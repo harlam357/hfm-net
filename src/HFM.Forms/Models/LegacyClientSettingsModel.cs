@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Settings Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -50,12 +49,12 @@ namespace HFM.Forms.Models
          _legacyClientSubType = LegacyClientSubType.Path;
          _name = String.Empty;
          _clientProcessorMegahertz = 1;
-         _fahLogFileName = Default.FahLogFileName;
-         _unitInfoFileName = Default.UnitInfoFileName;
-         _queueFileName = Default.QueueFileName;
+         _fahLogFileName = Constants.FahLogFileName;
+         _unitInfoFileName = Constants.UnitInfoFileName;
+         _queueFileName = Constants.QueueFileName;
          _path = String.Empty;
          _server = String.Empty;
-         _port = Default.FtpPort;
+         _port = Constants.DefaultFtpPort;
          _username = String.Empty;
          _password = String.Empty;
       }
@@ -478,7 +477,7 @@ namespace HFM.Forms.Models
       {
          Path = String.Empty;
          Server = String.Empty;
-         Port = Default.FtpPort;
+         Port = Constants.DefaultFtpPort;
          Username = String.Empty;
          Password = String.Empty;
          CredentialsErrorMessage = String.Empty;

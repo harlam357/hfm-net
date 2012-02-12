@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Factory
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -162,19 +162,19 @@ namespace HFM.Core
             if (String.IsNullOrEmpty(settings.FahLogFileName))
             {
                warnings.Add("No remote FAHlog.txt filename, loading default.");
-               settings.FahLogFileName = Default.FahLogFileName;
+               settings.FahLogFileName = Constants.FahLogFileName;
             }
 
             if (String.IsNullOrEmpty(settings.UnitInfoFileName))
             {
                warnings.Add("No remote unitinfo.txt filename, loading default.");
-               settings.UnitInfoFileName = Default.UnitInfoFileName;
+               settings.UnitInfoFileName = Constants.UnitInfoFileName;
             }
 
             if (String.IsNullOrEmpty(settings.QueueFileName))
             {
                warnings.Add("No remote queue.dat filename, loading default.");
-               settings.QueueFileName = Default.QueueFileName;
+               settings.QueueFileName = Constants.QueueFileName;
             }
 
             #endregion
@@ -184,7 +184,7 @@ namespace HFM.Core
             if (!Validate.ServerPort(settings.Port))
             {
                warnings.Add("Server port is invalid, loading default.");
-               settings.Port = Default.FahClientPort;
+               settings.Port = Constants.DefaultFahClientPort;
             }
          }
          

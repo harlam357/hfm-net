@@ -879,7 +879,18 @@ namespace HFM.Core.Tests
       {
          return DateTime.ParseExact(timeStamp, "HH:mm:ss",
                                     DateTimeFormatInfo.InvariantInfo,
-                                    Default.DateTimeStyle).TimeOfDay;
+                                    DateTimeStyle).TimeOfDay;
+      }
+
+      private static DateTimeStyles DateTimeStyle
+      {
+         get
+         {
+            // set parse style to parse local
+            return DateTimeStyles.NoCurrentDateDefault |
+                   DateTimeStyles.AssumeUniversal |
+                   DateTimeStyles.AdjustToUniversal;
+         }
       }
       
       #endregion

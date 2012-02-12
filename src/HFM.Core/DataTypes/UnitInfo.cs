@@ -32,8 +32,8 @@ namespace HFM.Core.DataTypes
       public UnitInfo()
       {
          UnitRetrievalTime = DateTime.MinValue;
-         FoldingID = Default.FoldingID;
-         Team = Default.Team;
+         FoldingID = Constants.DefaultFoldingID;
+         Team = Constants.DefaultTeam;
          SlotType = SlotType.Unknown;
          DownloadTime = DateTime.MinValue;
          DueTime = DateTime.MinValue;
@@ -44,7 +44,7 @@ namespace HFM.Core.DataTypes
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
          UnitFrames = new Dictionary<int, UnitFrame>();
-         CoreID = Default.CoreID;
+         CoreID = Constants.DefaultCoreID;
          QueueIndex = -1;
          OwningSlotId = -1;
       }

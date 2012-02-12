@@ -110,6 +110,8 @@ namespace HFM.Core.DataTypes
       [DataMember(Order = 12)]
       public double KFactor { get; set; }
 
+      private const int MaxDecimalPlaces = 5;
+
       /// <summary>
       /// Get Points Per Day based on given Frame Time
       /// </summary>
@@ -137,11 +139,11 @@ namespace HFM.Core.DataTypes
       /// <param name="calculateBonus">Calculate Bonus Value</param>
       public double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, bool calculateBonus)
       {
-         if (frameTime.IsZero()) return 0;
+         if (frameTime.Equals(TimeSpan.Zero)) return 0;
 
          double basePPD = GetUPD(frameTime) * Credit;
          double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
-         double bonusPPD = Math.Round((basePPD * bonusMulti), Default.MaxDecimalPlaces);
+         double bonusPPD = Math.Round((basePPD * bonusMulti), MaxDecimalPlaces);
          
          return bonusPPD;
       }
@@ -152,7 +154,7 @@ namespace HFM.Core.DataTypes
       /// <param name="frameTime">Frame Time</param>
       public double GetUPD(TimeSpan frameTime)
       {
-         return frameTime.IsZero() ? 0.0 : 86400 / (frameTime.TotalSeconds * Frames);
+         return frameTime.Equals(TimeSpan.Zero) ? 0.0 : 86400 / (frameTime.TotalSeconds * Frames);
       }
 
       /// <summary>
@@ -163,7 +165,7 @@ namespace HFM.Core.DataTypes
       public double GetCredit(TimeSpan estTimeOfUnit, bool calculateBonus)
       {
          double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
-         return Math.Round((Credit * bonusMulti), Default.MaxDecimalPlaces);
+         return Math.Round((Credit * bonusMulti), MaxDecimalPlaces);
       }
 
       /// <summary>
@@ -178,7 +180,7 @@ namespace HFM.Core.DataTypes
          {
             if (estTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
             {
-               return Math.Round(Math.Sqrt((MaximumDays * KFactor) / estTimeOfUnit.TotalDays), Default.MaxDecimalPlaces);
+               return Math.Round(Math.Sqrt((MaximumDays * KFactor) / estTimeOfUnit.TotalDays), MaxDecimalPlaces);
             }
          }
          

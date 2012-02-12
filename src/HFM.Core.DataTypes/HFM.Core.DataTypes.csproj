@@ -50,8 +50,6 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ClientRun.cs" />
-    <Compile Include="Default.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="LogLine.cs" />

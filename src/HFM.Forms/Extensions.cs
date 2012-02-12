@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms

@@ -71,6 +71,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ClientRun.cs" />
     <Compile Include="FahLogUnitData.cs" />
     <Compile Include="LogInterpreterBase.cs" />
     <Compile Include="LogInterpreter.cs" />

@@ -28,6 +28,14 @@ namespace HFM.Log
    {
       #region Regex (Static)
 
+      // a copy of this regex exists in HFM.Core.DataTypes
+      private static readonly Regex WorkUnitRunningRegex =
+         new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
+      // a copy of this regex exists in HFM.Core.DataTypes
+      private static readonly Regex WorkUnitRunningRegex38 =
+         new Regex("(?<Timestamp>.{8}):Unit (?<UnitIndex>\\d{2}):.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+
       private static readonly Regex WorkUnitWorkingRegex =
          new Regex("(?<Timestamp>.{8}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):Starting", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
@@ -73,11 +81,11 @@ namespace HFM.Log
                return new LogLineError(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitRunning:
                Match workUnitRunningMatch;
-               if ((workUnitRunningMatch = Extensions.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
+               if ((workUnitRunningMatch = WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(workUnitRunningMatch.Result("${UnitIndex}"));
                }
-               if ((workUnitRunningMatch = Extensions.WorkUnitRunningRegex38.Match(logLine.LineRaw)).Success)
+               if ((workUnitRunningMatch = WorkUnitRunningRegex38.Match(logLine.LineRaw)).Success)
                {
                   return Int32.Parse(workUnitRunningMatch.Result("${UnitIndex}"));
                }

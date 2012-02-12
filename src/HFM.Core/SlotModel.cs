@@ -439,7 +439,7 @@ namespace HFM.Core
          get
          {
             // if these are the default assigned values, don't check otherwise and just return true
-            if (UnitInfo.FoldingID == Default.FoldingID && UnitInfo.Team == Default.Team)
+            if (UnitInfo.FoldingID == Constants.DefaultFoldingID && UnitInfo.Team == Constants.DefaultTeam)
             {
                return true;
             }

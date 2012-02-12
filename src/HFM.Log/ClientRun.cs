@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Run Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace HFM.Core.DataTypes
+using HFM.Core.DataTypes;
+
+namespace HFM.Log
 {
    /// <summary>
    /// Data Class for a single Client Run (client start to client stop).
@@ -45,7 +47,7 @@ namespace HFM.Core.DataTypes
          get { return _unitIndexes; }
       }
    
-      #region CTOR
+      #region Constructor
       
       /// <summary>
       /// ClientRun Constructor
@@ -58,8 +60,8 @@ namespace HFM.Core.DataTypes
 
          ClientVersion = String.Empty;
          Arguments = String.Empty;
-         FoldingID = Default.FoldingID;
-         Team = Default.Team;
+         FoldingID = String.Empty;
+         Team = 0;
          UserID = String.Empty;
          Status = SlotStatus.Unknown;
       }

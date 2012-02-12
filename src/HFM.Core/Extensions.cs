@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 
@@ -28,6 +29,99 @@ namespace HFM.Core
 {
    public static class Extensions
    {
+      #region DateTime/TimeSpan
+
+      public static bool IsKnown(this DateTime dateTime)
+      {
+         return !IsUnknown(dateTime);
+      }
+
+      public static bool IsUnknown(this DateTime dateTime)
+      {
+         return dateTime.Equals(DateTime.MinValue);
+      }
+
+      public static bool IsZero(this TimeSpan timeSpan)
+      {
+         return timeSpan.Equals(TimeSpan.Zero);
+      }
+
+      #endregion
+
+      #region SlotStatus
+
+      /// <summary>
+      /// Gets Status Html Color String
+      /// </summary>
+      public static string GetHtmlColor(this SlotStatus status)
+      {
+         return ColorTranslator.ToHtml(status.GetStatusColor());
+      }
+
+      /// <summary>
+      /// Gets Status Html Font Color String
+      /// </summary>
+      public static string GetHtmlFontColor(this SlotStatus status)
+      {
+         switch (status)
+         {
+            case SlotStatus.Running:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.RunningAsync:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.RunningNoFrameTimes:
+               return ColorTranslator.ToHtml(Color.Black);
+            case SlotStatus.Finishing:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.Paused:
+               return ColorTranslator.ToHtml(Color.Black);
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
+               return ColorTranslator.ToHtml(Color.White);
+            case SlotStatus.Offline:
+               return ColorTranslator.ToHtml(Color.Black);
+            default:
+               return ColorTranslator.ToHtml(Color.Black);
+         }
+      }
+
+      /// <summary>
+      /// Gets Status Color Object
+      /// </summary>
+      public static Color GetStatusColor(this SlotStatus status)
+      {
+         switch (status)
+         {
+            case SlotStatus.Running:
+               return Color.Green;
+            case SlotStatus.RunningAsync:
+               return Color.Blue;
+            case SlotStatus.RunningNoFrameTimes:
+               return Color.Yellow;
+            case SlotStatus.Finishing:
+               return Color.DarkCyan;
+            case SlotStatus.Stopped:
+            case SlotStatus.EuePause:
+            case SlotStatus.Hung:
+               return Color.DarkRed;
+            case SlotStatus.Paused:
+               return Color.Orange;
+            case SlotStatus.SendingWorkPacket:
+            case SlotStatus.GettingWorkPacket:
+               return Color.Purple;
+            case SlotStatus.Offline:
+               return Color.Gray;
+            default:
+               return Color.Gray;
+         }
+      }
+
+      #endregion
+
       public static string AppendSlotId(this string name, int slotId)
       {
          return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1}", name, slotId) : name;
@@ -61,17 +155,17 @@ namespace HFM.Core
 
       public static string CachedFahLogFileName(this ClientSettings settings)
       {
-         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, settings.IsLegacy() ? Default.FahLogFileName : Default.FahClientLogFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, settings.IsLegacy() ? Constants.FahLogFileName : Constants.FahClientLogFileName);
       }
 
       public static string CachedUnitInfoFileName(this ClientSettings settings)
       {
-         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.UnitInfoFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Constants.UnitInfoFileName);
       }
 
       public static string CachedQueueFileName(this ClientSettings settings)
       {
-         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Default.QueueFileName);
+         return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Constants.QueueFileName);
       }
 
       #endregion

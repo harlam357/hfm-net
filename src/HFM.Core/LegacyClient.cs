@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 
 using HFM.Core.DataTypes;
+using HFM.Log;
 
 namespace HFM.Core
 {

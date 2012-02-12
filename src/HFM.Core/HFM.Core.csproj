@@ -71,6 +71,7 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\lib\SQLite.NET\bin\System.Data.SQLite.DLL</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic">
       <HintPath>..\..\lib\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
     </Reference>
