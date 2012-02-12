@@ -30,7 +30,8 @@ namespace HFM.Core.Configuration
    {
       public static void CreateMaps()
       {
-         Mapper.CreateMap<QueueData, ClientQueue>();
+         Mapper.CreateMap<QueueData, ClientQueue>()
+            .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.Legacy));
          Mapper.CreateMap<QueueEntry, ClientQueueEntry>();
          Mapper.CreateMap<SlotModel, SlotData>()
             .ForMember(dest => dest.GridData, opt => opt.MapFrom(Mapper.Map<SlotModel, GridData>));

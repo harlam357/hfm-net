@@ -113,7 +113,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Options options, 
+      public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, 
                                                       SlotOptions slotOptions, UnitInfo currentUnifInfo, int slotId)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
@@ -135,24 +135,81 @@ namespace HFM.Core
          }
 
          IDictionary<int, UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(unitCollection, options, slotOptions, currentUnifInfo, slotId);
-         _clientQueue = null; // BuildClientQueue(qData);
+         _clientQueue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
          _logInterpreter = null;
 
          return parsedUnits;
       }
 
-      //private static ClientQueue BuildClientQueue(QueueData q)
-      //{
-      //   Debug.Assert(q != null);
-      //
-      //   var cq = Mapper.Map<QueueData, ClientQueue>(q);
-      //   for (int i = 0; i < 10; i++)
-      //   {
-      //      Mapper.Map(q.GetQueueEntry((uint)i), cq.GetQueueEntry(i));
-      //   }
-      //
-      //   return cq;
-      //}
+      private static ClientQueue BuildClientQueue(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
+      {
+         var cq = new ClientQueue { ClientType = ClientType.FahClient };
+         foreach (var unit in unitCollection)
+         {
+            if (unit.Slot != slotId)
+            {
+               // does not match requested slot
+               continue;
+            }
+
+            var cqe = new ClientQueueEntry();
+            cqe.EntryStatusLiteral = unit.StateEnum.ToString();
+            cqe.NumberOfSmpCores = info.System.CpuCount;
+            cqe.BeginTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
+            cqe.BeginTimeLocal = unit.AssignedDateTime.GetValueOrDefault().ToLocalTime();
+            cqe.ProjectID = unit.Project;
+            cqe.ProjectRun = unit.Run;
+            cqe.ProjectClone = unit.Clone;
+            cqe.ProjectGen = unit.Gen;
+            cqe.MachineID = slotId;
+            cqe.ServerIP = unit.WorkServer;
+            cqe.CpuString = GetCpuString(info, slotOptions);
+            cqe.OsString = info.System.OperatingSystemEnum.ToOperatingSystemString(info.System.OperatingSystemArchitectureEnum);
+            // Memory Value is in Gigabytes - turn into Megabytes and truncate
+            cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
+            cq.Add(unit.Id, cqe);
+
+            if (unit.StateEnum.Equals(FahSlotStatus.Running) ||
+                unit.StateEnum.Equals(FahSlotStatus.Finishing))
+            {
+               cq.CurrentIndex = unit.Id;
+            }
+         }
+
+         return cq;
+      }
+
+      private static string GetCpuString(Info info, SlotOptions slotOptions)
+      {
+         if (slotOptions.FahClientSubTypeEnum.Equals(FahClientSubType.GPU))
+         {
+            switch (slotOptions.GpuIndex)
+            {
+               case 0:
+                  return info.System.GpuId0Type;
+               case 1:
+                  return info.System.GpuId1Type;
+               case 2:
+                  return info.System.GpuId2Type;
+               case 3:
+                  return info.System.GpuId3Type;
+               case 4:
+                  return info.System.GpuId4Type;
+               case 5:
+                  return info.System.GpuId5Type;
+               case 6:
+                  return info.System.GpuId6Type;
+               case 7:
+                  return info.System.GpuId7Type;
+            }
+         }
+         else
+         {
+            return info.System.CpuType.ToCpuTypeString();
+         }
+
+         return String.Empty;
+      }
 
       private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(IEnumerable<Unit> unitCollection, Options options, 
                                                                        SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)

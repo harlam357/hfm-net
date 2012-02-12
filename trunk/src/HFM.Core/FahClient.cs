@@ -378,7 +378,7 @@ namespace HFM.Core
             DataAggregator.ClientName = slotModel.Name;
             var lines = LogReader.GetLogLines(_logText.ToString().Split('\n').Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
             lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
-            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, _unitCollection, options, slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
+            IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, _unitCollection, info, options, slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
             PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);
 
             slotModel.Queue = DataAggregator.Queue;

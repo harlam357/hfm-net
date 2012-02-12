@@ -181,7 +181,7 @@ namespace HFM.Core
          var cq = Mapper.Map<QueueData, ClientQueue>(q);
          for (int i = 0; i < 10; i++)
          {
-            Mapper.Map(q.GetQueueEntry((uint)i), cq.GetQueueEntry(i));
+            cq.Add(i, Mapper.Map<QueueEntry, ClientQueueEntry>(q.GetQueueEntry((uint)i)));
          }
 
          return cq;

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Queue Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,32 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * This class is currently populated by the queue.dat data only.
- * 
- * The reason for its existance is to provide a buffer for the
- * queue.dat data coming from v6 and below clients as well as a
- * buffer for the data (presumably different) coming from v7 clients.
- * 
- * This class also provides a concrete type that can be serailized
- * into a client data file.  Previously the queue information that
- * was available to a DisplayInstance was of type IQueueBase which
- * is not serializable by protobuf-net.
- */
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 
 namespace HFM.Core.DataTypes
 {
    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-   public class ClientQueue
+   public class ClientQueue : IDictionary<int, ClientQueueEntry>
    {
       #region Fields
    
-      private readonly ClientQueueEntry[] _entries;
+      private readonly Dictionary<int, ClientQueueEntry> _entries;
       
       #endregion
 
@@ -50,16 +38,17 @@ namespace HFM.Core.DataTypes
 
       public ClientQueue()
       {
-         _entries = new ClientQueueEntry[10]; //TODO: Fix Hard Coded 10
-         for (int i = 0; i < _entries.Length; i++)
-         {
-            _entries[i] = new ClientQueueEntry();
-         }
+         _entries = new Dictionary<int, ClientQueueEntry>();
       }
       
       #endregion
 
       #region queue.dat Properties
+
+      /// <summary>
+      /// Client type that generated this queue
+      /// </summary>
+      public ClientType ClientType { get; set; }
 
       /// <summary>
       /// Current index number
@@ -108,34 +97,117 @@ namespace HFM.Core.DataTypes
          get { return _entries[CurrentIndex]; }
       }
 
-      /// <summary>
-      /// Get the QueueEntry at the specified Index.
-      /// </summary>
-      /// <param name="index">Queue Entry Index</param>
-      public ClientQueueEntry GetQueueEntry(int index)
-      {
-         return _entries[index];
-      }
-      
       #endregion
 
       /// <summary>
       /// Collection used to populate UI Controls
       /// </summary>
-      public ICollection<string> EntryNameCollection
+      public IEnumerable<ListItem> EntryNameCollection
       {
          get
          {
-            var list = new List<string>(10);
-
-            for (int i = 0; i < 10; i++)
-            {
-               list.Add(String.Format(CultureInfo.InvariantCulture,
-                  "{0} - {1}", i, GetQueueEntry(i).ProjectRunCloneGen()));
-            }
-
-            return list;
+            return _entries.Select(kvp => new ListItem
+                                          {
+                                             DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0} - {1}", kvp.Key, kvp.Value.ProjectRunCloneGen()), ValueMember = kvp.Key
+                                          }).ToList().AsReadOnly();
          }
       }
+
+      #region IDictionary<int,ClientQueueEntry> Members
+
+      public void Add(int key, ClientQueueEntry value)
+      {
+         _entries.Add(key, value);
+      }
+
+      public bool ContainsKey(int key)
+      {
+         return _entries.ContainsKey(key);
+      }
+
+      public ICollection<int> Keys
+      {
+         get { return _entries.Keys; }
+      }
+
+      public bool Remove(int key)
+      {
+         return _entries.Remove(key);
+      }
+
+      public bool TryGetValue(int key, out ClientQueueEntry value)
+      {
+         return _entries.TryGetValue(key, out value);
+      }
+
+      public ICollection<ClientQueueEntry> Values
+      {
+         get { return _entries.Values; }
+      }
+
+      public ClientQueueEntry this[int key]
+      {
+         get { return _entries[key]; }
+         set { _entries[key] = value; }
+      }
+
+      #endregion
+
+      #region ICollection<KeyValuePair<int,ClientQueueEntry>> Members
+
+      void ICollection<KeyValuePair<int, ClientQueueEntry>>.Add(KeyValuePair<int, ClientQueueEntry> item)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void Clear()
+      {
+         _entries.Clear();
+      }
+
+      bool ICollection<KeyValuePair<int, ClientQueueEntry>>.Contains(KeyValuePair<int, ClientQueueEntry> item)
+      {
+         throw new NotImplementedException();
+      }
+
+      void ICollection<KeyValuePair<int, ClientQueueEntry>>.CopyTo(KeyValuePair<int, ClientQueueEntry>[] array, int arrayIndex)
+      {
+         throw new NotImplementedException();
+      }
+
+      public int Count
+      {
+         get { return _entries.Count; }
+      }
+
+      bool ICollection<KeyValuePair<int, ClientQueueEntry>>.IsReadOnly
+      {
+         get { return false; }
+      }
+
+      bool ICollection<KeyValuePair<int, ClientQueueEntry>>.Remove(KeyValuePair<int, ClientQueueEntry> item)
+      {
+         throw new NotImplementedException();
+      }
+
+      #endregion
+
+      #region IEnumerable<KeyValuePair<int,ClientQueueEntry>> Members
+
+      public IEnumerator<KeyValuePair<int, ClientQueueEntry>> GetEnumerator()
+      {
+         return _entries.GetEnumerator();
+      }
+
+      #endregion
+
+      #region IEnumerable Members
+
+      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
+      }
+
+      #endregion
    }
 }
