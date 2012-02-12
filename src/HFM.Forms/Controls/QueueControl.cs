@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Control
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@ namespace HFM.Forms.Controls
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
-      private ClientQueue _qBase;
+      private ClientQueue _queue;
       private IProteinDictionary _proteinCollection;
 
       private SlotType _slotType = SlotType.Unknown;
@@ -92,20 +92,22 @@ namespace HFM.Forms.Controls
       {
          if (qBase != null)
          {
-            _qBase = qBase;
+            _queue = qBase;
             _slotType = type;
             _utcOffsetIsZero = utcOffsetIsZero;
             
             cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
-            cboQueueIndex.DataSource = _qBase.EntryNameCollection;
+            cboQueueIndex.DataSource = _queue.EntryNameCollection;
+            cboQueueIndex.DisplayMember = "DisplayMember";
+            cboQueueIndex.ValueMember = "ValueMember";
             cboQueueIndex.SelectedIndex = -1;
             cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
-            cboQueueIndex.SelectedIndex = _qBase.CurrentIndex;
+            cboQueueIndex.SelectedValue = _queue.CurrentIndex;
          }
          else
          {
-            _qBase = null;
+            _queue = null;
             _slotType = SlotType.Unknown;
             _utcOffsetIsZero = false;
             SetControlsVisible(false);
@@ -114,13 +116,13 @@ namespace HFM.Forms.Controls
 
       private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if (_qBase == null) return;
+         if (_queue == null) return;
       
          if (cboQueueIndex.SelectedIndex > -1)
          {
             SetControlsVisible(true);
 
-            ClientQueueEntry entry = _qBase.GetQueueEntry(cboQueueIndex.SelectedIndex);
+            ClientQueueEntry entry = _queue[(int)cboQueueIndex.SelectedValue];
             txtStatus.Text = entry.EntryStatusLiteral;
             txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (_utcOffsetIsZero)
@@ -148,11 +150,11 @@ namespace HFM.Forms.Controls
                
             }
             txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", entry.SpeedFactor);
-            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _qBase.PerformanceFraction, _qBase.PerformanceFractionUnitWeight);
+            txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _queue.PerformanceFraction, _queue.PerformanceFractionUnitWeight);
             txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", entry.MegaFlops);
             txtServer.Text = entry.ServerIP;
-            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qBase.DownloadRateAverage, _qBase.DownloadRateUnitWeight);
-            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _qBase.UploadRateAverage, _qBase.UploadRateUnitWeight);
+            txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.DownloadRateAverage, _queue.DownloadRateUnitWeight);
+            txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.UploadRateAverage, _queue.UploadRateUnitWeight);
             txtCpuType.Text = entry.CpuString;
             txtOsType.Text = entry.OsString;
             txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentCulture);
@@ -184,7 +186,7 @@ namespace HFM.Forms.Controls
             //txtMachineID.Text = "MachineID";
             #endregion
             
-            OnQueueIndexChanged(new QueueIndexChangedEventArgs(cboQueueIndex.SelectedIndex));
+            OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
          }
          else
          {
@@ -232,10 +234,13 @@ namespace HFM.Forms.Controls
          }
          else
          {
+            SetControlsForClientType(_queue.ClientType);
+
             switch (_slotType)
             {
                case SlotType.Unknown:
                case SlotType.Uniprocessor:
+                  lblCpuType.Text = "CPU Type:";
                   // Set Rows to Zero Height and Hide Labels First
                   txtSmpCores.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
@@ -246,6 +251,7 @@ namespace HFM.Forms.Controls
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
                   break;
                case SlotType.GPU:
+                  lblCpuType.Text = _queue.ClientType.Equals(ClientType.Legacy) ? "CPU Type:" : "GPU Type:";
                   // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
@@ -256,17 +262,39 @@ namespace HFM.Forms.Controls
                   // Then Show the Client Specific Queue Row(s)
                   break;
                case SlotType.SMP:
+                  lblCpuType.Text = "CPU Type:";
                   // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   // Then Show the Client Specific Queue Row(s)
-                  txtCoresToUse.Visible = true;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
                   txtSmpCores.Visible = true;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = DefaultRowHeight;
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
+                  txtCoresToUse.Visible = _queue.ClientType.Equals(ClientType.Legacy);
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = _queue.ClientType.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
                   break;
             }
          }
+      }
+
+      private void SetControlsForClientType(ClientType type)
+      {
+         bool visible = type.Equals(ClientType.Legacy);
+         int height = type.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
+
+         txtEndDate.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.EndDate].Height = height;
+         txtSpeedFactor.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SpeedFactor].Height = height;
+         txtPerformanceFraction.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.PerfFraction].Height = height;
+         txtMegaFlops.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.MegaFlops].Height = height;
+         txtAverageDownloadRate.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgDownload].Height = height;
+         txtAverageUploadRate.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgUpload].Height = height;
+         txtUserID.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.UserId].Height = height;
       }
    }
    

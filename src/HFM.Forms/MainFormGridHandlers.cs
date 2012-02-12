@@ -51,7 +51,7 @@ namespace HFM.Forms
       /// </summary>
       private int _currentMouseOverColumn = -1;
    
-      private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
+      private void DataGridViewMouseMove(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
 
@@ -115,8 +115,10 @@ namespace HFM.Forms
       /// <summary>
       /// Override Cell Painting in the DataGridView
       /// </summary>
-      private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+      private void DataGridViewCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
       {
+         if (e.Value == null) return;
+
          if (e.RowIndex >= 0)
          {
             // ReSharper disable PossibleNullReferenceException
@@ -248,7 +250,7 @@ namespace HFM.Forms
                }
                else
                {
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                  throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
                
@@ -275,10 +277,10 @@ namespace HFM.Forms
                
                if (paint.Equals(PaintCell.Status))
                {
-                  // this is new... sometimes being passed a null
-                  // value here.  check and skip if so. - 1/28/12
-                  if (e.Value != null)
-                  {
+                  //// this is new... sometimes being passed a null
+                  //// value here.  check and skip if so. - 1/28/12
+                  //if (e.Value != null)
+                  //{
                      // Draw the inset highlight box.
                      var newRect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4,
                                                  e.CellBounds.Width - 10, e.CellBounds.Height - 10);
@@ -286,38 +288,38 @@ namespace HFM.Forms
                      var status = (SlotStatus)e.Value;
                      e.Graphics.DrawRectangle(status.GetDrawingPen(), newRect);
                      e.Graphics.FillRectangle(status.GetDrawingBrush(), newRect);
-                  }
-                  else
-                  {
-                     Debug.WriteLine("Status value is null.");
-                  }
+                  //}
+                  //else
+                  //{
+                  //   Debug.WriteLine("Status value is null.");
+                  //}
                }
                else if (paint.Equals(PaintCell.Time))
                {
-                  if (e.Value != null)
-                  {
+                  //if (e.Value != null)
+                  //{
                      PaintTimeBasedCellValue(textColor, e);
-                  }
+                  //}
                }
                else if (paint.Equals(PaintCell.EtaDate))
                {
-                  if (e.Value != null)
-                  {
+                  //if (e.Value != null)
+                  //{
                      Debug.Assert(data != null);
                      DrawText(((DateTime)data).ToDateString(), textColor, e);
-                  }
+                  //}
                }
                else if (paint.Equals(PaintCell.Warning))
                {
                   // Draw the text content of the cell
-                  if (e.Value != null)
-                  {
+                  //if (e.Value != null)
+                  //{
                      DrawText(e.Value.ToString(), textColor, e);
-                  }
+                  //}
                }
                else
                {
-                  throw new NotImplementedException(String.Format(CultureInfo.CurrentCulture,
+                  throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
                
@@ -372,7 +374,7 @@ namespace HFM.Forms
       /// <summary>
       /// Measure Text and set Column Width on Double-Click
       /// </summary>
-      private void dataGridView1_ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
+      private void DataGridViewColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
       {
          AutoSizeColumn(e.ColumnIndex);
          e.Handled = true;

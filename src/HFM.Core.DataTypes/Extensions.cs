@@ -155,6 +155,67 @@ namespace HFM.Core.DataTypes
 
       #endregion
 
+      #region CpuType
+
+      public static string ToCpuTypeString(this CpuType type)
+      {
+         switch (type)
+         {
+            case CpuType.Core2:
+               return "Core 2";
+            case CpuType.Corei7:
+               return "Core i7";
+            case CpuType.Corei5:
+               return "Core i5";
+            case CpuType.Corei3:
+               return "Core i3";
+            case CpuType.PhenomII:
+               return "Phenom II";
+            case CpuType.Phenom:
+               return "Phenom";
+            case CpuType.Athlon:
+               return "Athlon";
+         }
+
+         return "Unknown";
+      }
+
+      #endregion
+
+      public static string ToOperatingSystemString(this OperatingSystemType type)
+      {
+         return ToOperatingSystemString(type, OperatingSystemArchitectureType.Unknown);
+      }
+
+      public static string ToOperatingSystemString(this OperatingSystemType type, OperatingSystemArchitectureType arch)
+      {
+         string osName = "Unknown";
+
+         switch (type)
+         {
+            case OperatingSystemType.Windows:
+               osName = "Windows";
+               break;
+            case OperatingSystemType.WindowsXP:
+               osName = "Windows XP";
+               break;
+            case OperatingSystemType.WindowsVista:
+               osName = "Vista";
+               break;
+            case OperatingSystemType.Windows7:
+               osName = "Windows 7";
+               break;
+            case OperatingSystemType.Linux:
+               osName = "Linux";
+               break;
+            case OperatingSystemType.OSX:
+               osName = "OS X";
+               break;
+         }
+
+         return arch.Equals(OperatingSystemArchitectureType.Unknown) ? osName : String.Format(CultureInfo.InvariantCulture, "{0} {1}", osName, arch);
+      }
+
       #region IEnumerable<LogLine>
 
       private static readonly Regex FoldingSlotRegex =

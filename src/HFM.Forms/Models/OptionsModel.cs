@@ -24,6 +24,7 @@ using System.ComponentModel;
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -347,11 +348,5 @@ namespace HFM.Forms.Models
             return list.AsReadOnly();
          }
       }
-   }
-   
-   struct ListItem
-   {
-      public string DisplayMember { get; set; }
-      public object ValueMember { get; set; }
    }
 }
