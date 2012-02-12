@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="LogReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitFrameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">

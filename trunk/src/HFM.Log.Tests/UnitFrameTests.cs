@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Frame Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,9 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Core.DataTypes.Tests
+using HFM.Core.DataTypes;
+
+namespace HFM.Log.Tests
 {
    [TestFixture]
    public class UnitFrameTests

@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.Tests", "HFM.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.DataTypes", "HFM.Core.DataTypes\HFM.Core.DataTypes.csproj", "{C198DA45-5B5B-4684-914B-97DED3F0BB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.DataTypes.Tests", "HFM.Core.DataTypes.Tests\HFM.Core.DataTypes.Tests.csproj", "{38308523-3AD1-4420-966D-0AE1B57F3EBF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.Plugins", "HFM.Core.Plugins\HFM.Core.Plugins.csproj", "{E1415297-BD33-4508-A491-F3C13E5A5F7F}"
 EndProject
 Global
@@ -162,12 +160,6 @@ Global
 		{C198DA45-5B5B-4684-914B-97DED3F0BB40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C198DA45-5B5B-4684-914B-97DED3F0BB40}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{C198DA45-5B5B-4684-914B-97DED3F0BB40}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.ScriptedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{38308523-3AD1-4420-966D-0AE1B57F3EBF}.ScriptedRelease|Any CPU.Build.0 = Release|Any CPU
 		{E1415297-BD33-4508-A491-F3C13E5A5F7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E1415297-BD33-4508-A491-F3C13E5A5F7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1415297-BD33-4508-A491-F3C13E5A5F7F}.Release|Any CPU.ActiveCfg = Release|Any CPU

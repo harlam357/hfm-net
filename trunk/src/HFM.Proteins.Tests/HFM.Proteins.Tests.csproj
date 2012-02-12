@@ -79,6 +79,7 @@
     <Compile Include="HtmlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinDictionaryTests.cs" />
+    <Compile Include="ProteinTests.cs" />
     <Compile Include="TabSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
