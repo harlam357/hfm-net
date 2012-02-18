@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Collection Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -258,7 +258,7 @@ namespace HFM.Client.DataTypes
       [MessageProperty("id")]
       public int Id { get; set; }
 
-      // same value in Unit.State
+      // NOT the same value in Unit.State
       [MessageProperty("status")]
       public string Status { get; set; }
 

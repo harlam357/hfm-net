@@ -46,7 +46,16 @@ namespace HFM.Client.DataTypes
       Paused,
       Running,
       Finishing,
-      Send
+      Ready
+   }
+
+   public enum FahUnitStatus
+   {
+      Unknown,
+      Running,
+      Download,
+      Send,
+      Ready
    }
 
    public enum MaxPacketSize

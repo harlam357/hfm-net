@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - General Data Converters
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,8 +91,8 @@ namespace HFM.Client.Converters
                return FahSlotStatus.Running;
             case "FINISHING":
                return FahSlotStatus.Finishing;
-            case "SEND":
-               return FahSlotStatus.Send;
+            case "READY":
+               return FahSlotStatus.Ready;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

@@ -65,27 +65,12 @@ namespace HFM.Core
       {
          switch (status)
          {
-            case SlotStatus.Running:
-               return ColorTranslator.ToHtml(Color.White);
-            case SlotStatus.RunningAsync:
-               return ColorTranslator.ToHtml(Color.White);
             case SlotStatus.RunningNoFrameTimes:
-               return ColorTranslator.ToHtml(Color.Black);
-            case SlotStatus.Finishing:
-               return ColorTranslator.ToHtml(Color.White);
-            case SlotStatus.Stopped:
-            case SlotStatus.EuePause:
-            case SlotStatus.Hung:
-               return ColorTranslator.ToHtml(Color.White);
             case SlotStatus.Paused:
-               return ColorTranslator.ToHtml(Color.Black);
-            case SlotStatus.SendingWorkPacket:
-            case SlotStatus.GettingWorkPacket:
-               return ColorTranslator.ToHtml(Color.White);
             case SlotStatus.Offline:
                return ColorTranslator.ToHtml(Color.Black);
             default:
-               return ColorTranslator.ToHtml(Color.Black);
+               return ColorTranslator.ToHtml(Color.White);
          }
       }
 
@@ -102,8 +87,11 @@ namespace HFM.Core
                return Color.Blue;
             case SlotStatus.RunningNoFrameTimes:
                return Color.Yellow;
-            case SlotStatus.Finishing:
+            case SlotStatus.Finishing: // v7 specific
+               return Color.Khaki;
+            case SlotStatus.Ready:     // v7 specific
                return Color.DarkCyan;
+            case SlotStatus.Stopping:  // v7 specific
             case SlotStatus.Stopped:
             case SlotStatus.EuePause:
             case SlotStatus.Hung:
