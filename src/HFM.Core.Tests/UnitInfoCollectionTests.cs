@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 using NUnit.Framework;
@@ -176,7 +177,7 @@ namespace HFM.Core.Tests
          {
             UnitInfo unitInfo = list[i];
 
-            Assert.AreEqual("TestOwner2 Slot " + (i - 10), unitInfo.OwningSlotName);
+            Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), unitInfo.OwningSlotName);
             Assert.AreEqual("TestOwner2", unitInfo.OwningClientName);
             Assert.AreEqual("TestPath2", unitInfo.OwningClientPath);
             Assert.AreEqual(i - 10, unitInfo.OwningSlotId);

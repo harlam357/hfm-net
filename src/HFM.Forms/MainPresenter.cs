@@ -444,7 +444,8 @@ namespace HFM.Forms
             try
             {
                var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
-               if (logLines == null && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
+               // show the current log even if not the current unit index - 2/17/12
+               if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
                {
                   logLines = _gridModel.SelectedSlot.CurrentLogLines;
                }

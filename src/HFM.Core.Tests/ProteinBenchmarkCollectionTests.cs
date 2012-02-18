@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 using NUnit.Framework;
@@ -131,7 +132,7 @@ namespace HFM.Core.Tests
          for (int i = 10; i < 20; i++)
          {
             ProteinBenchmark benchmark = list[i];
-            Assert.AreEqual("TestOwner2 Slot " + (i - 10), benchmark.OwningSlotName);
+            Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), benchmark.OwningSlotName);
             Assert.AreEqual("TestOwner2", benchmark.OwningClientName);
             Assert.AreEqual("TestPath2", benchmark.OwningClientPath);
             Assert.AreEqual(i - 10, benchmark.OwningSlotId);

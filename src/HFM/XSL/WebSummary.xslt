@@ -90,7 +90,7 @@
                <xsl:value-of select="GridData/Status"/>
             </font>
          </td>
-         <td width="5%" class="RightCol">
+         <td width="3%" class="RightCol">
             <xsl:value-of select="GridData/PercentComplete"/>%
          </td>
          <td width="15%">
@@ -110,7 +110,7 @@
          <td width="5%" class="RightCol">
             <xsl:value-of select="GridData/SlotType"/>
          </td>
-         <td width="3%" class="RightCol">
+         <td width="5%" class="RightCol">
             <xsl:value-of select="GridData/TPF"/>
          </td>
          <td width="8%" class="RightCol">

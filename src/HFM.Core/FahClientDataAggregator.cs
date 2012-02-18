@@ -143,7 +143,7 @@ namespace HFM.Core
 
       private static ClientQueue BuildClientQueue(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
       {
-         var cq = new ClientQueue { ClientType = ClientType.FahClient };
+         var cq = new ClientQueue { ClientType = ClientType.FahClient, CurrentIndex = -1 };
          foreach (var unit in unitCollection)
          {
             if (unit.Slot != slotId)
@@ -154,6 +154,9 @@ namespace HFM.Core
 
             var cqe = new ClientQueueEntry();
             cqe.EntryStatusLiteral = unit.StateEnum.ToString();
+            cqe.WaitingOn = unit.WaitingOn;
+            cqe.Attempts = unit.Attempts;
+            cqe.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
             cqe.NumberOfSmpCores = info.System.CpuCount;
             cqe.BeginTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
             cqe.BeginTimeLocal = unit.AssignedDateTime.GetValueOrDefault().ToLocalTime();
@@ -169,11 +172,17 @@ namespace HFM.Core
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
 
-            if (unit.StateEnum.Equals(FahSlotStatus.Running) ||
-                unit.StateEnum.Equals(FahSlotStatus.Finishing))
+            if (unit.StateEnum.Equals(FahUnitStatus.Running))
             {
                cq.CurrentIndex = unit.Id;
             }
+         }
+
+         // if no running index and at least something in the queue
+         if (cq.CurrentIndex == -1 && cq.Count != 0)
+         {
+            // take the minimum queue id
+            cq.CurrentIndex = cq.Keys.First();
          }
 
          return cq;
@@ -259,11 +268,21 @@ namespace HFM.Core
             {
                parsedUnits.Add(unit.Id, unitInfo);
                _unitLogLines.Add(unit.Id, logLines);
-               if (unit.StateEnum.Equals(FahSlotStatus.Running) ||
-                   unit.StateEnum.Equals(FahSlotStatus.Finishing))
+               if (unit.StateEnum.Equals(FahUnitStatus.Running))
                {
                   _currentUnitIndex = unit.Id;
                }
+            }
+         }
+
+         // if no running WU found
+         if (_currentUnitIndex == -1)
+         {
+            // look for a WU with Ready state
+            var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum.Equals(FahUnitStatus.Ready));
+            if (unit != null)
+            {
+               _currentUnitIndex = unit.Id;
             }
          }
 
