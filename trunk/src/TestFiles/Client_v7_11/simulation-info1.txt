@@ -1,0 +1,25 @@
+PyON 1 simulation-info
+{
+  "user": "harlam357",
+  "team": "32",
+  "project": 7610,
+  "run": 192,
+  "clone": 0,
+  "gen": 58,
+  "core_type": 164,
+  "core": "GROGBA4",
+  "description": "This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.
+",
+  "total_iterations": 2000,
+  "iterations_done": 1900,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "2012-02-17T21:48:22Z",
+  "timeout": 1330527046,
+  "deadline": 1331201830,
+  "eta": 1379,
+  "progress": 0.952612,
+  "news": ""
+}
+---
+

@@ -1,0 +1,35 @@
+PyON 1 units
+[
+  {
+    "id": "01",
+    "state": "RUNNING",
+    "error": "OK",
+    "project": 7610,
+    "run": 192,
+    "clone": 0,
+    "gen": 58,
+    "core": "0xa4",
+    "unit": "0x0000004e664f2dd04de6d35869ac2ae3",
+    "percentdone": "95.25%",
+    "totalframes": 2000,
+    "framesdone": 1900,
+    "assigned": "2012-02-17T21:48:22Z",
+    "timeout": "2012-02-29T14:50:46Z",
+    "deadline": "2012-03-08T10:17:10Z",
+    "ws": "171.64.65.104",
+    "cs": "171.67.108.49",
+    "waitingon": "",
+    "attempts": 0,
+    "nextattempt": "0.00 secs",
+    "slot": "00",
+    "eta": "23 mins 01 secs",
+    "ppd": "14327.57",
+    "tpf": "4 mins 51 secs",
+    "basecredit": "788.00",
+    "creditestimate": "4825.61",
+    "description": "This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.
+"
+  }
+]
+---
+

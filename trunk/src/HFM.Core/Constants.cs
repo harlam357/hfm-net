@@ -96,6 +96,6 @@ namespace HFM.Core
 
       public const string ClientNameFormat = "({0}) {1}";
 
-      public const string FahClientSlotOptions = "slot-options {0} client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
+      public const string FahClientSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
    }
 }
