@@ -291,12 +291,12 @@ namespace HFM.Client.DataTypes
       [MessageProperty("id")]
       public int Id { get; set; }
 
-      // same value in Slot.Status
+      // NOT the same value in Slot.Status
       [MessageProperty("state")]
       public string State { get; set; }
 
-      [MessageProperty("state", typeof(SlotStatusConverter))]
-      public FahSlotStatus StateEnum { get; set; }
+      [MessageProperty("state", typeof(UnitStatusConverter))]
+      public FahUnitStatus StateEnum { get; set; }
 
       [MessageProperty("project")]
       public int Project { get; set; }

@@ -28,14 +28,16 @@ namespace HFM.Core.DataTypes
       Unknown,
       Paused,
       Running,
-      Finishing,
-      SendingWorkPacket,
+      Finishing,  // v7 specific
+      Ready,      // v7 specific
+      Stopping,   // v7 specific
       // Extended entries for Legacy clients
       Stopped,
       EuePause,
       Hung,
       RunningNoFrameTimes,
       RunningAsync,
+      SendingWorkPacket,
       GettingWorkPacket,
       Offline
    }

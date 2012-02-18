@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Collection Data Converters
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +21,32 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using HFM.Client.DataTypes;
+
 namespace HFM.Client.Converters
 {
+   internal sealed class UnitStatusConverter : IConversionProvider
+   {
+      public object Convert(object input)
+      {
+         var inputString = (string)input;
+         switch (inputString)
+         {
+            case "RUNNING":
+               return FahUnitStatus.Running;
+            case "DOWNLOAD":
+               return FahUnitStatus.Download;
+            case "SEND":
+               return FahUnitStatus.Send;
+            case "READY":
+               return FahUnitStatus.Ready;
+         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse status value of '{0}'.", inputString));
+      }
+   }
+
    internal sealed class UnitTimeSpanConverter : IConversionProvider
    {
       public object Convert(object input)
