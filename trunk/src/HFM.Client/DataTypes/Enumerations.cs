@@ -46,7 +46,8 @@ namespace HFM.Client.DataTypes
       Paused,
       Running,
       Finishing,
-      Ready
+      Ready,
+      Stopping
    }
 
    public enum FahUnitStatus

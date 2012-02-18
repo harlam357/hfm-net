@@ -35,6 +35,9 @@ namespace HFM.Forms.Controls
          IndexCombo = 0,
          Blank1,
          Status,
+         WaitingOn,
+         Attempts,
+         NextAttempt,
          Credit,
          BeginDate,
          EndDate,
@@ -124,14 +127,24 @@ namespace HFM.Forms.Controls
 
             ClientQueueEntry entry = _queue[(int)cboQueueIndex.SelectedValue];
             txtStatus.Text = entry.EntryStatusLiteral;
+            WaitingOnTextBox.Text = String.IsNullOrEmpty(entry.WaitingOn) ? "(No Action)" : entry.WaitingOn;
+            AttemptsTextBox.Text = entry.Attempts.ToString();
+            NextAttemptTextBox.Text = entry.NextAttempt.ToString();
             txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
-            if (_utcOffsetIsZero)
+            if (entry.BeginTimeUtc.IsUnknown())
             {
-               txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
+               txtBeginDate.Text = "(Unknown)";
             }
             else
             {
-               txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeLocal.ToShortDateString(), entry.BeginTimeLocal.ToShortTimeString());
+               if (_utcOffsetIsZero)
+               {
+                  txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
+               }
+               else
+               {
+                  txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeLocal.ToShortDateString(), entry.BeginTimeLocal.ToShortTimeString());
+               }
             }
             if (entry.EndTimeUtc.Equals(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)))
             {
@@ -228,7 +241,7 @@ namespace HFM.Forms.Controls
          
          if (visible == false)
          {
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
+            tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
             tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
             tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
          }
@@ -241,32 +254,26 @@ namespace HFM.Forms.Controls
                case SlotType.Unknown:
                case SlotType.Uniprocessor:
                   lblCpuType.Text = "CPU Type:";
-                  // Set Rows to Zero Height and Hide Labels First
+                  txtBenchmark.Visible = _queue.ClientType.Equals(ClientType.Legacy);
+                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = _queue.ClientType.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
                   txtSmpCores.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   txtCoresToUse.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
-                  // Then Show the Client Specific Queue Row(s)
-                  txtBenchmark.Visible = true;
-                  tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = DefaultRowHeight;
                   break;
                case SlotType.GPU:
                   lblCpuType.Text = _queue.ClientType.Equals(ClientType.Legacy) ? "CPU Type:" : "GPU Type:";
-                  // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                   txtSmpCores.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
                   txtCoresToUse.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
-                  // Then Show the Client Specific Queue Row(s)
                   break;
                case SlotType.SMP:
                   lblCpuType.Text = "CPU Type:";
-                  // Set Rows to Zero Height and Hide Labels First
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
-                  // Then Show the Client Specific Queue Row(s)
                   txtSmpCores.Visible = true;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
                   txtCoresToUse.Visible = _queue.ClientType.Equals(ClientType.Legacy);
@@ -278,23 +285,33 @@ namespace HFM.Forms.Controls
 
       private void SetControlsForClientType(ClientType type)
       {
-         bool visible = type.Equals(ClientType.Legacy);
-         int height = type.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
+         bool legacyVisible = type.Equals(ClientType.Legacy);
+         int legacyHeight = type.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
 
-         txtEndDate.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.EndDate].Height = height;
-         txtSpeedFactor.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SpeedFactor].Height = height;
-         txtPerformanceFraction.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.PerfFraction].Height = height;
-         txtMegaFlops.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.MegaFlops].Height = height;
-         txtAverageDownloadRate.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgDownload].Height = height;
-         txtAverageUploadRate.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgUpload].Height = height;
-         txtUserID.Visible = visible;
-         tableLayoutPanel1.RowStyles[(int)QueueControlRows.UserId].Height = height;
+         txtEndDate.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.EndDate].Height = legacyHeight;
+         txtSpeedFactor.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SpeedFactor].Height = legacyHeight;
+         txtPerformanceFraction.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.PerfFraction].Height = legacyHeight;
+         txtMegaFlops.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.MegaFlops].Height = legacyHeight;
+         txtAverageDownloadRate.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgDownload].Height = legacyHeight;
+         txtAverageUploadRate.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgUpload].Height = legacyHeight;
+         txtUserID.Visible = legacyVisible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.UserId].Height = legacyHeight;
+
+         bool visible = type.Equals(ClientType.FahClient);
+         int height = type.Equals(ClientType.FahClient) ? DefaultRowHeight : 0;
+
+         WaitingOnTextBox.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.WaitingOn].Height = height;
+         AttemptsTextBox.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.Attempts].Height = height;
+         NextAttemptTextBox.Visible = visible;
+         tableLayoutPanel1.RowStyles[(int)QueueControlRows.NextAttempt].Height = height;
       }
    }
    

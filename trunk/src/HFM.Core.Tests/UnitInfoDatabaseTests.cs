@@ -235,7 +235,7 @@ namespace HFM.Core.Tests
          var rows = database.QueryUnitData(new QueryParameters());
          Assert.AreEqual(1, rows.Count);
          HistoryEntry entry = rows[0];
-         Assert.AreEqual("Owner2 Slot 2", entry.Name);
+         Assert.AreEqual("Owner2 Slot 02", entry.Name);
          Assert.AreEqual("Path2", entry.Path);
          Assert.AreEqual(6903, entry.ProjectID);
          Assert.AreEqual(2, entry.ProjectRun);

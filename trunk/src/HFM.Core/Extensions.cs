@@ -67,6 +67,7 @@ namespace HFM.Core
          {
             case SlotStatus.RunningNoFrameTimes:
             case SlotStatus.Paused:
+            case SlotStatus.Finishing:
             case SlotStatus.Offline:
                return ColorTranslator.ToHtml(Color.Black);
             default:
@@ -112,7 +113,7 @@ namespace HFM.Core
 
       public static string AppendSlotId(this string name, int slotId)
       {
-         return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1}", name, slotId) : name;
+         return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
       }
 
       #region ClientSettings

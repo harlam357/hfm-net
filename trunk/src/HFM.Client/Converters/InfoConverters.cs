@@ -30,36 +30,36 @@ namespace HFM.Client.Converters
       public object Convert(object input)
       {
          var inputString = (string)input;
-         Exception innerException = null;
-         try
+
+         double value;
+         // always returns value in gigabytes
+         int gigabyteIndex = inputString.IndexOf("GiB");
+         if (gigabyteIndex > 0)
          {
-            // always returns value in gigabytes
-            int gigabyteIndex = inputString.IndexOf("GiB");
-            if (gigabyteIndex > 0)
+            if (Double.TryParse(inputString.Substring(0, gigabyteIndex), out value))
             {
-               double gigabytes = Double.Parse(inputString.Substring(0, gigabyteIndex));
-               return gigabytes;
-            }
-            int megabyteIndex = inputString.IndexOf("MiB");
-            if (megabyteIndex > 0)
-            {
-               double megabytes = Double.Parse(inputString.Substring(0, megabyteIndex));
-               return megabytes / 1024;
-            }
-            int kilobyteIndex = inputString.IndexOf("KiB");
-            if (kilobyteIndex > 0)
-            {
-               double kilobytes = Double.Parse(inputString.Substring(0, kilobyteIndex));
-               return kilobytes / 1048576;
+               return value;
             }
          }
-         catch (FormatException ex)
+         int megabyteIndex = inputString.IndexOf("MiB");
+         if (megabyteIndex > 0)
          {
-            innerException = ex;
+            if (Double.TryParse(inputString.Substring(0, megabyteIndex), out value))
+            {
+               return value / 1024;
+            }
+         }
+         int kilobyteIndex = inputString.IndexOf("KiB");
+         if (kilobyteIndex > 0)
+         {
+            if (Double.TryParse(inputString.Substring(0, kilobyteIndex), out value))
+            {
+               return value / 1048576;   
+            }
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse memory value of '{0}'.", inputString), innerException);
+            "Failed to parse memory value of '{0}'.", inputString));
       }
    }
 
@@ -135,18 +135,14 @@ namespace HFM.Client.Converters
             return null;
          }
 
-         Exception innerException;
-         try
+         double value;
+         if (Double.TryParse(inputString, out value))
          {
-            return Double.Parse(inputString);
-         }
-         catch (FormatException ex)
-         {
-            innerException = ex;
+            return value;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CUDA version value of '{0}'.", inputString), innerException);
+            "Failed to parse CUDA version value of '{0}'.", inputString));
       }
    }
 

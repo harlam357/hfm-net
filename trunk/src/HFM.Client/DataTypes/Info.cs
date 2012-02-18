@@ -122,32 +122,6 @@ namespace HFM.Client.DataTypes
       [MessageProperty("Time")]
       public string Time { get; set; }
 
-      #region BuildDateTime Property (commented)
-
-      //public DateTime? BuildDateTime
-      //{
-      //   get { return GetDateTime(); }
-      //}
-
-      //private DateTime? GetDateTime()
-      //{
-      //   if (Date != null && Time != null)
-      //   {
-      //      try
-      //      {
-      //         return DateTime.ParseExact(String.Concat(Date, " ", Time), "MMM  d yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-      //      }
-      //      catch (FormatException)
-      //      {
-      //         return null;
-      //      }
-      //   }
-
-      //   return null;
-      //}
-
-      #endregion
-
       [MessageProperty("SVN Rev")]
       public int SvnRev { get; set; }
 

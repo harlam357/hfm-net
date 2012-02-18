@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Queue Entry Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,16 +18,12 @@
  */
 
 /*
- * This class is currently populated by the queue.dat data only.
- * 
- * The reason for its existance is to provide a buffer for the
+ * The reason for this class is to provide a buffer for the
  * queue.dat data coming from v6 and below clients as well as a
  * buffer for the data (presumably different) coming from v7 clients.
  * 
- * This class also provides a concrete type that can be serailized
- * into a client data file.  Previously the queue information that
- * was available to a DisplayInstance was of type IQueueBase which
- * is not serializable by protobuf-net.
+ * This class also provides a concrete type that can be serialized
+ * to binary or xml formats.
  */
 
 using System;
@@ -43,9 +39,24 @@ namespace HFM.Core.DataTypes
       #region queue.dat Properties
 
       /// <summary>
-      /// Status Enumeration
+      /// Status Literal Value
       /// </summary>
       public string EntryStatusLiteral { get; set; }
+
+      /// <summary>
+      /// Specifies the action this WU is waiting to perform.
+      /// </summary>
+      public string WaitingOn { get; set; }
+
+      /// <summary>
+      /// Specifies the number of attempts the client has made at the WaitingOn action.
+      /// </summary>
+      public int Attempts { get; set; }
+
+      /// <summary>
+      /// Length of time till the next attempt at the WaitingOn action.
+      /// </summary>
+      public TimeSpan NextAttempt { get; set; }
 
       /// <summary>
       /// Specifies a Factor Value denoting the Speed of Completion in relationship to the Maximum Expiration Time.

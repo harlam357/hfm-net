@@ -117,7 +117,7 @@ namespace HFM.Core
 
       public ClientSettings Settings { get; set; }
 
-      // temporary and only used with FahClient type
+      // HFM.Client data type
       public SlotOptions SlotOptions { get; set; }
 
       #endregion
@@ -233,11 +233,12 @@ namespace HFM.Core
       {
          get
          {
+            string slotType = SlotOptions != null ? SlotOptions.FahClientSubTypeEnum.ToString() : UnitInfo.SlotType.ToString();
             if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
             {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", UnitInfo.SlotType, ClientVersion);
+               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
             }
-            return UnitInfo.SlotType.ToString();
+            return slotType;
          }
       }
 

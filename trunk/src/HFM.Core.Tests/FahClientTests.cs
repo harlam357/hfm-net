@@ -63,7 +63,7 @@ namespace HFM.Core.Tests
          database.Stub(x => x.Connected).Return(true);
          database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
 
-         var benchmarkClient = new BenchmarkClient("Owner Slot 0", "Path");
+         var benchmarkClient = new BenchmarkClient("Owner Slot 00", "Path");
 
          // assert before act
          Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));

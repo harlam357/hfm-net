@@ -42,20 +42,19 @@ namespace HFM.Client.Converters
          }
 
          // ISO 8601
-         try
+         DateTime value;
+         if (DateTime.TryParse(inputString, CultureInfo.InvariantCulture, 
+             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out value))
          {
-            return DateTime.ParseExact(inputString, "s", CultureInfo.InvariantCulture);
+            return value;
          }
-         catch (FormatException)
-         { }
 
          // custom format for older v7 clients
-         try
+         if (DateTime.TryParseExact(inputString, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture,
+             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out value))
          {
-            return DateTime.ParseExact(inputString, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture);
+            return value;
          }
-         catch (FormatException)
-         { }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
             "Failed to parse date time value of '{0}'.", inputString));
@@ -66,15 +65,14 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
-         try
+         IPAddress value;
+         if (IPAddress.TryParse((string)input, out value))
          {
-            return IPAddress.Parse((string)input);
+            return value;
          }
-         catch (FormatException ex)
-         {
-            throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-               "Failed to parse IP address value of '{0}'.", input), ex);
-         }
+
+         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to parse IP address value of '{0}'.", input));
       }
    }
 
@@ -93,6 +91,8 @@ namespace HFM.Client.Converters
                return FahSlotStatus.Finishing;
             case "READY":
                return FahSlotStatus.Ready;
+            case "STOPPING":
+               return FahSlotStatus.Stopping;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
