@@ -36,6 +36,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slot-options.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -49,8 +50,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(true, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -59,6 +60,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\slot-options.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("LINUX", slotOptions.FahClientSubType);
@@ -72,8 +74,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -82,6 +84,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\slot-options.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -95,8 +98,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(30, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -105,6 +108,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options1.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -118,8 +122,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -128,6 +132,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options2.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("GPU", slotOptions.FahClientSubType);
@@ -141,8 +146,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -151,6 +156,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options3.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("GPU", slotOptions.FahClientSubType);
@@ -164,8 +170,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -174,6 +180,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slot-options1.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -187,8 +194,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(30, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -197,6 +204,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slot-options2.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("GPU", slotOptions.FahClientSubType);
@@ -210,8 +218,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(30, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -220,6 +228,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\slot-options1.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("STDCLI", slotOptions.FahClientSubType);
@@ -233,8 +242,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -243,6 +252,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\slot-options1.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -256,8 +266,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -266,6 +276,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\slot-options2.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("GPU", slotOptions.FahClientSubType);
@@ -279,8 +290,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(false, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -289,6 +300,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
@@ -302,8 +314,8 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(true, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
       }
 
       [Test]
@@ -312,6 +324,7 @@ namespace HFM.Client.Tests.DataTypes
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
          var slotOptions = new SlotOptions();
          slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("GPU", slotOptions.FahClientSubType);
@@ -325,8 +338,32 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, slotOptions.MaxUnits);
          Assert.AreEqual(15, slotOptions.Checkpoint);
          Assert.AreEqual(true, slotOptions.PauseOnStart);
-         Assert.AreEqual(null, slotOptions.GpuVendorId);
-         Assert.AreEqual(null, slotOptions.GpuDeviceId);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(null, slotOptions.GpuUsage);
+      }
+
+      [Test]
+      public void FillTest11()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
+         Assert.AreEqual("normal", slotOptions.FahClientType);
+         Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
+         Assert.AreEqual("SMP", slotOptions.FahClientSubType);
+         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(0, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(true, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(100, slotOptions.GpuUsage);
       }
 
       // ReSharper restore InconsistentNaming

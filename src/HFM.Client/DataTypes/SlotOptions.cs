@@ -29,6 +29,9 @@ namespace HFM.Client.DataTypes
    {
       #region Properties
 
+      [MessageProperty("cpus")]
+      public int? Cpus { get; set; }
+
       [MessageProperty("client-type")]
       public string FahClientType { get; set; }
 
@@ -70,14 +73,6 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("pause-on-start")]
       public bool? PauseOnStart { get; set; }
-
-      // Version 7.1.38 and prior
-      [MessageProperty("gpu-vendor-id")]
-      public string GpuVendorId { get; set; }
-
-      // Version 7.1.38 and prior
-      [MessageProperty("gpu-device-id")]
-      public string GpuDeviceId { get; set; }
 
       [MessageProperty("gpu-index")]
       public int? GpuIndex { get; set; }

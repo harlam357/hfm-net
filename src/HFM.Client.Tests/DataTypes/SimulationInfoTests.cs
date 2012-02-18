@@ -515,6 +515,40 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(String.Empty, simulationInfo.News);
       }
 
+      [Test]
+      public void FillTest11()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\simulation-info1.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("harlam357", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(7610, simulationInfo.Project);
+         Assert.AreEqual(192, simulationInfo.Run);
+         Assert.AreEqual(0, simulationInfo.Clone);
+         Assert.AreEqual(58, simulationInfo.Gen);
+         Assert.AreEqual(164, simulationInfo.CoreType);
+         Assert.AreEqual("GROGBA4", simulationInfo.Core);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", simulationInfo.Description);
+         Assert.AreEqual(2000, simulationInfo.TotalIterations);
+         Assert.AreEqual(1900, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("2012-02-17T21:48:22Z", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1330527046, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1331201830, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2012, 3, 8, 10, 17, 10), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(0, simulationInfo.RunTime);
+         Assert.AreEqual(null, simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(1379, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(0, 22, 59), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+      }
+
       // ReSharper restore InconsistentNaming
    }
 }
