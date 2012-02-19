@@ -221,6 +221,9 @@ namespace HFM.Forms.Controls
          }
 
          txtStatus.Visible = visible;
+         WaitingOnTextBox.Visible = visible;
+         AttemptsTextBox.Visible = visible;
+         NextAttemptTextBox.Visible = visible;
          txtCredit.Visible = visible;
          txtBeginDate.Visible = visible;
          txtEndDate.Visible = visible;

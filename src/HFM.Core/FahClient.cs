@@ -84,7 +84,15 @@ namespace HFM.Core
 
       private bool DefaultSlotActive
       {
-         get { return (!_fahClient.Connected || _slots.Count == 0); }
+         //get { return (!_fahClient.Connected || _slots.Count == 0); }
+
+         // based on only the slot count, otherwise if a connection is
+         // closed while the Slots property is being enumerated by a
+         // consumer the collection will be changed and the enumeration
+         // will fail.  if the connection is closed in the midle of an
+         // enumeration the slim lock will halt the call to RefreshSlots()
+         // until the Slots property is no longer being enumerated.
+         get { return _slots.Count == 0; }
       }
 
       public override IEnumerable<SlotModel> Slots
@@ -395,7 +403,7 @@ namespace HFM.Core
                UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, DataAggregator.CurrentUnitIndex);
 
                // Update the UnitInfoLogic if we have a current unit index
-               if (DataAggregator.CurrentUnitIndex != -1)
+               if (DataAggregator.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(DataAggregator.CurrentUnitIndex))
                {
                   slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
                }
