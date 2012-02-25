@@ -107,6 +107,11 @@ namespace HFM.Core
       event EventHandler MessageLevelChanged;
 
       /// <summary>
+      /// User/Team Statistics ID Changed
+      /// </summary>
+      event EventHandler StatsIdChanged;
+
+      /// <summary>
       /// PPD Decimal Places Setting Changed
       /// </summary>
       event EventHandler DecimalPlacesChanged;

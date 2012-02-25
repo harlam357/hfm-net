@@ -143,13 +143,13 @@ namespace HFM.Core
 
       private static ClientQueue BuildClientQueue(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
       {
-         var cq = new ClientQueue { ClientType = ClientType.FahClient, CurrentIndex = -1 };
-         foreach (var unit in unitCollection)
+         ClientQueue cq = null;
+         foreach (var unit in unitCollection.Where(unit => unit.Slot == slotId))
          {
-            if (unit.Slot != slotId)
+            // don't create a queue until we find a unit that matches this slot id
+            if (cq == null)
             {
-               // does not match requested slot
-               continue;
+               cq = new ClientQueue { ClientType = ClientType.FahClient, CurrentIndex = -1 };
             }
 
             var cqe = new ClientQueueEntry();
@@ -178,11 +178,14 @@ namespace HFM.Core
             }
          }
 
-         // if no running index and at least something in the queue
-         if (cq.CurrentIndex == -1 && cq.Count != 0)
+         if (cq != null)
          {
-            // take the minimum queue id
-            cq.CurrentIndex = cq.Keys.First();
+            // if no running index and at least something in the queue
+            if (cq.CurrentIndex == -1 && cq.Count != 0)
+            {
+               // take the minimum queue id
+               cq.CurrentIndex = cq.Keys.First();
+            }
          }
 
          return cq;

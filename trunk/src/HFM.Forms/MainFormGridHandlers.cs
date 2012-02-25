@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main UI DataGrid Handlers
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -368,7 +368,13 @@ namespace HFM.Forms
 
       private static void DrawText(string value, Color color, DataGridViewCellPaintingEventArgs e)
       {
-         TextRenderer.DrawText(e.Graphics, value, e.CellStyle.Font, new Point(e.CellBounds.X, e.CellBounds.Y + 2), color);
+         var font = new Font(e.CellStyle.Font.FontFamily, (float)(e.CellStyle.Font.Size * GetDpiScale(e.Graphics)));
+         TextRenderer.DrawText(e.Graphics, value, font, new Point(e.CellBounds.X, e.CellBounds.Y + 2), color);
+      }
+
+      private static double GetDpiScale(Graphics g)
+      {
+         return g.DpiX / 96;
       }
 
       /// <summary>
@@ -383,7 +389,7 @@ namespace HFM.Forms
       private void AutoSizeColumn(int columnIndex)
       {
          var font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
-         //Graphics g = dataGridView1.CreateGraphics();
+         Graphics g = dataGridView1.CreateGraphics();
 
          SizeF s;
          int width = 0;
@@ -392,8 +398,19 @@ namespace HFM.Forms
          {
             if (dataGridView1.Rows[i].Cells[columnIndex].Value != null)
             {
-               string formattedString = String.Empty;
                // ReSharper disable PossibleNullReferenceException
+               if (dataGridView1.Columns["Status"].Index == columnIndex)
+               {
+                  dataGridView1.Columns[columnIndex].Width = (int)(50 * GetDpiScale(g));
+                  return;
+               }
+               if (dataGridView1.Columns["Progress"].Index == columnIndex)
+               {
+                  dataGridView1.Columns[columnIndex].Width = (int)(60 * GetDpiScale(g));
+                  return;
+               }
+
+               string formattedString = String.Empty;
                if ((dataGridView1.Columns["TPF"].Index == columnIndex ||
                     dataGridView1.Columns["ETA"].Index == columnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
@@ -402,27 +419,22 @@ namespace HFM.Forms
                {
                   if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {
-                     formattedString =
-                        GetFormattedTpfString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
+                     formattedString = GetFormattedTpfString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                   else if (dataGridView1.Columns["ETA"].Index == columnIndex)
                   {
-                     formattedString =
-                        GetFormattedEtaString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
+                     formattedString = GetFormattedEtaString((TimeSpan)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                   else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex)
                   {
-                     formattedString =
-                        GetFormattedDownloadTimeString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
+                     formattedString = GetFormattedDownloadTimeString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                   else if (dataGridView1.Columns["Deadline"].Index == columnIndex)
                   {
-                     formattedString =
-                        GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
+                     formattedString = GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                }
-               else if (dataGridView1.Columns["ETA"].Index == columnIndex &&
-                        _prefs.Get<bool>(Preference.EtaDate))
+               else if (dataGridView1.Columns["ETA"].Index == columnIndex && _prefs.Get<bool>(Preference.EtaDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
                   formattedString = slotModel.ETADate.ToDateString();
@@ -445,7 +457,7 @@ namespace HFM.Forms
 
                if (width < s.Width)
                {
-                  width = (int)(s.Width + 3);
+                  width = (int)(s.Width + (int)(10 * GetDpiScale(g)));
                }
             }
          }

@@ -157,9 +157,6 @@ namespace HFM.Forms
          _prefs = prefs;
          _settingsManager = settingsManager;
 
-         // Hook-up Event Handlers
-         //_proteinCollection.Downloader.ProjectInfoUpdated += delegate { _retrievalLogic.QueueNewRetrieval(); };
-
          _clientDictionary.ClientEdited += HandleClientEdit;
          _clientDictionary.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
