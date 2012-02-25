@@ -739,6 +739,7 @@ namespace HFM.Preferences
          bool raiseDecimalPlacesChanged = false;
          bool raiseCalculateBonusChanged = false;
          bool raiseMessageLevelChanged = false;
+         bool raiseStatsIdChanged = false;
          
          try
          {
@@ -873,6 +874,10 @@ namespace HFM.Preferences
             Settings.Default.ReportEuePause = Get<bool>(Preference.ReportEuePause);
             Settings.Default.ReportHung = Get<bool>(Preference.ReportHung);
 
+            if (Settings.Default.EOCUserID != Get<int>(Preference.EocUserId))
+            {
+               raiseStatsIdChanged = true;
+            }
             Settings.Default.EOCUserID = Get<int>(Preference.EocUserId);
             Settings.Default.StanfordID = Get<string>(Preference.StanfordId);
             Settings.Default.TeamID = Get<int>(Preference.TeamId);
@@ -903,6 +908,7 @@ namespace HFM.Preferences
             if (raiseDecimalPlacesChanged) OnDecimalPlacesChanged(EventArgs.Empty);
             if (raiseCalculateBonusChanged) OnCalculateBonusChanged(EventArgs.Empty);
             if (raiseMessageLevelChanged) OnMessageLevelChanged(EventArgs.Empty);
+            if (raiseStatsIdChanged) OnStatsIdChanged(EventArgs.Empty);
 
             Settings.Default.Save();
          }
@@ -1049,6 +1055,18 @@ namespace HFM.Preferences
          if (MessageLevelChanged != null)
          {
             MessageLevelChanged(this, e);
+         }
+      }
+
+      /// <summary>
+      /// User/Team Statistics ID Changed
+      /// </summary>
+      public event EventHandler StatsIdChanged;
+      private void OnStatsIdChanged(EventArgs e)
+      {
+         if (StatsIdChanged != null)
+         {
+            StatsIdChanged(this, e);
          }
       }
 

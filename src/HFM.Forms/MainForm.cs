@@ -185,11 +185,11 @@ namespace HFM.Forms
       public void Initialize(MainPresenter presenter)
       {
          _presenter = presenter;
-         // Resize can be invoked when InitializeComponent() is call
-         // if the DPI is not set to Normal (96 DPI).  The frmMain_Resize
-         // method depends on _presenter being NOT NULL... wait to hook
+         // Resize can be invoked when InitializeComponent() is called
+         // if the DPI is not set to Normal (96 DPI).  The MainFormResize
+         // method depends on _presenter HAVING A VALUE.  Wait to hook
          // up this event until after _presenter has been set (above).
-         Resize += frmMain_Resize;
+         Resize += MainFormResize;
       
          #region Initialize Controls
 
@@ -209,6 +209,8 @@ namespace HFM.Forms
          BindToUserStatsDataModel();
          // Hook-up Status Label Event Handlers
          SubscribeToStatsLabelEvents();
+         // Hook-up Preferences Events
+         _prefs.StatsIdChanged += delegate { _userStatsDataModel.Refresh(); };
          
          #region Hook-up DataGridView Event Handlers for Mono
 
@@ -307,7 +309,7 @@ namespace HFM.Forms
          _presenter.ViewShown();
       }
 
-      private void frmMain_Resize(object sender, EventArgs e)
+      private void MainFormResize(object sender, EventArgs e)
       {
          _presenter.ViewResize();
       }
@@ -333,12 +335,12 @@ namespace HFM.Forms
 
       public void DisableViewResizeEvent()
       {
-         Resize -= frmMain_Resize;
+         Resize -= MainFormResize;
       }
 
       public void EnableViewResizeEvent()
       {
-         Resize += frmMain_Resize;
+         Resize += MainFormResize;
       }
 
       public void SetQueueButtonText(string text)
