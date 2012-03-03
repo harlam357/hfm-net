@@ -122,5 +122,14 @@ namespace HFM.Forms
       }
 
       #endregion
+
+      #region Graphics
+
+      public static double GetDpiScale(this Graphics g)
+      {
+         return g.DpiX / 96;
+      }
+
+      #endregion
    }
 }

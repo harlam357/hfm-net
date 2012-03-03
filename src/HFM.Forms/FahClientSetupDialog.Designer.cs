@@ -38,6 +38,7 @@
          this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
          this.SetupTabControl = new System.Windows.Forms.TabControl();
          this.ConnectionTabPage = new System.Windows.Forms.TabPage();
+         this.SlotsDataGridView = new System.Windows.Forms.DataGridView();
          this.ConnectButton = new HFM.Forms.Controls.ButtonWrapper();
          this.AddressPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.PasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
@@ -47,52 +48,48 @@
          this.AddressTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.ClientNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.SlotsTabPage = new System.Windows.Forms.TabPage();
-         this.SlotsDataGridView = new System.Windows.Forms.DataGridView();
-         this.EditButton = new HFM.Forms.Controls.ButtonWrapper();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
          this.SetupTabControl.SuspendLayout();
          this.ConnectionTabPage.SuspendLayout();
-         this.SlotsTabPage.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.SlotsDataGridView)).BeginInit();
          this.SuspendLayout();
          // 
          // DummyTextBox
          // 
-         this.DummyTextBox.Location = new System.Drawing.Point(331, 324);
+         this.DummyTextBox.Location = new System.Drawing.Point(331, 298);
          this.DummyTextBox.Name = "DummyTextBox";
          this.DummyTextBox.Size = new System.Drawing.Size(49, 20);
-         this.DummyTextBox.TabIndex = 26;
+         this.DummyTextBox.TabIndex = 6;
          // 
          // ClientTimeOffsetLabel
          // 
          this.ClientTimeOffsetLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.ClientTimeOffsetLabel.AutoSize = true;
-         this.ClientTimeOffsetLabel.Location = new System.Drawing.Point(64, 355);
+         this.ClientTimeOffsetLabel.Location = new System.Drawing.Point(64, 331);
          this.ClientTimeOffsetLabel.Name = "ClientTimeOffsetLabel";
          this.ClientTimeOffsetLabel.Size = new System.Drawing.Size(136, 13);
-         this.ClientTimeOffsetLabel.TabIndex = 23;
+         this.ClientTimeOffsetLabel.TabIndex = 3;
          this.ClientTimeOffsetLabel.Text = "Client Time Offset (Minutes)";
          this.ClientTimeOffsetLabel.Visible = false;
          // 
          // ClientTimeOffsetUpDown
          // 
          this.ClientTimeOffsetUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.ClientTimeOffsetUpDown.Location = new System.Drawing.Point(8, 352);
+         this.ClientTimeOffsetUpDown.Location = new System.Drawing.Point(8, 328);
          this.ClientTimeOffsetUpDown.Name = "ClientTimeOffsetUpDown";
          this.ClientTimeOffsetUpDown.Size = new System.Drawing.Size(54, 20);
-         this.ClientTimeOffsetUpDown.TabIndex = 22;
+         this.ClientTimeOffsetUpDown.TabIndex = 2;
          this.ClientTimeOffsetUpDown.Visible = false;
          // 
          // ClientNoUtcOffsetCheckBox
          // 
          this.ClientNoUtcOffsetCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.ClientNoUtcOffsetCheckBox.AutoSize = true;
-         this.ClientNoUtcOffsetCheckBox.Location = new System.Drawing.Point(12, 326);
+         this.ClientNoUtcOffsetCheckBox.Location = new System.Drawing.Point(12, 302);
          this.ClientNoUtcOffsetCheckBox.Name = "ClientNoUtcOffsetCheckBox";
          this.ClientNoUtcOffsetCheckBox.Size = new System.Drawing.Size(144, 17);
-         this.ClientNoUtcOffsetCheckBox.TabIndex = 21;
+         this.ClientNoUtcOffsetCheckBox.TabIndex = 1;
          this.ClientNoUtcOffsetCheckBox.Text = "Client has no UTC offset.";
          this.ClientNoUtcOffsetCheckBox.UseVisualStyleBackColor = true;
          this.ClientNoUtcOffsetCheckBox.Visible = false;
@@ -102,20 +99,20 @@
          this.DialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.DialogCancelButton.CausesValidation = false;
          this.DialogCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.DialogCancelButton.Location = new System.Drawing.Point(304, 350);
+         this.DialogCancelButton.Location = new System.Drawing.Point(304, 326);
          this.DialogCancelButton.Name = "DialogCancelButton";
          this.DialogCancelButton.Size = new System.Drawing.Size(81, 25);
-         this.DialogCancelButton.TabIndex = 25;
+         this.DialogCancelButton.TabIndex = 5;
          this.DialogCancelButton.Text = "Cancel";
          this.DialogCancelButton.UseVisualStyleBackColor = true;
          // 
          // DialogOkButton
          // 
          this.DialogOkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.DialogOkButton.Location = new System.Drawing.Point(212, 350);
+         this.DialogOkButton.Location = new System.Drawing.Point(212, 326);
          this.DialogOkButton.Name = "DialogOkButton";
          this.DialogOkButton.Size = new System.Drawing.Size(81, 25);
-         this.DialogOkButton.TabIndex = 24;
+         this.DialogOkButton.TabIndex = 4;
          this.DialogOkButton.Text = "OK";
          this.DialogOkButton.UseVisualStyleBackColor = true;
          this.DialogOkButton.Click += new System.EventHandler(this.DialogOkButtonClick);
@@ -123,15 +120,15 @@
          // SetupTabControl
          // 
          this.SetupTabControl.Controls.Add(this.ConnectionTabPage);
-         this.SetupTabControl.Controls.Add(this.SlotsTabPage);
          this.SetupTabControl.Location = new System.Drawing.Point(8, 12);
          this.SetupTabControl.Name = "SetupTabControl";
          this.SetupTabControl.SelectedIndex = 0;
-         this.SetupTabControl.Size = new System.Drawing.Size(377, 306);
-         this.SetupTabControl.TabIndex = 27;
+         this.SetupTabControl.Size = new System.Drawing.Size(377, 284);
+         this.SetupTabControl.TabIndex = 0;
          // 
          // ConnectionTabPage
          // 
+         this.ConnectionTabPage.Controls.Add(this.SlotsDataGridView);
          this.ConnectionTabPage.Controls.Add(this.ConnectButton);
          this.ConnectionTabPage.Controls.Add(this.AddressPortTextBox);
          this.ConnectionTabPage.Controls.Add(this.PasswordTextBox);
@@ -144,18 +141,33 @@
          this.ConnectionTabPage.Location = new System.Drawing.Point(4, 22);
          this.ConnectionTabPage.Name = "ConnectionTabPage";
          this.ConnectionTabPage.Padding = new System.Windows.Forms.Padding(3);
-         this.ConnectionTabPage.Size = new System.Drawing.Size(369, 280);
+         this.ConnectionTabPage.Size = new System.Drawing.Size(369, 258);
          this.ConnectionTabPage.TabIndex = 0;
          this.ConnectionTabPage.Text = "Connection";
          this.ConnectionTabPage.UseVisualStyleBackColor = true;
          // 
+         // SlotsDataGridView
+         // 
+         this.SlotsDataGridView.AllowUserToAddRows = false;
+         this.SlotsDataGridView.AllowUserToDeleteRows = false;
+         this.SlotsDataGridView.AllowUserToResizeRows = false;
+         this.SlotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.SlotsDataGridView.Location = new System.Drawing.Point(19, 102);
+         this.SlotsDataGridView.MultiSelect = false;
+         this.SlotsDataGridView.Name = "SlotsDataGridView";
+         this.SlotsDataGridView.ReadOnly = true;
+         this.SlotsDataGridView.RowHeadersVisible = false;
+         this.SlotsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+         this.SlotsDataGridView.Size = new System.Drawing.Size(331, 137);
+         this.SlotsDataGridView.TabIndex = 9;
+         // 
          // ConnectButton
          // 
-         this.ConnectButton.Location = new System.Drawing.Point(269, 240);
+         this.ConnectButton.Location = new System.Drawing.Point(247, 69);
          this.ConnectButton.Name = "ConnectButton";
-         this.ConnectButton.Size = new System.Drawing.Size(81, 25);
-         this.ConnectButton.TabIndex = 28;
-         this.ConnectButton.Text = "Connect";
+         this.ConnectButton.Size = new System.Drawing.Size(103, 25);
+         this.ConnectButton.TabIndex = 8;
+         this.ConnectButton.Text = "Test Connection";
          this.ConnectButton.UseVisualStyleBackColor = true;
          this.ConnectButton.Click += new System.EventHandler(this.ConnectButtonClick);
          // 
@@ -172,7 +184,7 @@
          this.AddressPortTextBox.Location = new System.Drawing.Point(289, 44);
          this.AddressPortTextBox.Name = "AddressPortTextBox";
          this.AddressPortTextBox.Size = new System.Drawing.Size(61, 20);
-         this.AddressPortTextBox.TabIndex = 10;
+         this.AddressPortTextBox.TabIndex = 5;
          this.AddressPortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // PasswordTextBox
@@ -187,8 +199,8 @@
          this.PasswordTextBox.ErrorToolTipText = "";
          this.PasswordTextBox.Location = new System.Drawing.Point(99, 70);
          this.PasswordTextBox.Name = "PasswordTextBox";
-         this.PasswordTextBox.Size = new System.Drawing.Size(251, 20);
-         this.PasswordTextBox.TabIndex = 9;
+         this.PasswordTextBox.Size = new System.Drawing.Size(139, 20);
+         this.PasswordTextBox.TabIndex = 7;
          this.PasswordTextBox.UseSystemPasswordChar = true;
          this.PasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
@@ -198,7 +210,7 @@
          this.PasswordLabel.Location = new System.Drawing.Point(16, 73);
          this.PasswordLabel.Name = "PasswordLabel";
          this.PasswordLabel.Size = new System.Drawing.Size(56, 13);
-         this.PasswordLabel.TabIndex = 8;
+         this.PasswordLabel.TabIndex = 6;
          this.PasswordLabel.Text = "Password:";
          // 
          // AddressPortLabel
@@ -207,7 +219,7 @@
          this.AddressPortLabel.Location = new System.Drawing.Point(254, 47);
          this.AddressPortLabel.Name = "AddressPortLabel";
          this.AddressPortLabel.Size = new System.Drawing.Size(29, 13);
-         this.AddressPortLabel.TabIndex = 6;
+         this.AddressPortLabel.TabIndex = 4;
          this.AddressPortLabel.Text = "Port:";
          // 
          // AddressLabel
@@ -216,7 +228,7 @@
          this.AddressLabel.Location = new System.Drawing.Point(16, 47);
          this.AddressLabel.Name = "AddressLabel";
          this.AddressLabel.Size = new System.Drawing.Size(48, 13);
-         this.AddressLabel.TabIndex = 4;
+         this.AddressLabel.TabIndex = 2;
          this.AddressLabel.Text = "Address:";
          // 
          // AddressTextBox
@@ -232,7 +244,7 @@
          this.AddressTextBox.Location = new System.Drawing.Point(99, 44);
          this.AddressTextBox.Name = "AddressTextBox";
          this.AddressTextBox.Size = new System.Drawing.Size(139, 20);
-         this.AddressTextBox.TabIndex = 5;
+         this.AddressTextBox.TabIndex = 3;
          this.AddressTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
          // 
          // ClientNameLabel
@@ -241,7 +253,7 @@
          this.ClientNameLabel.Location = new System.Drawing.Point(16, 21);
          this.ClientNameLabel.Name = "ClientNameLabel";
          this.ClientNameLabel.Size = new System.Drawing.Size(67, 13);
-         this.ClientNameLabel.TabIndex = 2;
+         this.ClientNameLabel.TabIndex = 0;
          this.ClientNameLabel.Text = "Client Name:";
          // 
          // ClientNameTextBox
@@ -260,51 +272,14 @@
          this.ClientNameTextBox.MaxLength = 100;
          this.ClientNameTextBox.Name = "ClientNameTextBox";
          this.ClientNameTextBox.Size = new System.Drawing.Size(251, 20);
-         this.ClientNameTextBox.TabIndex = 3;
+         this.ClientNameTextBox.TabIndex = 1;
          this.ClientNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
-         // 
-         // SlotsTabPage
-         // 
-         this.SlotsTabPage.Controls.Add(this.SlotsDataGridView);
-         this.SlotsTabPage.Controls.Add(this.EditButton);
-         this.SlotsTabPage.Location = new System.Drawing.Point(4, 22);
-         this.SlotsTabPage.Name = "SlotsTabPage";
-         this.SlotsTabPage.Padding = new System.Windows.Forms.Padding(3);
-         this.SlotsTabPage.Size = new System.Drawing.Size(369, 280);
-         this.SlotsTabPage.TabIndex = 1;
-         this.SlotsTabPage.Text = "Slots";
-         this.SlotsTabPage.UseVisualStyleBackColor = true;
-         // 
-         // SlotsDataGridView
-         // 
-         this.SlotsDataGridView.AllowUserToAddRows = false;
-         this.SlotsDataGridView.AllowUserToDeleteRows = false;
-         this.SlotsDataGridView.AllowUserToResizeRows = false;
-         this.SlotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.SlotsDataGridView.Location = new System.Drawing.Point(16, 18);
-         this.SlotsDataGridView.MultiSelect = false;
-         this.SlotsDataGridView.Name = "SlotsDataGridView";
-         this.SlotsDataGridView.ReadOnly = true;
-         this.SlotsDataGridView.RowHeadersVisible = false;
-         this.SlotsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-         this.SlotsDataGridView.Size = new System.Drawing.Size(334, 213);
-         this.SlotsDataGridView.TabIndex = 30;
-         // 
-         // EditButton
-         // 
-         this.EditButton.Location = new System.Drawing.Point(269, 240);
-         this.EditButton.Name = "EditButton";
-         this.EditButton.Size = new System.Drawing.Size(81, 25);
-         this.EditButton.TabIndex = 29;
-         this.EditButton.Text = "Edit";
-         this.EditButton.UseVisualStyleBackColor = true;
-         this.EditButton.Visible = false;
          // 
          // FahClientSetupDialog
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(392, 385);
+         this.ClientSize = new System.Drawing.Size(392, 361);
          this.Controls.Add(this.SetupTabControl);
          this.Controls.Add(this.DummyTextBox);
          this.Controls.Add(this.ClientTimeOffsetLabel);
@@ -325,7 +300,6 @@
          this.SetupTabControl.ResumeLayout(false);
          this.ConnectionTabPage.ResumeLayout(false);
          this.ConnectionTabPage.PerformLayout();
-         this.SlotsTabPage.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.SlotsDataGridView)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
@@ -342,7 +316,6 @@
       private Controls.ButtonWrapper DialogOkButton;
       private System.Windows.Forms.TabControl SetupTabControl;
       private System.Windows.Forms.TabPage ConnectionTabPage;
-      private System.Windows.Forms.TabPage SlotsTabPage;
       private Controls.LabelWrapper ClientNameLabel;
       private harlam357.Windows.Forms.ValidatingTextBox ClientNameTextBox;
       private Controls.LabelWrapper AddressLabel;
@@ -353,7 +326,6 @@
       private harlam357.Windows.Forms.ValidatingTextBox AddressPortTextBox;
       private System.Windows.Forms.ToolTip toolTip1;
       private Controls.ButtonWrapper ConnectButton;
-      private Controls.ButtonWrapper EditButton;
       private System.Windows.Forms.DataGridView SlotsDataGridView;
 
    }

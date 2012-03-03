@@ -368,13 +368,7 @@ namespace HFM.Forms
 
       private static void DrawText(string value, Color color, DataGridViewCellPaintingEventArgs e)
       {
-         var font = new Font(e.CellStyle.Font.FontFamily, (float)(e.CellStyle.Font.Size * GetDpiScale(e.Graphics)));
-         TextRenderer.DrawText(e.Graphics, value, font, new Point(e.CellBounds.X, e.CellBounds.Y + 2), color);
-      }
-
-      private static double GetDpiScale(Graphics g)
-      {
-         return g.DpiX / 96;
+         TextRenderer.DrawText(e.Graphics, value, e.CellStyle.Font, new Point(e.CellBounds.X, e.CellBounds.Y + 2), color);
       }
 
       /// <summary>
@@ -401,12 +395,12 @@ namespace HFM.Forms
                // ReSharper disable PossibleNullReferenceException
                if (dataGridView1.Columns["Status"].Index == columnIndex)
                {
-                  dataGridView1.Columns[columnIndex].Width = (int)(50 * GetDpiScale(g));
+                  dataGridView1.Columns[columnIndex].Width = (int)(50 * g.GetDpiScale());
                   return;
                }
                if (dataGridView1.Columns["Progress"].Index == columnIndex)
                {
-                  dataGridView1.Columns[columnIndex].Width = (int)(60 * GetDpiScale(g));
+                  dataGridView1.Columns[columnIndex].Width = (int)(60 * g.GetDpiScale());
                   return;
                }
 
@@ -457,7 +451,7 @@ namespace HFM.Forms
 
                if (width < s.Width)
                {
-                  width = (int)(s.Width + (int)(10 * GetDpiScale(g)));
+                  width = (int)(s.Width + (int)(10 * g.GetDpiScale()));
                }
             }
          }

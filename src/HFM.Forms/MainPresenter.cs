@@ -831,7 +831,7 @@ namespace HFM.Forms
       {
          using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
          {
-            dialog.SettingsModel = new FahClientSettingsModel();
+            dialog.SettingsModel = new FahClientSettingsModel(_view);
             while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
             {
                var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
