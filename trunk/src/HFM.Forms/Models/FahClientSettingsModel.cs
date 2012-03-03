@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 
 using HFM.Client.DataTypes;
 using HFM.Core;
@@ -28,8 +29,12 @@ namespace HFM.Forms.Models
 {
    public class FahClientSettingsModel : INotifyPropertyChanged
    {
-      public FahClientSettingsModel()
+      private readonly ISynchronizeInvoke _syncObject;
+
+      public FahClientSettingsModel(ISynchronizeInvoke syncObject)
       {
+         _syncObject = syncObject;
+
          _slots = new List<FahClientSettingsSlotModel>();
       }
 
@@ -138,10 +143,22 @@ namespace HFM.Forms.Models
 
       public void RefreshSlots(SlotCollection slots)
       {
+         if (_syncObject.InvokeRequired)
+         {
+            _syncObject.BeginInvoke(new Action<SlotCollection>(RefreshSlots), new object[] { slots });
+            return;
+         }
+
          _slots.Clear();
          foreach (var slot in slots)
          {
-            _slots.Add(new FahClientSettingsSlotModel { ID = slot.Id, SlotType = slot.SlotOptions.FahClientSubTypeEnum.ToString() });
+            _slots.Add(new FahClientSettingsSlotModel
+                       {
+                          ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.Id), 
+                          SlotType = slot.SlotOptions.FahClientSubTypeEnum.ToString(),
+                          ClientType = slot.SlotOptions.FahClientTypeEnum.ToString(),
+                          MaxPacketSize = slot.SlotOptions.MaxPacketSizeEnum.ToString()
+                       });
          }
          OnPropertyChanged("Slots");
       }
@@ -163,8 +180,12 @@ namespace HFM.Forms.Models
 
    public class FahClientSettingsSlotModel
    {
-      public int ID { get; set; }
+      public string ID { get; set; }
 
       public string SlotType { get; set; }
+
+      public string ClientType { get; set; }
+
+      public string MaxPacketSize { get; set; }
    }
 }

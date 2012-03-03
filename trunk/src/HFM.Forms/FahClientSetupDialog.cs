@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FAH Client Setup Dialog
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
@@ -68,8 +69,26 @@ namespace HFM.Forms
 
          InitializeComponent();
 
+         SetupDataGridViewColumns(SlotsDataGridView);
          ClientTimeOffsetUpDown.Minimum = Constants.MinOffsetMinutes;
          ClientTimeOffsetUpDown.Maximum = Constants.MaxOffsetMinutes;
+      }
+
+      private static void SetupDataGridViewColumns(DataGridView dgv)
+      {
+         // ReSharper disable PossibleNullReferenceException
+         dgv.Columns.Add("ID", "ID");
+         dgv.Columns["ID"].DataPropertyName = "ID";
+         dgv.Columns["ID"].Width = 48;
+         dgv.Columns.Add("SlotType", "Slot Type");
+         dgv.Columns["SlotType"].DataPropertyName = "SlotType";
+         dgv.Columns["SlotType"].Width = 100;
+         dgv.Columns.Add("ClientType", "Client Type");
+         dgv.Columns["ClientType"].DataPropertyName = "ClientType";
+         dgv.Columns["ClientType"].Width = 90;
+         dgv.Columns.Add("MaxPacketSize", "Packet Size");
+         dgv.Columns["MaxPacketSize"].DataPropertyName = "MaxPacketSize";
+         dgv.Columns["MaxPacketSize"].Width = 90;
       }
 
       public void AttachPresenter(FahClientSetupPresenter presenter)
