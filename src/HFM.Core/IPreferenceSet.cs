@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HFM.Core
@@ -53,7 +54,15 @@ namespace HFM.Core
       /// </summary>
       Uri StanfordUserUrl { get; }
 
+      /// <summary>
+      /// Process arguments.
+      /// </summary>
+      /// <param name="arguments">Collection of arguments to process.</param>
+      void Process(IEnumerable<Argument> arguments);
+
       void Reset();
+
+      void Initialize();
 
       /// <summary>
       /// Get a Preference of Type T

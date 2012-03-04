@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - HFM Container Installer
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,11 +32,6 @@ namespace HFM.Configuration
          // BootStrapper - Singleton
          container.Register(
             Component.For<BootStrapper>());
-
-         // ArgumentProcessor - Transient
-         container.Register(
-            Component.For<ArgumentProcessor>()
-               .LifeStyle.Transient);
       }
 
       #endregion

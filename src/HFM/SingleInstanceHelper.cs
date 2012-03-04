@@ -105,10 +105,13 @@ namespace HFM
          {
             if (disposing)
             {
-               if (_mutex != null)
-               {
-                  _mutex.Close();
-               }
+               
+            }
+
+            // Mutex is an unmanaged resource
+            if (_mutex != null)
+            {
+               _mutex.Close();
             }
          }
 

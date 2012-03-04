@@ -22,11 +22,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -127,17 +129,32 @@ namespace HFM.Preferences
          set { _logger = value; }
       }
 
-      public PreferenceSet()
+      #region Implementation
+
+      public void Process(IEnumerable<Argument> arguments)
       {
-         Upgrade();
-         // 
-         SetupDictionary();
-         // Issue 176
-         Load();
+         var argument = arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.ResetPrefs));
+         if (argument != null)
+         {
+            try
+            {
+               Reset();
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+               if (!String.IsNullOrEmpty(ex.Filename))
+               {
+                  File.Delete(ex.Filename);
+                  Reset();
+               }
+               else
+               {
+                  throw;
+               }
+            }
+         }
       }
 
-      #region Implementation
-      
       public void Reset()
       {
          _logger.Debug("Resetting user preferences...");
@@ -156,6 +173,15 @@ namespace HFM.Preferences
          }
       }
       
+      public void Initialize()
+      {
+         Upgrade();
+         // 
+         SetupDictionary();
+         // Issue 176
+         Load();
+      }
+
       /// <summary>
       /// Get a Preference of Type T
       /// </summary>

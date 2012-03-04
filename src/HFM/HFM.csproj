@@ -145,7 +145,6 @@
     <Compile Include="..\ExeAssemblyVersion.cs">
       <Link>ExeAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ArgumentProcessor.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Program.cs" />
