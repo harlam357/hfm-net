@@ -34,13 +34,12 @@ namespace HFM
 {
    internal sealed class BootStrapper
    {
+      private ILogger _logger;
       private readonly IPreferenceSet _prefs;
-      private readonly ILogger _logger;
 
-      public BootStrapper(IPreferenceSet prefs, ILogger logger)
+      public BootStrapper(IPreferenceSet prefs)
       {
          _prefs = prefs;
-         _logger = logger;
       }
 
       public void Strap(string[] args)
@@ -63,14 +62,19 @@ namespace HFM
 
          #region Process Arguments
          
-         var processor = ServiceLocator.Resolve<ArgumentProcessor>();
-         if (!processor.Process(arguments))
-         {
-            // arguments specified to exit the application
-            return;
-         }
+         _prefs.Process(arguments);
 
          #endregion
+
+         try
+         {
+            _prefs.Initialize();
+         }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, "User preferences failed to initialize.  The user.config file is likely corrupt.  Start with the '/r' switch to reset the user preferences.");
+            return;
+         }
 
          // Issue 180 - Restore the already running instance to the screen.
          using (var singleInstance = new SingleInstanceHelper())
@@ -98,6 +102,7 @@ namespace HFM
             // create messages view (hooks into logging messages)
             ServiceLocator.Resolve<IMessagesView>();
             // write log header
+            _logger = ServiceLocator.Resolve<ILogger>();
             _logger.Info(String.Empty);
             _logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
             _logger.Info(String.Empty);

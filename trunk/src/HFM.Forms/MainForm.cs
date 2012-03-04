@@ -276,7 +276,10 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            BeginInvoke(new Action<string[]>(SecondInstanceStarted), args);
+            // make sure to use new object[] for the params array.  not doing so will cause
+            // the invoke to use the args array as the params array which can easily cause
+            // a TargetParameterCountException
+            BeginInvoke(new Action<string[]>(SecondInstanceStarted), new object[] { args });
             return;
          }
 
