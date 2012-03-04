@@ -258,18 +258,18 @@ namespace HFM.Forms
 
                #region Draw the bottom grid line
                
-               if (Core.Application.IsRunningOnMono)
-               {
-                  e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                      e.CellBounds.Top, e.CellBounds.Right,
-                                      e.CellBounds.Top);
-               }
-               else
-               {
+               //if (Core.Application.IsRunningOnMono)
+               //{
+               //   e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+               //                       e.CellBounds.Top, e.CellBounds.Right,
+               //                       e.CellBounds.Top);
+               //}
+               //else
+               //{
                   e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
                                       e.CellBounds.Bottom - 1, e.CellBounds.Right,
                                       e.CellBounds.Bottom - 1);
-               }
+               //}
 
                #endregion
 

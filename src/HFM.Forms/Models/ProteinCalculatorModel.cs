@@ -21,12 +21,24 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+using Castle.Core.Logging;
+
 using HFM.Core;
 
 namespace HFM.Forms.Models
 {
    public sealed class ProteinCalculatorModel : INotifyPropertyChanged
    {
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         [CoverageExclude]
+         get { return _logger; }
+         [CoverageExclude]
+         set { _logger = value; }
+      }
+
       private readonly IPreferenceSet _prefs;
       private readonly IProteinDictionary _proteinDictionary;
 
@@ -38,6 +50,7 @@ namespace HFM.Forms.Models
 
       public void Calculate()
       {
+         _logger.Debug("Selected Project: {0}", SelectedProject);
          var protein = _proteinDictionary[SelectedProject].DeepClone();
          if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
          if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
