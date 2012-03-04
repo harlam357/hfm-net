@@ -125,7 +125,7 @@ namespace HFM.Forms
                                           {
                                              //_view.DataGridView.FreezeSelectionChanged = false;
                                              DisplaySelectedSlotData();
-                                             _view.RefreshControlsWithTotalsData(_clientDictionary.Slots.GetSlotTotals());
+                                             _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
                                           };
          _gridModel.SelectedSlotChanged += (sender, e) =>
                                            {

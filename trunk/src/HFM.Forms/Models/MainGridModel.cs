@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -97,13 +98,17 @@ namespace HFM.Forms.Models
       private readonly SlotModelSortableBindingList _slotList;
       public IEnumerable<SlotModel> SlotCollection
       {
-         // ToList() to make a "copy" of the current list.
+         // ToArray() to make a "copy" of the current list.
          // The value returned here is used by web generation
          // and if the collection changes the web generation
          // will not be able to enumerate the collection...
          // possibly use a lock here and RefreshSlotList()
          // if this doesn't work.
-         get { return _slotList.ToList().AsReadOnly(); }
+         get { return _slotList.ToArray(); }
+      }
+      public SlotTotals SlotTotals
+      {
+         get { return _slotList.GetSlotTotals(); }
       }
       private readonly BindingSource _bindingSource;
       public BindingSource BindingSource
@@ -146,16 +151,10 @@ namespace HFM.Forms.Models
          _clientDictionary.ClientDataInvalidated += delegate { ResetBindings(); };
       }
 
-      private bool _resetInProgress;
+      private volatile bool _resetInProgress;
 
       private void ResetBindings()
       {
-         if (_syncObject.InvokeRequired)
-         {
-            _syncObject.BeginInvoke(new MethodInvoker(ResetBindings), null);
-            return;
-         }
-
          // this check appears to fix the duplicate slot issue.
          // every time this condition is met and the return
          // statement is removed then subsequently in 
@@ -169,24 +168,7 @@ namespace HFM.Forms.Models
          _resetInProgress = true;
          try
          {
-            OnBeforeResetBindings(EventArgs.Empty);
-            // halt binding source updates
-            _bindingSource.RaiseListChangedEvents = false;
-            // refresh the underlying binding list
-            RefreshSlotList();
-            // sort the list
-            _bindingSource.Sort = null;
-            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-            // reset selected slot
-            ResetSelectedSlot();
-            // find duplicates
-            FindDuplicates();
-            // enable binding source updates
-            _bindingSource.RaiseListChangedEvents = true;
-            // reset AFTER RaiseListChangedEvents is enabled
-            _bindingSource.ResetBindings(false);
-            // restore binding source updates
-            OnAfterResetBindings(EventArgs.Empty);
+            ResetBindingsInternal();
          }
          finally
          {
@@ -194,13 +176,43 @@ namespace HFM.Forms.Models
          }
       }
 
+      private void ResetBindingsInternal()
+      {
+         if (_syncObject.InvokeRequired)
+         {
+            _syncObject.BeginInvoke(new MethodInvoker(ResetBindings), null);
+            return;
+         }
+         
+         OnBeforeResetBindings(EventArgs.Empty);
+         // halt binding source updates
+         _bindingSource.RaiseListChangedEvents = false;
+         // get slots from the dictionary
+         var slots = _clientDictionary.Slots;
+         // refresh the underlying binding list
+         RefreshSlotList(slots);
+         // sort the list
+         _bindingSource.Sort = null;
+         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
+         // reset selected slot
+         ResetSelectedSlot();
+         // find duplicates
+         slots.FindDuplicates();
+         // enable binding source updates
+         _bindingSource.RaiseListChangedEvents = true;
+         // reset AFTER RaiseListChangedEvents is enabled
+         _bindingSource.ResetBindings(false);
+         // restore binding source updates
+         OnAfterResetBindings(EventArgs.Empty);
+      }
+
       /// <summary>
       /// Refresh the SlotModel list from the ClientDictionary.
       /// </summary>
-      private void RefreshSlotList()
+      private void RefreshSlotList(IEnumerable<SlotModel> slots)
       {
          _slotList.Clear();
-         foreach (var slot in _clientDictionary.Slots)
+         foreach (var slot in slots)
          {
             _slotList.Add(slot);
          }
@@ -230,11 +242,6 @@ namespace HFM.Forms.Models
          {
             _bindingSource.Position = row;
          }
-      }
-
-      public void FindDuplicates()
-      {
-         _clientDictionary.Slots.FindDuplicates();
       }
 
       private void OnBeforeResetBindings(EventArgs e)
