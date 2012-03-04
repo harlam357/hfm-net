@@ -108,7 +108,7 @@ namespace HFM.Core
                   // return default slot (for grid binding)
                   return new[] { new SlotModel { Settings = _settings, Prefs = Prefs, Status = SlotStatus.Offline } };
                }
-               return _slots.AsReadOnly();
+               return _slots.ToArray();
             }
             finally
             {

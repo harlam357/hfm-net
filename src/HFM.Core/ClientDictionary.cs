@@ -224,7 +224,7 @@ namespace HFM.Core
             _cacheLock.EnterReadLock();
             try
             {
-               return _clientDictionary.Values.SelectMany(client => client.Slots); // .ToList().AsReadOnly(); }
+               return _clientDictionary.Values.SelectMany(client => client.Slots).ToArray();
             }
             finally
             {
