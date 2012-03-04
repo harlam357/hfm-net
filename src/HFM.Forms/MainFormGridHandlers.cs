@@ -256,7 +256,7 @@ namespace HFM.Forms
                
                #endregion
 
-               #region Draw the bottom grid line
+               #region Draw the grid lines
 
                if (Core.Application.IsRunningOnMono)
                {
@@ -265,8 +265,8 @@ namespace HFM.Forms
                                       e.CellBounds.Top);
 
                   e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                                      e.CellBounds.Bottom, e.CellBounds.Right,
-                                      e.CellBounds.Bottom);
+                                      e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                                      e.CellBounds.Bottom - 1);
                }
                else
                {

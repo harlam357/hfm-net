@@ -93,7 +93,14 @@ namespace HFM.Forms
 
       public static void BindText(this Control control, object dataSource, string dataMember)
       {
-         control.DataBindings.Add("Text", dataSource, dataMember, false, DataSourceUpdateMode.OnValidation);
+         if (Core.Application.IsRunningOnMono)
+         {
+            control.DataBindings.Add("Text", dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
+         }
+         else
+         {
+            control.DataBindings.Add("Text", dataSource, dataMember, false, DataSourceUpdateMode.OnValidation);
+         }
       }
 
       //public static void BindText(this Control control, object dataSource, string dataMember, DataSourceUpdateMode updateMode)
