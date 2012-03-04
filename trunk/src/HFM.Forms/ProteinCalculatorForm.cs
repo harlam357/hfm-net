@@ -20,6 +20,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -38,8 +39,10 @@ namespace HFM.Forms
 
       private void DataBind()
       {
-         ProjectComboBox.DataSource = _model.Projects.ToList();
-         ProjectComboBox.DataBindings.Add("SelectedItem", _model, "SelectedProject", false, DataSourceUpdateMode.OnPropertyChanged);
+         ProjectComboBox.DisplayMember = "DisplayMember";
+         ProjectComboBox.ValueMember = "ValueMember";
+         ProjectComboBox.DataSource = _model.Projects.Select(x => new ListItem { DisplayMember = x.ToString(), ValueMember = x }).ToList();
+         ProjectComboBox.DataBindings.Add("SelectedValue", _model, "SelectedProject", false, DataSourceUpdateMode.OnPropertyChanged);
 
          TimePerFrameMinuteTextBox.BindText(_model, "TpfMinutes");
          TimePerFrameSecondTextBox.BindText(_model, "TpfSeconds");
