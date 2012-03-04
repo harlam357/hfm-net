@@ -177,7 +177,7 @@
          this.AddressPortTextBox.DoubleBuffered = true;
          this.AddressPortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
          this.AddressPortTextBox.ErrorState = false;
-         this.AddressPortTextBox.ErrorToolTip = null;
+         this.AddressPortTextBox.ErrorToolTip = this.toolTip1;
          this.AddressPortTextBox.ErrorToolTipDuration = 5000;
          this.AddressPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.AddressPortTextBox.ErrorToolTipText = "";
@@ -193,7 +193,7 @@
          this.PasswordTextBox.DoubleBuffered = true;
          this.PasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
          this.PasswordTextBox.ErrorState = false;
-         this.PasswordTextBox.ErrorToolTip = null;
+         this.PasswordTextBox.ErrorToolTip = this.toolTip1;
          this.PasswordTextBox.ErrorToolTipDuration = 5000;
          this.PasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.PasswordTextBox.ErrorToolTipText = "";
@@ -237,7 +237,7 @@
          this.AddressTextBox.DoubleBuffered = true;
          this.AddressTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
          this.AddressTextBox.ErrorState = false;
-         this.AddressTextBox.ErrorToolTip = null;
+         this.AddressTextBox.ErrorToolTip = this.toolTip1;
          this.AddressTextBox.ErrorToolTipDuration = 5000;
          this.AddressTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
          this.AddressTextBox.ErrorToolTipText = "Must be a valid host name or IP address.";
@@ -262,7 +262,7 @@
          this.ClientNameTextBox.DoubleBuffered = true;
          this.ClientNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
          this.ClientNameTextBox.ErrorState = false;
-         this.ClientNameTextBox.ErrorToolTip = null;
+         this.ClientNameTextBox.ErrorToolTip = this.toolTip1;
          this.ClientNameTextBox.ErrorToolTipDuration = 5000;
          this.ClientNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, -20);
          this.ClientNameTextBox.ErrorToolTipText = "Client name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[]). I" +
