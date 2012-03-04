@@ -148,7 +148,7 @@ namespace HFM.Forms.Controls
 
          _logLines = null;
 
-         Rtf = null;
+         Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
          Text = "No Log Available";
       }
 
