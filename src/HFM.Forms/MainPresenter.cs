@@ -849,6 +849,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
+                  _logger.ErrorFormat(ex, "{0}", ex.Message);
                   _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
@@ -871,6 +872,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
+                  _logger.ErrorFormat(ex, "{0}", ex.Message);
                   _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
@@ -918,25 +920,10 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
+                  _logger.ErrorFormat(ex, "{0}", ex.Message);
                   _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
-         }
-      }
-
-      private void HandleClientEdit(object sender, ClientEditedEventArgs e)
-      {
-         // the name changed
-         if (e.PreviousName != e.NewName)
-         {
-            // update the Names in the benchmark collection
-            _benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
-         }
-         // the path changed
-         if (!Paths.Equal(e.PreviousPath, e.NewPath))
-         {
-            // update the Paths in the benchmark collection
-            _benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
          }
       }
 
@@ -961,9 +948,26 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
+                  _logger.ErrorFormat(ex, "{0}", ex.Message);
                   _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
+         }
+      }
+
+      private void HandleClientEdit(object sender, ClientEditedEventArgs e)
+      {
+         // the name changed
+         if (e.PreviousName != e.NewName)
+         {
+            // update the Names in the benchmark collection
+            _benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
+         }
+         // the path changed
+         if (!Paths.Equal(e.PreviousPath, e.NewPath))
+         {
+            // update the Paths in the benchmark collection
+            _benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
          }
       }
 
