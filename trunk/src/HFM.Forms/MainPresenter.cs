@@ -849,7 +849,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
          }
@@ -871,7 +871,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
          }
@@ -918,7 +918,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
          }
@@ -961,7 +961,7 @@ namespace HFM.Forms
                }
                catch (ArgumentException ex)
                {
-                  _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, ex.Message);
+                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                }
             }
          }
