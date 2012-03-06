@@ -77,6 +77,48 @@ namespace HFM.Forms
          BasePpdTextBox.BindText(_model, "BasePpd");
          BonusPpdTextBox.BindText(_model, "BonusPpd");
          TotalPpdTextBox.BindText(_model, "TotalPpd");
+
+         if (Core.Application.IsRunningOnMono)
+         {
+            _model.PropertyChanged += ModelPropertyChangedForMono;
+         }
+      }
+
+      private void ModelPropertyChangedForMono(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+      {
+         TimePerFrameMinuteTextBox.Text = _model.TpfMinutes.ToString();
+         TimePerFrameSecondTextBox.Text = _model.TpfSeconds.ToString();
+
+         TotalTimeCheckBox.Checked = _model.TotalWuTimeEnabled;
+         TotalTimeMinuteTextBox.Text = _model.TotalWuTimeMinutes.ToString();
+         TotalTimeMinuteTextBox.Enabled = _model.TotalWuTimeEnabled;
+         TotalTimeSecondTextBox.Text = _model.TotalWuTimeSeconds.ToString();
+         TotalTimeSecondTextBox.Enabled = _model.TotalWuTimeEnabled;
+
+         CoreNameTextBox.Text = _model.CoreName;
+         SlotTypeTextBox.Text = _model.SlotType;
+         NumberOfAtomsTextBox.Text = _model.NumberOfAtoms.ToString();
+         CompletionTimeTextBox.Text = _model.CompletionTime.ToString();
+
+         PreferredDeadlineTextBox.Text = _model.PreferredDeadline.ToString();
+         PreferredDeadlineTextBox.ReadOnly = _model.PreferredDeadlineIsReadOnly;
+         PreferredDeadlineCheckBox.Checked = _model.PreferredDeadlineChecked;
+
+         FinalDeadlineTextBox.Text = _model.FinalDeadline.ToString();
+         FinalDeadlineTextBox.ReadOnly = _model.FinalDeadlineIsReadOnly;
+         FinalDeadlineCheckBox.Checked = _model.FinalDeadlineChecked;
+
+         KFactorTextBox.Text = _model.KFactor.ToString();
+         KFactorTextBox.ReadOnly = _model.KFactorIsReadOnly;
+         KFactorCheckBox.Checked = _model.KFactorChecked;
+
+         BonusMultiplierTextBox.Text = _model.BonusMultiplier.ToString();
+         BaseCreditTextBox.Text = _model.BaseCredit.ToString();
+         BonusCreditTextBox.Text = _model.BonusCredit.ToString();
+         TotalCreditTextBox.Text = _model.TotalCredit.ToString();
+         BasePpdTextBox.Text = _model.BasePpd.ToString();
+         BonusPpdTextBox.Text = _model.BonusPpd.ToString();
+         TotalPpdTextBox.Text = _model.TotalPpd.ToString();
       }
 
       private void CalculateButtonClick(object sender, System.EventArgs e)
