@@ -187,6 +187,7 @@ namespace HFM.Forms.Models
          OnBeforeResetBindings(EventArgs.Empty);
          // halt binding source updates
          _bindingSource.RaiseListChangedEvents = false;
+         _slotList.RaiseListChangedEvents = false;
          // get slots from the dictionary
          var slots = _clientDictionary.Slots;
          // refresh the underlying binding list
@@ -200,6 +201,7 @@ namespace HFM.Forms.Models
          slots.FindDuplicates();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
+         _slotList.RaiseListChangedEvents = true;
          // reset AFTER RaiseListChangedEvents is enabled
          _bindingSource.ResetBindings(false);
          // restore binding source updates
@@ -211,12 +213,12 @@ namespace HFM.Forms.Models
       /// </summary>
       private void RefreshSlotList(IEnumerable<SlotModel> slots)
       {
-         _slotList.Clear();
+         _bindingSource.Clear();
          foreach (var slot in slots)
          {
-            _slotList.Add(slot);
+            _bindingSource.Add(slot);
          }
-         string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _slotList.Count);
+         string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _bindingSource.Count);
          Debug.WriteLine(message);
       }
 
@@ -226,11 +228,13 @@ namespace HFM.Forms.Models
       public void Sort()
       {
          _bindingSource.RaiseListChangedEvents = false;
+         _slotList.RaiseListChangedEvents = false;
          // sort the list
          _bindingSource.Sort = null;
          _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
+         _slotList.RaiseListChangedEvents = true;
       }
 
       public void ResetSelectedSlot()

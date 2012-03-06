@@ -37,11 +37,6 @@ namespace HFM.Core
    public interface IMarkupGenerator
    {
       /// <summary>
-      /// In Progress Flag for Callers
-      /// </summary>
-      bool GenerationInProgress { get; }
-
-      /// <summary>
       /// Contains XML File Paths from most recent XML Generation
       /// </summary>
       IEnumerable<string> XmlFilePaths { get; }
@@ -63,13 +58,6 @@ namespace HFM.Core
    public sealed class MarkupGenerator : IMarkupGenerator
    {
       #region Properties
-
-      private volatile bool _generationInProgress;
-
-      public bool GenerationInProgress
-      {
-         get { return _generationInProgress; }
-      }
 
       public IEnumerable<string> XmlFilePaths { get; private set; }
 
@@ -97,32 +85,22 @@ namespace HFM.Core
       public void Generate(IEnumerable<SlotModel> slots)
       {
          if (slots == null) throw new ArgumentNullException("slots");
-         if (_generationInProgress) throw new InvalidOperationException("Markup Generation already in progress.");
-
-         _generationInProgress = true;
 
          XmlFilePaths = null;
          HtmlFilePaths = null;
 
-         try
-         {
-            var copyHtml = _prefs.Get<bool>(Preference.WebGenCopyHtml);
-            var copyXml = _prefs.Get<bool>(Preference.WebGenCopyXml);
+         var copyHtml = _prefs.Get<bool>(Preference.WebGenCopyHtml);
+         var copyXml = _prefs.Get<bool>(Preference.WebGenCopyXml);
 
-            if (copyHtml)
-            {
-               // GenerateHtml calls GenerateXml - these two
-               // calls are mutually exclusive
-               GenerateHtml(slots);
-            }
-            else if (copyXml)
-            {
-               GenerateXml(slots);
-            }
-         }
-         finally
+         if (copyHtml)
          {
-            _generationInProgress = false;
+            // GenerateHtml calls GenerateXml - these two
+            // calls are mutually exclusive
+            GenerateHtml(slots);
+         }
+         else if (copyXml)
+         {
+            GenerateXml(slots);
          }
       }
       

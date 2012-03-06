@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using ThreadState = System.Threading.ThreadState;
 
 using Castle.Core.Logging;
 
@@ -61,6 +60,13 @@ namespace HFM.Forms
                _retrievalInProgress = false;
             }
          }
+      }
+
+      private volatile bool _generationInProgress;
+
+      public bool GenerationInProgress
+      {
+         get { return _generationInProgress; }
       }
 
       /// <summary>
@@ -165,32 +171,36 @@ namespace HFM.Forms
       {
          Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
 
-         // lazy initialize
-         if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
-         if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
+         if (_generationInProgress)
+         {
+            _logger.Warn("Web Generation already in progress...");
+            return;
+         }
 
+         _generationInProgress = true;
          try
          {
-            if (_markupGenerator.GenerationInProgress)
-            {
-               _logger.Info("Web Generation already in progress...");
-            }
-            else
-            {
-               DateTime start = Instrumentation.ExecStart;
+            DateTime start = Instrumentation.ExecStart;
 
-               _logger.Info("Starting Web Generation...");
+            // lazy initialize
+            if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
+            if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
 
-               var slots = _mainGridModel.SlotCollection;
-               _markupGenerator.Generate(slots);
-               _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
+            _logger.Info("Starting Web Generation...");
 
-               _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
-            }
+            var slots = _mainGridModel.SlotCollection;
+            _markupGenerator.Generate(slots);
+            _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
+
+            _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
          }
          catch (Exception ex)
          {
             _logger.ErrorFormat(ex, "{0}", ex.Message);
+         }
+         finally
+         {
+            _generationInProgress = false;
          }
       }
 
@@ -202,7 +212,7 @@ namespace HFM.Forms
          // don't fire this process twice
          if (RetrievalInProgress)
          {
-            _logger.Info("Retrieval already in progress...");
+            _logger.Warn("Retrieval already in progress...");
             return;
          }
 
