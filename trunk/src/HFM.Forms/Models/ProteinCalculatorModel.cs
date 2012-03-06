@@ -24,6 +24,7 @@ using System.ComponentModel;
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -50,8 +51,13 @@ namespace HFM.Forms.Models
 
       public void Calculate()
       {
-         _logger.Debug("Selected Project: {0}", SelectedProject);
-         var protein = _proteinDictionary[SelectedProject].DeepClone();
+         //_logger.Debug("Selected Project: {0}", SelectedProject);
+         Protein value;
+         if (!_proteinDictionary.TryGetValue(SelectedProject, out value))
+         {
+            return;
+         }
+         Protein protein = value.DeepClone();
          if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
          if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
          if (KFactorChecked) protein.KFactor = KFactor;
