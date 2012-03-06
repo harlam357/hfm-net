@@ -231,6 +231,7 @@ namespace HFM.Forms.Models
 
          // halt binding source updates
          _historyBindingSource.RaiseListChangedEvents = false;
+         _historyList.RaiseListChangedEvents = false;
          // refresh the underlying binding list
          RefreshHistoryList(_shownEntries);
          // sort the list
@@ -241,6 +242,7 @@ namespace HFM.Forms.Models
          }
          // enable binding source updates
          _historyBindingSource.RaiseListChangedEvents = true;
+         _historyList.RaiseListChangedEvents = true;
          // reset AFTER RaiseListChangedEvents is enabled
          _historyBindingSource.ResetBindings(false);
 
