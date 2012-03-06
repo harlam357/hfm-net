@@ -252,10 +252,10 @@ namespace HFM.Forms.Models
 
       private void RefreshHistoryList(IEnumerable<HistoryEntry> historyEntries)
       {
-         _historyList.Clear();
+         _historyBindingSource.Clear();
          foreach (var entry in historyEntries)
          {
-            _historyList.Add(entry);
+            _historyBindingSource.Add(entry);
          }
       }
 
