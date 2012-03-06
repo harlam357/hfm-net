@@ -250,6 +250,30 @@ namespace HFM.Forms
          statusUserWeek.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserTotal.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserWUs.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+
+         if (Core.Application.IsRunningOnMono)
+         {
+            _userStatsDataModel.PropertyChanged += UserStatsDataModelPropertyChangedForMono;
+         }
+      }
+
+      private void UserStatsDataModelPropertyChangedForMono(object sender, PropertyChangedEventArgs e)
+      {
+         statusUserTeamRank.Text = _userStatsDataModel.Rank;
+         statusUserProjectRank.Text = _userStatsDataModel.OverallRank;
+         statusUser24hr.Text = _userStatsDataModel.TwentyFourHourAvgerage;
+         statusUserToday.Text = _userStatsDataModel.PointsToday;
+         statusUserWeek.Text = _userStatsDataModel.PointsWeek;
+         statusUserTotal.Text = _userStatsDataModel.PointsTotal;
+         statusUserWUs.Text = _userStatsDataModel.WorkUnitsTotal;
+
+         statusUserTeamRank.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserProjectRank.Visible = _userStatsDataModel.OverallRankVisible;
+         statusUser24hr.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserToday.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserWeek.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserTotal.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserWUs.Visible = _userStatsDataModel.ControlsVisible;
       }
       
       private void SubscribeToStatsLabelEvents()
