@@ -184,7 +184,7 @@ namespace HFM.Core
       {
          try
          {
-            Process.Start(fileName, arguments);
+            Process.Start(fileName, PrepArguments(arguments));
             return null;
          }
          catch (Exception ex)
@@ -192,6 +192,11 @@ namespace HFM.Core
             _logger.ErrorFormat(ex, "{0}", ex.Message);
             return errorMessage;
          }
+      }
+
+      private static string PrepArguments(string arguments)
+      {
+         return Application.IsRunningOnMono ? String.Format(CultureInfo.InvariantCulture, "\"{0}\"", arguments) : arguments;
       }
    }
 }
