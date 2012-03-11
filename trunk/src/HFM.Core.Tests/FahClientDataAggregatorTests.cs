@@ -79,7 +79,10 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(1, _dataAggregator.UnitLogLines.Count);
          Assert.IsFalse(_dataAggregator.UnitLogLines.Any(x => x.Value == null));
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         if (_dataAggregator.UnitLogLines.ContainsKey(_dataAggregator.CurrentUnitIndex))
+         {
+            Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         }
          #endregion
 
          var unitInfoData = units[_dataAggregator.CurrentUnitIndex];
@@ -111,6 +114,79 @@ namespace HFM.Core.Tests
          Assert.AreEqual(33, unitInfoData.CurrentFrame.FrameID);
          Assert.AreEqual(new TimeSpan(4, 46, 8), unitInfoData.CurrentFrame.TimeOfFrame);
          Assert.AreEqual(new TimeSpan(0, 8, 31), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual("A4", unitInfoData.CoreID);
+         #endregion
+      }
+
+      [Test]
+      public void Client_v7_10_0_UnitDataOnly()
+      {
+         const int slotId = 0;
+         _dataAggregator.ClientName = "Client_v7_10";
+
+         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82).ToList(), LogFileType.FahClient);
+         lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
+
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
+         var unitCollection = new UnitCollection();
+         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+
+         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
+         var info = new Info();
+         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+
+         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
+         var options = new Options();
+         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+
+         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+
+         var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         Assert.AreEqual(1, units.Count);
+         Assert.IsFalse(units.Any(x => x.Value == null));
+
+         #region Check Data Aggregator
+         Assert.IsNotNull(_dataAggregator.Queue);
+         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(0, _dataAggregator.UnitLogLines.Count);
+         Assert.IsFalse(_dataAggregator.UnitLogLines.Any(x => x.Value == null));
+         if (_dataAggregator.UnitLogLines.ContainsKey(_dataAggregator.CurrentUnitIndex))
+         {
+            Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         }
+         #endregion
+
+         var unitInfoData = units[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+         Assert.AreEqual(32, unitInfoData.Team);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
+         Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual(String.Empty, unitInfoData.CoreVersion);
+         Assert.AreEqual(7610, unitInfoData.ProjectID);
+         Assert.AreEqual(630, unitInfoData.ProjectRun);
+         Assert.AreEqual(0, unitInfoData.ProjectClone);
+         Assert.AreEqual(59, unitInfoData.ProjectGen);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(0, unitInfoData.FramesObserved);
+         Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("A4", unitInfoData.CoreID);
          #endregion
       }
@@ -151,7 +227,10 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(1, _dataAggregator.UnitLogLines.Count);
          Assert.IsFalse(_dataAggregator.UnitLogLines.Any(x => x.Value == null));
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         if (_dataAggregator.UnitLogLines.ContainsKey(_dataAggregator.CurrentUnitIndex))
+         {
+            Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         }
          #endregion
 
          var unitInfoData = units[_dataAggregator.CurrentUnitIndex];
@@ -223,7 +302,10 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(_dataAggregator.CurrentLogLines);
          Assert.AreEqual(1, _dataAggregator.UnitLogLines.Count);
          Assert.IsFalse(_dataAggregator.UnitLogLines.Any(x => x.Value == null));
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         if (_dataAggregator.UnitLogLines.ContainsKey(_dataAggregator.CurrentUnitIndex))
+         {
+            Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         }
          #endregion
 
          var unitInfoData = units[_dataAggregator.CurrentUnitIndex];

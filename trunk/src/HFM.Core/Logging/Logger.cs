@@ -65,19 +65,15 @@ namespace HFM.Core.Logging
          {
             if (loggerLevel <= Level)
             {
-               if (exception == null)
+               var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x));
+               OnTextMessage(new TextMessageEventArgs(lines));
+               foreach (var line in lines)
                {
-                  var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x));
-                  OnTextMessage(new TextMessageEventArgs(lines));
-                  foreach (var line in lines)
-                  {
-                     Trace.WriteLine(line);
-                  }
+                  Trace.WriteLine(line);
                }
-               else
+
+               if (exception != null)
                {
-                  string formattedMessage = FormatMessage(loggerLevel, message);
-                  OnTextMessage(new TextMessageEventArgs(new[] { formattedMessage }));
                   Trace.WriteLine(FormatMessage(loggerLevel, exception.ToString()));
                }
             }

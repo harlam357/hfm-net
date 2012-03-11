@@ -252,25 +252,29 @@ namespace HFM.Core
                foundCurrentUnitInfo = true;
             }
 
+            FahLogUnitData fahLogUnitData = null;
             // Get the Log Lines for this queue position from the reader
             var logLines = _logInterpreter.GetLogLinesForQueueIndex(unit.Id, projectInfo);
             if (logLines == null)
             {
                string message = String.Format(CultureInfo.CurrentCulture,
-                  "Could not find log section for slot {0}. Cannot update data for this slot.", slotId);
+                  "Could not find log section for slot {0}. Cannot update frame data for this slot.", slotId);
                _logger.Warn(Constants.ClientNameFormat, ClientName, message);
-               // no log lines matching this unit
-               continue;
             }
-
-            // Get the FAH Log Data from the Log Lines
-            FahLogUnitData fahLogUnitData = LogReader.GetFahLogDataFromLogLines(logLines);
+            else
+            {
+               // Get the FAH Log Data from the Log Lines
+               fahLogUnitData = LogReader.GetFahLogDataFromLogLines(logLines);
+            }
 
             UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, fahLogUnitData);
             if (unitInfo != null)
             {
                parsedUnits.Add(unit.Id, unitInfo);
-               _unitLogLines.Add(unit.Id, logLines);
+               if (logLines != null)
+               {
+                  _unitLogLines.Add(unit.Id, logLines);
+               }
                if (unit.StateEnum.Equals(FahUnitStatus.Running))
                {
                   _currentUnitIndex = unit.Id;
@@ -313,27 +317,33 @@ namespace HFM.Core
          Debug.Assert(queueEntry != null);
          Debug.Assert(options != null);
          Debug.Assert(slotOptions != null);
-         Debug.Assert(fahLogUnitData != null);
 
          var unit = new UnitInfo();
          unit.QueueIndex = queueEntry.Id;
-         unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
-         unit.FramesObserved = fahLogUnitData.FramesObserved;
-         unit.CoreVersion = fahLogUnitData.CoreVersion;
-         unit.UnitResult = fahLogUnitData.UnitResult;
-         // there is no finished time available from the client API
-         // since the unit history database won't write the same
-         // result twice, the first time this hits use the local UTC
-         // value for the finished time... not as good as what was
-         // available with v6.
-         if (unit.UnitResult.Equals(WorkUnitResult.FinishedUnit))
+         if (fahLogUnitData != null)
          {
-            unit.FinishedTime = DateTime.UtcNow;
+            unit.UnitStartTimeStamp = fahLogUnitData.UnitStartTimeStamp;
+            unit.FramesObserved = fahLogUnitData.FramesObserved;
+            unit.CoreVersion = fahLogUnitData.CoreVersion;
+            unit.UnitResult = fahLogUnitData.UnitResult;
+
+            // there is no finished time available from the client API
+            // since the unit history database won't write the same
+            // result twice, the first time this hits use the local UTC
+            // value for the finished time... not as good as what was
+            // available with v6.
+            if (unit.UnitResult.Equals(WorkUnitResult.FinishedUnit))
+            {
+               unit.FinishedTime = DateTime.UtcNow;
+            }
          }
 
          PopulateUnitInfoFromQueueEntry(queueEntry, options, slotOptions, unit);
-         // parse the frame data
-         ParseFrameData(fahLogUnitData.FrameDataList, unit);
+         if (fahLogUnitData != null)
+         {
+            // parse the frame data
+            ParseFrameData(fahLogUnitData.FrameDataList, unit);
+         }
 
          return unit;
       }
