@@ -56,12 +56,12 @@ namespace HFM.Core
    public interface IFahClientDataAggregator : IDataAggregator
    {
       /// <summary>
-      /// Aggregate Data and return UnitInfo List
+      /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
       IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId);
 
       /// <summary>
-      /// Array of LogLine Lists
+      /// Dictionary of LogLine Lists.
       /// </summary>
       IDictionary<int, IList<LogLine>> UnitLogLines { get; }
    }

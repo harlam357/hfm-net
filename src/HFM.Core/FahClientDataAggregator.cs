@@ -91,7 +91,7 @@ namespace HFM.Core
 
       private IDictionary<int, IList<LogLine>> _unitLogLines;
       /// <summary>
-      /// Array of LogLine Lists
+      /// Dictionary of LogLine Lists.
       /// </summary>
       public IDictionary<int, IList<LogLine>> UnitLogLines
       {
@@ -111,7 +111,7 @@ namespace HFM.Core
       #region Aggregation Logic
 
       /// <summary>
-      /// Aggregate Data and return UnitInfo List
+      /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
       public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, 
                                                       SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)

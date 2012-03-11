@@ -1,0 +1,103 @@
+*********************** Log Started 2012-02-18T06:33:41Z ***********************
+06:33:41:************************* Folding@home Client *************************
+06:33:41:      Website: http://folding.stanford.edu/
+06:33:41:    Copyright: (c) 2009-2012 Stanford University
+06:33:41:       Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+06:33:41:         Args: --lifeline 3824 --command-port=36330
+06:33:41:       Config: C:/Users/harlarw/AppData/Roaming/FAHClient/config.xml
+06:33:41:******************************** Build ********************************
+06:33:41:      Version: 7.1.48
+06:33:41:         Date: Feb 15 2012
+06:33:41:         Time: 16:22:58
+06:33:41:      SVN Rev: 3271
+06:33:41:       Branch: fah/trunk/client
+06:33:41:     Compiler: Intel(R) C++ MSVC 1500 mode 1200
+06:33:41:      Options: /TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE
+06:33:41:               /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT
+06:33:41:     Platform: win32 XP
+06:33:41:         Bits: 32
+06:33:41:         Mode: Release
+06:33:41:******************************* System ********************************
+06:33:41:          CPU: Intel(R) Core(TM) i7 CPU 930 @ 2.80GHz
+06:33:41:       CPU ID: GenuineIntel Family 6 Model 26 Stepping 5
+06:33:41:         CPUs: 8
+06:33:41:       Memory: 6.00GiB
+06:33:41:  Free Memory: 4.74GiB
+06:33:41:      Threads: WINDOWS_THREADS
+06:33:41:   On Battery: false
+06:33:41:   UTC offset: -6
+06:33:41:          PID: 2700
+06:33:41:          CWD: C:/Users/harlarw/AppData/Roaming/FAHClient
+06:33:41:           OS: Windows 7 Ultimate
+06:33:41:      OS Arch: AMD64
+06:33:41:         GPUs: 2
+06:33:41:        GPU 0: FERMI:1 GF100 [GeForce GTX 470]
+06:33:41:        GPU 1: UNSUPPORTED: Rage XL (Intel Corporation)
+06:33:41:         CUDA: 2.0
+06:33:41:  CUDA Driver: 3020
+06:33:41:Win32 Service: false
+06:33:41:***********************************************************************
+06:33:41:<config>
+06:33:41:  <!-- Network -->
+06:33:41:  <proxy v=':8080'/>
+06:33:41:
+06:33:41:  <!-- Remote Command Server -->
+06:33:41:  <command-allow v='127.0.0.1 192.168.0.0/24'/>
+06:33:41:  <command-allow-no-pass v='127.0.0.1 192.168.0.0/24'/>
+06:33:41:  <password v=''/>
+06:33:41:
+06:33:41:  <!-- User Information -->
+06:33:41:  <passkey v='********************************'/>
+06:33:41:  <team v='32'/>
+06:33:41:  <user v='harlam357'/>
+06:33:41:
+06:33:41:  <!-- Folding Slots -->
+06:33:41:  <slot id='0' type='SMP'>
+06:33:41:    <cpus v='-1'/>
+06:33:41:    <pause-on-start v='true'/>
+06:33:41:  </slot>
+06:33:41:</config>
+06:33:41:Trying to access database...
+06:33:41:Upgrading database schema from version 11 to 13
+06:33:41:Successfully acquired database lock
+06:33:41:Enabled folding slot 00: PAUSED smp:8
+06:33:45:Server connection id=1 on 0.0.0.0:36330 from 127.0.0.1
+06:34:37:FS00:Unpaused
+06:34:38:WU01:FS00:Starting
+06:34:38:WU01:FS00:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" C:/Users/harlarw/AppData/Roaming/FAHClient/cores/www.stanford.edu/~pande/Win32/AMD64/Core_a4.fah/FahCore_a4.exe -dir 01 -suffix 01 -version 701 -lifeline 2700 -checkpoint 15 -np 8
+06:34:38:WU01:FS00:Started FahCore on PID 3308
+06:34:38:WU01:FS00:Core PID:3400
+06:34:38:WU01:FS00:FahCore 0xa4 started
+06:34:38:WU01:FS00:0xa4:
+06:34:38:WU01:FS00:0xa4:*------------------------------*
+06:34:38:WU01:FS00:0xa4:Folding@Home Gromacs GB Core
+06:34:38:WU01:FS00:0xa4:Version 2.27 (Dec. 15, 2010)
+06:34:38:WU01:FS00:0xa4:
+06:34:38:WU01:FS00:0xa4:Preparing to commence simulation
+06:34:38:WU01:FS00:0xa4:- Looking at optimizations...
+06:34:38:WU01:FS00:0xa4:- Files status OK
+06:34:38:WU01:FS00:0xa4:- Expanded 336678 -> 644556 (decompressed 191.4 percent)
+06:34:38:WU01:FS00:0xa4:Called DecompressByteArray: compressed_data_size=336678 data_size=644556, decompressed_data_size=644556 diff=0
+06:34:38:WU01:FS00:0xa4:- Digital signature verified
+06:34:38:WU01:FS00:0xa4:
+06:34:38:WU01:FS00:0xa4:Project: 7610 (Run 192, Clone 0, Gen 58)
+06:34:38:WU01:FS00:0xa4:
+06:34:38:WU01:FS00:0xa4:Assembly optimizations on if available.
+06:34:38:WU01:FS00:0xa4:Entering M.D.
+06:34:44:WU01:FS00:0xa4:Using Gromacs checkpoints
+06:34:44:WU01:FS00:0xa4:Mapping NT from 8 to 8 
+06:34:44:WU01:FS00:0xa4:Resuming from checkpoint
+06:34:44:WU01:FS00:0xa4:Verified 01/wudata_01.log
+06:34:44:WU01:FS00:0xa4:Verified 01/wudata_01.trr
+06:34:44:WU01:FS00:0xa4:Verified 01/wudata_01.xtc
+06:34:44:WU01:FS00:0xa4:Verified 01/wudata_01.edr
+06:34:44:WU01:FS00:0xa4:Completed 1852470 out of 2000000 steps  (92%)
+06:34:50:Server connection id=2 on 0.0.0.0:36330 from 192.168.0.137
+06:36:16:Server connection id=3 on 0.0.0.0:36330 from 192.168.0.191
+06:36:35:WU01:FS00:0xa4:Completed 1860000 out of 2000000 steps  (93%)
+06:41:26:WU01:FS00:0xa4:Completed 1880000 out of 2000000 steps  (94%)
+06:44:35:Server connection id=2 ended
+06:44:48:Server connection id=4 on 0.0.0.0:36330 from 192.168.0.191
+06:46:16:WU01:FS00:0xa4:Completed 1900000 out of 2000000 steps  (95%)
+06:47:26:Server connection id=5 on 0.0.0.0:36330 from 192.168.0.191
+
