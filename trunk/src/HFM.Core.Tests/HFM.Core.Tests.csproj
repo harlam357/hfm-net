@@ -80,6 +80,7 @@
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ClientDictionaryTests.cs" />
     <Compile Include="ClientSettingsManagerTests.cs" />
+    <Compile Include="FahClientDataAggregatorTests.cs" />
     <Compile Include="FahClientTests.cs" />
     <Compile Include="LegacyClientTests.cs" />
     <Compile Include="LegacyDataAggregatorTests.cs" />

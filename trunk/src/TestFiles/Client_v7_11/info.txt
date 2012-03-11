@@ -1,0 +1,146 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009-2012 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 3824 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/Users/harlarw/AppData/Roaming/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.48"
+    ],
+    [
+      "Date",
+      "Feb 15 2012"
+    ],
+    [
+      "Time",
+      "16:22:58"
+    ],
+    [
+      "SVN Rev",
+      "3271"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1200"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 XP"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "CPU",
+      "Intel(R) Core(TM) i7 CPU         930  @ 2.80GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 26 Stepping 5"
+    ],
+    [
+      "CPUs",
+      "8"
+    ],
+    [
+      "Memory",
+      "6.00GiB"
+    ],
+    [
+      "Free Memory",
+      "4.74GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-6"
+    ],
+    [
+      "PID",
+      "2700"
+    ],
+    [
+      "CWD",
+      "C:/Users/harlarw/AppData/Roaming/FAHClient"
+    ],
+    [
+      "OS",
+      "Windows 7 Ultimate"
+    ],
+    [
+      "OS Arch",
+      "AMD64"
+    ],
+    [
+      "GPUs",
+      "2"
+    ],
+    [
+      "GPU 0",
+      "FERMI:1 GF100 [GeForce GTX 470]"
+    ],
+    [
+      "GPU 1",
+      "UNSUPPORTED: Rage XL (Intel Corporation)"
+    ],
+    [
+      "CUDA",
+      "2.0"
+    ],
+    [
+      "CUDA Driver",
+      "3020"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+
