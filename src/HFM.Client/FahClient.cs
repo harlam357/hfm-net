@@ -26,7 +26,7 @@ using HFM.Client.DataTypes;
 namespace HFM.Client
 {
    /// <summary>
-   /// Folding@Home client class.  Provides functionality for accessing strongly typed objects that represent the JSON data returned by the Folding@Home client.
+   /// Folding@Home client class.  Provides functionality for accessing strongly typed objects that represent the JSON messages returned by the Folding@Home client.
    /// </summary>
    public class FahClient : MessageCache
    {

@@ -39,7 +39,7 @@ namespace HFM.Client
       /// </summary>
       public event EventHandler<MessageUpdatedEventArgs> MessageUpdated;
       /// <summary>
-      /// Occurs when a local data buffer update is finished.
+      /// Occurs when the local data buffer update is finished.
       /// </summary>
       public event EventHandler UpdateFinished;
       
