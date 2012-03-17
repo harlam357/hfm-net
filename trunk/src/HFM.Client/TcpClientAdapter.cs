@@ -23,7 +23,7 @@ using System.Net.Sockets;
 
 namespace HFM.Client
 {
-   public interface ITcpClient : IDisposable
+   internal interface ITcpClient : IDisposable
    {
       #region Properties
 

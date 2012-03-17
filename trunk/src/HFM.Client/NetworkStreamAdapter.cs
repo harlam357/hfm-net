@@ -25,7 +25,7 @@ using System.Runtime.Remoting;
 namespace HFM.Client
 {
    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-   public interface INetworkStream : IDisposable
+   internal interface INetworkStream : IDisposable
    {
       #region Properties
 
