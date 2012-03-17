@@ -23,10 +23,13 @@ using System.Globalization;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client heartbeat message. This class cannot be inherited.
+   /// </summary>
    public sealed class Heartbeat : TypedMessage
    {
       /// <summary>
-      /// Heartbeat Number
+      /// Heartbeat number.
       /// </summary>
       public int Value { get; set; }
 

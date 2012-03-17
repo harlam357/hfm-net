@@ -25,9 +25,14 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client slot options message.
+   /// </summary>
    public class SlotOptions : TypedMessage
    {
       #region Properties
+
+      #pragma warning disable 1591
 
       [MessageProperty("cpus")]
       public int? Cpus { get; set; }
@@ -79,6 +84,8 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("gpu-usage")]
       public int? GpuUsage { get; set; }
+
+      #pragma warning restore 1591
 
       #endregion
 

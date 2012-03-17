@@ -25,9 +25,14 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client options message.
+   /// </summary>
    public class Options : TypedMessage
    {
       #region Properties
+
+      #pragma warning disable 1591
 
       [MessageProperty("assignment-servers")]
       public string AssignmentServers { get; set; }
@@ -377,6 +382,8 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("verbosity")]
       public int? Verbosity { get; set; }
+
+      #pragma warning restore 1591
 
       #endregion
 

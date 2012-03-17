@@ -27,8 +27,14 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client info message.
+   /// </summary>
    public class Info : TypedMessage
    {
+      /// <summary>
+      /// Initializes a new instance of the Info class.
+      /// </summary>
       public Info()
       {
          Client = new ClientInfo();
@@ -38,12 +44,21 @@ namespace HFM.Client.DataTypes
 
       #region Properties
 
+      /// <summary>
+      /// Folding@Home client information.
+      /// </summary>
       [MessageProperty("Folding@home Client")]
       public ClientInfo Client { get; private set; }
 
+      /// <summary>
+      /// Folding@Home client build information.
+      /// </summary>
       [MessageProperty("Build")]
       public BuildInfo Build { get; private set; }
 
+      /// <summary>
+      /// Folding@Home client system information.
+      /// </summary>
       [MessageProperty("System")]
       public SystemInfo System { get; private set; }
 
@@ -87,6 +102,11 @@ namespace HFM.Client.DataTypes
       }      
    }
 
+   #pragma warning disable 1591
+
+   /// <summary>
+   /// Folding@Home client information.
+   /// </summary>
    public class ClientInfo
    {
       #region Properties
@@ -109,6 +129,9 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   /// <summary>
+   /// Folding@Home client build information.
+   /// </summary>
    public class BuildInfo
    {
       #region Properties
@@ -146,6 +169,9 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   /// <summary>
+   /// Folding@Home client system information.
+   /// </summary>
    public class SystemInfo
    {
       #region Properties
@@ -293,4 +319,6 @@ namespace HFM.Client.DataTypes
 
       #endregion
    }
+
+   #pragma warning restore 1591
 }

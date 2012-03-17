@@ -21,15 +21,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using HFM.Client.Converters;
+
 using Newtonsoft.Json.Linq;
+
+using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client slot collection message. This class cannot be inherited.
+   /// </summary>
    public sealed class SlotCollection : TypedMessageCollection, IList<Slot>
    {
       private readonly List<Slot> _slots;
-
+      /// <summary>
+      /// Initializes a new instance of the SlotCollection class.
+      /// </summary>
       public SlotCollection()
       {
          _slots = new List<Slot>();
@@ -245,8 +252,14 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   /// <summary>
+   /// Folding@Home client slot message.
+   /// </summary>
    public class Slot : ITypedMessageObject
    {
+      /// <summary>
+      /// Initializes a new instance of the Slot class.
+      /// </summary>
       public Slot()
       {
          SlotOptions = new SlotOptions();
@@ -254,6 +267,8 @@ namespace HFM.Client.DataTypes
       }
 
       #region Properties
+
+      #pragma warning disable 1591
 
       [MessageProperty("id")]
       public int Id { get; set; }
@@ -271,13 +286,15 @@ namespace HFM.Client.DataTypes
       [MessageProperty("options")]
       public SlotOptions SlotOptions { get; set; }
 
+      #pragma warning restore 1591
+
       #endregion
 
       #region ITypedMessageObject Members
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Read-only list of property type conversion errors.
+      /// Collection of property type conversion errors.
       /// </summary>
       public IEnumerable<MessagePropertyConversionError> Errors
       {

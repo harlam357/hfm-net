@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Fragment Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,20 +22,29 @@ using System.Diagnostics;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home log restart message.
+   /// </summary>
    public class LogRestart : LogFragment
    {
       // type is simply for mapping to a JsonMessageKey
    }
 
+   /// <summary>
+   /// Folding@Home log update message.
+   /// </summary>
    public class LogUpdate : LogFragment
    {
       // type is simply for mapping to a JsonMessageKey
    }
 
+   /// <summary>
+   /// Folding@Home client log fragment.
+   /// </summary>
    public abstract class LogFragment : TypedMessage
    {
       /// <summary>
-      /// Log Fragment Value
+      /// Log fragment value.
       /// </summary>
       public string Value { get; set; }
 
