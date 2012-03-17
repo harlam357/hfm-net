@@ -19,7 +19,7 @@
 
 namespace HFM.Client
 {
-   public interface ITcpClientFactory
+   internal interface ITcpClientFactory
    {
       ITcpClient Create();
    }
