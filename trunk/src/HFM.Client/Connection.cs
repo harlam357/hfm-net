@@ -64,7 +64,7 @@ namespace HFM.Client
       /// </summary>
       public event EventHandler<StatusMessageEventArgs> StatusMessage;
       /// <summary>
-      /// Occurs when the property value of the Connected property has changed.
+      /// Occurs when the value of the Connected property has changed.
       /// </summary>
       public event EventHandler<ConnectedChangedEventArgs> ConnectedChanged;
       /// <summary>
@@ -174,7 +174,7 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Gets or sets the debug flag on the receive buffer.  When true the receive buffer is written to a log file specified by the DebugBufferFileName property.
+      /// Gets or sets the debug flag on the receive buffer.  When true the receive buffer is written to a log file specified by the value of the DebugBufferFileName property.
       /// </summary>
       public bool DebugReceiveBuffer { get; set; }
 

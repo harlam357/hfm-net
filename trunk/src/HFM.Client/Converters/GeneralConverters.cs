@@ -25,8 +25,14 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
+   /// <summary>
+   /// Provides functionality to an object to convert an input value to another type and return the converted value.
+   /// </summary>
    public interface IConversionProvider
    {
+      /// <summary>
+      /// Returns an System.Object whose value has been converted from the specified input object.
+      /// </summary>
       object Convert(object input);
    }
 
