@@ -28,7 +28,7 @@ using System.Timers;
 namespace HFM.Client
 {
    /// <summary>
-   /// Folding@Home client connection class.
+   /// Folding@Home client connection class.  Provides functionality for connecting to a Folding@Home client, sending data, receiving data, and accessing the raw data returned by the client connection.
    /// </summary>
    public class Connection : IDisposable
    {

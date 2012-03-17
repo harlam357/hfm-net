@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FahClient Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,9 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
+   /// <summary>
+   /// Folding@Home client class.  Provides functionality for accessing strongly typed objects that represent the JSON data returned by the Folding@Home client.
+   /// </summary>
    public class FahClient : MessageCache
    {
       private static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type>
@@ -41,7 +44,7 @@ namespace HFM.Client
                                                                  };
 
       /// <summary>
-      /// Create a FahClient.
+      /// Initializes a new instance of the FahClient class.
       /// </summary>
       public FahClient()
          : this(new TcpClientFactory())
@@ -50,7 +53,7 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Create a FahClient.
+      /// Initializes a new instance of the FahClient class.
       /// </summary>
       internal FahClient(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
@@ -59,7 +62,7 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Get a Typed Server Message.  Returns null if the message is not in the cache.
+      /// Get a Folding@Home client message as a strongly typed object.  Returns null if the requested message is not available in the cache.
       /// </summary>
       public T GetMessage<T>() where T : TypedMessage, new()
       {
@@ -75,7 +78,7 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Get a Typed Server Message.  Returns null if the message is not in the cache.
+      /// Get a Folding@Home client message as a strongly typed object.  Returns null if the requested message is not available in the cache.
       /// </summary>
       public T GetMessage<T, TCollectionType>() where T : TypedMessageCollection, new() where TCollectionType : ITypedMessageObject, new()
       {
@@ -96,9 +99,9 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Raise the MessageUpdated Event.
+      /// Raise the MessageUpdated event.
       /// </summary>
-      /// <param name="e">Event Arguments (if null the event is cancelled)</param>
+      /// <param name="e">Event arguments (if null the event is cancelled).</param>
       protected override void OnMessageUpdated(MessageUpdatedEventArgs e)
       {
          if (e == null) return;
