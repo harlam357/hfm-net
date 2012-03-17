@@ -19,6 +19,11 @@
 
 namespace HFM.Client.DataTypes
 {
+   #pragma warning disable 1591
+
+   /// <summary>
+   /// Folding@Home client type.
+   /// </summary>
    public enum FahClientType
    {
       Unknown,
@@ -30,6 +35,9 @@ namespace HFM.Client.DataTypes
 
    // ReSharper disable InconsistentNaming
 
+   /// <summary>
+   /// Folding@Home sub-client type (Uniprocessor, SMP, GPU).
+   /// </summary>
    public enum FahClientSubType
    {
       Unknown = 0,
@@ -40,6 +48,9 @@ namespace HFM.Client.DataTypes
 
    // ReSharper restore InconsistentNaming
 
+   /// <summary>
+   /// Folding@Home slot status.
+   /// </summary>
    public enum FahSlotStatus
    {
       Unknown,
@@ -50,6 +61,9 @@ namespace HFM.Client.DataTypes
       Stopping
    }
 
+   /// <summary>
+   /// Folding@Home work unit status.
+   /// </summary>
    public enum FahUnitStatus
    {
       Unknown,
@@ -59,6 +73,9 @@ namespace HFM.Client.DataTypes
       Ready
    }
 
+   /// <summary>
+   /// Folding@Home maximum packet size.
+   /// </summary>
    public enum MaxPacketSize
    {
       Unknown,
@@ -67,10 +84,15 @@ namespace HFM.Client.DataTypes
       Big
    }
 
+   /// <summary>
+   /// Folding@Home core priority.
+   /// </summary>
    public enum CorePriority
    {
       Unknown,
       Idle,
       Low
    }
+
+   #pragma warning restore 1591
 }
