@@ -28,9 +28,9 @@ using HFM.Core.DataTypes;
 namespace HFM.Client.DataTypes
 {
    /// <summary>
-   /// Folding@Home client info message.
+   /// Folding@Home client info message. This class cannot be inherited.
    /// </summary>
-   public class Info : TypedMessage
+   public sealed class Info : TypedMessage
    {
       /// <summary>
       /// Initializes a new instance of the Info class.
@@ -105,9 +105,9 @@ namespace HFM.Client.DataTypes
    #pragma warning disable 1591
 
    /// <summary>
-   /// Folding@Home client information.
+   /// Folding@Home client information. This class cannot be inherited.
    /// </summary>
-   public class ClientInfo
+   public sealed class ClientInfo
    {
       #region Properties
 
@@ -130,9 +130,9 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// Folding@Home client build information.
+   /// Folding@Home client build information. This class cannot be inherited.
    /// </summary>
-   public class BuildInfo
+   public sealed class BuildInfo
    {
       #region Properties
 
@@ -170,9 +170,9 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// Folding@Home client system information.
+   /// Folding@Home client system information. This class cannot be inherited.
    /// </summary>
-   public class SystemInfo
+   public sealed class SystemInfo
    {
       #region Properties
 
