@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Message Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,15 +30,24 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Provides the base functionality for creating a collection of Folding@Home typed client messages.
+   /// </summary>
    public abstract class TypedMessageCollection : TypedMessage
    {
       internal abstract void Fill<T>(JsonMessage message) where T : ITypedMessageObject;
    }
 
+   /// <summary>
+   /// Provides the base functionality for creating Folding@Home typed client messages.
+   /// </summary>
    public abstract class TypedMessage : Message, ITypedMessageObject
    {
       #region Constructor
 
+      /// <summary>
+      /// Initializes a new instance of the TypedMessage class.
+      /// </summary>
       protected TypedMessage()
       {
          _errors = new List<MessagePropertyConversionError>();
@@ -52,7 +61,7 @@ namespace HFM.Client.DataTypes
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Read-only list of property type conversion errors.
+      /// Collection of property type conversion errors.
       /// </summary>
       public IEnumerable<MessagePropertyConversionError> Errors
       {
@@ -67,6 +76,9 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   /// <summary>
+   /// Folding@Home client JSON message.
+   /// </summary>
    public class JsonMessage : Message
    {
       internal JsonMessage()
@@ -75,7 +87,7 @@ namespace HFM.Client.DataTypes
       }
 
       /// <summary>
-      /// Message Value
+      /// Message value.
       /// </summary>
       public string Value { get; internal set; }
 
@@ -97,15 +109,18 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   /// <summary>
+   /// Provides the base functionality for creating Folding@Home client messages.
+   /// </summary>
    public abstract class Message
    {
       /// <summary>
-      /// Message Key
+      /// Message key.
       /// </summary>
       public string Key { get; internal set; }
 
       /// <summary>
-      /// Received Time Stamp
+      /// Received time stamp.
       /// </summary>
       public DateTime Received { get; internal set; }
 
@@ -128,28 +143,44 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   /// <summary>
+   /// Specifies that the property is populated by a Folding@Home client message property. This class cannot be inherited.
+   /// </summary>
    [AttributeUsage(AttributeTargets.Property)]
    public sealed class MessagePropertyAttribute : Attribute
    {
       private readonly string _name;
-
+      /// <summary>
+      /// Gets the name of the Folding@Home client message property.
+      /// </summary>
       public string Name
       {
          get { return _name; }
       }
 
       private readonly Type _converterType;
-
+      /// <summary>
+      /// Gets the type converter for this Folding@Home client message property.
+      /// </summary>
       public Type ConverterType
       {
          get { return _converterType; }
       }
 
+      /// <summary>
+      /// Initializes a new instance of the MessagePropertyAttribute class.
+      /// </summary>
+      /// <param name="name">The message property name.</param>
       public MessagePropertyAttribute(string name)
       {
          _name = name;
       }
 
+      /// <summary>
+      /// Initializes a new instance of the MessagePropertyAttribute class.
+      /// </summary>
+      /// <param name="name">The message property name.</param>
+      /// <param name="converterType">The type of the message property converter.</param>
       public MessagePropertyAttribute(string name, Type converterType)
       {
          _name = name;
@@ -290,6 +321,9 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   /// <summary>
+   /// Folding@Home message property conversion error. This class cannot be inherited.
+   /// </summary>
    public sealed class MessagePropertyConversionError
    {
       private readonly string _propertyName;
@@ -317,13 +351,20 @@ namespace HFM.Client.DataTypes
       }
    }
 
+   /// <summary>
+   /// Provides functionality to an typed message to add and return a collection of error messages.
+   /// </summary>
    public interface ITypedMessageObject
    {
       /// <summary>
-      /// Read-only list of property type conversion errors.
+      /// Collection of property type conversion errors.
       /// </summary>
       IEnumerable<MessagePropertyConversionError> Errors { get; }
 
+      /// <summary>
+      /// Add a message property conversion error.
+      /// </summary>
+      /// <param name="error">The conversion error.</param>
       void AddError(MessagePropertyConversionError error);
    }
 }

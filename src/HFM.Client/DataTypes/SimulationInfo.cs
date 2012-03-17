@@ -26,9 +26,14 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client simulation info message.
+   /// </summary>
    public class SimulationInfo : TypedMessage
    {
       #region Properties
+
+      #pragma warning disable 1591
 
       [MessageProperty("user")]
       public string User { get; set; }
@@ -105,6 +110,8 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("news")]
       public string News { get; set; }
+
+      #pragma warning restore 1591
 
       #endregion
 

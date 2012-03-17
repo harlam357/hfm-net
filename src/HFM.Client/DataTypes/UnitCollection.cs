@@ -30,10 +30,15 @@ using HFM.Client.Converters;
 
 namespace HFM.Client.DataTypes
 {
+   /// <summary>
+   /// Folding@Home client unit collection message. This class cannot be inherited.
+   /// </summary>
    public sealed class UnitCollection : TypedMessageCollection, IList<Unit>, IEquatable<UnitCollection>
    {
       private readonly List<Unit> _units;
-
+      /// <summary>
+      /// Initializes a new instance of the UnitCollection class.
+      /// </summary>
       public UnitCollection()
       {
          _units = new List<Unit>();
@@ -246,6 +251,13 @@ namespace HFM.Client.DataTypes
 
       #region Equality Methods
 
+      /// <summary>
+      /// Indicates whether the current object is equal to another object of the same type.
+      /// </summary>
+      /// <returns>
+      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+      /// </returns>
+      /// <param name="other">An object to compare with this object.</param>
       public bool Equals(UnitCollection other)
       {
          if (ReferenceEquals(null, other)) return false;
@@ -253,6 +265,15 @@ namespace HFM.Client.DataTypes
          return other._units.SequenceEqual(_units);
       }
 
+      /// <summary>
+      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+      /// </returns>
+      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+      /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+      /// <filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
          if (ReferenceEquals(null, obj)) return false;
@@ -261,17 +282,36 @@ namespace HFM.Client.DataTypes
          return Equals((UnitCollection)obj);
       }
 
+      /// <summary>
+      /// Serves as a hash function for a particular type. 
+      /// </summary>
+      /// <returns>
+      /// A hash code for the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
       public override int GetHashCode()
       {
          return (_units != null ? _units.GetHashCode() : 0);
       }
 
-      public static bool operator ==(UnitCollection left, UnitCollection right)
+      /// <summary>
+      /// Determines whether the specified unit collections are equal.
+      /// </summary>
+      /// <param name="left">First unit collection to compare.</param>
+      /// <param name="right">Second unit collection to compare.</param>
+      /// <returns>true if left is equal to right; otherwise, false.</returns>
+      public static bool operator == (UnitCollection left, UnitCollection right)
       {
          return Equals(left, right);
       }
 
-      public static bool operator !=(UnitCollection left, UnitCollection right)
+      /// <summary>
+      /// Determines whether the specified unit collections are not equal.
+      /// </summary>
+      /// <param name="left">First unit collection to compare.</param>
+      /// <param name="right">Second unit collection to compare.</param>
+      /// <returns>true if left is not equal to right; otherwise, false.</returns>
+      public static bool operator != (UnitCollection left, UnitCollection right)
       {
          return !Equals(left, right);
       }
@@ -279,14 +319,22 @@ namespace HFM.Client.DataTypes
       #endregion
    }
 
+   /// <summary>
+   /// Folding@Home client unit message.
+   /// </summary>
    public class Unit : ITypedMessageObject, IEquatable<Unit>
    {
+      /// <summary>
+      /// Initializes a new instance of the Unit class.
+      /// </summary>
       public Unit()
       {
          _errors = new List<MessagePropertyConversionError>();
       }
 
       #region Properties
+
+      #pragma warning disable 1591
 
       [MessageProperty("id")]
       public int Id { get; set; }
@@ -401,13 +449,15 @@ namespace HFM.Client.DataTypes
       [MessageProperty("description")]
       public string Description { get; set; }
 
+      #pragma warning restore 1591
+
       #endregion
 
       #region ITypedMessageObject Members
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Read-only list of property type conversion errors.
+      /// Collection of property type conversion errors.
       /// </summary>
       public IEnumerable<MessagePropertyConversionError> Errors
       {
@@ -423,6 +473,13 @@ namespace HFM.Client.DataTypes
 
       #region Equality Methods
 
+      /// <summary>
+      /// Indicates whether the current object is equal to another object of the same type.
+      /// </summary>
+      /// <returns>
+      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+      /// </returns>
+      /// <param name="other">An object to compare with this object.</param>
       public bool Equals(Unit other)
       {
          if (ReferenceEquals(null, other)) return false;
@@ -430,6 +487,15 @@ namespace HFM.Client.DataTypes
          return other.Id == Id && Equals(other.State, State) && Equals(other.StateEnum, StateEnum) && other.Project == Project && other.Run == Run && other.Clone == Clone && other.Gen == Gen && Equals(other.Core, Core) && Equals(other.UnitId, UnitId) && Equals(other.PercentDone, PercentDone) && other.TotalFrames == TotalFrames && other.FramesDone == FramesDone && Equals(other.Assigned, Assigned) && other.AssignedDateTime.Equals(AssignedDateTime) && Equals(other.Timeout, Timeout) && other.TimeoutDateTime.Equals(TimeoutDateTime) && Equals(other.Deadline, Deadline) && other.DeadlineDateTime.Equals(DeadlineDateTime) && Equals(other.WorkServer, WorkServer) && Equals(other.WorkServerIPAddress, WorkServerIPAddress) && Equals(other.CollectionServer, CollectionServer) && Equals(other.CollectionServerIPAddress, CollectionServerIPAddress) && Equals(other.WaitingOn, WaitingOn) && other.Attempts == Attempts && Equals(other.NextAttempt, NextAttempt) && other.NextAttemptTimeSpan.Equals(NextAttemptTimeSpan) && other.Slot == Slot && Equals(other.Eta, Eta) && other.EtaTimeSpan.Equals(EtaTimeSpan) && other.Ppd.Equals(Ppd) && Equals(other.Tpf, Tpf) && other.TpfTimeSpan.Equals(TpfTimeSpan) && other.BaseCredit.Equals(BaseCredit) && other.CreditEstimate.Equals(CreditEstimate) && Equals(other.Description, Description);
       }
 
+      /// <summary>
+      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+      /// </returns>
+      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+      /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+      /// <filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
          if (ReferenceEquals(null, obj)) return false;
@@ -438,6 +504,13 @@ namespace HFM.Client.DataTypes
          return Equals((Unit)obj);
       }
 
+      /// <summary>
+      /// Serves as a hash function for a particular type. 
+      /// </summary>
+      /// <returns>
+      /// A hash code for the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
       public override int GetHashCode()
       {
          unchecked
@@ -481,12 +554,24 @@ namespace HFM.Client.DataTypes
          }
       }
 
-      public static bool operator ==(Unit left, Unit right)
+      /// <summary>
+      /// Determines whether the specified units are equal.
+      /// </summary>
+      /// <param name="left">First unit to compare.</param>
+      /// <param name="right">Second unit to compare.</param>
+      /// <returns>true if left is equal to right; otherwise, false.</returns>
+      public static bool operator == (Unit left, Unit right)
       {
          return Equals(left, right);
       }
 
-      public static bool operator !=(Unit left, Unit right)
+      /// <summary>
+      /// Determines whether the specified units are not equal.
+      /// </summary>
+      /// <param name="left">First unit to compare.</param>
+      /// <param name="right">Second unit to compare.</param>
+      /// <returns>true if left is not equal to right; otherwise, false.</returns>
+      public static bool operator != (Unit left, Unit right)
       {
          return !Equals(left, right);
       }
