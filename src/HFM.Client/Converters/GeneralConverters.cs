@@ -26,7 +26,7 @@ using HFM.Client.DataTypes;
 namespace HFM.Client.Converters
 {
    /// <summary>
-   /// Provides functionality to an object to convert an input value to another type and return the converted value.
+   /// Provides functionality to convert a Folding@Home message property value to another type.  Types specified as the ConverterType of a MessagePropertyAttribute must implement this interface.
    /// </summary>
    public interface IConversionProvider
    {

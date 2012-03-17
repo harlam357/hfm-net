@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Coverage Exclude Attribute
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,13 @@ using System;
 
 namespace HFM.Client
 {
+   #pragma warning disable 1591
+
    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method)]
    public sealed class CoverageExcludeAttribute : Attribute
    {
-   
+
    }
+
+   #pragma warning restore 1591
 }
