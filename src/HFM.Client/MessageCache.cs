@@ -88,9 +88,10 @@ namespace HFM.Client
       #region Methods
 
       /// <summary>
-      /// Get a Folding@Home client message as a JSON value.  Returns null if the requested message is not available in the cache.
+      /// Get a Folding@Home client message as a JSON message object.  Returns null if the requested message is not available in the cache.
       /// </summary>
-      /// <param name="key">JSON message key.</param>
+      /// <param name="key">The JSON message key.</param>
+      /// <returns>Message value as a JSON message object.</returns>
       public JsonMessage GetJsonMessage(string key)
       {
          return _messages.ContainsKey(key) ? _messages[key] : null;
@@ -245,6 +246,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the MessageUpdatedEventArgs class.
       /// </summary>
+      /// <param name="key">The JSON message key.</param>
       public MessageUpdatedEventArgs(string key)
       {
          Key = key;

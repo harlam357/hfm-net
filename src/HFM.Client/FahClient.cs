@@ -65,6 +65,8 @@ namespace HFM.Client
       /// <summary>
       /// Get a Folding@Home client message as a strongly typed object.  Returns null if the requested message is not available in the cache.
       /// </summary>
+      /// <typeparam name="T">Message type to get.</typeparam>
+      /// <returns>Message value as a strongly typed object.</returns>
       public T GetMessage<T>() where T : TypedMessage, new()
       {
          var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
@@ -81,13 +83,16 @@ namespace HFM.Client
       /// <summary>
       /// Get a Folding@Home client message as a strongly typed object.  Returns null if the requested message is not available in the cache.
       /// </summary>
-      public T GetMessage<T, TCollectionType>() where T : TypedMessageCollection, new() where TCollectionType : ITypedMessageObject, new()
+      /// <typeparam name="T">Collection message type to get.</typeparam>
+      /// <typeparam name="TItemType">Collection item type used to populate the collection.</typeparam>
+      /// <returns>Message value as a strongly typed object.</returns>
+      public T GetMessage<T, TItemType>() where T : TypedMessageCollection, new() where TItemType : ITypedMessageObject, new()
       {
          var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
          if (jsonMessage != null)
          {
             var typedMessageCollection = Activator.CreateInstance<T>();
-            typedMessageCollection.Fill<TCollectionType>(jsonMessage);
+            typedMessageCollection.Fill<TItemType>(jsonMessage);
             return typedMessageCollection;
          }
 

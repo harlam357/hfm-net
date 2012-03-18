@@ -492,6 +492,7 @@ namespace HFM.Client
       /// <summary>
       /// Get the value of the local data buffer and clear that value from the local data buffer.
       /// </summary>
+      /// <returns>The buffer value.</returns>
       public string GetBuffer()
       {
          return GetBuffer(true);
@@ -501,6 +502,7 @@ namespace HFM.Client
       /// Get the value of the local data buffer and optionally clear that value from the local data buffer.
       /// </summary>
       /// <param name="clear">true to clear the local data buffer.</param>
+      /// <returns>The buffer value.</returns>
       public string GetBuffer(bool clear)
       {
          // lock so we're not append to and reading from the buffer at the same time
