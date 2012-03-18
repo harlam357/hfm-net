@@ -335,6 +335,32 @@ namespace HFM.Client.Tests
          _stream.VerifyAllExpectations();
       }
 
+      [Test]
+      public void SendCommandTest3()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            Connect(connection);
+
+            bool dataLengthSentFired = false;
+            bool statusMessageFired = false;
+            bool connectedChangedFired = false;
+            connection.DataLengthSent += (sender, args) => dataLengthSentFired = true;
+            connection.StatusMessage += (sender, args) => statusMessageFired = true;
+            connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
+            var buffer = Encoding.ASCII.GetBytes("command\n");
+            _stream.Expect(x => x.Write(buffer, 0, buffer.Length)).Throw(new IOException("Write failed."));
+            connection.SendCommand("command");
+
+            Assert.IsFalse(dataLengthSentFired);
+            Assert.IsTrue(statusMessageFired);
+            Assert.IsTrue(connectedChangedFired);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
       #region SendCommand - Null, Empty, & Whitespace Tests
 
       [Test]

@@ -66,6 +66,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the MessageCache class.
       /// </summary>
+      [CoverageExclude]
       public MessageCache()
          : this(new TcpClientFactory())
       {

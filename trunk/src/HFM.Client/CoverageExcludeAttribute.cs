@@ -21,13 +21,9 @@ using System;
 
 namespace HFM.Client
 {
-   #pragma warning disable 1591
-
-   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method)]
-   public sealed class CoverageExcludeAttribute : Attribute
+   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Property | AttributeTargets.Method)]
+   internal sealed class CoverageExcludeAttribute : Attribute
    {
 
    }
-
-   #pragma warning restore 1591
 }
