@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="Connection.cs" />
     <Compile Include="Converters\GeneralConverters.cs" />
+    <Compile Include="Converters\IConversionProvider.cs" />
     <Compile Include="Converters\InfoConverters.cs" />
     <Compile Include="Converters\OptionsConverters.cs" />
     <Compile Include="Converters\SimulationInfoConverters.cs" />
