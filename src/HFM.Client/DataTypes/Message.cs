@@ -352,7 +352,7 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// Provides functionality to an typed message to add and return a collection of error messages.
+   /// Provides functionality to a typed message to add to and return a collection of error messages.
    /// </summary>
    public interface ITypedMessageObject
    {

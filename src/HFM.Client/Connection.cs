@@ -190,6 +190,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the Connection class.
       /// </summary>
+      [CoverageExclude]
       public Connection()
          : this(new TcpClientFactory())
       {

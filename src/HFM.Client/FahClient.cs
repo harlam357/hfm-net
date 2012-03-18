@@ -46,6 +46,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the FahClient class.
       /// </summary>
+      [CoverageExclude]
       public FahClient()
          : this(new TcpClientFactory())
       {
