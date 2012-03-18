@@ -19,8 +19,10 @@
 
 namespace HFM.Core.DataTypes
 {
+   #pragma warning disable 1591
+
    /// <summary>
-   /// Slot Status Types
+   /// Slot status types.
    /// </summary>
    public enum SlotStatus
    {
@@ -43,7 +45,7 @@ namespace HFM.Core.DataTypes
    }
 
    /// <summary>
-   /// Log Line Types
+   /// Log line types.
    /// </summary>
    public enum LogLineType
    {
@@ -93,7 +95,7 @@ namespace HFM.Core.DataTypes
    }
 
    /// <summary>
-   /// Work Unit Result Types
+   /// Work unit result types.
    /// </summary>
    public enum WorkUnitResult
    {
@@ -108,7 +110,7 @@ namespace HFM.Core.DataTypes
    }
 
    /// <summary>
-   /// Work Unit Log Filter Types
+   /// Work unit log filter types.
    /// </summary>
    public enum LogFilterType
    {
@@ -120,6 +122,9 @@ namespace HFM.Core.DataTypes
 
    // ReSharper disable InconsistentNaming
 
+   /// <summary>
+   /// Operating system types.
+   /// </summary>
    public enum OperatingSystemType
    {
       Unknown,
@@ -131,6 +136,9 @@ namespace HFM.Core.DataTypes
       OSX
    }
 
+   /// <summary>
+   /// Operating system architecture types.
+   /// </summary>
    public enum OperatingSystemArchitectureType
    {
       Unknown,
@@ -138,6 +146,9 @@ namespace HFM.Core.DataTypes
       x64
    }
 
+   /// <summary>
+   /// CPU manufacturers.
+   /// </summary>
    public enum CpuManufacturer
    {
       Unknown,
@@ -145,6 +156,9 @@ namespace HFM.Core.DataTypes
       AMD
    }
 
+   /// <summary>
+   /// CPU types.
+   /// </summary>
    public enum CpuType
    {
       Unknown,
@@ -157,6 +171,9 @@ namespace HFM.Core.DataTypes
       Athlon
    }
 
+   /// <summary>
+   /// GPU manufacturers.
+   /// </summary>
    public enum GpuManufacturer
    {
       Unknown,
@@ -165,4 +182,6 @@ namespace HFM.Core.DataTypes
    }
 
    // ReSharper restore InconsistentNaming
+
+   #pragma warning restore 1591
 }

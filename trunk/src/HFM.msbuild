@@ -96,8 +96,8 @@
    </Target>
 
    <ItemGroup>
-      <ZipFiles Include="$(ArtifactsHFM)\**\*.*" />
-      <ClientZipFiles Include="$(ArtifactsHFM)\HFM.Client.dll;$(ArtifactsHFM)\HFM.Client.xml;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt;$(ArtifactsHFM)\Newtonsoft.Json.Net35.dll;$(ArtifactsHFM)\Newtonsoft.Json.Net35.xml;$(ArtifactsHFM)\Documentation\License\Json.NET License.txt" />
+      <ZipFiles Include="$(ArtifactsHFM)\**\*.*" Exclude="$(ArtifactsHFM)\Documentation\API Docs\*.*" />
+      <ClientZipFiles Include="$(ArtifactsHFM)\HFM.Client.dll;$(ArtifactsHFM)\HFM.Client.xml;$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt;$(ArtifactsHFM)\Newtonsoft.Json.Net35.dll;$(ArtifactsHFM)\Newtonsoft.Json.Net35.xml;$(ArtifactsHFM)\Documentation\License\Json.NET License.txt" />
       <LogZipFiles Include="$(ArtifactsHFM)\HFM.Log.dll;$(ArtifactsHFM)\HFM.Log.xml;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
       <QueueZipFiles Include="$(ArtifactsHFM)\HFM.Queue.dll;$(ArtifactsHFM)\HFM.Queue.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
    </ItemGroup>
@@ -127,7 +127,13 @@
       <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
    </Target>
 
-   <Target Name="BuildApiZips" DependsOnTargets="Version">
+   <Target Name="BuildDocs">
+      <MSBuild Projects="HFM.Client\HFM.Client.shfbproj"
+               Properties="Configuration=Release;Platform=Any CPU;CleanIntermediates=True" />
+      <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm" />
+   </Target>
+
+   <Target Name="BuildApiZips" DependsOnTargets="Version;BuildDocs">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(ClientZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
