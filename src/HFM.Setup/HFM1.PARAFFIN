@@ -12,7 +12,9 @@
   <NoRootDirectory>true</NoRootDirectory>
   <DiskId>1</DiskId>
   <ExtensionExcludes />
-  <DirExcludes />
+  <DirExcludes>
+    <Dir>API Docs</Dir>
+  </DirExcludes>
   <IncludeFiles />
   <RegExExcludes />
 </CommandLineOptions>-->

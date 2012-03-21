@@ -26,7 +26,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total Folding Clients
+                     Total Folding Slots
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalSlots"/>
@@ -34,7 +34,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Working Clients
+                     Working Slots
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="SlotTotals/WorkingSlots"/>
@@ -42,7 +42,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Non-Working Clients
+                     Non-Working Slots
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalSlots - SlotTotals/WorkingSlots"/>
