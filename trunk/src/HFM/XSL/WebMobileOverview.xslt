@@ -26,7 +26,7 @@
                </tr>
                <tr>
                   <td class="LeftCol" width="60">
-                     Total Clients
+                     Total Slots
                   </td>
                   <td class="RightCol" width="25">
                      <xsl:value-of select="SlotTotals/TotalSlots"/>
