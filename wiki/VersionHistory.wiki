@@ -1,6 +1,77 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version 0.6.2 - Revision 336 - Beta=
+
+  * Release Date: March 8, 2011
+
+  * Enhancement: Issue 245 - Capture Client Core Communications error as a failed Work Unit.
+  * Enhancement: HFM.Queue is now a public API.  Developers can reference HFM.Queue.dll to add queue.dat reading support to their own open source applications.
+  * Enhancement: HFM now includes a queue.dat reading tool found in the .\Tools folder in the HFM install or zip file.  This executable (HFM.Queue.exe) is a clone of the qd tool.  The HFM.Queue API is based on knowledge of the queue.dat structure gleened from the qd source code (http://linuxminded.xs4all.nl/?target=software-qd-tools.plc).
+
+Usage:
+
+>HFM.Queue.exe -u<br>
+HFM.Queue.Tool version 0.6.2.336 (qd clone)<br>
+Copyright (C) 2002-2005 Richard P. Howell IV.<br>
+Copyright (C) 2005-2008 Sebastiaan Couwenberg<br>
+Copyright (C) 2009-2010 Ryan Harlamert<br>
+ -u      Print this usage message (and exit)<br>
+ -C      Only show current index<br>
+ -P      Print extra Project, Run, Clone, Generation line like in FAHlog.txt<br>
+ -a      Show all, also displays the passkey if it's set<br>
+ -q file Explicitly specify queue data file<br>
+ -v      Just print version information and stop<br>
+
+  * Fix: Issue 253 - GPU3 clients reporting 99 Frames Completed to the WU History Database.
+  * Fix: Issue 254 - Issue writing strings with an apostrophe to the WU History Database.
+  * Fix: Halt problems writing to the Work Unit History Database from resulting in a client being shown as 'Offline'.
+  * Fix: Update core version parsing to comply with latest OPENMMGPU core v2.19.
+  * Fix: (Mono) Problems with File and Path browser dialogs not showing the selected file/path in the target text box upon return from the dialog.  Thanks Shel!
+
+  * Change: Add Client Type support for the GRO-A5 and UNLISTED core.
+  * Change: (Mono) Check for a valid connection to the WU History Database on startup.  If the connection fails mark the database as having a bad connection and disable the menu item in the main UI.  Unfortunately not all Linux distributions have a compatible SQLite library installed by default.
+  * Change: Issue 236 - Made changes to try and thwart startup issues with the message "Single Instance Helper Failed to Start."
+  * Change: Log lines that fail data parsing will now be shown as orange color.  This most frequently happens when starting a client and its last checkpoint was in the middle of a frame.  For a reported frame to be recognized by HFM it must be within 10% of the reported frame percentage.
+
+For example:
+
+{{{
+ex. [00:19:40] Completed 82499 out of 250000 steps  (33%) - Would Validate
+    [00:19:40] Completed 82750 out of 250000 steps  (33%) - Would Validate
+}}}
+
+10% frame step tolerance. In the example the completed must be within 250 steps.
+
+
+=Change Log - Version 0.6.1 - Revision 251 - Beta=
+
+  * Release Date: November 4, 2010
+
+  * Issue 239 - Clients Show Offline after starting up with Auto-Run.
+
+=Change Log - Version 0.6.0 - Revision 249 - Beta=
+  
+  * Release Date: October 28, 2010
+
+  * Enhancement: Added the WU History Database (Tools -> Work Unit History Viewer) to replace the CompletedUnits.csv file.  The WU History Database can import your previous CompletedUnits.csv file information through File -> Import CompletedUnits.csv (supports en-US culture only) - users with other culture settings on Windows may or may not be able to import.  The WU History Database is built on a SQLite backend and is compatible with Windows 32-bit and 64-bit environments as well as Linux (Mono) through the same installation package.  Linux (Mono) users will need to have a compatible native Linux SQLite engine installed on their machines to run HFM (SQLite v3.6.23.1 or better).  Currently includes basic query definition and sorting options as well as the ability to specify the PPD Calculation type.  Future plans include enhanced query functionality, multi-level sort, and data graphing.
+  * Enhancement: The "Import FahMon Configuration File" option has been removed.  The functionality is now available as a Plugin.  Users need to download and place the Plugin in the proper folder to enable this functionality, then use the standard Open menu item and select "FahMon Configuration Files" from the File Type/Filter combo box of the Open File Dialog.  See the readme.txt file inside the "HFM FahMon Plugin" zip file for install instructions.
+  * Enhancement: Issue 79 - Allow presistence of HFM local client data to file and provide an option to deploy that file during Web Generation.  Then allow HFM to merge that data into it's primary UI.  See the new Clients -> Merge Client Data option and Copy Client Data to Target option in the Preferences -> Web Generation section.
+  * Enhancement: Issue 101 - Show Project Download Progress when executing a manual psummary download.
+  * Enhancement: Issues 157 & 223 - Allow EOC Stats to show User or Team Stats.  Can activate the choice through a right-click context menu.  Right-click any of the status labels.  Also added an option to 'Force Refresh EOC Stats'.
+  * Enhancement: Issue 203 - Move the Calculate Bonus Credit and PPD option to a Menu/Hotkey option that will allow users to change the style quickly (Alt+O).  Also added an option for cycling through the PPD Calculation styles (Alt+P).
+  * Enhancement: Issue 222 - Send email notifications on Hung status.
+
+  * Change: Clients Menu now reacts accordingly and shows/hides the 'View Cached Log File' and 'View Client Files' menu options like the right-click context menu does.
+  * Change: The Data Grid column selector context menu can no longer have less than 1 visible column.
+
+  * Fix: Issue 162 - Add further validation to psummary download to counter act issues with possibly missing k factor values.
+  * Fix: Issues 177, 190, 220 - Superseded by the WU History Database.
+  * Fix: Issue 219 - Error dialog received when selecting to cancel an update download.
+  * Fix: Issue 230 - Refresh background timer does not start after adding first client.
+  * Fix: In cases where the EOC Xml Stats retrieval failed it halted the Refresh background timer from starting again.  I've had reports in the past that the timer loop was not restarting... this may indeed be what those users were experiencing.
+  * Fix: Bug with FahMon import plugin when attempting to import FTP client types.
+
 =Change Log - Version: 0.5.1 - Revision 198 - Beta=
 
   * Release Date: June 27, 2010
