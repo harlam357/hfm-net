@@ -47,6 +47,8 @@ namespace HFM.Forms
 
       Size Size { get; set; }
 
+      Size MinimumSize { get; }
+
       Rectangle RestoreBounds { get; }
 
       #endregion

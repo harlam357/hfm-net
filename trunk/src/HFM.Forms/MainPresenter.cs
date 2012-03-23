@@ -199,12 +199,19 @@ namespace HFM.Forms
          var size = _prefs.Get<Size>(Preference.FormSize);
          if (size.Width != 0 && size.Height != 0)
          {
+            // make sure values coming from the prefs are at least the minimums - Issue 234
+            if (size.Width < _view.MinimumSize.Width) size.Width = _view.MinimumSize.Width;
+            if (size.Height < _view.MinimumSize.Height) size.Height = _view.MinimumSize.Height;
+
             if (!_prefs.Get<bool>(Preference.FormLogVisible))
             {
                size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
             }
             _view.Size = size;
-            _view.SplitContainer.SplitterDistance = _prefs.Get<int>(Preference.FormSplitLocation);
+            // make sure split location from the prefs is at least the minimum panel size - Issue 234
+            var formSplitLocation = _prefs.Get<int>(Preference.FormSplitLocation);
+            if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
+            _view.SplitContainer.SplitterDistance = formSplitLocation;
          }
 
          if (!_prefs.Get<bool>(Preference.FormLogVisible))

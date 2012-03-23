@@ -1076,6 +1076,7 @@ namespace HFM.Forms
          this.Controls.Add(this.AppMenu);
          this.Controls.Add(this.statusStrip);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+         this.MinimumSize = new System.Drawing.Size(150, 150);
          this.Name = "MainForm";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
          this.Text = "HFM.NET";
