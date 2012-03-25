@@ -1,0 +1,60 @@
+HFM.NET is written in Microsoft C# and is developed with Microsoft Visual Studio 2010.
+
+If you do not have Visual Studio 2010 Professional or better you can download the free Visual Studio 2010 
+C# Express edition here: 
+
+http://www.microsoft.com/visualstudio/en-us/products/2010-editions/express
+
+Compiling within Visual Studio
+------------------------------
+
+There are two solutions files available in the source control repository beneath the \src folder.
+
+- HFM.sln:     This solution file contains all the projects necessary to build the HFM.NET distribution.
+- HFM.All.sln: This solution file contains everything in the above solution plus the HFM.NET tools and
+               NUnit unit test projects.
+
+If you simply want to build the latest version of HFM.NET then all you need to do is compile the projects
+in the HFM.sln file.
+
+If you want to make your own changes to HFM.NET then I suggest you load the HFM.All.sln file so you can 
+validate your changes using the HFM.NET unit test projects.
+
+There are several options available for executing NUnit (http://www.nunit.org/) unit tests.
+
+- The easiest is to use the built-in NUnit test runner available in the source code repository:
+
+  \lib\NUnit\bin\net-2.0\nunit.exe
+  \lib\NUnit\bin\net-2.0\nunit-x86.exe
+
+- TestDriven.Net is a great tool and available here (free):  http://www.testdriven.net/
+- I personally use ReSharper from JetBrains (commercial):    http://www.jetbrains.com/resharper/
+
+Compiling with the HFM.NET MSBuild Script
+-----------------------------------------
+
+The HFM.NET MSBuild Script is setup to build HFM.NET in Release mode and automatically run all the NUnit
+unit test projects.  On a successful compile, the script will copy the distribution files to a the 
+\src\Artifacts\HFM.NET folder.
+
+Although HFM.NET is compiled to run under with the Microsoft.NET Framework v3.5 it is built using the 
+Microsoft.NET Framework v4.0 toolset.  It will likely build fine using the Microsoft.NET Framework v3.5 
+toolset but this configuration is not supported.
+
+To execute the build script you still need a version of Visual Studio 2010 installed.  Open a Visual Studio
+2010 Command Prompt by going to the Start menu > Microsoft Visual Studio 2010 > Visual Studio Tools >
+Visual Studio Command Prompt (2010).  If you're using Visual Studio 2010 Express you will need to open a
+standard command propmt and execute the msbuild engine from either of the following two locations depending
+on OS platform.
+
+- 32-bit: C:\WINDOWS\microsoft.net\Framework\v4.0.30319
+- 64-bit: C:\WINDOWS\microsoft.net\Framework64\v4.0.30319
+
+You can execute the build script from the \src folder as seen below.  Note that the version of the msbuild
+engine is echoed in the command prompt.
+
+C:\...\src>C:\WINDOWS\microsoft.net\Framework64\v4.0.30319\msbuild HFM.msbuild
+Microsoft (R) Build Engine Version 4.0.30319.1
+[Microsoft .NET Framework, Version 4.0.30319.261]
+Copyright (C) Microsoft Corporation 2007. All rights reserved.
+
