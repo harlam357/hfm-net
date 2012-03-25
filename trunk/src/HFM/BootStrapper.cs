@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -46,15 +47,11 @@ namespace HFM
       {
          #region Parse Arguments
 
-         IEnumerable<Argument> arguments;
-         try
+         IEnumerable<Argument> arguments = Arguments.Parse(args);
+         IEnumerable<Argument> errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error);
+         if (errorArguments.Count() != 0)
          {
-            arguments = Arguments.Parse(args);
-         }
-         catch (FormatException ex)
-         {
-            // show usage dialog
-            ShowStartupError(ex, null);
+            MessageBox.Show(Arguments.GetUsageMessage(errorArguments), Core.Application.NameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
          }
 

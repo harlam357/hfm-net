@@ -19,11 +19,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace HFM.Core
 {
    public enum ArgumentType
    {
+      Unknown,
+      Error,
       ResetPrefs,
       OpenFile
    }
@@ -38,7 +41,6 @@ namespace HFM.Core
       /// </summary>
       /// <param name="args">Raw Argument Array</param>
       /// <returns>Argument Collection</returns>
-      /// <exception cref="FormatException">Throws if a supplied raw argument is malformed.</exception>
       public static IEnumerable<Argument> Parse(IList<string> args)
       {
          var arguments = new List<Argument>();
@@ -58,13 +60,44 @@ namespace HFM.Core
                }
                if (data.Length == 0 || data.StartsWith("/", StringComparison.Ordinal))
                {
-                  throw new FormatException("Missing file name argument.");
+                  arguments.Add(new Argument { Type = ArgumentType.Error, Data = "Missing file name argument." });
                }
-               arguments.Add(new Argument { Type = ArgumentType.OpenFile, Data = data });
+               else
+               {
+                  arguments.Add(new Argument { Type = ArgumentType.OpenFile, Data = data });
+               }
+            }
+            else
+            {
+               arguments.Add(new Argument { Type = ArgumentType.Unknown, Data = String.Format(CultureInfo.InvariantCulture, "Unknown argument: {0}", args[i]) });
             }
          }
 
          return arguments.AsReadOnly();
+      }
+
+      public static string GetUsageMessage()
+      {
+         return GetUsageMessage(null);
+      }
+
+      public static string GetUsageMessage(IEnumerable<Argument> arguments)
+      {
+         var sb = new System.Text.StringBuilder();
+         if (arguments != null)
+         {
+            foreach (var argument in arguments)
+            {
+               sb.AppendLine(argument.Data);
+            }
+            sb.AppendLine();
+         }
+         sb.AppendFormat("{0} Arguments", Constants.ApplicationName);
+         sb.AppendLine();
+         sb.AppendLine();
+         sb.AppendLine(" /r - Reset the user preferences.");
+         sb.AppendLine(" /f <file name> - Load HFM client configuration file.");
+         return sb.ToString();
       }
    }
 
