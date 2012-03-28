@@ -5,14 +5,37 @@ C# Express edition here:
 
 http://www.microsoft.com/visualstudio/en-us/products/2010-editions/express
 
+If you need help or if you find there is something I omitted that needs included or would help clarify the 
+process please create a post at the HFM.NET Google Group.  Patches from the community are welcome.
+
+http://groups.google.com/group/hfm-net
+
+
+Assembly Signing
+----------------
+
+All HFM.NET projects are delay signed.  To allow these projects to run on a development machine please see
+the file in this folder named "How to register the HFM public key.txt".  Alternatively, you can remove the
+signing from each project file in the project's properties window (right-click on the project and select 
+properties).
+
+
 Compiling within Visual Studio
 ------------------------------
 
-There are two solutions files available in the source control repository beneath the \src folder.
+There are two main solutions files available in the source control repository beneath the \src folder.
 
-- HFM.sln:     This solution file contains all the projects necessary to build the HFM.NET distribution.
+- HFM.sln:     This solution file contains all the projects necessary to build and run HFM.NET.
 - HFM.All.sln: This solution file contains everything in the above solution plus the HFM.NET tools and
                NUnit unit test projects.
+
+Each solution file is setup to build for either Any CPU or x86 platform.  Use the x86 platform to compile
+in Visual Studio.  HFM.NET has a compile time dependency on a 32-bit (x86) unmanaged SQLite library.  If
+HFM.NET is built and run from within Visual Studio on a 64-bit operating system it will not load correctly
+due to the dependency on the 32-bit unmanaged libray.  If you want to build the complete HFM.NET
+distribution that will load either a 32-bit or 64-bit SQLite library then please see the section below
+Compiling with the HFM.NET MSBuild Script.
+
 
 If you simply want to build the latest version of HFM.NET then all you need to do is compile the projects
 in the HFM.sln file.
@@ -30,22 +53,27 @@ There are several options available for executing NUnit (http://www.nunit.org/) 
 - TestDriven.Net is a great tool and available here (free):  http://www.testdriven.net/
 - I personally use ReSharper from JetBrains (commercial):    http://www.jetbrains.com/resharper/
 
+
 Compiling with the HFM.NET MSBuild Script
 -----------------------------------------
 
-The HFM.NET MSBuild Script is setup to build HFM.NET in Release mode and automatically run all the NUnit
-unit test projects.  On a successful compile, the script will copy the distribution files to a the 
-\src\Artifacts\HFM.NET folder.
+Prerequisites
+-------------
+- MSBuild Community Tasks v1.2.0.306: http://msbuildtasks.tigris.org/
+- CollabNet Subversion Client v1.6.x: http://www.collab.net/downloads/subversion/svn-other.html
+
+The HFM.NET MSBuild Script is setup to build HFM.NET in Release mode for the Any CPU platform.  It will 
+also automatically run all the NUnit unit test projects.  On a successful compile, the script will copy 
+the distribution files to a the \src\Artifacts\HFM.NET folder.
 
 Although HFM.NET is compiled to run under with the Microsoft.NET Framework v3.5 it is built using the 
 Microsoft.NET Framework v4.0 toolset.  It will likely build fine using the Microsoft.NET Framework v3.5 
 toolset but this configuration is not supported.
 
-To execute the build script you still need a version of Visual Studio 2010 installed.  Open a Visual Studio
-2010 Command Prompt by going to the Start menu > Microsoft Visual Studio 2010 > Visual Studio Tools >
-Visual Studio Command Prompt (2010).  If you're using Visual Studio 2010 Express you will need to open a
-standard command propmt and execute the msbuild engine from either of the following two locations depending
-on OS platform.
+To execute the build script open a Visual Studio 2010 Command Prompt by going to the Start menu > 
+Microsoft Visual Studio 2010 > Visual Studio Tools > Visual Studio Command Prompt (2010).  If you're using 
+Visual Studio 2010 Express you will need to open a standard command propmt and execute the msbuild engine 
+from either of the following two locations depending on OS platform.
 
 - 32-bit: C:\WINDOWS\microsoft.net\Framework\v4.0.30319
 - 64-bit: C:\WINDOWS\microsoft.net\Framework64\v4.0.30319
@@ -57,4 +85,3 @@ C:\...\src>C:\WINDOWS\microsoft.net\Framework64\v4.0.30319\msbuild HFM.msbuild
 Microsoft (R) Build Engine Version 4.0.30319.1
 [Microsoft .NET Framework, Version 4.0.30319.261]
 Copyright (C) Microsoft Corporation 2007. All rights reserved.
-
