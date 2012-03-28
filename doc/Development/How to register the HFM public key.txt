@@ -3,8 +3,7 @@ From a Visual Studio Command Prompt (Run as administrator)
 > sn -Vr *,7ebdbc730b03d55d
 
 If you're developing on a 64-bit version of windows you'll need to run
-this same command from both the standard (x86) AND the Visual Studio 
-Command Prompt x64 (Run as administrator).
+this same command from both the x86 and x64 Visual Studio Command Prompt.
 
 See the following msdn page for more information:
 
