@@ -1,0 +1,208 @@
+--- Opening Log file [March 20 07:52:34 UTC]
+
+
+# Windows SMP Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.34
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Users\Public\Documents\FAH SMP Client
+Executable: C:\Users\Public\Documents\FAH SMP Client\FAH6-SMP.exe
+Arguments: -smp -bigadv -betateam -verbosity 9
+
+[07:52:34] - Ask before connecting: No
+[07:52:34] - User name: GreyWhiskers (Team 0)
+[07:52:34] - User ID: 51EA5C9A7EF9D58E
+[07:52:34] - Machine ID: 2
+[07:52:34]
+[07:52:34] Loaded queue successfully.
+[07:52:34]
+[07:52:34] + Processing work unit
+[07:52:34] A4 will attempt to use 8 threads.
+[07:52:34] - Autosending finished units... [March 20 07:52:34 UTC]
+[07:52:34] Core required: FahCore_a4.exe
+[07:52:34] Trying to send all finished work units
+[07:52:34] + No unsent completed units remaining.
+[07:52:34] Core found.
+[07:52:34] - Autosend completed
+[07:52:34] Working on queue slot 00 [March 20 07:52:34 UTC]
+[07:52:34] + Working ...
+[07:52:34] - Calling '.\FahCore_a4.exe -dir work/ -nice 19 -suffix 00 -np 8 -checkpoint 15 -verbose -lifeline 4296 -version 634'
+
+[07:52:35]
+[07:52:35] *------------------------------*
+[07:52:35] Folding@Home Gromacs GB Core
+[07:52:35] Version 2.27 (Dec. 15, 2010)
+[07:52:35]
+[07:52:35] Preparing to commence simulation
+[07:52:35] - Ensuring status. Please wait.
+[07:52:44] - Looking at optimizations...
+[07:52:44] - Working with standard loops on this execution.
+[07:52:44] - Previous termination of core was improper.
+[07:52:44] - Files status OK
+[07:52:45] - Expanded 881328 -> 1982628 (decompressed 224.9 percent)
+[07:52:45] Called DecompressByteArray: compressed_data_size=881328 data_size=1982628, decompressed_data_size=1982628 diff=0
+[07:52:45] - Digital signature verified
+[07:52:45]
+[07:52:45] Project: 8022 (Run 11, Clone 318, Gen 24)
+[07:52:45]
+[07:52:45] Entering M.D.
+[07:52:51] Using Gromacs checkpoints
+[07:52:51] Mapping NT from 8 to 8
+[07:52:51] Resuming from checkpoint
+[07:52:51] Verified work/wudata_00.log
+[07:52:51] Verified work/wudata_00.trr
+[07:52:52] Verified work/wudata_00.xtc
+[07:52:52] Verified work/wudata_00.edr
+[07:52:52] Completed 117540 out of 250000 steps  (47%)
+[07:54:11] Completed 120000 out of 250000 steps  (48%)
+[07:55:15] Completed 122500 out of 250000 steps  (49%)
+[07:56:15] Completed 125000 out of 250000 steps  (50%)
+[07:57:16] Completed 127500 out of 250000 steps  (51%)
+[07:58:19] Completed 130000 out of 250000 steps  (52%)
+[07:59:20] Completed 132500 out of 250000 steps  (53%)
+[08:00:23] Completed 135000 out of 250000 steps  (54%)
+[08:01:20] Completed 137500 out of 250000 steps  (55%)
+[08:02:17] Completed 140000 out of 250000 steps  (56%)
+[08:03:15] Completed 142500 out of 250000 steps  (57%)
+[08:04:12] Completed 145000 out of 250000 steps  (58%)
+[08:05:08] Completed 147500 out of 250000 steps  (59%)
+[08:06:07] Completed 150000 out of 250000 steps  (60%)
+[08:07:06] Completed 152500 out of 250000 steps  (61%)
+[08:08:08] Completed 155000 out of 250000 steps  (62%)
+[08:09:07] Completed 157500 out of 250000 steps  (63%)
+[08:10:06] Completed 160000 out of 250000 steps  (64%)
+[08:11:04] Completed 162500 out of 250000 steps  (65%)
+[08:12:02] Completed 165000 out of 250000 steps  (66%)
+[08:13:05] Completed 167500 out of 250000 steps  (67%)
+[08:14:06] Completed 170000 out of 250000 steps  (68%)
+[08:15:08] Completed 172500 out of 250000 steps  (69%)
+[08:16:09] Completed 175000 out of 250000 steps  (70%)
+[08:17:13] Completed 177500 out of 250000 steps  (71%)
+[08:18:16] Completed 180000 out of 250000 steps  (72%)
+[08:19:20] Completed 182500 out of 250000 steps  (73%)
+[08:20:20] Completed 185000 out of 250000 steps  (74%)
+[08:21:18] Completed 187500 out of 250000 steps  (75%)
+[08:22:16] Completed 190000 out of 250000 steps  (76%)
+[08:23:15] Completed 192500 out of 250000 steps  (77%)
+[08:24:14] Completed 195000 out of 250000 steps  (78%)
+[08:25:11] Completed 197500 out of 250000 steps  (79%)
+[08:26:09] Completed 200000 out of 250000 steps  (80%)
+[08:27:12] Completed 202500 out of 250000 steps  (81%)
+[08:28:19] Completed 205000 out of 250000 steps  (82%)
+[08:29:26] Completed 207500 out of 250000 steps  (83%)
+[08:30:29] Completed 210000 out of 250000 steps  (84%)
+[08:31:29] Completed 212500 out of 250000 steps  (85%)
+[08:32:28] Completed 215000 out of 250000 steps  (86%)
+[08:33:27] Completed 217500 out of 250000 steps  (87%)
+[08:34:25] Completed 220000 out of 250000 steps  (88%)
+[08:35:27] Completed 222500 out of 250000 steps  (89%)
+[08:36:29] Completed 225000 out of 250000 steps  (90%)
+[08:37:31] Completed 227500 out of 250000 steps  (91%)
+[08:38:32] Completed 230000 out of 250000 steps  (92%)
+[08:39:36] Completed 232500 out of 250000 steps  (93%)
+[08:40:35] Completed 235000 out of 250000 steps  (94%)
+[08:41:31] Completed 237500 out of 250000 steps  (95%)
+[08:42:28] Completed 240000 out of 250000 steps  (96%)
+[08:43:24] Completed 242500 out of 250000 steps  (97%)
+[08:44:21] Completed 245000 out of 250000 steps  (98%)
+[08:45:17] Completed 247500 out of 250000 steps  (99%)
+[08:46:14] Completed 250000 out of 250000 steps  (100%)
+[08:46:15] DynamicWrapper: Finished Work Unit: sleep=10000
+[08:46:25]
+[08:46:25] Finished Work Unit:
+[08:46:25] - Reading up to 1299156 from "work/wudata_00.trr": Read 1299156
+[08:46:25] trr file hash check passed.
+[08:46:25] - Reading up to 786624 from "work/wudata_00.xtc": Read 786624
+[08:46:25] xtc file hash check passed.
+[08:46:25] edr file hash check passed.
+[08:46:25] logfile size: 23582
+[08:46:25] Leaving Run
+[08:46:27] - Writing 2114766 bytes of core data to disk...
+[08:46:27] Done: 2114254 -> 2027580 (compressed to 95.9 percent)
+[08:46:27]   ... Done.
+[08:46:29] - Shutting down core
+[08:46:29]
+[08:46:29] Folding@home Core Shutdown: FINISHED_UNIT
+[08:46:33] CoreStatus = 64 (100)
+[08:46:33] Unit 0 finished with 99 percent of time to deadline remaining.
+[08:46:33] Updated performance fraction: 0.990169
+[08:46:33] Sending work to server
+[08:46:33] Project: 8022 (Run 11, Clone 318, Gen 24)
+
+
+[08:46:33] + Attempting to send results [March 20 08:46:33 UTC]
+[08:46:33] - Reading file work/wuresults_00.dat from core
+[08:46:33]   (Read 2028092 bytes from disk)
+[08:46:33] Connecting to http://171.67.108.59:8080/
+[08:46:37] Posted data.
+[08:46:37] Initial: 0000; - Uploaded at ~495 kB/s
+[08:46:37] - Averaged speed for that direction ~449 kB/s
+[08:46:37] + Results successfully sent
+[08:46:37] Thank you for your contribution to Folding@Home.
+[08:46:37] + Number of Units Completed: 885
+
+[08:46:41] Trying to send all finished work units
+[08:46:41] + No unsent completed units remaining.
+[08:46:41] - Preparing to get new work unit...
+[08:46:41] Cleaning up work directory
+[08:46:42] + Attempting to get work packet
+[08:46:42] Passkey found
+[08:46:42] - Will indicate memory of 4076 MB
+[08:46:42] - Detect CPU. Vendor: GenuineIntel, Family: 6, Model: 10, Stepping: 7
+[08:46:42] - Connecting to assignment server
+[08:46:42] Connecting to http://assign.stanford.edu:8080/
+[08:46:42] Posted data.
+[08:46:42] Initial: 43AB; - Successful: assigned to (171.67.108.59).
+[08:46:42] + News From Folding@Home: Welcome to Folding@Home
+[08:46:42] Loaded queue successfully.
+[08:46:42] Sent data
+[08:46:42] Connecting to http://171.67.108.59:8080/
+[08:46:43] Posted data.
+[08:46:43] Initial: 0000; - Receiving payload (expected size: 881103)
+[08:46:43] Conversation time very short, giving reduced weight in bandwidth avg
+[08:46:43] - Downloaded at ~1720 kB/s
+[08:46:43] - Averaged speed for that direction ~1020 kB/s
+[08:46:43] + Received work.
+[08:46:43] Trying to send all finished work units
+[08:46:43] + No unsent completed units remaining.
+[08:46:43] + Closed connections
+[08:46:43]
+[08:46:43] + Processing work unit
+[08:46:43] A4 will attempt to use 8 threads.
+[08:46:43] Core required: FahCore_a4.exe
+[08:46:43] Core found.
+[08:46:43] Working on queue slot 01 [March 20 08:46:43 UTC]
+[08:46:43] + Working ...
+[08:46:43] - Calling '.\FahCore_a4.exe -dir work/ -nice 19 -suffix 01 -np 8 -checkpoint 15 -verbose -lifeline 4296 -version 634'
+
+[08:46:43]
+[08:46:43] *------------------------------*
+[08:46:43] Folding@Home Gromacs GB Core
+[08:46:43] Version 2.27 (Dec. 15, 2010)
+[08:46:43]
+[08:46:43] Preparing to commence simulation
+[08:46:43] - Looking at optimizations...
+[08:46:43] - Created dyn
+[08:46:43] - Files status OK
+[08:46:43] - Expanded 880591 -> 1982628 (decompressed 225.1 percent)
+[08:46:43] Called DecompressByteArray: compressed_data_size=880591 data_size=1982628, decompressed_data_size=1982628 diff=0
+[08:46:44] - Digital signature verified
+[08:46:44]
+[08:46:44] Project: 8022 (Run 11, Clone 318, Gen 25)
+[08:46:44]
+[08:46:44] Assembly optimizations on if available.
+[08:46:44] Entering M.D.
+[08:46:50] Mapping NT from 8 to 8
+[08:46:50] Completed 0 out of 250000 steps  (0%)
+[08:47:48] Completed 2500 out of 250000 steps  (1%)
+[08:48:44] Completed 5000 out of 250000 steps  (2%)
+[08:49:41] Completed 7500 out of 250000 steps  (3%)
+[08:50:37] Completed 10000 out of 250000 steps  (4%)
+[08:51:34] Completed 12500 out of 250000 steps  (5%)
+[08:52:30] Completed 15000 out of 250000 steps  (6%)
