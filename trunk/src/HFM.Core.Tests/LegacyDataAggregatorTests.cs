@@ -1471,6 +1471,65 @@ namespace HFM.Core.Tests
          #endregion
       }
 
+      [Test, Category("Standard")]
+      public void Standard_9() // v6.23 A4 Uniprocessor
+      {
+         const string path = "..\\..\\..\\TestFiles\\Standard_9";
+         _dataAggregator.ClientName = "Standard_9";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, unitInfoList.Count);
+         Assert.IsNull(unitInfoList[0]);
+         Assert.IsNotNull(unitInfoList[1]);
+
+         #region Check Data Aggregator
+         Assert.IsNull(_dataAggregator.Queue);
+         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.Stopped, _dataAggregator.CurrentClientRun.Status);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("Amaruk", unitInfoData.FoldingID);
+         Assert.AreEqual(50625, unitInfoData.Team);
+         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.DownloadTime);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(18, 46, 15), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual("2.27", unitInfoData.CoreVersion);
+         Assert.AreEqual(10741, unitInfoData.ProjectID);
+         Assert.AreEqual(0, unitInfoData.ProjectRun);
+         Assert.AreEqual(1996, unitInfoData.ProjectClone);
+         Assert.AreEqual(3, unitInfoData.ProjectGen);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
+         Assert.AreEqual(7000001, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(7000001, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(94, unitInfoData.FramesObserved);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.FrameID);
+         Assert.AreEqual(new TimeSpan(5, 37, 54), unitInfoData.CurrentFrame.TimeOfFrame);
+         Assert.AreEqual(new TimeSpan(1, 40, 36), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual("Unknown", unitInfoData.CoreID);
+         #endregion
+      }
+
       // ReSharper restore InconsistentNaming
    }
 }
