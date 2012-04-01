@@ -1,6 +1,6 @@
 /*
  * HFM.NET - FAHlog.txt Unit Data Class
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -150,5 +150,10 @@ namespace HFM.Log
       /// Work Unit Result
       /// </summary>
       public WorkUnitResult UnitResult { get; set; }
+
+      /// <summary>
+      /// Number of threads specified in the call to the FahCore process.
+      /// </summary>
+      public int Threads { get; set; }
    }
 }

@@ -443,6 +443,11 @@ namespace HFM.Core
             unit.ProjectGen = fahLogUnitData.ProjectGen;
          }
 
+         if (fahLogUnitData.Threads > 1)
+         {
+            unit.SlotType = SlotType.SMP;
+         }
+
          if (unitInfoLogData != null)
          {
             unit.ProteinName = unitInfoLogData.ProteinName;

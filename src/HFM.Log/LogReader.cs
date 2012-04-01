@@ -163,6 +163,15 @@ namespace HFM.Log
             }
 
             #endregion
+
+            #region Threads
+
+            if (line.LineType.Equals(LogLineType.WorkUnitCallingCore) && line.LineData != null)
+            {
+               data.Threads = (int)line.LineData;
+            }
+
+            #endregion
          }
          
          return data;

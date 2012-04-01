@@ -75,6 +75,7 @@ namespace HFM.Core.DataTypes
       WorkUnitIndex,
       WorkUnitQueueIndex,
       WorkUnitWorking,
+      WorkUnitCallingCore,
       WorkUnitStart,
       WorkUnitCoreVersion,
       WorkUnitRunning,

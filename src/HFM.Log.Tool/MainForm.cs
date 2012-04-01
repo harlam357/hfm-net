@@ -155,6 +155,7 @@ namespace HFM.Log.Tool
                var index = _clientRuns[i].UnitIndexes[j];
                sb.AppendLine("expectedRun.UnitIndexes.Add(new UnitIndex(" + index.QueueIndex + "," + index.StartIndex + "," + index.EndIndex + "));");
             }
+            sb.AppendLine("expectedRun.ClientVersion = \"" + _clientRuns[i].ClientVersion + "\";");
             sb.AppendLine("expectedRun.Arguments = \"" + _clientRuns[i].Arguments + "\";");
             sb.AppendLine("expectedRun.FoldingID = \"" + _clientRuns[i].FoldingID + "\";");
             sb.AppendLine("expectedRun.Team = " + _clientRuns[i].Team + ";");
