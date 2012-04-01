@@ -749,6 +749,40 @@ namespace HFM.Log.Tests
          Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, logLines[2323].LineType);
       }
 
+      [Test, Category("Standard")]
+      public void Standard_9_FAHlog() // v6.23 A4 Uniprocessor
+      {
+         // Scan
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(0);
+         expectedRun.UnitIndexes.Add(new UnitIndex(5, 24, -1));
+         expectedRun.ClientVersion = "6.23";
+         expectedRun.Arguments = "-oneunit -verbosity 9";
+         expectedRun.FoldingID = "Amaruk";
+         expectedRun.Team = 50625;
+         expectedRun.UserID = "1E53CB2Axxxxxxxx";
+         expectedRun.MachineID = 14;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 173;
+         expectedRun.Status = SlotStatus.Stopped;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         // Verify LogLine Properties
+         Assert.IsNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
+         Assert.AreEqual(5, logLines[31].LineData);
+         Assert.AreEqual("2.27", logLines[38].LineData);
+         Assert.That(logLines[47].ToString().Contains("Project: 10741 (Run 0, Clone 1996, Gen 3)"));
+      }
+
       #region Version 7 Logs
 
       [Test]
