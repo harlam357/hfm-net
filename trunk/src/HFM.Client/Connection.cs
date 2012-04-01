@@ -53,7 +53,7 @@ namespace HFM.Client
       /// <summary>
       /// Default Socket Receive Timer Length
       /// </summary>
-      private const int DefaultSocketTimerLength = 100;
+      private const int DefaultSocketTimerLength = 1;
 
       #endregion
 
@@ -135,7 +135,7 @@ namespace HFM.Client
       public int ConnectTimeout { get; set; }
 
       /// <summary>
-      /// Gets or sets the length of time between each network stream read attempt (default - 100ms).
+      /// Gets or sets the length of time between each network stream read attempt (default - 1ms).
       /// </summary>
       public double ReceiveLoopTime
       {
@@ -246,6 +246,10 @@ namespace HFM.Client
          if (host == null) throw new ArgumentNullException("host");
          if (password == null) throw new ArgumentNullException("password");
 
+         if (_tcpClient != null)
+         {
+            _tcpClient.Dispose();
+         }
          _tcpClient = CreateClient();
 
          IAsyncResult ar = _tcpClient.BeginConnect(host, port, null, null);

@@ -140,6 +140,10 @@ namespace HFM.Log
          {
             return LogLineType.WorkUnitWorking;
          }
+         if (logLine.Contains("] - Calling"))
+         {
+            return LogLineType.WorkUnitCallingCore;
+         }
          if (logLine.Contains("] *------------------------------*"))
          {
             return LogLineType.WorkUnitStart;

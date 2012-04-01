@@ -49,10 +49,8 @@ namespace HFM.Client.Tests
          using (var connection = new Connection(CreateClientFactory()))
          {
             Assert.AreEqual(2000, connection.ConnectTimeout);
-            Assert.AreEqual(100, connection.ReceiveLoopTime);
-            //Assert.AreEqual(2000, connection.SendTimeout);
+            Assert.AreEqual(1, connection.ReceiveLoopTime);
             Assert.AreEqual(1024 * 8, connection.SendBufferSize);
-            //Assert.AreEqual(2000, connection.ReceiveTimeout);
             Assert.AreEqual(1024 * 8, connection.ReceiveBufferSize);
          }
       }
@@ -67,17 +65,11 @@ namespace HFM.Client.Tests
             connection.ReceiveLoopTime = 1500;
             Assert.AreEqual(1500, connection.ReceiveLoopTime);
 
-            //_tcpClient.Expect(x => x.SendTimeout = 3000);
             _tcpClient.Expect(x => x.SendBufferSize = 2048);
-            //_tcpClient.Expect(x => x.ReceiveTimeout = 3000);
             _tcpClient.Expect(x => x.ReceiveBufferSize = 2048);
 
-            //connection.SendTimeout = 3000;
-            //Assert.AreEqual(3000, connection.SendTimeout);
             connection.SendBufferSize = 2048;
             Assert.AreEqual(2048, connection.SendBufferSize);
-            //connection.ReceiveTimeout = 3000;
-            //Assert.AreEqual(3000, connection.ReceiveTimeout);
             connection.ReceiveBufferSize = 2048;
             Assert.AreEqual(2048, connection.ReceiveBufferSize);
          }

@@ -157,7 +157,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 10, 3, 7, 52, 7), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2009, 10, 6, 7, 52, 7), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(7, 52, 7), unitInfoData.UnitStartTimeStamp);
@@ -239,7 +239,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 11, 24, 21, 53, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2009, 11, 30, 21, 53, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(21, 53, 46), unitInfoData.UnitStartTimeStamp);
@@ -301,7 +301,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 24, 21, 53, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 30, 21, 53, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(21, 53, 46), unitInfoData.UnitStartTimeStamp);
@@ -449,7 +449,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Felix_Pasqualli", unitInfoData.FoldingID);
          Assert.AreEqual(52523, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 12, 29, 9, 7, 48), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 1, 1, 9, 7, 48), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(9, 7, 48), unitInfoData.UnitStartTimeStamp);
@@ -524,7 +524,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 3, 24, 7, 21, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 3, 30, 7, 21, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(7, 21, 51), unitInfoData.UnitStartTimeStamp);
@@ -599,7 +599,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 5, 27, 12, 4, 26), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 6, 2, 12, 4, 26), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(17, 19, 05), unitInfoData.UnitStartTimeStamp);
@@ -751,7 +751,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.Unknown, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 10, 14, 9, 18, 26), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 10, 20, 9, 18, 26), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(9, 18, 31), unitInfoData.UnitStartTimeStamp);
@@ -772,6 +772,66 @@ namespace HFM.Core.Tests
          Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("A3", unitInfoData.CoreID);
+         #endregion
+      }
+
+      [Test, Category("SMP")]
+      public void SMP_17() // v6.23 A4 SMP
+      {
+         const string path = "..\\..\\..\\TestFiles\\SMP_17";
+         _dataAggregator.ClientName = "SMP_17";
+         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+
+         var unitInfoList = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, unitInfoList.Count);
+         Assert.IsNotNull(unitInfoList[0]);
+         Assert.IsNotNull(unitInfoList[1]);
+
+         #region Check Data Aggregator
+         Assert.IsNull(_dataAggregator.Queue);
+         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
+         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.Status);
+         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
+         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
+         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
+         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         #endregion
+
+         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+
+         #region Check Unit Info Data Values
+         Assert.AreEqual(null, unitInfoData.OwningSlotName);
+         Assert.AreEqual(null, unitInfoData.OwningClientName);
+         Assert.AreEqual(null, unitInfoData.OwningClientPath);
+         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+         Assert.AreEqual("GreyWhiskers", unitInfoData.FoldingID);
+         Assert.AreEqual(0, unitInfoData.Team);
+         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.DownloadTime);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
+         Assert.AreEqual(new TimeSpan(8, 46, 43), unitInfoData.UnitStartTimeStamp);
+         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+         Assert.AreEqual("2.27", unitInfoData.CoreVersion);
+         Assert.AreEqual(8022, unitInfoData.ProjectID);
+         Assert.AreEqual(11, unitInfoData.ProjectRun);
+         Assert.AreEqual(318, unitInfoData.ProjectClone);
+         Assert.AreEqual(25, unitInfoData.ProjectGen);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+         Assert.AreEqual(15000, unitInfoData.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
+         Assert.AreEqual(7, unitInfoData.FramesObserved);
+         Assert.AreEqual(6, unitInfoData.CurrentFrame.FrameID);
+         Assert.AreEqual(new TimeSpan(8, 52, 30), unitInfoData.CurrentFrame.TimeOfFrame);
+         Assert.AreEqual(new TimeSpan(0, 0, 56), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
 

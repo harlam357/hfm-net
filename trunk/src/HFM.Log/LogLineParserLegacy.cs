@@ -80,6 +80,13 @@ namespace HFM.Log
       /// </summary>
       private static readonly Regex rCompletedWUs =
          new Regex("\\[(?<Timestamp>.{8})\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+      
+      /// <summary>
+      /// Regular Expression to match Calling Core string.  Only matches the up to the first three digits of "-np X".
+      /// For this legacy detection we're only interested in knowing if this -np number exists and is greater than 1.
+      /// </summary>
+      private static readonly Regex WorkUnitCallingCore =
+         new Regex("\\[(?<Timestamp>.{8})\\].*-np (?<Threads>\\d{1,3}).*", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       // ReSharper restore InconsistentNaming
 
@@ -156,6 +163,15 @@ namespace HFM.Log
                   return Int32.Parse(mQueueIndex.Result("${QueueIndex}"));
                }
                return new LogLineError(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
+            case LogLineType.WorkUnitCallingCore:
+               Match workUnitCallingCoreMatch;
+               if ((workUnitCallingCoreMatch = WorkUnitCallingCore.Match(logLine.LineRaw)).Success)
+               {
+                  return Int32.Parse(workUnitCallingCoreMatch.Result("${Threads}"));
+               }
+               //return new LogLineError(String.Format("Failed to parse Work Unit Threads from '{0}'", logLine.LineRaw));
+               // not an error - not all "Calling" lines will have a "-np X" in the line
+               return 0; 
             case LogLineType.WorkUnitCoreVersion:
                /*** ProtoMol Only */
                Match mCoreVer;

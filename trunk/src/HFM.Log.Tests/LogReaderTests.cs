@@ -266,6 +266,42 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.ClientCoreError, logLines[3786].LineData);
       }
 
+      [Test, Category("SMP")]
+      public void SMP_17_FAHlog() // v6.23 A4 SMP
+      {
+         // Scan
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt");
+         var clientRuns = LogReader.GetClientRuns(logLines);
+         var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(0);
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 24, -1));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 175, -1));
+         expectedRun.ClientVersion = "6.34";
+         expectedRun.Arguments = "-smp -bigadv -betateam -verbosity 9";
+         expectedRun.FoldingID = "GreyWhiskers";
+         expectedRun.Team = 0;
+         expectedRun.UserID = "51EA5C9A7EF9D58E";
+         expectedRun.MachineID = 2;
+         expectedRun.CompletedUnits = 1;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 885;
+         expectedRun.Status = SlotStatus.RunningNoFrameTimes;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+         
+         // Verify LogLine Properties
+         Assert.IsNotNull(logInterpreter.PreviousWorkUnitLogLines);
+         Assert.IsNotNull(logInterpreter.CurrentWorkUnitLogLines);
+
+         // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
+         Assert.AreEqual(0, logLines[32].LineData);
+         Assert.AreEqual("2.27", logLines[39].LineData);
+         Assert.That(logLines[51].ToString().Contains("Project: 8022 (Run 11, Clone 318, Gen 24)"));
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[130].LineData);
+      }
+
       [Test, Category("GPU")]
       public void GPU2_1_FAHlog() // verbosity 9
       {
