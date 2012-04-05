@@ -75,6 +75,7 @@ namespace HFM.Core.Serializers
          }
       }
 
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
       public void Serialize(string fileName, List<ClientSettings> value)
       {
          // copy the values before encrypting, otherwise the ClientSettings

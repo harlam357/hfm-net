@@ -321,9 +321,9 @@ namespace HFM.Core.Tests
 
          var database = CreateUnitInfoDatabase();
          database.DatabaseFilePath = testFile;
-         Assert.AreEqual(true, database.TableExists());
-         database.DeleteAllUnitInfoData();
-         Assert.AreEqual(false, database.TableExists());
+         Assert.AreEqual(true, database.TableExists(SqlTable.WuHistory));
+         database.DropTable(SqlTable.WuHistory);
+         Assert.AreEqual(false, database.TableExists(SqlTable.WuHistory));
 
          File.Delete(testFile);
       }
@@ -386,27 +386,6 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, database.DeleteUnitInfo(100));
       }
 
-      //[Test]
-      //public void ImportCompletedUnitsTest()
-      //{
-      //   if (File.Exists(TestFile))
-      //   {
-      //      File.Delete(TestFile);
-      //   }
-         
-      //   _mocks.ReplayAll();
-
-      //   var database = new UnitInfoDatabase(_proteinDictionary) { DatabaseFilePath = TestFile };
-      //   var completedUnitsReader = new CompletedUnitsFileReader { CompletedUnitsFilePath = "..\\..\\TestFiles\\CompletedUnits.csv" };
-      //   completedUnitsReader.Process();
-      //   database.ImportCompletedUnits(completedUnitsReader.Result.Entries);
-
-      //   var rows = database.QueryUnitData(new QueryParameters());
-      //   Assert.AreEqual(44, rows.Count);
-         
-      //   _mocks.VerifyAll();
-      //}
-      
       [Test]
       public void QueryUnitDataTest()
       {

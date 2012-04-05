@@ -52,7 +52,7 @@ namespace HFM.Core
       #endregion
    }
 
-   public class QueryParametersCollection : DataContainer<List<QueryParameters>>, IQueryParametersCollection
+   public sealed class QueryParametersCollection : DataContainer<List<QueryParameters>>, IQueryParametersCollection
    {
       public QueryParametersCollection()
          : this(null)
