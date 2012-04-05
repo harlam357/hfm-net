@@ -208,20 +208,24 @@ namespace HFM.Core
          // Create XmlReaderSettings and XmlReader
          var xsltSettings = new XmlReaderSettings();
          xsltSettings.ProhibitDtd = false;
-         XmlReader xmlReader = XmlReader.Create(xsltFilePath, xsltSettings);
 
          // Create the XslCompiledTransform and Load the XmlReader
          var xslt = new XslCompiledTransform();
-         xslt.Load(xmlReader, XsltSettings.TrustedXslt, null);
+         using (var xmlReader = XmlReader.Create(xsltFilePath, xsltSettings))
+         {
+            xslt.Load(xmlReader, XsltSettings.TrustedXslt, null);
+         }
 
          // Transform the XML data to an in memory stream
-         var ms = new MemoryStream();
-         xslt.Transform(xmlDoc, null, ms);
+         using (var ms = new MemoryStream())
+         {
+            xslt.Transform(xmlDoc, null, ms);
 
-         // Return the transformed XML
-         string webPage = Encoding.UTF8.GetString(ms.ToArray());
-         webPage = webPage.Replace("$CSSFILE", cssFileName);
-         return webPage;
+            // Return the transformed XML
+            string webPage = Encoding.UTF8.GetString(ms.ToArray());
+            webPage = webPage.Replace("$CSSFILE", cssFileName);
+            return webPage;
+         }
       }
 
       private string GetXsltFileName(Preference p)

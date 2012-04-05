@@ -26,7 +26,7 @@ using System.Linq;
 namespace HFM.Core.DataTypes
 {
    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-   public class ClientQueue : IDictionary<int, ClientQueueEntry>
+   public sealed class ClientQueue : IDictionary<int, ClientQueueEntry>
    {
       #region Fields
    

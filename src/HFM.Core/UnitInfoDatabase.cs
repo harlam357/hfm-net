@@ -34,25 +34,27 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
+   public enum SqlTable
+   {
+      WuHistory,
+      Version
+   }
+
    public interface IUnitInfoDatabase
    {
       /// <summary>
-      /// Get or Set the Database File Path
+      /// Gets or sets the Database file path.
       /// </summary>
       string DatabaseFilePath { get; }
 
       /// <summary>
-      /// Flag that notes if the Database is safe to call
+      /// Flag that notes if the Database is safe to call.
       /// </summary>
       bool Connected { get; }
-
-      void DeleteAllUnitInfoData();
 
       void WriteUnitInfo(UnitInfoLogic unitInfoLogic);
 
       int DeleteUnitInfo(long id);
-
-      //void ImportCompletedUnits(ICollection<HistoryEntry> entries);
 
       IList<HistoryEntry> QueryUnitData(QueryParameters parameters);
 
@@ -61,41 +63,7 @@ namespace HFM.Core
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
    {
-      public const string WuHistoryTableName = "WuHistory";
-
-      private const string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
-                                                     "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                                                     "[ProjectID] INT  NOT NULL," +
-                                                     "[ProjectRun] INT  NOT NULL," +
-                                                     "[ProjectClone] INT  NOT NULL," +
-                                                     "[ProjectGen] INT  NOT NULL," +
-                                                     "[InstanceName] VARCHAR(60)  NOT NULL," +
-                                                     "[InstancePath] VARCHAR(260)  NOT NULL," +
-                                                     "[Username] VARCHAR(60)  NOT NULL," +
-                                                     "[Team] INT  NOT NULL," +
-                                                     "[CoreVersion] FLOAT  NOT NULL," +
-                                                     "[FramesCompleted] INT  NOT NULL," +
-                                                     "[FrameTime] INT  NOT NULL," +
-                                                     "[Result] INT  NOT NULL," +
-                                                     "[DownloadDateTime] DATETIME  NOT NULL," +
-                                                     "[CompletionDateTime] DATETIME  NOT NULL);";
-
-      private const string WuHistoryTableDropSql = "DROP TABLE [{0}];";                                                     
-
-      private const string WuHistoryTableInsertSql = "INSERT INTO [{0}] ([ProjectID]," +
-                                                                        "[ProjectRun]," +
-                                                                        "[ProjectClone]," +
-                                                                        "[ProjectGen]," +
-                                                                        "[InstanceName]," +
-                                                                        "[InstancePath]," +
-                                                                        "[Username]," +
-                                                                        "[Team]," +
-                                                                        "[CoreVersion]," +
-                                                                        "[FramesCompleted]," +
-                                                                        "[FrameTime]," +
-                                                                        "[Result]," +
-                                                                        "[DownloadDateTime]," +
-                                                                        "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+      #region Fields
 
       private string _databaseFilePath;
       /// <summary>
@@ -127,6 +95,15 @@ namespace HFM.Core
       }
 
       private readonly IProteinDictionary _proteinDictionary;
+      private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommands = new Dictionary<SqlTable, SqlTableCommands>
+                                                                                        {
+                                                                                           { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
+                                                                                           { SqlTable.Version, new VersionSqlTableCommands() }
+                                                                                        };  
+
+      #endregion
+
+      #region Constructor
 
       public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
       {
@@ -140,6 +117,35 @@ namespace HFM.Core
          }
       }
 
+      #endregion
+
+      #region Test Methods
+
+      internal bool TableExists(SqlTable sqlTable)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            return TableExists(con, sqlTable);
+         }
+      }
+
+      internal void DropTable(SqlTable sqlTable)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            if (TableExists(con, sqlTable))
+            {
+               DropTable(con, sqlTable);
+            }
+         }
+      }
+
+      #endregion
+
+      #region Methods
+
       /// <summary>
       /// Check the Database Connection
       /// </summary>
@@ -150,9 +156,9 @@ namespace HFM.Core
             try
             {
                con.Open();
-               if (!TableExists(con, WuHistoryTableName))
+               if (!TableExists(con, SqlTable.WuHistory))
                {
-                  CreateTable(con, WuHistoryTableName);
+                  CreateTable(con, SqlTable.WuHistory);
                }
                var parameters = new QueryParameters();
                parameters.Fields.Add(new QueryField
@@ -171,36 +177,8 @@ namespace HFM.Core
             }
          }
       }
-      
-      internal bool TableExists()
-      {
-         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-         {
-            con.Open();
-            return TableExists(con, WuHistoryTableName);
-         }
-      }
-      
-      internal void CreateTable()
-      {
-         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-         {
-            con.Open();
-            CreateTable(con, WuHistoryTableName);
-         }
-      }
-      
-      public void DeleteAllUnitInfoData()
-      {
-         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-         {
-            con.Open();
-            if (TableExists(con, WuHistoryTableName))
-            {
-               DropTable(con, WuHistoryTableName);
-            }
-         }
-      }
+
+      #region WriteUnitInfo
    
       public void WriteUnitInfo(UnitInfoLogic unitInfoLogic)
       {
@@ -210,14 +188,14 @@ namespace HFM.Core
          using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
          {
             con.Open();
-            if (TableExists(con, WuHistoryTableName))
+            if (TableExists(con, SqlTable.WuHistory))
             {
                // do upgrade
             }
             else
             {
-               CreateTable(con, WuHistoryTableName);
-               Debug.Assert(TableExists(con, WuHistoryTableName));
+               CreateTable(con, SqlTable.WuHistory);
+               Debug.Assert(TableExists(con, SqlTable.WuHistory));
             }
 
             // ensure this unit is not written twice
@@ -227,75 +205,7 @@ namespace HFM.Core
             }
          }
       }
-      
-      public int DeleteUnitInfo(long id)
-      {
-         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-         {
-            con.Open();
-            if (TableExists(con, WuHistoryTableName))
-            {
-               var parameters = new QueryParameters();
-               parameters.Fields.Add(new QueryField { Name = QueryFieldName.ID, Type = QueryFieldType.Equal, Value = id });
-               return DeleteRows(con, parameters);
-            }
 
-            return 0;
-         }
-      }
-      
-      //public void ImportCompletedUnits(ICollection<HistoryEntry> entries)
-      //{
-      //   using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
-      //   {
-      //      con.Open();
-      //      if (TableExists(con, WuHistoryTableName))
-      //      {
-      //         // do upgrade
-      //      }
-      //      else
-      //      {
-      //         CreateTable(con, WuHistoryTableName);
-      //         Debug.Assert(TableExists(con, WuHistoryTableName));
-      //      }
-
-      //      using (var trans = con.BeginTransaction())
-      //      {
-      //         foreach (var historyEntry in entries)
-      //         {
-      //            WriteUnitInfoToDatabase(con, historyEntry);
-      //         }
-      //         trans.Commit();
-      //      }
-      //   }
-      //}
-      
-      private static bool TableExists(DbConnection con, string tableName)
-      {
-         DataTable table = con.GetSchema("Tables", new[] { null, null, tableName, null });
-         return table.Rows.Count != 0;
-      }
-
-      private static void CreateTable(SQLiteConnection con, string tableName)
-      {
-         using (var command = new SQLiteCommand(con))
-         {
-            command.CommandText = String.Format(CultureInfo.InvariantCulture,
-                                                WuHistoryTableCreateSql, tableName);
-            command.ExecuteNonQuery();
-         }
-      }
-      
-      private static void DropTable(SQLiteConnection con, string tableName)
-      {
-         using (var command = new SQLiteCommand(con))
-         {
-            command.CommandText = String.Format(CultureInfo.InvariantCulture,
-                                                WuHistoryTableDropSql, tableName);
-            command.ExecuteNonQuery();
-         }
-      }
-      
       private static bool ValidateUnitInfo(UnitInfo unitInfo)
       {
          bool result = ValidateFinishedUnitInfo(unitInfo);
@@ -306,7 +216,7 @@ namespace HFM.Core
          }
          return result;
       }
-      
+
       private static bool ValidateFinishedUnitInfo(UnitInfo unitInfo)
       {
          return unitInfo.ProjectIsUnknown() == false &&
@@ -314,13 +224,13 @@ namespace HFM.Core
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false &&
                 unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
       }
-      
+
       private static bool ValidateIncompleteUnitInfo(UnitInfo unitInfo)
       {
          // Finished Time will not be populated if any of these error
          // results are detected.  Only check for valid Project and 
          // download time - Issue 233
-      
+
          return unitInfo.ProjectIsUnknown() == false &&
                (unitInfo.UnitResult.Equals(WorkUnitResult.BadWorkUnit) ||
                 unitInfo.UnitResult.Equals(WorkUnitResult.CoreOutdated) ||
@@ -336,12 +246,6 @@ namespace HFM.Core
          return rows.Count != 0;
       }
 
-      //private static bool UnitInfoExists(SQLiteConnection con, HistoryEntry entry)
-      //{
-      //   var rows = ExecuteQueryUnitData(con, BuildUnitKeyQueryParameters(entry));
-      //   return rows.Length != 0;
-      //}
-      
       private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoLogic unitInfoLogic)
       {
          var parameters = new QueryParameters();
@@ -355,7 +259,7 @@ namespace HFM.Core
 
       private void WriteUnitInfoToDatabase(SQLiteConnection con, UnitInfoLogic unitInfoLogic)
       {
-         using (var command = new SQLiteCommand(con))
+         using (DbCommand command = SqlTableCommands[SqlTable.WuHistory].GetInsertCommand(con))
          {
             string message = String.Format(CultureInfo.CurrentCulture, "Writing unit to database: {0}", unitInfoLogic.UnitInfoData.ProjectRunCloneGen());
             Logger.Info(Constants.ClientNameFormat, unitInfoLogic.UnitInfoData.OwningSlotName, message);
@@ -388,50 +292,31 @@ namespace HFM.Core
             command.Parameters.Add(downloadDateTime);
             var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = unitInfoLogic.UnitInfoData.FinishedTime };
             command.Parameters.Add(completionDateTime);
-            
-            command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
+
             command.ExecuteNonQuery();
          }
       }
+
+      #endregion
       
-      //private static void WriteUnitInfoToDatabase(SQLiteConnection con, HistoryEntry entry)
-      //{
-      //   using (var command = new SQLiteCommand(con))
-      //   {
-      //      var projectID = new SQLiteParameter("ProjectID", DbType.Int32) { Value = entry.ProjectID };
-      //      command.Parameters.Add(projectID);
-      //      var projectRun = new SQLiteParameter("ProjectRun", DbType.Int32) { Value = entry.ProjectRun };
-      //      command.Parameters.Add(projectRun);
-      //      var projectClone = new SQLiteParameter("ProjectClone", DbType.Int32) { Value = entry.ProjectClone };
-      //      command.Parameters.Add(projectClone);
-      //      var projectGen = new SQLiteParameter("ProjectGen", DbType.Int32) { Value = entry.ProjectGen };
-      //      command.Parameters.Add(projectGen);
-      //      var instanceName = new SQLiteParameter("InstanceName", DbType.String) { Value = entry.InstanceName };
-      //      command.Parameters.Add(instanceName);
-      //      var instancePath = new SQLiteParameter("InstancePath", DbType.String) { Value = entry.InstancePath };
-      //      command.Parameters.Add(instancePath);
-      //      var username = new SQLiteParameter("Username", DbType.String) { Value = entry.Username };
-      //      command.Parameters.Add(username);
-      //      var team = new SQLiteParameter("Team", DbType.Int32) { Value = entry.Team };
-      //      command.Parameters.Add(team);
-      //      var coreVersion = new SQLiteParameter("CoreVersion", DbType.Single) { Value = entry.CoreVersion };
-      //      command.Parameters.Add(coreVersion);
-      //      var framesCompleted = new SQLiteParameter("FramesCompleted", DbType.Int32) { Value = entry.FramesCompleted };
-      //      command.Parameters.Add(framesCompleted);
-      //      var frameTime = new SQLiteParameter("FrameTime", DbType.Int32) { Value = entry.FrameTime.TotalSeconds };
-      //      command.Parameters.Add(frameTime);
-      //      var result = new SQLiteParameter("Result", DbType.Int32) { Value = (int)entry.Result.ToWorkUnitResult() };
-      //      command.Parameters.Add(result);
-      //      var downloadDateTime = new SQLiteParameter("DownloadDateTime", DbType.DateTime) { Value = entry.DownloadDateTime };
-      //      command.Parameters.Add(downloadDateTime);
-      //      var completionDateTime = new SQLiteParameter("CompletionDateTime", DbType.DateTime) { Value = entry.CompletionDateTime };
-      //      command.Parameters.Add(completionDateTime);
+      public int DeleteUnitInfo(long id)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + DatabaseFilePath))
+         {
+            con.Open();
+            if (TableExists(con, SqlTable.WuHistory))
+            {
+               var parameters = new QueryParameters();
+               parameters.Fields.Add(new QueryField { Name = QueryFieldName.ID, Type = QueryFieldType.Equal, Value = id });
+               return DeleteRows(con, parameters);
+            }
 
-      //      command.CommandText = String.Format(CultureInfo.InvariantCulture, WuHistoryTableInsertSql, WuHistoryTableName);
-      //      command.ExecuteNonQuery();
-      //   }
-      //}
+            return 0;
+         }
+      }
 
+      #region QueryUnitData
+      
       public IList<HistoryEntry> QueryUnitData(QueryParameters parameters)
       {
          return QueryUnitData(parameters, HistoryProductionView.BonusDownloadTime);
@@ -454,7 +339,7 @@ namespace HFM.Core
       private IList<HistoryEntry> ExecuteQueryUnitData(SQLiteConnection con, QueryParameters parameters,
                                                        HistoryProductionView productionView, IDictionary<int, Protein> proteinDictionary)
       {
-         if (TableExists(con, WuHistoryTableName))
+         if (TableExists(con, SqlTable.WuHistory))
          {
             var table = GetDataTable(con, parameters);
 
@@ -490,42 +375,9 @@ namespace HFM.Core
             return FilterProteinParameters(parameters, joinQuery);
          }
 
-         return new List<HistoryEntry>();
-      }
-      
-      private static DataTable GetDataTable(SQLiteConnection con, QueryParameters parameters)
-      {
-         var selectBuilder = new SelectStatementBuilder();
-         var command = new SQLiteCommand(selectBuilder.BuildSelectStatement(parameters), con);
-         var adapter = new SQLiteDataAdapter(command);
-
-         var table = new DataTable();
-         adapter.Fill(table);
-         return table;
+         return new HistoryEntry[0];
       }
 
-      private static int DeleteRows(SQLiteConnection con, QueryParameters parameters)
-      {
-         var selectBuilder = new SelectStatementBuilder();
-         var command = new SQLiteCommand(selectBuilder.BuildSelectStatement(parameters), con);
-         var adapter = new SQLiteDataAdapter(command);
-         var table = new DataTable();
-         adapter.Fill(table);
-
-         if (table.Rows.Count != 0)
-         {
-            foreach (DataRow row in table.Rows)
-            {
-               row.Delete();
-            }
-            var builder = new SQLiteCommandBuilder(adapter);
-            adapter.UpdateCommand = builder.GetUpdateCommand();
-            return adapter.Update(table);
-         }
-
-         return 0;
-      }
-      
       private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
       {
          var query = entries.AsQueryable();
@@ -564,7 +416,7 @@ namespace HFM.Core
          {
             valueFormat = "\"{2}\"";
          }
-      
+
          var sbWhere = new StringBuilder();
          //if (queryField.Type.Equals(QueryFieldType.All) == false)
          //{
@@ -573,109 +425,315 @@ namespace HFM.Core
 
          return sbWhere.ToString();
       }
+
+      #endregion
+
+      private static bool TableExists(DbConnection con, SqlTable sqlTable)
+      {
+         DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommands[sqlTable].TableName, null });
+         return table.Rows.Count != 0;
+      }
+
+      private static void CreateTable(SQLiteConnection con, SqlTable sqlTable)
+      {
+         using (var command = SqlTableCommands[sqlTable].GetCreateTableCommand(con))
+         {
+            command.ExecuteNonQuery();
+         }
+      }
+
+      private static void DropTable(SQLiteConnection con, SqlTable sqlTable)
+      {
+         using (var command = SqlTableCommands[sqlTable].GetDropTableCommand(con))
+         {
+            command.ExecuteNonQuery();
+         }
+      }
+      
+      private static DataTable GetDataTable(SQLiteConnection con, QueryParameters parameters)
+      {
+         var command = SqlTableCommands[SqlTable.WuHistory].GetSelectCommand(con);
+         var whereStatementBuilder = new WuHistoryWhereStatementBuilder();
+         AppendWhereStatementToCommand(command, whereStatementBuilder.BuildWhereStatement(parameters));
+
+         var table = new DataTable();
+         using (var adapter = new SQLiteDataAdapter(command))
+         {
+            adapter.Fill(table);
+         }
+
+         return table;
+      }
+
+      private static int DeleteRows(SQLiteConnection con, QueryParameters parameters)
+      {
+         var command = SqlTableCommands[SqlTable.WuHistory].GetSelectCommand(con);
+         var whereStatementBuilder = new WuHistoryWhereStatementBuilder();
+         AppendWhereStatementToCommand(command, whereStatementBuilder.BuildWhereStatement(parameters));
+
+         using (var adapter = new SQLiteDataAdapter(command))
+         {
+            var table = new DataTable();
+            adapter.Fill(table);
+
+            if (table.Rows.Count != 0)
+            {
+               foreach (DataRow row in table.Rows)
+               {
+                  row.Delete();
+               }
+               var builder = new SQLiteCommandBuilder(adapter);
+               adapter.UpdateCommand = builder.GetUpdateCommand();
+               return adapter.Update(table);
+            }
+         }
+
+         return 0;
+      }
+
+      private static void AppendWhereStatementToCommand(DbCommand command, string whereStatement)
+      {
+         if (!String.IsNullOrEmpty(whereStatement))
+         {
+            Debug.Assert(command.CommandText.EndsWith(";"));
+            command.CommandText = String.Format(CultureInfo.InvariantCulture, "{0} {1};",
+               command.CommandText.Substring(0, command.CommandText.Length - 1), whereStatement);
+         }
+      }
+
+      #endregion
+
+      private class WuHistoryWhereStatementBuilder
+      {
+         private const string AndSpace = "AND ";
+
+         private bool _appendAnd;
+
+         public string BuildWhereStatement(QueryParameters parameters)
+         {
+            if (parameters.Fields.Count == 0)
+            {
+               return null;
+            }
+
+            // reset
+            _appendAnd = false;
+
+            var sb = new StringBuilder("WHERE ");
+            foreach (var field in parameters.Fields)
+            {
+               if (field.Name.Equals(QueryFieldName.ID) ||
+                   field.Name.Equals(QueryFieldName.ProjectID) ||
+                   field.Name.Equals(QueryFieldName.ProjectRun) ||
+                   field.Name.Equals(QueryFieldName.ProjectClone) ||
+                   field.Name.Equals(QueryFieldName.ProjectGen) ||
+                   field.Name.Equals(QueryFieldName.Name) ||
+                   field.Name.Equals(QueryFieldName.Path) ||
+                   field.Name.Equals(QueryFieldName.Username) ||
+                   field.Name.Equals(QueryFieldName.Team) ||
+                   field.Name.Equals(QueryFieldName.CoreVersion) ||
+                   field.Name.Equals(QueryFieldName.FramesCompleted) ||
+                   field.Name.Equals(QueryFieldName.FrameTime) ||
+                   field.Name.Equals(QueryFieldName.Result) ||
+                   field.Name.Equals(QueryFieldName.DownloadDateTime) ||
+                   field.Name.Equals(QueryFieldName.CompletionDateTime))
+               {
+                  sb.Append(BuildWhereConditionInternal(field));
+                  sb.Append(_appendAnd ? AndSpace : String.Empty);
+               }
+            }
+            
+            if (_appendAnd)
+            {
+               string whereStatement = sb.ToString();
+               whereStatement = whereStatement.Remove(whereStatement.LastIndexOf(AndSpace)).Trim();
+               whereStatement += " ORDER BY [ID] ASC";
+               return whereStatement;
+            }
+
+            return null;
+         }
+
+         private string BuildWhereConditionInternal(QueryField queryField)
+         {
+            _appendAnd = true;
+
+            var sbWhere = new StringBuilder();
+            sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", GetDatabaseColumnName(queryField.Name));
+            sbWhere.Append(BuildValueCondition(queryField.Operator, queryField.Value));
+
+            return sbWhere.ToString();
+         }
+
+         private static string GetDatabaseColumnName(QueryFieldName fieldName)
+         {
+            // changed enumerations, this provides compatibility with the existing column names
+            switch (fieldName)
+            {
+               case QueryFieldName.Name:
+                  return "InstanceName";
+               case QueryFieldName.Path:
+                  return "InstancePath";
+               default:
+                  return fieldName.ToString();
+            }
+         }
+
+         private static string BuildValueCondition(string oper, object value)
+         {
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} ", oper, GetFormattedValue(value));
+         }
+
+         private static string GetFormattedValue(object value)
+         {
+            if (value is DateTime)
+            {
+               var dateTime = (DateTime)value;
+               return String.Format(CultureInfo.InvariantCulture, "'{0}'", dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+            if (value is string)
+            {
+               WorkUnitResult workUnitResult = value.ToString().ToWorkUnitResult();
+               if (!workUnitResult.Equals(WorkUnitResult.Unknown))
+               {
+                  value = (int)workUnitResult;
+               }
+            }
+
+            return String.Format(CultureInfo.InvariantCulture, "'{0}'", value);
+         }
+      }
    }
 
-   internal class SelectStatementBuilder
+   public abstract class SqlTableCommands
    {
-      private const string WuHistoryTableSelectAllSql = "SELECT * FROM [{0}] ";
-      private const string AndSpace = "AND ";
-   
-      private bool _appendAnd;
+      #region SQL Strings
 
-      public string BuildSelectStatement(QueryParameters parameters)
+      private const string DropTableSql = "DROP TABLE [{0}];";
+      private const string SelectSql = "SELECT * FROM [{0}];";
+
+      #endregion
+
+      public abstract string TableName { get; }
+
+      public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
+
+      public abstract DbCommand GetInsertCommand(SQLiteConnection connection);
+
+      public virtual DbCommand GetDropTableCommand(SQLiteConnection connection)
       {
-         if (parameters.Fields.Count == 0)
-         {
-            return String.Format(CultureInfo.InvariantCulture, WuHistoryTableSelectAllSql, UnitInfoDatabase.WuHistoryTableName);
-         }
-         
-         // reset
-         _appendAnd = false;
+         return new SQLiteCommand(connection)
+                {
+                   CommandText = String.Format(CultureInfo.InvariantCulture, DropTableSql, TableName)
+                };
+      }
+      
+      public virtual SQLiteCommand GetSelectCommand(SQLiteConnection connection)
+      {
+         return new SQLiteCommand(connection)
+                {
+                   CommandText = String.Format(CultureInfo.InvariantCulture, SelectSql, TableName)
+                };
+      }
+   }
 
-         var sbWhere = new StringBuilder("WHERE ");
+   public sealed class WuHistorySqlTableCommands : SqlTableCommands
+   {
+      #region SQL Constants
+      
+      private const string WuHistoryTableName = "WuHistory";
 
-         foreach (var field in parameters.Fields)
-         {
-            if (field.Name.Equals(QueryFieldName.ID) ||
-                field.Name.Equals(QueryFieldName.ProjectID) ||
-                field.Name.Equals(QueryFieldName.ProjectRun) ||
-                field.Name.Equals(QueryFieldName.ProjectClone) ||
-                field.Name.Equals(QueryFieldName.ProjectGen) ||
-                field.Name.Equals(QueryFieldName.Name) ||
-                field.Name.Equals(QueryFieldName.Path) ||
-                field.Name.Equals(QueryFieldName.Username) ||
-                field.Name.Equals(QueryFieldName.Team) ||
-                field.Name.Equals(QueryFieldName.CoreVersion) ||
-                field.Name.Equals(QueryFieldName.FramesCompleted) ||
-                field.Name.Equals(QueryFieldName.FrameTime) ||
-                field.Name.Equals(QueryFieldName.Result) ||
-                field.Name.Equals(QueryFieldName.DownloadDateTime) ||
-                field.Name.Equals(QueryFieldName.CompletionDateTime))
-            {
-               sbWhere.Append(BuildWhereCondition(field));
-               sbWhere.Append(_appendAnd ? AndSpace : String.Empty);
-            }
-         }
+      private const string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
+                                                     "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                     "[ProjectID] INT  NOT NULL," +
+                                                     "[ProjectRun] INT  NOT NULL," +
+                                                     "[ProjectClone] INT  NOT NULL," +
+                                                     "[ProjectGen] INT  NOT NULL," +
+                                                     "[InstanceName] VARCHAR(60)  NOT NULL," +
+                                                     "[InstancePath] VARCHAR(260)  NOT NULL," +
+                                                     "[Username] VARCHAR(60)  NOT NULL," +
+                                                     "[Team] INT  NOT NULL," +
+                                                     "[CoreVersion] FLOAT  NOT NULL," +
+                                                     "[FramesCompleted] INT  NOT NULL," +
+                                                     "[FrameTime] INT  NOT NULL," +
+                                                     "[Result] INT  NOT NULL," +
+                                                     "[DownloadDateTime] DATETIME  NOT NULL," +
+                                                     "[CompletionDateTime] DATETIME  NOT NULL);";
 
-         string selectCommand = String.Format(CultureInfo.InvariantCulture,
-            WuHistoryTableSelectAllSql, UnitInfoDatabase.WuHistoryTableName);
-         if (_appendAnd)
-         {
-            selectCommand += sbWhere.ToString();
-            selectCommand = selectCommand.Remove(selectCommand.LastIndexOf(AndSpace)).Trim();
-         }
-         selectCommand += " ORDER BY [ID] ASC";
+      private const string WuHistoryTableInsertSql = "INSERT INTO [{0}] ([ProjectID]," +
+                                                                        "[ProjectRun]," +
+                                                                        "[ProjectClone]," +
+                                                                        "[ProjectGen]," +
+                                                                        "[InstanceName]," +
+                                                                        "[InstancePath]," +
+                                                                        "[Username]," +
+                                                                        "[Team]," +
+                                                                        "[CoreVersion]," +
+                                                                        "[FramesCompleted]," +
+                                                                        "[FrameTime]," +
+                                                                        "[Result]," +
+                                                                        "[DownloadDateTime]," +
+                                                                        "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-         return selectCommand;
+      #endregion
+
+      public override string TableName
+      {
+         get { return WuHistoryTableName; }
       }
 
-      private string BuildWhereCondition(QueryField queryField)
+      public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
       {
-         _appendAnd = true;
-
-         var sbWhere = new StringBuilder();
-         sbWhere.AppendFormat(CultureInfo.InvariantCulture, "[{0}] ", GetDatabaseColumnName(queryField.Name));
-         sbWhere.Append(BuildValueCondition(queryField.Operator, queryField.Value));
-
-         return sbWhere.ToString();
+         return new SQLiteCommand(connection)
+                {
+                   CommandText = String.Format(CultureInfo.InvariantCulture, 
+                                               WuHistoryTableCreateSql, WuHistoryTableName)
+                };
       }
 
-      private static string GetDatabaseColumnName(QueryFieldName fieldName)
+      public override DbCommand GetInsertCommand(SQLiteConnection connection)
       {
-         // changed enumerations, this provides compatibility with the existing column names
-         switch (fieldName)
-         {
-            case QueryFieldName.Name:
-               return "InstanceName";
-            case QueryFieldName.Path:
-               return "InstancePath";
-            default:
-               return fieldName.ToString();
-         }
+         return new SQLiteCommand(connection)
+                {
+                   CommandText = String.Format(CultureInfo.InvariantCulture,
+                                               WuHistoryTableInsertSql, WuHistoryTableName)
+                };
+      }
+   }
+
+   public sealed class VersionSqlTableCommands : SqlTableCommands
+   {
+      #region SQL Constants
+
+      private const string VersionTableName = "DbVersion";
+
+      private const string VersionTableCreateSql = "CREATE TABLE [{0}] (" +
+                                                   "[Version] FLOAT  NOT NULL);";
+      
+      #endregion
+
+      public override string TableName
+      {
+         get { return VersionTableName; }
       }
 
-      private static string BuildValueCondition(string oper, object value)
+      public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
       {
-         return String.Format(CultureInfo.InvariantCulture, "{0} {1} ", oper, GetFormattedValue(value));
+         return new SQLiteCommand(connection)
+                {
+                   CommandText = String.Format(CultureInfo.InvariantCulture,
+                                               VersionTableCreateSql, VersionTableName)
+                };
       }
 
-      private static string GetFormattedValue(object value)
+      public override DbCommand GetInsertCommand(SQLiteConnection connection)
       {
-         if (value is DateTime)
-         {
-            var dateTime = (DateTime)value;
-            return String.Format(CultureInfo.InvariantCulture, "'{0}'", dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-         }
-         if (value is string)
-         {
-            WorkUnitResult workUnitResult = value.ToString().ToWorkUnitResult();
-            if (!workUnitResult.Equals(WorkUnitResult.Unknown))
-            {
-               value = (int)workUnitResult;
-            }
-         }
-
-         return String.Format(CultureInfo.InvariantCulture, "'{0}'", value);
+         //return new SQLiteCommand(connection)
+         //       {
+         //          CommandText = String.Format(CultureInfo.InvariantCulture,
+         //                                      WuHistoryTableInsertSql, WuHistoryTableName)
+         //       };
+         return null;
       }
    }
 }
