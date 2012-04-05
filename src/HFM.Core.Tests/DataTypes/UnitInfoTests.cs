@@ -37,7 +37,7 @@ namespace HFM.Core.Tests.DataTypes
          Assert.IsTrue(unitInfo.DueTime.IsUnknown());
          Assert.IsTrue(unitInfo.UnitStartTimeStamp.IsZero());
          Assert.IsTrue(unitInfo.FinishedTime.IsUnknown());
-         Assert.IsTrue(unitInfo.CoreVersion.Length == 0);
+         Assert.IsTrue(unitInfo.CoreVersion == 0);
          Assert.IsTrue(unitInfo.ProteinName.Length == 0);
          Assert.IsTrue(unitInfo.ProteinTag.Length == 0);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfo.UnitResult);

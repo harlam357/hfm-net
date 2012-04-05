@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Log Line Parser Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
@@ -177,7 +178,11 @@ namespace HFM.Log
                Match coreVersionMatch;
                if ((coreVersionMatch = ProtoMolCoreVersionRegex.Match(logLine.LineRaw)).Success)
                {
-                  return coreVersionMatch.Result("${CoreVer}");
+                  float value;
+                  if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                  {
+                     return value;
+                  }
                }
                /*******************/
                return new LogLineError(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));

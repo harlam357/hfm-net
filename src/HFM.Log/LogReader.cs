@@ -111,11 +111,11 @@ namespace HFM.Log
 
             #region Core Version
 
-            if (data.CoreVersion.Length == 0)
+            if (data.CoreVersion == 0)
             {
                if (line.LineType.Equals(LogLineType.WorkUnitCoreVersion) && line.LineData != null)
                {
-                  data.CoreVersion = line.LineData.ToString();
+                  data.CoreVersion = (float)line.LineData;
                }
             }
 

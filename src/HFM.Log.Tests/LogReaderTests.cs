@@ -81,7 +81,7 @@ namespace HFM.Log.Tests
          
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(5, logLines[33].LineData);
-         Assert.AreEqual("2.08", logLines[40].LineData);
+         Assert.AreEqual(2.08f, logLines[40].LineData);
          Assert.That(logLines[51].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[109].LineData);
       }
@@ -117,7 +117,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[33].LineData);
-         Assert.AreEqual("2.08", logLines[40].LineData);
+         Assert.AreEqual(2.08f, logLines[40].LineData);
          Assert.That(logLines[47].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[180].LineData);
 
@@ -158,7 +158,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[234].LineData);
-         Assert.AreEqual("2.08", logLines[239].LineData);
+         Assert.AreEqual(2.08f, logLines[239].LineData);
          Assert.That(logLines[246].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[368].LineData);
       }
@@ -193,7 +193,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 8 - Unit Index 0)
          Assert.AreEqual(6, logLines[610].LineData);
-         Assert.AreEqual("2.10", logLines[617].LineData);
+         Assert.AreEqual(2.10f, logLines[617].LineData);
          Assert.That(logLines[628].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[660].LineData);
       }
@@ -261,7 +261,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 33)
          Assert.AreEqual(0, logLines[3763].LineData);
-         Assert.AreEqual("2.22", logLines[3770].LineData);
+         Assert.AreEqual(2.22f, logLines[3770].LineData);
          Assert.That(logLines[3780].ToString().Contains("Project: 6071 (Run 0, Clone 39, Gen 70)"));
          Assert.AreEqual(WorkUnitResult.ClientCoreError, logLines[3786].LineData);
       }
@@ -297,7 +297,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(0, logLines[32].LineData);
-         Assert.AreEqual("2.27", logLines[39].LineData);
+         Assert.AreEqual(2.27f, logLines[39].LineData);
          Assert.That(logLines[51].ToString().Contains("Project: 8022 (Run 11, Clone 318, Gen 24)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[130].LineData);
       }
@@ -365,7 +365,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(1, logLines[133].LineData);
-         Assert.AreEqual("1.19", logLines[140].LineData);
+         Assert.AreEqual(1.19f, logLines[140].LineData);
          Assert.That(logLines[154].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[286].LineData);
       }
@@ -402,7 +402,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(8, logLines[37].LineData);
-         Assert.AreEqual("1.19", logLines[42].LineData);
+         Assert.AreEqual(1.19f, logLines[42].LineData);
          Assert.That(logLines[56].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[188].LineData);
       }
@@ -458,7 +458,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 3)
          Assert.AreEqual(9, logLines[323].LineData);
-         Assert.AreEqual("1.19", logLines[328].LineData);
+         Assert.AreEqual(1.19f, logLines[328].LineData);
          Assert.That(logLines[342].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
          Assert.AreEqual(WorkUnitResult.UnstableMachine, logLines[359].LineData);
 
@@ -496,14 +496,14 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(0, logLines[28].LineData);
-         Assert.AreEqual("1.31", logLines[37].LineData);
+         Assert.AreEqual(1.31f, logLines[37].LineData);
          Assert.That(logLines[50].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
          var unitData = LogReader.GetFahLogDataFromLogLines(logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
-         Assert.AreEqual("1.31", unitData.CoreVersion);
+         Assert.AreEqual(1.31f, unitData.CoreVersion);
          Assert.AreEqual(-1, unitData.ProjectInfoIndex);
          Assert.AreEqual(2, unitData.ProjectInfoList.Count);
          Assert.AreEqual(5781, unitData.ProjectID);
@@ -548,14 +548,14 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(3, logLines[34].LineData);
-         Assert.AreEqual("2.19", logLines[41].LineData);
+         Assert.AreEqual(2.19f, logLines[41].LineData);
          Assert.That(logLines[56].ToString().Contains("Project: 10634 (Run 11, Clone 24, Gen 14)"));
 
          var unitData = LogReader.GetFahLogDataFromLogLines(logInterpreter.CurrentWorkUnitLogLines);
          Assert.AreEqual(new TimeSpan(17, 31, 22), unitData.UnitStartTimeStamp);
          Assert.AreEqual(12, unitData.FrameDataList.Count);
          Assert.AreEqual(12, unitData.FramesObserved);
-         Assert.AreEqual("2.19", unitData.CoreVersion);
+         Assert.AreEqual(2.19f, unitData.CoreVersion);
          Assert.AreEqual(-1, unitData.ProjectInfoIndex);
          Assert.AreEqual(1, unitData.ProjectInfoList.Count);
          Assert.AreEqual(10634, unitData.ProjectID);
@@ -630,7 +630,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 1 - Unit Index 0)
          Assert.AreEqual(1, logLines[182].LineData);
-         Assert.AreEqual("1.90", logLines[189].LineData);
+         Assert.AreEqual(1.90f, logLines[189].LineData);
          Assert.That(logLines[197].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, logLines[433].LineData);
       }
@@ -681,7 +681,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 4 - Unit Index 0)
          Assert.AreEqual(4, logLines[967].LineData);
-         Assert.AreEqual("23", logLines[978].LineData);
+         Assert.AreEqual(23f, logLines[978].LineData);
          Assert.That(logLines[963].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
          Assert.That(logLines[971].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
          Assert.That(logLines[1006].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
@@ -690,7 +690,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitData.UnitStartTimeStamp);
          Assert.AreEqual(5, unitData.FrameDataList.Count);
          Assert.AreEqual(5, unitData.FramesObserved);
-         Assert.AreEqual("23", unitData.CoreVersion);
+         Assert.AreEqual(23f, unitData.CoreVersion);
          Assert.AreEqual(-1, unitData.ProjectInfoIndex);
          Assert.AreEqual(3, unitData.ProjectInfoList.Count);
          Assert.AreEqual(10002, unitData.ProjectID);
@@ -742,7 +742,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 6)
          Assert.AreEqual(7, logLines[2133].LineData);
-         Assert.AreEqual("1.90", logLines[2138].LineData);
+         Assert.AreEqual(1.90f, logLines[2138].LineData);
          Assert.That(logLines[2147].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
          
          // Special Check to be sure the reader is catching the Pause For Battery line
@@ -779,7 +779,7 @@ namespace HFM.Log.Tests
 
          // Spot Check Work Unit Data (Run Index 0 - Unit Index 0)
          Assert.AreEqual(5, logLines[31].LineData);
-         Assert.AreEqual("2.27", logLines[38].LineData);
+         Assert.AreEqual(2.27f, logLines[38].LineData);
          Assert.That(logLines[47].ToString().Contains("Project: 10741 (Run 0, Clone 1996, Gen 3)"));
       }
 
@@ -837,7 +837,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(56, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(18, 6, 54), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(2.27f, fahLogData.CoreVersion);
          Assert.AreEqual(6, fahLogData.FrameDataList.Count);
          Assert.AreEqual(6, fahLogData.FramesObserved);
          Assert.AreEqual(7136, fahLogData.ProjectID);
@@ -850,7 +850,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(142, logLines.Count);
          fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(18, 39, 17), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(2.27f, fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(6984, fahLogData.ProjectID);
@@ -896,7 +896,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(158, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(0, 37, 38), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.20", fahLogData.CoreVersion);
+         Assert.AreEqual(2.20f, fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(6801, fahLogData.ProjectID);
@@ -909,7 +909,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(141, logLines.Count);
          fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(18, 29, 47), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(2.27f, fahLogData.CoreVersion);
          Assert.AreEqual(101, fahLogData.FrameDataList.Count);
          Assert.AreEqual(101, fahLogData.FramesObserved);
          Assert.AreEqual(11051, fahLogData.ProjectID);
@@ -948,7 +948,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(27, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(22, 1, 5), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(2.27f, fahLogData.CoreVersion);
          Assert.AreEqual(0, fahLogData.FrameDataList.Count);
          Assert.AreEqual(0, fahLogData.FramesObserved);
          Assert.AreEqual(7704, fahLogData.ProjectID);
@@ -990,7 +990,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(39, logLines.Count);
          FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(3, 25, 32), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("2.27", fahLogData.CoreVersion);
+         Assert.AreEqual(2.27f, fahLogData.CoreVersion);
          Assert.AreEqual(10, fahLogData.FrameDataList.Count);
          Assert.AreEqual(10, fahLogData.FramesObserved);
          Assert.AreEqual(7610, fahLogData.ProjectID);
@@ -1003,7 +1003,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(87, logLines.Count);
          fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
          Assert.AreEqual(new TimeSpan(4, 21, 52), fahLogData.UnitStartTimeStamp);
-         Assert.AreEqual("1.31", fahLogData.CoreVersion);
+         Assert.AreEqual(1.31f, fahLogData.CoreVersion);
          Assert.AreEqual(53, fahLogData.FrameDataList.Count);
          Assert.AreEqual(53, fahLogData.FramesObserved);
          Assert.AreEqual(5772, fahLogData.ProjectID);

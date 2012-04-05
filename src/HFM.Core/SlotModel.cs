@@ -296,9 +296,9 @@ namespace HFM.Core
       {
          get
          {
-            if (ShowVersions && !String.IsNullOrEmpty(UnitInfo.CoreVersion))
+            if (ShowVersions && UnitInfo.CoreVersion != 0)
             {
-               return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", UnitInfoLogic.CurrentProtein.Core, UnitInfo.CoreVersion);
+               return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoLogic.CurrentProtein.Core, UnitInfo.CoreVersion);
             }
             return UnitInfoLogic.CurrentProtein.Core;
          }
