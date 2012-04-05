@@ -74,7 +74,7 @@ namespace HFM.Core.Tests
             unitInfo.DueTime = new DateTime(2000, 3, 3, 0, 0, 0);
             unitInfo.UnitStartTimeStamp = TimeSpan.FromHours(i + 1);
             unitInfo.FinishedTime = new DateTime(2000, 4, 4, 0, 0, 0);
-            unitInfo.CoreVersion = "2.10";
+            unitInfo.CoreVersion = 2.10f;
             unitInfo.ProjectID = 2669;
             unitInfo.ProjectRun = 1;
             unitInfo.ProjectClone = 2;
@@ -109,7 +109,7 @@ namespace HFM.Core.Tests
             unitInfo.DueTime = new DateTime(2000, 3, 3, 0, 0, 0);
             unitInfo.UnitStartTimeStamp = TimeSpan.FromHours(i + 1);
             unitInfo.FinishedTime = new DateTime(2000, 4, 4, 0, 0, 0);
-            unitInfo.CoreVersion = "2.27";
+            unitInfo.CoreVersion = 2.27f;
             unitInfo.ProjectID = 6903;
             unitInfo.ProjectRun = 1;
             unitInfo.ProjectClone = 2;
@@ -151,7 +151,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(new DateTime(2000, 3, 3, 0, 0, 0), unitInfo.DueTime);
             Assert.AreEqual(TimeSpan.FromHours(i + 1), unitInfo.UnitStartTimeStamp);
             Assert.AreEqual(new DateTime(2000, 4, 4, 0, 0, 0), unitInfo.FinishedTime);
-            Assert.AreEqual("2.10", unitInfo.CoreVersion);
+            Assert.AreEqual(2.10f, unitInfo.CoreVersion);
             Assert.AreEqual(2669, unitInfo.ProjectID);
             Assert.AreEqual(1, unitInfo.ProjectRun);
             Assert.AreEqual(2, unitInfo.ProjectClone);
@@ -189,7 +189,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(new DateTime(2000, 3, 3, 0, 0, 0), unitInfo.DueTime);
             Assert.AreEqual(TimeSpan.FromHours(i + 1), unitInfo.UnitStartTimeStamp);
             Assert.AreEqual(new DateTime(2000, 4, 4, 0, 0, 0), unitInfo.FinishedTime);
-            Assert.AreEqual("2.27", unitInfo.CoreVersion);
+            Assert.AreEqual(2.27f, unitInfo.CoreVersion);
             Assert.AreEqual(6903, unitInfo.ProjectID);
             Assert.AreEqual(1, unitInfo.ProjectRun);
             Assert.AreEqual(2, unitInfo.ProjectClone);

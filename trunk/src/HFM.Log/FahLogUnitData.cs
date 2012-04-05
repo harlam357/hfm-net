@@ -30,7 +30,7 @@ namespace HFM.Log
       {
          UnitStartTimeStamp = TimeSpan.MinValue;
          FrameDataList = new List<LogLine>(101);
-         CoreVersion = String.Empty;
+         CoreVersion = 0;
          ProjectInfoIndex = -1;
          ProjectInfoList = new List<IProjectInfo>();
          UnitResult = WorkUnitResult.Unknown;
@@ -54,7 +54,7 @@ namespace HFM.Log
       /// <summary>
       /// Core Version
       /// </summary>
-      public string CoreVersion { get; set; }
+      public float CoreVersion { get; set; }
 
       /// <summary>
       /// Project Info List Current Index

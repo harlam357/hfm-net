@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 
@@ -53,7 +54,7 @@ namespace HFM.Core.Tests
          unitInfo.OwningClientPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
-         unitInfo.CoreVersion = "2.09";
+         unitInfo.CoreVersion = 2.09f;
          unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
          unitInfo.DownloadTime = new DateTime(2010, 1, 1);
          unitInfo.FinishedTime = new DateTime(2010, 1, 2);
@@ -95,6 +96,67 @@ namespace HFM.Core.Tests
       }
 
       [Test]
+      public void WriteUnitInfoTest1CzechCulture()
+      {
+         Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+
+         const string testFile = "UnitInfoTest1.db3";
+         if (File.Exists(testFile))
+         {
+            File.Delete(testFile);
+         }
+
+         var unitInfo = new UnitInfo();
+         unitInfo.ProjectID = 2669;
+         unitInfo.ProjectRun = 1;
+         unitInfo.ProjectClone = 2;
+         unitInfo.ProjectGen = 3;
+         unitInfo.OwningClientName = "Owner";
+         unitInfo.OwningClientPath = "Path";
+         unitInfo.FoldingID = "harlam357";
+         unitInfo.Team = 32;
+         unitInfo.CoreVersion = 2.09f;
+         unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+         unitInfo.DownloadTime = new DateTime(2010, 1, 1);
+         unitInfo.FinishedTime = new DateTime(2010, 1, 2);
+         unitInfo.FramesObserved = 2;
+         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+
+         var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
+
+         var database = CreateUnitInfoDatabase();
+         database.DatabaseFilePath = testFile;
+         database.WriteUnitInfo(unitInfoLogic);
+
+         var rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+         HistoryEntry entry = rows[0];
+         Assert.AreEqual(2669, entry.ProjectID);
+         Assert.AreEqual(1, entry.ProjectRun);
+         Assert.AreEqual(2, entry.ProjectClone);
+         Assert.AreEqual(3, entry.ProjectGen);
+         Assert.AreEqual("Owner", entry.Name);
+         Assert.AreEqual("Path", entry.Path);
+         Assert.AreEqual("harlam357", entry.Username);
+         Assert.AreEqual(32, entry.Team);
+         Assert.AreEqual(2.09f, entry.CoreVersion);
+         Assert.AreEqual(100, entry.FramesCompleted);
+         Assert.AreEqual(TimeSpan.FromSeconds(600), entry.FrameTime);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
+         Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
+         Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
+
+         // test code to ensure this unit is NOT written again
+         database.WriteUnitInfo(unitInfoLogic);
+         // verify
+         rows = database.QueryUnitData(new QueryParameters());
+         Assert.AreEqual(1, rows.Count);
+
+         File.Delete(testFile);
+      }
+
+      [Test]
       public void WriteUnitInfoTest2()
       {
          const string testFile = "UnitInfoTest2.db3";
@@ -112,7 +174,7 @@ namespace HFM.Core.Tests
          unitInfo.OwningClientPath = "The Path's";
          unitInfo.FoldingID = "harlam357's";
          unitInfo.Team = 100;
-         unitInfo.CoreVersion = "2.27";
+         unitInfo.CoreVersion = 2.27f;
          unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
          unitInfo.DownloadTime = new DateTime(2009, 5, 5);
          unitInfo.FinishedTime = DateTime.MinValue;
@@ -171,7 +233,7 @@ namespace HFM.Core.Tests
          unitInfo.OwningClientPath = "Path";
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
-         unitInfo.CoreVersion = "2.09";
+         unitInfo.CoreVersion = 2.09f;
          unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
          unitInfo.DownloadTime = new DateTime(2010, 2, 2);
          unitInfo.FinishedTime = DateTime.MinValue;
@@ -219,7 +281,7 @@ namespace HFM.Core.Tests
          unitInfo.OwningSlotId = 2;
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
-         unitInfo.CoreVersion = "2.27";
+         unitInfo.CoreVersion = 2.27f;
          unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
          unitInfo.DownloadTime = new DateTime(2012, 1, 2);
          unitInfo.FinishedTime = new DateTime(2012, 1, 5);

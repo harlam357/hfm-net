@@ -100,7 +100,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual("2.27", unitInfoData.CoreVersion);
+         Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
          Assert.AreEqual(7610, unitInfoData.ProjectID);
          Assert.AreEqual(630, unitInfoData.ProjectRun);
          Assert.AreEqual(0, unitInfoData.ProjectClone);
@@ -175,7 +175,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
          Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual(String.Empty, unitInfoData.CoreVersion);
+         Assert.AreEqual(0, unitInfoData.CoreVersion);
          Assert.AreEqual(7610, unitInfoData.ProjectID);
          Assert.AreEqual(630, unitInfoData.ProjectRun);
          Assert.AreEqual(0, unitInfoData.ProjectClone);
@@ -248,7 +248,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(4, 21, 52), unitInfoData.UnitStartTimeStamp);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual("1.31", unitInfoData.CoreVersion);
+         Assert.AreEqual(1.31f, unitInfoData.CoreVersion);
          Assert.AreEqual(5772, unitInfoData.ProjectID);
          Assert.AreEqual(7, unitInfoData.ProjectRun);
          Assert.AreEqual(364, unitInfoData.ProjectClone);
@@ -323,7 +323,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual("2.27", unitInfoData.CoreVersion);
+         Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
          Assert.AreEqual(7610, unitInfoData.ProjectID);
          Assert.AreEqual(192, unitInfoData.ProjectRun);
          Assert.AreEqual(0, unitInfoData.ProjectClone);

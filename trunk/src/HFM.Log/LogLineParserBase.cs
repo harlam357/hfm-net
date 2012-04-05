@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line Parser Base Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
@@ -90,14 +91,16 @@ namespace HFM.Log
                Match coreVersionMatch;
                if ((coreVersionMatch = CoreVersionRegex.Match(logLine.LineRaw)).Success)
                {
-                  string sCoreVer = coreVersionMatch.Result("${CoreVer}").Trim();
-                  float coreVersion;
-                  if (Single.TryParse(sCoreVer, out coreVersion))
+                  float value;
+                  if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
                   {
-                     return sCoreVer;
+                     return value;
                   }
-                  return new LogLineError(String.Format("Failed to parse Core Version from '{0}'", logLine.LineRaw));
+                  return new LogLineError(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));
                }
+               // return null here because a derived parser may also parse these lines
+               // if we were to return LogLineError the line would be marked as an error
+               // line and we don't want that (see LogLineParserLegacy).
                return null;
             case LogLineType.WorkUnitFrame:
                UnitFrame frame = GetUnitFrame(logLine);

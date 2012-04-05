@@ -39,7 +39,7 @@ namespace HFM.Core.DataTypes
          DueTime = DateTime.MinValue;
          UnitStartTimeStamp = TimeSpan.Zero;
          FinishedTime = DateTime.MinValue;
-         CoreVersion = String.Empty;
+         CoreVersion = 0;
          ProteinName = String.Empty;
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
@@ -142,7 +142,7 @@ namespace HFM.Core.DataTypes
       /// Core Version Number
       /// </summary>
       [DataMember(Order = 11)]
-      public string CoreVersion { get; set; }
+      public float CoreVersion { get; set; }
 
       /// <summary>
       /// Project ID Number
