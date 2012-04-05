@@ -34,51 +34,51 @@ namespace HFM.Log
       /// <summary>
       /// Regular Expression to match User (Folding ID) and Team string.
       /// </summary>
-      private static readonly Regex rUserTeam =
+      private static readonly Regex UserTeamRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] - User name: (?<Username>.*) \\(Team (?<TeamNumber>.*)\\)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User ID string.
       /// </summary>
-      private static readonly Regex rReceivedUserID =
+      private static readonly Regex ReceivedUserIDRegex =
          new Regex("\\[(?<Timestamp>.{8})\\].*- Received User ID = (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User ID string.
       /// </summary>
-      private static readonly Regex rUserID =
+      private static readonly Regex UserIDRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] - User ID: (?<UserID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Machine ID string.
       /// </summary>
-      private static readonly Regex rMachineID =
+      private static readonly Regex MachineIDRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] - Machine ID: (?<MachineID>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Unit Index string.
       /// </summary>
-      private static readonly Regex rUnitIndex =
+      private static readonly Regex UnitIndexRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] Working on Unit 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match Unit Index string.
       /// </summary>
-      private static readonly Regex rQueueIndex =
+      private static readonly Regex QueueIndexRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] Working on queue slot 0(?<QueueIndex>[\\d]) \\[.*\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /*** ProtoMol Only */
       /// <summary>
       /// Regular Expression to match ProtoMol Core Version string.
       /// </summary>
-      private static readonly Regex rProtoMolCoreVersion =
+      private static readonly Regex ProtoMolCoreVersionRegex =
          new Regex("\\[(?<Timestamp>.{8})\\]   Version: (?<CoreVer>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
       /*******************/
 
       /// <summary>
       /// Regular Expression to match Completed Work Units string.
       /// </summary>
-      private static readonly Regex rCompletedWUs =
+      private static readonly Regex CompletedWorkUnitsRegex =
          new Regex("\\[(?<Timestamp>.{8})\\] \\+ Number of Units Completed: (?<Completed>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
       
       /// <summary>
@@ -119,48 +119,48 @@ namespace HFM.Log
                }
                return new LogLineError(String.Format("Failed to parse Arguments value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientUserNameTeam:
-               Match mUserTeam;
-               if ((mUserTeam = rUserTeam.Match(logLine.LineRaw)).Success)
+               Match userTeamMatch;
+               if ((userTeamMatch = UserTeamRegex.Match(logLine.LineRaw)).Success)
                {
                   var list = new ArrayList(2);
-                  list.Add(mUserTeam.Result("${Username}"));
-                  list.Add(Int32.Parse(mUserTeam.Result("${TeamNumber}")));
+                  list.Add(userTeamMatch.Result("${Username}"));
+                  list.Add(Int32.Parse(userTeamMatch.Result("${TeamNumber}")));
                   return list;
                }
                return new LogLineError(String.Format("Failed to parse User Name and Team values from '{0}'", logLine.LineRaw));
             case LogLineType.ClientReceivedUserID:
-               Match receivedUserId;
-               if ((receivedUserId = rReceivedUserID.Match(logLine.LineRaw)).Success)
+               Match receivedUserIdMatch;
+               if ((receivedUserIdMatch = ReceivedUserIDRegex.Match(logLine.LineRaw)).Success)
                {
-                  return receivedUserId.Result("${UserID}");
+                  return receivedUserIdMatch.Result("${UserID}");
                }
                return new LogLineError(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientUserID:
-               Match userId;
-               if ((userId = rUserID.Match(logLine.LineRaw)).Success)
+               Match userIdMatch;
+               if ((userIdMatch = UserIDRegex.Match(logLine.LineRaw)).Success)
                {
-                  return userId.Result("${UserID}");
+                  return userIdMatch.Result("${UserID}");
                }
                return new LogLineError(String.Format("Failed to parse User ID value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientMachineID:
-               Match machineId;
-               if ((machineId = rMachineID.Match(logLine.LineRaw)).Success)
+               Match machineIdMatch;
+               if ((machineIdMatch = MachineIDRegex.Match(logLine.LineRaw)).Success)
                {
-                  return Int32.Parse(machineId.Result("${MachineID}"));
+                  return Int32.Parse(machineIdMatch.Result("${MachineID}"));
                }
                return new LogLineError(String.Format("Failed to parse Machine ID value from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitIndex:
-               Match mUnitIndex;
-               if ((mUnitIndex = rUnitIndex.Match(logLine.LineRaw)).Success)
+               Match unitIndexMatch;
+               if ((unitIndexMatch = UnitIndexRegex.Match(logLine.LineRaw)).Success)
                {
-                  return Int32.Parse(mUnitIndex.Result("${QueueIndex}"));
+                  return Int32.Parse(unitIndexMatch.Result("${QueueIndex}"));
                }
                return new LogLineError(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitQueueIndex:
-               Match mQueueIndex;
-               if ((mQueueIndex = rQueueIndex.Match(logLine.LineRaw)).Success)
+               Match queueIndexMatch;
+               if ((queueIndexMatch = QueueIndexRegex.Match(logLine.LineRaw)).Success)
                {
-                  return Int32.Parse(mQueueIndex.Result("${QueueIndex}"));
+                  return Int32.Parse(queueIndexMatch.Result("${QueueIndex}"));
                }
                return new LogLineError(String.Format("Failed to parse Work Unit Queue Index from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitCallingCore:
@@ -174,18 +174,18 @@ namespace HFM.Log
                return 0; 
             case LogLineType.WorkUnitCoreVersion:
                /*** ProtoMol Only */
-               Match mCoreVer;
-               if ((mCoreVer = rProtoMolCoreVersion.Match(logLine.LineRaw)).Success)
+               Match coreVersionMatch;
+               if ((coreVersionMatch = ProtoMolCoreVersionRegex.Match(logLine.LineRaw)).Success)
                {
-                  return mCoreVer.Result("${CoreVer}");
+                  return coreVersionMatch.Result("${CoreVer}");
                }
                /*******************/
                return new LogLineError(String.Format("Failed to parse Core Version value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientNumberOfUnitsCompleted:
-               Match mCompletedWUs;
-               if ((mCompletedWUs = rCompletedWUs.Match(logLine.LineRaw)).Success)
+               Match completedWorkUnitsMatch;
+               if ((completedWorkUnitsMatch = CompletedWorkUnitsRegex.Match(logLine.LineRaw)).Success)
                {
-                  return Int32.Parse(mCompletedWUs.Result("${Completed}"));
+                  return Int32.Parse(completedWorkUnitsMatch.Result("${Completed}"));
                }
                return new LogLineError(String.Format("Failed to parse Units Completed value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientCoreCommunicationsError:
