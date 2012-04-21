@@ -121,7 +121,8 @@ namespace HFM.Forms.Models
          _prefs = prefs;
          _syncObject = syncObject;
          _clientDictionary = clientDictionary;
-         _slotList = new SlotModelSortableBindingList(_prefs.Get<bool>(Preference.OfflineLast), _syncObject);
+         _slotList = new SlotModelSortableBindingList(_syncObject);
+         _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
          _slotList.Sorted += (sender, e) =>
                              {
                                 SortColumnName = e.Name;
@@ -135,7 +136,16 @@ namespace HFM.Forms.Models
                                               {
                                                  SelectedSlot = (SlotModel)_bindingSource.Current;
                                               };
-
+#if DEBUG
+         _slotList.ListChanged += (s, e) =>
+                                  {
+                                     Debug.WriteLine("BindingList: " + e.ListChangedType);
+                                  };
+         _bindingSource.ListChanged += (s, e) =>
+                                       {
+                                          Debug.WriteLine("BindingSource: " + e.ListChangedType);
+                                       };
+#endif
          // Subscribe to PreferenceSet events
          _prefs.OfflineLastChanged += delegate
                                       {
@@ -187,6 +197,8 @@ namespace HFM.Forms.Models
          OnBeforeResetBindings(EventArgs.Empty);
          // halt binding source updates
          _bindingSource.RaiseListChangedEvents = false;
+         // see Revision 534 commit comments for the reason
+         // _slotList.RaiseListChangedEvents = false is here.
          _slotList.RaiseListChangedEvents = false;
          // get slots from the dictionary
          var slots = _clientDictionary.Slots;
@@ -201,6 +213,8 @@ namespace HFM.Forms.Models
          slots.FindDuplicates();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
+         // see Revision 534 commit comments for the reason
+         // _slotList.RaiseListChangedEvents = false is here.
          _slotList.RaiseListChangedEvents = true;
          // reset AFTER RaiseListChangedEvents is enabled
          _bindingSource.ResetBindings(false);
@@ -228,12 +242,16 @@ namespace HFM.Forms.Models
       public void Sort()
       {
          _bindingSource.RaiseListChangedEvents = false;
+         // see Revision 534 commit comments for the reason
+         // _slotList.RaiseListChangedEvents = false is here.
          _slotList.RaiseListChangedEvents = false;
          // sort the list
          _bindingSource.Sort = null;
          _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
          // enable binding source updates
          _bindingSource.RaiseListChangedEvents = true;
+         // see Revision 534 commit comments for the reason
+         // _slotList.RaiseListChangedEvents = false is here.
          _slotList.RaiseListChangedEvents = true;
       }
 

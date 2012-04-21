@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+
+using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
@@ -29,158 +29,83 @@ namespace HFM.Forms
    [CoverageExclude]
    internal class HistoryEntrySortableBindingList : SortableBindingList<HistoryEntry>
    {
-      #region Constants
-
-      private const string IdColumnName = "ID";
-      
-      #endregion
-
       public HistoryEntrySortableBindingList()
       {
-
+         SortComparer = new HistoryEntrySortComparer();
       }
 
-      public HistoryEntrySortableBindingList(IList<HistoryEntry> list)
-         : base(list)
-      {
-         
-      }
-
-      #region BindingList<T> Sorting Overrides
-
-      protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
-      {
-         var items = Items as List<HistoryEntry>;
-
-         if ((null != items) && (null != property))
-         {
-            /* Set the sort property and direction */
-            SortProperty = property;
-            SortDirection = direction;
-
-            var pc = new HistoryEntryPropertyComparer<HistoryEntry>(property,
-                                                                    FindPropertyDescriptor(IdColumnName),
-                                                                    direction);
-            items.Sort(pc);
-
-            /* Set sorted */
-            IsSorted = true;
-
-            OnSorted(new SortedEventArgs(property.Name, direction));
-         }
-         else
-         {
-            /* Set sorted */
-            IsSorted = false;
-         }
-      }
-      
-      #endregion
-
-      #region HistoryEntryPropertyComparer<T>
+      #region HistoryEntrySortComparer
 
       [CoverageExclude]
-      private class HistoryEntryPropertyComparer<T> : IComparer<T>
+      private class HistoryEntrySortComparer : SortComparer<HistoryEntry>
       {
-         /*
-         * The following code contains code implemented by Rockford Lhotka:
-         * msdn.microsoft.com/library/default.asp?url=/library/en-us/dnadvnet/html/vbnet01272004.asp" 
-         */
-
-         private readonly PropertyDescriptor _property;
-         private readonly PropertyDescriptor _idProperty;
-         private readonly ListSortDirection _direction;
-
-         public HistoryEntryPropertyComparer(PropertyDescriptor property, PropertyDescriptor idProperty, ListSortDirection direction)
-         {
-            _property = property;
-            _idProperty = idProperty;
-            _direction = direction;
-         }
-
-         public int Compare(T xVal, T yVal)
+         protected override int CompareInternal(HistoryEntry xVal, HistoryEntry yVal)
          {
             /* Get property values */
-            object xValue = GetPropertyValue(xVal, _property);
-            object yValue = GetPropertyValue(yVal, _property);
-            object xIdValue = GetPropertyValue(xVal, _idProperty);
-            object yIdValue = GetPropertyValue(yVal, _idProperty);
+            object xValue = GetPropertyValue(xVal, Property);
+            object yValue = GetPropertyValue(yVal, Property);
+            long xIdValue = xVal.ID;
+            long yIdValue = yVal.ID;
 
-            int returnValue;
+            int result;
 
             /* Determine sort order */
-            if (_direction == ListSortDirection.Ascending)
+            if (Direction == ListSortDirection.Ascending)
             {
-               returnValue = CompareAscending(xValue, yValue);
+               result = CompareAscending(xValue, yValue);
             }
             else
             {
-               returnValue = CompareDescending(xValue, yValue);
+               result = CompareDescending(xValue, yValue);
             }
 
             // if values are equal, sort via the entry id (asc)
-            if (returnValue == 0)
+            if (result == 0)
             {
-               returnValue = CompareAscending(xIdValue, yIdValue);
+               result = CompareAscending(xIdValue, yIdValue);
             }
 
-            return returnValue;
-         }
-
-         //public bool Equals(T xVal, T yVal)
-         //{
-         //   return xVal.Equals(yVal);
-         //}
-
-         //public int GetHashCode(T obj)
-         //{
-         //   return obj.GetHashCode();
-         //}
-
-         /* Compare two property values of any type */
-         private static int CompareAscending(object xValue, object yValue)
-         {
-            int result;
-
-            try
-            {
-               if (xValue is IComparable)
-               {
-                  /* If values implement IComparer */
-                  result = ((IComparable)xValue).CompareTo(yValue);
-               }
-               else if (xValue.Equals(yValue))
-               {
-                  /* If values don't implement IComparer but are equivalent */
-                  result = 0;
-               }
-               else
-               {
-                  /* Values don't implement IComparer and are not equivalent, so compare as string values */
-                  result = xValue.ToString().CompareTo(yValue.ToString());
-               }
-            }
-            // we encounterd a null value, just return 0
-            catch (NullReferenceException)
-            {
-               result = 0;
-            }
-
-            /* Return result */
             return result;
          }
 
-         private static int CompareDescending(object xValue, object yValue)
+         protected override int RecursiveCompareInternal(HistoryEntry xVal, HistoryEntry yVal, int index)
          {
-            /* Return result adjusted for ascending or descending sort order ie
-               multiplied by 1 for ascending or -1 for descending */
-            return CompareAscending(xValue, yValue) * -1;
-         }
+            if (index >= SortDescriptions.Count)
+            {
+               return 0; // termination condition
+            }
 
-         private static object GetPropertyValue(T value, PropertyDescriptor property)
-         {
-            /* Get property */
-            return property.GetValue(value);
+            /* Get property values */
+            ListSortDescription listSortDesc = SortDescriptions[index];
+            object xValue = listSortDesc.PropertyDescriptor.GetValue(xVal);
+            object yValue = listSortDesc.PropertyDescriptor.GetValue(yVal);
+            long xIdValue = xVal.ID;
+            long yIdValue = yVal.ID;
+
+            int result;
+            /* Determine sort order */
+            if (listSortDesc.SortDirection == ListSortDirection.Ascending)
+            {
+               result = CompareAscending(xValue, yValue);
+            }
+            else
+            {
+               result = CompareDescending(xValue, yValue);
+            }
+
+            /* If the properties are equal, compare the next property */
+            if (result == 0)
+            {
+               result = RecursiveCompareInternal(xVal, yVal, ++index);
+            }
+
+            // if values are equal, sort via the entry id (asc)
+            if (result == 0)
+            {
+               result = CompareAscending(xIdValue, yIdValue);
+            }
+
+            return result;
          }
       }
 

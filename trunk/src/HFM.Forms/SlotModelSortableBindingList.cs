@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Model Sortable Binding List Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,61 +21,33 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+using harlam357.Windows.Forms;
+
 using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
    [CoverageExclude]
-   public class SlotModelSortableBindingList : SortableBindingList<SlotModel>
+   internal class SlotModelSortableBindingList : SortableBindingList<SlotModel>
    {
-      #region Constants
+      public bool OfflineClientsLast
+      {
+         get { return ((SlotModelSortComparer)SortComparer).OfflineClientsLast; }
+         set { ((SlotModelSortComparer)SortComparer).OfflineClientsLast = value; }
+      }
 
-      private const string StatusPropertyName = "Status";
-      private const string NamePropertyName = "Name";
-      
-      #endregion
+      public SlotModelSortableBindingList()
+         : this(null)
+      {
 
-      public SlotModelSortableBindingList(bool offlineClientsLast, ISynchronizeInvoke syncObject)
+      }
+
+      public SlotModelSortableBindingList(ISynchronizeInvoke syncObject)
          : base(syncObject)
       {
-         OfflineClientsLast = offlineClientsLast;
+         SortComparer = new SlotModelSortComparer();
       }
-
-      #region BindingList<T> Sorting Overrides
-
-      public bool OfflineClientsLast { get; set; }
-
-      protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
-      {
-         var items = Items as List<SlotModel>;
-
-         if ((null != items) && (null != property))
-         {
-            /* Set the sort property and direction */
-            SortProperty = property;
-            SortDirection = direction;
-
-            var pc = new SlotModelPropertyComparer<SlotModel>(property,
-                                                              FindPropertyDescriptor(StatusPropertyName),
-                                                              FindPropertyDescriptor(NamePropertyName),
-                                                              direction,
-                                                              OfflineClientsLast);
-            items.Sort(pc);
-
-            /* Set sorted */
-            IsSorted = true;
-
-            OnSorted(new SortedEventArgs(property.Name, direction));
-         }
-         else
-         {
-            /* Set sorted */
-            IsSorted = false;
-         }
-      }
-      
-      #endregion
 
       #region BindingList<T> Find Overrides
 
@@ -112,52 +84,47 @@ namespace HFM.Forms
 
       #endregion
 
-      #region SlotModelPropertyComparer<T>
-
-      [CoverageExclude]
-      private class SlotModelPropertyComparer<T> : IComparer<T>
+      /// <summary>
+      /// Sorts the items if overridden in a derived class; otherwise, throws a <see cref="T:System.NotSupportedException"/>.
+      /// </summary>
+      /// <param name="property">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
+      /// <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values.</param>
+      protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
       {
-         /*
-         * The following code contains code implemented by Rockford Lhotka:
-         * msdn.microsoft.com/library/default.asp?url=/library/en-us/dnadvnet/html/vbnet01272004.asp" 
-         */
+         ApplySortCoreInternal(property, direction, false);
+      }
 
-         private readonly PropertyDescriptor _property;
-         private readonly PropertyDescriptor _statusProperty;
-         private readonly PropertyDescriptor _nameProperty;
-         private readonly ListSortDirection _direction;
-         private readonly bool _offlineClientsLast;
+      #region SlotModelSortComparer
 
-         public SlotModelPropertyComparer(PropertyDescriptor property, PropertyDescriptor statusProperty, PropertyDescriptor nameProperty,
-                                          ListSortDirection direction, bool offlineClientsLast)
+      private class SlotModelSortComparer : SortComparer<SlotModel>
+      {
+         public bool OfflineClientsLast { get; set; }
+
+         public override bool SupportsAdvancedSorting
          {
-            _property = property;
-            _statusProperty = statusProperty;
-            _nameProperty = nameProperty;
-            _direction = direction;
-            _offlineClientsLast = offlineClientsLast;
+            get { return false; }
          }
 
-         public int Compare(T xVal, T yVal)
+         protected override int CompareInternal(SlotModel xVal, SlotModel yVal)
          {
             /* Get property values */
-            object xValue = GetPropertyValue(xVal, _property);
-            object yValue = GetPropertyValue(yVal, _property);
-            object xStatusValue = GetPropertyValue(xVal, _statusProperty);
-            object yStatusValue = GetPropertyValue(yVal, _statusProperty);
-            object xNameValue = GetPropertyValue(xVal, _nameProperty);
-            object yNameValue = GetPropertyValue(yVal, _nameProperty);
+            object xValue = GetPropertyValue(xVal, Property);
+            object yValue = GetPropertyValue(yVal, Property);
+            SlotStatus xStatusValue = xVal.Status;
+            SlotStatus yStatusValue = yVal.Status;
+            object xNameValue = xVal.Name;
+            object yNameValue = yVal.Name;
 
             // check for offline clients first
-            if (_offlineClientsLast)
+            if (OfflineClientsLast)
             {
-               if (((SlotStatus)xStatusValue).Equals(SlotStatus.Offline) &&
-                   ((SlotStatus)yStatusValue).Equals(SlotStatus.Offline) == false)
+               if ((xStatusValue).Equals(SlotStatus.Offline) &&
+                   (yStatusValue).Equals(SlotStatus.Offline) == false)
                {
                   return 1;
                }
-               if (((SlotStatus)yStatusValue).Equals(SlotStatus.Offline) &&
-                   ((SlotStatus)xStatusValue).Equals(SlotStatus.Offline) == false)
+               if ((yStatusValue).Equals(SlotStatus.Offline) &&
+                   (xStatusValue).Equals(SlotStatus.Offline) == false)
                {
                   return -1;
                }
@@ -166,7 +133,7 @@ namespace HFM.Forms
             int returnValue;
 
             /* Determine sort order */
-            if (_direction == ListSortDirection.Ascending)
+            if (Direction == ListSortDirection.Ascending)
             {
                returnValue = CompareAscending(xValue, yValue);
             }
@@ -182,62 +149,6 @@ namespace HFM.Forms
             }
 
             return returnValue;
-         }
-
-         //public bool Equals(T xVal, T yVal)
-         //{
-         //   return xVal.Equals(yVal);
-         //}
-
-         //public int GetHashCode(T obj)
-         //{
-         //   return obj.GetHashCode();
-         //}
-
-         /* Compare two property values of any type */
-         private static int CompareAscending(object xValue, object yValue)
-         {
-            int result;
-
-            try
-            {
-               if (xValue is IComparable)
-               {
-                  /* If values implement IComparer */
-                  result = ((IComparable)xValue).CompareTo(yValue);
-               }
-               else if (xValue.Equals(yValue))
-               {
-                  /* If values don't implement IComparer but are equivalent */
-                  result = 0;
-               }
-               else
-               {
-                  /* Values don't implement IComparer and are not equivalent, so compare as string values */
-                  result = xValue.ToString().CompareTo(yValue.ToString());
-               }
-            }
-            // we encounterd a null value, just return 0
-            catch (NullReferenceException)
-            {
-               result = 0;
-            }
-
-            /* Return result */
-            return result;
-         }
-
-         private static int CompareDescending(object xValue, object yValue)
-         {
-            /* Return result adjusted for ascending or descending sort order ie
-               multiplied by 1 for ascending or -1 for descending */
-            return CompareAscending(xValue, yValue) * -1;
-         }
-
-         private static object GetPropertyValue(T value, PropertyDescriptor property)
-         {
-            /* Get property */
-            return property.GetValue(value);
          }
       }
 
