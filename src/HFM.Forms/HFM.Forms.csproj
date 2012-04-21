@@ -266,7 +266,6 @@
     </Compile>
     <Compile Include="RetrievalLogic.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
-    <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="HistoryPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
