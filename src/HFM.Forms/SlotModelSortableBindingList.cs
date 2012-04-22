@@ -85,13 +85,21 @@ namespace HFM.Forms
       #endregion
 
       /// <summary>
-      /// Sorts the items if overridden in a derived class; otherwise, throws a <see cref="T:System.NotSupportedException"/>.
+      /// Sorts the items and optionally fires the ListChanged event.
       /// </summary>
-      /// <param name="property">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
-      /// <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values.</param>
-      protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
+      /// <param name="fireListChanged">true to fire the ListChanged event; otherwise, false.</param>
+      protected override void ApplySortCoreInternal(bool fireListChanged)
       {
-         ApplySortCoreInternal(property, direction, false);
+         base.ApplySortCoreInternal(false);
+      }
+
+      /// <summary>
+      /// Gets a value indicating whether the data source supports filtering. 
+      /// </summary>
+      /// <returns>true if the data source supports filtering; otherwise, false.</returns>
+      public override bool SupportsFiltering
+      {
+         get { return false; }
       }
 
       #region SlotModelSortComparer
