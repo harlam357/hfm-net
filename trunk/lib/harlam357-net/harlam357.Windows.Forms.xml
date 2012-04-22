@@ -1,0 +1,633 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>harlam357.Windows.Forms</name>
+    </assembly>
+    <members>
+        <member name="T:harlam357.Windows.Forms.ClipboardWrapper">
+            <summary>
+            Helper class to access the clipboard without worrying about ExternalExceptions
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ClipboardWrapper.GetDataObject">
+            <summary>
+            Gets the current clipboard content.
+            Can return null!
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ExceptionDialog.#ctor(System.Exception,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Creates a new ExceptionDialog instance.
+            </summary>
+            <param name="exception">The exception to display</param>
+            <param name="applicationId">The application name and version to display</param>
+            <param name="osVersion">The operating system version to display</param>
+            <param name="message">An additional message to display</param>
+            <param name="reportUrl">Override configured target URL for report button</param>
+            <param name="mustTerminate">If <paramref name="mustTerminate"/> is true, the continue button is not available.</param>
+        </member>
+        <member name="F:harlam357.Windows.Forms.ExceptionDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ExceptionDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ExceptionDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IValidatingControl.ValidateControlText">
+            <summary>
+            Validate the Control Text Property
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IValidatingControl.ShowToolTip">
+            <summary>
+            Show or Hide the Configured ToolTip based on Error State
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.IValidatingControl.CustomValidation">
+            <summary>
+            Custom Validation Event
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorToolTip">
+            <summary>
+            Attached ToolTip Instance
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorToolTipPoint">
+            <summary>
+            ToolTip Display Point
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorToolTipDuration">
+            <summary>
+            ToolTip Display Duration
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorToolTipText">
+            <summary>
+            ToolTip Text for Display
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ValidationType">
+            <summary>
+            Validation Type
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorBackColor">
+            <summary>
+            Control Error BackColor
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.ErrorState">
+            <summary>
+            Control Error State
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IValidatingControl.CompanionControls">
+            <summary>
+            Companion Controls List
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.IProgressProcessRunner">
+            <summary>
+            Defines the Progress Process Class Interface
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Process">
+            <summary>
+            Execute the Progress Process
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Cancel">
+            <summary>
+            Cancel the Progress Process
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProgressChanged">
+            <summary>
+            Raised on Progress Process Changed
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProcessFinished">
+            <summary>
+            Raised on Progress Process Finished
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Exception">
+            <summary>
+            Exception returned from Progress Process
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.SupportsCancellation">
+            <summary>
+            Defines if this Progress Process supports being cancelled
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Processing">
+            <summary>
+            Flag denoting if the Progress Process is in progress
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.IProgressDialogView">
+            <summary>
+            Defines the Progress Dialog View Interface
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateProgress(System.Int32)">
+            <summary>
+            Update Progress Bar Value
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateMessage(System.String)">
+            <summary>
+            Update Text Message Value
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.IProgressDialogView.Process">
+            <summary>
+            Show the Dialog and execute the Progress Process
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressDialogView.OwnerWindow">
+            <summary>
+            Window that owns this dialog
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressDialogView.ProcessRunner">
+            <summary>
+            Progress Process Class to execute
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.ProgressDialog">
+            <summary>
+            Progress Process Dialog Class
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateProgress(System.Int32)">
+            <summary>
+            Update Progress Bar Value (safe to be called from a worker thread)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateMessage(System.String)">
+            <summary>
+            Update Text Message Value (safe to be called from a worker thread)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.Process">
+            <summary>
+            Show the Dialog and execute the Progress Process asynchronously
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProgressChanged(System.Object,harlam357.Windows.Forms.ProgressEventArgs)">
+            <summary>
+            Handles the given ProcessRunner's Progress Changed Event
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProcessFinished(System.Object,System.EventArgs)">
+            <summary>
+            Handles the given ProcessRunner's Process Finished Event
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.OnFormClosing(System.Windows.Forms.FormClosingEventArgs)">
+            <summary>
+            Handles the Dialog's FormClosing Event
+            </summary>
+            <remarks>If the ProcessRunner is Processing this event will be cancelled.
+            If the ProcessRunner supports cancellation then the Cancel() method will be 
+            called and the dialog will be closed when the ProcessRunner is finished.</remarks>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.Close">
+            <summary>
+            Close the Dialog (safe to be called from a worker thread)
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.ProgressDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressDialog.OwnerWindow">
+            <summary>
+            Window that owns this dialog
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressDialog.ProcessRunner">
+            <summary>
+            Progress Process Class to execute
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.ProgressEventArgs">
+            <summary>
+            Progress Process Event Arguments
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Progress">
+            <summary>
+            Progress Bar Value
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Message">
+            <summary>
+            Text Message Value
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.RadioPanel">
+            <summary>
+            A Panel that supports binding an Enum property on an arbitrary object to a set of RadioButton controls. 
+            </summary>
+            <remarks>
+            USAGE: Add any number of RadioButtons. Assign the numeric value of your Enum's corresponding option to the Tag property of each button. (E.g., 
+            if MyEnum.Foo 0, MyEnum.Bar = 1, then radioButton1.Text = "Foo", radioButton1.Tag = 0, radioButton2.Text = "Bar", RadioButton2.tag = 1, and so
+            on.) RadioPanel will take care of setting the appropriate RadioButton control, and communicating changes back to your object when the
+            user selects another option. 
+            
+            Author: Jay Andrew Allen, August 2007
+            </remarks>
+        </member>
+        <member name="M:harlam357.Windows.Forms.RadioPanel.SetRadioButtonBinding">
+            <summary>
+            Set up the binding to the property.
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.RadioSelectionChangedEventArgs">
+            <summary>
+            An EventArgs class for radio button selection changed events. 
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.OnListChanged(System.ComponentModel.ListChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:System.ComponentModel.BindingList`1.ListChanged"/> event.
+            </summary>
+            <param name="e">A <see cref="T:System.ComponentModel.ListChangedEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            Sorts the items if overridden in a derived class; otherwise, throws a <see cref="T:System.NotSupportedException"/>.
+            </summary>
+            <param name="property">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
+            <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.ApplySortCoreInternal(System.Boolean)">
+            <summary>
+            Sorts the items and optionally fires the ListChanged event.
+            </summary>
+            <param name="fireListChanged">true to fire the ListChanged event; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.RemoveSortCore">
+            <summary>
+            Removes any sort applied with <see cref="M:System.ComponentModel.BindingList`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)"/> if sorting is implemented in a derived class; otherwise, raises <see cref="T:System.NotSupportedException"/>.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.ApplySort(System.ComponentModel.ListSortDescriptionCollection)">
+            <summary>
+            Sorts the data source based on the given <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/>.
+            </summary>
+            <param name="sorts">The <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/> containing the sorts to apply to the data source.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.RemoveFilter">
+            <summary>
+            Removes the current filter applied to the data source.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.IsSortedCore">
+            <summary>
+            Gets a value indicating whether the list is sorted. 
+            </summary>
+            <returns>true if the list is sorted; otherwise, false. The default is false.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SortPropertyCore">
+            <summary>
+            Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class; otherwise, returns null. 
+            </summary>
+            <returns>The <see cref="T:System.ComponentModel.PropertyDescriptor"/> used for sorting the list.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SortDirectionCore">
+            <summary>
+            Gets the direction the list is sorted.
+            </summary>
+            <returns>One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values. The default is <see cref="F:System.ComponentModel.ListSortDirection.Ascending"/>.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SupportsSortingCore">
+            <summary>
+            Gets a value indicating whether the list supports sorting.
+            </summary>
+            <returns>true if the list supports sorting; otherwise, false. The default is false.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SortComparer">
+            <summary>
+            User plugable sorting comparer.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SortDescriptions">
+            <summary>
+            Gets the collection of sort descriptions currently applied to the data source.
+            </summary>
+            <returns>The <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/> currently applied to the data source.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SupportsAdvancedSorting">
+            <summary>
+            Gets a value indicating whether the data source supports advanced sorting. 
+            </summary>
+            <returns>true if the data source supports advanced sorting; otherwise, false.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SupportsFiltering">
+            <summary>
+            Gets a value indicating whether the data source supports filtering. 
+            </summary>
+            <returns>true if the data source supports filtering; otherwise, false.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.FilterError">
+            <summary>
+            Gets the error message from the last filter attempt.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.Filter">
+            <summary>
+            Gets or sets the filter to be used to exclude items from the collection of items returned by the data source
+            </summary>
+            <returns>The string used to filter items out in the item collection returned by the data source.</returns>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.SetSortProperties(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            Set the sorting properties.
+            </summary>
+            <param name="property">Property descriptor for a simple sort.</param>
+            <param name="direction">Sort direction for a simple sort.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.SetSortProperties(System.ComponentModel.ListSortDescriptionCollection)">
+            <summary>
+            Set the sorting properties.
+            </summary>
+            <param name="sortDescriptions">Sort description collection for an advanced sort.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.Compare(`0,`0)">
+            <summary>
+            Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            </summary>
+            <param name="xVal">The first object to compare.</param>
+            <param name="yVal">The second object to compare.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.CompareInternal(`0,`0)">
+            <summary>
+            Single property compare method.
+            </summary>
+            <param name="xVal">The first object to compare.</param>
+            <param name="yVal">The second object to compare.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.RecursiveCompareInternal(`0,`0,System.Int32)">
+            <summary>
+            Multiple property compare method.
+            </summary>
+            <param name="xVal">The first object to compare.</param>
+            <param name="yVal">The second object to compare.</param>
+            <param name="index">Zero based index of SortDescriptions collection.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.CompareAscending(System.Object,System.Object)">
+            <summary>
+            Compare two property values in ascending order.
+            </summary>
+            <param name="xValue">The first property value to compare.</param>
+            <param name="yValue">The second property value to compare.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.CompareDescending(System.Object,System.Object)">
+            <summary>
+            Compare two property values in descending order.
+            </summary>
+            <param name="xValue">The first property value to compare.</param>
+            <param name="yValue">The second property value to compare.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortComparer`1.GetPropertyValue(`0,System.ComponentModel.PropertyDescriptor)">
+            <summary>
+            Get the property value from the object.
+            </summary>
+            <param name="value">Object instance.</param>
+            <param name="property">The property descriptor.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.SortMode">
+            <summary>
+            Gets a value indicating the active sorting mode.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.SupportsSorting">
+            <summary>
+            Gets a value indicating whether the comparer supports simple sorting.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.SupportsAdvancedSorting">
+            <summary>
+            Gets a value indicating whether the comparer supports advanced sorting.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.Property">
+            <summary>
+            Gets the property descriptor used in a simple sort.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.Direction">
+            <summary>
+            Gets the sort direction used in a simple sort.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortComparer`1.SortDescriptions">
+            <summary>
+            Gets the sort description collection used in an advanced sort.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetSelectDownloadLabelTextDefault">
+            <summary>
+            Modify Download Label Text (Thread Safe)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetSelectDownloadLabelText(System.String)">
+            <summary>
+            Modify Download Label Text (Thread Safe)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetUpdateComboBoxVisible(System.Boolean)">
+            <summary>
+            Set Update ComboBox Visible (Thread Safe)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetDownloadButtonEnabled(System.Boolean)">
+            <summary>
+            Set Download Button Enabled (Thread Safe)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetDownloadProgressVisisble(System.Boolean)">
+            <summary>
+            Set Download Progress Bar Visible (Thread Safe)
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.SetDownloadProgressValue(System.Int32)">
+            <summary>
+            Set Download Progress Bar Value (Thread Safe)
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.UpdateDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.UpdateDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.UpdatePresenter.SelectedUpdate">
+            <summary>
+            Update Data Selected by the User
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.UpdatePresenter.LocalFilePath">
+            <summary>
+            Local File Path for File to be Downloaded
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.UpdatePresenter.UpdateReady">
+            <summary>
+            Indicates the Update was Downloaded Completely and was Verified
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.UpdatePresenter.DownloadFinished">
+            <summary>
+            Raises when the download process is finished, regardless of whether is was successful, errored, or canceled.
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.ValidatingComboBox.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingComboBox.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingComboBox.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingControlLogic.ValidateControlText">
+            <summary>
+            Validate the Control Text Property
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingControlLogic.ShowToolTip">
+            <summary>
+            Show or Hide the Configured ToolTip based on Error State
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.ValidatingControlLogic.CustomValidation">
+            <summary>
+            Custom Validation Event
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorToolTip">
+            <summary>
+            Attached ToolTip Instance
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorToolTipPoint">
+            <summary>
+            ToolTip Display Point
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorToolTipDuration">
+            <summary>
+            ToolTip Display Duration
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorToolTipText">
+            <summary>
+            ToolTip Text for Display
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ValidationType">
+            <summary>
+            Validation Type
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorBackColor">
+            <summary>
+            Control Error Color
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.ErrorState">
+            <summary>
+            Control Error State
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ValidatingControlLogic.CompanionControls">
+            <summary>
+            Companion Controls List
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.ValidatingMaskedTextBox.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingMaskedTextBox.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingMaskedTextBox.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.ValidatingTextBox.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingTextBox.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ValidatingTextBox.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+    </members>
+</doc>
