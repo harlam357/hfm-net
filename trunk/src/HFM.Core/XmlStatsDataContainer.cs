@@ -157,6 +157,16 @@ namespace HFM.Core
 
       internal static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
       {
+         // values given here should not be in the future, if a user ran HFM with the system date time
+         // set incorrectly to a time in the future and the user stats data file was subsequently saved 
+         // with a sufficiently future date and time then this would cause an issue setting the stats 
+         // update timer in UserStatsDataModel.StartTimer().
+         // Issue 276 - http://www.tech-archive.net/Archive/DotNet/microsoft.public.dotnet.framework/2006-10/msg00228.html
+         if (lastUpdated > DateTime.UtcNow)
+         {
+            return DateTime.MinValue;
+         }
+
          // What I really need to know is if it is Daylight Savings Time
          // in the Central Time Zone, not the local machines Time Zone.
 

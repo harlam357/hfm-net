@@ -96,8 +96,7 @@ namespace HFM.Forms.Models
          DateTime nextUpdateTime = _dataContainer.GetNextUpdateTime();
          if (nextUpdateTime < DateTime.UtcNow)
          {
-            // if a recent update interval cannot be determined 
-            // then default to 3 hours from now.
+            // if a recent update interval cannot be determined then default to 3 hours from now.
             _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
          }
          else
@@ -109,8 +108,20 @@ namespace HFM.Forms.Models
             // between all HFM instances so the EOC servers aren't bombarded
             // all at the same time.
             nextUpdateInterval = nextUpdateInterval.Add(TimeSpan.FromMinutes(GetRandomMinutes()));
-            // set it
-            _updateTimer.Interval = nextUpdateInterval.TotalMilliseconds;
+
+            double interval = nextUpdateInterval.TotalMilliseconds;
+            // Check the value before setting it in the timer.  The value must be positive and less than Int32.MaxValue.
+            // Otherwise an exception is thrown when calling Start() on the timer.
+            // Issue 276 - http://www.tech-archive.net/Archive/DotNet/microsoft.public.dotnet.framework/2006-10/msg00228.html
+            if (interval > TimeSpan.FromMinutes(1).TotalMilliseconds && interval < Int32.MaxValue)
+            {
+               _updateTimer.Interval = interval;
+            }
+            else
+            {
+               // if a recent update interval cannot be determined then default to 3 hours from now.
+               _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
+            }
          }
 
          _logger.Info("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));

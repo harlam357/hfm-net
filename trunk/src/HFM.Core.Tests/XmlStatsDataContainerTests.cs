@@ -89,157 +89,167 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void GetNextUpdateTime()
+      public void GetNextUpdateTime1()
       {
-         DateTime nowUtc = DateTime.UtcNow.Date;
+         // Issue 276 - this value has to be in past, a future date 
+         // will generate a result that equals DateTime.MinValue.
+         DateTime lastUpdated = DateTime.UtcNow.Date.Subtract(TimeSpan.FromDays(1));
 
          #region Standard Time
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(3)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(0)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(3)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(0)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(3)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(1)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(3)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(1)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(3)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(2)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(3)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(2)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(6)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(3)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(6)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(3)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(6)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(4)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(6)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(4)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(6)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(5)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(6)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(5)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(9)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(6)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(9)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(6)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(9)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(7)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(9)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(7)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(9)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(8)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(9)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(8)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(12)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(9)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(12)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(9)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(12)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(10)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(12)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(10)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(12)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(11)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(12)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(11)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(15)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(12)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(15)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(12)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(15)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(13)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(15)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(13)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(15)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(14)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(15)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(14)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(18)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(15)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(18)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(15)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(18)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(16)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(18)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(16)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(18)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(17)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(18)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(17)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(21)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(18)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(21)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(18)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(21)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(19)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(21)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(19)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(21)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(20)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(21)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(20)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromDays(1)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(21)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromDays(1)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(21)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromDays(1)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(22)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromDays(1)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(22)), false));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromDays(1)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(23)), false));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromDays(1)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(23)), false));
          #endregion
 
          #region Daylight Savings Time
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(2)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(0)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(2)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(0)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(2)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(1)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(2)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(1)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(5)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(2)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(5)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(2)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(5)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(3)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(5)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(3)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(5)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(4)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(5)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(4)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(8)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(5)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(8)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(5)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(8)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(6)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(8)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(6)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(8)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(7)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(8)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(7)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(11)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(8)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(11)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(8)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(11)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(9)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(11)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(9)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(11)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(10)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(11)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(10)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(14)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(11)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(14)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(11)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(14)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(12)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(14)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(12)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(14)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(13)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(14)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(13)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(17)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(14)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(17)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(14)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(17)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(15)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(17)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(15)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(17)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(16)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(17)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(16)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(20)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(17)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(20)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(17)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(20)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(18)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(20)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(18)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(20)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(19)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(20)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(19)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(23)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(20)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(23)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(20)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(23)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(21)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(23)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(21)), true));
 
-         Assert.AreEqual(nowUtc.Add(TimeSpan.FromHours(23)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(22)), true));
+         Assert.AreEqual(lastUpdated.Add(TimeSpan.FromHours(23)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(22)), true));
 
-         Assert.AreEqual(nowUtc.Add(new TimeSpan(1, 2, 0, 0)),
-                         XmlStatsDataContainer.GetNextUpdateTime(nowUtc.Add(TimeSpan.FromHours(23)), true));
+         Assert.AreEqual(lastUpdated.Add(new TimeSpan(1, 2, 0, 0)),
+                         XmlStatsDataContainer.GetNextUpdateTime(lastUpdated.Add(TimeSpan.FromHours(23)), true));
          #endregion
+      }
+
+      [Test]
+      public void GetNextUpdateTime2()
+      {
+         // Issue 276
+         Assert.AreEqual(DateTime.MinValue, 
+                         XmlStatsDataContainer.GetNextUpdateTime(new DateTime(2020, 1, 1), false));
       }
    }
 }
