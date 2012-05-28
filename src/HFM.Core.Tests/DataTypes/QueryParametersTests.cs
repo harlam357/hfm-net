@@ -32,7 +32,7 @@ namespace HFM.Core.Tests.DataTypes
       public void CreateTest()
       {
          var param = new QueryParameters();
-         Assert.AreEqual(QueryParameters.SelectAll, param.Name);
+         Assert.AreEqual(QueryParameters.SelectAll.Name, param.Name);
          Assert.AreEqual(0, param.Fields.Count);
       }
 

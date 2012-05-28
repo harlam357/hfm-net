@@ -28,11 +28,18 @@ namespace HFM.Core.DataTypes
    [DataContract]
    public class QueryParameters : IComparable<QueryParameters>, IEquatable<QueryParameters>
    {
-      public const string SelectAll = "*** SELECT ALL ***";
+      private static readonly QueryParameters SelectAllValue = new QueryParameters();
+
+      public static QueryParameters SelectAll
+      {
+         get { return SelectAllValue; }
+      }
+
+      private const string SelectAllName = "*** SELECT ALL ***";
 
       public QueryParameters()
       {
-         Name = SelectAll;
+         Name = SelectAllName;
       }
 
       public QueryParameters DeepClone()
@@ -138,9 +145,9 @@ namespace HFM.Core.DataTypes
             return -1;
          }
 
-         if (Name == SelectAll)
+         if (Name == SelectAllName)
          {
-            if (other.Name == SelectAll)
+            if (other.Name == SelectAllName)
             {
                // both SelectAll, equal
                return 0;
@@ -150,7 +157,7 @@ namespace HFM.Core.DataTypes
             return -1;
          }
 
-         if (other.Name == SelectAll)
+         if (other.Name == SelectAllName)
          {
             // other.Name is SelectAll, this is greater
             return 1;

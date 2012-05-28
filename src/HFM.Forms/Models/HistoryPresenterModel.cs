@@ -98,7 +98,7 @@ namespace HFM.Forms.Models
          foreach (var query in queryCollection)
          {
             // don't load Select All twice
-            if (query.Name != QueryParameters.SelectAll)
+            if (query.Name != QueryParameters.SelectAll.Name)
             {
                _queryList.Add(query);
             }
@@ -124,7 +124,7 @@ namespace HFM.Forms.Models
          foreach (var query in _queryList)
          {
             // don't save Select All to disk
-            if (query.Name != QueryParameters.SelectAll)
+            if (query.Name != QueryParameters.SelectAll.Name)
             {
                queryCollection.Add(query);
             }
@@ -150,7 +150,7 @@ namespace HFM.Forms.Models
 
       public void ReplaceQuery(QueryParameters parameters)
       {
-         if (SelectedQuery.Name == QueryParameters.SelectAll)
+         if (SelectedQuery.Name == QueryParameters.SelectAll.Name)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot replace the '{0}' query.", QueryParameters.SelectAll));
          }
@@ -173,7 +173,7 @@ namespace HFM.Forms.Models
 
       private static void CheckQueryParametersForAddOrReplace(QueryParameters parameters)
       {
-         if (parameters.Name == QueryParameters.SelectAll)
+         if (parameters.Name == QueryParameters.SelectAll.Name)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", QueryParameters.SelectAll));
          }
@@ -194,7 +194,7 @@ namespace HFM.Forms.Models
 
       public void RemoveQuery(QueryParameters parameters)
       {
-         if (parameters.Name == QueryParameters.SelectAll)
+         if (parameters.Name == QueryParameters.SelectAll.Name)
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", QueryParameters.SelectAll));
          }
@@ -287,7 +287,7 @@ namespace HFM.Forms.Models
 
       public bool EditAndDeleteButtonsEnabled
       {
-         get { return SelectedQuery.Name != QueryParameters.SelectAll; }
+         get { return SelectedQuery.Name != QueryParameters.SelectAll.Name; }
       }
 
       private HistoryProductionView _productionView;
