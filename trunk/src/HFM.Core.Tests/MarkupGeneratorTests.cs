@@ -130,6 +130,7 @@ namespace HFM.Core.Tests
       {
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
          prefs.Stub(x => x.ApplicationPath).Return(@"..\..\..\HFM");
+         prefs.Stub(x => x.PpdFormatString).Return("0");
          prefs.Stub(x => x.Get<string>(Preference.WebOverview)).Return("WebOverview.xslt");
          prefs.Stub(x => x.Get<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt");
          prefs.Stub(x => x.Get<string>(Preference.WebSummary)).Return("WebSummary.xslt");

@@ -205,15 +205,11 @@ namespace HFM.Core
       /// <param name="cssFileName">CSS file name to embed in the transformed XML</param>
       private static string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
       {
-         // Create XmlReaderSettings and XmlReader
-         var xsltSettings = new XmlReaderSettings();
-         xsltSettings.ProhibitDtd = false;
-
          // Create the XslCompiledTransform and Load the XmlReader
          var xslt = new XslCompiledTransform();
-         using (var xmlReader = XmlReader.Create(xsltFilePath, xsltSettings))
+         using (var xmlReader = new XmlTextReader(xsltFilePath))
          {
-            xslt.Load(xmlReader, XsltSettings.TrustedXslt, null);
+            xslt.Load(xmlReader, null, new XmlUrlResolver());
          }
 
          // Transform the XML data to an in memory stream

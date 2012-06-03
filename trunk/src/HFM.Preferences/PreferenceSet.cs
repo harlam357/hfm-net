@@ -32,7 +32,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-using Castle.Core.Logging;
+//using Castle.Core.Logging;
 
 using harlam357.Security;
 using harlam357.Security.Encryption;
@@ -119,15 +119,15 @@ namespace HFM.Preferences
 
       #endregion
 
-      private ILogger _logger = NullLogger.Instance;
-
-      public ILogger Logger
-      {
-         [CoverageExclude]
-         get { return _logger; }
-         [CoverageExclude]
-         set { _logger = value; }
-      }
+      //private ILogger _logger = NullLogger.Instance;
+      //
+      //public ILogger Logger
+      //{
+      //   [CoverageExclude]
+      //   get { return _logger; }
+      //   [CoverageExclude]
+      //   set { _logger = value; }
+      //}
 
       #region Implementation
 
@@ -157,7 +157,7 @@ namespace HFM.Preferences
 
       public void Reset()
       {
-         _logger.Debug("Resetting user preferences...");
+         //_logger.Debug("Resetting user preferences...");
          Settings.Default.Reset();
       }
 
@@ -613,12 +613,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               _logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
                webGenPassword = value;
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Web Generation Password... loading clear value.");
                webGenPassword = value;
             }
          }
@@ -686,12 +686,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               _logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
                emailReportingServerPassword = value;
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Stmp Server Password... loading clear value.");
                emailReportingServerPassword = value;
             }
          }
@@ -714,12 +714,12 @@ namespace HFM.Preferences
             }
             catch (FormatException)
             {
-               _logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
                proxyPass = value;
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
+               //_logger.Warn("Cannot decrypt Proxy Password... loading clear value.");
                proxyPass = value;
             }
          }
@@ -767,8 +767,8 @@ namespace HFM.Preferences
          bool raiseMessageLevelChanged = false;
          bool raiseStatsIdChanged = false;
          
-         try
-         {
+         //try
+         //{
             Settings.Default.FormLocation = Get<Point>(Preference.FormLocation);
             Settings.Default.FormSize = Get<Size>(Preference.FormSize);
             Settings.Default.FormColumns = Get<StringCollection>(Preference.FormColumns);
@@ -937,11 +937,11 @@ namespace HFM.Preferences
             if (raiseStatsIdChanged) OnStatsIdChanged(EventArgs.Empty);
 
             Settings.Default.Save();
-         }
-         catch (Exception ex)
-         {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
-         }
+         //}
+         //catch (Exception ex)
+         //{
+         //   _logger.ErrorFormat(ex, "{0}", ex.Message);
+         //}
 
          //Debug.WriteLine(String.Format("{0} Execution Time: {1}", Instrumentation.FunctionName, Instrumentation.GetExecTime(start)));
       }
@@ -970,7 +970,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Failed to encrypt Web Generation Password... saving clear value.");
+               //_logger.Warn("Failed to encrypt Web Generation Password... saving clear value.");
                webGenPassword = value;
             }
          }
@@ -990,7 +990,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Failed to encrypt Smtp Server Password... saving clear value.");
+               //_logger.Warn("Failed to encrypt Smtp Server Password... saving clear value.");
                emailReportingServerPassword = value;
             }
          }
@@ -1010,7 +1010,7 @@ namespace HFM.Preferences
             }
             catch (CryptographicException)
             {
-               _logger.Warn("Failed to encrypt Proxy Password... saving clear value.");
+               //_logger.Warn("Failed to encrypt Proxy Password... saving clear value.");
                proxyPass = value;
             }
          }
