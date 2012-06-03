@@ -10,9 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Client.Tool</RootNamespace>
     <AssemblyName>HFM.Client.Tool</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -137,7 +137,7 @@ goto End
 
 :Merge
 set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
-..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll Newtonsoft.Json.Net35.dll
+..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:v4 /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll Newtonsoft.Json.Net35.dll
 :End</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

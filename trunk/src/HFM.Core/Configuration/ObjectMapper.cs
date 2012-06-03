@@ -37,7 +37,7 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.Attempts, opt => opt.Ignore())
             .ForMember(dest => dest.NextAttempt, opt => opt.Ignore());
          Mapper.CreateMap<SlotModel, SlotData>()
-            .ForMember(dest => dest.GridData, opt => opt.MapFrom(Mapper.Map<SlotModel, GridData>));
+            .ForMember(dest => dest.GridData, opt => opt.MapFrom(src => Mapper.Map<SlotModel, GridData>(src)));
          Mapper.CreateMap<SlotModel, GridData>()
             .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => src.Status.GetHtmlColor()))
             .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => src.Status.GetHtmlFontColor()))

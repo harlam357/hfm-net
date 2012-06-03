@@ -10,12 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Log.Tool</RootNamespace>
     <AssemblyName>HFM.Log.Tool</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -159,6 +160,7 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -189,7 +191,7 @@ goto End
 
 :Merge
 set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
-..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:winexe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
+..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:v4 /t:winexe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
 :End</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
