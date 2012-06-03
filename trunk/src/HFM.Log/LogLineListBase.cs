@@ -24,7 +24,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   internal abstract class LogLineListBase : List<LogLine>
+   internal abstract class LogLineListBase : LinkedList<LogLine>
    {
       private readonly LogLineParserBase _logLineParser;
 
@@ -37,13 +37,13 @@ namespace HFM.Log
       /// Adds the elements of the specified list to the end of the List.
       /// </summary>
       /// <param name="logLines">List of raw log lines.</param>
-      internal void AddRange(IList<string> logLines)
+      internal void AddRange(IEnumerable<string> logLines)
       {
          // Scan all raw lines and create a LogLine object for each denoting its
          // LogLineType and any LineData parsed from the raw line.
-         for (int i = 0; i < logLines.Count; i++)
+         foreach (string line in logLines)
          {
-            Add(logLines[i]);
+            Add(line);
          }
       }
 
@@ -73,7 +73,7 @@ namespace HFM.Log
             logLineObject.LineType = LogLineType.Error;
             logLineObject.LineData = ex.Message;
          }
-         Add(logLineObject);
+         AddLast(logLineObject);
       }
 
       protected virtual LogLineType DetermineLineType(string logLine)

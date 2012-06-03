@@ -39,7 +39,7 @@ namespace HFM.Log
 
       #region Methods
 
-      internal virtual void Build(IList<LogLine> logLines)
+      internal virtual void Build(ICollection<LogLine> logLines)
       {
          // clear before building
          Clear();

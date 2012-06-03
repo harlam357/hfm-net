@@ -28,7 +28,7 @@ namespace HFM.Log
    {
       #region Constructor
 
-      public LogInterpreterLegacy(IList<LogLine> logLines, IList<ClientRun> clientRuns)
+      public LogInterpreterLegacy(ICollection<LogLine> logLines, IList<ClientRun> clientRuns)
          : base(logLines, clientRuns)
       {
          

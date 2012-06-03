@@ -46,7 +46,7 @@ namespace HFM.Log
 
       #region Methods
 
-      internal override void Build(IList<LogLine> logLines)
+      internal override void Build(ICollection<LogLine> logLines)
       {
          base.Build(logLines);
 

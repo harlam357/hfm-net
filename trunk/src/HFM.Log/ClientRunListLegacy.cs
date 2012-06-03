@@ -55,7 +55,7 @@ namespace HFM.Log
 
       #region Methods
 
-      internal override void Build(IList<LogLine> logLines)
+      internal override void Build(ICollection<LogLine> logLines)
       {
          // init unit index container
          _unitIndexData.Initialize();
@@ -200,7 +200,7 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      private void DoRunLevelDetection(IList<LogLine> logLines)
+      private void DoRunLevelDetection(ICollection<LogLine> logLines)
       {
          for (int i = 0; i < Count; i++)
          {
@@ -217,61 +217,61 @@ namespace HFM.Log
                end = this[i + 1].ClientStartIndex;
             }
 
-            for (int j = this[i].ClientStartIndex; j < end; j++)
+            foreach (var line in logLines.WhereLineIndex(this[i].ClientStartIndex, end))
             {
-               if (logLines[j].LineType.Equals(LogLineType.ClientVersion))
+               if (line.LineType.Equals(LogLineType.ClientVersion))
                {
-                  this[i].ClientVersion = logLines[j].LineData.ToString();
+                  this[i].ClientVersion = line.LineData.ToString();
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientArguments))
+               else if (line.LineType.Equals(LogLineType.ClientArguments))
                {
-                  this[i].Arguments = logLines[j].LineData.ToString();
+                  this[i].Arguments = line.LineData.ToString();
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientUserNameTeam))
+               else if (line.LineType.Equals(LogLineType.ClientUserNameTeam))
                {
-                  var userAndTeam = (ArrayList)logLines[j].LineData;
+                  var userAndTeam = (ArrayList)line.LineData;
                   this[i].FoldingID = userAndTeam[0].ToString();
                   this[i].Team = (int)userAndTeam[1];
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientUserID) ||
-                        logLines[j].LineType.Equals(LogLineType.ClientReceivedUserID))
+               else if (line.LineType.Equals(LogLineType.ClientUserID) ||
+                        line.LineType.Equals(LogLineType.ClientReceivedUserID))
                {
-                  this[i].UserID = logLines[j].LineData.ToString();
+                  this[i].UserID = line.LineData.ToString();
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientMachineID))
+               else if (line.LineType.Equals(LogLineType.ClientMachineID))
                {
-                  this[i].MachineID = (int)logLines[j].LineData;
+                  this[i].MachineID = (int)line.LineData;
                }
 
                #region Client Status
 
-               if (logLines[j].LineType.Equals(LogLineType.WorkUnitProcessing) ||
-                   logLines[j].LineType.Equals(LogLineType.WorkUnitWorking) ||
-                   logLines[j].LineType.Equals(LogLineType.WorkUnitStart) ||
-                   logLines[j].LineType.Equals(LogLineType.WorkUnitFrame) ||
-                   logLines[j].LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
+               if (line.LineType.Equals(LogLineType.WorkUnitProcessing) ||
+                   line.LineType.Equals(LogLineType.WorkUnitWorking) ||
+                   line.LineType.Equals(LogLineType.WorkUnitStart) ||
+                   line.LineType.Equals(LogLineType.WorkUnitFrame) ||
+                   line.LineType.Equals(LogLineType.WorkUnitResumeFromBattery))
                {
                   this[i].Status = SlotStatus.RunningNoFrameTimes;
                }
-               else if (logLines[j].LineType.Equals(LogLineType.WorkUnitPaused) ||
-                        logLines[j].LineType.Equals(LogLineType.WorkUnitPausedForBattery))
+               else if (line.LineType.Equals(LogLineType.WorkUnitPaused) ||
+                        line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
                {
                   this[i].Status = SlotStatus.Paused;
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientSendWorkToServer))
+               else if (line.LineType.Equals(LogLineType.ClientSendWorkToServer))
                {
                   this[i].Status = SlotStatus.SendingWorkPacket;
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
+               else if (line.LineType.Equals(LogLineType.ClientAttemptGetWorkPacket))
                {
                   this[i].Status = SlotStatus.GettingWorkPacket;
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientEuePauseState))
+               else if (line.LineType.Equals(LogLineType.ClientEuePauseState))
                {
                   this[i].Status = SlotStatus.EuePause;
                }
-               else if (logLines[j].LineType.Equals(LogLineType.ClientShutdown) ||
-                        logLines[j].LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
+               else if (line.LineType.Equals(LogLineType.ClientShutdown) ||
+                        line.LineType.Equals(LogLineType.ClientCoreCommunicationsErrorShutdown))
                {
                   this[i].Status = SlotStatus.Stopped;
                }
