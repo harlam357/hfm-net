@@ -47,9 +47,9 @@ namespace HFM.Core
 
       void SendCommand(string command);
 
-      string GetBuffer();
+      char[] GetBuffer();
 
-      string GetBuffer(bool clear);
+      char[] GetBuffer(bool clear);
 
       JsonMessage GetJsonMessage(string key);
 
@@ -204,12 +204,12 @@ namespace HFM.Core
          _fahClient.SendCommand(command);
       }
       
-      public string GetBuffer()
+      public char[] GetBuffer()
       {
          return _fahClient.GetBuffer();
       }
 
-      public string GetBuffer(bool clear)
+      public char[] GetBuffer(bool clear)
       {
          return _fahClient.GetBuffer(clear);
       }

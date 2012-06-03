@@ -58,7 +58,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
-      IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId);
+      IDictionary<int, UnitInfo> AggregateData(ICollection<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId);
 
       /// <summary>
       /// Dictionary of LogLine Lists.

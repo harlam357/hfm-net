@@ -113,7 +113,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
-      public IDictionary<int, UnitInfo> AggregateData(IList<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, 
+      public IDictionary<int, UnitInfo> AggregateData(ICollection<LogLine> logLines, UnitCollection unitCollection, Info info, Options options, 
                                                       SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");

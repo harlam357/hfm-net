@@ -429,10 +429,10 @@ namespace HFM.Client.Tests
             Assert.IsTrue(dataLengthReceivedFired);
             // check GetBuffer() and DataAvailable
             Assert.IsTrue(connection.DataAvailable);
-            string connectionBuffer = connection.GetBuffer(false);
+            var connectionBuffer = new string(connection.GetBuffer(false));
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
             Assert.IsTrue(connection.DataAvailable);
-            connectionBuffer = connection.GetBuffer();
+            connectionBuffer = new string(connection.GetBuffer());
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
             Assert.IsFalse(connection.DataAvailable);
          }
