@@ -282,7 +282,7 @@ namespace HFM.Log
       /// <param name="logFilePath">Path to the log file.</param>
       /// <exception cref="ArgumentNullException">Throws if logFilePath is null.</exception>
       /// <exception cref="ArgumentException">Throws if logFilePath is empty.</exception>
-      public static List<LogLine> GetLogLines(string logFilePath)
+      public static ICollection<LogLine> GetLogLines(string logFilePath)
       {
          return GetLogLines(logFilePath, LogFileType.Legacy);
       }
@@ -294,7 +294,7 @@ namespace HFM.Log
       /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logFilePath is null.</exception>
       /// <exception cref="ArgumentException">Throws if logFilePath is empty.</exception>
-      public static List<LogLine> GetLogLines(string logFilePath, LogFileType logFileType)
+      public static ICollection<LogLine> GetLogLines(string logFilePath, LogFileType logFileType)
       {
          if (logFilePath == null) throw new ArgumentNullException("logFilePath");
 
@@ -304,13 +304,9 @@ namespace HFM.Log
          }
 
          var logLineList = logFileType.GetLogLineList();
-         using (var reader = new StreamReader(logFilePath))
+         foreach (string line in File.ReadLines(logFilePath))
          {
-            while (reader.Peek() != -1)
-            {
-               // Need to clear any previous data before adding new range.
-               logLineList.Add(reader.ReadLine());
-            }
+            logLineList.Add(line);
          }
 
          return logLineList;
@@ -323,7 +319,7 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logLines">List of log lines.</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
-      public static List<LogLine> GetLogLines(IList<string> logLines)
+      public static ICollection<LogLine> GetLogLines(IEnumerable<string> logLines)
       {
          return GetLogLines(logLines, LogFileType.Legacy);
       }
@@ -334,7 +330,7 @@ namespace HFM.Log
       /// <param name="logLines">List of log lines.</param>
       /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
-      public static List<LogLine> GetLogLines(IList<string> logLines, LogFileType logFileType)
+      public static ICollection<LogLine> GetLogLines(IEnumerable<string> logLines, LogFileType logFileType)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
 
@@ -350,7 +346,7 @@ namespace HFM.Log
       /// </summary>
       /// <param name="logLines">Log lines to scan.</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
-      public static List<ClientRun> GetClientRuns(IList<LogLine> logLines)
+      public static List<ClientRun> GetClientRuns(ICollection<LogLine> logLines)
       {
          return GetClientRuns(logLines, LogFileType.Legacy);
       }
@@ -361,7 +357,7 @@ namespace HFM.Log
       /// <param name="logLines">Log lines to scan.</param>
       /// <param name="logFileType">File Type - Legacy or FahClient</param>
       /// <exception cref="ArgumentNullException">Throws if logLines is null.</exception>
-      public static List<ClientRun> GetClientRuns(IList<LogLine> logLines, LogFileType logFileType)
+      public static List<ClientRun> GetClientRuns(ICollection<LogLine> logLines, LogFileType logFileType)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
 

@@ -29,9 +29,9 @@ namespace HFM.Log
    {
       #region Fields
 
-      private readonly IList<LogLine> _logLineList;
+      private readonly ICollection<LogLine> _logLineList;
 
-      protected IList<LogLine> LogLineList 
+      protected ICollection<LogLine> LogLineList 
       { 
          get { return _logLineList; }
       }
@@ -73,7 +73,7 @@ namespace HFM.Log
 
       #region Constructor
 
-      protected LogInterpreterBase(IList<LogLine> logLines, IList<ClientRun> clientRuns)
+      protected LogInterpreterBase(ICollection<LogLine> logLines, IList<ClientRun> clientRuns)
       {
          if (logLines == null) throw new ArgumentNullException("logLines");
          if (clientRuns == null) throw new ArgumentNullException("clientRuns");
