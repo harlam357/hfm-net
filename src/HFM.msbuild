@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+   <UsingTask TaskName="SetEnv" AssemblyName="Microsoft.Build.CppTasks.Common, Version=4.0.0.0 , Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
 
    <PropertyGroup>
       <Major>0</Major>
@@ -82,6 +83,7 @@
    </PropertyGroup>
 
    <Target Name="NUnit">
+      <SetEnv Name="COMPLUS_ProfAPI_ProfilerCompatibilitySetting" Prefix="false" Value="EnableV2Profiler" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml //reg //a HFM.Client;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Client.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /xml=$(ArtifactsPath)\HFM.Core.Tests.Results.xml //reg //a HFM.Core;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Core.Tests.Coverage.xml" />
       <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Forms.Tests.Coverage.xml" />
