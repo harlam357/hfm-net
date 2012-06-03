@@ -72,7 +72,6 @@
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="FahClient.cs" />
     <Compile Include="MessageCache.cs" />
     <Compile Include="NetworkStreamAdapter.cs" />

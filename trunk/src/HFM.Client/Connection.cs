@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Timers;
@@ -470,7 +469,7 @@ namespace HFM.Client
             // lock so we're not appending to and reading from the buffer at the same time
             lock (BufferLock)
             {
-               _readBuffer.Append(Encoding.ASCII.GetString(_internalBuffer.Take(bytesRead).ToArray()));
+               _readBuffer.Append(Encoding.ASCII.GetChars(_internalBuffer, 0, bytesRead));
             }
 
             totalBytesRead += bytesRead;
@@ -497,7 +496,7 @@ namespace HFM.Client
       /// Get the value of the local data buffer and clear that value from the local data buffer.
       /// </summary>
       /// <returns>The buffer value.</returns>
-      public string GetBuffer()
+      public char[] GetBuffer()
       {
          return GetBuffer(true);
       }
@@ -507,12 +506,13 @@ namespace HFM.Client
       /// </summary>
       /// <param name="clear">true to clear the local data buffer.</param>
       /// <returns>The buffer value.</returns>
-      public string GetBuffer(bool clear)
+      public char[] GetBuffer(bool clear)
       {
          // lock so we're not append to and reading from the buffer at the same time
          lock (BufferLock)
          {
-            string value = _readBuffer.ToString();
+            var value = new char[_readBuffer.Length];
+            _readBuffer.CopyTo(0, value, 0, _readBuffer.Length);
             if (clear) _readBuffer.Clear();
             return value;
          }

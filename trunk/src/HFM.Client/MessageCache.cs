@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 
 using HFM.Client.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Client
 {
@@ -107,16 +108,13 @@ namespace HFM.Client
 
          // get the connection buffer and clear the connection buffer
          _readBuffer.Append(GetBuffer());
-         string bufferValue = _readBuffer.ToString();
-         _readBuffer.Clear();
 
          JsonMessage json;
-         while ((json = GetNextJsonMessage(ref bufferValue)) != null)
+         while ((json = GetNextJsonMessage(_readBuffer)) != null)
          {
             UpdateMessageCache(json);
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
          }
-         _readBuffer.Append(bufferValue);
          // send update finished event
          OnUpdateFinished(EventArgs.Empty);
       }
@@ -127,6 +125,19 @@ namespace HFM.Client
       /// <param name="buffer">Data buffer value.</param>
       /// <returns>JsonMessage or null if no message is available in the buffer.</returns>
       internal static JsonMessage GetNextJsonMessage(ref string buffer)
+      {
+         var sb = new StringBuilder(buffer);
+         var message = GetNextJsonMessage(sb);
+         buffer = sb.ToString();
+         return message;
+      }
+
+      /// <summary>
+      /// Parse first message from the data buffer and remove it from the buffer value.  The remaining buffer value is returned to the caller.
+      /// </summary>
+      /// <param name="buffer">Data buffer value.</param>
+      /// <returns>JsonMessage or null if no message is available in the buffer.</returns>
+      internal static JsonMessage GetNextJsonMessage(StringBuilder buffer)
       {
          if (buffer == null) return null;
 
@@ -163,18 +174,25 @@ namespace HFM.Client
          // set the index so we know where to trim the string (end plus footer length)
          int nextStartIndex = endIndex + PyonFooter.Length;
          // if more buffer is available set it and return, otherwise set the buffer empty
-         buffer = nextStartIndex < buffer.Length ? buffer.Substring(nextStartIndex) : String.Empty;
+         if (nextStartIndex < buffer.Length)
+         {
+            buffer.Remove(0, nextStartIndex);
+         }
+         else
+         {
+            buffer.Clear();
+         }
 
          return message;
       }
 
-      private static int FindStartIndex(string buffer, int messageIndex)
+      private static int FindStartIndex(StringBuilder buffer, int messageIndex)
       {
          int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex, StringComparison.Ordinal);
          return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex, StringComparison.Ordinal);
       }
 
-      private static int FindEndIndex(string buffer, int startIndex)
+      private static int FindEndIndex(StringBuilder buffer, int startIndex)
       {
          int index = buffer.IndexOf(String.Concat(CarriageReturnLineFeed, PyonFooter, CarriageReturnLineFeed), startIndex, StringComparison.Ordinal);
          if (index >= 0)

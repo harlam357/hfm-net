@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HFM.Core.DataTypes
@@ -341,6 +342,109 @@ namespace HFM.Core.DataTypes
          }
 
          return list.AsReadOnly();
+      }
+
+      #endregion
+
+      #region StringBuilder
+
+      ///// <summary>
+      ///// Reports the index of the first occurrence of the specified string in this instance.
+      ///// </summary>
+      ///// <param name="sb">The System.Text.StringBuilder to search.</param>
+      ///// <param name="value">The string to seek.</param>
+      ///// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is 0.</returns>
+      ///// <exception cref="System.ArgumentNullException">value is null.</exception>
+      //public static int IndexOf(this StringBuilder sb, string value)
+      //{
+      //   return IndexOf(sb, value, 0);
+      //}
+
+      ///// <summary>
+      ///// Reports the index of the first occurrence of the specified string in this instance. The search starts at a specified character position.
+      ///// </summary>
+      ///// <param name="sb">The System.Text.StringBuilder to search.</param>
+      ///// <param name="value">The string to seek.</param>
+      ///// <param name="startIndex">The search starting position.</param>
+      ///// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is startIndex.</returns>
+      ///// <exception cref="System.ArgumentNullException">value is null.</exception>
+      ///// <exception cref="System.ArgumentOutOfRangeException">startIndex is negative. -or- startIndex specifies a position not within this instance.</exception>
+      //public static int IndexOf(this StringBuilder sb, string value, int startIndex)
+      //{
+      //   return IndexOf(sb, value, startIndex, StringComparison.CurrentCulture);
+      //}
+
+      /// <summary>
+      /// Reports the index of the first occurrence of the specified string in the current System.String object. A parameter specifies the type of search to use for the specified string.
+      /// </summary>
+      /// <param name="sb">The System.Text.StringBuilder to search.</param>
+      /// <param name="value">The string to seek.</param>
+      /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+      /// <returns>The index position of the value parameter if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is 0.</returns>
+      /// <exception cref="System.ArgumentNullException">value is null.</exception>
+      public static int IndexOf(this StringBuilder sb, string value, StringComparison comparisonType)
+      {
+         return IndexOf(sb, value, 0, comparisonType);
+      }
+
+      /// <summary>
+      /// Reports the index of the first occurrence of the specified string in the current System.String object. Parameters specify the starting search position in the current string and the type of search to use for the specified string.
+      /// </summary>
+      /// <param name="sb">The System.Text.StringBuilder to search.</param>
+      /// <param name="value">The string to seek.</param>
+      /// <param name="startIndex">The search starting position.</param>
+      /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+      /// <returns>The zero-based index position of the value parameter if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is startIndex.</returns>
+      /// <exception cref="System.ArgumentNullException">value is null.</exception>
+      /// <exception cref="System.ArgumentOutOfRangeException">startIndex is negative. -or- startIndex specifies a position not within this instance.</exception>
+      public static int IndexOf(this StringBuilder sb, string value, int startIndex, StringComparison comparisonType)
+      {
+         if (sb == null) throw new ArgumentNullException("sb");
+         if (value == null) throw new ArgumentNullException("value");
+         if (startIndex < 0 || startIndex > sb.Length) throw new ArgumentOutOfRangeException("startIndex");
+
+         if (value.Length == 0)
+         {
+            return startIndex;
+         }
+
+         int length = value.Length;
+         for (int i = startIndex; i < sb.Length; i++)
+         {
+            if (i + length > sb.Length)
+            {
+               break;
+            }
+
+            var temp = new char[value.Length];
+            sb.CopyTo(i, temp, 0, length);
+            if (new string(temp).Equals(value, comparisonType))
+            {
+               return i;
+            }
+         }
+
+         return -1;
+      }
+
+      /// <summary>
+      /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length.
+      /// </summary>
+      /// <param name="sb">The System.Text.StringBuilder source instance.</param>
+      /// <param name="startIndex">The zero-based starting character position of a substring in this instance.</param>
+      /// <param name="length">The number of characters in the substring.</param>
+      /// <returns>A string that is equivalent to the substring of length length that begins at startIndex in this instance, or System.String.Empty if startIndex is equal to the length of this instance and length is zero.</returns>
+      /// <exception cref="System.ArgumentOutOfRangeException">startIndex plus length indicates a position not within this instance. -or- startIndex or length is less than zero.</exception>
+      public static string Substring(this StringBuilder sb, int startIndex, int length)
+      {
+         if (sb == null) throw new ArgumentNullException("sb");
+         if (startIndex < 0) throw new ArgumentOutOfRangeException("startIndex");
+         if (length < 0) throw new ArgumentOutOfRangeException("length");
+         if (startIndex + length > sb.Length) throw new ArgumentOutOfRangeException("length");
+
+         var temp = new char[length];
+         sb.CopyTo(startIndex, temp, 0, length);
+         return new string(temp);
       }
 
       #endregion
