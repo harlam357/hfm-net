@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-    xmlns:user="http://www.tempuri.org/User">
+                              xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
    <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
+   <xsl:include href="FormatDate.xslt"/>
    <xsl:template match="SlotSummary">
       <html>
          <head>
@@ -53,7 +52,7 @@
                      Total PPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD)"/>
+                     <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -61,7 +60,7 @@
                      Total PPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, $PPW)"/>
+                     <xsl:value-of select="format-number($PPW, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -69,7 +68,7 @@
                      Total UPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/UPD)"/>
+                     <xsl:value-of select="format-number(SlotTotals/UPD, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -77,7 +76,7 @@
                      Total UPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, $UPW)"/>
+                     <xsl:value-of select="format-number($UPW, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -85,7 +84,7 @@
                      Average PPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/PPD div SlotTotals/WorkingSlots)"/>
+                     <xsl:value-of select="format-number(SlotTotals/PPD div SlotTotals/WorkingSlots, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -93,7 +92,7 @@
                      Average PPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, $PPW div SlotTotals/WorkingSlots)"/>
+                     <xsl:value-of select="format-number($PPW div SlotTotals/WorkingSlots, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -101,7 +100,7 @@
                      Average UPD
                   </td>
                   <td class="AltRightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, SlotTotals/UPD div SlotTotals/WorkingSlots)"/>
+                     <xsl:value-of select="format-number(SlotTotals/UPD div SlotTotals/WorkingSlots, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -109,7 +108,7 @@
                      Average UPW
                   </td>
                   <td class="RightCol" width="25">
-                     <xsl:value-of select="user:FormatNumber(NumberFormat, $UPW div SlotTotals/WorkingSlots)"/>
+                     <xsl:value-of select="format-number($UPW div SlotTotals/WorkingSlots, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
@@ -143,31 +142,11 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:value-of select="user:FormatDate(UpdateDateTime)"/>
+                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate"><xsl:with-param name="dateTime" select="UpdateDateTime" /></xsl:call-template>
                   </td>
                </tr>
             </table>
          </body>
       </html>
    </xsl:template>
-
-   <msxsl:script implements-prefix="user" language="C#">
-      <![CDATA[
-         public string FormatNumber(string format, string value)
-         {
-            decimal decimalValue;
-            if (Decimal.TryParse(value, out decimalValue))
-            {
-               return decimalValue.ToString(format);
-            }
-            return String.Empty;
-         }
-
-         public string FormatDate(string dateValue)
-         {
-            DateTime value = DateTime.Parse(dateValue);
-            return String.Format("{0} at {1}", value.ToLongDateString(), value.ToString("h:mm:ss tt zzz"));
-         }
-      ]]>
-   </msxsl:script>
 </xsl:stylesheet>
