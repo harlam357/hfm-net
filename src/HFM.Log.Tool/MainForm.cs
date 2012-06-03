@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -112,7 +113,7 @@ namespace HFM.Log.Tool
          if (File.Exists(txtLogPath.Text))
          {
             LogFileType logFileType = GetLogFileType();
-            _logLines = LogReader.GetLogLines(txtLogPath.Text, logFileType);
+            _logLines = LogReader.GetLogLines(txtLogPath.Text, logFileType).ToList();
             _clientRuns = LogReader.GetClientRuns(_logLines, logFileType);
 
             PopulateClientRunsInTree(_clientRuns);
