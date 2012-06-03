@@ -37,7 +37,7 @@ namespace HFM.Log.Tests
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
          
@@ -90,7 +90,7 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -129,7 +129,7 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -167,7 +167,7 @@ namespace HFM.Log.Tests
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -202,7 +202,7 @@ namespace HFM.Log.Tests
       public void SMP_15_FAHlog() // lots of Client-core communications error
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -270,7 +270,7 @@ namespace HFM.Log.Tests
       public void SMP_17_FAHlog() // v6.23 A4 SMP
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -306,7 +306,7 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -374,7 +374,7 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -411,7 +411,7 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -470,7 +470,7 @@ namespace HFM.Log.Tests
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -521,7 +521,7 @@ namespace HFM.Log.Tests
       public void GPU3_2_FAHlog() // verbosity 9 / OPENMMGPU v2.19
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -573,7 +573,7 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -639,7 +639,7 @@ namespace HFM.Log.Tests
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -708,7 +708,7 @@ namespace HFM.Log.Tests
       public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -753,7 +753,7 @@ namespace HFM.Log.Tests
       public void Standard_9_FAHlog() // v6.23 A4 Uniprocessor
       {
          // Scan
-         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt");
+         var logLines = LogReader.GetLogLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt").ToList();
          var clientRuns = LogReader.GetClientRuns(logLines);
          var logInterpreter = new LogInterpreterLegacy(logLines, clientRuns);
 
@@ -789,7 +789,7 @@ namespace HFM.Log.Tests
       public void Client_v7_1()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_1\\log.txt"), LogFileType.FahClient);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_1\\log.txt"), LogFileType.FahClient).ToList();
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
          
          // Check Run 0 Positions
@@ -864,7 +864,7 @@ namespace HFM.Log.Tests
       public void Client_v7_7()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_7\\log.txt"), LogFileType.FahClient);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_7\\log.txt"), LogFileType.FahClient).ToList();
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
@@ -923,7 +923,7 @@ namespace HFM.Log.Tests
       public void Client_v7_8()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_8\\log.txt"), LogFileType.FahClient);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_8\\log.txt"), LogFileType.FahClient).ToList();
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
@@ -962,7 +962,7 @@ namespace HFM.Log.Tests
       public void Client_v7_10()
       {
          // Scan
-         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient).ToList();
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
