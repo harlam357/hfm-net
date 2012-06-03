@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Queue.Tool</RootNamespace>
     <AssemblyName>HFM.Queue.Tool</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>hfm_48_48.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -32,6 +32,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -115,6 +116,7 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -130,7 +132,7 @@ goto End
 
 :Merge
 set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
-..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /t:exe /ndebug /out:HFM.Queue.exe HFM.Queue.Tool.exe HFM.Queue.dll
+..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:v4 /t:exe /ndebug /out:HFM.Queue.exe HFM.Queue.Tool.exe HFM.Queue.dll
 :End</PostBuildEvent>
   </PropertyGroup>
 </Project>

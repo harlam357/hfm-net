@@ -15,7 +15,7 @@
     <ApplicationIcon>hfm_48_48.ico</ApplicationIcon>
     <Win32Resource>
     </Win32Resource>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -35,6 +35,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -125,10 +126,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\..\lib\Castle Windsor\dotNet35\Castle.Windsor.dll</HintPath>
+      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
       <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>

@@ -40,9 +40,9 @@ copy /Y Newtonsoft.Json.Net35.xml %1
 
 if not exist %1\SQLite md %1\SQLite
 if not exist %1\SQLite\x86 md %1\SQLite\x86
-copy /Y ..\..\..\..\lib\SQLite.NET\bin\System.Data.SQLite.dll %1\SQLite\x86
+copy /Y ..\..\..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll %1\SQLite\x86
 if not exist %1\SQLite\AMD64 md %1\SQLite\AMD64
-copy /Y ..\..\..\..\lib\SQLite.NET\bin\x64\System.Data.SQLite.dll %1\SQLite\AMD64
+copy /Y ..\..\..\..\lib\System.Data.SQLite\bin\x64\System.Data.SQLite.dll %1\SQLite\AMD64
 if not exist %1\SQLite\Mono md %1\SQLite\Mono
 copy /Y ..\..\..\..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll %1\SQLite\Mono
 
