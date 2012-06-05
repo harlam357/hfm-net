@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FahClient Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@ using Rhino.Mocks;
 
 using HFM.Client.DataTypes;
 using HFM.Client.Tests.DataTypes;
+using HFM.Core.DataTypes;
 
 namespace HFM.Client.Tests
 {
@@ -380,7 +381,7 @@ namespace HFM.Client.Tests
             var logRestart = fahClient.GetMessage<LogRestart>();
             Assert.IsNotNull(logRestart);
             Assert.AreEqual('*', logRestart.Value[0]);
-            Assert.IsFalse(logRestart.Value.EndsWith("\""));
+            Assert.IsFalse(logRestart.Value.EndsWith('\"'));
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -413,7 +414,7 @@ namespace HFM.Client.Tests
             var logUpdate = fahClient.GetMessage<LogUpdate>();
             Assert.IsNotNull(logUpdate);
             Assert.AreEqual('s', logUpdate.Value[0]);
-            Assert.IsFalse(logUpdate.Value.EndsWith("\""));
+            Assert.IsFalse(logUpdate.Value.EndsWith('\"'));
          }
 
          _tcpClient.VerifyAllExpectations();

@@ -62,7 +62,6 @@ namespace HFM.Core.Configuration
          // UnitInfoLogic - Transient
          container.Register(
             Component.For<UnitInfoLogic>()
-               //.ImplementedBy<UnitInfoLogic>()
                .LifeStyle.Transient);
 
          // IExternalProcessStarter - Singleton

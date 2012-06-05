@@ -124,7 +124,7 @@ namespace HFM.Client.DataTypes
          Debug.Assert(message != null);
 
          var propertySetter = new MessagePropertySetter(this);
-         foreach (var prop in JObject.Parse(message.Value).Properties())
+         foreach (var prop in JObject.Parse(message.Value.ToString()).Properties())
          {
             propertySetter.SetProperty(prop);
          }

@@ -57,7 +57,7 @@ namespace HFM.Client
 
       #region Fields
 
-      private readonly StringBuilder _readBuffer;
+      //private readonly StringBuilder _readBuffer;
       private readonly Dictionary<string, JsonMessage> _messages;
 
       #endregion
@@ -80,7 +80,7 @@ namespace HFM.Client
       internal MessageCache(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
       {
-         _readBuffer = new StringBuilder();
+         //_readBuffer = new StringBuilder();
          _messages = new Dictionary<string, JsonMessage>();
       }
 
@@ -107,10 +107,10 @@ namespace HFM.Client
          base.Update();
 
          // get the connection buffer and clear the connection buffer
-         _readBuffer.Append(GetBuffer());
+         //_readBuffer.Append(GetBuffer());
 
          JsonMessage json;
-         while ((json = GetNextJsonMessage(_readBuffer)) != null)
+         while ((json = GetNextJsonMessage(ReadBuffer)) != null)
          {
             UpdateMessageCache(json);
             OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
@@ -142,7 +142,7 @@ namespace HFM.Client
          if (buffer == null) return null;
 
          // find the header
-         int messageIndex = buffer.IndexOf(PyonHeader, StringComparison.Ordinal);
+         int messageIndex = buffer.IndexOf(PyonHeader, false);
          if (messageIndex < 0)
          {
             return null;
@@ -167,9 +167,9 @@ namespace HFM.Client
          message.Key = buffer.Substring(messageIndex, startIndex - messageIndex);
 
          // get the PyON message
-         string pyon = buffer.Substring(startIndex, endIndex - startIndex);
+         buffer.SubstringBuilder(startIndex, message.Value, endIndex - startIndex);
          // replace PyON values with JSON values
-         message.Value = pyon.Replace(": None", ": null");
+         message.Value.Replace(": None", ": null");
 
          // set the index so we know where to trim the string (end plus footer length)
          int nextStartIndex = endIndex + PyonFooter.Length;
@@ -188,19 +188,19 @@ namespace HFM.Client
 
       private static int FindStartIndex(StringBuilder buffer, int messageIndex)
       {
-         int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex, StringComparison.Ordinal);
-         return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex, StringComparison.Ordinal);
+         int index = buffer.IndexOf(CarriageReturnLineFeed, messageIndex, false);
+         return index >= 0 ? index : buffer.IndexOf(LineFeed, messageIndex, false);
       }
 
       private static int FindEndIndex(StringBuilder buffer, int startIndex)
       {
-         int index = buffer.IndexOf(String.Concat(CarriageReturnLineFeed, PyonFooter, CarriageReturnLineFeed), startIndex, StringComparison.Ordinal);
+         int index = buffer.IndexOf(String.Concat(CarriageReturnLineFeed, PyonFooter, CarriageReturnLineFeed), startIndex, false);
          if (index >= 0)
          {
             return index;
          }
 
-         index = buffer.IndexOf(String.Concat(LineFeed, PyonFooter, LineFeed), startIndex, StringComparison.Ordinal);
+         index = buffer.IndexOf(String.Concat(LineFeed, PyonFooter, LineFeed), startIndex, false);
          if (index >= 0)
          {
             return index;

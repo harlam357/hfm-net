@@ -19,6 +19,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
+
+using HFM.Core.DataTypes;
 
 namespace HFM.Client.DataTypes
 {
@@ -43,10 +46,15 @@ namespace HFM.Client.DataTypes
    /// </summary>
    public abstract class LogFragment : TypedMessage
    {
+      protected LogFragment()
+      {
+         Value = new StringBuilder();
+      }
+
       /// <summary>
       /// Log fragment value.
       /// </summary>
-      public string Value { get; set; }
+      public StringBuilder Value { get; private set; }
 
       /// <summary>
       /// Fill the LogFragment object with data from the given JsonMessage.
@@ -55,21 +63,22 @@ namespace HFM.Client.DataTypes
       internal override void Fill(JsonMessage message)
       {
          Debug.Assert(message != null);
-         int startIndex = GetStartIndex(message.Value);
-         int length = (message.Value.EndsWith("\"") ? message.Value.Length - 1 : message.Value.Length) - startIndex;
-         Value = SetEnvironmentNewLineCharacters(message.Value.Substring(startIndex, length));
+         message.Value.CopyTo(Value);
+         int startIndex = GetStartIndex(Value);
+         int length = (Value.EndsWith('\"') ? Value.Length - 1 : Value.Length) - startIndex;
+         SetEnvironmentNewLineCharacters(Value.SubstringBuilder(startIndex, length, true));
       }
 
-      private static int GetStartIndex(string value)
+      private static int GetStartIndex(StringBuilder value)
       {
-         int startIndex = value.IndexOf("\r\n\"");
+         int startIndex = value.IndexOf("\r\n\"", false);
          if (startIndex >= 0)
          {
             startIndex += 3;
          }
          else
          {
-            startIndex = value.IndexOf("\n\"");
+            startIndex = value.IndexOf("\n\"", false);
             if (startIndex >= 0)
             {
                startIndex += 2;
@@ -82,10 +91,10 @@ namespace HFM.Client.DataTypes
          return startIndex;
       }
 
-      private static string SetEnvironmentNewLineCharacters(string value)
+      private static void SetEnvironmentNewLineCharacters(StringBuilder value)
       {
-         value = value.Replace("\n", Environment.NewLine);
-         return value.Replace("\\n", Environment.NewLine);
+         value.Replace("\n", Environment.NewLine);
+         value.Replace("\\n", Environment.NewLine);
       }
    }
 }

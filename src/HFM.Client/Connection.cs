@@ -18,11 +18,14 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using System.Timers;
+
+using HFM.Core.DataTypes;
 
 namespace HFM.Client
 {
@@ -117,6 +120,20 @@ namespace HFM.Client
       public bool DataAvailable
       {
          get { return _readBuffer.Length != 0; }
+      }
+
+      /// <summary>
+      /// Gets the read buffer for the Connection.
+      /// </summary>
+      protected StringBuilder ReadBuffer
+      {
+         get
+         {
+            lock (BufferLock)
+            {
+               return _readBuffer;
+            }
+         }
       }
 
       /// <summary>
@@ -495,8 +512,9 @@ namespace HFM.Client
       /// <summary>
       /// Get the value of the local data buffer and clear that value from the local data buffer.
       /// </summary>
-      /// <returns>The buffer value.</returns>
-      public char[] GetBuffer()
+      /// <returns>The buffer value as a string.</returns>
+      /// <remarks>If the buffer value is large this string allocation may end up on the Large Object Heap.</remarks>
+      public string GetBuffer()
       {
          return GetBuffer(true);
       }
@@ -505,14 +523,39 @@ namespace HFM.Client
       /// Get the value of the local data buffer and optionally clear that value from the local data buffer.
       /// </summary>
       /// <param name="clear">true to clear the local data buffer.</param>
-      /// <returns>The buffer value.</returns>
-      public char[] GetBuffer(bool clear)
+      /// <returns>The buffer value as a string.</returns>
+      /// <remarks>If the buffer value is large this string allocation may end up on the Large Object Heap.</remarks>
+      public string GetBuffer(bool clear)
       {
          // lock so we're not append to and reading from the buffer at the same time
          lock (BufferLock)
          {
-            var value = new char[_readBuffer.Length];
-            _readBuffer.CopyTo(0, value, 0, _readBuffer.Length);
+            string value = _readBuffer.ToString();
+            if (clear) _readBuffer.Clear();
+            return value;
+         }
+      }
+
+      /// <summary>
+      /// Get the value of the local data buffer and clear that value from the local data buffer.
+      /// </summary>
+      /// <returns>The buffer value in an enumerable collection of up to 8000 element char arrays.</returns>
+      public IEnumerable<char[]> GetBufferChunks()
+      {
+         return GetBufferChunks(true);
+      }
+
+      /// <summary>
+      /// Get the value of the local data buffer and optionally clear that value from the local data buffer.
+      /// </summary>
+      /// <param name="clear">true to clear the local data buffer.</param>
+      /// <returns>The buffer value in an enumerable collection of up to 8000 element char arrays.</returns>
+      public IEnumerable<char[]> GetBufferChunks(bool clear)
+      {
+         // lock so we're not append to and reading from the buffer at the same time
+         lock (BufferLock)
+         {
+            IEnumerable<char[]> value = _readBuffer.GetChunks();
             if (clear) _readBuffer.Clear();
             return value;
          }

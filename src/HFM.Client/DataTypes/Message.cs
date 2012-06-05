@@ -83,13 +83,13 @@ namespace HFM.Client.DataTypes
    {
       internal JsonMessage()
       {
-         
+         Value = new StringBuilder();
       }
 
       /// <summary>
       /// Message value.
       /// </summary>
-      public string Value { get; internal set; }
+      public StringBuilder Value { get; private set; }
 
       /// <summary>
       /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
@@ -103,7 +103,7 @@ namespace HFM.Client.DataTypes
          var sb = new StringBuilder();
          sb.Append(base.ToString());
          sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " - Length: {0}", Value.Length));
-         sb.AppendLine(Value);
+         sb.AppendLine(Value.ToString());
          sb.AppendLine();
          return sb.ToString();
       }

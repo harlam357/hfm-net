@@ -40,7 +40,7 @@ namespace HFM.Client.DataTypes
       internal override void Fill(JsonMessage message)
       {
          Debug.Assert(message != null);
-         Value = Int32.Parse(message.Value, CultureInfo.InvariantCulture);
+         Value = Int32.Parse(message.Value.ToString(), CultureInfo.InvariantCulture);
          SetMessageValues(message);
       }
    }

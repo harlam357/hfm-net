@@ -44,6 +44,7 @@
          this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
          this.CloseButton = new System.Windows.Forms.Button();
          this.ConnectionGroupBox = new System.Windows.Forms.GroupBox();
+         this.LogMessagesCheckBox = new System.Windows.Forms.CheckBox();
          this.DataReceivedValueLabel = new System.Windows.Forms.Label();
          this.DataSentValueLabel = new System.Windows.Forms.Label();
          this.DataReceivedLabel = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
          this.ClearMessagesButton = new System.Windows.Forms.Button();
          this.ClientCommandGroupBox = new System.Windows.Forms.GroupBox();
          this.StatusMessageListBox = new System.Windows.Forms.ListBox();
-         this.LogMessagesCheckBox = new System.Windows.Forms.CheckBox();
          this.StatusStrip.SuspendLayout();
          this.ConnectionGroupBox.SuspendLayout();
          this.ClientCommandGroupBox.SuspendLayout();
@@ -208,6 +208,17 @@
          this.ConnectionGroupBox.TabStop = false;
          this.ConnectionGroupBox.Text = "Connection";
          // 
+         // LogMessagesCheckBox
+         // 
+         this.LogMessagesCheckBox.AutoSize = true;
+         this.LogMessagesCheckBox.Location = new System.Drawing.Point(292, 48);
+         this.LogMessagesCheckBox.Name = "LogMessagesCheckBox";
+         this.LogMessagesCheckBox.Size = new System.Drawing.Size(95, 17);
+         this.LogMessagesCheckBox.TabIndex = 13;
+         this.LogMessagesCheckBox.Text = "Log Messages";
+         this.LogMessagesCheckBox.UseVisualStyleBackColor = true;
+         this.LogMessagesCheckBox.CheckedChanged += new System.EventHandler(this.LogMessagesCheckBoxCheckedChanged);
+         // 
          // DataReceivedValueLabel
          // 
          this.DataReceivedValueLabel.Location = new System.Drawing.Point(281, 120);
@@ -266,23 +277,14 @@
          // 
          // StatusMessageListBox
          // 
+         this.StatusMessageListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.StatusMessageListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this.StatusMessageListBox.FormattingEnabled = true;
          this.StatusMessageListBox.Location = new System.Drawing.Point(440, 25);
          this.StatusMessageListBox.Name = "StatusMessageListBox";
          this.StatusMessageListBox.Size = new System.Drawing.Size(246, 184);
          this.StatusMessageListBox.TabIndex = 4;
-         // 
-         // LogMessagesCheckBox
-         // 
-         this.LogMessagesCheckBox.AutoSize = true;
-         this.LogMessagesCheckBox.Location = new System.Drawing.Point(292, 48);
-         this.LogMessagesCheckBox.Name = "LogMessagesCheckBox";
-         this.LogMessagesCheckBox.Size = new System.Drawing.Size(95, 17);
-         this.LogMessagesCheckBox.TabIndex = 13;
-         this.LogMessagesCheckBox.Text = "Log Messages";
-         this.LogMessagesCheckBox.UseVisualStyleBackColor = true;
-         this.LogMessagesCheckBox.CheckedChanged += new System.EventHandler(this.LogMessagesCheckBoxCheckedChanged);
          // 
          // MainForm
          // 

@@ -193,42 +193,61 @@ namespace HFM.Core
          }
          else if (e.DataType == typeof(LogRestart))
          {
-            string logRestart = _fahClient.GetMessage<LogRestart>().Value;
+            LogFragment logFragment = _fahClient.GetMessage<LogRestart>();
+            IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
             // clear
             _logText.Length = 0;
-            WriteToLocalFahLogCache(logRestart);
-            AppendToLogBuffer(logRestart);
+            WriteToLocalFahLogCache(chunks);
+            AppendToLogBuffer(chunks, logFragment.Value.Length);
          }
          else if (e.DataType == typeof(LogUpdate))
          {
-            string logUpdate = _fahClient.GetMessage<LogUpdate>().Value;
-            WriteToLocalFahLogCache(logUpdate);
-            AppendToLogBuffer(logUpdate);
+            LogFragment logFragment = _fahClient.GetMessage<LogUpdate>();
+            IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
+            WriteToLocalFahLogCache(chunks);
+            AppendToLogBuffer(chunks, logFragment.Value.Length);
          }
       }
 
-      private void WriteToLocalFahLogCache(string value)
+      private void WriteToLocalFahLogCache(IEnumerable<char[]> chunks)
       {
          string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
          if (_logText.Length == 0)
          {
-            File.WriteAllText(fahLogPath, value);
+            int i = 0;
+            foreach (var chunk in chunks)
+            {
+               if (i == 0)
+               {
+                  File.WriteAllText(fahLogPath, new string(chunk));
+               }
+               else
+               {
+                  File.AppendAllText(fahLogPath, new string(chunk));
+               }
+            }
          }
          else
          {
-            File.AppendAllText(fahLogPath, value);
+            foreach (var chunk in chunks)
+            {
+               File.AppendAllText(fahLogPath, new string(chunk));
+            }
          }
       }
 
-      private void AppendToLogBuffer(string value)
+      private void AppendToLogBuffer(IEnumerable<char[]> chunks, int length)
       {
-         Debug.Assert(value != null);
+         Debug.Assert(chunks != null);
 
-         if (_logText.Length > 450000)
+         if (_logText.Length > _logText.MaxCapacity - 16000)
          {
-            _logText.Remove(0, value.Length);
+            _logText.Remove(0, length);
          }
-         _logText.Append(value);
+         foreach (var chunk in chunks)
+         {
+            _logText.Append(chunk);
+         }
       }
 
       private void FahClientUpdateFinished(object sender, EventArgs e)
@@ -378,7 +397,7 @@ namespace HFM.Core
                #region Run the Aggregator
 
                DataAggregator.ClientName = slotModel.Name;
-               var lines = LogReader.GetLogLines(_logText.ToString().Split('\n').Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
+               var lines = LogReader.GetLogLines(_logText.Split('\n').Where(x => x.Length != 0), LogFileType.FahClient);
                lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
                IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, _messages.UnitCollection, info, options,
                                                                                slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
