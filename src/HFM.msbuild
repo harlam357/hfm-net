@@ -94,7 +94,7 @@
    </Target>
 
    <Target Name="FxCop">
-      <Exec Command="$(FxCopPath) /f:$(ArtifactsHFM)\HFM.exe /f:$(ArtifactsHFM)\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\SQLite.NET\bin /out:.\Artifacts\FxCopReport.xml" />
+      <Exec Command="$(FxCopPath) /f:$(ArtifactsHFM)\HFM.exe /f:$(ArtifactsHFM)\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:.\Artifacts\FxCopReport.xml /gac" />
    </Target>
 
    <ItemGroup>
