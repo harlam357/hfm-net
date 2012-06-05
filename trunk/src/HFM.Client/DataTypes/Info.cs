@@ -73,7 +73,7 @@ namespace HFM.Client.DataTypes
          Debug.Assert(message != null);
 
          var propertySetter = new MessagePropertySetter(this);
-         foreach (var token in JArray.Parse(message.Value))
+         foreach (var token in JArray.Parse(message.Value.ToString()))
          {
             if (!token.HasValues)
             {

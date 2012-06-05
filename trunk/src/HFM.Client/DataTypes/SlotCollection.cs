@@ -59,7 +59,7 @@ namespace HFM.Client.DataTypes
       {
          Debug.Assert(message != null);
 
-         var jsonArray = JArray.Parse(message.Value);
+         var jsonArray = JArray.Parse(message.Value.ToString());
          foreach (var token in jsonArray)
          {
             if (!token.HasValues)

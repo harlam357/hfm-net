@@ -26,6 +26,8 @@ using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.DataTypes;
+
 namespace HFM.Client.Tests
 {
    [TestFixture]
@@ -429,10 +431,42 @@ namespace HFM.Client.Tests
             Assert.IsTrue(dataLengthReceivedFired);
             // check GetBuffer() and DataAvailable
             Assert.IsTrue(connection.DataAvailable);
-            var connectionBuffer = new string(connection.GetBuffer(false));
+            var connectionBuffer = connection.GetBuffer(false);
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
             Assert.IsTrue(connection.DataAvailable);
-            connectionBuffer = new string(connection.GetBuffer());
+            connectionBuffer = connection.GetBuffer();
+            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
+            Assert.IsFalse(connection.DataAvailable);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      [Test]
+      // ReSharper disable InconsistentNaming
+      public void SocketTimerElapsedTest1_GetBufferChunks()
+      // ReSharper restore InconsistentNaming
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            Connect(connection);
+
+            bool dataLengthReceivedFired = false;
+            connection.DataLengthReceived += (sender, args) => dataLengthReceivedFired = true;
+            var buffer = connection.InternalBuffer;
+            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
+               new Func<byte[], int, int, int>(FillBufferWithTestData));
+
+            connection.SocketTimerElapsed(null, null);
+
+            Assert.IsTrue(dataLengthReceivedFired);
+            // check GetBuffer() and DataAvailable
+            Assert.IsTrue(connection.DataAvailable);
+            var connectionBuffer = connection.GetBufferChunks(false).MergeChunks().ToString();
+            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
+            Assert.IsTrue(connection.DataAvailable);
+            connectionBuffer = connection.GetBufferChunks().MergeChunks().ToString();
             Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
             Assert.IsFalse(connection.DataAvailable);
          }
