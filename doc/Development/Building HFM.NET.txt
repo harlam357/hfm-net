@@ -60,15 +60,15 @@ Compiling with the HFM.NET MSBuild Script
 Prerequisites
 -------------
 - MSBuild Community Tasks v1.2.0.306: http://msbuildtasks.tigris.org/
+- MSBuild Extension Pack v4.0.5.0:    http://msbuildextensionpack.codeplex.com/
 - CollabNet Subversion Client v1.6.x: http://www.collab.net/downloads/subversion/svn-other.html
 
 The HFM.NET MSBuild Script is setup to build HFM.NET in Release mode for the Any CPU platform.  It will 
 also automatically run all the NUnit unit test projects.  On a successful compile, the script will copy 
 the distribution files to a the \src\Artifacts\HFM.NET folder.
 
-Although HFM.NET is compiled to run under with the Microsoft.NET Framework v3.5 it is built using the 
-Microsoft.NET Framework v4.0 toolset.  It will likely build fine using the Microsoft.NET Framework v3.5 
-toolset but this configuration is not supported.
+HFM.NET is compiled to run under the Microsoft.NET Framework v4.0 Client Profile and is built using the
+Microsoft.NET Framework v4.0 tool chain.
 
 To execute the build script open a Visual Studio 2010 Command Prompt by going to the Start menu > 
 Microsoft Visual Studio 2010 > Visual Studio Tools > Visual Studio Command Prompt (2010).  If you're using 
