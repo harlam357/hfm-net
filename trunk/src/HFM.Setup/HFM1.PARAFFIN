@@ -73,6 +73,7 @@
       <ComponentRef Id="comp_DE8059D7C97E4408B84B059B11D35966" />
       <ComponentRef Id="comp_FFEEFD2F10514286B2847BA71D0264EB" />
       <ComponentRef Id="comp_017B23CAD3C64AB4AD3D2C76B0093B30" />
+      <ComponentRef Id="comp_07C71ABAB0384DD1AE720E3B9F922E5D" />
       <ComponentRef Id="comp_59ABC1E12CE5481FA885ADF41B4C4D9A" />
       <ComponentRef Id="comp_571A08CD4C944F4B8B6B4A2DB7F2BD1D" />
       <ComponentRef Id="comp_40420E3B6DD544FE8EC950C80052F320" />
@@ -258,6 +259,9 @@
         </Component>
       </Directory>
       <Directory Id="dir_53F5A3A5FCAF449FA0184012BF04882D" Name="XSL">
+        <Component Id="comp_07C71ABAB0384DD1AE720E3B9F922E5D" Guid="5628748A-0E2A-4B7E-B449-A70880F81D66">
+          <File Id="file_08F8E9AF9EC94F28ADA1C084FB916EB6" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\XSL\FormatDate.xslt" />
+        </Component>
         <Component Id="comp_59ABC1E12CE5481FA885ADF41B4C4D9A" Guid="F5D1C747-9261-4708-813C-4C4F0EDC69FB">
           <File Id="file_74B4813147F049B4831EE7DB3EC5E3B9" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\XSL\WebMobileOverview.xslt" />
         </Component>
