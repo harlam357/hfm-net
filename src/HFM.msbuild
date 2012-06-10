@@ -4,6 +4,11 @@
    <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
 
    <PropertyGroup>
+      <!--<Configuration Condition=" '$(Configuration)' == '' ">ScriptedRelease</Configuration>-->
+      <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
+   </PropertyGroup>
+
+   <PropertyGroup>
       <Major>0</Major>
       <Minor>9</Minor>
       <Build>1</Build>
@@ -54,7 +59,7 @@
    <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
       <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease;Platform=Any CPU;AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
+               Properties="Configuration=ScriptedRelease;Platform=$(Platform);AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
 
       <CallTarget Targets="NUnit" />
    </Target>
@@ -108,12 +113,12 @@
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(ZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
-           ZipFileName="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" />
+           ZipFileName="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" />
       <CallTarget Targets="CopyZipPackage" />
    </Target>
 
    <Target Name ="CopyZipPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
 
    <Target Name="BuildMsi" DependsOnTargets="Version">
@@ -121,12 +126,12 @@
       <MSBuild Projects="HFM.Setup.sln"
                Targets="Rebuild"
                Properties="Configuration=Release" />
-      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" />
+      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" />
       <CallTarget Targets="CopyMsiPackage" />
    </Target>
    
    <Target Name ="CopyMsiPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
    </Target>
 
    <Target Name="BuildDocs">
@@ -135,7 +140,7 @@
       <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm" />
    </Target>
 
-   <Target Name="BuildApiZips" DependsOnTargets="Version;BuildDocs">
+   <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="Version;BuildDocs">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(ClientZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
@@ -149,7 +154,7 @@
       <CallTarget Targets="CopyApiZipPackages" />
    </Target>
 
-   <Target Name ="CopyApiZipPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+   <Target Name ="CopyApiZipPackages" Condition="'$(Platform)' == 'Any CPU' AND '$(PackageDestination)' != ''" DependsOnTargets="Version">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
