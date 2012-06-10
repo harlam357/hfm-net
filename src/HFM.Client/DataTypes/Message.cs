@@ -33,6 +33,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Provides the base functionality for creating a collection of Folding@Home typed client messages.
    /// </summary>
+   [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
    public abstract class TypedMessageCollection : TypedMessage
    {
       internal abstract void Fill<T>(JsonMessage message) where T : ITypedMessageObject;
@@ -68,9 +69,9 @@ namespace HFM.Client.DataTypes
          get { return _errors.AsReadOnly(); }
       }
 
-      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
       {
-         _errors.Add(error);
+         _errors.Add(conversionError);
       }
 
       #endregion
@@ -364,7 +365,7 @@ namespace HFM.Client.DataTypes
       /// <summary>
       /// Add a message property conversion error.
       /// </summary>
-      /// <param name="error">The conversion error.</param>
-      void AddError(MessagePropertyConversionError error);
+      /// <param name="conversionError">The conversion error.</param>
+      void AddError(MessagePropertyConversionError conversionError);
    }
 }

@@ -239,7 +239,7 @@ namespace HFM.Client.Tests.DataTypes
          get { throw new NotImplementedException(); }
       }
 
-      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
       {
          throw new NotImplementedException();
       }

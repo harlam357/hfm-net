@@ -464,9 +464,9 @@ namespace HFM.Client.DataTypes
          get { return _errors.AsReadOnly(); }
       }
 
-      void ITypedMessageObject.AddError(MessagePropertyConversionError error)
+      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
       {
-         _errors.Add(error);
+         _errors.Add(conversionError);
       }
 
       #endregion

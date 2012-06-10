@@ -86,6 +86,7 @@ namespace HFM.Client
       /// <typeparam name="T">Collection message type to get.</typeparam>
       /// <typeparam name="TItemType">Collection item type used to populate the collection.</typeparam>
       /// <returns>Message value as a strongly typed object.</returns>
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       public T GetMessage<T, TItemType>() where T : TypedMessageCollection, new() where TItemType : ITypedMessageObject, new()
       {
          var jsonMessage = GetJsonMessage(GetKey(typeof(T)));
