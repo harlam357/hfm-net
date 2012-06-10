@@ -40,7 +40,7 @@ namespace HFM.Core.Tests
          };
 
          collection.Read();
-         Assert.AreEqual(6, collection.Count);
+         Assert.AreEqual(20, collection.Count);
       }
 
       [Test]
