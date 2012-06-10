@@ -33,7 +33,7 @@ namespace HFM.Client.Converters
 
          double value;
          // always returns value in gigabytes
-         int gigabyteIndex = inputString.IndexOf("GiB");
+         int gigabyteIndex = inputString.IndexOf("GiB", StringComparison.Ordinal);
          if (gigabyteIndex > 0)
          {
             if (Double.TryParse(inputString.Substring(0, gigabyteIndex), out value))
@@ -41,7 +41,7 @@ namespace HFM.Client.Converters
                return value;
             }
          }
-         int megabyteIndex = inputString.IndexOf("MiB");
+         int megabyteIndex = inputString.IndexOf("MiB", StringComparison.Ordinal);
          if (megabyteIndex > 0)
          {
             if (Double.TryParse(inputString.Substring(0, megabyteIndex), out value))
@@ -49,7 +49,7 @@ namespace HFM.Client.Converters
                return value / 1024;
             }
          }
-         int kilobyteIndex = inputString.IndexOf("KiB");
+         int kilobyteIndex = inputString.IndexOf("KiB", StringComparison.Ordinal);
          if (kilobyteIndex > 0)
          {
             if (Double.TryParse(inputString.Substring(0, kilobyteIndex), out value))
@@ -249,7 +249,7 @@ namespace HFM.Client.Converters
             return matchRegex1.Result("${GpuType}");
          }
 
-         int radeonIndex = inputString.IndexOf("Radeon");
+         int radeonIndex = inputString.IndexOf("Radeon", StringComparison.Ordinal);
          if (radeonIndex >= 0)
          {
             return inputString.Substring(radeonIndex, inputString.Length - radeonIndex);
