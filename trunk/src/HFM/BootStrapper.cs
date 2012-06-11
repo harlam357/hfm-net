@@ -19,9 +19,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -69,7 +71,7 @@ namespace HFM
          }
          catch (Exception ex)
          {
-            ShowStartupError(ex, "User preferences failed to initialize.  The user.config file is likely corrupt.  Start with the '/r' switch to reset the user preferences.");
+            ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
             return;
          }
 
@@ -86,9 +88,17 @@ namespace HFM
                   return;
                }
             }
+            catch (RemotingException ex)
+            {
+               if (MessageBox.Show(Properties.Resources.RemotingFailedQuestion, Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning).Equals(DialogResult.No))
+               {
+                  ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
+                  return;
+               }
+            }
             catch (Exception ex)
             {
-               ShowStartupError(ex, "Failed to signal first instance of HFM.NET.  Please try starting HFM.NET again before reporting this issue.");
+               ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
                return;
             }
 
@@ -106,7 +116,33 @@ namespace HFM
             // check for Mono runtime
             if (Core.Application.IsRunningOnMono)
             {
-               _logger.Info("Running on Mono...");
+               Version monoVersion = null;
+               try
+               {
+                  monoVersion = Core.Application.GetMonoVersionNumer();
+               }
+               catch (Exception ex)
+               {
+                  _logger.Warn(Properties.Resources.MonoDetectFailed, ex);
+               }
+
+               if (monoVersion != null)
+               {
+                  try
+                  {
+                     ValidateMonoVersion(monoVersion);
+                  }
+                  catch (InvalidOperationException ex)
+                  {
+                     ShowStartupError(ex, ex.Message);
+                     return;
+                  }
+                  _logger.Info("Running on Mono v{0}...", monoVersion);
+               }
+               else
+               {
+                  _logger.Info("Running on Mono...");
+               }
             }
 
             #endregion
@@ -119,7 +155,7 @@ namespace HFM
             }
             catch (Exception ex)
             {
-               ShowStartupError(ex, "Failed to create or clear the data cache folder.");
+               ShowStartupError(ex, Properties.Resources.CacheSetupFailed);
                return;
             }
 
@@ -140,7 +176,7 @@ namespace HFM
             }
             catch (Exception ex)
             {
-               ShowStartupError(ex, "Single Instance IPC channel failed to register.");
+               ShowStartupError(ex, Properties.Resources.IpcRegisterFailed);
                return;
             }
 
@@ -157,7 +193,7 @@ namespace HFM
             }
             catch (Exception ex)
             {
-               ShowStartupError(ex, "Primary UI failed to initialize.");
+               ShowStartupError(ex, Properties.Resources.FailedToInitUI);
                return;
             }
             mainView.WorkUnitHistoryMenuEnabled = ServiceLocator.Resolve<IUnitInfoDatabase>().Connected;
@@ -193,6 +229,15 @@ namespace HFM
             message, Constants.GoogleGroupUrl, true);
       }
       
+      private static void ValidateMonoVersion(Version monoVersion)
+      {
+         Debug.Assert(monoVersion != null);
+         if (monoVersion.Major < 2 || monoVersion.Minor < 8)
+         {
+            throw new InvalidOperationException(Properties.Resources.MonoTooOld);
+         }
+      }
+
       /// <summary>
       /// Clears the log cache folder specified by the CacheFolder setting
       /// </summary>
@@ -213,7 +258,7 @@ namespace HFM
                }
                catch (Exception ex)
                {
-                  _logger.WarnFormat(ex, "Failed to clear cache file '{0}'.", fi.Name);
+                  _logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
                }
             }
          }

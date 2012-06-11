@@ -48,6 +48,9 @@
       <xsl:value-of select="' at '"/>
       <!--January 12, 2001 at -->
       <xsl:choose>
+         <xsl:when test="$hh = 0">
+            <xsl:value-of select="'12'"/>
+         </xsl:when>
          <xsl:when test="$hh &gt; 12">
             <xsl:value-of select="format-number($hh - 12, 0)"/>
          </xsl:when>
