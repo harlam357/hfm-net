@@ -112,9 +112,36 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CacheFileDeleteFailed" xml:space="preserve">
+    <value>Failed to clear cache file '{0}'.</value>
+  </data>
+  <data name="CacheSetupFailed" xml:space="preserve">
+    <value>Failed to create or clear the data cache folder.</value>
+  </data>
+  <data name="FailedToInitUI" xml:space="preserve">
+    <value>Primary UI failed to initialize.</value>
+  </data>
+  <data name="IpcRegisterFailed" xml:space="preserve">
+    <value>Single Instance IPC channel failed to register.</value>
+  </data>
+  <data name="MonoDetectFailed" xml:space="preserve">
+    <value>Mono version detection failed.</value>
+  </data>
+  <data name="MonoTooOld" xml:space="preserve">
+    <value>Your version of Mono is too old.  Please update to 2.8 or later.</value>
+  </data>
+  <data name="RemotingCallFailed" xml:space="preserve">
+    <value>Failed to signal first instance of HFM.NET.  Please try starting HFM.NET again before reporting this issue.</value>
+  </data>
+  <data name="RemotingFailedQuestion" xml:space="preserve">
+    <value>HFM.NET detected an instance of HFM.NET already running on this computer but failed to connect with it.  If you're sure there is not an existing instance of HFM.NET running then you may safely ignore this warning and allow HFM.NET to start.  Note that running more than one instance of HFM.NET on the same computer will cause problems.  Do you want to allow HFM.NET to start?</value>
+  </data>
+  <data name="UserPreferencesFailed" xml:space="preserve">
+    <value>User preferences failed to initialize.  The user.config file is likely corrupt.  Start with the '/r' switch to reset the user preferences.</value>
+  </data>
 </root>

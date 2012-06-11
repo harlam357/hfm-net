@@ -139,6 +139,50 @@ namespace HFM.Core
 
       #endregion
 
+      #region Mono Version
+
+      /// <summary>
+      /// Uses the GetDisplayName method to get the name. It most likely contains a version number.
+      /// </summary>
+      private static string GetMonoDisplayName()
+      {
+         return ((string)typeof(object).Assembly.GetType("Mono.Runtime").InvokeMember("GetDisplayName", BindingFlags.InvokeMethod |
+                                                                                                        BindingFlags.NonPublic |
+                                                                                                        BindingFlags.Static |
+                                                                                                        BindingFlags.DeclaredOnly |
+                                                                                                        BindingFlags.ExactBinding, null, null, null));
+      }
+
+      /// <summary>
+      /// Extracts Complete version number from the Display Name.
+      /// </summary>
+      public static Version GetMonoVersionNumer()
+      {
+         string[] tokens = GetMonoDisplayName().Split(' ');
+         foreach (string word in tokens)
+         {
+            // This if statement is needed because mono 2.6 display name is "tarball"
+            string versionString;
+            if (word == "tarball")
+            {
+               versionString = "2.6";
+            }
+            else
+            {
+               versionString = word;
+            }
+
+            Version result;
+            if (System.Version.TryParse(versionString, out result))
+            {
+               return result;
+            }
+         }
+         return null;
+      }
+
+      #endregion
+
       //public static string AssemblyTitle
       //{
       //   get
