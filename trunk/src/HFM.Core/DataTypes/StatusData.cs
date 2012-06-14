@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Status Data Structure
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,13 +25,13 @@ namespace HFM.Core.DataTypes
    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
    public struct StatusData
    {
-      public string InstanceName { get; set; }
+      public string ClientName { get; set; }
 
       public SlotType SlotType { get; set; }
 
-      public DateTime LastRetrievalTime { get; set; }
+      public DateTime UnitRetrievalTime { get; set; }
 
-      public bool IgnoreUtcOffset { get; set; }
+      public bool UtcOffsetIsZero { get; set; }
 
       public TimeSpan UtcOffset { get; set; }
 
@@ -47,7 +47,7 @@ namespace HFM.Core.DataTypes
 
       public int FrameTime { get; set; }
 
-      public TimeSpan AverageFrameTime { get; set; }
+      public TimeSpan BenchmarkAverageFrameTime { get; set; }
 
       public TimeSpan TimeOfLastFrame { get; set; }
 

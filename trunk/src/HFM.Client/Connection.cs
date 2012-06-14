@@ -51,7 +51,7 @@ namespace HFM.Client
       /// <summary>
       /// Default Connection, Send, and Receive Timeout Length
       /// </summary>
-      private const int DefaultTimeoutLength = 2000;
+      private const int DefaultTimeoutLength = 5000;
       /// <summary>
       /// Default Socket Receive Timer Length
       /// </summary>
@@ -146,7 +146,7 @@ namespace HFM.Client
       }
 
       /// <summary>
-      /// Gets or sets the length of time to wait for a response to a connection request (default - 2 seconds).
+      /// Gets or sets the length of time to wait for a response to a connection request (default - 5 seconds).
       /// </summary>
       public int ConnectTimeout { get; set; }
 

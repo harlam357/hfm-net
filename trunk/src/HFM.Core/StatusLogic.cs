@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Status Logic Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@ namespace HFM.Core
             case SlotStatus.RunningNoFrameTimes:
                break;
             case SlotStatus.Unknown:
-               _logger.Error("Unable to Determine Status for Client '{0}'", statusData.InstanceName);
+               _logger.Error("Unable to Determine Status for Client '{0}'", statusData.ClientName);
                // Update Client Status - don't call Determine Status
                return statusData.ReturnedStatus;
             case SlotStatus.Offline:
@@ -99,7 +99,7 @@ namespace HFM.Core
                statusData.TimeOfLastFrame = statusData.UnitStartTimeStamp;
             }
 
-            statusData.FrameTime = GetBaseFrameTime(statusData.AverageFrameTime, statusData.SlotType);
+            statusData.FrameTime = GetBaseFrameTime(statusData.BenchmarkAverageFrameTime, statusData.SlotType);
             if (DetermineStatus(statusData).Equals(SlotStatus.Hung))
             {
                // Issue 124
@@ -165,33 +165,33 @@ namespace HFM.Core
 
          if (statusData.SlotType.Equals(SlotType.GPU))
          {
-            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
+            terminalDateTime = statusData.UnitRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
          }
          else
          {
-            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
+            terminalDateTime = statusData.UnitRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
          }
          #endregion
 
          #region Get Last Retrieval Time Date
          DateTime currentFrameDateTime;
 
-         if (statusData.IgnoreUtcOffset)
+         if (statusData.UtcOffsetIsZero)
          {
             // get only the date from the last retrieval time (in universal), we'll add the current time below
-            currentFrameDateTime = new DateTime(statusData.LastRetrievalTime.Date.Ticks, DateTimeKind.Utc);
+            currentFrameDateTime = new DateTime(statusData.UnitRetrievalTime.Date.Ticks, DateTimeKind.Utc);
          }
          else
          {
             // get only the date from the last retrieval time, we'll add the current time below
-            currentFrameDateTime = statusData.LastRetrievalTime.Date;
+            currentFrameDateTime = statusData.UnitRetrievalTime.Date;
          }
          #endregion
 
          #region Apply Frame Time Offset and Set Current Frame Time Date
          TimeSpan offset = TimeSpan.FromMinutes(statusData.ClientTimeOffset);
          TimeSpan adjustedFrameTime = statusData.TimeOfLastFrame;
-         if (statusData.IgnoreUtcOffset == false)
+         if (statusData.UtcOffsetIsZero == false)
          {
             adjustedFrameTime = adjustedFrameTime.Add(statusData.UtcOffset);
          }
@@ -224,8 +224,8 @@ namespace HFM.Core
          // this should only happen after midnight time on the machine running HFM when the monitored client has 
          // not completed a frame since the local machine time rolled over to the next day, otherwise the time
          // stamps between HFM and the client are too far off, a positive offset should be set to correct.
-         if (currentFrameDateTime.TimeOfDay.Hours > statusData.LastRetrievalTime.TimeOfDay.Hours &&
-             currentFrameDateTime.TimeOfDay.Subtract(statusData.LastRetrievalTime.TimeOfDay).Hours > 0)
+         if (currentFrameDateTime.TimeOfDay.Hours > statusData.UnitRetrievalTime.TimeOfDay.Hours &&
+             currentFrameDateTime.TimeOfDay.Subtract(statusData.UnitRetrievalTime.TimeOfDay).Hours > 0)
          {
             priorDayAdjust = true;
 
@@ -238,8 +238,8 @@ namespace HFM.Core
          if (_logger.IsDebugEnabled)
          {
             var messages = new List<string>(10);
-            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.InstanceName));
-            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));
+            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.ClientName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.UnitRetrievalTime));
             messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", statusData.TimeOfLastFrame));
             messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", statusData.ClientTimeOffset));
             messages.Add(String.Format(" - Time Of Last Frame (Adjusted) : {0}", adjustedFrameTime));
@@ -273,11 +273,11 @@ namespace HFM.Core
 
          if (statusData.SlotType.Equals(SlotType.GPU))
          {
-            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
+            terminalDateTime = statusData.UnitRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 7));
          }
          else
          {
-            terminalDateTime = statusData.LastRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
+            terminalDateTime = statusData.UnitRetrievalTime.Subtract(TimeSpan.FromSeconds(statusData.FrameTime * 2));
          }
          #endregion
 
@@ -295,8 +295,8 @@ namespace HFM.Core
          if (_logger.IsDebugEnabled)
          {
             var messages = new List<string>(4);
-            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.InstanceName));
-            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.LastRetrievalTime));
+            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.ClientName));
+            messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.UnitRetrievalTime));
             messages.Add(String.Format(" - Time Of Last Unit Start ----- : {0}", statusData.TimeOfLastUnitStart));
             messages.Add(String.Format(" - Time Of Last Frame Progress - : {0}", statusData.TimeOfLastFrameProgress));
             messages.Add(String.Format(" - Terminal Time (Date) -------- : {0}", terminalDateTime));
