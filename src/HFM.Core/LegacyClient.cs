@@ -330,10 +330,10 @@ namespace HFM.Core
       {
          var statusData = new StatusData
                           {
-                             InstanceName = Settings.Name,
+                             ClientName = Settings.Name,
                              SlotType = slot.UnitInfoLogic.UnitInfoData.SlotType,
-                             LastRetrievalTime = slot.UnitInfoLogic.UnitInfoData.UnitRetrievalTime,
-                             IgnoreUtcOffset = Settings.UtcOffsetIsZero,
+                             UnitRetrievalTime = slot.UnitInfoLogic.UnitInfoData.UnitRetrievalTime,
+                             UtcOffsetIsZero = Settings.UtcOffsetIsZero,
                              UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now),
                              ClientTimeOffset = Settings.ClientTimeOffset,
                              TimeOfLastUnitStart = slot.TimeOfLastUnitStart,
@@ -341,7 +341,7 @@ namespace HFM.Core
                              CurrentStatus = slot.Status,
                              ReturnedStatus = returnedStatus,
                              FrameTime = slot.UnitInfoLogic.GetRawTime(Prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
-                             AverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
+                             BenchmarkAverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
                              TimeOfLastFrame = slot.UnitInfoLogic.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
                                                   : slot.UnitInfoLogic.UnitInfoData.CurrentFrame.TimeOfFrame,
@@ -349,27 +349,29 @@ namespace HFM.Core
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
 
+         SlotStatus computedStatus = StatusLogic.HandleStatusData(statusData);
+         
          // If the returned status is EuePause and current status is not
-         if (statusData.ReturnedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)
+         if (computedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)
          {
             if (Prefs.Get<bool>(Preference.EmailReportingEnabled) &&
                 Prefs.Get<bool>(Preference.ReportEuePause))
             {
-               SendEuePauseEmail(statusData.InstanceName);
+               SendEuePauseEmail(statusData.ClientName);
             }
          }
 
          // If the returned status is Hung and current status is not
-         if (statusData.ReturnedStatus.Equals(SlotStatus.Hung) && statusData.CurrentStatus.Equals(SlotStatus.Hung) == false)
+         if (computedStatus.Equals(SlotStatus.Hung) && statusData.CurrentStatus.Equals(SlotStatus.Hung) == false)
          {
             if (Prefs.Get<bool>(Preference.EmailReportingEnabled) &&
                 Prefs.Get<bool>(Preference.ReportHung))
             {
-               SendHungEmail(statusData.InstanceName);
+               SendHungEmail(statusData.ClientName);
             }
          }
 
-         slot.Status = StatusLogic.HandleStatusData(statusData);
+         slot.Status = computedStatus;
       }
 
       private TimeSpan GetBenchmarkAverageFrameTimeOrDefault(UnitInfo unitInfo)
