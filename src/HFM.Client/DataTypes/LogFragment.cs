@@ -67,6 +67,7 @@ namespace HFM.Client.DataTypes
          int startIndex = GetStartIndex(Value);
          int length = (Value.EndsWith('\"') ? Value.Length - 1 : Value.Length) - startIndex;
          SetEnvironmentNewLineCharacters(Value.SubstringBuilder(startIndex, length, true));
+         SetMessageValues(message);
       }
 
       private static int GetStartIndex(StringBuilder value)
