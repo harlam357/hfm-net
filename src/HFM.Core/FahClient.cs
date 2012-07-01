@@ -171,7 +171,7 @@ namespace HFM.Core
 
          _messages.Add(e);
          JsonMessage message = _fahClient.GetJsonMessage(e.Key);
-         Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, message.GetMessageHeader());
+         Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, message.GetHeader());
 
          if (e.DataType == typeof(Heartbeat))
          {

@@ -96,9 +96,9 @@ namespace HFM.Client.DataTypes
       /// Gets a formatted string that represents the metadata of the message.
       /// </summary>
       /// <returns>A formatted string that represents the metadata of the message.</returns>
-      public override string GetMessageHeader()
+      public override string GetHeader()
       {
-         return String.Format(CultureInfo.CurrentCulture, "{0} - Length: {1}", base.GetMessageHeader(), Value.Length);
+         return String.Format(CultureInfo.CurrentCulture, "{0} - Length: {1}", base.GetHeader(), Value.Length);
       }
 
       /// <summary>
@@ -111,7 +111,7 @@ namespace HFM.Client.DataTypes
       public override string ToString()
       {
          var sb = new StringBuilder();
-         sb.AppendLine(GetMessageHeader());
+         sb.AppendLine(GetHeader());
          sb.AppendLine(Value.ToString());
          sb.AppendLine();
          return sb.ToString();
@@ -143,7 +143,7 @@ namespace HFM.Client.DataTypes
       /// Gets a formatted string that represents the metadata of the message.
       /// </summary>
       /// <returns>A formatted string that represents the metadata of the message.</returns>
-      public virtual string GetMessageHeader()
+      public virtual string GetHeader()
       {
          return String.Format(CultureInfo.CurrentCulture, "Message Key: {0} - Received at: {1}", Key, Received);
       }
@@ -157,7 +157,7 @@ namespace HFM.Client.DataTypes
       /// <filterpriority>2</filterpriority>
       public override string ToString()
       {
-         return GetMessageHeader();
+         return GetHeader();
       }
    }
 
