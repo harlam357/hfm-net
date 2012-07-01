@@ -185,7 +185,7 @@ namespace HFM.Core
 
          HandleReturnedStatus(currentWorkUnitStatus, _slotModel);
          
-         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Status, 
+         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status, 
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
 

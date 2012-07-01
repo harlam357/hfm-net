@@ -170,6 +170,8 @@ namespace HFM.Core
          if (AbortFlag) return;
 
          _messages.Add(e);
+         JsonMessage message = _fahClient.GetJsonMessage(e.Key);
+         Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, message.GetMessageHeader());
 
          if (e.DataType == typeof(Heartbeat))
          {
@@ -195,6 +197,7 @@ namespace HFM.Core
          {
             LogFragment logFragment = _fahClient.GetMessage<LogRestart>();
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
+
             // clear
             _logText.Length = 0;
             WriteToLocalFahLogCache(chunks);
@@ -204,6 +207,7 @@ namespace HFM.Core
          {
             LogFragment logFragment = _fahClient.GetMessage<LogUpdate>();
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
+
             WriteToLocalFahLogCache(chunks);
             AppendToLogBuffer(chunks, logFragment.Value.Length);
          }
@@ -225,6 +229,7 @@ namespace HFM.Core
                {
                   File.AppendAllText(fahLogPath, new string(chunk));
                }
+               i++;
             }
          }
          else
@@ -240,7 +245,7 @@ namespace HFM.Core
       {
          Debug.Assert(chunks != null);
 
-         if (_logText.Length > _logText.MaxCapacity - 16000)
+         if (_logText.Length > (8000 * 2500)) // 20 Million Bytes
          {
             _logText.Remove(0, length);
          }
@@ -429,7 +434,7 @@ namespace HFM.Core
 
                SetSlotStatus(slotModel);
 
-               slotModel.UnitInfoLogic.ShowPPDTrace(Logger, slotModel.Status,
+               slotModel.UnitInfoLogic.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
                   Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                   Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
 
@@ -641,6 +646,8 @@ namespace HFM.Core
          {
             get
             {
+               // possibly wait for a log message that is less 
+               // than 65000 bytes before triggering an update
                return (ContainsMessage(typeof(LogRestart)) ||
                        ContainsMessage(typeof(LogUpdate))) && _unitCollectionUpdated;
             }

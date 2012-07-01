@@ -452,14 +452,14 @@ namespace HFM.Core
          return CurrentProtein.GetPPD(frameTime);
       }
 
-      public void ShowPPDTrace(ILogger logger, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
+      public void ShowPPDTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          // test the level
          if (!logger.IsDebugEnabled) return;
       
          if (CurrentProtein.IsUnknown())
          {
-            logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Protein is unknown... 0 PPD.");
+            logger.DebugFormat(Constants.ClientNameFormat, slotName, "Protein is unknown... 0 PPD.");
             return;
          }
 
@@ -470,20 +470,20 @@ namespace HFM.Core
             if (status.Equals(SlotStatus.RunningAsync) ||
                 status.Equals(SlotStatus.RunningNoFrameTimes))
             {
-               logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Frame Time.");
+               logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
             }
             else
             {
-               logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Download Time.");
+               logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Download Time.");
             }
          }
          else if (calculateBonus.Equals(BonusCalculationType.FrameTime))
          {
-            logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Bonus PPD by Frame Time.");
+            logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
          }
          else
          {
-            logger.DebugFormat(Constants.ClientNameFormat, _unitInfo.OwningSlotName, "Calculate Standard PPD.");
+            logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Standard PPD.");
          }
 
          TimeSpan frameTime = GetFrameTime(calculationType);
