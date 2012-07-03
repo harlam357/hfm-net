@@ -285,22 +285,22 @@ namespace HFM.Core.DataTypes
       /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
       private static TimeSpan GetDelta(TimeSpan timeLastFrame, TimeSpan timeCompareFrame)
       {
-         TimeSpan tDelta;
+         TimeSpan delta;
 
          // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
          if (timeLastFrame < timeCompareFrame)
          {
             // get time before rollover
-            tDelta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
+            delta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
             // add time from latest reading
-            tDelta = tDelta.Add(timeLastFrame);
+            delta = delta.Add(timeLastFrame);
          }
          else
          {
-            tDelta = timeLastFrame.Subtract(timeCompareFrame);
+            delta = timeLastFrame.Subtract(timeCompareFrame);
          }
 
-         return tDelta;
+         return delta;
       }
       
       /// <summary>
@@ -336,12 +336,14 @@ namespace HFM.Core.DataTypes
          if (!this.ProjectIsUnknown() && !other.ProjectIsUnknown())
          {
             // ReSharper disable RedundantThisQualifier
+
             // equals the Project and Download Time
             if (this.EqualsProject(other) &&
                 this.DownloadTime.Equals(other.DownloadTime))
             {
                return true;
             }
+
             // ReSharper restore RedundantThisQualifier
          }
 

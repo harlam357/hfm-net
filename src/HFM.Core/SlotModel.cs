@@ -42,7 +42,7 @@ namespace HFM.Core
          get { return Prefs.Get<BonusCalculationType>(Preference.CalculateBonus); }
       }
 
-      public bool ShowVersions
+      private bool ShowVersions
       {
          get { return Prefs.Get<bool>(Preference.ShowVersions); }
       }

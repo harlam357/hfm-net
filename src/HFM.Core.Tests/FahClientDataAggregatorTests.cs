@@ -49,7 +49,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
+         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
          lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
@@ -124,7 +124,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82).ToList(), LogFileType.FahClient);
+         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), LogFileType.FahClient);
          lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
@@ -197,7 +197,7 @@ namespace HFM.Core.Tests
          const int slotId = 1;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
+         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
          lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
@@ -272,7 +272,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_11";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt").Where(x => x.Length != 0).ToList(), LogFileType.FahClient);
+         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
          lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
