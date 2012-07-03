@@ -89,7 +89,7 @@ namespace HFM.Core
          // based on only the slot count, otherwise if a connection is
          // closed while the Slots property is being enumerated by a
          // consumer the collection will be changed and the enumeration
-         // will fail.  if the connection is closed in the midle of an
+         // will fail.  if the connection is closed in the middle of an
          // enumeration the slim lock will halt the call to RefreshSlots()
          // until the Slots property is no longer being enumerated.
          get { return _slots.Count == 0; }

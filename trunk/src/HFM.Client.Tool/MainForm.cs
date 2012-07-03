@@ -69,7 +69,7 @@ namespace HFM.Client.Tool
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<string>(AppendToMessageDisplayTextBox), text);
+            BeginInvoke(new Action<string>(AppendToMessageDisplayTextBox), text);
             return;
          }
 
@@ -91,7 +91,7 @@ namespace HFM.Client.Tool
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<string>(UpdateStatusLabel), text);
+            BeginInvoke(new Action<string>(UpdateStatusLabel), text);
             return;
          }
 
@@ -206,7 +206,7 @@ namespace HFM.Client.Tool
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<bool>(SetConnectionButtons), connected);
+            BeginInvoke(new Action<bool>(SetConnectionButtons), connected);
             return;
          }
 
@@ -234,7 +234,7 @@ namespace HFM.Client.Tool
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<int>(UpdateDataSentValueLabel), value);
+            BeginInvoke(new Action<int>(UpdateDataSentValueLabel), value);
             return;
          }
 
@@ -255,7 +255,7 @@ namespace HFM.Client.Tool
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<int>(UpdateDataReceivedValueLabel), value);
+            BeginInvoke(new Action<int>(UpdateDataReceivedValueLabel), value);
             return;
          }
 

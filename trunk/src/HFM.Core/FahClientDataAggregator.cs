@@ -303,9 +303,13 @@ namespace HFM.Core
                // Get the FAH Log Data from the Log Lines
                FahLogUnitData fahLogUnitData = LogReader.GetFahLogDataFromLogLines(logLines);
 
-               UpdateUnitInfo(currentUnitInfo, fahLogUnitData);
-               parsedUnits.Add(currentUnitInfo.QueueIndex, currentUnitInfo);
-               _unitLogLines.Add(currentUnitInfo.QueueIndex, logLines);
+               // create a clone of the current UnitInfo object so we're not working with an 
+               // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
+               UnitInfo currentClone = currentUnitInfo.DeepClone();
+
+               UpdateUnitInfo(currentClone, fahLogUnitData);
+               parsedUnits.Add(currentClone.QueueIndex, currentClone);
+               _unitLogLines.Add(currentClone.QueueIndex, logLines);
             }
          }
 
