@@ -504,7 +504,7 @@ namespace HFM.Core
                continue;
             }
 
-            if (currentUnitInfo.UnitInfoData.Equals(unitInfoLogic.UnitInfoData))
+            if (currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoLogic.UnitInfoData))
             {
                // found the current unit
                // current frame has already been recorded, increment to the next frame

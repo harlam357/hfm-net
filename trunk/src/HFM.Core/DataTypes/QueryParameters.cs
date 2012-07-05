@@ -42,11 +42,6 @@ namespace HFM.Core.DataTypes
          Name = SelectAllName;
       }
 
-      public QueryParameters DeepClone()
-      {
-         return ProtoBuf.Serializer.DeepClone(this);
-      }
-
       [DataMember(Order = 1)]
       public string Name { get; set; }
       [DataMember(Order = 2)]

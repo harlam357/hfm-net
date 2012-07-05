@@ -59,8 +59,8 @@ namespace HFM.Core.Tests
          unitInfo.DownloadTime = new DateTime(2010, 1, 1);
          unitInfo.FinishedTime = new DateTime(2010, 1, 2);
          unitInfo.FramesObserved = 2;
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
@@ -120,8 +120,8 @@ namespace HFM.Core.Tests
          unitInfo.DownloadTime = new DateTime(2010, 1, 1);
          unitInfo.FinishedTime = new DateTime(2010, 1, 2);
          unitInfo.FramesObserved = 2;
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
@@ -179,8 +179,8 @@ namespace HFM.Core.Tests
          unitInfo.DownloadTime = new DateTime(2009, 5, 5);
          unitInfo.FinishedTime = DateTime.MinValue;
          unitInfo.FramesObserved = 2;
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 55, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 56, TimeOfFrame = TimeSpan.FromSeconds(1000) });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 55, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 56, TimeOfFrame = TimeSpan.FromSeconds(1000) });
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
@@ -237,8 +237,8 @@ namespace HFM.Core.Tests
          unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
          unitInfo.DownloadTime = new DateTime(2010, 2, 2);
          unitInfo.FinishedTime = DateTime.MinValue;
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
@@ -285,8 +285,8 @@ namespace HFM.Core.Tests
          unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
          unitInfo.DownloadTime = new DateTime(2012, 1, 2);
          unitInfo.FinishedTime = new DateTime(2012, 1, 5);
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetCurrentFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
 
          var unitInfoLogic = CreateUnitInfoLogic(new Protein(), unitInfo);
 
