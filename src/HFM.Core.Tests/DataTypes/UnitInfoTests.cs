@@ -95,13 +95,13 @@ namespace HFM.Core.Tests.DataTypes
                             TimeOfFrame = new TimeSpan(0, 0, 0),
                             FrameDuration = new TimeSpan(0, 0, 0)
                          };
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(1, unitInfo.UnitFrames.Count);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
 
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          // still only 1 frame
          Assert.AreEqual(1, unitInfo.UnitFrames.Count);
       }
@@ -118,7 +118,7 @@ namespace HFM.Core.Tests.DataTypes
             TimeOfFrame = new TimeSpan(0, 0, 0),
             FrameDuration = new TimeSpan(0, 0, 0)
          };
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(1, unitInfo.UnitFrames.Count);
@@ -134,7 +134,7 @@ namespace HFM.Core.Tests.DataTypes
             TimeOfFrame = new TimeSpan(0, 5, 0),
             FrameDuration = new TimeSpan(0, 0, 0)
          };
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(1000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(2, unitInfo.UnitFrames.Count);
@@ -152,7 +152,7 @@ namespace HFM.Core.Tests.DataTypes
          };
          // set observed count
          unitInfo.FramesObserved = 2;
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(2000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(3, unitInfo.UnitFrames.Count);
@@ -175,7 +175,7 @@ namespace HFM.Core.Tests.DataTypes
             TimeOfFrame = new TimeSpan(23, 55, 0),
             FrameDuration = new TimeSpan(0, 0, 0)
          };
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          // no duration - first frame
          Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
 
@@ -189,7 +189,7 @@ namespace HFM.Core.Tests.DataTypes
          };
          // set observed count
          unitInfo.FramesObserved = 2;
-         unitInfo.SetCurrentFrame(unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          // now we get a frame duration
          Assert.AreEqual(new TimeSpan(0, 10, 0), unitInfo.CurrentFrame.FrameDuration);
       }
@@ -199,7 +199,7 @@ namespace HFM.Core.Tests.DataTypes
       public void SetCurrentFrameTest4()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetCurrentFrame(null);
+         unitInfo.SetUnitFrame(null);
       }
       
       [Test]

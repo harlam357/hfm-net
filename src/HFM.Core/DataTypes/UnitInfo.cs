@@ -29,6 +29,8 @@ namespace HFM.Core.DataTypes
    [DataContract(Namespace = "")]
    public class UnitInfo : IProjectInfo, IOwnedByClient, IEquatable<UnitInfo>
    {
+      #region Constructor
+
       public UnitInfo()
       {
          UnitRetrievalTime = DateTime.MinValue;
@@ -48,8 +50,12 @@ namespace HFM.Core.DataTypes
          QueueIndex = -1;
          OwningSlotId = -1;
       }
+
+      #endregion
       
-      #region Owner Data Properties
+      #region Properties
+
+      #region IOwnedByClient Implementation
 
       /// <summary>
       /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
@@ -79,17 +85,11 @@ namespace HFM.Core.DataTypes
 
       #endregion
 
-      #region Retrieval Time Property
-
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved
       /// </summary>
       [DataMember(Order = 3)]
       public DateTime UnitRetrievalTime { get; set; }
-
-      #endregion
-
-      #region Folding ID and Team Properties
 
       /// <summary>
       /// The Folding ID (Username) attached to this work unit
@@ -102,10 +102,6 @@ namespace HFM.Core.DataTypes
       /// </summary>
       [DataMember(Order = 5)]
       public int Team { get; set; }
-
-      #endregion
-
-      #region Unit Level Members
 
       /// <summary>
       /// Client Type for this work unit
@@ -186,10 +182,6 @@ namespace HFM.Core.DataTypes
       [DataMember(Order = 18)]
       public WorkUnitResult UnitResult { get; set; }
 
-      #endregion
-
-      #region Frames/Percent Completed Unit Level Members
-
       /// <summary>
       /// Raw number of steps complete
       /// </summary>
@@ -201,10 +193,6 @@ namespace HFM.Core.DataTypes
       /// </summary>
       [DataMember(Order = 20)]
       public int RawFramesTotal { get; set; }
-
-      #endregion
-
-      #region Frame (UnitFrame) Data Variables
 
       /// <summary>
       /// Number of Frames Observed since Last Unit Start or Resume from Pause
@@ -253,11 +241,15 @@ namespace HFM.Core.DataTypes
       [DataMember(Order = 25)]
       public int QueueIndex { get; set; }
 
+      #endregion
+
+      #region Methods
+
       /// <summary>
-      /// Set the Current Work Unit Frame
+      /// Sets the UnitFrame based on its frame ID.
       /// </summary>
-      /// <exception cref="ArgumentNullException">Throws if 'frame' is null.</exception>
-      public void SetCurrentFrame(UnitFrame frame)
+      /// <exception cref="ArgumentNullException">frame is null.</exception>
+      public void SetUnitFrame(UnitFrame frame)
       {
          if (frame == null) throw new ArgumentNullException("frame");
 
@@ -274,37 +266,12 @@ namespace HFM.Core.DataTypes
              UnitFrames.ContainsKey(frame.FrameID - 1) &&
              FramesObserved > 1)
          {
-            frame.FrameDuration = GetDelta(frame.TimeOfFrame, UnitFrames[frame.FrameID - 1].TimeOfFrame);
+            frame.FrameDuration = frame.TimeOfFrame.GetDelta(UnitFrames[frame.FrameID - 1].TimeOfFrame);
          }
       }
 
       /// <summary>
-      /// Get Time Delta between given frames
-      /// </summary>
-      /// <param name="timeLastFrame">Time of last frame</param>
-      /// <param name="timeCompareFrame">Time of a previous frame to compare</param>
-      private static TimeSpan GetDelta(TimeSpan timeLastFrame, TimeSpan timeCompareFrame)
-      {
-         TimeSpan delta;
-
-         // check for rollover back to 00:00:00 timeLastFrame will be less than previous timeCompareFrame reading
-         if (timeLastFrame < timeCompareFrame)
-         {
-            // get time before rollover
-            delta = TimeSpan.FromDays(1).Subtract(timeCompareFrame);
-            // add time from latest reading
-            delta = delta.Add(timeLastFrame);
-         }
-         else
-         {
-            delta = timeLastFrame.Subtract(timeCompareFrame);
-         }
-
-         return delta;
-      }
-      
-      /// <summary>
-      /// Get the UnitFrame Interface for this frameID
+      /// Gets the UnitFrame for the frame ID.
       /// </summary>
       public UnitFrame GetUnitFrame(int frameID)
       {
@@ -318,36 +285,109 @@ namespace HFM.Core.DataTypes
       
       #endregion
 
-      public UnitInfo DeepClone()
-      {
-         return ProtoBuf.Serializer.DeepClone(this);
-      }
+      #region IEquatable<T> Implementation
 
-      #region IEquatable<UnitInfo> Members
-
+      /// <summary>
+      /// Indicates whether the current object is equal to another object of the same type.
+      /// </summary>
+      /// <returns>
+      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+      /// </returns>
+      /// <param name="other">An object to compare with this object.</param>
       public bool Equals(UnitInfo other)
       {
-         if (other == null)
+         if (ReferenceEquals(null, other)) return false;
+         if (ReferenceEquals(this, other)) return true;
+         return Equals(other.OwningClientName, OwningClientName) && 
+                Equals(other.OwningClientPath, OwningClientPath) && 
+                other.OwningSlotId == OwningSlotId && 
+                other.UnitRetrievalTime.Equals(UnitRetrievalTime) && 
+                Equals(other.FoldingID, FoldingID) && 
+                other.Team == Team && 
+                Equals(other.SlotType, SlotType) && 
+                other.DownloadTime.Equals(DownloadTime) && 
+                other.DueTime.Equals(DueTime) && 
+                other.UnitStartTimeStamp.Equals(UnitStartTimeStamp) && 
+                other.FinishedTime.Equals(FinishedTime) && 
+                other.CoreVersion.Equals(CoreVersion) && 
+                other.ProjectID == ProjectID && 
+                other.ProjectRun == ProjectRun && 
+                other.ProjectClone == ProjectClone && 
+                other.ProjectGen == ProjectGen && 
+                Equals(other.ProteinName, ProteinName) && 
+                Equals(other.ProteinTag, ProteinTag) && 
+                Equals(other.UnitResult, UnitResult) && 
+                other.RawFramesComplete == RawFramesComplete && 
+                other.RawFramesTotal == RawFramesTotal && 
+                other.FramesObserved == FramesObserved && 
+                other.UnitFrames.SequenceEqual(UnitFrames) && 
+                Equals(other.CoreID, CoreID) && 
+                other.QueueIndex == QueueIndex;
+      }
+
+      /// <summary>
+      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+      /// </returns>
+      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
+      public override bool Equals(object obj)
+      {
+         if (ReferenceEquals(null, obj)) return false;
+         if (ReferenceEquals(this, obj)) return true;
+         if (obj.GetType() != typeof(UnitInfo)) return false;
+         return Equals((UnitInfo)obj);
+      }
+
+      /// <summary>
+      /// Serves as a hash function for a particular type. 
+      /// </summary>
+      /// <returns>
+      /// A hash code for the current <see cref="T:System.Object"/>.
+      /// </returns>
+      /// <filterpriority>2</filterpriority>
+      public override int GetHashCode()
+      {
+         unchecked
          {
-            return false;
+            int result = (OwningClientName != null ? OwningClientName.GetHashCode() : 0);
+            result = (result * 397) ^ (OwningClientPath != null ? OwningClientPath.GetHashCode() : 0);
+            result = (result * 397) ^ OwningSlotId;
+            result = (result * 397) ^ UnitRetrievalTime.GetHashCode();
+            result = (result * 397) ^ (FoldingID != null ? FoldingID.GetHashCode() : 0);
+            result = (result * 397) ^ Team;
+            result = (result * 397) ^ SlotType.GetHashCode();
+            result = (result * 397) ^ DownloadTime.GetHashCode();
+            result = (result * 397) ^ DueTime.GetHashCode();
+            result = (result * 397) ^ UnitStartTimeStamp.GetHashCode();
+            result = (result * 397) ^ FinishedTime.GetHashCode();
+            result = (result * 397) ^ CoreVersion.GetHashCode();
+            result = (result * 397) ^ ProjectID;
+            result = (result * 397) ^ ProjectRun;
+            result = (result * 397) ^ ProjectClone;
+            result = (result * 397) ^ ProjectGen;
+            result = (result * 397) ^ (ProteinName != null ? ProteinName.GetHashCode() : 0);
+            result = (result * 397) ^ (ProteinTag != null ? ProteinTag.GetHashCode() : 0);
+            result = (result * 397) ^ UnitResult.GetHashCode();
+            result = (result * 397) ^ RawFramesComplete;
+            result = (result * 397) ^ RawFramesTotal;
+            result = (result * 397) ^ FramesObserved;
+            result = (result * 397) ^ (UnitFrames != null ? UnitFrames.GetHashCode() : 0);
+            result = (result * 397) ^ (CoreID != null ? CoreID.GetHashCode() : 0);
+            result = (result * 397) ^ QueueIndex;
+            return result;
          }
+      }
 
-         // if the Projects are known
-         if (!this.ProjectIsUnknown() && !other.ProjectIsUnknown())
-         {
-            // ReSharper disable RedundantThisQualifier
+      public static bool operator ==(UnitInfo left, UnitInfo right)
+      {
+         return Equals(left, right);
+      }
 
-            // equals the Project and Download Time
-            if (this.EqualsProject(other) &&
-                this.DownloadTime.Equals(other.DownloadTime))
-            {
-               return true;
-            }
-
-            // ReSharper restore RedundantThisQualifier
-         }
-
-         return false;
+      public static bool operator !=(UnitInfo left, UnitInfo right)
+      {
+         return !Equals(left, right);
       }
 
       #endregion

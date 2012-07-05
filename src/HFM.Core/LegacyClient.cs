@@ -265,7 +265,7 @@ namespace HFM.Core
          {
             // If Current has not been found, check the nextUnitIndex
             // or try to match the Current Project and Raw Download Time
-            if (parsedUnits[index] != null && processUpdates == false && (index == nextUnitIndex || currentUnitInfo.UnitInfoData.Equals(parsedUnits[index].UnitInfoData)))
+            if (parsedUnits[index] != null && processUpdates == false && (index == nextUnitIndex || currentUnitInfo.UnitInfoData.IsSameUnitAs(parsedUnits[index].UnitInfoData)))
             {
                foundCurrent = true;
                processUpdates = true;

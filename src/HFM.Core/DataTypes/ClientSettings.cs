@@ -166,10 +166,5 @@ namespace HFM.Core.DataTypes
          UtcOffsetIsZero = false;
          ClientTimeOffset = 0;
       }
-
-      public ClientSettings DeepClone()
-      {
-         return ProtoBuf.Serializer.DeepClone(this);
-      }
    }
 }

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -55,7 +56,7 @@ namespace HFM.Core.Tests
          collection.Write();
          collection.Data = null;
          collection.Read();
-         ValidateTestList(collection.Data);
+         Assert.IsTrue(CreateTestList().SequenceEqual(collection.Data));
       }
 
       private static List<UnitInfo> CreateTestList()
@@ -82,13 +83,14 @@ namespace HFM.Core.Tests
             unitInfo.ProteinName = "Protein";
             unitInfo.ProteinTag  = "ProteinTag";
             unitInfo.UnitResult = WorkUnitResult.CoreOutdated;
-            unitInfo.RawFramesComplete = 2500;
-            unitInfo.RawFramesTotal = 250000;
+            // values set by SetUnitFrame() below
+            //unitInfo.RawFramesComplete = 7500;
+            //unitInfo.RawFramesTotal = 250000;
 
             for (int j = 0; j < 4; j++)
             {
-               var unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
-               unitInfo.UnitFrames.Add(j, unitFrame);
+               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               unitInfo.SetUnitFrame(unitFrame);
             }
             unitInfo.FramesObserved = 4;
 
@@ -117,13 +119,14 @@ namespace HFM.Core.Tests
             unitInfo.ProteinName = "Protein";
             unitInfo.ProteinTag = "ProteinTag";
             unitInfo.UnitResult = WorkUnitResult.CoreOutdated;
-            unitInfo.RawFramesComplete = 2500;
-            unitInfo.RawFramesTotal = 250000;
+            // values set by SetUnitFrame() below
+            //unitInfo.RawFramesComplete = 7500;
+            //unitInfo.RawFramesTotal = 250000;
 
             for (int j = 0; j < 4; j++)
             {
-               var unitFrame = new UnitFrame { FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
-               unitInfo.UnitFrames.Add(j, unitFrame);
+               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               unitInfo.SetUnitFrame(unitFrame);
             }
             unitInfo.FramesObserved = 4;
 
@@ -131,85 +134,6 @@ namespace HFM.Core.Tests
          }
 
          return list;
-      }
-
-      private static void ValidateTestList(IList<UnitInfo> list)
-      {
-         for (int i = 0; i < 10; i++)
-         {
-            UnitInfo unitInfo = list[i];
-
-            Assert.AreEqual("TestOwner", unitInfo.OwningSlotName);
-            Assert.AreEqual("TestOwner", unitInfo.OwningClientName);
-            Assert.AreEqual("TestPath", unitInfo.OwningClientPath);
-            Assert.AreEqual(-1, unitInfo.OwningSlotId);
-            Assert.AreEqual(new DateTime((2000 + i), 1, 1, 0, 0, 0), unitInfo.UnitRetrievalTime);
-            Assert.AreEqual("TestID", unitInfo.FoldingID);
-            Assert.AreEqual(32, unitInfo.Team);
-            Assert.AreEqual(SlotType.Uniprocessor, unitInfo.SlotType);
-            Assert.AreEqual(new DateTime(2000, 2, 2, 0, 0, 0), unitInfo.DownloadTime);
-            Assert.AreEqual(new DateTime(2000, 3, 3, 0, 0, 0), unitInfo.DueTime);
-            Assert.AreEqual(TimeSpan.FromHours(i + 1), unitInfo.UnitStartTimeStamp);
-            Assert.AreEqual(new DateTime(2000, 4, 4, 0, 0, 0), unitInfo.FinishedTime);
-            Assert.AreEqual(2.10f, unitInfo.CoreVersion);
-            Assert.AreEqual(2669, unitInfo.ProjectID);
-            Assert.AreEqual(1, unitInfo.ProjectRun);
-            Assert.AreEqual(2, unitInfo.ProjectClone);
-            Assert.AreEqual(3, unitInfo.ProjectGen);
-            Assert.AreEqual("Protein", unitInfo.ProteinName);
-            Assert.AreEqual("ProteinTag", unitInfo.ProteinTag);
-            Assert.AreEqual(WorkUnitResult.CoreOutdated, unitInfo.UnitResult);
-            Assert.AreEqual(2500, unitInfo.RawFramesComplete);
-            Assert.AreEqual(250000, unitInfo.RawFramesTotal);
-            
-            UnitFrame unitFrame = null;
-            for (int j = 0; j < 4; j++)
-            {
-               unitFrame = unitInfo.UnitFrames[j];
-               Assert.AreEqual(j, unitFrame.FrameID);
-               Assert.AreEqual(TimeSpan.FromMinutes(j + 1), unitFrame.TimeOfFrame);
-            }
-            Assert.AreEqual(4, unitInfo.FramesObserved);
-            Assert.AreEqual(unitFrame, unitInfo.CurrentFrame);
-         }
-
-         for (int i = 10; i < 20; i++)
-         {
-            UnitInfo unitInfo = list[i];
-
-            Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), unitInfo.OwningSlotName);
-            Assert.AreEqual("TestOwner2", unitInfo.OwningClientName);
-            Assert.AreEqual("TestPath2", unitInfo.OwningClientPath);
-            Assert.AreEqual(i - 10, unitInfo.OwningSlotId);
-            Assert.AreEqual(new DateTime((2000 + i), 1, 1, 0, 0, 0), unitInfo.UnitRetrievalTime);
-            Assert.AreEqual("TestID", unitInfo.FoldingID);
-            Assert.AreEqual(32, unitInfo.Team);
-            Assert.AreEqual(SlotType.Uniprocessor, unitInfo.SlotType);
-            Assert.AreEqual(new DateTime(2000, 2, 2, 0, 0, 0), unitInfo.DownloadTime);
-            Assert.AreEqual(new DateTime(2000, 3, 3, 0, 0, 0), unitInfo.DueTime);
-            Assert.AreEqual(TimeSpan.FromHours(i + 1), unitInfo.UnitStartTimeStamp);
-            Assert.AreEqual(new DateTime(2000, 4, 4, 0, 0, 0), unitInfo.FinishedTime);
-            Assert.AreEqual(2.27f, unitInfo.CoreVersion);
-            Assert.AreEqual(6903, unitInfo.ProjectID);
-            Assert.AreEqual(1, unitInfo.ProjectRun);
-            Assert.AreEqual(2, unitInfo.ProjectClone);
-            Assert.AreEqual(3, unitInfo.ProjectGen);
-            Assert.AreEqual("Protein", unitInfo.ProteinName);
-            Assert.AreEqual("ProteinTag", unitInfo.ProteinTag);
-            Assert.AreEqual(WorkUnitResult.CoreOutdated, unitInfo.UnitResult);
-            Assert.AreEqual(2500, unitInfo.RawFramesComplete);
-            Assert.AreEqual(250000, unitInfo.RawFramesTotal);
-
-            UnitFrame unitFrame = null;
-            for (int j = 0; j < 4; j++)
-            {
-               unitFrame = unitInfo.UnitFrames[j];
-               Assert.AreEqual(j, unitFrame.FrameID);
-               Assert.AreEqual(TimeSpan.FromMinutes(j + 1), unitFrame.TimeOfFrame);
-            }
-            Assert.AreEqual(4, unitInfo.FramesObserved);
-            Assert.AreEqual(unitFrame, unitInfo.CurrentFrame);
-         }
       }
    }
 }

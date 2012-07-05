@@ -46,6 +46,42 @@ namespace HFM.Core
          return timeSpan.Equals(TimeSpan.Zero);
       }
 
+      public static string ToDateString(this DateTime date)
+      {
+         return ToDateString(date, String.Format(CultureInfo.CurrentCulture,
+                  "{0} {1}", date.ToShortDateString(), date.ToShortTimeString()));
+      }
+
+      public static string ToDateString(this IEquatable<DateTime> date, string formattedValue)
+      {
+         return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
+      }
+
+      /// <summary>
+      /// Get time delta between the TimeSpan arguments.
+      /// </summary>
+      /// <param name="time1">First TimeSpan value.</param>
+      /// <param name="time2">Second TimeSpan value.</param>
+      internal static TimeSpan GetDelta(this TimeSpan time1, TimeSpan time2)
+      {
+         TimeSpan delta;
+
+         // check for rollover back to 00:00:00 time1 will be less than previous time2 reading
+         if (time1 < time2)
+         {
+            // get time before rollover
+            delta = TimeSpan.FromDays(1).Subtract(time2);
+            // add time from latest reading
+            delta = delta.Add(time1);
+         }
+         else
+         {
+            delta = time1.Subtract(time2);
+         }
+
+         return delta;
+      }
+
       #endregion
 
       #region SlotStatus
@@ -111,10 +147,14 @@ namespace HFM.Core
 
       #endregion
 
-      public static string AppendSlotId(this string name, int slotId)
+      #region SlotName
+
+      internal static string AppendSlotId(this string name, int slotId)
       {
          return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
       }
+
+      #endregion
 
       #region ClientSettings
 
@@ -159,16 +199,7 @@ namespace HFM.Core
 
       #endregion
 
-      public static string ToDateString(this DateTime date)
-      {
-         return ToDateString(date, String.Format(CultureInfo.CurrentCulture,
-                  "{0} {1}", date.ToShortDateString(), date.ToShortTimeString()));
-      }
-
-      public static string ToDateString(this IEquatable<DateTime> date, string formattedValue)
-      {
-         return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
-      }
+      #region SlotTotals
 
       /// <summary>
       /// Get the totals for all slots.
@@ -208,11 +239,16 @@ namespace HFM.Core
          return totals;
       }
 
+      #endregion
+
+      #region FindDuplicates
+
       /// <summary>
-      /// Find Clients with Duplicate UserIDs or Project (R/C/G)
+      /// Find Clients with Duplicate User IDs or Project (R/C/G).
       /// </summary>
-      public static void FindDuplicates(this IEnumerable<SlotModel> slots) // Issue 19
+      public static void FindDuplicates(this IEnumerable<SlotModel> slots)
       {
+         // Issue 19
          FindDuplicateUserId(slots);
          FindDuplicateProjects(slots);
       }
@@ -244,6 +280,8 @@ namespace HFM.Core
             slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoLogic.UnitInfoData.ProjectRunCloneGen());
          }
       }
+
+      #endregion
 
       #region SlotType
 
@@ -356,11 +394,57 @@ namespace HFM.Core
 
       #endregion
 
-      #region Protein
+      #region UnitInfo
 
-      public static Protein DeepClone(this Protein protein)
+      internal static bool IsSameUnitAs(this UnitInfo unit1, UnitInfo unit2)
       {
-         return ProtoBuf.Serializer.DeepClone(protein);
+         if (unit1 == null) throw new ArgumentNullException("unit1");
+
+         if (unit2 == null)
+         {
+            return false;
+         }
+
+         // if the Projects are known
+         if (!unit1.ProjectIsUnknown() && !unit2.ProjectIsUnknown())
+         {
+            // ReSharper disable RedundantThisQualifier
+
+            // equals the Project and Download Time
+            if (unit1.EqualsProject(unit2) &&
+                unit1.DownloadTime.Equals(unit2.DownloadTime))
+            {
+               return true;
+            }
+
+            // ReSharper restore RedundantThisQualifier
+         }
+
+         return false;
+      }
+
+      #endregion
+
+      #region DeepClone
+
+      public static Protein DeepClone(this Protein value)
+      {
+         return ProtoBuf.Serializer.DeepClone(value);
+      }
+
+      public static QueryParameters DeepClone(this QueryParameters value)
+      {
+         return ProtoBuf.Serializer.DeepClone(value);
+      }
+
+      internal static UnitInfo DeepClone(this UnitInfo value)
+      {
+         return ProtoBuf.Serializer.DeepClone(value);
+      }
+
+      internal static ClientSettings DeepClone(this ClientSettings value)
+      {
+         return ProtoBuf.Serializer.DeepClone(value);
       }
 
       #endregion

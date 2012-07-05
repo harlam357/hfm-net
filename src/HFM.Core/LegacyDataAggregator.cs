@@ -523,7 +523,7 @@ namespace HFM.Core
                continue;
             }
             
-            unit.SetCurrentFrame(frame);
+            unit.SetUnitFrame(frame);
          }
       }
 

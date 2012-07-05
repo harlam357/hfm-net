@@ -51,10 +51,11 @@ namespace HFM.Core.Tests
          var currentUnitInfo = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
 
          var unitInfo1Clone = unitInfo1.DeepClone();
-         unitInfo1Clone.UnitFrames.Add(0, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(0), FrameID = 0 });
-         unitInfo1Clone.UnitFrames.Add(1, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 1 });
-         unitInfo1Clone.UnitFrames.Add(2, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 2 });
-         unitInfo1Clone.UnitFrames.Add(3, new UnitFrame { FrameDuration = TimeSpan.FromMinutes(5), FrameID = 3 });
+         unitInfo1Clone.FramesObserved = 4;
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(0), FrameID = 0 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(5), FrameID = 1 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(10), FrameID = 2 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(15), FrameID = 3 });
          var unitInfoLogic1 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var parsedUnits = new[] { unitInfoLogic1 };
