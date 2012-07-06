@@ -48,11 +48,7 @@ namespace HFM.Core
 
       void Read();
 
-      List<UnitInfo> Read(string filePath, Plugins.IFileSerializer<List<UnitInfo>> serializer);
-
       void Write();
-
-      void Write(string filePath, Plugins.IFileSerializer<List<UnitInfo>> serializer);
 
       #endregion
    }

@@ -126,11 +126,7 @@ namespace HFM.Core
 
       void Read();
 
-      List<ProteinBenchmark> Read(string filePath, Plugins.IFileSerializer<List<ProteinBenchmark>> serializer);
-
       void Write();
-
-      void Write(string filePath, Plugins.IFileSerializer<List<ProteinBenchmark>> serializer);
 
       #endregion
    }

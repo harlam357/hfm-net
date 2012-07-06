@@ -54,11 +54,7 @@ namespace HFM.Core
 
       void Read();
 
-      List<Protein> Read(string filePath, Plugins.IFileSerializer<List<Protein>> serializer);
-
       void Write();
-
-      void Write(string filePath, Plugins.IFileSerializer<List<Protein>> serializer);
 
       #endregion
    }
@@ -236,13 +232,6 @@ namespace HFM.Core
          Data = _dictionary.Values.ToList();
 
          base.Write();
-      }
-
-      public override void Write(string filePath, Plugins.IFileSerializer<List<Protein>> serializer)
-      {
-         Data = _dictionary.Values.ToList();
-
-         base.Write(filePath, serializer);
       }
 
       #endregion

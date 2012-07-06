@@ -19,13 +19,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
+using HFM.Core.Serializers;
 
 namespace HFM.Core.Tests
 {
@@ -33,7 +33,7 @@ namespace HFM.Core.Tests
    public class UnitInfoCollectionTests
    {
       [Test]
-      public void ReadTest1()
+      public void ReadBinaryTest()
       {
          var collection = new UnitInfoCollection
          {
@@ -45,11 +45,11 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void WriteTest1()
+      public void WriteAndReadBinaryTest()
       {
          var collection = new UnitInfoCollection
          {
-            FileName = "TestUnitInfoBinary.dat",
+            FileName = "TestUnitInfo.dat",
          };
 
          collection.Data = CreateTestList();
@@ -57,6 +57,17 @@ namespace HFM.Core.Tests
          collection.Data = null;
          collection.Read();
          Assert.IsTrue(CreateTestList().SequenceEqual(collection.Data));
+      }
+
+      [Test]
+      public void WriteAndReadXmlTest()
+      {
+         var data1 = CreateTestList();
+         var serializer = new XmlFileSerializer<List<UnitInfo>>();
+         serializer.Serialize("TestUnitInfo.xml", data1);
+
+         var data2 = serializer.Deserialize("TestUnitInfo.xml");
+         Assert.IsTrue(data1.SequenceEqual(data2));
       }
 
       private static List<UnitInfo> CreateTestList()
