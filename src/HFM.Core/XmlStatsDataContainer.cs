@@ -54,11 +54,7 @@ namespace HFM.Core
 
       void Read();
 
-      XmlStatsData Read(string filePath, Plugins.IFileSerializer<XmlStatsData> serializer);
-
       void Write();
-
-      void Write(string filePath, Plugins.IFileSerializer<XmlStatsData> serializer);
 
       #endregion
    }

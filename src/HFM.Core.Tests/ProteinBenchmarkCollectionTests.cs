@@ -33,7 +33,7 @@ namespace HFM.Core.Tests
    public class ProteinBenchmarkCollectionTests
    {
       [Test]
-      public void ReadTest1()
+      public void ReadBinaryTest()
       {
          var container = new ProteinBenchmarkCollection
          {
@@ -45,11 +45,11 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void WriteTest1()
+      public void WriteAndReadBinaryTest()
       {
          var collection = new ProteinBenchmarkCollection
          {
-            FileName = "TestProteinBenchmarkBinary.dat",
+            FileName = "TestProteinBenchmark.dat",
          };
 
          collection.Data = CreateTestList();
@@ -60,15 +60,14 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void WriteTest2()
+      public void WriteAndReadXmlTest()
       {
-         var collection = new ProteinBenchmarkCollection();
+         var data1 = CreateTestList();
          var serializer = new XmlFileSerializer<List<ProteinBenchmark>>();
+         serializer.Serialize("TestProteinBenchmark.xml", data1);
 
-         collection.Data = CreateTestList();
-         collection.Write("TestProteinBenchmarkXml.xml", serializer);
-         var data = collection.Read("TestProteinBenchmarkXml.xml", serializer);
-         ValidateTestList(data);
+         var data2 = serializer.Deserialize("TestProteinBenchmark.xml");
+         ValidateTestList(data2);
       }
       
       private static List<ProteinBenchmark> CreateTestList()

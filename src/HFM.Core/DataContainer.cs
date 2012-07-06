@@ -83,21 +83,6 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Read data file.
-      /// </summary>
-      public virtual T Read(string filePath, Plugins.IFileSerializer<T> serializer)
-      {
-         //DateTime start = HfmTrace.ExecStart;
-
-         lock (SerializeLock)
-         {
-            return serializer.Deserialize(filePath);
-         }
-
-         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
-      }
-
-      /// <summary>
       /// Write data file.
       /// </summary>
       public virtual void Write()
@@ -114,21 +99,6 @@ namespace HFM.Core
             {
                Logger.ErrorFormat(ex, "{0}", ex.Message);
             }
-         }
-
-         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
-      }
-
-      /// <summary>
-      /// Write data file.
-      /// </summary>
-      public virtual void Write(string filePath, Plugins.IFileSerializer<T> serializer)
-      {
-         //DateTime start = HfmTrace.ExecStart;
-
-         lock (SerializeLock)
-         {
-            serializer.Serialize(filePath, Data);
          }
 
          //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);

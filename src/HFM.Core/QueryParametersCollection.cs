@@ -43,11 +43,7 @@ namespace HFM.Core
 
       void Read();
 
-      List<QueryParameters> Read(string filePath, Plugins.IFileSerializer<List<QueryParameters>> serializer);
-
       void Write();
-
-      void Write(string filePath, Plugins.IFileSerializer<List<QueryParameters>> serializer);
 
       #endregion
    }
