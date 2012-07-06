@@ -98,12 +98,12 @@ namespace HFM.Core.Tests
             //unitInfo.RawFramesComplete = 7500;
             //unitInfo.RawFramesTotal = 250000;
 
-            for (int j = 0; j < 4; j++)
+            unitInfo.FramesObserved = 4;
+            for (int j = 0; j < unitInfo.FramesObserved; j++)
             {
-               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes((j + 1) * (j + 1.5)) };
                unitInfo.SetUnitFrame(unitFrame);
             }
-            unitInfo.FramesObserved = 4;
 
             list.Add(unitInfo);
          }
@@ -134,12 +134,12 @@ namespace HFM.Core.Tests
             //unitInfo.RawFramesComplete = 7500;
             //unitInfo.RawFramesTotal = 250000;
 
-            for (int j = 0; j < 4; j++)
+            unitInfo.FramesObserved = 4;
+            for (int j = 0; j < unitInfo.FramesObserved; j++)
             {
-               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes(j + 1) };
+               var unitFrame = new UnitFrame { RawFramesComplete = 2500 * j, RawFramesTotal = 250000, FrameID = j, TimeOfFrame = TimeSpan.FromMinutes((j + 2) * (j + 0.75)) };
                unitInfo.SetUnitFrame(unitFrame);
             }
-            unitInfo.FramesObserved = 4;
 
             list.Add(unitInfo);
          }

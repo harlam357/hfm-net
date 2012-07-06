@@ -158,21 +158,6 @@ namespace HFM.Core
          var serializer = _settingsPlugins[filterIndex - 1].Interface;
          List<ClientSettings> settings = serializer.Deserialize(filePath);
 
-         //IEnumerable<IClient> clients = _instanceFactory.CreateCollection(collectionDataInterface.Settings);
-
-         //foreach (var instance in instances)
-         //{
-         //   foreach (var displayInstance in instance.DisplayInstances.Values)
-         //   {
-         //      var restoreUnitInfo = _unitInfoContainer.RetrieveUnitInfo(displayInstance);
-         //      if (restoreUnitInfo != null)
-         //      {
-         //         //displayInstance.RestoreUnitInfo(restoreUnitInfo);
-         //         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, instance.Settings.InstanceName, "Restored UnitInfo.");
-         //      }
-         //   }
-         //}
-
          if (settings.Count != 0)
          {
             // update the settings plugin index only if something was loaded
