@@ -26,11 +26,6 @@ namespace HFM.Core
 {
    public interface IUnitInfoCollection : ICollection<UnitInfo>
    {
-      ///// <summary>
-      ///// Retrieve from the Container
-      ///// </summary>
-      //UnitInfo RetrieveUnitInfo(DisplayInstance displayInstance);
-
       #region ICollection<UnitInfo> Members
 
       // Override Default Interface Documentation
@@ -77,19 +72,6 @@ namespace HFM.Core
             FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.UnitInfoCacheFileName);
          }
       }
-
-      #region Methods
-      
-      ///// <summary>
-      ///// Retrieve from the Container
-      ///// </summary>
-      ///// <param name="displayInstance"></param>
-      //public UnitInfo RetrieveUnitInfo(DisplayInstance displayInstance)
-      //{
-      //   return _collection.UnitInfoList.Find(displayInstance.Owns);
-      //}
-      
-      #endregion
 
       #region ICollection<UnitInfo> Members
 

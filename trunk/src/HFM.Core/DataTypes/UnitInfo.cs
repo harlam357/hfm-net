@@ -195,7 +195,7 @@ namespace HFM.Core.DataTypes
       public int RawFramesTotal { get; set; }
 
       /// <summary>
-      /// Number of Frames Observed since Last Unit Start or Resume from Pause
+      /// Gets or sets the number of frames observed since the unit was last started.
       /// </summary>
       [DataMember(Order = 21)]
       public int FramesObserved { get; set; }
@@ -227,7 +227,15 @@ namespace HFM.Core.DataTypes
       /// Frame Data for this Unit
       /// </summary>
       [DataMember(Order = 23)]
-      public Dictionary<int, UnitFrame> UnitFrames { get; private set; }
+      private Dictionary<int, UnitFrame> UnitFrames { get; set; }
+
+      /// <summary>
+      /// Gets the total number of frames added to this unit.
+      /// </summary>
+      internal int FrameCount
+      {
+         get { return UnitFrames.Count; }
+      }
 
       /// <summary>
       /// Core ID (Hex) Value
@@ -273,14 +281,9 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Gets the UnitFrame for the frame ID.
       /// </summary>
-      public UnitFrame GetUnitFrame(int frameID)
+      public UnitFrame GetUnitFrame(int frameId)
       {
-         if (UnitFrames.ContainsKey(frameID))
-         {
-            return UnitFrames[frameID];
-         }
-         
-         return null;
+         return UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
       }
       
       #endregion

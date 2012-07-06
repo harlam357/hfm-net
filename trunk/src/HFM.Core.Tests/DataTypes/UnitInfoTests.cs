@@ -41,7 +41,7 @@ namespace HFM.Core.Tests.DataTypes
          Assert.IsTrue(unitInfo.ProteinName.Length == 0);
          Assert.IsTrue(unitInfo.ProteinTag.Length == 0);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfo.UnitResult);
-         Assert.IsTrue(unitInfo.UnitFrames.Count == 0);
+         Assert.IsTrue(unitInfo.FrameCount == 0);
          Assert.AreEqual(Constants.DefaultCoreID, unitInfo.CoreID);
       }
       
@@ -57,7 +57,7 @@ namespace HFM.Core.Tests.DataTypes
       {
          var unitInfo = new UnitInfo();
          var unitFrame = new UnitFrame { FrameID = 0 };
-         unitInfo.UnitFrames.Add(unitFrame.FrameID, unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
       }
 
@@ -66,11 +66,11 @@ namespace HFM.Core.Tests.DataTypes
       {
          var unitInfo = new UnitInfo();
          var unitFrame = new UnitFrame { FrameID = 0 };
-         unitInfo.UnitFrames.Add(unitFrame.FrameID, unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          unitFrame = new UnitFrame { FrameID = 1 };
-         unitInfo.UnitFrames.Add(unitFrame.FrameID, unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          unitFrame = new UnitFrame { FrameID = 5 };
-         unitInfo.UnitFrames.Add(unitFrame.FrameID, unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
       }
 
@@ -79,7 +79,7 @@ namespace HFM.Core.Tests.DataTypes
       {
          var unitInfo = new UnitInfo();
          var unitFrame = new UnitFrame { FrameID = -1 };
-         unitInfo.UnitFrames.Add(unitFrame.FrameID, unitFrame);
+         unitInfo.SetUnitFrame(unitFrame);
          Assert.IsNull(unitInfo.CurrentFrame);
       }
 
@@ -98,12 +98,12 @@ namespace HFM.Core.Tests.DataTypes
          unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(1, unitInfo.FrameCount);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
 
          unitInfo.SetUnitFrame(unitFrame);
          // still only 1 frame
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(1, unitInfo.FrameCount);
       }
 
       [Test]
@@ -121,7 +121,7 @@ namespace HFM.Core.Tests.DataTypes
          unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(1, unitInfo.FrameCount);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
          // no duration - first frame
          Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
@@ -137,7 +137,7 @@ namespace HFM.Core.Tests.DataTypes
          unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(1000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(2, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(2, unitInfo.FrameCount);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
          // still no duration - unitInfo.FramesObserved must be > 1
          Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
@@ -155,7 +155,7 @@ namespace HFM.Core.Tests.DataTypes
          unitInfo.SetUnitFrame(unitFrame);
          Assert.AreEqual(2000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(3, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(3, unitInfo.FrameCount);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
          // now we get a frame duration
          Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.FrameDuration);
@@ -213,7 +213,7 @@ namespace HFM.Core.Tests.DataTypes
       public void GetUnitFrameTest2()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.UnitFrames.Add(0, new UnitFrame());
+         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 0 });
          Assert.IsNotNull(unitInfo.GetUnitFrame(0));
          Assert.IsNull(unitInfo.GetUnitFrame(1));
       }

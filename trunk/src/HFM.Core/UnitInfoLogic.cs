@@ -501,58 +501,39 @@ namespace HFM.Core
       /// <param name="numberOfFrames">Number of most recent frames</param>
       private int GetDurationInSeconds(int numberOfFrames)
       {
-         // No Frames have been captured yet, just return 0.
-         // UnitFrames == null should NEVER happen, but I'm leaving the
-         // check here anyway.  CurrentFrame could easily be null.
-         if (_unitInfo.UnitFrames == null || _unitInfo.CurrentFrame == null)
+         // the numberOfFrames must be 1 or greater
+         // if CurrentFrame is null then no frames have been captured yet
+         if (numberOfFrames < 1 || _unitInfo.CurrentFrame == null)
          {
             return 0;
          }
 
-         if (numberOfFrames < 1) //TODO: possibly add an upper bound check here
-         {
-            // used to throw ArgumentOutOfRangeException here, didn't make sense
-            // just return 0.  Callers aren't equipt to handle the exception.
-            return 0;
-         }
-
+         // init return value
          int averageSeconds = 0;
 
-         // Commented try/catch... the ContainsKey() check 
-         // should be all that is needed here. - 2/21/11
-         //try
-         //{
-            int frameNumber = _unitInfo.CurrentFrame.FrameID;
+         // Make sure we only add frame durations greater than a Zero TimeSpan
+         // The first frame will always have a Zero TimeSpan for frame duration
+         // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23
+         TimeSpan totalTime = TimeSpan.Zero;
+         int countFrames = 0;
 
-            // Make sure we only add frame durations greater than a Zero TimeSpan
-            // The first frame will always have a Zero TimeSpan for frame duration
-            // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23
-            TimeSpan totalTime = TimeSpan.Zero;
-            int countFrames = 0;
-
-            for (int i = 0; i < numberOfFrames; i++)
+         int frameId = _unitInfo.CurrentFrame.FrameID;
+         for (int i = 0; i < numberOfFrames; i++)
+         {
+            // Issue 199
+            var unitFrame = _unitInfo.GetUnitFrame(frameId);
+            if (unitFrame != null && unitFrame.FrameDuration > TimeSpan.Zero)
             {
-               // Issue 199
-               if (_unitInfo.UnitFrames.ContainsKey(frameNumber) &&
-                   _unitInfo.UnitFrames[frameNumber].FrameDuration > TimeSpan.Zero)
-               {
-                  totalTime = totalTime.Add(_unitInfo.UnitFrames[frameNumber].FrameDuration);
-                  countFrames++;
-               }
-               frameNumber--;
+               totalTime = totalTime.Add(unitFrame.FrameDuration);
+               countFrames++;
             }
+            frameId--;
+         }
 
-            if (countFrames > 0)
-            {
-               averageSeconds = Convert.ToInt32(totalTime.TotalSeconds) / countFrames;
-            }
-         //}
-         //// Issue 199
-         //catch (KeyNotFoundException ex)
-         //{
-         //   averageSeconds = 0;
-         //   HfmTrace.WriteToHfmConsole(TraceLevel.Warning, ex);
-         //}
+         if (countFrames > 0)
+         {
+            averageSeconds = Convert.ToInt32(totalTime.TotalSeconds) / countFrames;
+         }
 
          return averageSeconds;
       }
