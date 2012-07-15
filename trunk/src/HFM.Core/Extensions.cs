@@ -209,12 +209,7 @@ namespace HFM.Core
       {
          var totals = new SlotTotals();
 
-         // If no Instance Collection, return initialized totals.
-         // Added this check because this function is now being passed a copy of the client 
-         // slots references using GetCurrentInstanceArray() and not the collection 
-         // directly, since the "live" collection can change at any time.
-         // 4/17/10 - GetCurrentInstanceArray() no longer returns null when there are no clients
-         //           it returns an empty collection.  However, leaving this check for now.
+         // If no slots return initialized totals.
          if (slots == null)
          {
             return totals;

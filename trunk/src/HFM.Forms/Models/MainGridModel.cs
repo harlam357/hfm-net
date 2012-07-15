@@ -34,9 +34,15 @@ namespace HFM.Forms.Models
 {
    public sealed class MainGridModel
    {
+      #region Events
+
       public event EventHandler BeforeResetBindings;
       public event EventHandler AfterResetBindings;
       public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
+
+      #endregion
+
+      #region Properties
 
       private ILogger _logger = NullLogger.Instance;
 
@@ -92,26 +98,42 @@ namespace HFM.Forms.Models
       /// </summary>
       public ListSortDirection SortColumnOrder { get; set; }
 
+      #endregion
+
+      #region Fields
+
       private readonly IPreferenceSet _prefs;
       private readonly ISynchronizeInvoke _syncObject;
       private readonly IClientDictionary _clientDictionary;
       private readonly SlotModelSortableBindingList _slotList;
+      private readonly BindingSource _bindingSource;
+
+      private static readonly object SlotsListLock = new object();
+
+      #endregion
+
       public IEnumerable<SlotModel> SlotCollection
       {
          // ToArray() to make a "copy" of the current list.
          // The value returned here is used by web generation
          // and if the collection changes the web generation
-         // will not be able to enumerate the collection...
-         // possibly use a lock here and RefreshSlotList()
-         // if this doesn't work.
-         get { return _slotList.ToArray(); }
+         // will not be able to enumerate the collection.
+         get
+         {
+            lock (SlotsListLock)
+            {
+               return _slotList.ToArray();
+            }
+         }
       }
+
       public SlotTotals SlotTotals
       {
-         get { return _slotList.GetSlotTotals(); }
+         // use SlotCollection, it's provides synchronized access to the slot list
+         get { return SlotCollection.GetSlotTotals(); }
       }
-      private readonly BindingSource _bindingSource;
-      public BindingSource BindingSource
+      
+      public object BindingSource
       {
          get { return _bindingSource; }
       }
@@ -190,50 +212,43 @@ namespace HFM.Forms.Models
       {
          if (_syncObject.InvokeRequired)
          {
-            _syncObject.BeginInvoke(new MethodInvoker(ResetBindings), null);
+            _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
             return;
          }
          
          OnBeforeResetBindings(EventArgs.Empty);
-         // halt binding source updates
-         _bindingSource.RaiseListChangedEvents = false;
-         // see Revision 534 commit comments for the reason
-         // _slotList.RaiseListChangedEvents = false is here.
-         _slotList.RaiseListChangedEvents = false;
-         // get slots from the dictionary
-         var slots = _clientDictionary.Slots;
-         // refresh the underlying binding list
-         RefreshSlotList(slots);
-         // sort the list
-         _bindingSource.Sort = null;
-         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-         // reset selected slot
-         ResetSelectedSlot();
-         // find duplicates
-         slots.FindDuplicates();
-         // enable binding source updates
-         _bindingSource.RaiseListChangedEvents = true;
-         // see Revision 534 commit comments for the reason
-         // _slotList.RaiseListChangedEvents = false is here.
-         _slotList.RaiseListChangedEvents = true;
-         // reset AFTER RaiseListChangedEvents is enabled
-         _bindingSource.ResetBindings(false);
-         // restore binding source updates
-         OnAfterResetBindings(EventArgs.Empty);
-      }
-
-      /// <summary>
-      /// Refresh the SlotModel list from the ClientDictionary.
-      /// </summary>
-      private void RefreshSlotList(IEnumerable<SlotModel> slots)
-      {
-         _bindingSource.Clear();
-         foreach (var slot in slots)
+         lock (SlotsListLock)
          {
-            _bindingSource.Add(slot);
+            // halt binding source updates
+            _bindingSource.RaiseListChangedEvents = false;
+            // see Revision 534 commit comments for the reason
+            // _slotList.RaiseListChangedEvents = false is here.
+            _slotList.RaiseListChangedEvents = false;
+            // get slots from the dictionary
+            var slots = _clientDictionary.Slots;
+            // refresh the underlying binding list
+            _bindingSource.Clear();
+            foreach (var slot in slots)
+            {
+               _bindingSource.Add(slot);
+            }
+            Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _bindingSource.Count));
+            // sort the list
+            _bindingSource.Sort = null;
+            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
+            // reset selected slot
+            ResetSelectedSlot();
+            // find duplicates
+            slots.FindDuplicates();
+            // enable binding source updates
+            _bindingSource.RaiseListChangedEvents = true;
+            // see Revision 534 commit comments for the reason
+            // _slotList.RaiseListChangedEvents = false is here.
+            _slotList.RaiseListChangedEvents = true;
+            // reset AFTER RaiseListChangedEvents is enabled
+            _bindingSource.ResetBindings(false);
          }
-         string message = String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _bindingSource.Count);
-         Debug.WriteLine(message);
+         OnAfterResetBindings(EventArgs.Empty);
       }
 
       /// <summary>
@@ -241,18 +256,21 @@ namespace HFM.Forms.Models
       /// </summary>
       public void Sort()
       {
-         _bindingSource.RaiseListChangedEvents = false;
-         // see Revision 534 commit comments for the reason
-         // _slotList.RaiseListChangedEvents = false is here.
-         _slotList.RaiseListChangedEvents = false;
-         // sort the list
-         _bindingSource.Sort = null;
-         _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-         // enable binding source updates
-         _bindingSource.RaiseListChangedEvents = true;
-         // see Revision 534 commit comments for the reason
-         // _slotList.RaiseListChangedEvents = false is here.
-         _slotList.RaiseListChangedEvents = true;
+         lock (SlotsListLock)
+         {
+            _bindingSource.RaiseListChangedEvents = false;
+            // see Revision 534 commit comments for the reason
+            // _slotList.RaiseListChangedEvents = false is here.
+            _slotList.RaiseListChangedEvents = false;
+            // sort the list
+            _bindingSource.Sort = null;
+            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
+            // enable binding source updates
+            _bindingSource.RaiseListChangedEvents = true;
+            // see Revision 534 commit comments for the reason
+            // _slotList.RaiseListChangedEvents = false is here.
+            _slotList.RaiseListChangedEvents = true;
+         }
       }
 
       public void ResetSelectedSlot()
