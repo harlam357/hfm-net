@@ -30,7 +30,7 @@
     * "HFM.exe /f `<filename>`" will load the specified file upon startup and override any auto-load configuration file specified in the Preferences.
 
 
-=HFM Client API Change Log - Version 0.9.0 - Revision 548=
+=HFM v7 Client API Change Log - Version 0.9.0 - Revision 548=
 
   * Release Date: March 21, 2012
 
