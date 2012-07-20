@@ -1,6 +1,42 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version 0.9.0 - Revision 548=
+  
+  * Release Date: March 21, 2012
+
+  * Note: User preferences will be reset by this version.  This is a one time issue and your preferences will persist with future upgrades.
+
+  * Enhancement: Issue 44 - Add a progress bar to the progress column.
+  * Enhancement: Add initial Folding@Home v7 support (v7.1.48 or newer supported).  This support includes MONITORING ONLY for this release.  Later releases will incrementally add support for manipulating v7 client slots.
+  * Enhancement: Add HFM.Client Tool and HFM.Log Tool applications.  These applications are data diagnostic tools for the HFM Client and Log APIs respectively.
+  * Enhancement: Download Projects From Stanford will now display a results dialog detailing what projects were added or changed and what project properties were changed.
+  * Enhancement: Issue 215 & 229 - Allow FTP Ports to be specified for Web Generation and Legacy FTP Clients.
+  * Enhancement: Issue 263 - Add an option to calculate Bonus PPD based on Download Time, Frame Time, or No Bonus (None).  Hotkey is Alt+O.  The option is also in the Preferences - Options Tab.
+  * Enhancement: Points Calculator - allows you to calculate project production numbers based on a given frame time.
+  * Enhancement: Add Follow Log File option for log file viewer.  See the View menu.
+
+  * Change: Remove MHz setting and MHZ and PPD/MHz columns from the main grid.
+  * Change: The default "hfm" file format has been superceeded by the "hfmx" file format.  You can still open your old "hfm" files by selecting it as the file type in the open dialog.  However, please save your legacy configuration to the new format and use the new file format moving forward.  The auto-load feature will only work with "hfmx" files.
+  * Change: The EOC Status Update is on it's own timer and will engage somewhere between 15-30 minutes after the update hour to allow for the update to process and to stagger all the HFM clients updating their data.
+  * Change: Logging - the Messages (F7) window should now be much easier to read and understand if you have the need or want to see what HFM is doing behind the scenes.  There are now only two supported logging levels: Info and Debug.  Users should leave the level at Info unless they're trying to diagnose a problem.
+  * Change: Issue 264 - Web Generation - It generally looks the same but the XSLT transforms as well as the XML data format have had a major overhaul.  Customized XSLT transforms based on previous HFM versions will NOT WORK with this new version.  Use copies of the packaged XSLT files as a basis for your customizations.  Consumers of the XML data provided by HFM will also need to update their code accordingly.  The XML is much more robust and strongly typed.  There is one set of tags `<GridData>` that is intented specifically for display purposes and should not be parsed for strongly typed data.
+  * Change: "External Client Data" feature has been removed for the time being.  I'll bring it back if there is demand.  Configurations of this type will be ignored when reading legacy "hfm" configuration files.
+  * Change: EVERYTHING ELSE!!!  It looks the same on the surface but replumbing for v7 was quite an effort.
+
+  * Fix: Issue 112 - Issue with a large number of clients and drawing the benchmarks graphs.  You now have the option to split the clients into multiple graphs.  See the 'Graph Config' tab in the Benchmarks dialog.
+  * Fix: Command Line Switches Verified Working: 
+    * "HFM.exe /r" will reset (delete) the user.config (settings) file for the version being run.
+    * "HFM.exe /f `<filename>`" will load the specified file upon startup and override any auto-load configuration file specified in the Preferences.
+
+
+=HFM Client API Change Log - Version 0.9.0 - Revision 548=
+
+  * Release Date: March 21, 2012
+
+  * Microsoft.NET API for connecting to and communicating with a Folding@Home v7 client.  This is a free and open source API available under the same GPLv2 license as HFM itself.  Developers can use this API to develop their own applications that access the Folding@Home v7 client.  Included in the package are all the necessary DLLs in addition to full API documentation in a Microsoft Compiled HTML Help (chm) file.
+
+
 =Change Log - Version 0.6.2 - Revision 336 - Beta=
 
   * Release Date: March 8, 2011
