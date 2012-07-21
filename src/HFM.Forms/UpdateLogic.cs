@@ -180,7 +180,7 @@ namespace HFM.Forms
          }
 
          var updatePresenter = new UpdatePresenter(ExceptionLogger,
-            update, _proxy, Application.NameAndVersion, Application.VersionWithRevision);
+            update, _proxy, Application.Name, Application.VersionWithRevision);
          updatePresenter.Show(Owner);
          HandleUpdatePresenterResults(updatePresenter);
       }
