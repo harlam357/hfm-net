@@ -92,7 +92,7 @@ namespace HFM.Core
             }
             sb.AppendLine();
          }
-         sb.AppendFormat("{0} Arguments", Constants.ApplicationName);
+         sb.AppendFormat("{0} Arguments", Application.Name);
          sb.AppendLine();
          sb.AppendLine();
          sb.AppendLine(" /r - Reset the user preferences.");

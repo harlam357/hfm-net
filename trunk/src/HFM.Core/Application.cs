@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Platform Operations Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET - Application Class
+ * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,10 +29,31 @@ namespace HFM.Core
    {
       public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
-      #region Version Strings
+      #region Name and Version Strings
 
       /// <summary>
-      /// Major.Minor.Build
+      /// The application name.
+      /// </summary>
+      public const string Name = "HFM.NET";
+
+      /// <summary>
+      /// Gets a string in the format Name vMajor.Minor.Build.
+      /// </summary>
+      public static string NameAndVersion
+      {
+         get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}")); }
+      }
+
+      /// <summary>
+      /// Gets a string in the format Name vMajor.Minor.Build.Revision
+      /// </summary>
+      public static string NameAndVersionWithRevision
+      {
+         get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}.{3}")); }
+      }
+
+      /// <summary>
+      /// Gets a string in the format Major.Minor.Build.
       /// </summary>
       public static string Version
       {
@@ -40,23 +61,7 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Major.Minor.Build
-      /// </summary>
-      public static string NameAndVersion
-      {
-         get { return String.Concat("HFM.NET v", CreateVersionString("{0}.{1}.{2}")); }
-      }
-
-      /// <summary>
-      /// Major.Minor.Build.Revision
-      /// </summary>
-      public static string NameAndVersionWithRevision
-      {
-         get { return String.Concat("HFM.NET v", CreateVersionString("{0}.{1}.{2}.{3}")); }
-      }
-
-      /// <summary>
-      /// Major.Minor.Build.Revision
+      /// Gets a string in the format Major.Minor.Build.Revision.
       /// </summary>
       public static string VersionWithRevision
       {
