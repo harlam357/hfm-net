@@ -1,0 +1,16 @@
+PyON 1 slot-options
+{
+  "client-type": "beta",
+  "client-subtype": "GPU",
+  "machine-id": "2",
+  "max-packet-size": "normal",
+  "core-priority": "low",
+  "next-unit-percentage": "99",
+  "max-units": "0",
+  "checkpoint": "15",
+  "pause-on-start": "false",
+  "gpu-vendor-id": None,
+  "gpu-device-id": None
+}
+---
+

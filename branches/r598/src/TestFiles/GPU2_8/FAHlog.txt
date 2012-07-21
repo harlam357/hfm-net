@@ -1,0 +1,314 @@
+
+
+--- Opening Log file [April 28 19:01:28 UTC] 
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Users\harlarw\AppData\Roaming\Folding@home-gpu
+Arguments: -send all -verbosity 9 
+
+[19:01:28] - Ask before connecting: No
+[19:01:28] - User name: harlam357 (Team 32)
+[19:01:28] - User ID: 6E4E78D7629BA4F9
+[19:01:28] - Machine ID: 2
+[19:01:28] 
+[19:01:29] Loaded queue successfully.
+[19:01:29] Initialization complete
+[19:01:29] Attempting to return result(s) to server...
+[19:01:29] Trying to send all finished work units
+[19:01:29] Project: 5770 (Run 1, Clone 325, Gen 376)
+[19:01:29] - Read packet limit of 540015616... Set to 524286976.
+
+
+[19:01:29] + Attempting to send results [April 28 19:01:29 UTC]
+[19:01:29] - Reading file work/wuresults_00.dat from core
+[19:01:29]   (Read 90895 bytes from disk)
+[19:01:29] Connecting to http://171.67.108.11:8080/
+[19:01:50] - Couldn't send HTTP request to server
+[19:01:50] + Could not connect to Work Server (results)
+[19:01:50]     (171.67.108.11:8080)
+[19:01:50] + Retrying using alternative port
+[19:01:50] Connecting to http://171.67.108.11:80/
+[19:02:11] - Couldn't send HTTP request to server
+[19:02:11] + Could not connect to Work Server (results)
+[19:02:11]     (171.67.108.11:80)
+[19:02:11] - Error: Could not transmit unit 00 (completed April 27) to work server.
+[19:02:11] - 44 failed uploads of this unit.
+[19:02:11] - Read packet limit of 540015616... Set to 524286976.
+
+
+[19:02:11] + Attempting to send results [April 28 19:02:11 UTC]
+[19:02:11] - Reading file work/wuresults_00.dat from core
+[19:02:11]   (Read 90895 bytes from disk)
+[19:02:11] Connecting to http://171.67.108.25:8080/
+[19:02:11] - Couldn't send HTTP request to server
+[19:02:11]   (Got status 503)
+[19:02:11] + Could not connect to Work Server (results)
+[19:02:11]     (171.67.108.25:8080)
+[19:02:11] + Retrying using alternative port
+[19:02:11] Connecting to http://171.67.108.25:80/
+[19:02:11] - Couldn't send HTTP request to server
+[19:02:11]   (Got status 503)
+[19:02:11] + Could not connect to Work Server (results)
+[19:02:11]     (171.67.108.25:80)
+[19:02:11]   Could not transmit unit 00 to Collection server; keeping in queue.
+[19:02:11] Project: 5770 (Run 1, Clone 325, Gen 376)
+[19:02:11] - Read packet limit of 540015616... Set to 524286976.
+
+
+[19:02:11] + Attempting to send results [April 28 19:02:11 UTC]
+[19:02:11] - Reading file work/wuresults_00.dat from core
+[19:02:11]   (Read 90895 bytes from disk)
+[19:02:11] Connecting to http://171.67.108.11:8080/
+[19:02:32] - Couldn't send HTTP request to server
+[19:02:32] + Could not connect to Work Server (results)
+[19:02:32]     (171.67.108.11:8080)
+[19:02:32] + Retrying using alternative port
+[19:02:32] Connecting to http://171.67.108.11:80/
+[19:02:54] - Couldn't send HTTP request to server
+[19:02:54] + Could not connect to Work Server (results)
+[19:02:54]     (171.67.108.11:80)
+[19:02:54] - Error: Could not transmit unit 00 (completed April 27) to work server.
+[19:02:54] - 45 failed uploads of this unit.
+[19:02:54] - Read packet limit of 540015616... Set to 524286976.
+
+
+[19:02:54] + Attempting to send results [April 28 19:02:54 UTC]
+[19:02:54] - Reading file work/wuresults_00.dat from core
+[19:02:54]   (Read 90895 bytes from disk)
+[19:02:54] Connecting to http://171.67.108.25:8080/
+[19:02:54] Posted data.
+[19:02:55] Initial: 0000; - Uploaded at ~89 kB/s
+[19:02:55] - Averaged speed for that direction ~79 kB/s
+[19:02:55] - Server does not have record of this unit. Will try again later.
+[19:02:55]   Could not transmit unit 00 to Collection server; keeping in queue.
+[19:02:55] + Sent 0 of 2 completed units to the server
+[19:02:55] - Failed to send all units to server
+[19:02:55] ***** Got a SIGTERM signal (2)
+[19:02:55] Killing all core threads
+
+Folding@Home Client Shutdown.
+
+
+--- Opening Log file [April 28 19:07:48 UTC] 
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Users\harlarw\AppData\Roaming\Folding@home-gpu
+Arguments: -verbosity 9 
+
+[19:07:48] - Ask before connecting: No
+[19:07:48] - User name: harlam357 (Team 32)
+[19:07:48] - User ID: 6E4E78D7629BA4F9
+[19:07:48] - Machine ID: 2
+[19:07:48] 
+[19:07:48] Loaded queue successfully.
+[19:07:48] Initialization complete
+[19:07:48] 
+[19:07:48] + Processing work unit
+[19:07:48] - Autosending finished units... [April 28 19:07:48 UTC]
+[19:07:48] Trying to send all finished work units
+[19:07:48] + No unsent completed units remaining.
+[19:07:48] - Autosend completed
+[19:07:48] Core required: FahCore_11.exe
+[19:07:48] Core found.
+[19:07:48] Working on queue slot 05 [April 28 19:07:48 UTC]
+[19:07:48] + Working ...
+[19:07:48] - Calling '.\FahCore_11.exe -dir work/ -suffix 05 -priority 96 -nocpulock -checkpoint 15 -verbose -lifeline 820 -version 623'
+
+[19:07:48] 
+[19:07:48] *------------------------------*
+[19:07:48] Folding@Home GPU Core
+[19:07:48] Version 1.31 (Tue Sep 15 10:57:42 PDT 2009)
+[19:07:48] 
+[19:07:48] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+[19:07:48] Build host: amoeba
+[19:07:48] Board Type: Nvidia
+[19:07:48] Core      : 
+[19:07:48] Preparing to commence simulation
+[19:07:48] - Looking at optimizations...
+[19:07:48] - Files status OK
+[19:07:48] - Expanded 73863 -> 383588 (decompressed 519.3 percent)
+[19:07:48] Called DecompressByteArray: compressed_data_size=73863 data_size=383588, decompressed_data_size=383588 diff=0
+[19:07:48] - Digital signature verified
+[19:07:48] 
+[19:07:48] Project: 6606 (Run 1, Clone 346, Gen 22)
+[19:07:48] 
+[19:07:48] Assembly optimizations on if available.
+[19:07:48] Entering M.D.
+[19:07:54] Will resume from checkpoint file
+[19:07:54] Tpr hash work/wudata_05.tpr:  3033445822 3308270260 3500708403 2781974365 3428365660
+[19:07:54] 
+[19:07:54] Calling fah_main args: 14 usage=100
+[19:07:54] 
+[19:07:55] Working on Protein
+[19:07:57] Client config found, loading data.
+[19:07:57] Starting GUI Server
+[19:07:57] Resuming from checkpoint
+[19:07:57] fcCheckPointResume: retreived and current tpr file hash:
+[19:07:57]    0   3033445822   3033445822
+[19:07:57]    1   3308270260   3308270260
+[19:07:57]    2   3500708403   3500708403
+[19:07:57]    3   2781974365   2781974365
+[19:07:57]    4   3428365660   3428365660
+[19:07:57] fcCheckPointResume: file hashes same.
+[19:07:57] fcCheckPointResume: state restored.
+[19:07:57] Verified work/wudata_05.log
+[19:07:57] Verified work/wudata_05.edr
+[19:07:57] Verified work/wudata_05.xtc
+[19:07:57] Completed 69%
+[19:08:38] Completed 70%
+[19:09:20] Completed 71%
+[19:10:01] Completed 72%
+[19:10:43] Completed 73%
+[19:11:23] Completed 74%
+[19:12:04] Completed 75%
+[19:12:45] Completed 76%
+[19:13:25] Completed 77%
+[19:14:05] Completed 78%
+[19:14:45] Completed 79%
+[19:15:25] Completed 80%
+[19:16:06] Completed 81%
+[19:16:46] Completed 82%
+[19:17:26] Completed 83%
+[19:18:06] Completed 84%
+[19:18:46] Completed 85%
+[19:19:27] Completed 86%
+[19:20:07] Completed 87%
+[19:20:46] Completed 88%
+[19:21:27] Completed 89%
+[19:22:07] Completed 90%
+[19:22:47] Completed 91%
+[19:23:27] Completed 92%
+[19:24:07] Completed 93%
+[19:24:47] Completed 94%
+[19:25:27] Completed 95%
+[19:26:07] Completed 96%
+[19:26:47] Completed 97%
+[19:27:27] Completed 98%
+[19:28:07] Completed 99%
+[19:28:48] Completed 100%
+[19:28:48] Successful run
+[19:28:48] DynamicWrapper: Finished Work Unit: sleep=10000
+[19:28:58] Reserved 85892 bytes for xtc file; Cosm status=0
+[19:28:58] Allocated 85892 bytes for xtc file
+[19:28:58] - Reading up to 85892 from "work/wudata_05.xtc": Read 85892
+[19:28:58] Read 85892 bytes from xtc file; available packet space=786344572
+[19:28:58] xtc file hash check passed.
+[19:28:58] Reserved 25248 25248 786344572 bytes for arc file=<work/wudata_05.trr> Cosm status=0
+[19:28:58] Allocated 25248 bytes for arc file
+[19:28:58] - Reading up to 25248 from "work/wudata_05.trr": Read 25248
+[19:28:58] Read 25248 bytes from arc file; available packet space=786319324
+[19:28:58] trr file hash check passed.
+[19:28:58] Allocated 560 bytes for edr file
+[19:28:58] Read bedfile
+[19:28:58] edr file hash check passed.
+[19:28:58] Allocated 22396 bytes for logfile
+[19:28:58] Read logfile
+[19:28:58] GuardedRun: success in DynamicWrapper
+[19:28:58] GuardedRun: done
+[19:28:58] Run: GuardedRun completed.
+[19:29:00] + Opened results file
+[19:29:00] - Writing 134608 bytes of core data to disk...
+[19:29:00] Done: 134096 -> 118318 (compressed to 88.2 percent)
+[19:29:00]   ... Done.
+[19:29:00] DeleteFrameFiles: successfully deleted file=work/wudata_05.ckp
+[19:29:00] Shutting down core 
+[19:29:00] 
+[19:29:00] Folding@home Core Shutdown: FINISHED_UNIT
+[19:29:03] CoreStatus = 64 (100)
+[19:29:03] Unit 5 finished with 93 percent of time to deadline remaining.
+[19:29:03] Updated performance fraction: 0.967204
+[19:29:03] Sending work to server
+[19:29:03] Project: 6606 (Run 1, Clone 346, Gen 22)
+[19:29:03] - Read packet limit of 540015616... Set to 524286976.
+
+
+[19:29:03] + Attempting to send results [April 28 19:29:03 UTC]
+[19:29:03] - Reading file work/wuresults_05.dat from core
+[19:29:03]   (Read 118830 bytes from disk)
+[19:29:03] Connecting to http://171.64.65.61:8080/
+[19:29:04] Posted data.
+[19:29:04] Initial: 0000; - Uploaded at ~117 kB/s
+[19:29:04] - Averaged speed for that direction ~86 kB/s
+[19:29:04] + Results successfully sent
+[19:29:04] Thank you for your contribution to Folding@Home.
+[19:29:04] + Number of Units Completed: 7350
+
+[19:29:08] Trying to send all finished work units
+[19:29:08] + No unsent completed units remaining.
+[19:29:08] + Closed connections
+[19:29:08] + Paused after finishing unit
+[01:07:48] - Autosending finished units... [April 29 01:07:48 UTC]
+[01:07:48] Trying to send all finished work units
+[01:07:48] + No unsent completed units remaining.
+[01:07:48] - Autosend completed
+[03:42:03] ***** Got a SIGTERM signal (2)
+[03:42:03] Killing all core threads
+
+Folding@Home Client Shutdown.
+
+
+--- Opening Log file [April 29 04:55:24 UTC] 
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Users\harlarw\AppData\Roaming\Folding@home-gpu
+Arguments: -send all -verbosity 9 
+
+[04:55:24] - Ask before connecting: No
+[04:55:24] - User name: harlam357 (Team 32)
+[04:55:24] - User ID: 6E4E78D7629BA4F9
+[04:55:24] - Machine ID: 2
+[04:55:24] 
+[04:55:24] Loaded queue successfully.
+[04:55:24] Initialization complete
+[04:55:24] Attempting to return result(s) to server...
+[04:55:24] Trying to send all finished work units
+[04:55:24] Project: 5770 (Run 1, Clone 325, Gen 376)
+[04:55:24] - Read packet limit of 540015616... Set to 524286976.
+
+
+[04:55:24] + Attempting to send results [April 29 04:55:24 UTC]
+[04:55:24] - Reading file work/wuresults_00.dat from core
+[04:55:24]   (Read 90895 bytes from disk)
+[04:55:24] Connecting to http://171.67.108.11:8080/
+[04:55:25] Posted data.
+[04:55:25] Initial: 0000; - Uploaded at ~89 kB/s
+[04:55:25] - Averaged speed for that direction ~81 kB/s
+[04:55:25] + Results successfully sent
+[04:55:25] Thank you for your contribution to Folding@Home.
+[04:55:25] + Number of Units Completed: 7351
+
+[04:55:25] + Sent 1 of 1 completed units to the server
+[04:55:25] ***** Got a SIGTERM signal (2)
+[04:55:25] Killing all core threads
+
+Folding@Home Client Shutdown.

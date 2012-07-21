@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Queue", "HFM.Queue\HFM.Queue.csproj", "{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Queue.Tests", "HFM.Queue.Tests\HFM.Queue.Tests.csproj", "{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Queue.Tool", "HFM.Queue.Tool\HFM.Queue.Tool.csproj", "{44CD6A07-A171-4D11-B71B-0439618E5670}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseMerge|Any CPU = ReleaseMerge|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.ReleaseMerge|Any CPU.ActiveCfg = Release|Any CPU
+		{44AC27F2-833D-4BF2-9E17-C35D38C7BD67}.ReleaseMerge|Any CPU.Build.0 = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.ReleaseMerge|Any CPU.ActiveCfg = Release|Any CPU
+		{E46CE8E6-13F3-4B74-A95E-2C29A5CDBE95}.ReleaseMerge|Any CPU.Build.0 = Release|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.ReleaseMerge|Any CPU.ActiveCfg = ReleaseMerge|Any CPU
+		{44CD6A07-A171-4D11-B71B-0439618E5670}.ReleaseMerge|Any CPU.Build.0 = ReleaseMerge|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,415 @@
+*********************** Log Started 2012-01-11T03:24:22 ************************
+03:24:22:************************* Folding@home Client *************************
+03:24:22:      Website: http://folding.stanford.edu/
+03:24:22:    Copyright: (c) 2009-2012 Stanford University
+03:24:22:       Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+03:24:22:         Args: --lifeline 2600 --command-port=36330
+03:24:22:       Config: C:/Documents and Settings/harlarw/Application
+03:24:22:               Data/FAHClient/config.xml
+03:24:22:******************************** Build ********************************
+03:24:22:      Version: 7.1.43
+03:24:22:         Date: Jan 2 2012
+03:24:22:         Time: 12:33:05
+03:24:22:      SVN Rev: 3223
+03:24:22:       Branch: fah/trunk/client
+03:24:22:     Compiler: Intel(R) C++ MSVC 1500 mode 1200
+03:24:22:      Options: /TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE
+03:24:22:               /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT
+03:24:22:     Platform: win32 XP
+03:24:22:         Bits: 32
+03:24:22:         Mode: Release
+03:24:22:******************************* System ********************************
+03:24:22:          CPU: Intel(R) Core(TM)2 Quad CPU Q6600 @ 2.40GHz
+03:24:22:       CPU ID: GenuineIntel Family 6 Model 15 Stepping 11
+03:24:22:         CPUs: 4
+03:24:22:       Memory: 4.00GiB
+03:24:22:  Free Memory: 3.22GiB
+03:24:22:      Threads: WINDOWS_THREADS
+03:24:22:   On Battery: false
+03:24:22:   UTC offset: -6
+03:24:22:          PID: 1520
+03:24:22:          CWD: C:/Documents and Settings/harlarw/Application Data/FAHClient
+03:24:22:           OS: Microsoft Windows XP Service Pack 2
+03:24:22:      OS Arch: AMD64
+03:24:22:         GPUs: 1
+03:24:22:        GPU 0: NVIDIA:1 GT200b [GeForce GTX 285]
+03:24:22:         CUDA: 1.3
+03:24:22:  CUDA Driver: 3010
+03:24:22:Win32 Service: false
+03:24:22:***********************************************************************
+03:24:22:<config>
+03:24:22:  <!-- Network -->
+03:24:22:  <proxy v=':8080'/>
+03:24:22:
+03:24:22:  <!-- Remote Command Server -->
+03:24:22:  <password v='******'/>
+03:24:22:
+03:24:22:  <!-- User Information -->
+03:24:22:  <passkey v='********************************'/>
+03:24:22:  <team v='32'/>
+03:24:22:  <user v='harlam357'/>
+03:24:22:
+03:24:22:  <!-- Folding Slots -->
+03:24:22:  <slot id='0' type='SMP'>
+03:24:22:    <pause-on-start v='true'/>
+03:24:22:  </slot>
+03:24:22:</config>
+03:24:22:Trying to access database...
+03:24:23:Successfully acquired database lock
+03:24:23:Enabled folding slot 00: PAUSED smp:4
+03:24:25:Server connection id=1 on 0.0.0.0:36330 from 127.0.0.1
+03:25:13:Adding folding slot 01: PAUSED gpu:0:\"GT200b [GeForce GTX 285]\"
+03:25:13:Removing old file 'configs/config-20110224-194205.xml'
+03:25:13:Saving configuration to config.xml
+03:25:13:<config>
+03:25:13:  <!-- Network -->
+03:25:13:  <proxy v=':8080'/>
+03:25:13:
+03:25:13:  <!-- Remote Command Server -->
+03:25:13:  <password v='******'/>
+03:25:13:
+03:25:13:  <!-- User Information -->
+03:25:13:  <passkey v='********************************'/>
+03:25:13:  <team v='32'/>
+03:25:13:  <user v='harlam357'/>
+03:25:13:
+03:25:13:  <!-- Folding Slots -->
+03:25:13:  <slot id='0' type='SMP'>
+03:25:13:    <pause-on-start v='true'/>
+03:25:13:  </slot>
+03:25:13:  <slot id='1' type='GPU'>
+03:25:13:    <pause-on-start v='true'/>
+03:25:13:  </slot>
+03:25:13:</config>
+03:25:32:FS00:Unpaused
+03:25:32:FS01:Unpaused
+03:25:32:WU01:FS00:Starting
+03:25:32:WU01:FS00:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" \"C:/Documents and Settings/harlarw/Application Data/FAHClient/cores/www.stanford.edu/~pande/Win32/AMD64/Core_a4.fah/FahCore_a4.exe\" -dir 01 -suffix 01 -version 701 -checkpoint 15 -np 4
+03:25:32:WU01:FS00:Started FahCore on PID 3888
+03:25:32:WU01:FS00:Core PID:3880
+03:25:32:WU01:FS00:FahCore 0xa4 started
+03:25:32:WU00:FS01:Connecting to assign-GPU.stanford.edu:80
+03:25:32:WU01:FS00:0xa4:
+03:25:32:WU01:FS00:0xa4:*------------------------------*
+03:25:32:WU01:FS00:0xa4:Folding@Home Gromacs GB Core
+03:25:32:WU01:FS00:0xa4:Version 2.27 (Dec. 15, 2010)
+03:25:32:WU01:FS00:0xa4:
+03:25:32:WU01:FS00:0xa4:Preparing to commence simulation
+03:25:32:WU01:FS00:0xa4:- Looking at optimizations...
+03:25:32:WU01:FS00:0xa4:- Files status OK
+03:25:32:WU01:FS00:0xa4:- Expanded 337763 -> 644556 (decompressed 190.8 percent)
+03:25:32:WU01:FS00:0xa4:Called DecompressByteArray: compressed_data_size=337763 data_size=644556, decompressed_data_size=644556 diff=0
+03:25:32:WU01:FS00:0xa4:- Digital signature verified
+03:25:32:WU01:FS00:0xa4:
+03:25:32:WU01:FS00:0xa4:Project: 7610 (Run 630, Clone 0, Gen 59)
+03:25:32:WU01:FS00:0xa4:
+03:25:32:WU01:FS00:0xa4:Assembly optimizations on if available.
+03:25:32:WU01:FS00:0xa4:Entering M.D.
+03:25:32:WU00:FS01:News: Welcome to Folding@Home
+03:25:32:WU00:FS01:Assigned to work server 171.67.108.11
+03:25:32:WU00:FS01:Requesting new work unit for slot 01: READY gpu:0:\"GT200b [GeForce GTX 285]\" from 171.67.108.11
+03:25:32:WU00:FS01:Connecting to 171.67.108.11:8080
+03:25:33:WU00:FS01:Downloading 46.17KiB
+03:25:33:WU00:FS01:Download complete
+03:25:33:WU00:FS01:Received Unit: id:00 state:DOWNLOAD error:OK project:5767 run:3 clone:138 gen:144 core:0x11 unit:0x65c690944f0d01340090008a00031687
+03:25:33:WU00:FS01:Downloading core from http://www.stanford.edu/~pande/Win32/AMD64/NVIDIA/G80/Core_11.fah
+03:25:33:WU00:FS01:Connecting to www.stanford.edu:80
+03:25:34:WU00:FS01:FahCore 11: Downloading 648.82KiB
+03:25:36:WU00:FS01:FahCore 11: Download complete
+03:25:36:WU00:FS01:Valid core signature
+03:25:36:WU00:FS01:Unpacked 1.82MiB to cores/www.stanford.edu/~pande/Win32/AMD64/NVIDIA/G80/Core_11.fah/FahCore_11.exe
+03:25:36:WU00:FS01:Starting
+03:25:36:WU00:FS01:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" \"C:/Documents and Settings/harlarw/Application Data/FAHClient/cores/www.stanford.edu/~pande/Win32/AMD64/NVIDIA/G80/Core_11.fah/FahCore_11.exe\" -dir 00 -suffix 01 -version 701 -checkpoint 15 -gpu 0
+03:25:36:WU00:FS01:Started FahCore on PID 4092
+03:25:36:WU00:FS01:Core PID:3804
+03:25:36:WU00:FS01:FahCore 0x11 started
+03:25:36:WU00:FS01:Downloading project 5767 description
+03:25:36:WU00:FS01:Connecting to fah-web.stanford.edu:80
+03:25:37:WU00:FS01:0x11:
+03:25:37:WU00:FS01:0x11:*------------------------------*
+03:25:37:WU00:FS01:0x11:Folding@Home GPU Core
+03:25:37:WU00:FS01:0x11:Version 1.31 (Tue Sep 15 10:57:42 PDT 2009)
+03:25:37:WU00:FS01:0x11:
+03:25:37:WU00:FS01:0x11:Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+03:25:37:WU00:FS01:0x11:Build host: amoeba
+03:25:37:WU00:FS01:0x11:Board Type: Nvidia
+03:25:37:WU00:FS01:0x11:Core      : 
+03:25:37:WU00:FS01:0x11:Preparing to commence simulation
+03:25:37:WU00:FS01:0x11:- Looking at optimizations...
+03:25:37:WU00:FS01:0x11:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+03:25:37:WU00:FS01:0x11:- Created dyn
+03:25:37:WU00:FS01:0x11:- Files status OK
+03:25:37:WU00:FS01:0x11:- Expanded 46766 -> 252912 (decompressed 540.8 percent)
+03:25:37:WU00:FS01:0x11:Called DecompressByteArray: compressed_data_size=46766 data_size=252912, decompressed_data_size=252912 diff=0
+03:25:37:WU00:FS01:0x11:- Digital signature verified
+03:25:37:WU00:FS01:0x11:
+03:25:37:WU00:FS01:0x11:Project: 5767 (Run 3, Clone 138, Gen 144)
+03:25:37:WU00:FS01:0x11:
+03:25:37:WU00:FS01:0x11:Assembly optimizations on if available.
+03:25:37:WU00:FS01:0x11:Entering M.D.
+03:25:38:WU00:FS01:Project 5767 description downloaded successfully
+03:25:38:WU01:FS00:0xa4:Using Gromacs checkpoints
+03:25:38:WU01:FS00:0xa4:Mapping NT from 4 to 4 
+03:25:39:WU01:FS00:0xa4:Resuming from checkpoint
+03:25:39:WU01:FS00:0xa4:Verified 01/wudata_01.log
+03:25:39:WU01:FS00:0xa4:Verified 01/wudata_01.trr
+03:25:39:WU01:FS00:0xa4:Verified 01/wudata_01.xtc
+03:25:39:WU01:FS00:0xa4:Verified 01/wudata_01.edr
+03:25:39:WU01:FS00:0xa4:Completed 469840 out of 2000000 steps  (23%)
+03:25:42:WU00:FS01:0x11:Tpr hash 00/wudata_01.tpr:  878247368 2452398469 250393907 2744990802 2268153268
+03:25:42:WU00:FS01:0x11:
+03:25:42:WU00:FS01:0x11:Calling fah_main args: 14 usage=100
+03:25:42:WU00:FS01:0x11:
+03:25:43:WU00:FS01:0x11:Working on Protein
+03:25:43:WU00:FS01:0x11:Client config unavailable.
+03:25:44:WU00:FS01:0x11:Starting GUI Server
+03:26:19:WU00:FS01:0x11:Completed 1%
+03:26:52:WU00:FS01:0x11:Completed 2%
+03:26:56:Server connection id=2 on 0.0.0.0:36330 from 192.168.0.110
+03:27:06:Server connection id=3 on 0.0.0.0:36330 from 192.168.0.110
+03:27:11:Server connection id=4 on 0.0.0.0:36330 from 192.168.0.110
+03:27:26:WU00:FS01:0x11:Completed 3%
+03:27:40:Server connection id=5 on 0.0.0.0:36330 from 192.168.0.110
+03:27:43:Server connection id=6 on 0.0.0.0:36330 from 192.168.0.110
+03:27:59:WU00:FS01:0x11:Completed 4%
+03:28:33:WU00:FS01:0x11:Completed 5%
+03:29:06:WU00:FS01:0x11:Completed 6%
+03:29:40:WU00:FS01:0x11:Completed 7%
+03:29:53:WU01:FS00:0xa4:Completed 480000 out of 2000000 steps  (24%)
+03:30:14:WU00:FS01:0x11:Completed 8%
+03:30:47:WU00:FS01:0x11:Completed 9%
+03:31:21:WU00:FS01:0x11:Completed 10%
+03:31:54:WU00:FS01:0x11:Completed 11%
+03:32:28:WU00:FS01:0x11:Completed 12%
+03:33:01:WU00:FS01:0x11:Completed 13%
+03:33:35:WU00:FS01:0x11:Completed 14%
+03:34:08:WU00:FS01:0x11:Completed 15%
+03:34:42:WU00:FS01:0x11:Completed 16%
+03:35:15:WU00:FS01:0x11:Completed 17%
+03:35:49:WU00:FS01:0x11:Completed 18%
+03:36:22:WU00:FS01:0x11:Completed 19%
+03:36:56:WU00:FS01:0x11:Completed 20%
+03:37:29:WU00:FS01:0x11:Completed 21%
+03:38:03:WU00:FS01:0x11:Completed 22%
+03:38:18:WU01:FS00:0xa4:Completed 500000 out of 2000000 steps  (25%)
+03:38:37:WU00:FS01:0x11:Completed 23%
+03:39:10:WU00:FS01:0x11:Completed 24%
+03:39:44:WU00:FS01:0x11:Completed 25%
+03:40:17:WU00:FS01:0x11:Completed 26%
+03:40:51:WU00:FS01:0x11:Completed 27%
+03:41:24:WU00:FS01:0x11:Completed 28%
+03:41:58:WU00:FS01:0x11:Completed 29%
+03:42:31:WU00:FS01:0x11:Completed 30%
+03:43:05:WU00:FS01:0x11:Completed 31%
+03:43:38:WU00:FS01:0x11:Completed 32%
+03:44:12:WU00:FS01:0x11:Completed 33%
+03:44:45:WU00:FS01:0x11:Completed 34%
+03:45:19:WU00:FS01:0x11:Completed 35%
+03:45:52:WU00:FS01:0x11:Completed 36%
+03:46:26:WU00:FS01:0x11:Completed 37%
+03:46:39:WU01:FS00:0xa4:Completed 520000 out of 2000000 steps  (26%)
+03:47:00:WU00:FS01:0x11:Completed 38%
+03:47:33:WU00:FS01:0x11:Completed 39%
+03:48:07:WU00:FS01:0x11:Completed 40%
+03:48:40:WU00:FS01:0x11:Completed 41%
+03:49:14:WU00:FS01:0x11:Completed 42%
+03:49:47:WU00:FS01:0x11:Completed 43%
+03:50:21:WU00:FS01:0x11:Completed 44%
+03:50:54:WU00:FS01:0x11:Completed 45%
+03:51:28:WU00:FS01:0x11:Completed 46%
+03:52:01:WU00:FS01:0x11:Completed 47%
+03:52:35:WU00:FS01:0x11:Completed 48%
+03:53:08:WU00:FS01:0x11:Completed 49%
+03:53:42:WU00:FS01:0x11:Completed 50%
+03:54:15:WU00:FS01:0x11:Completed 51%
+03:54:49:WU00:FS01:0x11:Completed 52%
+03:55:01:WU01:FS00:0xa4:Completed 540000 out of 2000000 steps  (27%)
+03:55:23:WU00:FS01:0x11:Completed 53%
+03:55:56:WU00:FS01:0x11:Completed 54%
+03:56:30:WU00:FS01:0x11:Completed 55%
+03:57:03:WU00:FS01:0x11:Completed 56%
+03:57:37:WU00:FS01:0x11:Completed 57%
+03:58:10:WU00:FS01:0x11:Completed 58%
+03:58:44:WU00:FS01:0x11:Completed 59%
+03:59:17:WU00:FS01:0x11:Completed 60%
+03:59:51:WU00:FS01:0x11:Completed 61%
+04:00:24:WU00:FS01:0x11:Completed 62%
+04:00:58:WU00:FS01:0x11:Completed 63%
+04:01:31:WU00:FS01:0x11:Completed 64%
+04:02:05:WU00:FS01:0x11:Completed 65%
+04:02:38:WU00:FS01:0x11:Completed 66%
+04:03:12:WU00:FS01:0x11:Completed 67%
+04:03:33:WU01:FS00:0xa4:Completed 560000 out of 2000000 steps  (28%)
+04:03:46:WU00:FS01:0x11:Completed 68%
+04:04:19:WU00:FS01:0x11:Completed 69%
+04:04:53:WU00:FS01:0x11:Completed 70%
+04:05:26:WU00:FS01:0x11:Completed 71%
+04:06:00:WU00:FS01:0x11:Completed 72%
+04:06:33:WU00:FS01:0x11:Completed 73%
+04:07:07:WU00:FS01:0x11:Completed 74%
+04:07:40:WU00:FS01:0x11:Completed 75%
+04:08:14:WU00:FS01:0x11:Completed 76%
+04:08:47:WU00:FS01:0x11:Completed 77%
+04:09:21:WU00:FS01:0x11:Completed 78%
+04:09:54:WU00:FS01:0x11:Completed 79%
+04:10:28:WU00:FS01:0x11:Completed 80%
+04:11:01:WU00:FS01:0x11:Completed 81%
+04:11:35:WU00:FS01:0x11:Completed 82%
+04:11:59:WU01:FS00:0xa4:Completed 580000 out of 2000000 steps  (29%)
+04:12:08:WU00:FS01:0x11:Completed 83%
+04:12:42:WU00:FS01:0x11:Completed 84%
+04:13:16:WU00:FS01:0x11:Completed 85%
+04:13:49:WU00:FS01:0x11:Completed 86%
+04:14:23:WU00:FS01:0x11:Completed 87%
+04:14:56:WU00:FS01:0x11:Completed 88%
+04:15:30:WU00:FS01:0x11:Completed 89%
+04:16:03:WU00:FS01:0x11:Completed 90%
+04:16:37:WU00:FS01:0x11:Completed 91%
+04:17:10:WU00:FS01:0x11:Completed 92%
+04:17:44:WU00:FS01:0x11:Completed 93%
+04:18:17:WU00:FS01:0x11:Completed 94%
+04:18:51:WU00:FS01:0x11:Completed 95%
+04:19:25:WU00:FS01:0x11:Completed 96%
+04:19:59:WU00:FS01:0x11:Completed 97%
+04:20:27:WU01:FS00:0xa4:Completed 600000 out of 2000000 steps  (30%)
+04:20:32:WU00:FS01:0x11:Completed 98%
+04:21:06:WU00:FS01:0x11:Completed 99%
+04:21:06:WU02:FS01:Connecting to assign-GPU.stanford.edu:80
+04:21:07:WU02:FS01:News: Welcome to Folding@Home
+04:21:07:WU02:FS01:Assigned to work server 171.67.108.11
+04:21:07:WU02:FS01:Requesting new work unit for slot 01: RUNNING gpu:0:\"GT200b [GeForce GTX 285]\" from 171.67.108.11
+04:21:07:WU02:FS01:Connecting to 171.67.108.11:8080
+04:21:07:WU02:FS01:Downloading 44.78KiB
+04:21:07:WU02:FS01:Download complete
+04:21:07:WU02:FS01:Received Unit: id:02 state:DOWNLOAD error:OK project:5772 run:7 clone:364 gen:252 core:0x11 unit:0x241a68704f0d0e3a00fc016c0007168c
+04:21:07:WU02:FS01:Downloading project 5772 description
+04:21:07:WU02:FS01:Connecting to fah-web.stanford.edu:80
+04:21:08:WU02:FS01:Project 5772 description downloaded successfully
+04:21:39:WU00:FS01:0x11:Completed 100%
+04:21:39:WU00:FS01:0x11:Successful run
+04:21:39:WU00:FS01:0x11:DynamicWrapper: Finished Work Unit: sleep=10000
+04:21:49:WU00:FS01:0x11:Reserved 75676 bytes for xtc file; Cosm status=0
+04:21:49:WU00:FS01:0x11:Allocated 75676 bytes for xtc file
+04:21:49:WU00:FS01:0x11:- Reading up to 75676 from \"00/wudata_01.xtc\": Read 75676
+04:21:49:WU00:FS01:0x11:Read 75676 bytes from xtc file; available packet space=786354788
+04:21:49:WU00:FS01:0x11:xtc file hash check passed.
+04:21:49:WU00:FS01:0x11:Reserved 15168 15168 786354788 bytes for arc file=<00/wudata_01.trr> Cosm status=0
+04:21:49:WU00:FS01:0x11:Allocated 15168 bytes for arc file
+04:21:49:WU00:FS01:0x11:- Reading up to 15168 from \"00/wudata_01.trr\": Read 15168
+04:21:49:WU00:FS01:0x11:Read 15168 bytes from arc file; available packet space=786339620
+04:21:49:WU00:FS01:0x11:trr file hash check passed.
+04:21:49:WU00:FS01:0x11:Allocated 560 bytes for edr file
+04:21:49:WU00:FS01:0x11:Read bedfile
+04:21:49:WU00:FS01:0x11:edr file hash check passed.
+04:21:49:WU00:FS01:0x11:Allocated 33283 bytes for logfile
+04:21:49:WU00:FS01:0x11:Read logfile
+04:21:49:WU00:FS01:0x11:GuardedRun: success in DynamicWrapper
+04:21:49:WU00:FS01:0x11:GuardedRun: done
+04:21:49:WU00:FS01:0x11:Run: GuardedRun completed.
+04:21:51:WU00:FS01:0x11:+ Opened results file
+04:21:51:WU00:FS01:0x11:- Writing 125199 bytes of core data to disk...
+04:21:51:WU00:FS01:0x11:Done: 124687 -> 99219 (compressed to 79.5 percent)
+04:21:51:WU00:FS01:0x11:  ... Done.
+04:21:51:WU00:FS01:0x11:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+04:21:51:WU00:FS01:0x11:Shutting down core 
+04:21:51:WU00:FS01:0x11:
+04:21:51:WU00:FS01:0x11:Folding@home Core Shutdown: FINISHED_UNIT
+04:21:52:WU00:FS01:FahCore returned: FINISHED_UNIT (100 = 0x64)
+04:21:52:WU00:FS01:Sending unit results: id:00 state:SEND error:OK project:5767 run:3 clone:138 gen:144 core:0x11 unit:0x65c690944f0d01340090008a00031687
+04:21:52:WU00:FS01:Uploading 97.39KiB to 171.67.108.11
+04:21:52:WU02:FS01:Starting
+04:21:52:WU00:FS01:Connecting to 171.67.108.11:8080
+04:21:52:WU02:FS01:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" \"C:/Documents and Settings/harlarw/Application Data/FAHClient/cores/www.stanford.edu/~pande/Win32/AMD64/NVIDIA/G80/Core_11.fah/FahCore_11.exe\" -dir 02 -suffix 01 -version 701 -checkpoint 15 -gpu 0
+04:21:52:WU02:FS01:Started FahCore on PID 3304
+04:21:52:WU02:FS01:Core PID:1180
+04:21:52:WU02:FS01:FahCore 0x11 started
+04:21:52:WU02:FS01:0x11:
+04:21:52:WU02:FS01:0x11:*------------------------------*
+04:21:52:WU02:FS01:0x11:Folding@Home GPU Core
+04:21:52:WU02:FS01:0x11:Version 1.31 (Tue Sep 15 10:57:42 PDT 2009)
+04:21:52:WU02:FS01:0x11:
+04:21:52:WU02:FS01:0x11:Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86 
+04:21:52:WU02:FS01:0x11:Build host: amoeba
+04:21:52:WU02:FS01:0x11:Board Type: Nvidia
+04:21:52:WU02:FS01:0x11:Core      : 
+04:21:52:WU02:FS01:0x11:Preparing to commence simulation
+04:21:52:WU02:FS01:0x11:- Looking at optimizations...
+04:21:52:WU02:FS01:0x11:DeleteFrameFiles: successfully deleted file=02/wudata_01.ckp
+04:21:52:WU02:FS01:0x11:- Created dyn
+04:21:52:WU02:FS01:0x11:- Files status OK
+04:21:52:WU02:FS01:0x11:- Expanded 45339 -> 251112 (decompressed 553.8 percent)
+04:21:52:WU02:FS01:0x11:Called DecompressByteArray: compressed_data_size=45339 data_size=251112, decompressed_data_size=251112 diff=0
+04:21:52:WU02:FS01:0x11:- Digital signature verified
+04:21:52:WU02:FS01:0x11:
+04:21:52:WU02:FS01:0x11:Project: 5772 (Run 7, Clone 364, Gen 252)
+04:21:52:WU02:FS01:0x11:
+04:21:52:WU02:FS01:0x11:Assembly optimizations on if available.
+04:21:52:WU02:FS01:0x11:Entering M.D.
+04:21:53:WU00:FS01:Upload complete
+04:21:53:WU00:FS01:Server responded WORK_ACK (400)
+04:21:53:WU00:FS01:Cleaning up
+04:21:58:WU02:FS01:0x11:Tpr hash 02/wudata_01.tpr:  3628451712 338066600 3409466553 2090054248 3662750891
+04:21:58:WU02:FS01:0x11:
+04:21:58:WU02:FS01:0x11:Calling fah_main args: 14 usage=100
+04:21:58:WU02:FS01:0x11:
+04:21:58:WU02:FS01:0x11:Working on Protein
+04:21:59:WU02:FS01:0x11:Client config unavailable.
+04:21:59:WU02:FS01:0x11:Starting GUI Server
+04:22:32:WU02:FS01:0x11:Completed 1%
+04:23:06:WU02:FS01:0x11:Completed 2%
+04:23:39:WU02:FS01:0x11:Completed 3%
+04:24:13:WU02:FS01:0x11:Completed 4%
+04:24:47:WU02:FS01:0x11:Completed 5%
+04:25:20:WU02:FS01:0x11:Completed 6%
+04:25:54:WU02:FS01:0x11:Completed 7%
+04:26:27:WU02:FS01:0x11:Completed 8%
+04:27:01:WU02:FS01:0x11:Completed 9%
+04:27:35:WU02:FS01:0x11:Completed 10%
+04:28:08:WU02:FS01:0x11:Completed 11%
+04:28:42:WU02:FS01:0x11:Completed 12%
+04:29:00:WU01:FS00:0xa4:Completed 620000 out of 2000000 steps  (31%)
+04:29:15:WU02:FS01:0x11:Completed 13%
+04:29:49:WU02:FS01:0x11:Completed 14%
+04:30:23:WU02:FS01:0x11:Completed 15%
+04:30:56:WU02:FS01:0x11:Completed 16%
+04:31:30:WU02:FS01:0x11:Completed 17%
+04:32:03:WU02:FS01:0x11:Completed 18%
+04:32:37:WU02:FS01:0x11:Completed 19%
+04:33:10:WU02:FS01:0x11:Completed 20%
+04:33:44:WU02:FS01:0x11:Completed 21%
+04:34:18:WU02:FS01:0x11:Completed 22%
+04:34:51:WU02:FS01:0x11:Completed 23%
+04:35:25:WU02:FS01:0x11:Completed 24%
+04:35:58:WU02:FS01:0x11:Completed 25%
+04:36:32:WU02:FS01:0x11:Completed 26%
+04:37:06:WU02:FS01:0x11:Completed 27%
+04:37:37:WU01:FS00:0xa4:Completed 640000 out of 2000000 steps  (32%)
+04:37:39:WU02:FS01:0x11:Completed 28%
+04:38:13:WU02:FS01:0x11:Completed 29%
+04:38:46:WU02:FS01:0x11:Completed 30%
+04:39:20:WU02:FS01:0x11:Completed 31%
+04:39:54:WU02:FS01:0x11:Completed 32%
+04:40:27:WU02:FS01:0x11:Completed 33%
+04:41:01:WU02:FS01:0x11:Completed 34%
+04:41:34:WU02:FS01:0x11:Completed 35%
+04:42:08:WU02:FS01:0x11:Completed 36%
+04:42:42:WU02:FS01:0x11:Completed 37%
+04:43:16:WU02:FS01:0x11:Completed 38%
+04:43:49:WU02:FS01:0x11:Completed 39%
+04:44:23:WU02:FS01:0x11:Completed 40%
+04:44:56:WU02:FS01:0x11:Completed 41%
+04:45:30:WU02:FS01:0x11:Completed 42%
+04:46:04:WU02:FS01:0x11:Completed 43%
+04:46:08:WU01:FS00:0xa4:Completed 660000 out of 2000000 steps  (33%)
+04:46:37:WU02:FS01:0x11:Completed 44%
+04:47:11:WU02:FS01:0x11:Completed 45%
+04:47:44:WU02:FS01:0x11:Completed 46%
+04:48:18:WU02:FS01:0x11:Completed 47%
+04:48:52:WU02:FS01:0x11:Completed 48%
+04:49:26:WU02:FS01:0x11:Completed 49%
+04:50:02:WU02:FS01:0x11:Completed 50%
+04:50:36:WU02:FS01:0x11:Completed 51%
+04:50:50:Server connection id=7 on 0.0.0.0:36330 from 192.168.0.152
+04:51:11:WU02:FS01:0x11:Completed 52%
+04:51:53:WU02:FS01:0x11:Completed 53%
+

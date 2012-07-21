@@ -1,0 +1,21 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "RUNNING",
+    "description": "smp:4",
+    "options": {
+      "pause-on-start": "true"
+    }
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:0:\"GT200b [GeForce GTX 285]\"",
+    "options": {
+      "pause-on-start": "true"
+    }
+  }
+]
+---
+

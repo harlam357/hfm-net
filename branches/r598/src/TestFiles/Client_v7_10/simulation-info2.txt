@@ -1,0 +1,95 @@
+PyON 1 simulation-info
+{
+  "user": "harlam357",
+  "team": "32",
+  "project": 5772,
+  "run": 7,
+  "clone": 364,
+  "gen": 252,
+  "core_type": 17,
+  "core": "GROGPU2",
+  "description": "These projects are constant-temperature simulations of a small alpha/beta protein called NTL9, so named after the \"N-terminal domain of ribosomal protein L9\". [Ribosomal proteins][3] are interesting targets for simulation, as the full structure of the ribosome has been solved only recently, and the function of the many proteins bound to the ribosomal RNA remain unknown. 
+
+Here, though, we are mainly interested in NTL9 as a model system for fast protein folding. The simulation entails the first 39 residues of the sequence of L9, which has been well studied, and shown to fold autonomously on a millisecond time scale. 
+
+These are full production runs designed to be run on the GPU clients. The small size of this protein should be very amenable to fast folding simulations out to microseconds time scales relatively quickly. 
+
+**Points and deadlines:**  
+
+project
+points
+deadline
+timeout
+forcefield
+temperature
+
+p5765
+353
+2 days
+3 days
+ff03
+300K
+
+p5766
+353
+2 days
+3 days
+ff03
+330K
+
+p5767
+353
+2 days
+3 days
+ff03
+370K
+
+p5768
+353
+2 days
+3 days
+ff03
+450K
+
+p5769
+353
+2 days
+3 days
+ff96
+300K
+
+p5770
+353
+2 days
+3 days
+ff96
+330K
+
+p5771
+353
+2 days
+3 days
+ff96
+370K
+
+p5772
+353
+2 days
+3 days
+ff96
+450K
+",
+  "total_iterations": 15000,
+  "iterations_done": 7650,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "2012-01-11T04:21:14",
+  "timeout": 0,
+  "deadline": 2601506566332023300,
+  "run_time": 1725,
+  "simulation_time": 0,
+  "eta": 1655,
+  "news": ""
+}
+---
+

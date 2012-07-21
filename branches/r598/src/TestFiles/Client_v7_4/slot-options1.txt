@@ -1,0 +1,16 @@
+PyON 1 slot-options
+{
+  "client-type": "beta",
+  "client-subtype": "SMP",
+  "machine-id": "0",
+  "max-packet-size": "big",
+  "core-priority": "idle",
+  "next-unit-percentage": "100",
+  "max-units": "0",
+  "checkpoint": "15",
+  "pause-on-start": "false",
+  "gpu-vendor-id": None,
+  "gpu-device-id": None
+}
+---
+

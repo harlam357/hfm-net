@@ -1,0 +1,1402 @@
+*********************** Log Started 21/Aug/2011-23:05:01 ***********************
+23:05:01:************************* Folding@home Client *************************
+23:05:01:      Website: http://folding.stanford.edu/
+23:05:01:    Copyright: (c) 2009,2010 Stanford University
+23:05:01:       Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+23:05:01:         Args: --lifeline 4040 --command-port=36330
+23:05:01:       Config: C:/folding/FAH-V7/config.xml
+23:05:01:******************************** Build ********************************
+23:05:01:      Version: 7.1.24
+23:05:01:         Date: Apr 6 2011
+23:05:01:         Time: 21:37:50
+23:05:01:      SVN Rev: 2908
+23:05:01:       Branch: fah/trunk/client
+23:05:01:     Compiler: Intel(R) C++ MSVC 1500 mode 1110
+23:05:01:      Options: /TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE
+23:05:01:               /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT
+23:05:01:     Platform: win32 XP
+23:05:01:         Bits: 32
+23:05:01:         Mode: Release
+23:05:01:******************************* System ********************************
+23:05:01:           OS: Microsoft Windows XP Professional
+23:05:01:          CPU: Intel(R) Core(TM)2 Quad CPU Q9450 @ 2.66GHz
+23:05:01:       CPU ID: GenuineIntel Family 6 Model 23 Stepping 7
+23:05:01:         CPUs: 4
+23:05:01:       Memory: 3.25GiB
+23:05:01:  Free Memory: 2.54GiB
+23:05:01:      Threads: WINDOWS_THREADS
+23:05:01:         GPUs: 1
+23:05:01:        GPU 0: FERMI:1 GF106 [GeForce 450 GTS]
+23:05:01:         CUDA: 2.1
+23:05:01:  CUDA Driver: 3020
+23:05:01:   On Battery: false
+23:05:01:   UTC offset: -5
+23:05:01:          PID: 3204
+23:05:01:          CWD: C:/folding/FAH-V7
+23:05:01:Win32 Service: false
+23:05:01:***********************************************************************
+23:05:01:<config>
+23:05:01:  <!-- Network -->
+23:05:01:  <proxy v=':8080'/>
+23:05:01:
+23:05:01:  <!-- User Information -->
+23:05:01:  <passkey v='********************************'/>
+23:05:01:  <team v='32'/>
+23:05:01:  <user v='HayesK'/>
+23:05:01:
+23:05:01:  <!-- Folding Slots -->
+23:05:01:  <slot id='0' type='SMP'>
+23:05:01:    <client-type v='beta'/>
+23:05:01:    <max-packet-size v='big'/>
+23:05:01:    <next-unit-percentage v='100'/>
+23:05:01:  </slot>
+23:05:01:  <slot id='1' type='GPU'>
+23:05:01:    <client-type v='beta'/>
+23:05:01:  </slot>
+23:05:01:</config>
+23:05:01:Trying to access database...
+23:05:01:Database locked
+23:05:01:Enabled folding slot 00: READY smp:4
+23:05:01:Enabled folding slot 01: READY gpu:0:"GF106 [GeForce 450 GTS]"
+23:05:01:Starting Unit 00
+23:05:01:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/Core_a3.fah/FahCore_a3.exe -dir 00 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -np 4
+23:05:01:Started core on PID 3620
+23:05:01:FahCore 0xa3 started
+23:05:01:Starting Unit 01
+23:05:01:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/Core_15.fah/FahCore_15.exe -dir 01 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -gpu 0
+23:05:01:Started core on PID 3220
+23:05:01:FahCore 0x15 started
+23:05:02:Unit 00:
+23:05:02:Unit 00:*------------------------------*
+23:05:02:Unit 00:Folding@Home Gromacs SMP Core
+23:05:02:Unit 00:Version 2.27 (Dec. 15, 2010)
+23:05:02:Unit 00:
+23:05:02:Unit 00:Preparing to commence simulation
+23:05:02:Unit 00:- Ensuring status. Please wait.
+23:05:02:Unit 01:
+23:05:02:Unit 01:*------------------------------*
+23:05:02:Unit 01:Folding@Home GPU Core
+23:05:02:Unit 01:Version                2.20 (Tue Aug 2 12:06:37 PDT 2011)
+23:05:02:Unit 01:Build host             SimbiosNvdWin7
+23:05:02:Unit 01:Board Type             NVIDIA/CUDA
+23:05:02:Unit 01:Core                   15
+23:05:02:Unit 01:
+23:05:02:Unit 01:Window's signal control handler registered.
+23:05:02:Unit 01:Preparing to commence simulation
+23:05:02:Unit 01:- Ensuring status. Please wait.
+23:05:02:Server connection id=1 on 0.0.0.0:36330 from 127.0.0.1
+23:05:11:Unit 00:- Looking at optimizations...
+23:05:11:Unit 00:- Working with standard loops on this execution.
+23:05:11:Unit 00:- Previous termination of core was improper.
+23:05:11:Unit 00:- Files status OK
+23:05:11:Unit 00:- Expanded 1764201 -> 2254597 (decompressed 127.7 percent)
+23:05:11:Unit 00:Called DecompressByteArray: compressed_data_size=1764201 data_size=2254597, decompressed_data_size=2254597 diff=0
+23:05:11:Unit 00:- Digital signature verified
+23:05:11:Unit 00:
+23:05:11:Unit 00:Project: 6075 (Run 0, Clone 61, Gen 479)
+23:05:11:Unit 00:
+23:05:11:Unit 00:Entering M.D.
+23:05:11:Unit 01:- Looking at optimizations...
+23:05:11:Unit 01:- Working with standard loops on this execution.
+23:05:11:Unit 01:- Previous termination of core was improper.
+23:05:11:Unit 01:- Files status OK
+23:05:11:Unit 01:sizeof(CORE_PACKET_HDR) = 512 file=<>
+23:05:11:Unit 01:- Expanded 44718 -> 170279 (decompressed 380.7 percent)
+23:05:11:Unit 01:Called DecompressByteArray: compressed_data_size=44718 data_size=170279, decompressed_data_size=170279 diff=0
+23:05:11:Unit 01:- Digital signature verified
+23:05:11:Unit 01:
+23:05:11:Unit 01:Project: 6803 (Run 8, Clone 43, Gen 183)
+23:05:11:Unit 01:
+23:05:11:Unit 01:Entering M.D.
+23:05:13:Unit 01:Will resume from checkpoint file 01/wudata_01.ckp
+23:05:13:Unit 01:Tpr hash 01/wudata_01.tpr:  1456898407 3416831408 764808356 626759272 3563074680
+23:05:13:Unit 01:calling fah_main gpuDeviceId=0
+23:05:13:Unit 01:Working on ALZHEIMER'S DISEASE AMYLOID
+23:05:13:Unit 01:Client config unavailable.
+23:05:13:Unit 01:Starting GUI Server
+23:05:17:Unit 00:Using Gromacs checkpoints
+23:05:17:Unit 00:Mapping NT from 4 to 4 
+23:05:17:Unit 00:Resuming from checkpoint
+23:05:17:Unit 00:Verified 00/wudata_01.log
+23:05:17:Unit 00:Verified 00/wudata_01.trr
+23:05:17:Unit 00:Verified 00/wudata_01.edr
+23:05:17:Unit 00:Completed 173274 out of 500000 steps  (34%)
+23:06:18:Unit 01:Resuming from checkpoint
+23:06:18:Unit 01:fcCheckPointResume: retreived and current tpr file hash:
+23:06:18:Unit 01:   0   1456898407   1456898407
+23:06:18:Unit 01:   1   3416831408   3416831408
+23:06:18:Unit 01:   2    764808356    764808356
+23:06:18:Unit 01:   3    626759272    626759272
+23:06:18:Unit 01:   4   3563074680   3563074680
+23:06:18:Unit 01:fcCheckPointResume: file hashes same.
+23:06:18:Unit 01:fcCheckPointResume: state restored.
+23:06:18:Unit 01:fcCheckPointResume: name 01/wudata_01.log Verified 01/wudata_01.log
+23:06:18:Unit 01:fcCheckPointResume: name 01/wudata_01.trr Verified 01/wudata_01.trr
+23:06:18:Unit 01:fcCheckPointResume: name 01/wudata_01.xtc Verified 01/wudata_01.xtc
+23:06:18:Unit 01:fcCheckPointResume: name 01/wudata_01.edr Verified 01/wudata_01.edr
+23:06:18:Unit 01:fcCheckPointResume: state restored 2
+23:06:18:Unit 01:Resumed from checkpoint
+23:06:18:Unit 01:Setting checkpoint frequency: 500000
+23:06:18:Unit 01:Completed  24500001 out of 50000000 steps (49%).
+23:06:53:Unit 00:Completed 175000 out of 500000 steps  (35%)
+23:08:27:Unit 01:Completed  25000000 out of 50000000 steps (50%).
+23:10:35:Unit 01:Completed  25500000 out of 50000000 steps (51%).
+23:11:34:Unit 00:Completed 180000 out of 500000 steps  (36%)
+23:12:44:Unit 01:Completed  26000000 out of 50000000 steps (52%).
+23:14:53:Unit 01:Completed  26500000 out of 50000000 steps (53%).
+23:16:15:Unit 00:Completed 185000 out of 500000 steps  (37%)
+23:17:01:Unit 01:Completed  27000000 out of 50000000 steps (54%).
+23:19:10:Unit 01:Completed  27500000 out of 50000000 steps (55%).
+23:20:56:Unit 00:Completed 190000 out of 500000 steps  (38%)
+23:21:18:Unit 01:Completed  28000000 out of 50000000 steps (56%).
+23:23:27:Unit 01:Completed  28500000 out of 50000000 steps (57%).
+23:25:36:Unit 01:Completed  29000000 out of 50000000 steps (58%).
+23:25:37:Unit 00:Completed 195000 out of 500000 steps  (39%)
+23:27:44:Unit 01:Completed  29500000 out of 50000000 steps (59%).
+23:29:53:Unit 01:Completed  30000000 out of 50000000 steps (60%).
+23:30:18:Unit 00:Completed 200000 out of 500000 steps  (40%)
+23:32:02:Unit 01:Completed  30500000 out of 50000000 steps (61%).
+23:34:10:Unit 01:Completed  31000000 out of 50000000 steps (62%).
+23:34:59:Unit 00:Completed 205000 out of 500000 steps  (41%)
+23:36:19:Unit 01:Completed  31500000 out of 50000000 steps (63%).
+23:38:27:Unit 01:Completed  32000000 out of 50000000 steps (64%).
+23:39:40:Unit 00:Completed 210000 out of 500000 steps  (42%)
+23:40:36:Unit 01:Completed  32500000 out of 50000000 steps (65%).
+23:42:45:Unit 01:Completed  33000000 out of 50000000 steps (66%).
+23:44:20:Unit 00:Completed 215000 out of 500000 steps  (43%)
+23:44:53:Unit 01:Completed  33500000 out of 50000000 steps (67%).
+23:47:02:Unit 01:Completed  34000000 out of 50000000 steps (68%).
+23:49:01:Unit 00:Completed 220000 out of 500000 steps  (44%)
+23:49:10:Unit 01:Completed  34500000 out of 50000000 steps (69%).
+23:51:19:Unit 01:Completed  35000000 out of 50000000 steps (70%).
+23:53:28:Unit 01:Completed  35500000 out of 50000000 steps (71%).
+23:53:42:Unit 00:Completed 225000 out of 500000 steps  (45%)
+23:55:36:Unit 01:Completed  36000000 out of 50000000 steps (72%).
+23:57:45:Unit 01:Completed  36500000 out of 50000000 steps (73%).
+23:58:23:Unit 00:Completed 230000 out of 500000 steps  (46%)
+23:59:54:Unit 01:Completed  37000000 out of 50000000 steps (74%).
+00:02:02:Unit 01:Completed  37500000 out of 50000000 steps (75%).
+00:03:05:Unit 00:Completed 235000 out of 500000 steps  (47%)
+00:04:11:Unit 01:Completed  38000000 out of 50000000 steps (76%).
+00:06:19:Unit 01:Completed  38500000 out of 50000000 steps (77%).
+00:07:46:Unit 00:Completed 240000 out of 500000 steps  (48%)
+00:08:28:Unit 01:Completed  39000000 out of 50000000 steps (78%).
+00:10:37:Unit 01:Completed  39500000 out of 50000000 steps (79%).
+00:12:27:Unit 00:Completed 245000 out of 500000 steps  (49%)
+00:12:45:Unit 01:Completed  40000000 out of 50000000 steps (80%).
+00:14:54:Unit 01:Completed  40500000 out of 50000000 steps (81%).
+00:17:03:Unit 01:Completed  41000000 out of 50000000 steps (82%).
+00:17:08:Unit 00:Completed 250000 out of 500000 steps  (50%)
+00:19:11:Unit 01:Completed  41500000 out of 50000000 steps (83%).
+00:21:20:Unit 01:Completed  42000000 out of 50000000 steps (84%).
+00:21:49:Unit 00:Completed 255000 out of 500000 steps  (51%)
+00:23:28:Unit 01:Completed  42500000 out of 50000000 steps (85%).
+00:25:37:Unit 01:Completed  43000000 out of 50000000 steps (86%).
+00:26:30:Unit 00:Completed 260000 out of 500000 steps  (52%)
+00:27:46:Unit 01:Completed  43500000 out of 50000000 steps (87%).
+00:29:54:Unit 01:Completed  44000000 out of 50000000 steps (88%).
+00:31:11:Unit 00:Completed 265000 out of 500000 steps  (53%)
+00:32:03:Unit 01:Completed  44500000 out of 50000000 steps (89%).
+00:34:12:Unit 01:Completed  45000000 out of 50000000 steps (90%).
+00:35:53:Unit 00:Completed 270000 out of 500000 steps  (54%)
+00:36:20:Unit 01:Completed  45500000 out of 50000000 steps (91%).
+00:38:29:Unit 01:Completed  46000000 out of 50000000 steps (92%).
+00:40:34:Unit 00:Completed 275000 out of 500000 steps  (55%)
+00:40:37:Unit 01:Completed  46500000 out of 50000000 steps (93%).
+00:42:46:Unit 01:Completed  47000000 out of 50000000 steps (94%).
+00:44:55:Unit 01:Completed  47500000 out of 50000000 steps (95%).
+00:45:14:Unit 00:Completed 280000 out of 500000 steps  (56%)
+00:47:03:Unit 01:Completed  48000000 out of 50000000 steps (96%).
+00:49:12:Unit 01:Completed  48500000 out of 50000000 steps (97%).
+00:49:55:Unit 00:Completed 285000 out of 500000 steps  (57%)
+00:51:21:Unit 01:Completed  49000000 out of 50000000 steps (98%).
+00:53:29:Unit 01:Completed  49500000 out of 50000000 steps (99%).
+00:53:30:Connecting to assign-GPU.stanford.edu:80
+00:53:30:News: Welcome to Folding@Home
+00:53:30:Assigned to work server 171.64.65.105
+00:53:30:Requesting new work unit for slot 01: RUNNING gpu:0:"GF106 [GeForce 450 GTS]" from 171.64.65.105
+00:53:30:Connecting to 171.64.65.105:8080
+00:53:31:Slot 01: Downloading 122.11KiB
+00:53:32:Slot 01: Download complete
+00:53:32:Received Unit: id:02 state:DOWNLOAD project:7620 run:451 clone:0 gen:5 core:0x15 unit:0x00000005664f2dd14e42f5ec23951b3a
+00:53:32:Downloading core from http://www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/beta/Core_15.fah
+00:53:32:Connecting to www.stanford.edu:80
+00:53:33:FahCore 15: Downloading 1.47MiB
+00:53:39:FahCore 15: 92.99%
+00:53:39:FahCore 15: Download complete
+00:53:39:Valid core signature
+00:53:39:Unpacked 4.40MiB to cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/beta/Core_15.fah/FahCore_15.exe
+00:54:37:Unit 00:Completed 290000 out of 500000 steps  (58%)
+00:55:38:Unit 01:Completed  50000000 out of 50000000 steps (100%).
+00:55:38:Unit 01:Finished fah_main status=0
+00:55:38:Unit 01:Successful run
+00:55:38:Unit 01:DynamicWrapper: Finished Work Unit: sleep=10000
+00:55:48:Unit 01:Reserved 244748 bytes for xtc file; Cosm status=0
+00:55:48:Unit 01:Allocated 244748 bytes for xtc file
+00:55:48:Unit 01:- Reading up to 244748 from "01/wudata_01.xtc": Read 244748
+00:55:48:Unit 01:Read 244748 bytes from xtc file; available packet space=786185716
+00:55:48:Unit 01:xtc file hash check passed.
+00:55:48:Unit 01:Reserved 76080 76080 786185716 bytes for arc file=<01/wudata_01.trr> Cosm status=0
+00:55:48:Unit 01:Allocated 76080 bytes for arc file
+00:55:48:Unit 01:- Reading up to 76080 from "01/wudata_01.trr": Read 76080
+00:55:48:Unit 01:Read 76080 bytes from arc file; available packet space=786109636
+00:55:48:Unit 01:trr file hash check passed.
+00:55:48:Unit 01:Allocated 544 bytes for edr file
+00:55:48:Unit 01:Read bedfile
+00:55:48:Unit 01:edr file hash check passed.
+00:55:48:Unit 01:Allocated 36899 bytes for logfile
+00:55:48:Unit 01:Read logfile
+00:55:48:Unit 01:GuardedRun: success in DynamicWrapper
+00:55:48:Unit 01:GuardedRun: done
+00:55:48:Unit 01:Run: GuardedRun completed.
+00:55:51:Unit 01:+ Opened results file
+00:55:51:Unit 01:- Writing 358783 bytes of core data to disk...
+00:55:51:Unit 01:Done: 358271 -> 326399 (compressed to 91.1 percent)
+00:55:51:Unit 01:  ... Done.
+00:55:51:Unit 01:DeleteFrameFiles: successfully deleted file=01/wudata_01.ckp
+00:55:51:Unit 01:Shutting down core 
+00:55:51:Unit 01:
+00:55:51:Unit 01:Folding@home Core Shutdown: FINISHED_UNIT
+00:55:51:FahCore, running Unit 01, returned: FINISHED_UNIT (100)
+00:55:51:Sending unit results: id:01 state:SEND project:6803 run:8 clone:43 gen:183 core:0x15 unit:0x000000c36652edc64e03a09aae551b3e
+00:55:51:Starting Unit 02
+00:55:51:Unit 01: Uploading 319.25KiB
+00:55:51:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/beta/Core_15.fah/FahCore_15.exe -dir 02 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -gpu 0
+00:55:51:Connecting to 171.67.108.54:8080
+00:55:52:Started core on PID 2972
+00:55:52:FahCore 0x15 started
+00:55:53:Unit 02:
+00:55:53:Unit 02:*------------------------------*
+00:55:53:Unit 02:Folding@Home GPU Core
+00:55:53:Unit 02:Version                2.20 (Tue Aug 2 12:06:37 PDT 2011)
+00:55:53:Unit 02:Build host             SimbiosNvdWin7
+00:55:53:Unit 02:Board Type             NVIDIA/CUDA
+00:55:53:Unit 02:Core                   15
+00:55:53:Unit 02:
+00:55:53:Unit 02:Window's signal control handler registered.
+00:55:53:Unit 02:Preparing to commence simulation
+00:55:53:Unit 02:- Looking at optimizations...
+00:55:53:Unit 02:DeleteFrameFiles: successfully deleted file=02/wudata_01.ckp
+00:55:53:Unit 02:- Created dyn
+00:55:53:Unit 02:- Files status OK
+00:55:53:Unit 02:sizeof(CORE_PACKET_HDR) = 512 file=<>
+00:55:53:Unit 02:- Expanded 124533 -> 501826 (decompressed 402.9 percent)
+00:55:53:Unit 02:Called DecompressByteArray: compressed_data_size=124533 data_size=501826, decompressed_data_size=501826 diff=0
+00:55:53:Unit 02:- Digital signature verified
+00:55:53:Unit 02:
+00:55:53:Unit 02:Project: 7620 (Run 451, Clone 0, Gen 5)
+00:55:53:Unit 02:
+00:55:53:Unit 02:Assembly optimizations on if available.
+00:55:53:Unit 02:Entering M.D.
+00:55:54:Unit 01: Upload complete
+00:55:54:Server responded WORK_ACK (400)
+00:55:54:Final credit estimate, 1325.00 points
+00:55:54:Cleaning up Unit 01
+00:55:55:Unit 02:Tpr hash 02/wudata_01.tpr:  1880183208 1614421068 3101852870 4170118909 3167129485
+00:55:55:Unit 02:calling fah_main gpuDeviceId=0
+00:55:56:Unit 02:Working on Protein
+00:55:56:Unit 02:Client config unavailable.
+00:55:56:Unit 02:Starting GUI Server
+00:57:03:Unit 02:Setting checkpoint frequency: 400000
+00:57:03:Unit 02:Completed         3 out of 40000000 steps (0%).
+00:59:08:Unit 00:Completed 295000 out of 500000 steps  (59%)
+01:03:36:Unit 00:Completed 300000 out of 500000 steps  (60%)
+01:06:54:Unit 02:Completed    400000 out of 40000000 steps (1%).
+01:08:05:Unit 00:Completed 305000 out of 500000 steps  (61%)
+01:12:34:Unit 00:Completed 310000 out of 500000 steps  (62%)
+01:16:46:Unit 02:Completed    800000 out of 40000000 steps (2%).
+01:17:02:Unit 00:Completed 315000 out of 500000 steps  (63%)
+01:21:31:Unit 00:Completed 320000 out of 500000 steps  (64%)
+01:25:58:Unit 00:Completed 325000 out of 500000 steps  (65%)
+01:26:38:Unit 02:Completed   1200000 out of 40000000 steps (3%).
+01:30:27:Unit 00:Completed 330000 out of 500000 steps  (66%)
+01:34:55:Unit 00:Completed 335000 out of 500000 steps  (67%)
+01:36:30:Unit 02:Completed   1600000 out of 40000000 steps (4%).
+01:39:24:Unit 00:Completed 340000 out of 500000 steps  (68%)
+01:43:53:Unit 00:Completed 345000 out of 500000 steps  (69%)
+01:46:21:Unit 02:Completed   2000000 out of 40000000 steps (5%).
+01:48:22:Unit 00:Completed 350000 out of 500000 steps  (70%)
+01:52:51:Unit 00:Completed 355000 out of 500000 steps  (71%)
+01:56:13:Unit 02:Completed   2400000 out of 40000000 steps (6%).
+01:57:20:Unit 00:Completed 360000 out of 500000 steps  (72%)
+02:01:48:Unit 00:Completed 365000 out of 500000 steps  (73%)
+02:06:05:Unit 02:Completed   2800000 out of 40000000 steps (7%).
+02:06:17:Unit 00:Completed 370000 out of 500000 steps  (74%)
+02:10:45:Unit 00:Completed 375000 out of 500000 steps  (75%)
+02:15:13:Unit 00:Completed 380000 out of 500000 steps  (76%)
+02:15:56:Unit 02:Completed   3200000 out of 40000000 steps (8%).
+02:19:40:Unit 00:Completed 385000 out of 500000 steps  (77%)
+02:23:54:Saving configuration to config.xml
+02:23:54:<config>
+02:23:54:  <!-- Network -->
+02:23:54:  <proxy v=':8080'/>
+02:23:54:
+02:23:54:  <!-- User Information -->
+02:23:54:  <passkey v='********************************'/>
+02:23:54:  <team v='32'/>
+02:23:54:  <user v='HayesK'/>
+02:23:54:
+02:23:54:  <!-- Folding Slots -->
+02:23:54:  <slot id='0' type='SMP'>
+02:23:54:    <client-type v='beta'/>
+02:23:54:    <max-packet-size v='big'/>
+02:23:54:    <next-unit-percentage v='100'/>
+02:23:54:  </slot>
+02:23:54:  <slot id='1' type='GPU'/>
+02:23:54:</config>
+02:24:11:Unit 00:Completed 390000 out of 500000 steps  (78%)
+02:25:48:Unit 02:Completed   3600000 out of 40000000 steps (9%).
+02:28:40:Unit 00:Completed 395000 out of 500000 steps  (79%)
+02:33:08:Unit 00:Completed 400000 out of 500000 steps  (80%)
+02:35:40:Unit 02:Completed   4000000 out of 40000000 steps (10%).
+02:37:37:Unit 00:Completed 405000 out of 500000 steps  (81%)
+02:42:05:Unit 00:Completed 410000 out of 500000 steps  (82%)
+02:45:32:Unit 02:Completed   4400000 out of 40000000 steps (11%).
+02:46:33:Unit 00:Completed 415000 out of 500000 steps  (83%)
+02:51:01:Unit 00:Completed 420000 out of 500000 steps  (84%)
+02:55:24:Unit 02:Completed   4800000 out of 40000000 steps (12%).
+02:55:29:Unit 00:Completed 425000 out of 500000 steps  (85%)
+02:59:57:Unit 00:Completed 430000 out of 500000 steps  (86%)
+03:04:26:Unit 00:Completed 435000 out of 500000 steps  (87%)
+03:05:15:Unit 02:Completed   5200000 out of 40000000 steps (13%).
+03:08:54:Unit 00:Completed 440000 out of 500000 steps  (88%)
+03:13:23:Unit 00:Completed 445000 out of 500000 steps  (89%)
+03:15:07:Unit 02:Completed   5600000 out of 40000000 steps (14%).
+03:17:52:Unit 00:Completed 450000 out of 500000 steps  (90%)
+03:22:21:Unit 00:Completed 455000 out of 500000 steps  (91%)
+03:24:59:Unit 02:Completed   6000000 out of 40000000 steps (15%).
+03:26:51:Unit 00:Completed 460000 out of 500000 steps  (92%)
+03:31:21:Unit 00:Completed 465000 out of 500000 steps  (93%)
+03:34:51:Unit 02:Completed   6400000 out of 40000000 steps (16%).
+03:35:50:Unit 00:Completed 470000 out of 500000 steps  (94%)
+03:40:18:Unit 00:Completed 475000 out of 500000 steps  (95%)
+03:44:42:Unit 02:Completed   6800000 out of 40000000 steps (17%).
+03:44:47:Unit 00:Completed 480000 out of 500000 steps  (96%)
+03:49:15:Unit 00:Completed 485000 out of 500000 steps  (97%)
+03:53:44:Unit 00:Completed 490000 out of 500000 steps  (98%)
+03:54:34:Unit 02:Completed   7200000 out of 40000000 steps (18%).
+03:58:13:Unit 00:Completed 495000 out of 500000 steps  (99%)
+04:02:41:Unit 00:Completed 500000 out of 500000 steps  (100%)
+04:02:42:Connecting to assign3.stanford.edu:8080
+04:02:42:News: Welcome to Folding@Home
+04:02:42:Assigned to work server 171.64.65.55
+04:02:42:Requesting new work unit for slot 00: RUNNING smp:4 from 171.64.65.55
+04:02:42:Connecting to 171.64.65.55:8080
+04:02:43:Slot 00: Downloading 126.08KiB
+04:02:43:Unit 00:DynamicWrapper: Finished Work Unit: sleep=10000
+04:02:44:Slot 00: Download complete
+04:02:44:Received Unit: id:01 state:DOWNLOAD project:10700 run:0 clone:41 gen:37 core:0xa3 unit:0x0000002a0a3b1e5b4d4c906342641821
+04:02:44:Downloading core from http://www.stanford.edu/~pande/Win32/x86/beta/Core_a3.fah
+04:02:44:Connecting to www.stanford.edu:80
+04:02:44:WARNING: FahCore type in core package seems to be in wrong byte order.
+04:02:44:FahCore a3: Downloading 2.89MiB
+04:02:50:FahCore a3: 43.15%
+04:02:53:Unit 00:
+04:02:53:Unit 00:Finished Work Unit:
+04:02:53:Unit 00:- Reading up to 3700368 from "00/wudata_01.trr": Read 3700368
+04:02:53:Unit 00:trr file hash check passed.
+04:02:53:Unit 00:edr file hash check passed.
+04:02:53:Unit 00:logfile size: 57426
+04:02:53:Unit 00:Leaving Run
+04:02:56:FahCore a3: 93.59%
+04:02:56:Unit 00:- Writing 3793754 bytes of core data to disk...
+04:02:56:Unit 00:  ... Done.
+04:02:56:FahCore a3: Download complete
+04:02:56:Valid core signature
+04:02:58:Unpacked 9.59MiB to cores/www.stanford.edu/~pande/Win32/x86/beta/Core_a3.fah/FahCore_a3.exe
+04:03:01:Unit 00:- Shutting down core
+04:03:01:Unit 00:
+04:03:01:Unit 00:Folding@home Core Shutdown: FINISHED_UNIT
+04:03:02:FahCore, running Unit 00, returned: FINISHED_UNIT (100)
+04:03:02:Sending unit results: id:00 state:SEND project:6075 run:0 clone:61 gen:479 core:0xa3 unit:0x06a176a14e5167a501df003d000017bb
+04:03:02:Unit 00: Uploading 3.62MiB
+04:03:02:Starting Unit 01
+04:03:02:Connecting to 171.64.65.54:8080
+04:03:02:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/beta/Core_a3.fah/FahCore_a3.exe -dir 01 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -np 4
+04:03:03:Started core on PID 3044
+04:03:03:FahCore 0xa3 started
+04:03:04:Unit 01:
+04:03:04:Unit 01:*------------------------------*
+04:03:04:Unit 01:Folding@Home Gromacs SMP Core
+04:03:04:Unit 01:Version 2.27 (Dec. 15, 2010)
+04:03:04:Unit 01:
+04:03:04:Unit 01:Preparing to commence simulation
+04:03:04:Unit 01:- Looking at optimizations...
+04:03:04:Unit 01:- Created dyn
+04:03:04:Unit 01:- Files status OK
+04:03:04:Unit 01:- Expanded 128591 -> 179848 (decompressed 139.8 percent)
+04:03:04:Unit 01:Called DecompressByteArray: compressed_data_size=128591 data_size=179848, decompressed_data_size=179848 diff=0
+04:03:04:Unit 01:- Digital signature verified
+04:03:04:Unit 01:
+04:03:04:Unit 01:Project: 10700 (Run 0, Clone 41, Gen 37)
+04:03:04:Unit 01:
+04:03:04:Unit 01:Assembly optimizations on if available.
+04:03:04:Unit 01:Entering M.D.
+04:03:08:Unit 00: 63.27%
+04:03:10:Unit 01:Mapping NT from 4 to 4 
+04:03:13:Unit 00: Upload complete
+04:03:13:Server responded WORK_ACK (400)
+04:03:13:Unit 01:Completed 0 out of 7000000 steps  (0%)
+04:03:13:Cleaning up Unit 00
+04:04:26:Unit 02:Completed   7600000 out of 40000000 steps (19%).
+04:11:50:Unit 01:Completed 70000 out of 7000000 steps  (1%)
+04:14:18:Unit 02:Completed   8000000 out of 40000000 steps (20%).
+04:20:19:Unit 01:Completed 140000 out of 7000000 steps  (2%)
+04:24:09:Unit 02:Completed   8400000 out of 40000000 steps (21%).
+04:28:49:Unit 01:Completed 210000 out of 7000000 steps  (3%)
+04:34:01:Unit 02:Completed   8800000 out of 40000000 steps (22%).
+04:37:23:Unit 01:Completed 280000 out of 7000000 steps  (4%)
+04:43:53:Unit 02:Completed   9200000 out of 40000000 steps (23%).
+04:46:04:Unit 01:Completed 350000 out of 7000000 steps  (5%)
+04:53:44:Unit 02:Completed   9600000 out of 40000000 steps (24%).
+04:54:38:Unit 01:Completed 420000 out of 7000000 steps  (6%)
+05:03:07:Unit 01:Completed 490000 out of 7000000 steps  (7%)
+05:03:36:Unit 02:Completed  10000000 out of 40000000 steps (25%).
+05:11:37:Unit 01:Completed 560000 out of 7000000 steps  (8%)
+05:13:28:Unit 02:Completed  10400000 out of 40000000 steps (26%).
+05:20:05:Unit 01:Completed 630000 out of 7000000 steps  (9%)
+05:23:20:Unit 02:Completed  10800000 out of 40000000 steps (27%).
+05:28:37:Unit 01:Completed 700000 out of 7000000 steps  (10%)
+05:33:11:Unit 02:Completed  11200000 out of 40000000 steps (28%).
+05:37:09:Unit 01:Completed 770000 out of 7000000 steps  (11%)
+05:43:03:Unit 02:Completed  11600000 out of 40000000 steps (29%).
+05:45:41:Unit 01:Completed 840000 out of 7000000 steps  (12%)
+05:52:55:Unit 02:Completed  12000000 out of 40000000 steps (30%).
+05:54:11:Unit 01:Completed 910000 out of 7000000 steps  (13%)
+06:02:42:Unit 01:Completed 980000 out of 7000000 steps  (14%)
+06:02:47:Unit 02:Completed  12400000 out of 40000000 steps (31%).
+06:11:15:Unit 01:Completed 1050000 out of 7000000 steps  (15%)
+06:12:38:Unit 02:Completed  12800000 out of 40000000 steps (32%).
+06:19:49:Unit 01:Completed 1120000 out of 7000000 steps  (16%)
+06:22:30:Unit 02:Completed  13200000 out of 40000000 steps (33%).
+06:28:43:Unit 01:Completed 1190000 out of 7000000 steps  (17%)
+06:32:22:Unit 02:Completed  13600000 out of 40000000 steps (34%).
+06:37:29:Unit 01:Completed 1260000 out of 7000000 steps  (18%)
+06:42:14:Unit 02:Completed  14000000 out of 40000000 steps (35%).
+06:46:13:Unit 01:Completed 1330000 out of 7000000 steps  (19%)
+06:52:05:Unit 02:Completed  14400000 out of 40000000 steps (36%).
+06:54:49:Unit 01:Completed 1400000 out of 7000000 steps  (20%)
+07:01:57:Unit 02:Completed  14800000 out of 40000000 steps (37%).
+07:03:27:Unit 01:Completed 1470000 out of 7000000 steps  (21%)
+07:11:49:Unit 02:Completed  15200000 out of 40000000 steps (38%).
+07:11:59:Unit 01:Completed 1540000 out of 7000000 steps  (22%)
+07:20:31:Unit 01:Completed 1610000 out of 7000000 steps  (23%)
+07:21:41:Unit 02:Completed  15600000 out of 40000000 steps (39%).
+07:28:59:Unit 01:Completed 1680000 out of 7000000 steps  (24%)
+07:31:32:Unit 02:Completed  16000000 out of 40000000 steps (40%).
+07:37:32:Unit 01:Completed 1750000 out of 7000000 steps  (25%)
+07:41:24:Unit 02:Completed  16400000 out of 40000000 steps (41%).
+07:46:00:Unit 01:Completed 1820000 out of 7000000 steps  (26%)
+07:51:16:Unit 02:Completed  16800000 out of 40000000 steps (42%).
+07:54:30:Unit 01:Completed 1890000 out of 7000000 steps  (27%)
+08:01:08:Unit 02:Completed  17200000 out of 40000000 steps (43%).
+08:03:02:Unit 01:Completed 1960000 out of 7000000 steps  (28%)
+08:10:59:Unit 02:Completed  17600000 out of 40000000 steps (44%).
+08:11:38:Unit 01:Completed 2030000 out of 7000000 steps  (29%)
+08:20:14:Unit 01:Completed 2100000 out of 7000000 steps  (30%)
+08:20:51:Unit 02:Completed  18000000 out of 40000000 steps (45%).
+08:28:51:Unit 01:Completed 2170000 out of 7000000 steps  (31%)
+08:30:43:Unit 02:Completed  18400000 out of 40000000 steps (46%).
+08:37:27:Unit 01:Completed 2240000 out of 7000000 steps  (32%)
+08:40:35:Unit 02:Completed  18800000 out of 40000000 steps (47%).
+08:46:05:Unit 01:Completed 2310000 out of 7000000 steps  (33%)
+08:50:26:Unit 02:Completed  19200000 out of 40000000 steps (48%).
+08:54:44:Unit 01:Completed 2380000 out of 7000000 steps  (34%)
+09:00:18:Unit 02:Completed  19600000 out of 40000000 steps (49%).
+09:03:22:Unit 01:Completed 2450000 out of 7000000 steps  (35%)
+09:10:10:Unit 02:Completed  20000000 out of 40000000 steps (50%).
+09:12:04:Unit 01:Completed 2520000 out of 7000000 steps  (36%)
+09:20:02:Unit 02:Completed  20400000 out of 40000000 steps (51%).
+09:21:01:Unit 01:Completed 2590000 out of 7000000 steps  (37%)
+09:29:53:Unit 02:Completed  20800000 out of 40000000 steps (52%).
+09:30:00:Unit 01:Completed 2660000 out of 7000000 steps  (38%)
+09:38:52:Unit 01:Completed 2730000 out of 7000000 steps  (39%)
+09:39:45:Unit 02:Completed  21200000 out of 40000000 steps (53%).
+09:47:46:Unit 01:Completed 2800000 out of 7000000 steps  (40%)
+09:49:37:Unit 02:Completed  21600000 out of 40000000 steps (54%).
+09:56:42:Unit 01:Completed 2870000 out of 7000000 steps  (41%)
+09:59:29:Unit 02:Completed  22000000 out of 40000000 steps (55%).
+10:05:35:Unit 01:Completed 2940000 out of 7000000 steps  (42%)
+10:09:20:Unit 02:Completed  22400000 out of 40000000 steps (56%).
+10:14:17:Unit 01:Completed 3010000 out of 7000000 steps  (43%)
+10:19:12:Unit 02:Completed  22800000 out of 40000000 steps (57%).
+10:22:49:Unit 01:Completed 3080000 out of 7000000 steps  (44%)
+10:29:04:Unit 02:Completed  23200000 out of 40000000 steps (58%).
+10:31:24:Unit 01:Completed 3150000 out of 7000000 steps  (45%)
+10:38:56:Unit 02:Completed  23600000 out of 40000000 steps (59%).
+10:39:56:Unit 01:Completed 3220000 out of 7000000 steps  (46%)
+10:48:30:Unit 01:Completed 3290000 out of 7000000 steps  (47%)
+10:48:47:Unit 02:Completed  24000000 out of 40000000 steps (60%).
+10:57:03:Unit 01:Completed 3360000 out of 7000000 steps  (48%)
+10:58:39:Unit 02:Completed  24400000 out of 40000000 steps (61%).
+11:05:36:Unit 01:Completed 3430000 out of 7000000 steps  (49%)
+11:08:31:Unit 02:Completed  24800000 out of 40000000 steps (62%).
+11:14:10:Unit 01:Completed 3500000 out of 7000000 steps  (50%)
+11:18:23:Unit 02:Completed  25200000 out of 40000000 steps (63%).
+11:22:44:Unit 01:Completed 3570000 out of 7000000 steps  (51%)
+11:28:14:Unit 02:Completed  25600000 out of 40000000 steps (64%).
+11:31:19:Unit 01:Completed 3640000 out of 7000000 steps  (52%)
+11:38:06:Unit 02:Completed  26000000 out of 40000000 steps (65%).
+11:39:53:Unit 01:Completed 3710000 out of 7000000 steps  (53%)
+11:47:58:Unit 02:Completed  26400000 out of 40000000 steps (66%).
+11:48:26:Unit 01:Completed 3780000 out of 7000000 steps  (54%)
+11:57:01:Unit 01:Completed 3850000 out of 7000000 steps  (55%)
+11:57:50:Unit 02:Completed  26800000 out of 40000000 steps (67%).
+12:05:39:Unit 01:Completed 3920000 out of 7000000 steps  (56%)
+12:07:41:Unit 02:Completed  27200000 out of 40000000 steps (68%).
+12:14:18:Unit 01:Completed 3990000 out of 7000000 steps  (57%)
+12:17:33:Unit 02:Completed  27600000 out of 40000000 steps (69%).
+12:22:50:Unit 01:Completed 4060000 out of 7000000 steps  (58%)
+12:27:25:Unit 02:Completed  28000000 out of 40000000 steps (70%).
+12:31:23:Unit 01:Completed 4130000 out of 7000000 steps  (59%)
+12:37:17:Unit 02:Completed  28400000 out of 40000000 steps (71%).
+12:39:57:Unit 01:Completed 4200000 out of 7000000 steps  (60%)
+12:47:08:Unit 02:Completed  28800000 out of 40000000 steps (72%).
+12:48:42:Unit 01:Completed 4270000 out of 7000000 steps  (61%)
+12:57:00:Unit 02:Completed  29200000 out of 40000000 steps (73%).
+12:57:25:Unit 01:Completed 4340000 out of 7000000 steps  (62%)
+13:06:03:Unit 01:Completed 4410000 out of 7000000 steps  (63%)
+13:06:52:Unit 02:Completed  29600000 out of 40000000 steps (74%).
+13:14:45:Unit 01:Completed 4480000 out of 7000000 steps  (64%)
+13:16:44:Unit 02:Completed  30000000 out of 40000000 steps (75%).
+13:23:20:Unit 01:Completed 4550000 out of 7000000 steps  (65%)
+13:26:35:Unit 02:Completed  30400000 out of 40000000 steps (76%).
+13:31:54:Unit 01:Completed 4620000 out of 7000000 steps  (66%)
+13:36:27:Unit 02:Completed  30800000 out of 40000000 steps (77%).
+13:40:27:Unit 01:Completed 4690000 out of 7000000 steps  (67%)
+13:46:19:Unit 02:Completed  31200000 out of 40000000 steps (78%).
+13:49:03:Unit 01:Completed 4760000 out of 7000000 steps  (68%)
+13:56:11:Unit 02:Completed  31600000 out of 40000000 steps (79%).
+13:57:45:Unit 01:Completed 4830000 out of 7000000 steps  (69%)
+14:06:02:Unit 02:Completed  32000000 out of 40000000 steps (80%).
+14:06:20:Unit 01:Completed 4900000 out of 7000000 steps  (70%)
+14:14:57:Unit 01:Completed 4970000 out of 7000000 steps  (71%)
+14:15:54:Unit 02:Completed  32400000 out of 40000000 steps (81%).
+14:23:37:Unit 01:Completed 5040000 out of 7000000 steps  (72%)
+14:25:46:Unit 02:Completed  32800000 out of 40000000 steps (82%).
+14:32:19:Unit 01:Completed 5110000 out of 7000000 steps  (73%)
+14:35:38:Unit 02:Completed  33200000 out of 40000000 steps (83%).
+14:40:57:Unit 01:Completed 5180000 out of 7000000 steps  (74%)
+14:45:29:Unit 02:Completed  33600000 out of 40000000 steps (84%).
+14:49:37:Unit 01:Completed 5250000 out of 7000000 steps  (75%)
+14:55:21:Unit 02:Completed  34000000 out of 40000000 steps (85%).
+14:58:13:Unit 01:Completed 5320000 out of 7000000 steps  (76%)
+15:05:13:Unit 02:Completed  34400000 out of 40000000 steps (86%).
+15:06:46:Unit 01:Completed 5390000 out of 7000000 steps  (77%)
+15:15:05:Unit 02:Completed  34800000 out of 40000000 steps (87%).
+15:15:19:Unit 01:Completed 5460000 out of 7000000 steps  (78%)
+15:23:53:Unit 01:Completed 5530000 out of 7000000 steps  (79%)
+15:24:56:Unit 02:Completed  35200000 out of 40000000 steps (88%).
+15:32:27:Unit 01:Completed 5600000 out of 7000000 steps  (80%)
+15:34:48:Unit 02:Completed  35600000 out of 40000000 steps (89%).
+15:41:00:Unit 01:Completed 5670000 out of 7000000 steps  (81%)
+15:44:40:Unit 02:Completed  36000000 out of 40000000 steps (90%).
+15:49:38:Unit 01:Completed 5740000 out of 7000000 steps  (82%)
+15:54:32:Unit 02:Completed  36400000 out of 40000000 steps (91%).
+15:58:12:Unit 01:Completed 5810000 out of 7000000 steps  (83%)
+16:04:23:Unit 02:Completed  36800000 out of 40000000 steps (92%).
+16:06:46:Unit 01:Completed 5880000 out of 7000000 steps  (84%)
+16:14:15:Unit 02:Completed  37200000 out of 40000000 steps (93%).
+16:15:20:Unit 01:Completed 5950000 out of 7000000 steps  (85%)
+16:23:53:Unit 01:Completed 6020000 out of 7000000 steps  (86%)
+16:24:07:Unit 02:Completed  37600000 out of 40000000 steps (94%).
+16:32:32:Unit 01:Completed 6090000 out of 7000000 steps  (87%)
+16:33:59:Unit 02:Completed  38000000 out of 40000000 steps (95%).
+16:41:13:Unit 01:Completed 6160000 out of 7000000 steps  (88%)
+16:43:50:Unit 02:Completed  38400000 out of 40000000 steps (96%).
+16:49:56:Unit 01:Completed 6230000 out of 7000000 steps  (89%)
+16:53:42:Unit 02:Completed  38800000 out of 40000000 steps (97%).
+16:58:38:Unit 01:Completed 6300000 out of 7000000 steps  (90%)
+17:03:34:Unit 02:Completed  39200000 out of 40000000 steps (98%).
+17:07:29:Unit 01:Completed 6370000 out of 7000000 steps  (91%)
+17:13:26:Unit 02:Completed  39600000 out of 40000000 steps (99%).
+17:13:26:Connecting to assign-GPU.stanford.edu:80
+17:13:26:News: Welcome to Folding@Home
+17:13:26:Assigned to work server 171.64.65.64
+17:13:26:Requesting new work unit for slot 01: RUNNING gpu:0:"GF106 [GeForce 450 GTS]" from 171.64.65.64
+17:13:26:Connecting to 171.64.65.64:8080
+17:13:27:Slot 01: Downloading 42.75KiB
+17:13:27:Slot 01: Download complete
+17:13:27:Received Unit: id:00 state:DOWNLOAD project:6800 run:18595 clone:0 gen:291 core:0x15 unit:0x000001580a3b1e644ddbf4de86c8ae75
+17:16:20:Unit 01:Completed 6440000 out of 7000000 steps  (92%)
+17:23:17:Unit 02:Completed  40000000 out of 40000000 steps (100%).
+17:23:18:Unit 02:Finished fah_main status=0
+17:23:18:Unit 02:Successful run
+17:23:18:Unit 02:DynamicWrapper: Finished Work Unit: sleep=10000
+17:23:28:Unit 02:Reserved 760552 bytes for xtc file; Cosm status=0
+17:23:28:Unit 02:Allocated 760552 bytes for xtc file
+17:23:28:Unit 02:- Reading up to 760552 from "02/wudata_01.xtc": Read 760552
+17:23:28:Unit 02:Read 760552 bytes from xtc file; available packet space=785669912
+17:23:28:Unit 02:xtc file hash check passed.
+17:23:28:Unit 02:Reserved 47688 47688 785669912 bytes for arc file=<02/wudata_01.trr> Cosm status=0
+17:23:28:Unit 02:Allocated 47688 bytes for arc file
+17:23:28:Unit 02:- Reading up to 47688 from "02/wudata_01.trr": Read 47688
+17:23:28:Unit 02:Read 47688 bytes from arc file; available packet space=785622224
+17:23:28:Unit 02:trr file hash check passed.
+17:23:28:Unit 02:Allocated 544 bytes for edr file
+17:23:28:Unit 02:Read bedfile
+17:23:28:Unit 02:edr file hash check passed.
+17:23:28:Unit 02:Allocated 36673 bytes for logfile
+17:23:28:Unit 02:Read logfile
+17:23:28:Unit 02:GuardedRun: success in DynamicWrapper
+17:23:28:Unit 02:GuardedRun: done
+17:23:28:Unit 02:Run: GuardedRun completed.
+17:23:28:Unit 02:+ Opened results file
+17:23:28:Unit 02:- Writing 845969 bytes of core data to disk...
+17:23:30:Unit 02:Done: 845457 -> 817332 (compressed to 96.6 percent)
+17:23:30:Unit 02:  ... Done.
+17:23:30:Unit 02:DeleteFrameFiles: successfully deleted file=02/wudata_01.ckp
+17:23:30:Unit 02:Shutting down core 
+17:23:30:Unit 02:
+17:23:30:Unit 02:Folding@home Core Shutdown: FINISHED_UNIT
+17:23:30:FahCore, running Unit 02, returned: FINISHED_UNIT (100)
+17:23:30:Sending unit results: id:02 state:SEND project:7620 run:451 clone:0 gen:5 core:0x15 unit:0x00000005664f2dd14e42f5ec23951b3a
+17:23:30:Unit 02: Uploading 798.68KiB
+17:23:30:Starting Unit 00
+17:23:30:Connecting to 171.64.65.105:8080
+17:23:30:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/Core_15.fah/FahCore_15.exe -dir 00 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -gpu 0
+17:23:30:Started core on PID 3152
+17:23:30:FahCore 0x15 started
+17:23:31:Unit 00:
+17:23:31:Unit 00:*------------------------------*
+17:23:31:Unit 00:Folding@Home GPU Core
+17:23:31:Unit 00:Version                2.20 (Tue Aug 2 12:06:37 PDT 2011)
+17:23:31:Unit 00:Build host             SimbiosNvdWin7
+17:23:31:Unit 00:Board Type             NVIDIA/CUDA
+17:23:31:Unit 00:Core                   15
+17:23:31:Unit 00:
+17:23:31:Unit 00:Window's signal control handler registered.
+17:23:31:Unit 00:Preparing to commence simulation
+17:23:31:Unit 00:- Looking at optimizations...
+17:23:31:Unit 00:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+17:23:31:Unit 00:- Created dyn
+17:23:31:Unit 00:- Files status OK
+17:23:31:Unit 00:sizeof(CORE_PACKET_HDR) = 512 file=<>
+17:23:31:Unit 00:- Expanded 43261 -> 169787 (decompressed 392.4 percent)
+17:23:31:Unit 00:Called DecompressByteArray: compressed_data_size=43261 data_size=169787, decompressed_data_size=169787 diff=0
+17:23:31:Unit 00:- Digital signature verified
+17:23:31:Unit 00:
+17:23:31:Unit 00:Project: 6800 (Run 18595, Clone 0, Gen 291)
+17:23:31:Unit 00:
+17:23:31:Unit 00:Assembly optimizations on if available.
+17:23:31:Unit 00:Entering M.D.
+17:23:33:Unit 00:Tpr hash 00/wudata_01.tpr:  2841816521 1346454237 865892045 2633596112 2970489753
+17:23:33:Unit 00:calling fah_main gpuDeviceId=0
+17:23:33:Unit 00:Working on PEPTIDE (1-42)
+17:23:33:Unit 00:Client config unavailable.
+17:23:33:Unit 00:Starting GUI Server
+17:23:33:Unit 02: Upload complete
+17:23:33:Server responded WORK_ACK (400)
+17:23:33:Final credit estimate, 5187.00 points
+17:23:33:Cleaning up Unit 02
+17:24:38:Unit 00:Setting checkpoint frequency: 500000
+17:24:38:Unit 00:Completed         3 out of 50000000 steps (0%).
+17:25:06:Unit 01:Completed 6510000 out of 7000000 steps  (93%)
+17:26:47:Unit 00:Completed    500000 out of 50000000 steps (1%).
+17:28:55:Unit 00:Completed   1000000 out of 50000000 steps (2%).
+17:31:04:Unit 00:Completed   1500000 out of 50000000 steps (3%).
+17:33:13:Unit 00:Completed   2000000 out of 50000000 steps (4%).
+17:34:20:Unit 01:Completed 6580000 out of 7000000 steps  (94%)
+17:35:21:Unit 00:Completed   2500000 out of 50000000 steps (5%).
+17:37:30:Unit 00:Completed   3000000 out of 50000000 steps (6%).
+17:39:39:Unit 00:Completed   3500000 out of 50000000 steps (7%).
+17:41:48:Unit 00:Completed   4000000 out of 50000000 steps (8%).
+17:43:30:Unit 01:Completed 6650000 out of 7000000 steps  (95%)
+17:43:56:Unit 00:Completed   4500000 out of 50000000 steps (9%).
+17:46:05:Unit 00:Completed   5000000 out of 50000000 steps (10%).
+17:48:14:Unit 00:Completed   5500000 out of 50000000 steps (11%).
+17:50:23:Unit 00:Completed   6000000 out of 50000000 steps (12%).
+17:52:31:Unit 00:Completed   6500000 out of 50000000 steps (13%).
+17:52:42:Unit 01:Completed 6720000 out of 7000000 steps  (96%)
+17:54:40:Unit 00:Completed   7000000 out of 50000000 steps (14%).
+17:56:49:Unit 00:Completed   7500000 out of 50000000 steps (15%).
+17:58:57:Unit 00:Completed   8000000 out of 50000000 steps (16%).
+18:01:06:Unit 00:Completed   8500000 out of 50000000 steps (17%).
+18:01:54:Unit 01:Completed 6790000 out of 7000000 steps  (97%)
+18:03:15:Unit 00:Completed   9000000 out of 50000000 steps (18%).
+18:05:24:Unit 00:Completed   9500000 out of 50000000 steps (19%).
+18:07:32:Unit 00:Completed  10000000 out of 50000000 steps (20%).
+18:09:41:Unit 00:Completed  10500000 out of 50000000 steps (21%).
+18:11:03:Unit 01:Completed 6860000 out of 7000000 steps  (98%)
+18:11:50:Unit 00:Completed  11000000 out of 50000000 steps (22%).
+18:13:59:Unit 00:Completed  11500000 out of 50000000 steps (23%).
+18:16:07:Unit 00:Completed  12000000 out of 50000000 steps (24%).
+18:18:16:Unit 00:Completed  12500000 out of 50000000 steps (25%).
+18:20:11:Unit 01:Completed 6930000 out of 7000000 steps  (99%)
+18:20:25:Unit 00:Completed  13000000 out of 50000000 steps (26%).
+18:22:33:Unit 00:Completed  13500000 out of 50000000 steps (27%).
+18:24:42:Unit 00:Completed  14000000 out of 50000000 steps (28%).
+18:26:51:Unit 00:Completed  14500000 out of 50000000 steps (29%).
+18:29:00:Unit 00:Completed  15000000 out of 50000000 steps (30%).
+18:29:21:Unit 01:Completed 7000000 out of 7000000 steps  (100%)
+18:29:21:Unit 01:DynamicWrapper: Finished Work Unit: sleep=10000
+18:29:22:Connecting to assign3.stanford.edu:8080
+18:29:22:News: Welcome to Folding@Home
+18:29:22:Assigned to work server 171.64.65.55
+18:29:22:Requesting new work unit for slot 00: RUNNING smp:4 from 171.64.65.55
+18:29:22:Connecting to 171.64.65.55:8080
+18:29:23:Slot 00: Downloading 869.76KiB
+18:29:26:Slot 00: Download complete
+18:29:26:Received Unit: id:02 state:DOWNLOAD project:11051 run:0 clone:2 gen:39 core:0xa3 unit:0x000000280a3b1e5b4db73f5943ba9ef4
+18:29:31:Unit 01:
+18:29:31:Unit 01:Finished Work Unit:
+18:29:31:Unit 01:- Reading up to 2838960 from "01/wudata_01.trr": Read 2838960
+18:29:31:Unit 01:trr file hash check passed.
+18:29:31:Unit 01:- Reading up to 12914740 from "01/wudata_01.xtc": Read 12914740
+18:29:31:Unit 01:xtc file hash check passed.
+18:29:31:Unit 01:edr file hash check passed.
+18:29:31:Unit 01:logfile size: 72023
+18:29:31:Unit 01:Leaving Run
+18:29:34:Unit 01:- Writing 15866919 bytes of core data to disk...
+18:29:42:Unit 01:Done: 15866407 -> 15642428 (compressed to 98.5 percent)
+18:29:42:Unit 01:  ... Done.
+18:29:46:FahCore, running Unit 01, returned: FINISHED_UNIT (100)
+18:29:46:Sending unit results: id:01 state:SEND project:10700 run:0 clone:41 gen:37 core:0xa3 unit:0x0000002a0a3b1e5b4d4c906342641821
+18:29:46:Unit 01: Uploading 14.92MiB
+18:29:46:Starting Unit 02
+18:29:46:Connecting to 171.64.65.55:8080
+18:29:46:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/beta/Core_a3.fah/FahCore_a3.exe -dir 02 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -np 4
+18:29:46:Started core on PID 1140
+18:29:46:FahCore 0xa3 started
+18:29:47:Unit 02:
+18:29:47:Unit 02:*------------------------------*
+18:29:47:Unit 02:Folding@Home Gromacs SMP Core
+18:29:47:Unit 02:Version 2.27 (Dec. 15, 2010)
+18:29:47:Unit 02:
+18:29:47:Unit 02:Preparing to commence simulation
+18:29:47:Unit 02:- Looking at optimizations...
+18:29:47:Unit 02:- Created dyn
+18:29:47:Unit 02:- Files status OK
+18:29:47:Unit 02:- Expanded 890119 -> 1337024 (decompressed 150.2 percent)
+18:29:47:Unit 02:Called DecompressByteArray: compressed_data_size=890119 data_size=1337024, decompressed_data_size=1337024 diff=0
+18:29:47:Unit 02:- Digital signature verified
+18:29:47:Unit 02:
+18:29:47:Unit 02:Project: 11051 (Run 0, Clone 2, Gen 39)
+18:29:47:Unit 02:
+18:29:47:Unit 02:Assembly optimizations on if available.
+18:29:47:Unit 02:Entering M.D.
+18:29:52:Unit 01: 16.29%
+18:29:53:Unit 02:Mapping NT from 4 to 4 
+18:29:53:Unit 02:Completed 0 out of 1000000 steps  (0%)
+18:29:58:Unit 01: 33.59%
+18:30:04:Unit 01: 50.85%
+18:30:10:Unit 01: 67.87%
+18:30:16:Unit 01: 81.93%
+18:30:22:Unit 01: 91.99%
+18:30:30:Unit 01: Upload complete
+18:30:30:Server responded WORK_ACK (400)
+18:30:30:Final credit estimate, 3765.00 points
+18:30:30:Cleaning up Unit 01
+18:31:08:Unit 00:Completed  15500000 out of 50000000 steps (31%).
+18:33:17:Unit 00:Completed  16000000 out of 50000000 steps (32%).
+18:34:53:Unit 02:Completed 10000 out of 1000000 steps  (1%)
+18:35:26:Unit 00:Completed  16500000 out of 50000000 steps (33%).
+18:37:35:Unit 00:Completed  17000000 out of 50000000 steps (34%).
+18:39:43:Unit 00:Completed  17500000 out of 50000000 steps (35%).
+18:39:53:Unit 02:Completed 20000 out of 1000000 steps  (2%)
+18:41:52:Unit 00:Completed  18000000 out of 50000000 steps (36%).
+18:44:01:Unit 00:Completed  18500000 out of 50000000 steps (37%).
+18:44:53:Unit 02:Completed 30000 out of 1000000 steps  (3%)
+18:46:09:Unit 00:Completed  19000000 out of 50000000 steps (38%).
+18:48:18:Unit 00:Completed  19500000 out of 50000000 steps (39%).
+18:49:53:Unit 02:Completed 40000 out of 1000000 steps  (4%)
+18:50:27:Unit 00:Completed  20000000 out of 50000000 steps (40%).
+18:52:36:Unit 00:Completed  20500000 out of 50000000 steps (41%).
+18:54:44:Unit 00:Completed  21000000 out of 50000000 steps (42%).
+18:54:53:Unit 02:Completed 50000 out of 1000000 steps  (5%)
+18:56:53:Unit 00:Completed  21500000 out of 50000000 steps (43%).
+18:59:02:Unit 00:Completed  22000000 out of 50000000 steps (44%).
+18:59:53:Unit 02:Completed 60000 out of 1000000 steps  (6%)
+19:01:10:Unit 00:Completed  22500000 out of 50000000 steps (45%).
+19:03:19:Unit 00:Completed  23000000 out of 50000000 steps (46%).
+19:04:53:Unit 02:Completed 70000 out of 1000000 steps  (7%)
+19:05:28:Unit 00:Completed  23500000 out of 50000000 steps (47%).
+19:07:37:Unit 00:Completed  24000000 out of 50000000 steps (48%).
+19:09:45:Unit 00:Completed  24500000 out of 50000000 steps (49%).
+19:09:53:Unit 02:Completed 80000 out of 1000000 steps  (8%)
+19:11:54:Unit 00:Completed  25000000 out of 50000000 steps (50%).
+19:14:03:Unit 00:Completed  25500000 out of 50000000 steps (51%).
+19:14:54:Unit 02:Completed 90000 out of 1000000 steps  (9%)
+19:16:12:Unit 00:Completed  26000000 out of 50000000 steps (52%).
+19:18:20:Unit 00:Completed  26500000 out of 50000000 steps (53%).
+19:19:55:Unit 02:Completed 100000 out of 1000000 steps  (10%)
+19:20:29:Unit 00:Completed  27000000 out of 50000000 steps (54%).
+19:22:38:Unit 00:Completed  27500000 out of 50000000 steps (55%).
+19:24:46:Unit 00:Completed  28000000 out of 50000000 steps (56%).
+19:24:55:Unit 02:Completed 110000 out of 1000000 steps  (11%)
+19:26:55:Unit 00:Completed  28500000 out of 50000000 steps (57%).
+19:29:04:Unit 00:Completed  29000000 out of 50000000 steps (58%).
+19:29:56:Unit 02:Completed 120000 out of 1000000 steps  (12%)
+19:31:13:Unit 00:Completed  29500000 out of 50000000 steps (59%).
+19:33:21:Unit 00:Completed  30000000 out of 50000000 steps (60%).
+19:34:55:Unit 02:Completed 130000 out of 1000000 steps  (13%)
+19:35:30:Unit 00:Completed  30500000 out of 50000000 steps (61%).
+19:37:39:Unit 00:Completed  31000000 out of 50000000 steps (62%).
+19:39:48:Unit 00:Completed  31500000 out of 50000000 steps (63%).
+19:39:56:Unit 02:Completed 140000 out of 1000000 steps  (14%)
+19:41:56:Unit 00:Completed  32000000 out of 50000000 steps (64%).
+19:44:05:Unit 00:Completed  32500000 out of 50000000 steps (65%).
+19:44:56:Unit 02:Completed 150000 out of 1000000 steps  (15%)
+19:46:14:Unit 00:Completed  33000000 out of 50000000 steps (66%).
+19:48:22:Unit 00:Completed  33500000 out of 50000000 steps (67%).
+19:49:55:Unit 02:Completed 160000 out of 1000000 steps  (16%)
+19:50:31:Unit 00:Completed  34000000 out of 50000000 steps (68%).
+19:52:40:Unit 00:Completed  34500000 out of 50000000 steps (69%).
+19:54:49:Unit 00:Completed  35000000 out of 50000000 steps (70%).
+19:54:55:Unit 02:Completed 170000 out of 1000000 steps  (17%)
+19:56:57:Unit 00:Completed  35500000 out of 50000000 steps (71%).
+19:59:06:Unit 00:Completed  36000000 out of 50000000 steps (72%).
+19:59:55:Unit 02:Completed 180000 out of 1000000 steps  (18%)
+20:01:15:Unit 00:Completed  36500000 out of 50000000 steps (73%).
+20:03:24:Unit 00:Completed  37000000 out of 50000000 steps (74%).
+20:04:55:Unit 02:Completed 190000 out of 1000000 steps  (19%)
+20:05:32:Unit 00:Completed  37500000 out of 50000000 steps (75%).
+20:07:41:Unit 00:Completed  38000000 out of 50000000 steps (76%).
+20:09:50:Unit 00:Completed  38500000 out of 50000000 steps (77%).
+20:09:55:Unit 02:Completed 200000 out of 1000000 steps  (20%)
+20:11:58:Unit 00:Completed  39000000 out of 50000000 steps (78%).
+20:14:07:Unit 00:Completed  39500000 out of 50000000 steps (79%).
+20:14:55:Unit 02:Completed 210000 out of 1000000 steps  (21%)
+20:16:16:Unit 00:Completed  40000000 out of 50000000 steps (80%).
+20:18:25:Unit 00:Completed  40500000 out of 50000000 steps (81%).
+20:19:55:Unit 02:Completed 220000 out of 1000000 steps  (22%)
+20:20:33:Unit 00:Completed  41000000 out of 50000000 steps (82%).
+20:22:42:Unit 00:Completed  41500000 out of 50000000 steps (83%).
+20:24:51:Unit 00:Completed  42000000 out of 50000000 steps (84%).
+20:24:55:Unit 02:Completed 230000 out of 1000000 steps  (23%)
+20:27:00:Unit 00:Completed  42500000 out of 50000000 steps (85%).
+20:29:08:Unit 00:Completed  43000000 out of 50000000 steps (86%).
+20:29:55:Unit 02:Completed 240000 out of 1000000 steps  (24%)
+20:31:17:Unit 00:Completed  43500000 out of 50000000 steps (87%).
+20:33:26:Unit 00:Completed  44000000 out of 50000000 steps (88%).
+20:34:54:Unit 02:Completed 250000 out of 1000000 steps  (25%)
+20:35:34:Unit 00:Completed  44500000 out of 50000000 steps (89%).
+20:37:43:Unit 00:Completed  45000000 out of 50000000 steps (90%).
+20:39:52:Unit 00:Completed  45500000 out of 50000000 steps (91%).
+20:39:54:Unit 02:Completed 260000 out of 1000000 steps  (26%)
+20:42:01:Unit 00:Completed  46000000 out of 50000000 steps (92%).
+20:44:09:Unit 00:Completed  46500000 out of 50000000 steps (93%).
+20:44:54:Unit 02:Completed 270000 out of 1000000 steps  (27%)
+20:46:18:Unit 00:Completed  47000000 out of 50000000 steps (94%).
+20:48:27:Unit 00:Completed  47500000 out of 50000000 steps (95%).
+20:49:54:Unit 02:Completed 280000 out of 1000000 steps  (28%)
+20:50:36:Unit 00:Completed  48000000 out of 50000000 steps (96%).
+20:52:44:Unit 00:Completed  48500000 out of 50000000 steps (97%).
+20:54:53:Unit 00:Completed  49000000 out of 50000000 steps (98%).
+20:54:53:Unit 02:Completed 290000 out of 1000000 steps  (29%)
+20:57:02:Unit 00:Completed  49500000 out of 50000000 steps (99%).
+20:57:03:Connecting to assign-GPU.stanford.edu:80
+20:57:03:News: Welcome to Folding@Home
+20:57:03:Assigned to work server 171.64.65.64
+20:57:03:Requesting new work unit for slot 01: RUNNING gpu:0:"GF106 [GeForce 450 GTS]" from 171.64.65.64
+20:57:03:Connecting to 171.64.65.64:8080
+20:57:03:Slot 01: Downloading 43.70KiB
+20:57:04:Slot 01: Download complete
+20:57:04:Received Unit: id:01 state:DOWNLOAD project:6801 run:6097 clone:0 gen:282 core:0x15 unit:0x000001210a3b1e644d94b8b067b102ca
+20:59:10:Unit 00:Completed  50000000 out of 50000000 steps (100%).
+20:59:10:Unit 00:Finished fah_main status=0
+20:59:10:Unit 00:Successful run
+20:59:10:Unit 00:DynamicWrapper: Finished Work Unit: sleep=10000
+20:59:20:Unit 00:Reserved 245416 bytes for xtc file; Cosm status=0
+20:59:20:Unit 00:Allocated 245416 bytes for xtc file
+20:59:20:Unit 00:- Reading up to 245416 from "00/wudata_01.xtc": Read 245416
+20:59:20:Unit 00:Read 245416 bytes from xtc file; available packet space=786185048
+20:59:20:Unit 00:xtc file hash check passed.
+20:59:20:Unit 00:Reserved 75840 75840 786185048 bytes for arc file=<00/wudata_01.trr> Cosm status=0
+20:59:20:Unit 00:Allocated 75840 bytes for arc file
+20:59:20:Unit 00:- Reading up to 75840 from "00/wudata_01.trr": Read 75840
+20:59:20:Unit 00:Read 75840 bytes from arc file; available packet space=786109208
+20:59:20:Unit 00:trr file hash check passed.
+20:59:20:Unit 00:Allocated 544 bytes for edr file
+20:59:20:Unit 00:Read bedfile
+20:59:20:Unit 00:edr file hash check passed.
+20:59:20:Unit 00:Allocated 120377 bytes for logfile
+20:59:20:Unit 00:Read logfile
+20:59:20:Unit 00:GuardedRun: success in DynamicWrapper
+20:59:20:Unit 00:GuardedRun: done
+20:59:20:Unit 00:Run: GuardedRun completed.
+20:59:21:Unit 00:+ Opened results file
+20:59:21:Unit 00:- Writing 442689 bytes of core data to disk...
+20:59:21:Unit 00:Done: 442177 -> 331312 (compressed to 74.9 percent)
+20:59:21:Unit 00:  ... Done.
+20:59:21:Unit 00:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+20:59:21:Unit 00:Shutting down core 
+20:59:21:Unit 00:
+20:59:21:Unit 00:Folding@home Core Shutdown: FINISHED_UNIT
+20:59:21:FahCore, running Unit 00, returned: FINISHED_UNIT (100)
+20:59:21:Sending unit results: id:00 state:SEND project:6800 run:18595 clone:0 gen:291 core:0x15 unit:0x000001580a3b1e644ddbf4de86c8ae75
+20:59:21:Unit 00: Uploading 324.05KiB
+20:59:21:Starting Unit 01
+20:59:21:Connecting to 171.64.65.64:8080
+20:59:21:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/Core_15.fah/FahCore_15.exe -dir 01 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -gpu 0
+20:59:21:Started core on PID 2892
+20:59:21:FahCore 0x15 started
+20:59:22:Unit 01:
+20:59:22:Unit 01:*------------------------------*
+20:59:22:Unit 01:Folding@Home GPU Core
+20:59:22:Unit 01:Version                2.20 (Tue Aug 2 12:06:37 PDT 2011)
+20:59:22:Unit 01:Build host             SimbiosNvdWin7
+20:59:22:Unit 01:Board Type             NVIDIA/CUDA
+20:59:22:Unit 01:Core                   15
+20:59:22:Unit 01:
+20:59:22:Unit 01:Window's signal control handler registered.
+20:59:22:Unit 01:Preparing to commence simulation
+20:59:22:Unit 01:- Looking at optimizations...
+20:59:22:Unit 01:DeleteFrameFiles: successfully deleted file=01/wudata_01.ckp
+20:59:22:Unit 01:- Created dyn
+20:59:22:Unit 01:- Files status OK
+20:59:22:Unit 01:sizeof(CORE_PACKET_HDR) = 512 file=<>
+20:59:22:Unit 01:- Expanded 44232 -> 171827 (decompressed 388.4 percent)
+20:59:22:Unit 01:Called DecompressByteArray: compressed_data_size=44232 data_size=171827, decompressed_data_size=171827 diff=0
+20:59:22:Unit 01:- Digital signature verified
+20:59:22:Unit 01:
+20:59:22:Unit 01:Project: 6801 (Run 6097, Clone 0, Gen 282)
+20:59:22:Unit 01:
+20:59:22:Unit 01:Assembly optimizations on if available.
+20:59:22:Unit 01:Entering M.D.
+20:59:23:Unit 00: Upload complete
+20:59:23:Server responded WORK_ACK (400)
+20:59:23:Final credit estimate, 1298.00 points
+20:59:23:Cleaning up Unit 00
+20:59:23:Unit 01:Tpr hash 01/wudata_01.tpr:  2038740576 1053361508 646673664 1726069262 567577874
+20:59:23:Unit 01:calling fah_main gpuDeviceId=0
+20:59:23:Unit 01:Working on ALZHEIMER'S DISEASE AMYLOID
+20:59:23:Unit 01:Client config unavailable.
+20:59:24:Unit 01:Starting GUI Server
+20:59:50:Unit 02:Completed 300000 out of 1000000 steps  (30%)
+21:00:29:Unit 01:Setting checkpoint frequency: 500000
+21:00:29:Unit 01:Completed         3 out of 50000000 steps (0%).
+21:02:38:Unit 01:Completed    500000 out of 50000000 steps (1%).
+21:04:47:Unit 02:Completed 310000 out of 1000000 steps  (31%)
+21:04:48:Unit 01:Completed   1000000 out of 50000000 steps (2%).
+21:06:58:Unit 01:Completed   1500000 out of 50000000 steps (3%).
+21:09:07:Unit 01:Completed   2000000 out of 50000000 steps (4%).
+21:09:46:Unit 02:Completed 320000 out of 1000000 steps  (32%)
+21:11:17:Unit 01:Completed   2500000 out of 50000000 steps (5%).
+21:13:27:Unit 01:Completed   3000000 out of 50000000 steps (6%).
+21:14:46:Unit 02:Completed 330000 out of 1000000 steps  (33%)
+21:15:36:Unit 01:Completed   3500000 out of 50000000 steps (7%).
+21:17:46:Unit 01:Completed   4000000 out of 50000000 steps (8%).
+21:19:46:Unit 02:Completed 340000 out of 1000000 steps  (34%)
+21:19:56:Unit 01:Completed   4500000 out of 50000000 steps (9%).
+21:22:05:Unit 01:Completed   5000000 out of 50000000 steps (10%).
+21:24:15:Unit 01:Completed   5500000 out of 50000000 steps (11%).
+21:24:45:Unit 02:Completed 350000 out of 1000000 steps  (35%)
+21:26:25:Unit 01:Completed   6000000 out of 50000000 steps (12%).
+21:28:34:Unit 01:Completed   6500000 out of 50000000 steps (13%).
+21:29:45:Unit 02:Completed 360000 out of 1000000 steps  (36%)
+21:30:44:Unit 01:Completed   7000000 out of 50000000 steps (14%).
+21:32:54:Unit 01:Completed   7500000 out of 50000000 steps (15%).
+21:34:45:Unit 02:Completed 370000 out of 1000000 steps  (37%)
+21:35:04:Unit 01:Completed   8000000 out of 50000000 steps (16%).
+21:37:13:Unit 01:Completed   8500000 out of 50000000 steps (17%).
+21:39:23:Unit 01:Completed   9000000 out of 50000000 steps (18%).
+21:39:44:Unit 02:Completed 380000 out of 1000000 steps  (38%)
+21:41:33:Unit 01:Completed   9500000 out of 50000000 steps (19%).
+21:43:42:Unit 01:Completed  10000000 out of 50000000 steps (20%).
+21:44:44:Unit 02:Completed 390000 out of 1000000 steps  (39%)
+21:45:52:Unit 01:Completed  10500000 out of 50000000 steps (21%).
+21:48:02:Unit 01:Completed  11000000 out of 50000000 steps (22%).
+21:49:45:Unit 02:Completed 400000 out of 1000000 steps  (40%)
+21:50:11:Unit 01:Completed  11500000 out of 50000000 steps (23%).
+21:52:21:Unit 01:Completed  12000000 out of 50000000 steps (24%).
+21:54:31:Unit 01:Completed  12500000 out of 50000000 steps (25%).
+21:54:45:Unit 02:Completed 410000 out of 1000000 steps  (41%)
+21:56:40:Unit 01:Completed  13000000 out of 50000000 steps (26%).
+21:58:50:Unit 01:Completed  13500000 out of 50000000 steps (27%).
+21:59:46:Unit 02:Completed 420000 out of 1000000 steps  (42%)
+22:01:00:Unit 01:Completed  14000000 out of 50000000 steps (28%).
+22:03:09:Unit 01:Completed  14500000 out of 50000000 steps (29%).
+22:04:47:Unit 02:Completed 430000 out of 1000000 steps  (43%)
+22:05:19:Unit 01:Completed  15000000 out of 50000000 steps (30%).
+22:07:29:Unit 01:Completed  15500000 out of 50000000 steps (31%).
+22:09:38:Unit 01:Completed  16000000 out of 50000000 steps (32%).
+22:09:47:Unit 02:Completed 440000 out of 1000000 steps  (44%)
+22:11:48:Unit 01:Completed  16500000 out of 50000000 steps (33%).
+22:13:58:Unit 01:Completed  17000000 out of 50000000 steps (34%).
+22:14:48:Unit 02:Completed 450000 out of 1000000 steps  (45%)
+22:16:07:Unit 01:Completed  17500000 out of 50000000 steps (35%).
+22:18:17:Unit 01:Completed  18000000 out of 50000000 steps (36%).
+22:19:47:Unit 02:Completed 460000 out of 1000000 steps  (46%)
+22:20:27:Unit 01:Completed  18500000 out of 50000000 steps (37%).
+22:22:37:Unit 01:Completed  19000000 out of 50000000 steps (38%).
+22:24:46:Unit 01:Completed  19500000 out of 50000000 steps (39%).
+22:24:47:Unit 02:Completed 470000 out of 1000000 steps  (47%)
+22:26:56:Unit 01:Completed  20000000 out of 50000000 steps (40%).
+22:29:06:Unit 01:Completed  20500000 out of 50000000 steps (41%).
+22:29:46:Unit 02:Completed 480000 out of 1000000 steps  (48%)
+22:31:15:Unit 01:Completed  21000000 out of 50000000 steps (42%).
+22:33:25:Unit 01:Completed  21500000 out of 50000000 steps (43%).
+22:34:47:Unit 02:Completed 490000 out of 1000000 steps  (49%)
+22:35:35:Unit 01:Completed  22000000 out of 50000000 steps (44%).
+22:37:44:Unit 01:Completed  22500000 out of 50000000 steps (45%).
+22:39:46:Unit 02:Completed 500000 out of 1000000 steps  (50%)
+22:39:54:Unit 01:Completed  23000000 out of 50000000 steps (46%).
+22:42:04:Unit 01:Completed  23500000 out of 50000000 steps (47%).
+22:44:13:Unit 01:Completed  24000000 out of 50000000 steps (48%).
+22:44:46:Unit 02:Completed 510000 out of 1000000 steps  (51%)
+22:46:23:Unit 01:Completed  24500000 out of 50000000 steps (49%).
+22:48:33:Unit 01:Completed  25000000 out of 50000000 steps (50%).
+22:49:46:Unit 02:Completed 520000 out of 1000000 steps  (52%)
+22:50:42:Unit 01:Completed  25500000 out of 50000000 steps (51%).
+22:52:52:Unit 01:Completed  26000000 out of 50000000 steps (52%).
+22:54:45:Unit 02:Completed 530000 out of 1000000 steps  (53%)
+22:55:02:Unit 01:Completed  26500000 out of 50000000 steps (53%).
+22:57:11:Unit 01:Completed  27000000 out of 50000000 steps (54%).
+22:59:21:Unit 01:Completed  27500000 out of 50000000 steps (55%).
+22:59:44:Unit 02:Completed 540000 out of 1000000 steps  (54%)
+23:01:31:Unit 01:Completed  28000000 out of 50000000 steps (56%).
+23:03:40:Unit 01:Completed  28500000 out of 50000000 steps (57%).
+23:04:44:Unit 02:Completed 550000 out of 1000000 steps  (55%)
+23:05:50:Unit 01:Completed  29000000 out of 50000000 steps (58%).
+23:08:00:Unit 01:Completed  29500000 out of 50000000 steps (59%).
+23:09:43:Unit 02:Completed 560000 out of 1000000 steps  (56%)
+23:10:10:Unit 01:Completed  30000000 out of 50000000 steps (60%).
+23:12:19:Unit 01:Completed  30500000 out of 50000000 steps (61%).
+23:14:29:Unit 01:Completed  31000000 out of 50000000 steps (62%).
+23:14:43:Unit 02:Completed 570000 out of 1000000 steps  (57%)
+23:16:39:Unit 01:Completed  31500000 out of 50000000 steps (63%).
+23:18:48:Unit 01:Completed  32000000 out of 50000000 steps (64%).
+23:19:43:Unit 02:Completed 580000 out of 1000000 steps  (58%)
+23:20:58:Unit 01:Completed  32500000 out of 50000000 steps (65%).
+23:23:08:Unit 01:Completed  33000000 out of 50000000 steps (66%).
+23:24:43:Unit 02:Completed 590000 out of 1000000 steps  (59%)
+23:25:17:Unit 01:Completed  33500000 out of 50000000 steps (67%).
+23:27:27:Unit 01:Completed  34000000 out of 50000000 steps (68%).
+23:29:37:Unit 01:Completed  34500000 out of 50000000 steps (69%).
+23:29:43:Unit 02:Completed 600000 out of 1000000 steps  (60%)
+23:31:46:Unit 01:Completed  35000000 out of 50000000 steps (70%).
+23:33:56:Unit 01:Completed  35500000 out of 50000000 steps (71%).
+23:34:43:Unit 02:Completed 610000 out of 1000000 steps  (61%)
+23:36:06:Unit 01:Completed  36000000 out of 50000000 steps (72%).
+23:38:15:Unit 01:Completed  36500000 out of 50000000 steps (73%).
+23:39:43:Unit 02:Completed 620000 out of 1000000 steps  (62%)
+23:40:25:Unit 01:Completed  37000000 out of 50000000 steps (74%).
+23:42:35:Unit 01:Completed  37500000 out of 50000000 steps (75%).
+23:44:42:Unit 02:Completed 630000 out of 1000000 steps  (63%)
+23:44:44:Unit 01:Completed  38000000 out of 50000000 steps (76%).
+23:46:54:Unit 01:Completed  38500000 out of 50000000 steps (77%).
+23:49:04:Unit 01:Completed  39000000 out of 50000000 steps (78%).
+23:49:42:Unit 02:Completed 640000 out of 1000000 steps  (64%)
+23:51:14:Unit 01:Completed  39500000 out of 50000000 steps (79%).
+23:53:23:Unit 01:Completed  40000000 out of 50000000 steps (80%).
+23:54:42:Unit 02:Completed 650000 out of 1000000 steps  (65%)
+23:55:33:Unit 01:Completed  40500000 out of 50000000 steps (81%).
+23:57:43:Unit 01:Completed  41000000 out of 50000000 steps (82%).
+23:59:42:Unit 02:Completed 660000 out of 1000000 steps  (66%)
+23:59:52:Unit 01:Completed  41500000 out of 50000000 steps (83%).
+00:02:02:Unit 01:Completed  42000000 out of 50000000 steps (84%).
+00:04:12:Unit 01:Completed  42500000 out of 50000000 steps (85%).
+00:04:43:Unit 02:Completed 670000 out of 1000000 steps  (67%)
+00:06:21:Unit 01:Completed  43000000 out of 50000000 steps (86%).
+00:08:31:Unit 01:Completed  43500000 out of 50000000 steps (87%).
+00:09:43:Unit 02:Completed 680000 out of 1000000 steps  (68%)
+00:10:41:Unit 01:Completed  44000000 out of 50000000 steps (88%).
+00:12:50:Unit 01:Completed  44500000 out of 50000000 steps (89%).
+00:14:43:Unit 02:Completed 690000 out of 1000000 steps  (69%)
+00:15:00:Unit 01:Completed  45000000 out of 50000000 steps (90%).
+00:17:10:Unit 01:Completed  45500000 out of 50000000 steps (91%).
+00:19:19:Unit 01:Completed  46000000 out of 50000000 steps (92%).
+00:19:42:Unit 02:Completed 700000 out of 1000000 steps  (70%)
+00:21:29:Unit 01:Completed  46500000 out of 50000000 steps (93%).
+00:23:39:Unit 01:Completed  47000000 out of 50000000 steps (94%).
+00:24:41:Unit 02:Completed 710000 out of 1000000 steps  (71%)
+00:25:48:Unit 01:Completed  47500000 out of 50000000 steps (95%).
+00:27:58:Unit 01:Completed  48000000 out of 50000000 steps (96%).
+00:29:40:Unit 02:Completed 720000 out of 1000000 steps  (72%)
+00:30:08:Unit 01:Completed  48500000 out of 50000000 steps (97%).
+00:32:17:Unit 01:Completed  49000000 out of 50000000 steps (98%).
+00:34:27:Unit 01:Completed  49500000 out of 50000000 steps (99%).
+00:34:28:Connecting to assign-GPU.stanford.edu:80
+00:34:39:Unit 02:Completed 730000 out of 1000000 steps  (73%)
+00:34:43:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:80': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:34:43:Connecting to assign-GPU.stanford.edu:8080
+00:34:58:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:8080': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:34:58:ERROR: Exception: Could not get an assignment
+00:34:58:Connecting to assign-GPU.stanford.edu:80
+00:35:13:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:80': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:35:13:Connecting to assign-GPU.stanford.edu:8080
+00:35:28:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:8080': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:35:28:ERROR: Exception: Could not get an assignment
+00:35:58:Connecting to assign-GPU.stanford.edu:80
+00:36:13:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:80': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:36:13:Connecting to assign-GPU.stanford.edu:8080
+00:36:28:WARNING: Failed to get assignment from 'assign-GPU.stanford.edu:8080': Could not get IP address for assign-GPU.stanford.edu: No such host is known. 
+00:36:28:ERROR: Exception: Could not get an assignment
+00:36:37:Unit 01:Completed  50000000 out of 50000000 steps (100%).
+00:36:37:Unit 01:Finished fah_main status=0
+00:36:37:Unit 01:Successful run
+00:36:37:Unit 01:DynamicWrapper: Finished Work Unit: sleep=10000
+00:36:47:Unit 01:Reserved 2471540 bytes for xtc file; Cosm status=0
+00:36:47:Unit 01:Allocated 2471540 bytes for xtc file
+00:36:47:Unit 01:- Reading up to 2471540 from "01/wudata_01.xtc": Read 2471540
+00:36:47:Unit 01:Read 2471540 bytes from xtc file; available packet space=783958924
+00:36:47:Unit 01:xtc file hash check passed.
+00:36:47:Unit 01:Reserved 76680 76680 783958924 bytes for arc file=<01/wudata_01.trr> Cosm status=0
+00:36:47:Unit 01:Allocated 76680 bytes for arc file
+00:36:47:Unit 01:- Reading up to 76680 from "01/wudata_01.trr": Read 76680
+00:36:47:Unit 01:Read 76680 bytes from arc file; available packet space=783882244
+00:36:47:Unit 01:trr file hash check passed.
+00:36:47:Unit 01:Allocated 544 bytes for edr file
+00:36:47:Unit 01:Read bedfile
+00:36:47:Unit 01:edr file hash check passed.
+00:36:47:Unit 01:Allocated 120389 bytes for logfile
+00:36:47:Unit 01:Read logfile
+00:36:47:Unit 01:GuardedRun: success in DynamicWrapper
+00:36:47:Unit 01:GuardedRun: done
+00:36:47:Unit 01:Run: GuardedRun completed.
+00:36:51:Unit 01:+ Opened results file
+00:36:51:Unit 01:- Writing 2669665 bytes of core data to disk...
+00:36:52:Unit 01:Done: 2669153 -> 2514541 (compressed to 94.2 percent)
+00:36:52:Unit 01:  ... Done.
+00:36:52:Unit 01:DeleteFrameFiles: successfully deleted file=01/wudata_01.ckp
+00:36:53:FahCore, running Unit 01, returned: FINISHED_UNIT (100)
+00:36:53:Sending unit results: id:01 state:SEND project:6801 run:6097 clone:0 gen:282 core:0x15 unit:0x000001210a3b1e644d94b8b067b102ca
+00:36:53:Unit 01: Uploading 2.40MiB
+00:36:53:Connecting to 171.64.65.64:8080
+00:37:12:WARNING: WorkServer connection failed on port 8080 trying 80
+00:37:12:Connecting to 171.64.65.64:80
+00:37:22:Unit 01: 0.16%
+00:37:28:Unit 01: 67.59%
+00:37:32:Unit 01: Upload complete
+00:37:32:Server responded WORK_ACK (400)
+00:37:32:Final credit estimate, 1348.00 points
+00:37:32:Cleaning up Unit 01
+00:37:36:Connecting to assign-GPU.stanford.edu:80
+00:37:36:News: Welcome to Folding@Home
+00:37:36:Assigned to work server 171.64.65.64
+00:37:36:Requesting new work unit for slot 01: READY gpu:0:"GF106 [GeForce 450 GTS]" from 171.64.65.64
+00:37:36:Connecting to 171.64.65.64:8080
+00:37:36:Slot 01: Downloading 42.89KiB
+00:37:37:Slot 01: Download complete
+00:37:37:Received Unit: id:00 state:DOWNLOAD project:6801 run:6348 clone:0 gen:305 core:0x15 unit:0x0000014d0a3b1e644d94b9700899a51b
+00:37:37:Starting Unit 00
+00:37:37:Running core: C:/folding/FAH-V7/cores/www.stanford.edu/~pande/Win32/x86/NVIDIA/Fermi/Core_15.fah/FahCore_15.exe -dir 00 -suffix 01 -lifeline 3204 -version 701 -checkpoint 15 -gpu 0
+00:37:37:Started core on PID 1864
+00:37:37:FahCore 0x15 started
+00:37:38:Unit 00:
+00:37:38:Unit 00:*------------------------------*
+00:37:38:Unit 00:Folding@Home GPU Core
+00:37:38:Unit 00:Version                2.20 (Tue Aug 2 12:06:37 PDT 2011)
+00:37:38:Unit 00:Build host             SimbiosNvdWin7
+00:37:38:Unit 00:Board Type             NVIDIA/CUDA
+00:37:38:Unit 00:Core                   15
+00:37:38:Unit 00:
+00:37:38:Unit 00:Window's signal control handler registered.
+00:37:38:Unit 00:Preparing to commence simulation
+00:37:38:Unit 00:- Looking at optimizations...
+00:37:38:Unit 00:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+00:37:38:Unit 00:- Created dyn
+00:37:38:Unit 00:- Files status OK
+00:37:38:Unit 00:sizeof(CORE_PACKET_HDR) = 512 file=<>
+00:37:38:Unit 00:- Expanded 43404 -> 171827 (decompressed 395.8 percent)
+00:37:38:Unit 00:Called DecompressByteArray: compressed_data_size=43404 data_size=171827, decompressed_data_size=171827 diff=0
+00:37:38:Unit 00:- Digital signature verified
+00:37:38:Unit 00:
+00:37:38:Unit 00:Project: 6801 (Run 6348, Clone 0, Gen 305)
+00:37:38:Unit 00:
+00:37:38:Unit 00:Assembly optimizations on if available.
+00:37:38:Unit 00:Entering M.D.
+00:37:39:Unit 00:Tpr hash 00/wudata_01.tpr:  925897339 3554522236 1048872975 3250093610 855717118
+00:37:39:Unit 00:calling fah_main gpuDeviceId=0
+00:37:39:Unit 00:Working on ALZHEIMER'S DISEASE AMYLOID
+00:37:39:Unit 00:Client config unavailable.
+00:37:40:Unit 00:Starting GUI Server
+00:38:45:Unit 00:Setting checkpoint frequency: 500000
+00:38:45:Unit 00:Completed         3 out of 50000000 steps (0%).
+00:39:29:Unit 02:Completed 740000 out of 1000000 steps  (74%)
+00:40:54:Unit 00:Completed    500000 out of 50000000 steps (1%).
+00:43:04:Unit 00:Completed   1000000 out of 50000000 steps (2%).
+00:44:28:Unit 02:Completed 750000 out of 1000000 steps  (75%)
+00:45:13:Unit 00:Completed   1500000 out of 50000000 steps (3%).
+00:47:23:Unit 00:Completed   2000000 out of 50000000 steps (4%).
+00:49:27:Unit 02:Completed 760000 out of 1000000 steps  (76%)
+00:49:33:Unit 00:Completed   2500000 out of 50000000 steps (5%).
+00:51:42:Unit 00:Completed   3000000 out of 50000000 steps (6%).
+00:53:52:Unit 00:Completed   3500000 out of 50000000 steps (7%).
+00:54:26:Unit 02:Completed 770000 out of 1000000 steps  (77%)
+00:56:02:Unit 00:Completed   4000000 out of 50000000 steps (8%).
+00:58:11:Unit 00:Completed   4500000 out of 50000000 steps (9%).
+00:59:25:Unit 02:Completed 780000 out of 1000000 steps  (78%)
+01:00:21:Unit 00:Completed   5000000 out of 50000000 steps (10%).
+01:02:30:Unit 00:Completed   5500000 out of 50000000 steps (11%).
+01:04:24:Unit 02:Completed 790000 out of 1000000 steps  (79%)
+01:04:40:Unit 00:Completed   6000000 out of 50000000 steps (12%).
+01:06:08:Slot 00 finishing
+01:06:50:Unit 00:Completed   6500000 out of 50000000 steps (13%).
+01:08:59:Unit 00:Completed   7000000 out of 50000000 steps (14%).
+01:09:24:Unit 02:Completed 800000 out of 1000000 steps  (80%)
+01:11:09:Unit 00:Completed   7500000 out of 50000000 steps (15%).
+01:13:18:Unit 00:Completed   8000000 out of 50000000 steps (16%).
+01:14:24:Unit 02:Completed 810000 out of 1000000 steps  (81%)
+01:15:28:Unit 00:Completed   8500000 out of 50000000 steps (17%).
+01:17:38:Unit 00:Completed   9000000 out of 50000000 steps (18%).
+01:19:23:Unit 02:Completed 820000 out of 1000000 steps  (82%)
+01:19:47:Unit 00:Completed   9500000 out of 50000000 steps (19%).
+01:21:57:Unit 00:Completed  10000000 out of 50000000 steps (20%).
+01:24:07:Unit 00:Completed  10500000 out of 50000000 steps (21%).
+01:24:21:Unit 02:Completed 830000 out of 1000000 steps  (83%)
+01:26:16:Unit 00:Completed  11000000 out of 50000000 steps (22%).
+01:28:26:Unit 00:Completed  11500000 out of 50000000 steps (23%).
+01:29:20:Unit 02:Completed 840000 out of 1000000 steps  (84%)
+01:30:35:Unit 00:Completed  12000000 out of 50000000 steps (24%).
+01:32:45:Unit 00:Completed  12500000 out of 50000000 steps (25%).
+01:34:19:Unit 02:Completed 850000 out of 1000000 steps  (85%)
+01:34:55:Unit 00:Completed  13000000 out of 50000000 steps (26%).
+01:37:04:Unit 00:Completed  13500000 out of 50000000 steps (27%).
+01:39:14:Unit 00:Completed  14000000 out of 50000000 steps (28%).
+01:39:17:Unit 02:Completed 860000 out of 1000000 steps  (86%)
+01:41:24:Unit 00:Completed  14500000 out of 50000000 steps (29%).
+01:43:33:Unit 00:Completed  15000000 out of 50000000 steps (30%).
+01:44:16:Unit 02:Completed 870000 out of 1000000 steps  (87%)
+01:45:43:Unit 00:Completed  15500000 out of 50000000 steps (31%).
+01:47:52:Unit 00:Completed  16000000 out of 50000000 steps (32%).
+01:49:15:Unit 02:Completed 880000 out of 1000000 steps  (88%)
+01:50:02:Unit 00:Completed  16500000 out of 50000000 steps (33%).
+01:52:12:Unit 00:Completed  17000000 out of 50000000 steps (34%).
+01:54:14:Unit 02:Completed 890000 out of 1000000 steps  (89%)
+01:54:21:Unit 00:Completed  17500000 out of 50000000 steps (35%).
+01:56:31:Unit 00:Completed  18000000 out of 50000000 steps (36%).
+01:58:40:Unit 00:Completed  18500000 out of 50000000 steps (37%).
+01:59:13:Unit 02:Completed 900000 out of 1000000 steps  (90%)
+02:00:50:Unit 00:Completed  19000000 out of 50000000 steps (38%).
+02:03:00:Unit 00:Completed  19500000 out of 50000000 steps (39%).
+02:04:12:Unit 02:Completed 910000 out of 1000000 steps  (91%)
+02:05:09:Unit 00:Completed  20000000 out of 50000000 steps (40%).
+02:06:20:Server connection id=2 on 0.0.0.0:36330 from 127.0.0.1
+02:07:03:Server connection id=2 ended
+02:07:19:Unit 00:Completed  20500000 out of 50000000 steps (41%).
+02:09:14:Unit 02:Completed 920000 out of 1000000 steps  (92%)
+02:09:29:Unit 00:Completed  21000000 out of 50000000 steps (42%).
+02:09:43:Slot 01 finishing
+02:11:38:Unit 00:Completed  21500000 out of 50000000 steps (43%).
+02:13:48:Unit 00:Completed  22000000 out of 50000000 steps (44%).
+02:14:14:Unit 02:Completed 930000 out of 1000000 steps  (93%)
+02:15:58:Unit 00:Completed  22500000 out of 50000000 steps (45%).
+02:18:07:Unit 00:Completed  23000000 out of 50000000 steps (46%).
+02:19:14:Unit 02:Completed 940000 out of 1000000 steps  (94%)
+02:20:17:Unit 00:Completed  23500000 out of 50000000 steps (47%).
+02:22:26:Unit 00:Completed  24000000 out of 50000000 steps (48%).
+02:24:13:Unit 02:Completed 950000 out of 1000000 steps  (95%)
+02:24:36:Unit 00:Completed  24500000 out of 50000000 steps (49%).
+02:26:46:Unit 00:Completed  25000000 out of 50000000 steps (50%).
+02:28:55:Unit 00:Completed  25500000 out of 50000000 steps (51%).
+02:29:11:Unit 02:Completed 960000 out of 1000000 steps  (96%)
+02:31:05:Unit 00:Completed  26000000 out of 50000000 steps (52%).
+02:33:15:Unit 00:Completed  26500000 out of 50000000 steps (53%).
+02:34:10:Unit 02:Completed 970000 out of 1000000 steps  (97%)
+02:35:24:Unit 00:Completed  27000000 out of 50000000 steps (54%).
+02:37:34:Unit 00:Completed  27500000 out of 50000000 steps (55%).
+02:39:09:Unit 02:Completed 980000 out of 1000000 steps  (98%)
+02:39:43:Unit 00:Completed  28000000 out of 50000000 steps (56%).
+02:41:53:Unit 00:Completed  28500000 out of 50000000 steps (57%).
+02:44:03:Unit 00:Completed  29000000 out of 50000000 steps (58%).
+02:44:08:Unit 02:Completed 990000 out of 1000000 steps  (99%)
+02:46:12:Unit 00:Completed  29500000 out of 50000000 steps (59%).
+02:48:22:Unit 00:Completed  30000000 out of 50000000 steps (60%).
+02:49:07:Unit 02:Completed 1000000 out of 1000000 steps  (100%)
+02:49:08:Unit 02:DynamicWrapper: Finished Work Unit: sleep=10000
+02:49:18:Unit 02:
+02:49:18:Unit 02:Finished Work Unit:
+02:49:18:Unit 02:- Reading up to 9346392 from "02/wudata_01.trr": Read 9346392
+02:49:18:Unit 02:trr file hash check passed.
+02:49:18:Unit 02:- Reading up to 1417444 from "02/wudata_01.xtc": Read 1417444
+02:49:18:Unit 02:xtc file hash check passed.
+02:49:18:Unit 02:edr file hash check passed.
+02:49:18:Unit 02:logfile size: 27890
+02:49:18:Unit 02:Leaving Run
+02:49:22:Unit 02:- Writing 10799090 bytes of core data to disk...
+02:49:24:Unit 02:Done: 10798578 -> 10310258 (compressed to 95.4 percent)
+02:49:24:Unit 02:  ... Done.
+02:49:27:Unit 02:- Shutting down core
+02:49:27:Unit 02:
+02:49:27:Unit 02:Folding@home Core Shutdown: FINISHED_UNIT
+02:49:28:FahCore, running Unit 02, returned: FINISHED_UNIT (100)
+02:49:28:Sending unit results: id:02 state:SEND project:11051 run:0 clone:2 gen:39 core:0xa3 unit:0x000000280a3b1e5b4db73f5943ba9ef4
+02:49:29:Unit 02: Uploading 9.83MiB
+02:49:29:Connecting to 171.64.65.55:8080
+02:49:35:Unit 02: 26.14%
+02:49:41:Unit 02: 50.21%
+02:49:47:Unit 02: 74.17%
+02:49:53:Unit 02: 98.60%
+02:49:56:Unit 02: Upload complete
+02:49:56:Server responded WORK_ACK (400)
+02:49:56:Final credit estimate, 4641.00 points
+02:49:56:Cleaning up Unit 02
+02:50:32:Unit 00:Completed  30500000 out of 50000000 steps (61%).
+02:52:41:Unit 00:Completed  31000000 out of 50000000 steps (62%).
+02:54:51:Unit 00:Completed  31500000 out of 50000000 steps (63%).
+02:57:00:Unit 00:Completed  32000000 out of 50000000 steps (64%).
+02:59:10:Unit 00:Completed  32500000 out of 50000000 steps (65%).
+03:01:20:Unit 00:Completed  33000000 out of 50000000 steps (66%).
+03:03:29:Unit 00:Completed  33500000 out of 50000000 steps (67%).
+03:05:39:Unit 00:Completed  34000000 out of 50000000 steps (68%).
+03:07:48:Unit 00:Completed  34500000 out of 50000000 steps (69%).
+03:09:58:Unit 00:Completed  35000000 out of 50000000 steps (70%).
+03:12:08:Unit 00:Completed  35500000 out of 50000000 steps (71%).
+03:14:17:Unit 00:Completed  36000000 out of 50000000 steps (72%).
+03:16:27:Unit 00:Completed  36500000 out of 50000000 steps (73%).
+03:18:37:Unit 00:Completed  37000000 out of 50000000 steps (74%).
+03:20:46:Unit 00:Completed  37500000 out of 50000000 steps (75%).
+03:22:56:Unit 00:Completed  38000000 out of 50000000 steps (76%).
+03:25:07:Unit 00:Completed  38500000 out of 50000000 steps (77%).
+03:27:16:Unit 00:Completed  39000000 out of 50000000 steps (78%).
+03:29:26:Unit 00:Completed  39500000 out of 50000000 steps (79%).
+03:31:36:Unit 00:Completed  40000000 out of 50000000 steps (80%).
+03:33:46:Unit 00:Completed  40500000 out of 50000000 steps (81%).
+03:35:55:Unit 00:Completed  41000000 out of 50000000 steps (82%).
+03:38:05:Unit 00:Completed  41500000 out of 50000000 steps (83%).
+03:40:15:Unit 00:Completed  42000000 out of 50000000 steps (84%).
+03:42:25:Unit 00:Completed  42500000 out of 50000000 steps (85%).
+03:44:34:Unit 00:Completed  43000000 out of 50000000 steps (86%).
+03:46:44:Unit 00:Completed  43500000 out of 50000000 steps (87%).
+03:48:54:Unit 00:Completed  44000000 out of 50000000 steps (88%).
+03:51:03:Unit 00:Completed  44500000 out of 50000000 steps (89%).
+03:53:13:Unit 00:Completed  45000000 out of 50000000 steps (90%).
+03:55:23:Unit 00:Completed  45500000 out of 50000000 steps (91%).
+03:57:33:Unit 00:Completed  46000000 out of 50000000 steps (92%).
+03:59:42:Unit 00:Completed  46500000 out of 50000000 steps (93%).
+04:01:52:Unit 00:Completed  47000000 out of 50000000 steps (94%).
+04:04:02:Unit 00:Completed  47500000 out of 50000000 steps (95%).
+04:06:12:Unit 00:Completed  48000000 out of 50000000 steps (96%).
+04:08:21:Unit 00:Completed  48500000 out of 50000000 steps (97%).
+04:10:31:Unit 00:Completed  49000000 out of 50000000 steps (98%).
+04:12:41:Unit 00:Completed  49500000 out of 50000000 steps (99%).
+04:14:50:Unit 00:Completed  50000000 out of 50000000 steps (100%).
+04:14:51:Unit 00:Finished fah_main status=0
+04:14:51:Unit 00:Successful run
+04:14:51:Unit 00:DynamicWrapper: Finished Work Unit: sleep=10000
+04:15:01:Unit 00:Reserved 2464800 bytes for xtc file; Cosm status=0
+04:15:01:Unit 00:Allocated 2464800 bytes for xtc file
+04:15:01:Unit 00:- Reading up to 2464800 from "00/wudata_01.xtc": Read 2464800
+04:15:01:Unit 00:Read 2464800 bytes from xtc file; available packet space=783965664
+04:15:01:Unit 00:xtc file hash check passed.
+04:15:01:Unit 00:Reserved 76680 76680 783965664 bytes for arc file=<00/wudata_01.trr> Cosm status=0
+04:15:01:Unit 00:Allocated 76680 bytes for arc file
+04:15:01:Unit 00:- Reading up to 76680 from "00/wudata_01.trr": Read 76680
+04:15:01:Unit 00:Read 76680 bytes from arc file; available packet space=783888984
+04:15:01:Unit 00:trr file hash check passed.
+04:15:01:Unit 00:Allocated 544 bytes for edr file
+04:15:01:Unit 00:Read bedfile
+04:15:01:Unit 00:edr file hash check passed.
+04:15:01:Unit 00:Allocated 120389 bytes for logfile
+04:15:01:Unit 00:Read logfile
+04:15:01:Unit 00:GuardedRun: success in DynamicWrapper
+04:15:01:Unit 00:GuardedRun: done
+04:15:01:Unit 00:Run: GuardedRun completed.
+04:15:03:Unit 00:+ Opened results file
+04:15:03:Unit 00:- Writing 2662925 bytes of core data to disk...
+04:15:03:Unit 00:Done: 2662413 -> 2506703 (compressed to 94.1 percent)
+04:15:03:Unit 00:  ... Done.
+04:15:03:Unit 00:DeleteFrameFiles: successfully deleted file=00/wudata_01.ckp
+04:15:04:FahCore, running Unit 00, returned: FINISHED_UNIT (100)
+04:15:05:Sending unit results: id:00 state:SEND project:6801 run:6348 clone:0 gen:305 core:0x15 unit:0x0000014d0a3b1e644d94b9700899a51b
+04:15:05:Unit 00: Uploading 2.39MiB
+04:15:05:Connecting to 171.64.65.64:8080
+04:15:12:Unit 00: Upload complete
+04:15:12:Server responded WORK_ACK (400)
+04:15:12:Final credit estimate, 1348.00 points
+04:15:12:Cleaning up Unit 00
+04:39:17:Server connection id=1 ended
+04:39:17:Lost lifeline PID 4040, exiting
+04:39:18:Clean exit

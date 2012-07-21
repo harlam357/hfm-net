@@ -1,0 +1,138 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 1344 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/Users/adak/AppData/Roaming/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.24"
+    ],
+    [
+      "Date",
+      "Apr  6 2011"
+    ],
+    [
+      "Time",
+      "21:37:58"
+    ],
+    [
+      "SVN Rev",
+      "2908"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1110"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE2 /QaxSSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 Vista"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Microsoft Windows 7 Professional"
+    ],
+    [
+      "CPU",
+      "Intel(R) Core(TM) i7 CPU         940  @ 2.93GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 26 Stepping 4"
+    ],
+    [
+      "CPUs",
+      "8"
+    ],
+    [
+      "Memory",
+      "11.99GiB"
+    ],
+    [
+      "Free Memory",
+      "10.50GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "GPUs",
+      "2"
+    ],
+    [
+      "GPU 0",
+      "ATI:1 RV530 [Radeon X1600]"
+    ],
+    [
+      "GPU 1",
+      "ATI:1 RV530 [Radeon X1600] (Secondary)"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-7"
+    ],
+    [
+      "PID",
+      "2932"
+    ],
+    [
+      "CWD",
+      "C:/Users/adak/AppData/Roaming/FAHClient"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+

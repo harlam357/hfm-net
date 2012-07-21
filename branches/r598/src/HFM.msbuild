@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+   <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
+
+   <PropertyGroup>
+      <!--<Configuration Condition=" '$(Configuration)' == '' ">ScriptedRelease</Configuration>-->
+      <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
+   </PropertyGroup>
+
+   <PropertyGroup>
+      <Major>0</Major>
+      <Minor>9</Minor>
+      <Build>1</Build>
+      <Revision>0</Revision>
+   </PropertyGroup>
+
+   <Target Name="AssemblyVersion" DependsOnTargets="Version">
+      <AssemblyInfo CodeLanguage="CS"
+        OutputFile="ExeAssemblyVersion.cs"
+        AssemblyCompany="harlam357"
+        AssemblyProduct="HFM.NET"
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
+        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
+
+      <AssemblyInfo CodeLanguage="CS"
+        OutputFile="AssemblyVersion.cs"
+        AssemblyCompany="harlam357"
+        AssemblyProduct="HFM.NET"
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
+        AssemblyVersion="1.0.0.0"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        Condition="$(Revision) != '0' "/>
+   </Target>
+
+   <Target Name="Version">
+      <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet\Subversion Client">
+         <Output TaskParameter="Revision" PropertyName="Revision" />
+      </SvnVersion>
+
+      <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
+   </Target>
+
+   <Target Name="Build" DependsOnTargets="RemoveArtifactsFolder;Compile">
+      <CallTarget Targets="Deploy" ContinueOnError="true"/>
+      <Message Text="HFM.NET Build Complete"/>
+   </Target>
+
+   <Target Name="Deploy">
+      <Exec Command="..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET" WorkingDirectory="HFM\bin\Release"/>
+   </Target>
+
+   <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' == '' ">
+      <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\harlam357public.snk</AssemblyOriginatorKeyFile>
+   </PropertyGroup>
+
+   <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
+      <MSBuild Projects="HFM.All.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease;Platform=$(Platform);AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
+
+      <CallTarget Targets="NUnit" />
+   </Target>
+
+   <Target Name="RemoveArtifactsFolder">
+      <RemoveDir Directories="$(ArtifactsPath)" ContinueOnError="true" />
+   </Target>
+
+   <Target Name="CreateArtifactsFolder">
+      <MakeDir Directories="$(ArtifactsPath)"/>
+   </Target>
+
+   <PropertyGroup>
+      <NCoverPath>&quot;..\tools\NCover\NCover.Console.exe&quot;</NCoverPath>
+      <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Core.CoverageExcludeAttribute;HFM.Client.CoverageExcludeAttribute</NCoverExcludeList>
+      <NCoverExpPath>&quot;..\tools\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
+      <NUnitPath>&quot;..\lib\NUnit\bin\net-2.0\nunit-console-x86.exe&quot;</NUnitPath>
+      <FxCopPath>&quot;$(ProgramFiles)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe&quot;</FxCopPath>
+   </PropertyGroup>
+
+   <PropertyGroup>
+      <ArtifactsPath>.\Artifacts</ArtifactsPath>
+      <ArtifactsHFM>.\Artifacts\HFM.NET</ArtifactsHFM>
+      <ArtifactsPlugins>.\Artifacts\Plugins</ArtifactsPlugins>
+      <ArtifactsPackages>.\Artifacts\Packages</ArtifactsPackages>
+   </PropertyGroup>
+
+   <Target Name="NUnit">
+      <MSBuild.ExtensionPack.Computer.EnvironmentVariable TaskAction="Set" Variable="COMPLUS_ProfAPI_ProfilerCompatibilitySetting" Value="EnableV2Profiler"/>
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml //reg //a HFM.Client;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Client.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /xml=$(ArtifactsPath)\HFM.Core.Tests.Results.xml //reg //a HFM.Core;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Core.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml //reg //a HFM.Forms //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Forms.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /xml=$(ArtifactsPath)\HFM.Log.Tests.Results.xml //reg //a HFM.Log;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Log.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /xml=$(ArtifactsPath)\HFM.Proteins.Tests.Results.xml //reg //a HFM.Proteins;HFM.Core.DataTypes //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Proteins.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverPath) $(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /xml=$(ArtifactsPath)\HFM.Queue.Tests.Results.xml //reg //a HFM.Queue //ea $(NCoverExcludeList) //x $(ArtifactsPath)\HFM.Queue.Tests.Coverage.xml" />
+      <Exec Command="$(NCoverExpPath) $(ArtifactsPath)\*.Tests.Coverage.xml /s:$(ArtifactsPath)\Coverage.xml" />
+   </Target>
+
+   <Target Name="FxCop">
+      <Exec Command="$(FxCopPath) /f:$(ArtifactsHFM)\HFM.exe /f:$(ArtifactsHFM)\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:.\Artifacts\FxCopReport.xml /gac" />
+   </Target>
+
+   <ItemGroup>
+      <ZipFiles Include="$(ArtifactsHFM)\**\*.*" Exclude="$(ArtifactsHFM)\Documentation\API Docs\*.*" />
+      <ClientZipFiles Include="$(ArtifactsHFM)\HFM.Client.dll;$(ArtifactsHFM)\HFM.Client.xml;$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt;$(ArtifactsHFM)\Newtonsoft.Json.Net35.dll;$(ArtifactsHFM)\Newtonsoft.Json.Net35.xml;$(ArtifactsHFM)\Documentation\License\Json.NET License.txt" />
+      <LogZipFiles Include="$(ArtifactsHFM)\HFM.Log.dll;$(ArtifactsHFM)\HFM.Log.xml;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
+      <QueueZipFiles Include="$(ArtifactsHFM)\HFM.Queue.dll;$(ArtifactsHFM)\HFM.Queue.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt" />
+   </ItemGroup>
+
+   <Target Name="BuildZip" DependsOnTargets="Version">
+      <MakeDir Directories="$(ArtifactsPackages)" />
+      <Zip Files="@(ZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <CallTarget Targets="CopyZipPackage" />
+   </Target>
+
+   <Target Name ="CopyZipPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   </Target>
+
+   <Target Name="BuildMsi" DependsOnTargets="Version">
+      <MakeDir Directories="$(ArtifactsPackages)" />
+      <MSBuild Projects="HFM.Setup.sln"
+               Targets="Rebuild"
+               Properties="Configuration=Release" />
+      <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" />
+      <CallTarget Targets="CopyMsiPackage" />
+   </Target>
+   
+   <Target Name ="CopyMsiPackage" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
+   </Target>
+
+   <Target Name="BuildDocs">
+      <MSBuild Projects="HFM.Client\HFM.Client.shfbproj"
+               Properties="Configuration=Release;Platform=Any CPU;CleanIntermediates=True" />
+      <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm" />
+   </Target>
+
+   <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="Version;BuildDocs">
+      <MakeDir Directories="$(ArtifactsPackages)" />
+      <Zip Files="@(ClientZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <Zip Files="@(LogZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <Zip Files="@(QueueZipFiles)"
+           WorkingDirectory="$(ArtifactsHFM)"
+           ZipFileName="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" />
+      <CallTarget Targets="CopyApiZipPackages" />
+   </Target>
+
+   <Target Name ="CopyApiZipPackages" Condition="'$(Platform)' == 'Any CPU' AND '$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   </Target>
+      
+   <!--<Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
+      <Message Text="HFM.NET Plugins Build Complete"/>
+   </Target>
+
+   <Target Name="CompilePlugins" DependsOnTargets="AssemblyVersion">
+      <MSBuild Projects=".\HFM.Plugins.ClientSettings\FahMon\HFM.Plugins.ClientSettings.FahMon.sln"
+               Targets="Rebuild"
+               Properties="Configuration=ScriptedRelease" />
+   </Target>
+
+   <ItemGroup>
+      <PluginsFahMonZipFiles Include="$(ArtifactsPlugins)\FahMon\**\*.*" />
+   </ItemGroup>
+
+   <Target Name="BuildPluginsZip" DependsOnTargets="Version">
+      <MakeDir Directories="$(ArtifactsPackages)" />
+      <Zip Files="@(PluginsFahMonZipFiles)"
+           WorkingDirectory="$(ArtifactsPlugins)\FahMon"
+           ZipFileName="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
+   </Target>
+
+   <Target Name ="CopyPluginsPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="Version">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   </Target>-->
+</Project>

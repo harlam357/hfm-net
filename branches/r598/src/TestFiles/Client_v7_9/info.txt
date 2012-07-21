@@ -1,0 +1,138 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009-2011 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 2308 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/Documents and Settings/harlarw/Application Data/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.33"
+    ],
+    [
+      "Date",
+      "Sep 19 2011"
+    ],
+    [
+      "Time",
+      "12:38:52"
+    ],
+    [
+      "SVN Rev",
+      "3053"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1200"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 XP"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "CPU",
+      "Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 15 Stepping 11"
+    ],
+    [
+      "CPUs",
+      "4"
+    ],
+    [
+      "Memory",
+      "4.00GiB"
+    ],
+    [
+      "Free Memory",
+      "3.17GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-6"
+    ],
+    [
+      "PID",
+      "2636"
+    ],
+    [
+      "CWD",
+      "C:/Documents and Settings/harlarw/Application Data/FAHClient"
+    ],
+    [
+      "OS",
+      "Microsoft Windows XP Service Pack 2"
+    ],
+    [
+      "OS Arch",
+      "AMD64"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "ATI:2 Mobility Radeon HD 3600 Series"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+

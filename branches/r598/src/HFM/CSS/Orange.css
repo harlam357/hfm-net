@@ -1,0 +1,148 @@
+/*
+ * HFM.NET - Orange Style Sheet
+ * Copyright (C) 2006-2007 David Rawling
+ * Copyright (C) 2009 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+body
+{
+	font-family: Tahoma, Arial, Sans-Serif;
+	font-size: x-small;
+}
+
+TD
+{
+	font-size: x-small;
+	vertical-align: top;
+}
+
+.Instance
+{
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	border-collapse: collapse;
+	font-size: x-small;
+}
+
+.Overview
+{
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	border-collapse: collapse;
+	font-size: x-small;
+}
+
+.Heading
+{
+	background-color: #C35617;
+	color: White;
+	font-weight: bold;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+}
+
+.Heading2
+{
+	background-color: #C35617;
+	color: White;
+	font-style: italic;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+}
+
+.Blank
+{
+	border: none;
+	background-color: White;
+	color: #F87217;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+}
+
+.Empty
+{
+	border: none;
+	background-color: White;
+	color: White;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+}
+
+.Plain
+{
+	border: none;
+	background-color: White;
+	color: #C35617;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+}
+
+.StatusCol
+{
+	border: solid 1px #F87217;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
+}
+
+.LeftCol
+{
+	border: solid 1px #F87217;
+	background-color: #ffffff;
+	color: #C35617;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
+}
+
+.RightCol
+{
+	border: solid 1px #F87217;
+	background-color: #ffffff;
+	color: #C35617;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
+}
+
+.AltLeftCol
+{
+	border: solid 1px #F87217;
+	background-color: #ffd06b;
+	color: #C35617;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
+}
+
+.AltRightCol
+{
+	border: solid 1px #F87217;
+	background-color: #ffd06b;
+	color: #C35617;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 2px 2px 2px;
+	font-size: inherit;
+	vertical-align: top;
+}

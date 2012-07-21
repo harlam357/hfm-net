@@ -1,0 +1,83 @@
+--- Opening Log file [January 31 01:57:21 UTC]
+
+
+# Windows GPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: C:\Users\Kyle\F@h GPU
+Executable: C:\Users\Kyle\F@h GPU\Folding@home-Win32-GPU.exe
+
+
+[01:57:21] - Ask before connecting: No
+[01:57:21] - User name: Zagen30 (Team 46301)
+[01:57:21] - User ID: xxxxxxxxxxxxxxxxxxx
+[01:57:21] - Machine ID: 2
+[01:57:21]
+[01:57:21] Loaded queue successfully.
+[01:57:21]
+[01:57:21] + Processing work unit
+[01:57:21] Core required: FahCore_11.exe
+[01:57:21] Core found.
+[01:57:21] Project: 5767 (Run 1, Clone 31, Gen 1963)
+[01:57:21] Working on queue slot 00 [January 31 01:57:21 UTC]
+[01:57:21] - Read packet limit of 540015616... [01:57:21] + Working ...
+Set to 524286976.
+
+
+[01:57:21] + Attempting to send results [January 31 01:57:21 UTC]
+[01:57:21]
+[01:57:21] *------------------------------*
+[01:57:21] Folding@Home GPU Core
+[01:57:21] Version 1.31 (Tue Sep 15 10:57:42 PDT 2009)
+[01:57:21]
+[01:57:21] Compiler  : Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.762 for 80x86
+[01:57:21] Build host: amoeba
+[01:57:21] Board Type: Nvidia
+[01:57:21] Core      :
+[01:57:21] Preparing to commence simulation
+[01:57:21] - Looking at optimizations...
+[01:57:21] - Files status OK
+[01:57:21] - Expanded 64941 -> 344387 (decompressed 530.3 percent)
+[01:57:21] Called DecompressByteArray: compressed_data_size=64941 data_size=344387, decompressed_data_size=344387 diff=0
+[01:57:21] - Digital signature verified
+[01:57:21]
+[01:57:21] Project: 5781 (Run 2, Clone 700, Gen 2)
+[01:57:21]
+[01:57:21] Assembly optimizations on if available.
+[01:57:21] Entering M.D.
+[01:57:22] - Couldn't send HTTP request to server
+[01:57:22] + Could not connect to Work Server (results)
+[01:57:22]     (171.67.108.11:8080)
+[01:57:22] + Retrying using alternative port
+[01:57:23] - Couldn't send HTTP request to server
+[01:57:23] + Could not connect to Work Server (results)
+[01:57:23]     (171.67.108.11:80)
+[01:57:23] - Error: Could not transmit unit 09 (completed January 31) to work server.
+[01:57:23] - Read packet limit of 540015616... Set to 524286976.
+
+
+[01:57:23] + Attempting to send results [January 31 01:57:23 UTC]
+[01:57:25] + Results successfully sent
+[01:57:25] Thank you for your contribution to Folding@Home.
+[01:57:25] + Number of Units Completed: 1994
+
+[01:57:25]   Successfully sent unit 09 to Collection server.
+[01:57:27] Tpr hash work/wudata_00.tpr:  2511757856 2907143072 4045132744 2698427497 2563811677
+[01:57:27]
+[01:57:27] Calling fah_main args: 14 usage=100
+[01:57:27]
+[01:57:27] Working on Great Red Owns Many ACres of Sand
+[01:57:28] Client config found, loading data.
+[01:57:28] Starting GUI Server
+[01:58:47] Completed 1%
+[02:00:06] Completed 2%
+[02:01:25] Completed 3%
+[02:02:43] Completed 4%
+[02:04:02] Completed 5%

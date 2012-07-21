@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.0</ProductVersion>
+    <ProjectGuid>{ccdb70b7-bc0f-4dc2-b7f8-cc7b3a98c7f1}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>HFM.Setup</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;HFM.TargetPath=..\Artifacts\HFM.NET</DefineConstants>
+    <Cultures>en-US</Cultures>
+    <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <Cultures>en-US</Cultures>
+    <DefineConstants>HFM.TargetPath=..\Artifacts\HFM.NET</DefineConstants>
+    <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="HFM.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixFileVersionExtension">
+      <HintPath>WixFileVersionExtension.dll</HintPath>
+      <Name>WixFileVersionExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HFM1.PARAFFIN" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>..\..\..\..\tools\Paraffin\Paraffin -update ..\..\HFM1.PARAFFIN</PreBuildEvent>
+  </PropertyGroup>
+</Project>
