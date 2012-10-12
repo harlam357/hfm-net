@@ -129,6 +129,7 @@ namespace HFM.Core
             case SlotStatus.Ready:     // v7 specific
                return Color.DarkCyan;
             case SlotStatus.Stopping:  // v7 specific
+            case SlotStatus.Failed:    // v7 specific
             case SlotStatus.Stopped:
             case SlotStatus.EuePause:
             case SlotStatus.Hung:

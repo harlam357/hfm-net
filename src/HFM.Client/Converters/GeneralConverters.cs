@@ -88,6 +88,8 @@ namespace HFM.Client.Converters
                return FahSlotStatus.Ready;
             case "STOPPING":
                return FahSlotStatus.Stopping;
+            case "FAILED":
+               return FahSlotStatus.Failed;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,
