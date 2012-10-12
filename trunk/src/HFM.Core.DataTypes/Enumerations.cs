@@ -33,6 +33,7 @@ namespace HFM.Core.DataTypes
       Finishing,  // v7 specific
       Ready,      // v7 specific
       Stopping,   // v7 specific
+      Failed,     // v7 specific
       // Extended entries for Legacy clients
       Stopped,
       EuePause,

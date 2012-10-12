@@ -58,7 +58,8 @@ namespace HFM.Client.DataTypes
       Running,
       Finishing,
       Ready,
-      Stopping
+      Stopping,
+      Failed
    }
 
    /// <summary>
