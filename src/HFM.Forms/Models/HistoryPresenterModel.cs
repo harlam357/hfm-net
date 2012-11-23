@@ -203,9 +203,9 @@ namespace HFM.Forms.Models
          _queryBindingSource.ResetBindings(false);
       }
 
-      public void DeleteUnitInfo(long id)
+      public void DeleteHistoryEntry(HistoryEntry entry)
       {
-         if (_database.DeleteUnitInfo(id) != 0)
+         if (_database.Delete(entry) != 0)
          {
             ResetBindings(true);
          }
@@ -217,7 +217,7 @@ namespace HFM.Forms.Models
 
          if (executeQuery)
          {
-            _allEntries = _database.QueryUnitData(SelectedQuery, ProductionView) ?? new List<HistoryEntry>();
+            _allEntries = _database.Fetch(SelectedQuery, ProductionView) ?? new List<HistoryEntry>();
          }
          _shownEntries = _allEntries;
          if (ShowFirstChecked)

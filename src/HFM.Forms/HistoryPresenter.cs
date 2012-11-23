@@ -190,7 +190,7 @@ namespace HFM.Forms
             var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", Core.Application.NameAndVersion);
             if (result.Equals(DialogResult.Yes))
             {
-               _model.DeleteUnitInfo(entry.ID);
+               _model.DeleteHistoryEntry(entry);
             }
          }
       }

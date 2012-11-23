@@ -305,8 +305,8 @@ namespace HFM.Forms.Tests
          _model.HistoryBindingSource.Add(new HistoryEntry { ID = 1 });
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-         _database.Expect(x => x.DeleteUnitInfo(1)).Return(1);
-         _database.Expect(x => x.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new List<HistoryEntry>());
+         _database.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
+         _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new List<HistoryEntry>());
          // Act
          _presenter = CreatePresenter();
          _presenter.DeleteWorkUnitClick();

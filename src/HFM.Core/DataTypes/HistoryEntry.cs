@@ -22,6 +22,8 @@ using System.Diagnostics;
 
 namespace HFM.Core.DataTypes
 {
+   [PetaPoco.TableName("WuHistory")]
+   [PetaPoco.PrimaryKey("ID")]
    public class HistoryEntry : IEquatable<HistoryEntry>
    {
       public HistoryEntry()
@@ -34,29 +36,51 @@ namespace HFM.Core.DataTypes
       public int ProjectRun { get; set; }
       public int ProjectClone { get; set; }
       public int ProjectGen { get; set; }
+      [PetaPoco.Column("InstanceName")]
       public string Name { get; set; }
+      [PetaPoco.Column("InstancePath")]
       public string Path { get; set; }
       public string Username { get; set; }
       public int Team { get; set; }
       public float CoreVersion { get; set; }
       public int FramesCompleted { get; set; }
-      public TimeSpan FrameTime { get; set; }
-      public string Result { get; set; }
+      [PetaPoco.Ignore]
+      public TimeSpan FrameTime
+      {
+         get { return TimeSpan.FromSeconds(FrameTimeValue); }
+      }
+      [PetaPoco.Column("FrameTime")]
+      public int FrameTimeValue { get; set; }
+      [PetaPoco.Ignore]
+      public string Result
+      {
+         get { return ResultValue.ToWorkUnitResultString(); }
+      }
+      [PetaPoco.Column("Result")]
+      public int ResultValue { get; set; }
       public DateTime DownloadDateTime { get; set; }
       public DateTime CompletionDateTime { get; set; }
 
       private Protein _protein;
-      
+
+      [PetaPoco.Ignore]
       public string WorkUnitName { get { return _protein == null ? String.Empty : _protein.WorkUnitName; } }
+      [PetaPoco.Ignore]
       public double KFactor { get { return _protein == null ? 0 : _protein.KFactor; } }
+      [PetaPoco.Ignore]
       public string Core { get { return _protein == null ? String.Empty : _protein.Core; } }
+      [PetaPoco.Ignore]
       public int Frames { get { return _protein == null ? 0 : _protein.Frames; } }
+      [PetaPoco.Ignore]
       public int Atoms { get { return _protein == null ? 0 : _protein.NumberOfAtoms; } }
 
+      [PetaPoco.Ignore]
       public string SlotType { get; private set; }
       
+      [PetaPoco.Ignore]
       public HistoryProductionView ProductionView { get; set; }
-      
+
+      [PetaPoco.Ignore]
       public double PPD
       {
          get
@@ -80,6 +104,7 @@ namespace HFM.Core.DataTypes
          }
       }
 
+      [PetaPoco.Ignore]
       public double Credit
       {
          get

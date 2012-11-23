@@ -194,7 +194,7 @@ namespace HFM.Core
          {
             try
             {
-               UnitInfoDatabase.WriteUnitInfo(unitInfoLogic);
+               UnitInfoDatabase.Insert(unitInfoLogic);
             }
             catch (Exception ex)
             {
