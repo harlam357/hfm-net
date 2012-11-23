@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBoxWrapper1.Text" xml:space="preserve">
     <value>
@@ -133,11 +133,11 @@ HFM.NET was derived from the FAHLogStats.NET code base - http://code.google.com/
 Third-Party Libraries
 
 Castle Windsor Container - http://www.castleproject.org/
-Copyright 2004-2005 Castle Project
+Copyright 2004-2011 Castle Project
 Licensed under the Apache License, Version 2.0
 
 protobuf-net - http://code.google.com/p/protobuf-net/
-Copyright 2008 Marc Gravell
+Copyright 2008-2011 Marc Gravell
 Licensed under the Apache License, Version 2.0
 
 Protocol Buffers Technology - http://code.google.com/p/protobuf/
@@ -145,12 +145,16 @@ Copyright 2008, Google Inc.
 Licensed under the BSD License
 
 AutoMapper - http://automapper.codeplex.com/
-Copyright (c) 2010 Jimmy Bogard
+Copyright (c) 2008-2011 Jimmy Bogard
 Licensed under the MIT License
 
-SQLite .NET Data Provider - http://sqlite.phxsoftware.com/
-Written by Robert Simpson
+System.Data.SQLite Data Provider - http://system.data.sqlite.org/
+Written by Robert Simpson and Contributors
 Licensed under Public Domain
+
+PetaPoco Micro-ORM - http://www.toptensoftware.com/petapoco/
+Copyright (c) 2011 Topten Software
+Licensed under the Apache License, Version 2.0
 
 ZedGraph - http://sourceforge.net/projects/zedgraph/
 Copyright 2004-2008 John Champion
@@ -160,7 +164,7 @@ HTMLparser - http://www.majestic12.co.uk/projects/html_parser.php
 Copyright (c) Alex Chudnovsky, Majestic-12 Ltd (UK). 2005+ All rights reserved.
 Licensed under the BSD License</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAMDAAAAEAIACoJQAAFgAAACgAAAAwAAAAYAAAAAEAIAAAAAAAAEgAAAAAAAAAAAAAAAAAAAAA
