@@ -57,6 +57,17 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.GridData.Status))
             .ForMember(dest => dest.Queue, opt => opt.Ignore()) // Ignore for now, may want to include later
             .ForMember(dest => dest.UnitLogLines, opt => opt.Ignore()); // Ignore for now, may want to include later
+         Mapper.CreateMap<UnitInfo, HistoryEntry>()
+            .ForMember(dest => dest.ID, opt => opt.Ignore())
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.OwningSlotName))
+            .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.OwningClientPath))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.FoldingID))
+            .ForMember(dest => dest.FramesCompleted, opt => opt.Ignore())
+            .ForMember(dest => dest.FrameTimeValue, opt => opt.Ignore())
+            .ForMember(dest => dest.ResultValue, opt => opt.MapFrom(src => (int)src.UnitResult))
+            .ForMember(dest => dest.DownloadDateTime, opt => opt.MapFrom(src => src.DownloadTime))
+            .ForMember(dest => dest.CompletionDateTime, opt => opt.MapFrom(src => src.FinishedTime))
+            .ForMember(dest => dest.ProductionView, opt => opt.Ignore());
       }
    }
 }

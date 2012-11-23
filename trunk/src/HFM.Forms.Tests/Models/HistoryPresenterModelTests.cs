@@ -172,7 +172,7 @@ namespace HFM.Forms.Tests.Models
          _model.AddQuery(parameters);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
          
-         _database.Expect(x => x.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new List<HistoryEntry>());
+         _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new List<HistoryEntry>());
          // Act
          _model.ResetBindings(true);
          // Assert
@@ -184,7 +184,7 @@ namespace HFM.Forms.Tests.Models
       {
          // Arrange
          var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
-         _database.Expect(x => x.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
          // Act
          _model.ShowFirstChecked = true;
          _model.ShowEntriesValue = 1;
@@ -199,7 +199,7 @@ namespace HFM.Forms.Tests.Models
       {
          // Arrange
          var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
-         _database.Expect(x => x.QueryUnitData(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
+         _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
          // Act
          _model.ShowLastChecked = true;
          _model.ShowEntriesValue = 1;

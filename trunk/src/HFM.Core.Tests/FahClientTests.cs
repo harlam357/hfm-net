@@ -62,7 +62,7 @@ namespace HFM.Core.Tests
 
          // arrange
          database.Stub(x => x.Connected).Return(true);
-         database.Expect(x => x.WriteUnitInfo(null)).IgnoreArguments().Repeat.Times(1);
+         database.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
          var benchmarkClient = new BenchmarkClient("Owner Slot 00", "Path");
 

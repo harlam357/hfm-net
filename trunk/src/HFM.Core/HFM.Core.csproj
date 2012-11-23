@@ -63,6 +63,7 @@
       <HintPath>..\..\lib\protobuf-net-v2\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,6 +88,7 @@
     <Compile Include="DataTypes\Markup\GridData.cs" />
     <Compile Include="MarkupGenerator.cs" />
     <Compile Include="MarkupReader.cs" />
+    <Compile Include="PetaPoco.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
