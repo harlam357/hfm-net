@@ -162,7 +162,7 @@ namespace HFM.Core.Tests.DataTypes
       public void QueryFieldGetOperatorTest1()
       {
          var field = new QueryField();
-         Assert.AreEqual("==", field.Operator);
+         Assert.AreEqual("=", field.Operator);
       }
 
       [Test]

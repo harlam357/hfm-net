@@ -232,7 +232,7 @@ namespace HFM.Core.DataTypes
             //case QueryFieldType.All:
             //   return "*";
             case QueryFieldType.Equal:
-               return "==";
+               return "=";
             case QueryFieldType.GreaterThan:
                return ">";
             case QueryFieldType.GreaterThanOrEqual:
