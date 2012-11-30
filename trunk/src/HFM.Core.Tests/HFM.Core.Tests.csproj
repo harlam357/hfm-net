@@ -132,6 +132,7 @@
     <None Include="TestFiles\BenchmarkCache.dat" />
     <None Include="TestFiles\LegacyTest.hfm" />
     <None Include="TestFiles\TestData.db3" />
+    <None Include="TestFiles\TestData2.db3" />
     <None Include="TestFiles\UnitInfoCache.dat" />
     <None Include="TestFiles\UserStatsCache.dat" />
     <None Include="TestFiles\WuHistoryQuery.dat" />

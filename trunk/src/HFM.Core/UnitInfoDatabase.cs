@@ -56,6 +56,40 @@ namespace HFM.Core
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
    }
 
+   //public class MyMapper : PetaPoco.IMapper
+   //{
+   //   public void GetTableInfo(Type t, PetaPoco.TableInfo ti)
+   //   {
+   //      // no implementation
+   //   }
+   //
+   //   public bool MapPropertyToColumn(System.Reflection.PropertyInfo pi, ref string columnName, ref bool resultColumn)
+   //   {
+   //      // no implementation
+   //      return true;
+   //   }
+   //
+   //   public Func<object, object> GetFromDbConverter(System.Reflection.PropertyInfo pi, Type sourceType)
+   //   {
+   //      // no implementation
+   //      return null;
+   //   }
+   //
+   //   public Func<object, object> GetToDbConverter(Type sourceType)
+   //   {
+   //      if (sourceType == typeof(DateTime))
+   //      {
+   //         return value =>
+   //                {
+   //                   var dateTime = (DateTime)value;
+   //                   //return String.Format(CultureInfo.InvariantCulture, "'{0}'", 
+   //                   return dateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); // + "Z";
+   //                };
+   //      }
+   //      return null;
+   //   }
+   //}
+
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
    {
       #region Fields
@@ -424,9 +458,15 @@ namespace HFM.Core
 
          private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, QueryField queryField)
          {
-            sql = sql.Append(String.Format(CultureInfo.InvariantCulture, "[{0}] {1} @0",
-               ColumnNameOverides.ContainsKey(queryField.Name) ? ColumnNameOverides[queryField.Name] : queryField.Name.ToString(), 
-               queryField.Operator), queryField.Value);
+            string format = "[{0}] {1} @0";
+            if (queryField.Name.Equals(QueryFieldName.DownloadDateTime) ||
+                queryField.Name.Equals(QueryFieldName.CompletionDateTime))
+            {
+               format = "datetime([{0}]) {1} datetime(@0)";
+            }
+            sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
+                     ColumnNameOverides.ContainsKey(queryField.Name) ? ColumnNameOverides[queryField.Name] : queryField.Name.ToString(),
+                     queryField.Operator), queryField.Value);
             return sql;
          }
 

@@ -19,10 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 using NUnit.Framework;
@@ -36,6 +34,7 @@ namespace HFM.Core.Tests
    public class UnitInfoDatabaseTests
    {
       private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
+      private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
       private readonly string _testDataFileCopy = Path.ChangeExtension(TestDataFile, ".dbcopy");
       private const string TestScratchFile = "UnitInfoTest.db3";
 
@@ -352,122 +351,1488 @@ namespace HFM.Core.Tests
       #region Fetch
 
       [Test]
-      public void FetchTest1()
+      public void FetchAllTest()
       {
-         FetchTestInternal(44, new QueryParameters());
+         // Select All
+         FetchTestData(44, BuildParameters());
       }
 
       [Test]
-      public void FetchTest2()
+      public void FetchEqualTest()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               { 
-                                  Name = QueryFieldName.ProjectID, 
-                                  Type = QueryFieldType.Equal, 
-                                  Value = 6600 
-                               });
-         FetchTestInternal(13, parameters);
+         FetchTestData(13, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.Equal,
+            Value = 6600
+         }));
+         FetchTestData(4, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.Equal,
+            Value = 7
+         }));
+         FetchTestData(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.Equal,
+            Value = 18
+         }));
+         FetchTestData(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.Equal,
+            Value = 18
+         }));
+         FetchTestData(11, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.Equal,
+            Value = "nVidia GPU - GTX275"
+         }));
+         FetchTestData(11, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.Equal,
+            Value = @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.Equal,
+            Value = "harlam357"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.Equal,
+            Value = 32
+         }));
+         FetchTestData(11, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.Equal,
+            Value = 2.09
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.Equal,
+            Value = 100
+         }));
+         FetchTestData(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.Equal,
+            Value = 41  // not a TimeSpan value
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.Equal,
+            Value = 1   // not a String value
+         }));
+         FetchTestData(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.Equal,
+            Value = new DateTime(2010, 8, 22, 0, 42, 0)
+         }));
+         FetchTestData(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.Equal,
+            Value = new DateTime(2010, 8, 21, 20, 57, 0)
+         }));
+         FetchTestData(13, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.Equal,
+            Value = "WorkUnitName"
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.Equal,
+            Value = 2.3
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.Equal,
+            Value = "GROGPU2"
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.Equal,
+            Value = 100
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.Equal,
+            Value = 7000
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.Equal,
+            Value = "GPU"
+         }));
+         FetchTestData(6, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.Equal,
+            Value = 9482.92683
+         }));
+         FetchTestData(13, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.Equal,
+            Value = 450
+         }));
       }
 
       [Test]
-      public void FetchTest3()
+      public void FetchGreaterThanTest()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.DownloadDateTime,
-                                  Type = QueryFieldType.GreaterThanOrEqual,
-                                  Value = new DateTime(2010, 8, 20)
-                               });
-         FetchTestInternal(25, parameters);
+         FetchTestData(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.GreaterThan,
+            Value = 10502
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.GreaterThan,
+            Value = 79
+         }));
+         FetchTestData(7, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.GreaterThan,
+            Value = 761
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.GreaterThan,
+            Value = 279
+         }));
+         FetchTestData(21, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.GreaterThan,
+            Value = "nVidia GPU - GTX275"
+         }));
+         FetchTestData(32, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.GreaterThan,
+            Value = @"\\Mainworkstation\Folding@home-gpu\"
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.GreaterThan,
+            Value = "harlam357"
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.GreaterThan,
+            Value = 32
+         }));
+         FetchTestData(4, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.GreaterThan,
+            Value = 2.09
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.GreaterThan,
+            Value = 100
+         }));
+         FetchTestData(23, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = 41  // not a TimeSpan value
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.GreaterThan,
+            Value = 1   // not a String value
+         }));
+         FetchTestData(7, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2010, 8, 22, 0, 42, 0)
+         }));
+         FetchTestData(23, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2010, 8, 21, 20, 57, 0)
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.GreaterThan,
+            Value = "WorkUnitName"
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.GreaterThan,
+            Value = 2.3
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.GreaterThan,
+            Value = "GRO-A3"
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.GreaterThan,
+            Value = 99
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.GreaterThan,
+            Value = 0
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.GreaterThan,
+            Value = "SMP"
+         }));
+         FetchTestData(6, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.GreaterThan,
+            Value = 9482.92683
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.GreaterThan,
+            Value = 450
+         }));
       }
 
       [Test]
-      public void FetchTest4()
+      public void FetchGreaterThanOrEqualTest()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.DownloadDateTime,
-                                  Type = QueryFieldType.GreaterThan,
-                                  Value = new DateTime(2010, 8, 8)
-                               });
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.DownloadDateTime,
-                                  Type = QueryFieldType.LessThan,
-                                  Value = new DateTime(2010, 8, 22)
-                               });
-         FetchTestInternal(33, parameters);
+         FetchTestData(13, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 10502
+         }));
+         FetchTestData(5, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 79
+         }));
+         FetchTestData(8, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 761
+         }));
+         FetchTestData(4, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 279
+         }));
+         FetchTestData(32, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "nVidia GPU - GTX275"
+         }));
+         FetchTestData(43, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = @"\\Mainworkstation\Folding@home-gpu\"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "harlam357"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 32
+         }));
+         FetchTestData(15, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 2.09
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData(35, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 41  // not a TimeSpan value
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 1   // not a String value
+         }));
+         FetchTestData(8, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = new DateTime(2010, 8, 22, 0, 42, 0)
+         }));
+         FetchTestData(24, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = new DateTime(2010, 8, 21, 20, 57, 0)
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "WorkUnitName"
+         }));
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 2.3
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "GRO-A3"
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 99
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 0
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "SMP"
+         }));
+         FetchTestData(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 9482.92683
+         }));
+         FetchTestData(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 450
+         }));
       }
 
       [Test]
-      public void FetchTest5()
+      public void FetchLessThanTest()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.WorkUnitName,
-                                  Type = QueryFieldType.Equal,
-                                  Value = "WorkUnitName"
-                               });
-         FetchTestInternal(13, parameters);
+         FetchTestData(31, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.LessThan,
+            Value = 10502
+         }));
+         FetchTestData(39, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.LessThan,
+            Value = 79
+         }));
+         FetchTestData(36, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.LessThan,
+            Value = 761
+         }));
+         FetchTestData(40, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.LessThan,
+            Value = 279
+         }));
+         FetchTestData(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.LessThan,
+            Value = "nVidia GPU - GTX275"
+         }));
+         FetchTestData(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.LessThan,
+            Value = @"\\Mainworkstation\Folding@home-gpu\"
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.LessThan,
+            Value = "harlam357"
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.LessThan,
+            Value = 32
+         }));
+         FetchTestData(29, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.LessThan,
+            Value = 2.09
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.LessThan,
+            Value = 100
+         }));
+         FetchTestData(9, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.LessThan,
+            Value = 41  // not a TimeSpan value
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.LessThan,
+            Value = 1   // not a String value
+         }));
+         FetchTestData(36, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2010, 8, 22, 0, 42, 0)
+         }));
+         FetchTestData(20, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2010, 8, 21, 20, 57, 0)
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.LessThan,
+            Value = "WorkUnitName"
+         }));
+         FetchTestData(41, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.LessThan,
+            Value = 2.3
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.LessThan,
+            Value = "GRO-A3"
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.LessThan,
+            Value = 99
+         }));
+         FetchTestData(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.LessThan,
+            Value = 0
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.LessThan,
+            Value = "SMP"
+         }));
+         FetchTestData(32, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.LessThan,
+            Value = 9482.92683
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.LessThan,
+            Value = 450
+         }));
       }
 
       [Test]
-      public void FetchTest6()
+      public void FetchLessThanOrEqualTest()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.WorkUnitName,
-                                  Type = QueryFieldType.Equal,
-                                  Value = "WorkUnitName2"
-                               });
-         FetchTestInternal(3, parameters);
+         FetchTestData(32, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 10502
+         }));
+         FetchTestData(41, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 79
+         }));
+         FetchTestData(37, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 761
+         }));
+         FetchTestData(41, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 279
+         }));
+         FetchTestData(23, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "nVidia GPU - GTX275"
+         }));
+         FetchTestData(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = @"\\Mainworkstation\Folding@home-gpu\"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "harlam357"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 32
+         }));
+         FetchTestData(40, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 2.09
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData(21, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 41  // not a TimeSpan value
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 1   // not a String value
+         }));
+         FetchTestData(37, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = new DateTime(2010, 8, 22, 0, 42, 0)
+         }));
+         FetchTestData(21, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = new DateTime(2010, 8, 21, 20, 57, 0)
+         }));
+         FetchTestData(41, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "WorkUnitName"
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 2.3
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "GRO-A3"
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 99
+         }));
+         FetchTestData(28, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 0
+         }));
+         FetchTestData(44, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "SMP"
+         }));
+         FetchTestData(38, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 9482.92683
+         }));
+         FetchTestData(41, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 450
+         }));
       }
 
       [Test]
-      public void FetchTest7()
+      public void FetchComplexTest_1()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.Atoms,
-                                  Type = QueryFieldType.GreaterThan,
-                                  Value = 5000
-                               });
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.Atoms,
-                                  Type = QueryFieldType.LessThanOrEqual,
-                                  Value = 7000
-                               });
-         FetchTestInternal(3, parameters);
+         FetchTestData(33, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2010, 8, 8)
+         },
+         new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2010, 8, 22)
+         }));
       }
 
       [Test]
-      public void FetchTest8()
+      public void FetchComplexTest_2()
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField
-                               {
-                                  Name = QueryFieldName.Core, 
-                                  Type = QueryFieldType.Equal, 
-                                  Value = "GROGPU2"
-                               });
-         FetchTestInternal(16, parameters);
+         FetchTestData(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.GreaterThan,
+            Value = 5000
+         },
+         new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 7000
+         }));
       }
 
-      public void FetchTestInternal(int count, QueryParameters parameters)
+      [Test]
+      public void FetchAllTest2()
+      {
+         // Select All
+         FetchTestData2(285, BuildParameters());
+      }
+
+      [Test]
+      public void FetchEqualTest2()
+      {
+         FetchTestData2(10, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.Equal,
+            Value = 8011
+         }));
+         FetchTestData2(89, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.Equal,
+            Value = 0
+         }));
+         FetchTestData2(14, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.Equal,
+            Value = 63
+         }));
+         FetchTestData2(2, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.Equal,
+            Value = 188
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.Equal,
+            Value = "Windows - Test Workstation Slot 00"
+         }));
+         FetchTestData2(30, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.Equal,
+            Value = "192.168.0.172-36330"
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.Equal,
+            Value = "harlam357"
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.Equal,
+            Value = 32
+         }));
+         FetchTestData2(63, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.Equal,
+            Value = 2.27
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.Equal,
+            Value = 100
+         }));
+         FetchTestData2(14, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.Equal,
+            Value = 100  // not a TimeSpan value
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.Equal,
+            Value = 1   // not a String value
+         }));
+         FetchTestData2(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.Equal,
+            Value = new DateTime(2012, 7, 5, 0, 25, 7)
+         }));
+         FetchTestData2(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.Equal,
+            Value = new DateTime(2012, 11, 19, 6, 56, 47)
+         }));
+         FetchTestData2(10, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.Equal,
+            Value = "WorkUnitName3"
+         }));
+         FetchTestData2(10, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.Equal,
+            Value = 0.75
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.Equal,
+            Value = "GRO-A5"
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.Equal,
+            Value = 100
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.Equal,
+            Value = 11000
+         }));
+         FetchTestData2(10, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.Equal,
+            Value = "Uniprocessor"
+         }));
+         FetchTestData2(3, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.Equal,
+            Value = 486876.03173
+         }));
+         FetchTestData2(2, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.Equal,
+            Value = 869.4797
+         }));
+      }
+
+      [Test]
+      public void FetchGreaterThanTest2()
+      {
+         FetchTestData2(82, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.GreaterThan,
+            Value = 7137
+         }));
+         FetchTestData2(49, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.GreaterThan,
+            Value = 18
+         }));
+         FetchTestData2(114, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.GreaterThan,
+            Value = 63
+         }));
+         FetchTestData2(164, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.GreaterThan,
+            Value = 188
+         }));
+         FetchTestData2(86, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.GreaterThan,
+            Value = "Windows - Test Workstation Slot 00"
+         }));
+         FetchTestData2(229, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.GreaterThan,
+            Value = @"\\192.168.0.133\FAH\"
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.GreaterThan,
+            Value = "harlam357"
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.GreaterThan,
+            Value = 32
+         }));
+         FetchTestData2(198, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.GreaterThan,
+            Value = 2.15
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.GreaterThan,
+            Value = 100
+         }));
+         FetchTestData2(182, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = 100  // not a TimeSpan value
+         }));
+         FetchTestData2(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.GreaterThan,
+            Value = 1   // not a String value
+         }));
+         FetchTestData2(42, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2012, 7, 5, 0, 25, 7)
+         }));
+         FetchTestData2(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2012, 11, 19, 6, 56, 47)
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.GreaterThan,
+            Value = "WorkUnitName3"
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.GreaterThan,
+            Value = 0.75
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.GreaterThan,
+            Value = "GRO-A4"
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.GreaterThan,
+            Value = 100
+         }));
+         FetchTestData2(12, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.GreaterThan,
+            Value = 9000
+         }));
+         FetchTestData2(10, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.GreaterThan,
+            Value = "SMP"
+         }));
+         FetchTestData2(5, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.GreaterThan,
+            Value = 486876.03173
+         }));
+         FetchTestData2(16, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.GreaterThan,
+            Value = 869.4797
+         }));
+      }
+
+      [Test]
+      public void FetchGreaterThanOrEqualTest2()
+      {
+         FetchTestData2(85, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 7137
+         }));
+         FetchTestData2(53, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 18
+         }));
+         FetchTestData2(128, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 63
+         }));
+         FetchTestData2(166, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 188
+         }));
+         FetchTestData2(98, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "Windows - Test Workstation Slot 00"
+         }));
+         FetchTestData2(237, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = @"\\192.168.0.133\FAH\"
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "harlam357"
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 32
+         }));
+         FetchTestData2(258, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 2.15
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData2(196, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 100  // not a TimeSpan value
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 1   // not a String value
+         }));
+         FetchTestData2(43, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = new DateTime(2012, 7, 5, 0, 25, 7)
+         }));
+         FetchTestData2(17, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = new DateTime(2012, 11, 19, 6, 56, 47)
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "WorkUnitName3"
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 0.75
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "GRO-A4"
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 9000
+         }));
+         FetchTestData2(22, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "SMP"
+         }));
+         FetchTestData2(8, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 486876.03173
+         }));
+         FetchTestData2(18, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = 869.4797
+         }));
+      }
+
+      [Test]
+      public void FetchLessThanTest2()
+      {
+         FetchTestData2(200, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.LessThan,
+            Value = 7137
+         }));
+         FetchTestData2(232, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.LessThan,
+            Value = 18
+         }));
+         FetchTestData2(157, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.LessThan,
+            Value = 63
+         }));
+         FetchTestData2(119, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.LessThan,
+            Value = 188
+         }));
+         FetchTestData2(187, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.LessThan,
+            Value = "Windows - Test Workstation Slot 00"
+         }));
+         FetchTestData2(48, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.LessThan,
+            Value = @"\\192.168.0.133\FAH\"
+         }));
+         FetchTestData2(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.LessThan,
+            Value = "harlam357"
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.LessThan,
+            Value = 32
+         }));
+         FetchTestData2(27, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.LessThan,
+            Value = 2.15
+         }));
+         FetchTestData2(1, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.LessThan,
+            Value = 100
+         }));
+         FetchTestData2(89, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.LessThan,
+            Value = 100  // not a TimeSpan value
+         }));
+         FetchTestData2(0, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.LessThan,
+            Value = 1   // not a String value
+         }));
+         FetchTestData2(242, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2012, 7, 5, 0, 25, 7)
+         }));
+         FetchTestData2(268, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2012, 11, 19, 6, 56, 47)
+         }));
+         FetchTestData2(273, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.LessThan,
+            Value = "WorkUnitName4"
+         }));
+         FetchTestData2(263, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.LessThan,
+            Value = 0.75
+         }));
+         FetchTestData2(263, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.LessThan,
+            Value = "GRO-A4"
+         }));
+         FetchTestData2(263, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.LessThan,
+            Value = 100
+         }));
+         FetchTestData2(273, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.LessThan,
+            Value = 11000
+         }));
+         FetchTestData2(263, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.LessThan,
+            Value = "SMP"
+         }));
+         FetchTestData2(277, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.LessThan,
+            Value = 486876.03173
+         }));
+         FetchTestData2(267, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.LessThan,
+            Value = 869.4797
+         }));
+      }
+
+      [Test]
+      public void FetchLessThanOrEqualTest2()
+      {
+         FetchTestData2(203, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectID,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 7137
+         }));
+         FetchTestData2(236, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectRun,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 18
+         }));
+         FetchTestData2(171, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectClone,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 63
+         }));
+         FetchTestData2(121, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.ProjectGen,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 188
+         }));
+         FetchTestData2(199, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "Windows - Test Workstation Slot 00"
+         }));
+         FetchTestData2(56, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Path,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = @"\\192.168.0.133\FAH\"
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Username,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "harlam357"
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Team,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 32
+         }));
+         FetchTestData2(87, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CoreVersion,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 2.15
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FramesCompleted,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData2(103, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.FrameTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 100  // not a TimeSpan value
+         }));
+         FetchTestData2(284, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Result,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 1   // not a String value
+         }));
+         FetchTestData2(243, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = new DateTime(2012, 7, 5, 0, 25, 7)
+         }));
+         FetchTestData2(269, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.CompletionDateTime,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = new DateTime(2012, 11, 19, 6, 56, 47)
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.WorkUnitName,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "WorkUnitName4"
+         }));
+         FetchTestData2(273, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.KFactor,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 0.75
+         }));
+         FetchTestData2(273, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Core,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "GRO-A4"
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Frames,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 100
+         }));
+         FetchTestData2(285, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Atoms,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 11000
+         }));
+         FetchTestData2(275, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.SlotType,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "SMP"
+         }));
+         FetchTestData2(280, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.PPD,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 486876.03173
+         }));
+         FetchTestData2(269, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Credit,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = 869.4797
+         }));
+      }
+
+      [Test]
+      public void FetchComplexTest2_1()
+      {
+         FetchTestData2(84, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.GreaterThan,
+            Value = new DateTime(2012, 5, 29)
+         },
+         new QueryField
+         {
+            Name = QueryFieldName.DownloadDateTime,
+            Type = QueryFieldType.LessThan,
+            Value = new DateTime(2012, 11, 1)
+         }));
+      }
+
+      [Test]
+      public void FetchComplexTest2_2()
+      {
+         FetchTestData2(88, BuildParameters(new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.GreaterThanOrEqual,
+            Value = "Ubuntu VM SMP - Media Server"
+         },
+         new QueryField
+         {
+            Name = QueryFieldName.Name,
+            Type = QueryFieldType.LessThanOrEqual,
+            Value = "n"
+         }));
+      }
+
+      private static QueryParameters BuildParameters(params QueryField[] fields)
+      {
+         var parameters = new QueryParameters();
+         parameters.Fields.AddRange(fields);
+         return parameters;
+      }
+
+      private void FetchTestData(int count, QueryParameters parameters)
       {
          _database.DatabaseFilePath = TestDataFile;
-         var entries = _database.Fetch(parameters);
-         foreach (var entry in entries)
-         {
-            Debug.WriteLine(entry.ID);
-         }
+         FetchInternal(count, parameters);
+      }
+
+      private void FetchTestData2(int count, QueryParameters parameters)
+      {
+         _database.DatabaseFilePath = TestData2File;
+         FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
+      }
+
+      private void FetchInternal(int count, QueryParameters parameters)
+      {
+         FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
+      }
+
+      private void FetchInternal(int count, QueryParameters parameters, HistoryProductionView productionView)
+      {
+         var entries = _database.Fetch(parameters, productionView);
+         //foreach (var entry in entries)
+         //{
+         //   Debug.WriteLine(entry.ID);
+         //}
          Assert.AreEqual(count, entries.Count);
       }
 
@@ -494,11 +1859,35 @@ namespace HFM.Core.Tests
          protein.WorkUnitName = "WorkUnitName2";
          protein.Core = "GROGPU2";
          protein.Credit = 675;
-         protein.KFactor = 0;
+         protein.KFactor = 2.3;
          protein.Frames = 100;
          protein.NumberOfAtoms = 7000;
          protein.PreferredDays = 2;
          protein.MaximumDays = 3;
+         proteins.Add(protein.ProjectNumber, protein);
+
+         protein = new Protein();
+         protein.ProjectNumber = 8011;
+         protein.WorkUnitName = "WorkUnitName3";
+         protein.Core = "GRO-A4";
+         protein.Credit = 106.6;
+         protein.KFactor = 0.75;
+         protein.Frames = 100;
+         protein.NumberOfAtoms = 9000;
+         protein.PreferredDays = 2.13;
+         protein.MaximumDays = 4.62;
+         proteins.Add(protein.ProjectNumber, protein);
+
+         protein = new Protein();
+         protein.ProjectNumber = 6903;
+         protein.WorkUnitName = "WorkUnitName4";
+         protein.Core = "GRO-A5";
+         protein.Credit = 22706;
+         protein.KFactor = 38.05;
+         protein.Frames = 100;
+         protein.NumberOfAtoms = 11000;
+         protein.PreferredDays = 5;
+         protein.MaximumDays = 12;
          proteins.Add(protein.ProjectNumber, protein);
 
          return proteins;
