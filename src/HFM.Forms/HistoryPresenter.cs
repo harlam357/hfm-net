@@ -209,7 +209,7 @@ namespace HFM.Forms
          list.Add("Team");
          list.Add("Core Version");
          list.Add("Frames Completed");
-         list.Add("Frame Time");
+         list.Add("Frame Time (Seconds)");
          list.Add("Unit Result");
          list.Add("Download Date (UTC)");
          list.Add("Completion Date (UTC)");
