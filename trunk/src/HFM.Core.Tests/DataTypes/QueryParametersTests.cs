@@ -205,6 +205,14 @@ namespace HFM.Core.Tests.DataTypes
          Assert.AreEqual("Like", field.Operator);
       }
 
+      [Test]
+      public void QueryFieldGetOperatorTest7()
+      {
+         var field = new QueryField();
+         field.Type = QueryFieldType.NotLike;
+         Assert.AreEqual("Not Like", field.Operator);
+      }
+
       #endregion
    }
 }
