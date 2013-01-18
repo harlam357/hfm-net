@@ -197,6 +197,14 @@ namespace HFM.Core.Tests.DataTypes
          Assert.AreEqual("<=", field.Operator);
       }
 
+      [Test]
+      public void QueryFieldGetOperatorTest6()
+      {
+         var field = new QueryField();
+         field.Type = QueryFieldType.Like;
+         Assert.AreEqual("LIKE", field.Operator);
+      }
+
       #endregion
    }
 }

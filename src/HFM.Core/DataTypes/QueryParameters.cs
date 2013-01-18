@@ -229,8 +229,6 @@ namespace HFM.Core.DataTypes
       {
          switch (type)
          {
-            //case QueryFieldType.All:
-            //   return "*";
             case QueryFieldType.Equal:
                return "=";
             case QueryFieldType.GreaterThan:
@@ -241,6 +239,8 @@ namespace HFM.Core.DataTypes
                return "<";
             case QueryFieldType.LessThanOrEqual:
                return "<=";
+            case QueryFieldType.Like:
+               return "Like";
             default:
                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                   "Query Field Type '{0}' is not implemented.", type));
