@@ -185,6 +185,7 @@ namespace HFM.Forms
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.LessThan.ToString(), QueryFieldType.LessThan));
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.LessThanOrEqual.ToString(), QueryFieldType.LessThanOrEqual));
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.Like.ToString(), QueryFieldType.Like));
+            columnChoices.Add(new QueryColumnChoice(QueryFieldType.NotLike.ToString(), QueryFieldType.NotLike));
          }
          else
          {
@@ -194,6 +195,7 @@ namespace HFM.Forms
             columnChoices.Add(new QueryColumnChoice("Less Than", QueryFieldType.LessThan));
             columnChoices.Add(new QueryColumnChoice("Less Than Or Equal", QueryFieldType.LessThanOrEqual));
             columnChoices.Add(new QueryColumnChoice("Like", QueryFieldType.Like));
+            columnChoices.Add(new QueryColumnChoice("Not Like", QueryFieldType.NotLike));
          }
 
          return columnChoices;

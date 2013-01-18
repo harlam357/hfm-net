@@ -241,6 +241,8 @@ namespace HFM.Core.DataTypes
                return "<=";
             case QueryFieldType.Like:
                return "Like";
+            case QueryFieldType.NotLike:
+               return "Not Like";
             default:
                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                   "Query Field Type '{0}' is not implemented.", type));

@@ -57,40 +57,6 @@ namespace HFM.Core
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
    }
 
-   //public class MyMapper : PetaPoco.IMapper
-   //{
-   //   public void GetTableInfo(Type t, PetaPoco.TableInfo ti)
-   //   {
-   //      // no implementation
-   //   }
-   //
-   //   public bool MapPropertyToColumn(System.Reflection.PropertyInfo pi, ref string columnName, ref bool resultColumn)
-   //   {
-   //      // no implementation
-   //      return true;
-   //   }
-   //
-   //   public Func<object, object> GetFromDbConverter(System.Reflection.PropertyInfo pi, Type sourceType)
-   //   {
-   //      // no implementation
-   //      return null;
-   //   }
-   //
-   //   public Func<object, object> GetToDbConverter(Type sourceType)
-   //   {
-   //      if (sourceType == typeof(DateTime))
-   //      {
-   //         return value =>
-   //                {
-   //                   var dateTime = (DateTime)value;
-   //                   //return String.Format(CultureInfo.InvariantCulture, "'{0}'", 
-   //                   return dateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); // + "Z";
-   //                };
-   //      }
-   //      return null;
-   //   }
-   //}
-
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
    {
       #region Fields
@@ -346,6 +312,10 @@ namespace HFM.Core
                {
                   query = Like(query, field);
                }
+               else if (field.Type.Equals(QueryFieldType.NotLike))
+               {
+                  query = NotLike(query, field);
+               }
                else
                {
                   try
@@ -366,38 +336,51 @@ namespace HFM.Core
       private static IQueryable<HistoryEntry> Like(IQueryable<HistoryEntry> query, QueryField field)
       {
          Debug.Assert(field.Type.Equals(QueryFieldType.Like));
+         return LikeMatch(query, field, IsSqlLikeMatch);
+      }
+
+      private static IQueryable<HistoryEntry> NotLike(IQueryable<HistoryEntry> query, QueryField field)
+      {
+         Debug.Assert(field.Type.Equals(QueryFieldType.NotLike));
+         return LikeMatch(query, field, (input, pattern) => !IsSqlLikeMatch(input, pattern));
+      }
+      
+      private static IQueryable<HistoryEntry> LikeMatch(IQueryable<HistoryEntry> query, QueryField field, Func<string, string, bool> func)
+      {
+         Debug.Assert(field.Type.Equals(QueryFieldType.Like) ||
+                      field.Type.Equals(QueryFieldType.NotLike));
 
          if (field.Name.Equals(QueryFieldName.WorkUnitName))
          {
-            return query.Where(x => IsSqlLikeMatch(x.WorkUnitName, field.Value.ToString()));
+            return query.Where(x => func(x.WorkUnitName, field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.KFactor))
          {
-            return query.Where(x => IsSqlLikeMatch(x.KFactor.ToString(), field.Value.ToString()));
+            return query.Where(x => func(x.KFactor.ToString(), field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.Core))
          {
-            return query.Where(x => IsSqlLikeMatch(x.Core, field.Value.ToString()));
+            return query.Where(x => func(x.Core, field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.Frames))
          {
-            return query.Where(x => IsSqlLikeMatch(x.Frames.ToString(), field.Value.ToString()));
+            return query.Where(x => func(x.Frames.ToString(), field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.Atoms))
          {
-            return query.Where(x => IsSqlLikeMatch(x.Atoms.ToString(), field.Value.ToString()));
+            return query.Where(x => func(x.Atoms.ToString(), field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.SlotType))
          {
-            return query.Where(x => IsSqlLikeMatch(x.SlotType, field.Value.ToString()));
+            return query.Where(x => func(x.SlotType, field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.PPD))
          {
-            return query.Where(x => IsSqlLikeMatch(x.PPD.ToString(), field.Value.ToString()));
+            return query.Where(x => func(x.PPD.ToString(), field.Value.ToString()));
          }
          if (field.Name.Equals(QueryFieldName.Credit))
          {
-            return query.Where(x => IsSqlLikeMatch(x.Credit.ToString(), field.Value.ToString()));
+            return query.Where(x => func(x.Credit.ToString(), field.Value.ToString()));
          }
 
          // ReSharper disable HeuristicUnreachableCode

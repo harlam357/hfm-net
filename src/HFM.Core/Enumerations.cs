@@ -174,7 +174,8 @@ namespace HFM.Core
       GreaterThanOrEqual,
       LessThan,
       LessThanOrEqual,
-      Like
+      Like,
+      NotLike
    }
 
    public enum WebGenType
