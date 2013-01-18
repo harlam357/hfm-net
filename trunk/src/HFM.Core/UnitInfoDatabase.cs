@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Castle.Core.Logging;
 
@@ -341,18 +342,100 @@ namespace HFM.Core
                 field.Name.Equals(QueryFieldName.PPD) ||
                 field.Name.Equals(QueryFieldName.Credit))
             {
-               try
+               if (field.Type.Equals(QueryFieldType.Like))
                {
-                  query = query.Where(BuildWhereCondition(field));
+                  query = Like(query, field);
                }
-               catch (ParseException ex)
+               else
                {
-                  Logger.WarnFormat(ex, "{0}", ex.Message);
+                  try
+                  {
+                     query = query.Where(BuildWhereCondition(field));
+                  }
+                  catch (ParseException ex)
+                  {
+                     Logger.WarnFormat(ex, "{0}", ex.Message);
+                  }
                }
             }
          }
 
          return query.ToList();
+      }
+
+      private static IQueryable<HistoryEntry> Like(IQueryable<HistoryEntry> query, QueryField field)
+      {
+         Debug.Assert(field.Type.Equals(QueryFieldType.Like));
+
+         if (field.Name.Equals(QueryFieldName.WorkUnitName))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.WorkUnitName, field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.KFactor))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.KFactor.ToString(), field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.Core))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.Core, field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.Frames))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.Frames.ToString(), field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.Atoms))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.Atoms.ToString(), field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.SlotType))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.SlotType, field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.PPD))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.PPD.ToString(), field.Value.ToString()));
+         }
+         if (field.Name.Equals(QueryFieldName.Credit))
+         {
+            return query.Where(x => IsSqlLikeMatch(x.Credit.ToString(), field.Value.ToString()));
+         }
+
+         // ReSharper disable HeuristicUnreachableCode
+         Debug.Assert(false);
+         return query;
+         // ReSharper restore HeuristicUnreachableCode
+      }
+
+      private static bool IsSqlLikeMatch(string input, string pattern)
+      {
+         // Method from here: http://bytes.com/topic/c-sharp/answers/253519-using-regex-create-sqls-like-like-function
+
+         /* Turn "off" all regular expression related syntax in
+         * the pattern string. */
+         pattern = Regex.Escape(pattern);
+
+         /* Replace the SQL LIKE wildcard metacharacters with the
+         * equivalent regular expression metacharacters. */
+         pattern = pattern.Replace("%", ".*?").Replace("_", ".");
+
+         /* The previous call to Regex.Escape actually turned off
+         * too many metacharacters, i.e. those which are recognized by
+         * both the regular expression engine and the SQL LIKE
+         * statement ([...] and [^...]). Those metacharacters have
+         * to be manually unescaped here. */
+         pattern = pattern.Replace(@"\[", "[").Replace(@"\]", "]").Replace(@"\^", "^");
+
+         // anchor the pattern - rwh 12/1/12
+         if (!pattern.StartsWith("^"))
+         {
+            pattern = "^" + pattern;
+         }
+         if (!pattern.EndsWith("$"))
+         {
+            pattern = pattern + "$";
+         }
+         
+         return input != null && Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
       }
 
       private static string BuildWhereCondition(QueryField queryField)
@@ -365,13 +448,7 @@ namespace HFM.Core
             valueFormat = "\"{2}\"";
          }
 
-         var sbWhere = new StringBuilder();
-         //if (queryField.Type.Equals(QueryFieldType.All) == false)
-         //{
-            sbWhere.AppendFormat(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, queryField.Name, queryField.Operator, queryField.Value);
-         //}
-
-         return sbWhere.ToString();
+         return String.Format(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, queryField.Name, queryField.Operator, queryField.Value);
       }
 
       #endregion
