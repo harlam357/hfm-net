@@ -11,7 +11,7 @@
    <PropertyGroup>
       <Major>0</Major>
       <Minor>9</Minor>
-      <Build>1</Build>
+      <Build>2</Build>
       <Revision>0</Revision>
    </PropertyGroup>
 
@@ -20,7 +20,7 @@
         OutputFile="ExeAssemblyVersion.cs"
         AssemblyCompany="harlam357"
         AssemblyProduct="HFM.NET"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2013."
         AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>
@@ -29,7 +29,7 @@
         OutputFile="AssemblyVersion.cs"
         AssemblyCompany="harlam357"
         AssemblyProduct="HFM.NET"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2012."
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2013."
         AssemblyVersion="1.0.0.0"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' "/>

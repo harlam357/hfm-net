@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Settings Manager Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -58,11 +59,15 @@ namespace HFM.Core.Tests
          var instance1 = new LegacyClient();
          instance1.Settings = new ClientSettings(ClientType.Legacy) { Name = "test" };
 
+         const string testFile = "..\\..\\TestFiles\\new.ext";
+
          var configurationManager = new ClientSettingsManager(GetPluginManager());
-         configurationManager.Write(new[] { instance1.Settings }, "..\\..\\TestFiles\\new.ext", 1);
+         configurationManager.Write(new[] { instance1.Settings }, testFile, 1);
          Assert.AreEqual("..\\..\\TestFiles\\new.ext", configurationManager.FileName);
          Assert.AreEqual(1, configurationManager.FilterIndex);
          Assert.AreEqual(".ext", configurationManager.FileExtension);
+
+         File.Delete(testFile);
       }
 
       private static IFileSerializerPluginManager<List<ClientSettings>> GetPluginManager()

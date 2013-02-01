@@ -36,9 +36,18 @@ namespace HFM.Core.Tests
    [TestFixture]
    public class UnitInfoDatabaseTests
    {
+      private const string TestDataFilesFolder = "..\\..\\TestFiles";
+
       private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
-      private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
       private readonly string _testDataFileCopy = Path.ChangeExtension(TestDataFile, ".dbcopy");
+      
+      private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
+      private readonly string _testData2FileCopy = Path.ChangeExtension(TestData2File, ".dbcopy");
+
+      // this file is the same as TestDataFile but has already had UpgradeWuHistory1() run on it
+      private const string TestData_1File = "..\\..\\TestFiles\\TestData_1.db3";
+      private readonly string _testData_1FileCopy = Path.ChangeExtension(TestData_1File, ".dbcopy");
+      
       private const string TestScratchFile = "UnitInfoTest.db3";
 
       private UnitInfoDatabase _database;
@@ -47,6 +56,8 @@ namespace HFM.Core.Tests
       [SetUp]
       public void Init()
       {
+         SetupTestDataFileCopies();
+
          if (File.Exists(TestScratchFile))
          {
             File.Delete(TestScratchFile);
@@ -55,12 +66,12 @@ namespace HFM.Core.Tests
          _database = new UnitInfoDatabase(null, _proteinDictionary);
       }
 
-      [TearDown]
+      [TestFixtureTearDown]
       public void Destroy()
       {
-         if (File.Exists(_testDataFileCopy))
+         foreach (var file in Directory.EnumerateFiles(TestDataFilesFolder, "*.dbcopy"))
          {
-            File.Delete(_testDataFileCopy);
+            File.Delete(file);
          }
          if (File.Exists(TestScratchFile))
          {
@@ -71,8 +82,6 @@ namespace HFM.Core.Tests
       [Test]
       public void TableExistsAndDropTableTest()
       {
-         SetupTestDataFileCopy();
-
          _database.DatabaseFilePath = _testDataFileCopy;
          Assert.AreEqual(true, _database.TableExists(SqlTable.WuHistory));
          _database.DropTable(SqlTable.WuHistory);
@@ -95,8 +104,22 @@ namespace HFM.Core.Tests
       [Test]
       public void PerformUpgradeTest1()
       {
+         Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testDataFileCopy;
-         using (var con = new SQLiteConnection(@"Data Source=" + _testDataFileCopy))
+         Assert.AreEqual(22, GetWuHistoryColumnCount(_testDataFileCopy));
+      }
+
+      [Test]
+      public void PerformUpgradeTest1_AlreadyUpgraded()
+      {
+         Assert.AreEqual(22, GetWuHistoryColumnCount(_testData_1FileCopy));
+         _database.DatabaseFilePath = _testData_1FileCopy;
+         Assert.AreEqual(22, GetWuHistoryColumnCount(_testData_1FileCopy));
+      }
+
+      private static int GetWuHistoryColumnCount(string dataSource)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
          {
             con.Open();
             using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
@@ -107,7 +130,7 @@ namespace HFM.Core.Tests
                {
                   Debug.WriteLine(row[1].ToString());
                }
-               Assert.AreEqual(22, table.Rows.Count);
+               return table.Rows.Count;
             }
          }
       }
@@ -356,8 +379,6 @@ namespace HFM.Core.Tests
       [Test]
       public void DeleteTest()
       {
-         SetupTestDataFileCopy();
-
          _database.DatabaseFilePath = _testDataFileCopy;
          var entries = _database.Fetch(new QueryParameters());
          Assert.AreEqual(44, entries.Count);
@@ -369,7 +390,7 @@ namespace HFM.Core.Tests
       [Test]
       public void DeleteNotExistTest()
       {
-         _database.DatabaseFilePath = TestDataFile;
+         _database.DatabaseFilePath = _testDataFileCopy;
          Assert.AreEqual(0, _database.Delete(new HistoryEntry { ID = 100 }));
       }
 
@@ -2386,13 +2407,13 @@ namespace HFM.Core.Tests
 
       private void FetchTestData(int count, QueryParameters parameters)
       {
-         _database.DatabaseFilePath = TestDataFile;
+         _database.DatabaseFilePath = _testDataFileCopy;
          FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
       }
 
       private void FetchTestData2(int count, QueryParameters parameters)
       {
-         _database.DatabaseFilePath = TestData2File;
+         _database.DatabaseFilePath = _testData2FileCopy;
          FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
       }
 
@@ -2465,17 +2486,21 @@ namespace HFM.Core.Tests
          return proteins;
       }
 
-      private void SetupTestDataFileCopy()
+      private void SetupTestDataFileCopies()
       {
-         if (File.Exists(_testDataFileCopy))
-         {
-            File.Delete(_testDataFileCopy);
-         }
-
-         File.Copy(TestDataFile, _testDataFileCopy, true);
          // sometimes the file is not finished
          // copying before we attempt to open
-         // the copied file.
+         // the copied file.  Halt the thread
+         // for a bit to ensure the copy has
+         // completed.
+
+         File.Copy(TestDataFile, _testDataFileCopy, true);
+         Thread.Sleep(100);
+
+         File.Copy(TestData2File, _testData2FileCopy, true);
+         Thread.Sleep(100);
+
+         File.Copy(TestData_1File, _testData_1FileCopy, true);
          Thread.Sleep(100);
       }
    }
