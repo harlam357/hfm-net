@@ -19,6 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -83,6 +86,30 @@ namespace HFM.Core.Tests
       {
          _database.DatabaseFilePath = TestScratchFile;
          Assert.AreEqual(true, _database.Connected);
+      }
+
+      #endregion
+
+      #region PerformUpgrade
+
+      [Test]
+      public void PerformUpgradeTest1()
+      {
+         _database.DatabaseFilePath = _testDataFileCopy;
+         using (var con = new SQLiteConnection(@"Data Source=" + _testDataFileCopy))
+         {
+            con.Open();
+            using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
+            using (var table = new DataTable())
+            {
+               adapter.Fill(table);
+               foreach (DataRow row in table.Rows)
+               {
+                  Debug.WriteLine(row[1].ToString());
+               }
+               Assert.AreEqual(22, table.Rows.Count);
+            }
+         }
       }
 
       #endregion
@@ -2360,7 +2387,7 @@ namespace HFM.Core.Tests
       private void FetchTestData(int count, QueryParameters parameters)
       {
          _database.DatabaseFilePath = TestDataFile;
-         FetchInternal(count, parameters);
+         FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
       }
 
       private void FetchTestData2(int count, QueryParameters parameters)
@@ -2369,18 +2396,15 @@ namespace HFM.Core.Tests
          FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
       }
 
-      private void FetchInternal(int count, QueryParameters parameters)
-      {
-         FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
-      }
-
       private void FetchInternal(int count, QueryParameters parameters, HistoryProductionView productionView)
       {
          var entries = _database.Fetch(parameters, productionView);
-         //foreach (var entry in entries)
-         //{
-         //   Debug.WriteLine(entry.ID);
-         //}
+#if DEBUG
+         foreach (var entry in entries)
+         {
+            Debug.WriteLine(entry.ID);
+         }
+#endif
          Assert.AreEqual(count, entries.Count);
       }
 
