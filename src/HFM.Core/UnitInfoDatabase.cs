@@ -26,7 +26,6 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 using Castle.Core.Logging;
@@ -100,11 +99,11 @@ namespace HFM.Core
       }
 
       private readonly IProteinDictionary _proteinDictionary;
-      private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommands = new Dictionary<SqlTable, SqlTableCommands>
-                                                                                        {
-                                                                                           { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
-                                                                                           { SqlTable.Version, new VersionSqlTableCommands() }
-                                                                                        };  
+      private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
+                                                                                                 {
+                                                                                                    { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
+                                                                                                    { SqlTable.Version, new VersionSqlTableCommands() }
+                                                                                                 };  
 
       #endregion
 
@@ -134,9 +133,9 @@ namespace HFM.Core
       {
          try
          {
-            if (!TableExists(SqlTable.WuHistory))
+            bool exists = TableExists(SqlTable.WuHistory);
+            if (!exists)
             {
-               //PerformUpgrade();
                CreateTable(SqlTable.WuHistory);
             }
             var parameters = new QueryParameters();
@@ -148,6 +147,10 @@ namespace HFM.Core
                                     });
             Fetch(parameters);
             Connected = true;
+            if (exists)
+            {
+               PerformUpgrade();
+            }
          }
          catch (Exception ex)
          {
@@ -156,17 +159,103 @@ namespace HFM.Core
          }
       }
 
-      //private void PerformUpgrade()
-      //{
-      //   
-      //}
+      #region Database Upgrades
+
+      private void PerformUpgrade()
+      {
+         string dbVersionString = GetDatabaseVersion() ?? "0.0.0.0";
+         int dbVersion = Application.ParseVersion(dbVersionString);
+         Logger.Info("Database version: {0}", dbVersionString);
+
+         bool upgraded = false;
+         if (dbVersion < Application.ParseVersion("0.9.1.595"))
+         {
+            Logger.Info("Upgrading at version: {0}", dbVersionString);
+            UpgradeWuHistory1();
+            upgraded = true;
+         }
+
+         if (upgraded)
+         {
+            string appVersion = Application.VersionWithRevision;
+            SetDatabaseVersion(appVersion);
+            Logger.Info("Upgraded to version: {0}", dbVersionString);
+         }
+      }
+
+      private string GetDatabaseVersion()
+      {
+         if (!TableExists(SqlTable.Version))
+         {
+            CreateTable(SqlTable.Version);
+            return null;
+         }
+
+         using (var con = new SQLiteConnection(ConnectionString))
+         {
+            con.Open();
+            using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", con))
+            using (var table = new DataTable())
+            {
+               adapter.Fill(table);
+               if (table.Rows.Count != 0)
+               {
+                  return table.Rows[0]["Version"].ToString();
+               }
+            }
+         }
+
+         return null;
+      }
+
+      private void UpgradeWuHistory1()
+      {
+         using (var con = new SQLiteConnection(ConnectionString))
+         {
+            con.Open();
+            using (var trans = con.BeginTransaction())
+            {
+               var adder = new SQLiteColumnAdder
+               {
+                  TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
+                  Connection = con
+               };
+
+               adder.AddColumn("WorkUnitName", "VARCHAR(30)");
+               adder.AddColumn("KFactor", "FLOAT");
+               adder.AddColumn("Core", "VARCHAR(20)");
+               adder.AddColumn("Frames", "INT");
+               adder.AddColumn("Atoms", "INT");
+               adder.AddColumn("SlotType", "VARCHAR(20)");
+               adder.AddColumn("Credit", "FLOAT");
+               adder.Execute();
+               trans.Commit();
+            }
+         }
+      }
+
+      private void SetDatabaseVersion(string version)
+      {
+         using (var con = new SQLiteConnection(ConnectionString))
+         {
+            con.Open();
+            using (var command = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
+            {
+               var param = new SQLiteParameter("Version", DbType.String) { Value = version };
+               command.Parameters.Add(param);
+               command.ExecuteNonQuery();
+            }
+         }
+      }
+
+      #endregion
 
       #region Insert
    
       public void Insert(UnitInfoLogic unitInfoLogic)
       {
          // validate the UnitInfoLogic before opening the connection
-         if (ValidateUnitInfo(unitInfoLogic.UnitInfoData) == false) return;
+         if (!ValidateUnitInfo(unitInfoLogic.UnitInfoData)) return;
 
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
@@ -270,7 +359,7 @@ namespace HFM.Core
          }
       }
 
-      public IList<HistoryEntry> FetchInternal(QueryParameters parameters, HistoryProductionView productionView)
+      private IList<HistoryEntry> FetchInternal(QueryParameters parameters, HistoryProductionView productionView)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
           
@@ -443,7 +532,7 @@ namespace HFM.Core
          using (var con = new SQLiteConnection(ConnectionString))
          {
             con.Open();
-            DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommands[sqlTable].TableName, null });
+            DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null });
             return table.Rows.Count != 0;
          }
       }
@@ -453,7 +542,7 @@ namespace HFM.Core
          using (var con = new SQLiteConnection(ConnectionString))
          {
             con.Open();
-            using (var command = SqlTableCommands[sqlTable].GetCreateTableCommand(con))
+            using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(con))
             {
                command.ExecuteNonQuery();
             }
@@ -465,7 +554,7 @@ namespace HFM.Core
          using (var con = new SQLiteConnection(ConnectionString))
          {
             con.Open();
-            using (var command = SqlTableCommands[sqlTable].GetDropTableCommand(con))
+            using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(con))
             {
                command.ExecuteNonQuery();
             }
@@ -475,6 +564,8 @@ namespace HFM.Core
       #endregion
       
       #endregion
+
+      #region Private Helper Classes
 
       private static class WhereBuilder
       {
@@ -536,137 +627,137 @@ namespace HFM.Core
             { QueryFieldName.Path, "InstancePath" },
          };
       }
-   }
 
-   public abstract class SqlTableCommands
-   {
-      #region SQL Strings
+      private abstract class SqlTableCommands
+      {
+         #region SQL Strings
 
-      private const string DropTableSql = "DROP TABLE [{0}];";
-      private const string SelectSql = "SELECT * FROM [{0}];";
+         private const string DropTableSql = "DROP TABLE [{0}];";
+
+         #endregion
+
+         public abstract string TableName { get; }
+
+         public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
+
+         public DbCommand GetDropTableCommand(SQLiteConnection connection)
+         {
+            return new SQLiteCommand(connection)
+            {
+               CommandText = String.Format(CultureInfo.InvariantCulture, DropTableSql, TableName)
+            };
+         }
+      }
+
+      private sealed class WuHistorySqlTableCommands : SqlTableCommands
+      {
+         #region SQL Constants
+
+         private const string WuHistoryTableName = "WuHistory";
+
+         private const string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
+                                                        "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                        "[ProjectID] INT  NOT NULL," +
+                                                        "[ProjectRun] INT  NOT NULL," +
+                                                        "[ProjectClone] INT  NOT NULL," +
+                                                        "[ProjectGen] INT  NOT NULL," +
+                                                        "[InstanceName] VARCHAR(60)  NOT NULL," +
+                                                        "[InstancePath] VARCHAR(260)  NOT NULL," +
+                                                        "[Username] VARCHAR(60)  NOT NULL," +
+                                                        "[Team] INT  NOT NULL," +
+                                                        "[CoreVersion] FLOAT  NOT NULL," +
+                                                        "[FramesCompleted] INT  NOT NULL," +
+                                                        "[FrameTime] INT  NOT NULL," +
+                                                        "[Result] INT  NOT NULL," +
+                                                        "[DownloadDateTime] DATETIME  NOT NULL," +
+                                                        "[CompletionDateTime] DATETIME  NOT NULL," +
+                                                        "[WorkUnitName] VARCHAR(30)," +
+                                                        "[KFactor] FLOAT," +
+                                                        "[Core] VARCHAR(20)," +
+                                                        "[Frames] INT," +
+                                                        "[Atoms] INT," +
+                                                        "[SlotType] VARCHAR(20)," +
+                                                        "[Credit] FLOAT" +
+                                                        ");";
+
+         
+
+         #endregion
+
+         public override string TableName
+         {
+            get { return WuHistoryTableName; }
+         }
+
+         public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
+         {
+            return new SQLiteCommand(connection)
+            {
+               CommandText = String.Format(CultureInfo.InvariantCulture,
+                                           WuHistoryTableCreateSql, WuHistoryTableName)
+            };
+         }
+      }
+
+      private sealed class VersionSqlTableCommands : SqlTableCommands
+      {
+         #region SQL Constants
+
+         private const string VersionTableName = "DbVersion";
+
+         private const string VersionTableCreateSql = "CREATE TABLE [{0}] (" +
+                                                      "[Version] VARCHAR(20)  NOT NULL);";
+
+         #endregion
+
+         public override string TableName
+         {
+            get { return VersionTableName; }
+         }
+
+         public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
+         {
+            return new SQLiteCommand(connection)
+            {
+               CommandText = String.Format(CultureInfo.InvariantCulture,
+                                           VersionTableCreateSql, VersionTableName)
+            };
+         }
+      }
+
+      // ReSharper disable InconsistentNaming
+      private class SQLiteColumnAdder
+      // ReSharper restore InconsistentNaming
+      {
+         private readonly List<DbCommand> _commands = new List<DbCommand>();
+
+         public string TableName { get; set; }
+
+         public SQLiteConnection Connection { get; set; }
+
+         public void AddColumn(string name, string dataType)
+         {
+            if (TableName == null || Connection == null)
+            {
+               return;
+            }
+
+            _commands.Add(new SQLiteCommand(Connection)
+                          {
+                             CommandText = String.Format(CultureInfo.InvariantCulture,
+                                              "ALTER TABLE [{0}] ADD COLUMN [{1}] {2}", TableName, name, dataType)
+                          });
+         }
+
+         public void Execute()
+         {
+            foreach (var command in _commands)
+            {
+               command.ExecuteNonQuery();
+            }
+         }
+      }
 
       #endregion
-
-      public abstract string TableName { get; }
-
-      public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
-
-      public abstract DbCommand GetInsertCommand(SQLiteConnection connection);
-
-      public virtual DbCommand GetDropTableCommand(SQLiteConnection connection)
-      {
-         return new SQLiteCommand(connection)
-                {
-                   CommandText = String.Format(CultureInfo.InvariantCulture, DropTableSql, TableName)
-                };
-      }
-      
-      public virtual SQLiteCommand GetSelectCommand(SQLiteConnection connection)
-      {
-         return new SQLiteCommand(connection)
-                {
-                   CommandText = String.Format(CultureInfo.InvariantCulture, SelectSql, TableName)
-                };
-      }
-   }
-
-   public sealed class WuHistorySqlTableCommands : SqlTableCommands
-   {
-      #region SQL Constants
-      
-      private const string WuHistoryTableName = "WuHistory";
-
-      private const string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
-                                                     "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                                                     "[ProjectID] INT  NOT NULL," +
-                                                     "[ProjectRun] INT  NOT NULL," +
-                                                     "[ProjectClone] INT  NOT NULL," +
-                                                     "[ProjectGen] INT  NOT NULL," +
-                                                     "[InstanceName] VARCHAR(60)  NOT NULL," +
-                                                     "[InstancePath] VARCHAR(260)  NOT NULL," +
-                                                     "[Username] VARCHAR(60)  NOT NULL," +
-                                                     "[Team] INT  NOT NULL," +
-                                                     "[CoreVersion] FLOAT  NOT NULL," +
-                                                     "[FramesCompleted] INT  NOT NULL," +
-                                                     "[FrameTime] INT  NOT NULL," +
-                                                     "[Result] INT  NOT NULL," +
-                                                     "[DownloadDateTime] DATETIME  NOT NULL," +
-                                                     "[CompletionDateTime] DATETIME  NOT NULL);";
-
-      private const string WuHistoryTableInsertSql = "INSERT INTO [{0}] ([ProjectID]," +
-                                                                        "[ProjectRun]," +
-                                                                        "[ProjectClone]," +
-                                                                        "[ProjectGen]," +
-                                                                        "[InstanceName]," +
-                                                                        "[InstancePath]," +
-                                                                        "[Username]," +
-                                                                        "[Team]," +
-                                                                        "[CoreVersion]," +
-                                                                        "[FramesCompleted]," +
-                                                                        "[FrameTime]," +
-                                                                        "[Result]," +
-                                                                        "[DownloadDateTime]," +
-                                                                        "[CompletionDateTime]) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-      #endregion
-
-      public override string TableName
-      {
-         get { return WuHistoryTableName; }
-      }
-
-      public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
-      {
-         return new SQLiteCommand(connection)
-                {
-                   CommandText = String.Format(CultureInfo.InvariantCulture, 
-                                               WuHistoryTableCreateSql, WuHistoryTableName)
-                };
-      }
-
-      public override DbCommand GetInsertCommand(SQLiteConnection connection)
-      {
-         return new SQLiteCommand(connection)
-                {
-                   CommandText = String.Format(CultureInfo.InvariantCulture,
-                                               WuHistoryTableInsertSql, WuHistoryTableName)
-                };
-      }
-   }
-
-   public sealed class VersionSqlTableCommands : SqlTableCommands
-   {
-      #region SQL Constants
-
-      private const string VersionTableName = "DbVersion";
-
-      private const string VersionTableCreateSql = "CREATE TABLE [{0}] (" +
-                                                   "[Version] FLOAT  NOT NULL);";
-      
-      #endregion
-
-      public override string TableName
-      {
-         get { return VersionTableName; }
-      }
-
-      public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
-      {
-         return new SQLiteCommand(connection)
-                {
-                   CommandText = String.Format(CultureInfo.InvariantCulture,
-                                               VersionTableCreateSql, VersionTableName)
-                };
-      }
-
-      public override DbCommand GetInsertCommand(SQLiteConnection connection)
-      {
-         //return new SQLiteCommand(connection)
-         //       {
-         //          CommandText = String.Format(CultureInfo.InvariantCulture,
-         //                                      WuHistoryTableInsertSql, WuHistoryTableName)
-         //       };
-         return null;
-      }
    }
 }

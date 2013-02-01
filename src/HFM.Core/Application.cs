@@ -81,11 +81,11 @@ namespace HFM.Core
 
       #region Version Numbers
 
-      public static long VersionNumber
+      public static int VersionNumber
       {
          get
          {
-            // Example: 0.3.1.50 == 30010045 / 1.3.4.75 == 1030040075
+            // Example: 0.3.1.50 == 30010050 / 1.3.4.75 == 1030040075
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
             return GetVersionLongFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
                                            fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
@@ -97,7 +97,7 @@ namespace HFM.Core
       /// </summary>
       /// <exception cref="ArgumentNullException">Throws when argument is null.</exception>
       /// <exception cref="FormatException">Throws when given version cannot be parsed.</exception>
-      public static long ParseVersion(string version)
+      public static int ParseVersion(string version)
       {
          if (version == null) throw new ArgumentNullException("version");
 
@@ -105,7 +105,7 @@ namespace HFM.Core
          return GetVersionLongFromArray(versionNumbers);
       }
 
-      private static long GetVersionLongFromArray(params int[] versionNumbers)
+      private static int GetVersionLongFromArray(params int[] versionNumbers)
       {
          return (versionNumbers[0] * 1000000000) + (versionNumbers[1] * 10000000) +
                 (versionNumbers[2] * 10000) + versionNumbers[3];
