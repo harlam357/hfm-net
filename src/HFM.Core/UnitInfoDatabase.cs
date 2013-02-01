@@ -88,15 +88,15 @@ namespace HFM.Core
       /// </summary>
       public bool Connected { get; private set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private readonly ILogger _logger = NullLogger.Instance;
 
-      public ILogger Logger
-      {
-         [CoverageExclude]
-         get { return _logger; }
-         [CoverageExclude]
-         set { _logger = value; }
-      }
+      //public ILogger Logger
+      //{
+      //   [CoverageExclude]
+      //   get { return _logger; }
+      //   [CoverageExclude]
+      //   set { _logger = value; }
+      //}
 
       private readonly IProteinDictionary _proteinDictionary;
       private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
@@ -110,10 +110,20 @@ namespace HFM.Core
       #region Constructor
 
       public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
+         : this(prefs, proteinDictionary, null)
+      {
+
+      }
+
+      public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary, ILogger logger)
       {
          if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
-
          _proteinDictionary = proteinDictionary;
+
+         if (logger != null)
+         {
+            _logger = logger;
+         }
 
          ForceDateTimesToUtc = true;
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
@@ -146,11 +156,11 @@ namespace HFM.Core
                                        Value = 0
                                     });
             Fetch(parameters);
-            Connected = true;
             if (exists)
             {
                PerformUpgrade();
             }
+            Connected = true;
          }
          catch (Exception ex)
          {
@@ -165,21 +175,30 @@ namespace HFM.Core
       {
          string dbVersionString = GetDatabaseVersion() ?? "0.0.0.0";
          int dbVersion = Application.ParseVersion(dbVersionString);
-         Logger.Info("Database version: {0}", dbVersionString);
+         _logger.Info("Database version: v{0}", dbVersionString);
 
-         bool upgraded = false;
-         if (dbVersion < Application.ParseVersion("0.9.1.595"))
+         using (var con = new SQLiteConnection(ConnectionString))
          {
-            Logger.Info("Upgrading at version: {0}", dbVersionString);
-            UpgradeWuHistory1();
-            upgraded = true;
-         }
+            con.Open();
+            using (var trans = con.BeginTransaction())
+            {
+               bool upgraded = false;
+               const string upgradeVersion1String = "0.9.2.0";
+               if (dbVersion < Application.ParseVersion(upgradeVersion1String))
+               {
+                  _logger.Info("Performing database upgrade for version: v{0}", upgradeVersion1String);
+                  UpgradeWuHistory1(con);
+                  upgraded = true;
+               }
 
-         if (upgraded)
-         {
-            string appVersion = Application.VersionWithRevision;
-            SetDatabaseVersion(appVersion);
-            Logger.Info("Upgraded to version: {0}", dbVersionString);
+               if (upgraded)
+               {
+                  string appVersion = Application.VersionWithRevision;
+                  _logger.Info("Setting database version to: v{0}", appVersion);
+                  SetDatabaseVersion(con, appVersion);
+                  trans.Commit();
+               }
+            }
          }
       }
 
@@ -208,43 +227,31 @@ namespace HFM.Core
          return null;
       }
 
-      private void UpgradeWuHistory1()
+      private static void UpgradeWuHistory1(SQLiteConnection con)
       {
-         using (var con = new SQLiteConnection(ConnectionString))
+         var adder = new SQLiteColumnAdder
          {
-            con.Open();
-            using (var trans = con.BeginTransaction())
-            {
-               var adder = new SQLiteColumnAdder
-               {
-                  TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
-                  Connection = con
-               };
+            TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
+            Connection = con
+         };
 
-               adder.AddColumn("WorkUnitName", "VARCHAR(30)");
-               adder.AddColumn("KFactor", "FLOAT");
-               adder.AddColumn("Core", "VARCHAR(20)");
-               adder.AddColumn("Frames", "INT");
-               adder.AddColumn("Atoms", "INT");
-               adder.AddColumn("SlotType", "VARCHAR(20)");
-               adder.AddColumn("Credit", "FLOAT");
-               adder.Execute();
-               trans.Commit();
-            }
-         }
+         adder.AddColumn("WorkUnitName", "VARCHAR(30)");
+         adder.AddColumn("KFactor", "FLOAT");
+         adder.AddColumn("Core", "VARCHAR(20)");
+         adder.AddColumn("Frames", "INT");
+         adder.AddColumn("Atoms", "INT");
+         adder.AddColumn("SlotType", "VARCHAR(20)");
+         adder.AddColumn("Credit", "FLOAT");
+         adder.Execute();
       }
 
-      private void SetDatabaseVersion(string version)
+      private static void SetDatabaseVersion(SQLiteConnection con, string version)
       {
-         using (var con = new SQLiteConnection(ConnectionString))
+         using (var command = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
          {
-            con.Open();
-            using (var command = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
-            {
-               var param = new SQLiteParameter("Version", DbType.String) { Value = version };
-               command.Parameters.Add(param);
-               command.ExecuteNonQuery();
-            }
+            var param = new SQLiteParameter("Version", DbType.String) { Value = version };
+            command.Parameters.Add(param);
+            command.ExecuteNonQuery();
          }
       }
 
@@ -413,7 +420,7 @@ namespace HFM.Core
                   }
                   catch (ParseException ex)
                   {
-                     Logger.WarnFormat(ex, "{0}", ex.Message);
+                     _logger.WarnFormat(ex, "{0}", ex.Message);
                   }
                }
             }
@@ -706,6 +713,7 @@ namespace HFM.Core
          private const string VersionTableName = "DbVersion";
 
          private const string VersionTableCreateSql = "CREATE TABLE [{0}] (" +
+                                                      "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                                       "[Version] VARCHAR(20)  NOT NULL);";
 
          #endregion
