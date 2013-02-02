@@ -86,6 +86,10 @@ namespace HFM.Client.Converters
             {
                os = OperatingSystemType.Windows7;
             }
+            else if (inputString.Contains("Windows 8"))
+            {
+               os = OperatingSystemType.Windows8;
+            }
 
             #endregion
 
