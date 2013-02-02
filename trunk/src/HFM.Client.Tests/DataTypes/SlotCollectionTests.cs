@@ -208,6 +208,23 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("gpu:0:\"GT200b [GeForce GTX 285]\"", slotCollection[1].Description);
          Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
       }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slots.txt");
+         var slotCollection = new SlotCollection();
+         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(1, slotCollection.Count);
+
+         Assert.AreEqual(0, slotCollection[0].Id);
+         Assert.AreEqual("PAUSED", slotCollection[0].Status);
+         Assert.AreEqual(FahSlotStatus.Paused, slotCollection[0].StatusEnum);
+         Assert.AreEqual("cpu:4", slotCollection[0].Description);
+         Assert.AreEqual(-1, slotCollection[0].SlotOptions.Cpus);
+         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
+         Assert.AreEqual("paused", slotCollection[0].Reason);
+      }
    }
 
    public class SlotDerived : Slot

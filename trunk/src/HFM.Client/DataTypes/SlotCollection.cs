@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Collection Data Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -285,6 +285,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("options")]
       public SlotOptions SlotOptions { get; set; }
+
+      [MessageProperty("reason")]
+      public string Reason { get; set; }
 
       #pragma warning restore 1591
 

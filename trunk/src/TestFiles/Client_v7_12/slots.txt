@@ -1,0 +1,15 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "PAUSED",
+    "description": "cpu:4",
+    "options": {
+      "cpus": "-1",
+      "pause-on-start": "true"
+    },
+    "reason": "paused"
+  }
+]
+---
+
