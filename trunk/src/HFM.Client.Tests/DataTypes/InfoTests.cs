@@ -94,6 +94,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-5, info.System.UtcOffset);
          Assert.AreEqual(3080, info.System.ProcessId);
@@ -164,6 +165,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("2.1", info.System.Cuda);
          Assert.AreEqual(2.1, info.System.CudaVersion);
          Assert.AreEqual("4000", info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-4, info.System.UtcOffset);
          Assert.AreEqual(1408, info.System.ProcessId);
@@ -234,6 +236,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-7, info.System.UtcOffset);
          Assert.AreEqual(2932, info.System.ProcessId);
@@ -306,6 +309,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("1.3", info.System.Cuda);
          Assert.AreEqual(1.3, info.System.CudaVersion);
          Assert.AreEqual("3020", info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-4, info.System.UtcOffset);
          Assert.AreEqual(2884, info.System.ProcessId);
@@ -376,6 +380,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-4, info.System.UtcOffset);
          Assert.AreEqual(760, info.System.ProcessId);
@@ -446,6 +451,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-4, info.System.UtcOffset);
          Assert.AreEqual(45024, info.System.ProcessId);
@@ -516,6 +522,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("2.1", info.System.Cuda);
          Assert.AreEqual(2.1, info.System.CudaVersion);
          Assert.AreEqual("3020", info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-5, info.System.UtcOffset);
          Assert.AreEqual(3204, info.System.ProcessId);
@@ -586,10 +593,82 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("1.3", info.System.Cuda);
          Assert.AreEqual(1.3, info.System.CudaVersion);
          Assert.AreEqual("3010", info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
          Assert.AreEqual(false, info.System.OnBattery);
          Assert.AreEqual(-6, info.System.UtcOffset);
          Assert.AreEqual(1520, info.System.ProcessId);
          Assert.AreEqual("", info.System.WorkingDirectory);
+         Assert.AreEqual(false, info.System.Win32Service);
+      }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\info.txt");
+         var info = new Info();
+         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
+         Assert.AreEqual("(c) 2009-2013 Stanford University", info.Client.Copyright);
+         Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
+         Assert.AreEqual("", info.Client.Args);
+         Assert.AreEqual("C:/Program Files (x86)/FAHClient/config.xml", info.Client.Config);
+         Assert.AreEqual("7.3.2", info.Build.Version);
+         Assert.AreEqual("Feb  1 2013", info.Build.Date);
+         Assert.AreEqual("01:46:52", info.Build.Time);
+         Assert.AreEqual(3852, info.Build.SvnRev);
+         Assert.AreEqual("fah/trunk/client", info.Build.Branch);
+         Assert.AreEqual("Intel(R) C++ MSVC 1500 mode 1200", info.Build.Compiler);
+         Assert.AreEqual("/TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT /Qmkl", info.Build.Options);
+         Assert.AreEqual("win32 XP", info.Build.Platform);
+         Assert.AreEqual(32, info.Build.Bits);
+         Assert.AreEqual("Release", info.Build.Mode);
+         Assert.AreEqual("Windows 8 Pro", info.System.OperatingSystem);
+         Assert.AreEqual(OperatingSystemType.Windows8, info.System.OperatingSystemEnum);
+         Assert.AreEqual("AMD64", info.System.OperatingSystemArchitecture);
+         Assert.AreEqual(OperatingSystemArchitectureType.x64, info.System.OperatingSystemArchitectureEnum);
+         Assert.AreEqual("       Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz", info.System.Cpu);
+         Assert.AreEqual(CpuType.Corei5, info.System.CpuType);
+         Assert.AreEqual("GenuineIntel Family 6 Model 58 Stepping 9", info.System.CpuId);
+         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual(4, info.System.CpuCount);
+         Assert.AreEqual("3.45GiB", info.System.Memory);
+         Assert.AreEqual(3.45, info.System.MemoryValue);
+         Assert.AreEqual("2.80GiB", info.System.FreeMemory);
+         Assert.AreEqual(2.80, info.System.FreeMemoryValue);
+         Assert.AreEqual("WINDOWS_THREADS", info.System.ThreadType);
+         Assert.AreEqual(0, info.System.GpuCount);
+         Assert.AreEqual(null, info.System.GpuId0);
+         Assert.AreEqual(null, info.System.GpuId0Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId0Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1);
+         Assert.AreEqual(null, info.System.GpuId1Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2);
+         Assert.AreEqual(null, info.System.GpuId2Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3);
+         Assert.AreEqual(null, info.System.GpuId3Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4);
+         Assert.AreEqual(null, info.System.GpuId4Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5);
+         Assert.AreEqual(null, info.System.GpuId5Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6);
+         Assert.AreEqual(null, info.System.GpuId6Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7);
+         Assert.AreEqual(null, info.System.GpuId7Type);
+         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual("Not detected", info.System.Cuda);
+         Assert.AreEqual(null, info.System.CudaVersion);
+         Assert.AreEqual(null, info.System.CudaDriver);
+         Assert.AreEqual(false, info.System.HasBattery);
+         Assert.AreEqual(false, info.System.OnBattery);
+         Assert.AreEqual(-8, info.System.UtcOffset);
+         Assert.AreEqual(584, info.System.ProcessId);
+         Assert.AreEqual("C:/Program Files (x86)/FAHClient", info.System.WorkingDirectory);
          Assert.AreEqual(false, info.System.Win32Service);
       }
    }

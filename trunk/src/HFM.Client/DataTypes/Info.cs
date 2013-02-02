@@ -302,6 +302,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("CUDA Driver")]
       public string CudaDriver { get; set; }
 
+      [MessageProperty("Has Battery")]
+      public bool HasBattery { get; set; }
+
       [MessageProperty("On Battery")]
       public bool OnBattery { get; set; }
 
