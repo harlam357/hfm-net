@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Options Data Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,9 +45,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -160,9 +160,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -275,9 +275,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -390,9 +390,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -505,9 +505,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("advanced", options.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -620,9 +620,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -735,9 +735,9 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
-         Assert.AreEqual("127.0.0.1", options.CommandAllow);
+         Assert.AreEqual("127.0.0.1", options.Allow);
          Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
-         Assert.AreEqual("0.0.0.0/0", options.CommandDeny);
+         Assert.AreEqual("0.0.0.0/0", options.Deny);
          Assert.AreEqual("0.0.0.0/0", options.CommandDenyNoPass);
          Assert.AreEqual(36330, options.CommandPort);
          Assert.AreEqual(true, options.ConfigRotate);
@@ -837,6 +837,149 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(4, options.Threads);
          Assert.AreEqual("harlam357", options.User);
          Assert.AreEqual(3, options.Verbosity);
+      }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\options.txt");
+         var options = new Options();
+         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
+         Assert.AreEqual("capture", options.CaptureDirectory);
+         Assert.AreEqual(false, options.CaptureOnError);
+         Assert.AreEqual(false, options.CapturePackets);
+         Assert.AreEqual(false, options.CaptureRequests);
+         Assert.AreEqual(false, options.CaptureResponses);
+         Assert.AreEqual(false, options.CaptureSockets);
+         Assert.AreEqual("ANY", options.Cause);
+         // Assert.AreEqual(null, options.CertificateFile);
+         Assert.AreEqual(15, options.Checkpoint);
+         Assert.AreEqual(false, options.Child);
+         Assert.AreEqual("STDCLI", options.FahClientSubType);
+         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(4, options.ClientThreads);
+         Assert.AreEqual("normal", options.FahClientType);
+         Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
+         Assert.AreEqual("0.0.0.0", options.CommandAddress);
+         Assert.AreEqual("127.0.0.1", options.Allow);
+         Assert.AreEqual("127.0.0.1", options.CommandAllowNoPass);
+         Assert.AreEqual("0/0", options.Deny);
+         Assert.AreEqual("0/0", options.CommandDenyNoPass);
+         Assert.AreEqual(36330, options.CommandPort);
+         Assert.AreEqual(true, options.ConfigRotate);
+         Assert.AreEqual("configs", options.ConfigRotateDir);
+         Assert.AreEqual(16, options.ConfigRotateMax);
+         Assert.AreEqual(60, options.ConnectionTimeout);
+         Assert.AreEqual("cores", options.CoreDir);
+         Assert.AreEqual(null, options.CoreKey);
+         Assert.AreEqual(null, options.CorePrep);
+         Assert.AreEqual("idle", options.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, options.CorePriorityEnum);
+         Assert.AreEqual(null, options.CoreServer);
+         Assert.AreEqual(false, options.CpuAffinity);
+         Assert.AreEqual("X86_PENTIUM_II", options.CpuSpecies);
+         Assert.AreEqual("AMD64", options.CpuType);
+         Assert.AreEqual(100, options.CpuUsage);
+         Assert.AreEqual(-1, options.Cpus);
+         // Assert.AreEqual(null, options.CrlFile);
+         Assert.AreEqual(0, options.CudaIndex);
+         Assert.AreEqual(4, options.CycleRate);
+         Assert.AreEqual(-1, options.Cycles);
+         Assert.AreEqual(false, options.Daemon);
+         Assert.AreEqual(".", options.DataDirectory);
+         Assert.AreEqual(false, options.DebugSockets);
+         Assert.AreEqual(null, options.DisableProjectLookup);
+         Assert.AreEqual(true, options.DisableSleepWhenActive);
+         Assert.AreEqual(true, options.DumpAfterDeadline);
+         Assert.AreEqual(null, options.Eval);
+         Assert.AreEqual(true, options.ExceptionLocations);
+         Assert.AreEqual("C:\\Program Files (x86)\\FAHClient", options.ExecDirectory);
+         Assert.AreEqual(false, options.ExitWhenDone);
+         Assert.AreEqual(null, options.ExtraCoreArgs);
+         Assert.AreEqual(false, options.FoldAnon);
+         Assert.AreEqual(null, options.ForceWs);
+         Assert.AreEqual(true, options.Gpu);
+         Assert.AreEqual("assign-GPU.stanford.edu:80 assign-GPU.stanford.edu:8080", options.GpuAssignmentServers);
+         Assert.AreEqual(null, options.GpuDeviceId);
+         Assert.AreEqual(null, options.GpuId);
+         Assert.AreEqual(null, options.GpuVendorId);
+         Assert.AreEqual(null, options.GpuIndex);
+         Assert.AreEqual(100, options.GpuUsage);
+         Assert.AreEqual("0:7396", options.HttpAddresses);
+         Assert.AreEqual("", options.HttpsAddresses);
+         Assert.AreEqual(100, options.GpuUsage);
+         Assert.AreEqual(300, options.IdleSeconds);
+         Assert.AreEqual(false, options.LogColor);
+         Assert.AreEqual(true, options.LogCrlf);
+         Assert.AreEqual(false, options.LogDate);
+         Assert.AreEqual(21600, options.LogDatePeriodically);
+         Assert.AreEqual(true, options.LogDebug);
+         Assert.AreEqual(false, options.LogDomain);
+         Assert.AreEqual(null, options.LogDomainLevels);
+         Assert.AreEqual(true, options.LogHeader);
+         Assert.AreEqual(true, options.LogLevel);
+         Assert.AreEqual(true, options.LogNoInfoHeader);
+         Assert.AreEqual(false, options.LogRedirect);
+         Assert.AreEqual(true, options.LogRotate);
+         Assert.AreEqual("logs", options.LogRotateDir);
+         Assert.AreEqual(16, options.LogRotateMax);
+         Assert.AreEqual(false, options.LogShortLevel);
+         Assert.AreEqual(true, options.LogSimpleDomains);
+         Assert.AreEqual(false, options.LogThreadId);
+         Assert.AreEqual(true, options.LogTime);
+         Assert.AreEqual(true, options.LogToScreen);
+         Assert.AreEqual(false, options.LogTruncate);
+         Assert.AreEqual(0, options.MachineId);
+         Assert.AreEqual(null, options.MaxDelay);
+         Assert.AreEqual(900, options.MaxConnectTime);
+         Assert.AreEqual(800, options.MaxConnections);
+         Assert.AreEqual("normal", options.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, options.MaxPacketSizeEnum);
+         Assert.AreEqual(16, options.MaxQueue);
+         Assert.AreEqual(52428800, options.MaxRequestLength);
+         Assert.AreEqual(60, options.MaxShutdownWait);
+         Assert.AreEqual(5, options.MaxSlotErrors);
+         Assert.AreEqual(5, options.MaxUnitErrors);
+         Assert.AreEqual(0, options.MaxUnits);
+         Assert.AreEqual(null, options.Memory);
+         Assert.AreEqual(null, options.MinDelay);
+         Assert.AreEqual(300, options.MinConnectTime);
+         Assert.AreEqual(99, options.NextUnitPercentage);
+         Assert.AreEqual(null, options.Priority);
+         Assert.AreEqual(false, options.NoAssembly);
+         Assert.AreEqual(0, options.OpenClIndex);
+         Assert.AreEqual("UNKNOWN", options.OsSpecies);
+         Assert.AreEqual("WIN32", options.OsType);
+         Assert.AreEqual("", options.Passkey);
+         Assert.AreEqual(null, options.Password);
+         Assert.AreEqual(true, options.PauseOnBattery);
+         Assert.AreEqual(false, options.PauseOnStart);
+         Assert.AreEqual(false, options.Pid);
+         Assert.AreEqual("Folding@home Client.pid", options.PidFile);
+         Assert.AreEqual("medium", options.Power);
+         // Assert.AreEqual(null, options.PrivateKeyFile);
+         Assert.AreEqual(0, options.ProjectKey);
+         Assert.AreEqual(":8080", options.Proxy);
+         Assert.AreEqual(false, options.ProxyEnable);
+         Assert.AreEqual(String.Empty, options.ProxyPass);
+         Assert.AreEqual(String.Empty, options.ProxyUser);
+         Assert.AreEqual(false, options.Respawn);
+         Assert.AreEqual(null, options.RunAs);
+         Assert.AreEqual(null, options.Script);
+         Assert.AreEqual(false, options.Service);
+         Assert.AreEqual("Folding@home Client", options.ServiceDescription);
+         Assert.AreEqual(true, options.ServiceRestart);
+         Assert.AreEqual(5000, options.ServiceRestartDelay);
+         Assert.AreEqual(3600, options.SessionTimeout);
+         Assert.AreEqual(true, options.Smp);
+         Assert.AreEqual(false, options.StackTraces);
+         Assert.AreEqual(32, options.Team);
+         Assert.AreEqual(4, options.Threads);
+         Assert.AreEqual("harlam357", options.User);
+         Assert.AreEqual(3, options.Verbosity);
+         Assert.AreEqual("127.0.0.1", options.WebAllow);
+         Assert.AreEqual("0/0", options.WebDeny);
       }
    }
 }
