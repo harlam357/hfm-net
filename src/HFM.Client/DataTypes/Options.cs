@@ -40,8 +40,26 @@ namespace HFM.Client.DataTypes
       [MessageProperty("capture-directory")]
       public string CaptureDirectory { get; set; }
 
+      [MessageProperty("capture-on-error")]
+      public bool? CaptureOnError { get; set; }
+
+      [MessageProperty("capture-packets")]
+      public bool? CapturePackets { get; set; }
+
+      [MessageProperty("capture-requests")]
+      public bool? CaptureRequests { get; set; }
+
+      [MessageProperty("capture-responses")]
+      public bool? CaptureResponses { get; set; }
+
       [MessageProperty("capture-sockets")]
       public bool? CaptureSockets { get; set; }
+
+      [MessageProperty("cause")]
+      public string Cause { get; set; }
+
+      //[MessageProperty("certificate-file")]
+      //public string CertificateFile { get; set; }
 
       [MessageProperty("checkpoint")]
       public int? Checkpoint { get; set; }
@@ -55,6 +73,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("client-subtype", typeof(FahClientSubTypeConverter))]
       public FahClientSubType FahClientSubTypeEnum { get; set; }
 
+      [MessageProperty("client-threads")]
+      public int? ClientThreads { get; set; }
+
       [MessageProperty("client-type")]
       public string FahClientType { get; set; }
 
@@ -66,16 +87,16 @@ namespace HFM.Client.DataTypes
       public string CommandAddress { get; set; }
 
       // could be IP Address type
-      [MessageProperty("command-allow")]
-      public string CommandAllow { get; set; }
+      [MessageProperty("allow")]
+      public string Allow { get; set; }
 
       // could be IP Address type
       [MessageProperty("command-allow-no-pass")]
       public string CommandAllowNoPass { get; set; }
 
       // could be IP Address type
-      [MessageProperty("command-deny")]
-      public string CommandDeny { get; set; }
+      [MessageProperty("deny")]
+      public string Deny { get; set; }
 
       // could be IP Address type
       [MessageProperty("command-deny-no-pass")]
@@ -92,6 +113,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("config-rotate-max")]
       public int? ConfigRotateMax { get; set; }
+
+      [MessageProperty("connection-timeout")]
+      public int? ConnectionTimeout { get; set; }
 
       [MessageProperty("core-dir")]
       public string CoreDir { get; set; }
@@ -128,6 +152,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("cpus")]
       public int? Cpus { get; set; }
 
+      //[MessageProperty("crl-file")]
+      //public string CrlFile { get; set; }
+
       [MessageProperty("cuda-index")]
       public int? CudaIndex { get; set; }
 
@@ -146,8 +173,12 @@ namespace HFM.Client.DataTypes
       [MessageProperty("debug-sockets")]
       public bool? DebugSockets { get; set; }
 
+      // Version 7.2.9 and prior
       [MessageProperty("disable-project-lookup")]
       public bool? DisableProjectLookup { get; set; }
+
+      [MessageProperty("disable-sleep-when-active")]
+      public bool? DisableSleepWhenActive { get; set; }
 
       [MessageProperty("dump-after-deadline")]
       public bool? DumpAfterDeadline { get; set; }
@@ -166,6 +197,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("extra-core-args")]
       public string ExtraCoreArgs { get; set; }
+
+      [MessageProperty("fold-anon")]
+      public bool? FoldAnon { get; set; }
 
       [MessageProperty("force-ws")]
       public string ForceWs { get; set; }
@@ -193,6 +227,15 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("gpu-usage")]
       public int? GpuUsage { get; set; }
+
+      [MessageProperty("http-addresses")]
+      public string HttpAddresses { get; set; }
+
+      [MessageProperty("https-addresses")]
+      public string HttpsAddresses { get; set; }
+
+      [MessageProperty("idle-seconds")]
+      public int? IdleSeconds { get; set; }
       
       [MessageProperty("log")]
       public string Log { get; set; }
@@ -260,8 +303,15 @@ namespace HFM.Client.DataTypes
       [MessageProperty("machine-id")]
       public int? MachineId { get; set; }
 
+      // Version 7.1.38 and prior
       [MessageProperty("max-delay")]
       public int? MaxDelay { get; set; }
+
+      [MessageProperty("max-connect-time")]
+      public int? MaxConnectTime { get; set; }
+
+      [MessageProperty("max-connections")]
+      public int? MaxConnections { get; set; }
 
       [MessageProperty("max-packet-size")]
       public string MaxPacketSize { get; set; }
@@ -271,6 +321,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("max-queue")]
       public int? MaxQueue { get; set; }
+
+      [MessageProperty("max-request-length")]
+      public int? MaxRequestLength { get; set; }
 
       [MessageProperty("max-shutdown-wait")]
       public int? MaxShutdownWait { get; set; }
@@ -290,6 +343,9 @@ namespace HFM.Client.DataTypes
       // Version 7.1.38 and prior
       [MessageProperty("min-delay")]
       public int? MinDelay { get; set; }
+
+      [MessageProperty("min-connect-time")]
+      public int? MinConnectTime { get; set; }
 
       [MessageProperty("next-unit-percentage")]
       public int? NextUnitPercentage { get; set; }
@@ -329,6 +385,12 @@ namespace HFM.Client.DataTypes
       [MessageProperty("pid-file")]
       public string PidFile { get; set; }
 
+      [MessageProperty("power")]
+      public string Power { get; set; }
+
+      //[MessageProperty("private-key-file")]
+      //public string PrivateKeyFile { get; set; }
+
       [MessageProperty("project-key")]
       public int? ProjectKey { get; set; }
 
@@ -365,6 +427,9 @@ namespace HFM.Client.DataTypes
       [MessageProperty("service-restart-delay")]
       public int? ServiceRestartDelay { get; set; }
 
+      [MessageProperty("session-timeout")]
+      public int? SessionTimeout { get; set; }
+
       [MessageProperty("smp")]
       public bool? Smp { get; set; }
 
@@ -382,6 +447,14 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("verbosity")]
       public int? Verbosity { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("web-allow")]
+      public string WebAllow { get; set; }
+
+      // could be IP Address type
+      [MessageProperty("web-deny")]
+      public string WebDeny { get; set; }
 
       #pragma warning restore 1591
 
