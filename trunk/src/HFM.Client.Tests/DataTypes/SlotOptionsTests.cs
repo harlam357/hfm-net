@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Options Data Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -352,6 +352,30 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(0, slotOptions.MachineId);
+         Assert.AreEqual("normal", slotOptions.MaxPacketSize);
+         Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
+         Assert.AreEqual("idle", slotOptions.CorePriority);
+         Assert.AreEqual(CorePriority.Idle, slotOptions.CorePriorityEnum);
+         Assert.AreEqual(99, slotOptions.NextUnitPercentage);
+         Assert.AreEqual(0, slotOptions.MaxUnits);
+         Assert.AreEqual(15, slotOptions.Checkpoint);
+         Assert.AreEqual(true, slotOptions.PauseOnStart);
+         Assert.AreEqual(null, slotOptions.GpuIndex);
+         Assert.AreEqual(100, slotOptions.GpuUsage);
+      }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slot-options1.txt");
+         var slotOptions = new SlotOptions();
+         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(null, slotOptions.Cpus);
+         Assert.AreEqual("normal", slotOptions.FahClientType);
+         Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
+         Assert.AreEqual("STDCLI", slotOptions.FahClientSubType);
          Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
