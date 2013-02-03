@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Data Aggregator Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -406,7 +406,7 @@ namespace HFM.Core
          /* FoldingID and Team from Queue Entry */
          unit.FoldingID = options.User ?? Constants.DefaultFoldingID;
          unit.Team = options.Team ?? Constants.DefaultTeam;
-         unit.SlotType = (SlotType)slotOptions.FahClientSubTypeEnum;
+         unit.SlotType = (SlotType)Enum.Parse(typeof(SlotType), slotOptions.FahClientSubTypeEnum.ToString());
 
          /* Core ID */
          unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();

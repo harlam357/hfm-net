@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Options Data Converters
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,20 +53,22 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          switch (inputString)
          {
-            case "normal":
-               return FahClientSubType.Uniprocessor;
-            case "SMP":
-               return FahClientSubType.SMP;
+            //case "normal":
+            //   return FahClientSubType.CPU;
+            //case "SMP":
+            //   return FahClientSubType.CPU;
             case "GPU":
                return FahClientSubType.GPU;
-            case "STDCLI": // uniprocessor on Windows
-               return FahClientSubType.Uniprocessor;
-            case "LINUX":  // uniprocessor on Linux
-               return FahClientSubType.Uniprocessor;
+            //case "STDCLI": // uniprocessor on Windows
+            //   return FahClientSubType.CPU;
+            //case "LINUX":  // uniprocessor on Linux
+            //   return FahClientSubType.CPU;
+            default:
+               return FahClientSubType.CPU;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse client-subtype value of '{0}'.", inputString));
+         //throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+         //   "Failed to parse client-subtype value of '{0}'.", inputString));
       }
    }
 

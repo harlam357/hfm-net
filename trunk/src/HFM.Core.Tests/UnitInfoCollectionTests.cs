@@ -81,7 +81,7 @@ namespace HFM.Core.Tests
             unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
             unitInfo.FoldingID = "TestID";
             unitInfo.Team = 32;
-            unitInfo.SlotType = SlotType.Uniprocessor;
+            unitInfo.SlotType = SlotType.CPU;
             unitInfo.DownloadTime = new DateTime(2000, 2, 2, 0, 0, 0);
             unitInfo.DueTime = new DateTime(2000, 3, 3, 0, 0, 0);
             unitInfo.UnitStartTimeStamp = TimeSpan.FromHours(i + 1);
@@ -117,7 +117,7 @@ namespace HFM.Core.Tests
             unitInfo.UnitRetrievalTime = new DateTime((2000 + i), 1, 1, 0, 0, 0);
             unitInfo.FoldingID = "TestID";
             unitInfo.Team = 32;
-            unitInfo.SlotType = SlotType.Uniprocessor;
+            unitInfo.SlotType = SlotType.CPU;
             unitInfo.DownloadTime = new DateTime(2000, 2, 2, 0, 0, 0);
             unitInfo.DueTime = new DateTime(2000, 3, 3, 0, 0, 0);
             unitInfo.UnitStartTimeStamp = TimeSpan.FromHours(i + 1);

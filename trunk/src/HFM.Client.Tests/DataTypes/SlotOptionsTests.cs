@@ -40,7 +40,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
@@ -64,7 +64,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("LINUX", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
@@ -88,7 +88,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
@@ -112,7 +112,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("big", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Big, slotOptions.MaxPacketSizeEnum);
@@ -184,7 +184,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("big", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Big, slotOptions.MaxPacketSizeEnum);
@@ -232,7 +232,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("STDCLI", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
@@ -256,7 +256,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("big", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Big, slotOptions.MaxPacketSizeEnum);
@@ -304,7 +304,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);
@@ -352,7 +352,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
          Assert.AreEqual("SMP", slotOptions.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.SMP, slotOptions.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, slotOptions.FahClientSubTypeEnum);
          Assert.AreEqual(0, slotOptions.MachineId);
          Assert.AreEqual("normal", slotOptions.MaxPacketSize);
          Assert.AreEqual(MaxPacketSize.Normal, slotOptions.MaxPacketSizeEnum);

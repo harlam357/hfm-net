@@ -167,13 +167,13 @@ namespace HFM.Client.DataTypes
    [AttributeUsage(AttributeTargets.Property)]
    public sealed class MessagePropertyAttribute : Attribute
    {
-      private readonly string _name;
+      private readonly string[] _names;
       /// <summary>
-      /// Gets the name of the Folding@Home client message property.
+      /// Gets the names of the Folding@Home client message property.
       /// </summary>
-      public string Name
+      public IEnumerable<string> Names
       {
-         get { return _name; }
+         get { return _names; }
       }
 
       private readonly Type _converterType;
@@ -191,7 +191,17 @@ namespace HFM.Client.DataTypes
       /// <param name="name">The message property name.</param>
       public MessagePropertyAttribute(string name)
       {
-         _name = name;
+         _names = new[] { name };
+      }
+
+      /// <summary>
+      /// Initializes a new instance of the MessagePropertyAttribute class.
+      /// </summary>
+      /// <param name="name1">The first possible message property name.</param>
+      /// <param name="name2">The second possible message property name.</param>
+      public MessagePropertyAttribute(string name1, string name2)
+      {
+         _names = new[] { name1, name2 };
       }
 
       /// <summary>
@@ -201,7 +211,7 @@ namespace HFM.Client.DataTypes
       /// <param name="converterType">The type of the message property converter.</param>
       public MessagePropertyAttribute(string name, Type converterType)
       {
-         _name = name;
+         _names = new[] { name };
          _converterType = converterType;
       }
    }
@@ -324,7 +334,7 @@ namespace HFM.Client.DataTypes
          return (from PropertyDescriptor classProperty in _properties
                  let messageProperty = (MessagePropertyAttribute)classProperty.Attributes[typeof(MessagePropertyAttribute)]
                  where messageProperty != null
-                 where messageProperty.Name == key
+                 where messageProperty.Names.Contains(key)
                  select classProperty);
       }
 

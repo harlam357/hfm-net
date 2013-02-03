@@ -87,7 +87,7 @@ namespace HFM.Client.DataTypes
       public string CommandAddress { get; set; }
 
       // could be IP Address type
-      [MessageProperty("allow")]
+      [MessageProperty("allow", "command-allow")]
       public string Allow { get; set; }
 
       // could be IP Address type
@@ -95,7 +95,7 @@ namespace HFM.Client.DataTypes
       public string CommandAllowNoPass { get; set; }
 
       // could be IP Address type
-      [MessageProperty("deny")]
+      [MessageProperty("deny", "command-deny")]
       public string Deny { get; set; }
 
       // could be IP Address type

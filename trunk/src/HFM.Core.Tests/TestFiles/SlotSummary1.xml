@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <SlotSummary xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   <HfmVersion>0.9.0.498</HfmVersion>
   <NumberFormat>###,###,##0.0</NumberFormat>
@@ -1444,7 +1444,7 @@
         <PercentComplete>26</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>p35 Slot 0</Name>
-        <SlotType>SMP (7.1.43)</SlotType>
+        <SlotType>CPU (7.1.43)</SlotType>
         <TPF>00:04:14</TPF>
         <PPD>8307.4</PPD>
         <UPD>3.402</UPD>
@@ -1771,7 +1771,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:32.4915469-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-28T04:52:23</DownloadTime>
         <DueTime>2012-02-05T04:52:23</DueTime>
         <UnitStartTimeStamp>PT4H56M50S</UnitStartTimeStamp>
@@ -3402,7 +3402,7 @@
         <PercentComplete>85</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>Ubuntu SMP - Quadteron</Name>
-        <SlotType>SMP (6.34)</SlotType>
+        <SlotType>CPU (6.34)</SlotType>
         <TPF>00:06:25</TPF>
         <PPD>300952.7</PPD>
         <UPD>2.244</UPD>
@@ -4024,7 +4024,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:32.1829531-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-27T21:30:51Z</DownloadTime>
         <DueTime>2012-02-02T21:30:51Z</DueTime>
         <UnitStartTimeStamp>PT21H30M56S</UnitStartTimeStamp>
@@ -4751,7 +4751,7 @@
         <PercentComplete>0</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>Ubuntu VM SMP - Main Workstation</Name>
-        <SlotType>SMP (6.34)</SlotType>
+        <SlotType>CPU (6.34)</SlotType>
         <TPF>00:00:00</TPF>
         <PPD>0</PPD>
         <UPD>0</UPD>
@@ -5553,7 +5553,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:31.6907656-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-21T22:05:11Z</DownloadTime>
         <DueTime>2012-01-25T22:05:11Z</DueTime>
         <UnitStartTimeStamp>PT4H44M42S</UnitStartTimeStamp>
@@ -6272,7 +6272,7 @@
         <PercentComplete>3</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>Ubuntu VM SMP - Media Server</Name>
-        <SlotType>SMP (6.34)</SlotType>
+        <SlotType>CPU (6.34)</SlotType>
         <TPF>00:02:30</TPF>
         <PPD>27527.9</PPD>
         <UPD>5.76</UPD>
@@ -6444,7 +6444,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:30.767914-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-28T06:34:26Z</DownloadTime>
         <DueTime>2012-02-01T06:34:26Z</DueTime>
         <UnitStartTimeStamp>PT6H34M26S</UnitStartTimeStamp>
@@ -6515,7 +6515,7 @@
         <PercentComplete>0</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>Ubuntu VM SMP - Test Workstation</Name>
-        <SlotType>SMP (6.34)</SlotType>
+        <SlotType>CPU (6.34)</SlotType>
         <TPF>00:00:00</TPF>
         <PPD>0</PPD>
         <UPD>0</UPD>
@@ -6767,7 +6767,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:41.6643984-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-21T22:05:11Z</DownloadTime>
         <DueTime>2012-01-25T22:05:11Z</DueTime>
         <UnitStartTimeStamp>PT22H5M11S</UnitStartTimeStamp>
@@ -6934,7 +6934,7 @@
         <PercentComplete>80</PercentComplete>
         <UserIdIsDuplicate>false</UserIdIsDuplicate>
         <Name>Windows - Test Workstation Slot 0</Name>
-        <SlotType>SMP (7.1.43)</SlotType>
+        <SlotType>CPU (7.1.43)</SlotType>
         <TPF>00:06:56</TPF>
         <PPD>9581.6</PPD>
         <UPD>2.077</UPD>
@@ -7585,7 +7585,7 @@
         <UnitRetrievalTime>2012-01-28T00:45:32.2737734-06:00</UnitRetrievalTime>
         <FoldingID>harlam357</FoldingID>
         <Team>32</Team>
-        <SlotType>SMP</SlotType>
+        <SlotType>CPU</SlotType>
         <DownloadTime>2012-01-27T21:33:26</DownloadTime>
         <DueTime>2012-02-10T21:33:26</DueTime>
         <UnitStartTimeStamp>PT21H34M31S</UnitStartTimeStamp>
