@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Status Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,7 +45,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -74,7 +74,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -103,7 +103,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.FromHours(-6);
@@ -132,7 +132,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -162,7 +162,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -193,7 +193,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -223,7 +223,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;
@@ -253,7 +253,7 @@ namespace HFM.Core.Tests
 
          var statusData = new StatusData();
          statusData.ClientName = "Status Test";
-         statusData.SlotType = SlotType.SMP;
+         statusData.SlotType = SlotType.CPU;
          statusData.ClientTimeOffset = 0;
          statusData.UtcOffsetIsZero = false;
          statusData.UtcOffset = TimeSpan.Zero;

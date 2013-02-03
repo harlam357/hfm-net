@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Extension Methods
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -316,13 +316,12 @@ namespace HFM.Core
             case "DGROMACSC":
             case "GRO-A4":
             case "PROTOMOL":
-               return SlotType.Uniprocessor;
             case "GRO-SMP":
             case "GROCVS":
             case "GRO-A3":
             case "GRO-A5":
             case "GRO-A6":
-               return SlotType.SMP;
+               return SlotType.CPU;
             case "GROGPU2":
             case "GROGPU2-MT":
             case "OPENMMGPU":
@@ -359,13 +358,12 @@ namespace HFM.Core
             case "82": // Amber
             case "A0": // Gromacs 33
             case "B4": // ProtoMol
-               return SlotType.Uniprocessor;
             case "A1": // Gromacs SMP
             case "A2": // Gromacs SMP
             case "A3": // Gromacs SMP2
             case "A5": // Gromacs SMP2
             case "A6": // Gromacs SMP2
-               return SlotType.SMP;
+               return SlotType.CPU;
             case "11": // GPU2 - GROGPU2
             case "12": // GPU2 - ATI-DEV
             case "13": // GPU2 - NVIDIA-DEV

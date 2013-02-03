@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Data Aggregator Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -445,7 +445,7 @@ namespace HFM.Core
 
          if (fahLogUnitData.Threads > 1)
          {
-            unit.SlotType = SlotType.SMP;
+            unit.SlotType = SlotType.CPU;
          }
 
          if (unitInfoLogData != null)

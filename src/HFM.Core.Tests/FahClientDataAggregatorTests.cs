@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Data Aggregator Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -95,7 +95,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
@@ -170,7 +170,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
          Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
@@ -318,7 +318,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);

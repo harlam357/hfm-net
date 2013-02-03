@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Enumerations
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+using System;
 
 namespace HFM.Core
 {
@@ -48,8 +50,9 @@ namespace HFM.Core
    public enum SlotType
    {
       Unknown,
+      [Obsolete("Use CPU.")]
       Uniprocessor,
-      SMP,
+      CPU,
       GPU
    }
 

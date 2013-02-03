@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Data Aggregator Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -157,7 +157,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 10, 3, 7, 52, 7), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2009, 10, 6, 7, 52, 7), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(7, 52, 7), unitInfoData.UnitStartTimeStamp);
@@ -239,7 +239,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 11, 24, 21, 53, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2009, 11, 30, 21, 53, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(21, 53, 46), unitInfoData.UnitStartTimeStamp);
@@ -301,7 +301,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 24, 21, 53, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 30, 21, 53, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(21, 53, 46), unitInfoData.UnitStartTimeStamp);
@@ -449,7 +449,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("Felix_Pasqualli", unitInfoData.FoldingID);
          Assert.AreEqual(52523, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2009, 12, 29, 9, 7, 48), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 1, 1, 9, 7, 48), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(9, 7, 48), unitInfoData.UnitStartTimeStamp);
@@ -524,7 +524,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 3, 24, 7, 21, 46), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 3, 30, 7, 21, 46), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(7, 21, 51), unitInfoData.UnitStartTimeStamp);
@@ -599,7 +599,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 5, 27, 12, 4, 26), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 6, 2, 12, 4, 26), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(17, 19, 05), unitInfoData.UnitStartTimeStamp);
@@ -751,7 +751,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(new DateTime(2010, 10, 14, 9, 18, 26), unitInfoData.DownloadTime);
          Assert.AreEqual(new DateTime(2010, 10, 20, 9, 18, 26), unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(9, 18, 31), unitInfoData.UnitStartTimeStamp);
@@ -811,7 +811,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("GreyWhiskers", unitInfoData.FoldingID);
          Assert.AreEqual(0, unitInfoData.Team);
-         Assert.AreEqual(SlotType.SMP, unitInfoData.SlotType);
+         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.DownloadTime);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
          Assert.AreEqual(new TimeSpan(8, 46, 43), unitInfoData.UnitStartTimeStamp);

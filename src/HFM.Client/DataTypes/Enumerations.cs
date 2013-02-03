@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Data Type Enumerations
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,14 +36,13 @@ namespace HFM.Client.DataTypes
    // ReSharper disable InconsistentNaming
 
    /// <summary>
-   /// Folding@Home sub-client type (Uniprocessor, SMP, GPU).
+   /// Folding@Home sub-client type (CPU or GPU).
    /// </summary>
    public enum FahClientSubType
    {
       Unknown = 0,
-      Uniprocessor = 1,
-      SMP = 2,
-      GPU = 3,
+      CPU = 1,
+      GPU = 2,
    }
 
    // ReSharper restore InconsistentNaming

@@ -659,11 +659,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 0
          }));
-         FetchTestData(0, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.GreaterThan,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData(6, BuildParameters(new QueryField
          {
@@ -796,11 +796,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 0
          }));
-         FetchTestData(0, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.GreaterThanOrEqual,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData(12, BuildParameters(new QueryField
          {
@@ -933,11 +933,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 0
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(28, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThan,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData(32, BuildParameters(new QueryField
          {
@@ -1070,11 +1070,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 0
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(28, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThanOrEqual,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData(38, BuildParameters(new QueryField
          {
@@ -1522,11 +1522,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = 11000
          }));
-         FetchTestData2(10, BuildParameters(new QueryField
+         FetchTestData2(22, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.Equal,
-            Value = "Uniprocessor"
+            Value = "CPU"
          }));
          FetchTestData2(3, BuildParameters(new QueryField
          {
@@ -1659,11 +1659,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 9000
          }));
-         FetchTestData2(10, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.GreaterThan,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData2(5, BuildParameters(new QueryField
          {
@@ -1800,7 +1800,7 @@ namespace HFM.Core.Tests
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.GreaterThanOrEqual,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData2(8, BuildParameters(new QueryField
          {
@@ -1937,7 +1937,7 @@ namespace HFM.Core.Tests
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThan,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData2(277, BuildParameters(new QueryField
          {
@@ -2070,11 +2070,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 11000
          }));
-         FetchTestData2(275, BuildParameters(new QueryField
+         FetchTestData2(285, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThanOrEqual,
-            Value = "SMP"
+            Value = "CPU"
          }));
          FetchTestData2(280, BuildParameters(new QueryField
          {
@@ -2207,11 +2207,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "0%"
          }));
-         FetchTestData2(12, BuildParameters(new QueryField
+         FetchTestData2(22, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.Like,
-            Value = "%P"
+            Value = "%U"
          }));
          FetchTestData2(10, BuildParameters(new QueryField
          {
@@ -2344,11 +2344,11 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "0%"
          }));
-         FetchTestData2(273, BuildParameters(new QueryField
+         FetchTestData2(263, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.NotLike,
-            Value = "%P"
+            Value = "%U"
          }));
          FetchTestData2(275, BuildParameters(new QueryField
          {

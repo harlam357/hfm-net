@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Queue Control
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -255,7 +255,7 @@ namespace HFM.Forms.Controls
             switch (_slotType)
             {
                case SlotType.Unknown:
-               case SlotType.Uniprocessor:
+               //case SlotType.Uniprocessor:
                   lblCpuType.Text = "CPU Type:";
                   txtBenchmark.Visible = _queue.ClientType.Equals(ClientType.Legacy);
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = _queue.ClientType.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
@@ -273,7 +273,7 @@ namespace HFM.Forms.Controls
                   txtCoresToUse.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                   break;
-               case SlotType.SMP:
+               case SlotType.CPU:
                   lblCpuType.Text = "CPU Type:";
                   txtBenchmark.Visible = false;
                   tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;

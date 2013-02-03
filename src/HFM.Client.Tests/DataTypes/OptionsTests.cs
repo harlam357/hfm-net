@@ -41,7 +41,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -156,7 +156,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("LINUX", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -271,7 +271,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(30, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -386,7 +386,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -501,7 +501,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("advanced", options.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -616,7 +616,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -731,7 +731,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
          Assert.AreEqual("0.0.0.0", options.CommandAddress);
@@ -857,7 +857,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(15, options.Checkpoint);
          Assert.AreEqual(false, options.Child);
          Assert.AreEqual("STDCLI", options.FahClientSubType);
-         Assert.AreEqual(FahClientSubType.Uniprocessor, options.FahClientSubTypeEnum);
+         Assert.AreEqual(FahClientSubType.CPU, options.FahClientSubTypeEnum);
          Assert.AreEqual(4, options.ClientThreads);
          Assert.AreEqual("normal", options.FahClientType);
          Assert.AreEqual(FahClientType.Normal, options.FahClientTypeEnum);
