@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Collection Data Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -849,6 +849,51 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(788, unitCollection[0].BaseCredit);
          Assert.AreEqual(4825.61, unitCollection[0].CreditEstimate);
          Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", unitCollection[0].Description);
+      }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\units.txt");
+         var unitCollection = new UnitCollection();
+         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual(0, unitCollection[0].Id);
+         Assert.AreEqual("READY", unitCollection[0].State);
+         Assert.AreEqual(FahUnitStatus.Ready, unitCollection[0].StateEnum);
+         Assert.AreEqual("NO_ERROR", unitCollection[0].Error);
+         Assert.AreEqual(7006, unitCollection[0].Project);
+         Assert.AreEqual(1, unitCollection[0].Run);
+         Assert.AreEqual(540, unitCollection[0].Clone);
+         Assert.AreEqual(6, unitCollection[0].Gen);
+         Assert.AreEqual("0xa4", unitCollection[0].Core);
+         Assert.AreEqual("0x0000000f0001329c4dfb8f31e319f044", unitCollection[0].UnitId);
+         Assert.AreEqual("43.00%", unitCollection[0].PercentDone);
+         Assert.AreEqual(10000, unitCollection[0].TotalFrames);
+         Assert.AreEqual(4300, unitCollection[0].FramesDone);
+         Assert.AreEqual("2013-02-02T16:44:18Z", unitCollection[0].Assigned);
+         Assert.AreEqual(new DateTime(2013, 2, 2, 16, 44, 18), unitCollection[0].AssignedDateTime);
+         Assert.AreEqual("2013-02-10T16:44:18Z", unitCollection[0].Timeout);
+         Assert.AreEqual(new DateTime(2013, 2, 10, 16, 44, 18), unitCollection[0].TimeoutDateTime);
+         Assert.AreEqual("2013-02-13T16:44:18Z", unitCollection[0].Deadline);
+         Assert.AreEqual(new DateTime(2013, 2, 13, 16, 44, 18), unitCollection[0].DeadlineDateTime);
+         Assert.AreEqual("129.74.85.15", unitCollection[0].WorkServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 129, 74, 85, 15 }), unitCollection[0].WorkServerIPAddress);
+         Assert.AreEqual("129.74.85.16", unitCollection[0].CollectionServer);
+         Assert.AreEqual(new IPAddress(new byte[] { 129, 74, 85, 16 }), unitCollection[0].CollectionServerIPAddress);
+         Assert.AreEqual(String.Empty, unitCollection[0].WaitingOn);
+         Assert.AreEqual(0, unitCollection[0].Attempts);
+         Assert.AreEqual("0.00 secs", unitCollection[0].NextAttempt);
+         Assert.AreEqual(TimeSpan.Zero, unitCollection[0].NextAttemptTimeSpan);
+         Assert.AreEqual(0, unitCollection[0].Slot);
+         Assert.AreEqual("2 hours 46 mins", unitCollection[0].Eta);
+         // not exactly the same value seen in SimulationInfo.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(2, 46, 0), unitCollection[0].EtaTimeSpan);
+         Assert.AreEqual(18686, unitCollection[0].Ppd);
+         Assert.AreEqual("2 mins 55 secs", unitCollection[0].Tpf);
+         Assert.AreEqual(new TimeSpan(0, 2, 55), unitCollection[0].TpfTimeSpan);
+         Assert.AreEqual(600, unitCollection[0].BaseCredit);
+         Assert.AreEqual(3785, unitCollection[0].CreditEstimate);
+         Assert.AreEqual(null, unitCollection[0].Description);
       }
 
       [Test]
