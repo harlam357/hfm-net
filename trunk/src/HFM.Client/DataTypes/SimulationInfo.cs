@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Simulation Info Data Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,13 +92,18 @@ namespace HFM.Client.DataTypes
       [MessageProperty("deadline", typeof(SimulationInfoDateTimeConverter))]
       public DateTime? DeadlineDateTime { get; set; }
 
-      // could be TimeSpan type
+      // doesn't appear that all work units have this piece of data
+      // *OR*
+      // Version 7.1.43 and prior
       [MessageProperty("run_time")]
       public int RunTime { get; set; }
 
       [MessageProperty("run_time", typeof(SimulationInfoTimeSpanConverter))]
       public TimeSpan? RunTimeTimeSpan { get; set; }
 
+      // doesn't appear that all work units have this piece of data
+      // *OR*
+      // Version 7.1.43 and prior
       [MessageProperty("simulation_time")]
       public int SimulationTime { get; set; }
 
@@ -110,6 +115,9 @@ namespace HFM.Client.DataTypes
 
       [MessageProperty("news")]
       public string News { get; set; }
+
+      [MessageProperty("slot")]
+      public int? Slot { get; set; }
 
       #pragma warning restore 1591
 
