@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Simulation Info Data Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,6 +64,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(2, 27, 24), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -97,6 +98,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(0, simulationInfo.Eta);
          Assert.AreEqual(TimeSpan.Zero, simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -131,6 +133,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(3, 32, 10), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -165,6 +168,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(9, 14, 9), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -199,6 +203,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(0, 4, 22), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
          // Errors
          Assert.AreEqual(2, simulationInfo.Errors.Count());
          Assert.AreEqual("Deadline", simulationInfo.Errors.ElementAt(0).PropertyName);
@@ -237,6 +242,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(3, 4, 39), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
          // Errors
          Assert.AreEqual(2, simulationInfo.Errors.Count());
          Assert.AreEqual("Deadline", simulationInfo.Errors.ElementAt(0).PropertyName);
@@ -275,6 +281,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(1, 2, 12, 59), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -309,6 +316,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(0, 5, 29), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -343,6 +351,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(1, 2, 58, 54), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -377,6 +386,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(0, 42, 47), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -411,6 +421,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(2, 10, 7), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -445,6 +456,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(TimeSpan.Zero, simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -479,6 +491,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(2, 24, 42), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -513,6 +526,7 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(0, 27, 35), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
       }
 
       [Test]
@@ -547,6 +561,42 @@ namespace HFM.Client.Tests.DataTypes
          // not exactly the same value seen in Unit.EtaTimeSpan
          Assert.AreEqual(new TimeSpan(0, 22, 59), simulationInfo.EtaTimeSpan);
          Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(null, simulationInfo.Slot);
+      }
+
+      [Test]
+      public void FillTest12()
+      {
+         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\simulation-info1.txt");
+         var simulationInfo = new SimulationInfo();
+         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         Assert.AreEqual("harlam357", simulationInfo.User);
+         Assert.AreEqual(32, simulationInfo.Team);
+         Assert.AreEqual(7006, simulationInfo.Project);
+         Assert.AreEqual(1, simulationInfo.Run);
+         Assert.AreEqual(540, simulationInfo.Clone);
+         Assert.AreEqual(6, simulationInfo.Gen);
+         Assert.AreEqual(164, simulationInfo.CoreType);
+         Assert.AreEqual("GRO_A4", simulationInfo.Core);
+         Assert.AreEqual(null, simulationInfo.Description);
+         Assert.AreEqual(0, simulationInfo.TotalIterations);
+         Assert.AreEqual(0, simulationInfo.IterationsDone);
+         Assert.AreEqual(0, simulationInfo.Energy);
+         Assert.AreEqual(0, simulationInfo.Temperature);
+         Assert.AreEqual("2013-02-02T16:44:18Z", simulationInfo.StartTime);
+         Assert.AreEqual(new DateTime(2013, 2, 2, 16, 44, 18), simulationInfo.StartTimeDateTime);
+         Assert.AreEqual(1360514658, simulationInfo.Timeout);
+         Assert.AreEqual(new DateTime(2013, 2, 10, 16, 44, 18), simulationInfo.TimeoutDateTime);
+         Assert.AreEqual(1360773858, simulationInfo.Deadline);
+         Assert.AreEqual(new DateTime(2013, 2, 13, 16, 44, 18), simulationInfo.DeadlineDateTime);
+         Assert.AreEqual(0, simulationInfo.RunTime);
+         Assert.AreEqual(null, simulationInfo.RunTimeTimeSpan);
+         Assert.AreEqual(0, simulationInfo.SimulationTime);
+         Assert.AreEqual(9975, simulationInfo.Eta);
+         // not exactly the same value seen in Unit.EtaTimeSpan
+         Assert.AreEqual(new TimeSpan(2, 46, 15), simulationInfo.EtaTimeSpan);
+         Assert.AreEqual(String.Empty, simulationInfo.News);
+         Assert.AreEqual(0, simulationInfo.Slot);
       }
 
       // ReSharper restore InconsistentNaming

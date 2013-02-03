@@ -1,0 +1,24 @@
+PyON 1 simulation-info
+{
+  "user": "harlam357",
+  "team": "32",
+  "project": 7006,
+  "run": 1,
+  "clone": 540,
+  "gen": 6,
+  "core_type": 164,
+  "core": "GRO_A4",
+  "total_iterations": 0,
+  "iterations_done": 0,
+  "energy": 0,
+  "temperature": 0,
+  "start_time": "2013-02-02T16:44:18Z",
+  "timeout": 1360514658,
+  "deadline": 1360773858,
+  "eta": 9975,
+  "progress": 0.43,
+  "news": "",
+  "slot": 0
+}
+---
+
