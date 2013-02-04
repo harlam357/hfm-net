@@ -147,6 +147,8 @@ namespace HFM.Core
             if (!exists)
             {
                CreateTable(SqlTable.WuHistory);
+               CreateTable(SqlTable.Version);
+               SetDatabaseVersion(Application.VersionWithRevision);
             }
             var parameters = new QueryParameters();
             parameters.Fields.Add(new QueryField
@@ -173,9 +175,17 @@ namespace HFM.Core
 
       private void PerformUpgrade()
       {
-         string dbVersionString = GetDatabaseVersion() ?? "0.0.0.0";
+         string dbVersionString = "0.0.0.0";
+         if (TableExists(SqlTable.Version))
+         {
+            dbVersionString = GetDatabaseVersion();
+         }
+         else
+         {
+            CreateTable(SqlTable.Version);
+         }
          int dbVersion = Application.ParseVersion(dbVersionString);
-         _logger.Info("Database version: v{0}", dbVersionString);
+         _logger.Info("WU History database v{0}", dbVersionString);
 
          using (var con = new SQLiteConnection(ConnectionString))
          {
@@ -186,49 +196,76 @@ namespace HFM.Core
                const string upgradeVersion1String = "0.9.2.0";
                if (dbVersion < Application.ParseVersion(upgradeVersion1String))
                {
-                  _logger.Info("Performing database upgrade for version: v{0}", upgradeVersion1String);
+                  _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
+                  DeleteDuplicates(con);
                   UpgradeWuHistory1(con);
                   upgraded = true;
                }
 
                if (upgraded)
                {
-                  string appVersion = Application.VersionWithRevision;
-                  _logger.Info("Setting database version to: v{0}", appVersion);
-                  SetDatabaseVersion(con, appVersion);
+                  SetDatabaseVersion(con, Application.VersionWithRevision);
                   trans.Commit();
                }
             }
          }
       }
 
-      private string GetDatabaseVersion()
+      private void DeleteDuplicates(SQLiteConnection con)
       {
-         if (!TableExists(SqlTable.Version))
-         {
-            CreateTable(SqlTable.Version);
-            return null;
-         }
+         Debug.Assert(TableExists(SqlTable.WuHistory));
+         Debug.Assert(con.State.Equals(ConnectionState.Open));
 
-         using (var con = new SQLiteConnection(ConnectionString))
+         const string select =
+            "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
+            "FROM WuHistory " +
+            "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
+            "HAVING COUNT(*) > 1 ";
+            //"ORDER BY ID ASC";
+
+         const string delete =
+            "DELETE FROM WuHistory " +
+            "WHERE ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)";
+
+         int count = 0;
+         _logger.Info("Checking for duplicate WU History entries...");
+
+         using (var adapter = new SQLiteDataAdapter(select, con))
+         using (var table = new DataTable())
          {
-            con.Open();
-            using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", con))
-            using (var table = new DataTable())
+            adapter.Fill(table);
+            foreach (DataRow row in table.Rows)
             {
-               adapter.Fill(table);
-               if (table.Rows.Count != 0)
+               using (var cmd = con.CreateCommand())
                {
-                  return table.Rows[0]["Version"].ToString();
+                  cmd.CommandText = delete;
+                  for (int i = 0; i < row.ItemArray.Length; i++)
+                  {
+                     var param = cmd.CreateParameter();
+                     param.ParameterName = "@" + i;
+                     param.Value = row.ItemArray[i];
+                     cmd.Parameters.Add(param);
+                  }
+                  int result = cmd.ExecuteNonQuery();
+                  if (result != 0)
+                  {
+                     _logger.Debug("Deleted rows: {0}", result);
+                     count += result;
+                  }
                }
             }
          }
 
-         return null;
+         if (count != 0)
+         {
+            _logger.Info("Total number of duplicate WU History entries deleted: {0}", count);
+         }
       }
 
       private static void UpgradeWuHistory1(SQLiteConnection con)
       {
+         Debug.Assert(con.State.Equals(ConnectionState.Open));
+
          var adder = new SQLiteColumnAdder
          {
             TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
@@ -245,13 +282,28 @@ namespace HFM.Core
          adder.Execute();
       }
 
-      private static void SetDatabaseVersion(SQLiteConnection con, string version)
+      private void SetDatabaseVersion(string version)
       {
-         using (var command = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
+         Debug.Assert(!String.IsNullOrWhiteSpace(version));
+
+         using (var con = new SQLiteConnection(ConnectionString))
+         {
+            con.Open();
+            SetDatabaseVersion(con, version);
+         }
+      }
+
+      private void SetDatabaseVersion(SQLiteConnection con, string version)
+      {
+         Debug.Assert(con.State.Equals(ConnectionState.Open));
+         Debug.Assert(!String.IsNullOrWhiteSpace(version));
+
+         _logger.Info("Setting database version to: v{0}", version);
+         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
          {
             var param = new SQLiteParameter("Version", DbType.String) { Value = version };
-            command.Parameters.Add(param);
-            command.ExecuteNonQuery();
+            cmd.Parameters.Add(param);
+            cmd.ExecuteNonQuery();
          }
       }
 
@@ -539,8 +591,10 @@ namespace HFM.Core
          using (var con = new SQLiteConnection(ConnectionString))
          {
             con.Open();
-            DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null });
-            return table.Rows.Count != 0;
+            using (DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
+            {
+               return table.Rows.Count != 0;
+            }
          }
       }
 
@@ -566,6 +620,30 @@ namespace HFM.Core
                command.ExecuteNonQuery();
             }
          }
+      }
+
+      internal string GetDatabaseVersion()
+      {
+         if (!TableExists(SqlTable.Version))
+         {
+            return null;
+         }
+
+         using (var con = new SQLiteConnection(ConnectionString))
+         {
+            con.Open();
+            using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", con))
+            using (var table = new DataTable())
+            {
+               adapter.Fill(table);
+               if (table.Rows.Count != 0)
+               {
+                  return table.Rows[0]["Version"].ToString();
+               }
+            }
+         }
+
+         return null;
       }
 
       #endregion
