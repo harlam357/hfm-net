@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -196,7 +197,10 @@ namespace HFM
                ShowStartupError(ex, Properties.Resources.FailedToInitUI);
                return;
             }
-            mainView.WorkUnitHistoryMenuEnabled = ServiceLocator.Resolve<IUnitInfoDatabase>().Connected;
+
+            mainView.WorkUnitHistoryMenuEnabled = false;
+            Task<bool>.Factory.StartNew(() => ServiceLocator.Resolve<IUnitInfoDatabase>().Connected)
+               .ContinueWith(task => mainView.Invoke(new Action(() => mainView.WorkUnitHistoryMenuEnabled = task.Result), null));
 
             #endregion
 
