@@ -42,10 +42,8 @@ namespace HFM
 
          try
          {
-            #region Configure Container
-
+            // Configure Container
             IWindsorContainer container = new WindsorContainer();
-            // Components
             container.Install(new Configuration.ContainerInstaller(),
                               new Preferences.Configuration.ContainerInstaller(),
                               new Core.Configuration.ContainerInstaller(),
@@ -53,14 +51,12 @@ namespace HFM
 
             Core.ServiceLocator.SetContainer(container);
 
-            #endregion
-
-            #region Create Object Maps
-
+            // Create Object Maps
             Core.Configuration.ObjectMapper.CreateMaps();
             Forms.Configuration.ObjectMapper.CreateMaps();
 
-            #endregion
+            // Setup TypeDescriptor
+            Core.Configuration.TypeDescriptionProviderSetup.Execute();
 
             var bootStrapper = container.Resolve<BootStrapper>();
             bootStrapper.Strap(args);
