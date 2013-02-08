@@ -1171,6 +1171,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.Interrupted, "INTERRUPTED".ToWorkUnitResult());
          Assert.AreEqual(WorkUnitResult.BadWorkUnit, "BAD_WORK_UNIT".ToWorkUnitResult());
          Assert.AreEqual(WorkUnitResult.CoreOutdated, "CORE_OUTDATED".ToWorkUnitResult());
+         Assert.AreEqual(WorkUnitResult.GpuMemtestError, "GPU_MEMTEST_ERROR".ToWorkUnitResult());
          Assert.AreEqual(WorkUnitResult.Unknown, "afasfdsafasdfas".ToWorkUnitResult());
       }
    }

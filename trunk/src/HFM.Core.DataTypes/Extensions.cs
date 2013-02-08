@@ -106,6 +106,7 @@ namespace HFM.Core.DataTypes
       private const string Interrupted = "INTERRUPTED";
       private const string BadWorkUnit = "BAD_WORK_UNIT";
       private const string CoreOutdated = "CORE_OUTDATED";
+      private const string GpuMemtestError = "GPU_MEMTEST_ERROR";
 
       /// <summary>
       /// Get the WorkUnitResult Enum representation of the given result string.
@@ -126,6 +127,8 @@ namespace HFM.Core.DataTypes
                return WorkUnitResult.BadWorkUnit;
             case CoreOutdated:
                return WorkUnitResult.CoreOutdated;
+            case GpuMemtestError:
+               return WorkUnitResult.GpuMemtestError;
             default:
                return WorkUnitResult.Unknown;
          }
@@ -152,6 +155,8 @@ namespace HFM.Core.DataTypes
                return BadWorkUnit;
             case WorkUnitResult.CoreOutdated:
                return CoreOutdated;
+            case WorkUnitResult.GpuMemtestError:
+               return GpuMemtestError;
             default:
                return String.Empty;
          }
