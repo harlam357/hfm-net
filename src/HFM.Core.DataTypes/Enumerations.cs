@@ -108,7 +108,8 @@ namespace HFM.Core.DataTypes
       Interrupted,
       BadWorkUnit,
       CoreOutdated,
-      ClientCoreError
+      ClientCoreError,
+      GpuMemtestError
    }
 
    /// <summary>
