@@ -168,6 +168,11 @@
             Progress Process Class to execute
             </summary>
         </member>
+        <member name="P:harlam357.Windows.Forms.IProgressDialogView.Text">
+            <summary>
+            Gets or sets the text associated with this control.
+            </summary>
+        </member>
         <member name="T:harlam357.Windows.Forms.ProgressDialog">
             <summary>
             Progress Process Dialog Class
