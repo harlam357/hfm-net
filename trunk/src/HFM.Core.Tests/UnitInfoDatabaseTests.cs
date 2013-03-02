@@ -118,6 +118,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
@@ -129,6 +130,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testData_1FileCopy;
+         _database.Upgrade();
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          Assert.IsTrue(Application.ParseVersion("0.9.2.0") <= Application.ParseVersion(_database.GetDatabaseVersion()));
@@ -140,6 +142,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
          Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
          _database.DatabaseFilePath = _testData2FileCopy;
+         _database.Upgrade();
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testData2FileCopy));
          // 32 duplicates deleted
          Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
@@ -391,6 +394,7 @@ namespace HFM.Core.Tests
       public void DeleteTest()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
          var entries = _database.Fetch(new QueryParameters());
          Assert.AreEqual(44, entries.Count);
          Assert.AreEqual(1, _database.Delete(entries[14]));
@@ -402,6 +406,7 @@ namespace HFM.Core.Tests
       public void DeleteNotExistTest()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
          Assert.AreEqual(0, _database.Delete(new HistoryEntry { ID = 100 }));
       }
 
@@ -2419,12 +2424,14 @@ namespace HFM.Core.Tests
       private void FetchTestData(int count, QueryParameters parameters)
       {
          _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
          FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
       }
 
       private void FetchTestData2(int count, QueryParameters parameters)
       {
          _database.DatabaseFilePath = _testData2FileCopy;
+         _database.Upgrade();
          FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
       }
 
