@@ -40,12 +40,14 @@ namespace HFM.Core
       Version
    }
 
-   public interface IUnitInfoDatabase
+   public interface IUnitInfoDatabase : IDisposable
    {
       /// <summary>
       /// Flag that notes if the Database is safe to call.
       /// </summary>
       bool Connected { get; }
+
+      SQLiteConnection Connection { get; }
 
       void Insert(UnitInfoLogic unitInfoLogic);
 
@@ -67,7 +69,7 @@ namespace HFM.Core
          get { return @"Data Source=" + DatabaseFilePath + (ForceDateTimesToUtc ? ";DateTimeKind=Utc" : String.Empty); }
       }
 
-      private const string DbProvider = "System.Data.SQLite";
+      //private const string DbProvider = "System.Data.SQLite";
 
       private string _databaseFilePath;
       /// <summary>
@@ -90,20 +92,21 @@ namespace HFM.Core
 
       private readonly ILogger _logger = NullLogger.Instance;
 
-      //public ILogger Logger
-      //{
-      //   [CoverageExclude]
-      //   get { return _logger; }
-      //   [CoverageExclude]
-      //   set { _logger = value; }
-      //}
-
       private readonly IProteinDictionary _proteinDictionary;
       private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
                                                                                                  {
                                                                                                     { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
                                                                                                     { SqlTable.Version, new VersionSqlTableCommands() }
                                                                                                  };  
+
+      private SQLiteConnection _connection;
+
+      public SQLiteConnection Connection
+      {
+         get { return _connection; }
+      }
+
+      private PetaPoco.Database _database;
 
       #endregion
 
@@ -143,6 +146,18 @@ namespace HFM.Core
       {
          try
          {
+            if (_connection != null)
+            {
+               _connection.Dispose();
+            }
+            _connection = new SQLiteConnection(ConnectionString);
+            _connection.Open();
+            if (_database != null)
+            {
+               _database.Dispose();
+            }
+            _database = new PetaPoco.Database(_connection);
+
             bool exists = TableExists(SqlTable.WuHistory);
             if (!exists)
             {
@@ -157,16 +172,25 @@ namespace HFM.Core
                                        Type = QueryFieldType.Equal,
                                        Value = 0
                                     });
-            Fetch(parameters);
             if (exists)
             {
                PerformUpgrade();
             }
+            Fetch(parameters);
             Connected = true;
          }
          catch (Exception ex)
          {
             _logger.ErrorFormat(ex, "{0}", ex.Message);
+
+            if (_connection != null)
+            {
+               _connection.Dispose();
+            }
+            if (_database != null)
+            {
+               _database.Dispose();
+            }
             Connected = false;
          }
       }
@@ -187,27 +211,19 @@ namespace HFM.Core
          int dbVersion = Application.ParseVersion(dbVersionString);
          _logger.Info("WU History database v{0}", dbVersionString);
 
-         using (var con = new SQLiteConnection(ConnectionString))
+         bool upgraded = false;
+         const string upgradeVersion1String = "0.9.2.0";
+         if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
-            con.Open();
-            using (var trans = con.BeginTransaction())
-            {
-               bool upgraded = false;
-               const string upgradeVersion1String = "0.9.2.0";
-               if (dbVersion < Application.ParseVersion(upgradeVersion1String))
-               {
-                  _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
-                  DeleteDuplicates(con);
-                  UpgradeWuHistory1(con);
-                  upgraded = true;
-               }
+            _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
+            DeleteDuplicates(_connection);
+            UpgradeWuHistory1(_connection);
+            upgraded = true;
+         }
 
-               if (upgraded)
-               {
-                  SetDatabaseVersion(con, Application.VersionWithRevision);
-                  trans.Commit();
-               }
-            }
+         if (upgraded)
+         {
+            SetDatabaseVersion(Application.VersionWithRevision);
          }
       }
 
@@ -279,6 +295,8 @@ namespace HFM.Core
          adder.AddColumn("Atoms", "INT");
          adder.AddColumn("SlotType", "VARCHAR(20)");
          adder.AddColumn("Credit", "FLOAT");
+         adder.AddColumn("PreferredDays", "FLOAT");
+         adder.AddColumn("MaximumDays", "FLOAT");
          adder.Execute();
       }
 
@@ -286,20 +304,8 @@ namespace HFM.Core
       {
          Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
-         using (var con = new SQLiteConnection(ConnectionString))
-         {
-            con.Open();
-            SetDatabaseVersion(con, version);
-         }
-      }
-
-      private void SetDatabaseVersion(SQLiteConnection con, string version)
-      {
-         Debug.Assert(con.State.Equals(ConnectionState.Open));
-         Debug.Assert(!String.IsNullOrWhiteSpace(version));
-
          _logger.Info("Setting database version to: v{0}", version);
-         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", con))
+         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", _connection))
          {
             var param = new SQLiteParameter("Version", DbType.String) { Value = version };
             cmd.Parameters.Add(param);
@@ -324,10 +330,8 @@ namespace HFM.Core
             var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoLogic.UnitInfoData);
             entry.FramesCompleted = unitInfoLogic.FramesComplete;
             entry.FrameTimeValue = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames);
-            using (var database = new PetaPoco.Database(ConnectionString, DbProvider))
-            {
-               database.Insert(entry);
-            }
+            entry.SetProtein(unitInfoLogic.CurrentProtein);
+            _database.Insert(entry);
          }
       }
 
@@ -390,10 +394,7 @@ namespace HFM.Core
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
-         using (var database = new PetaPoco.Database(ConnectionString, DbProvider))
-         {
-            return database.Delete(entry);
-         }
+         return _database.Delete(entry);
       }
 
       #endregion
@@ -421,13 +422,9 @@ namespace HFM.Core
       private IList<HistoryEntry> FetchInternal(QueryParameters parameters, HistoryProductionView productionView)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
-          
-         List<HistoryEntry> query;
-         using (var database = new PetaPoco.Database(ConnectionString, DbProvider))
-         {
-            PetaPoco.Sql where = WhereBuilder.Execute(parameters);
-            query = where != null ? database.Fetch<HistoryEntry>(where) : database.Fetch<HistoryEntry>(String.Empty);
-         }
+
+         PetaPoco.Sql where = WhereBuilder.Execute(parameters);
+         List<HistoryEntry> query = where != null ? _database.Fetch<HistoryEntry>(where) : _database.Fetch<HistoryEntry>(String.Empty);
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
 
@@ -584,41 +581,61 @@ namespace HFM.Core
 
       #endregion
 
+      #region IDisposable Members
+
+      private bool _disposed;
+
+      public void Dispose()
+      {
+         Dispose(true);
+         //GC.SuppressFinalize(this);
+      }
+
+      private void Dispose(bool disposing)
+      {
+         if (!_disposed)
+         {
+            if (disposing)
+            {
+               if (_connection != null)
+               {
+                  _connection.Dispose();
+               }
+               if (_database != null)
+               {
+                  _database.Dispose();
+               }
+            }
+         }
+
+         _disposed = true;
+      }
+
+      #endregion
+
       #region Table Helpers
 
       internal bool TableExists(SqlTable sqlTable)
       {
-         using (var con = new SQLiteConnection(ConnectionString))
+         using (DataTable table = _connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
          {
-            con.Open();
-            using (DataTable table = con.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
-            {
-               return table.Rows.Count != 0;
-            }
+            return table.Rows.Count != 0;
          }
       }
 
       internal void CreateTable(SqlTable sqlTable)
       {
-         using (var con = new SQLiteConnection(ConnectionString))
+         using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(_connection))
          {
-            con.Open();
-            using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(con))
-            {
-               command.ExecuteNonQuery();
-            }
+            command.ExecuteNonQuery();
          }
       }
 
       internal void DropTable(SqlTable sqlTable)
       {
-         using (var con = new SQLiteConnection(ConnectionString))
+         using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(_connection))
          {
-            con.Open();
-            using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(con))
-            {
-               command.ExecuteNonQuery();
-            }
+            command.ExecuteNonQuery();
          }
       }
 
@@ -629,17 +646,13 @@ namespace HFM.Core
             return null;
          }
 
-         using (var con = new SQLiteConnection(ConnectionString))
+         using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", _connection))
+         using (var table = new DataTable())
          {
-            con.Open();
-            using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", con))
-            using (var table = new DataTable())
+            adapter.Fill(table);
+            if (table.Rows.Count != 0)
             {
-               adapter.Fill(table);
-               if (table.Rows.Count != 0)
-               {
-                  return table.Rows[0]["Version"].ToString();
-               }
+               return table.Rows[0]["Version"].ToString();
             }
          }
 
@@ -762,7 +775,9 @@ namespace HFM.Core
                                                         "[Frames] INT," +
                                                         "[Atoms] INT," +
                                                         "[SlotType] VARCHAR(20)," +
-                                                        "[Credit] FLOAT" +
+                                                        "[Credit] FLOAT," +
+                                                        "[PreferredDays] FLOAT," +
+                                                        "[MaximumDays] FLOAT" +
                                                         ");";
 
          
