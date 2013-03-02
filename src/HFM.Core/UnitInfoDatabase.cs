@@ -56,6 +56,12 @@ namespace HFM.Core
       IList<HistoryEntry> Fetch(QueryParameters parameters);
 
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
+
+      bool TableExists(SqlTable sqlTable);
+
+      DataTable Select(string sql);
+
+      int Execute(string sql);
    }
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
@@ -217,7 +223,7 @@ namespace HFM.Core
          {
             _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
             DeleteDuplicates(_connection);
-            UpgradeWuHistory1(_connection);
+            UpgradeWuHistory1();
             upgraded = true;
          }
 
@@ -278,14 +284,12 @@ namespace HFM.Core
          }
       }
 
-      private static void UpgradeWuHistory1(SQLiteConnection con)
+      private void UpgradeWuHistory1()
       {
-         Debug.Assert(con.State.Equals(ConnectionState.Open));
-
          var adder = new SQLiteColumnAdder
          {
             TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
-            Connection = con
+            Connection = _connection
          };
 
          adder.AddColumn("WorkUnitName", "VARCHAR(30)");
@@ -581,6 +585,33 @@ namespace HFM.Core
 
       #endregion
 
+      #region Select
+
+      public DataTable Select(string sql)
+      {
+         using (var adapter = new SQLiteDataAdapter(sql, _connection))
+         {
+            var table = new DataTable();
+            adapter.Fill(table);
+            return table;
+         }
+      }
+
+      #endregion
+
+      #region Execute
+
+      public int Execute(string sql)
+      {
+         using (var command = _connection.CreateCommand())
+         {
+            command.CommandText = sql;
+            return command.ExecuteNonQuery();
+         }
+      }
+
+      #endregion
+
       #region IDisposable Members
 
       private bool _disposed;
@@ -615,7 +646,7 @@ namespace HFM.Core
 
       #region Table Helpers
 
-      internal bool TableExists(SqlTable sqlTable)
+      public bool TableExists(SqlTable sqlTable)
       {
          using (DataTable table = _connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
          {
