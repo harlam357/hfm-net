@@ -66,8 +66,17 @@ namespace HFM.Core.Tests
          _database = new UnitInfoDatabase(null, _proteinDictionary);
       }
 
-      [TestFixtureTearDown]
+      [TearDown]
       public void Destroy()
+      {
+         if (_database != null)
+         {
+            _database.Dispose();
+         }
+      }
+
+      [TestFixtureTearDown]
+      public void FixtureDestroy()
       {
          foreach (var file in Directory.EnumerateFiles(TestDataFilesFolder, "*.dbcopy"))
          {
@@ -94,7 +103,7 @@ namespace HFM.Core.Tests
       public void ConnectedTest1()
       {
          _database.DatabaseFilePath = TestScratchFile;
-         Assert.AreEqual(22, GetWuHistoryColumnCount(TestScratchFile));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(TestScratchFile));
          Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
          Assert.AreEqual(true, _database.Connected);
       }
@@ -109,7 +118,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testDataFileCopy;
-         Assert.AreEqual(22, GetWuHistoryColumnCount(_testDataFileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
       }
@@ -117,10 +126,10 @@ namespace HFM.Core.Tests
       [Test]
       public void PerformUpgrade_v092_AlreadyUpgraded_Test()
       {
-         Assert.AreEqual(22, GetWuHistoryColumnCount(_testData_1FileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testData_1FileCopy;
-         Assert.AreEqual(22, GetWuHistoryColumnCount(_testData_1FileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          Assert.IsTrue(Application.ParseVersion("0.9.2.0") <= Application.ParseVersion(_database.GetDatabaseVersion()));
       }
@@ -131,7 +140,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
          Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
          _database.DatabaseFilePath = _testData2FileCopy;
-         Assert.AreEqual(22, GetWuHistoryColumnCount(_testData2FileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData2FileCopy));
          // 32 duplicates deleted
          Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
          Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());

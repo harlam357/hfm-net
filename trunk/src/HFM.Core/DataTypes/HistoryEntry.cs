@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - History Entry Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,24 +26,39 @@ namespace HFM.Core.DataTypes
    [PetaPoco.PrimaryKey("ID")]
    public class HistoryEntry : IEquatable<HistoryEntry>
    {
+      private Protein _protein;
+
       public HistoryEntry()
       {
+         _protein = new Protein();
+
          ProductionView = HistoryProductionView.BonusDownloadTime;
       }
 
       public long ID { get; set; }
+
       public int ProjectID { get; set; }
+
       public int ProjectRun { get; set; }
+
       public int ProjectClone { get; set; }
+
       public int ProjectGen { get; set; }
+
       [PetaPoco.Column("InstanceName")]
       public string Name { get; set; }
+
       [PetaPoco.Column("InstancePath")]
       public string Path { get; set; }
+
       public string Username { get; set; }
+
       public int Team { get; set; }
+
       public float CoreVersion { get; set; }
+
       public int FramesCompleted { get; set; }
+
       [PetaPoco.Ignore]
       public TimeSpan FrameTime
       {
@@ -51,6 +66,7 @@ namespace HFM.Core.DataTypes
       }
       [PetaPoco.Column("FrameTime")]
       public int FrameTimeValue { get; set; }
+
       [PetaPoco.Ignore]
       public string Result
       {
@@ -58,24 +74,102 @@ namespace HFM.Core.DataTypes
       }
       [PetaPoco.Column("Result")]
       public int ResultValue { get; set; }
+
       public DateTime DownloadDateTime { get; set; }
+
       public DateTime CompletionDateTime { get; set; }
 
-      private Protein _protein;
+      private string _workUnitName = String.Empty;
 
-      [PetaPoco.Ignore]
-      public string WorkUnitName { get { return _protein == null ? String.Empty : _protein.WorkUnitName; } }
-      [PetaPoco.Ignore]
-      public double KFactor { get { return _protein == null ? 0 : _protein.KFactor; } }
-      [PetaPoco.Ignore]
-      public string Core { get { return _protein == null ? String.Empty : _protein.Core; } }
-      [PetaPoco.Ignore]
-      public int Frames { get { return _protein == null ? 0 : _protein.Frames; } }
-      [PetaPoco.Ignore]
-      public int Atoms { get { return _protein == null ? 0 : _protein.NumberOfAtoms; } }
+      public string WorkUnitName
+      {
+         get { return _protein == null ? _workUnitName : _protein.WorkUnitName; }
+         set
+         {
+            if (_protein == null)
+            {
+               _workUnitName = value;
+            }
+            else
+            {
+               _protein.WorkUnitName = value;
+            }
+         }
+      }
 
-      [PetaPoco.Ignore]
-      public string SlotType { get; private set; }
+      private double _kfactor;
+
+      public double KFactor
+      {
+         get { return _protein == null ? _kfactor : _protein.KFactor; }
+         set
+         {
+            if (_protein == null)
+            {
+               _kfactor = value;
+            }
+            else
+            {
+               _protein.KFactor = value;
+            }
+         }
+      }
+
+      private string _core = String.Empty;
+
+      public string Core
+      {
+         get { return _protein == null ? _core : _protein.Core; }
+         set
+         {
+            if (_protein == null)
+            {
+               _core = value;
+            }
+            else
+            {
+               _protein.Core = value;
+            }
+         }
+      }
+
+      private int _frames;
+
+      public int Frames
+      {
+         get { return _protein == null ? _frames : _protein.Frames; }
+         set
+         {
+            if (_protein == null)
+            {
+               _frames = value;
+            }
+            else
+            {
+               _protein.Frames = value;
+            }
+         }
+      }
+
+      private int _atoms;
+
+      public int Atoms
+      {
+         get { return _protein == null ? _atoms : _protein.NumberOfAtoms; }
+         set
+         {
+            if (_protein == null)
+            {
+               _atoms = value;
+            }
+            else
+            {
+               _protein.NumberOfAtoms = value;
+            }
+         }
+      }
+
+      public string SlotType { get; set; }
       
       [PetaPoco.Ignore]
       public HistoryProductionView ProductionView { get; set; }
@@ -104,12 +198,13 @@ namespace HFM.Core.DataTypes
          }
       }
 
-      [PetaPoco.Ignore]
+      private double _credit;
+
       public double Credit
       {
          get
          {
-            if (_protein == null) return 0;
+            if (_protein == null) return _credit;
 
             switch (ProductionView)
             {
@@ -126,6 +221,53 @@ namespace HFM.Core.DataTypes
                   // ReSharper restore HeuristicUnreachableCode
             }
          }
+         set
+         {
+            if (_protein == null)
+            {
+               _credit = value;
+            }
+            else
+            {
+               _protein.Credit = value;
+            }
+         }
+      }
+
+      private double _preferredDays;
+
+      public double PreferredDays
+      {
+         get { return _protein == null ? _preferredDays : _protein.PreferredDays; }
+         set
+         {
+            if (_protein == null)
+            {
+               _preferredDays = value;
+            }
+            else
+            {
+               _protein.PreferredDays = value;
+            }
+         }
+      }
+
+      private double _maximumDays;
+
+      public double MaximumDays
+      {
+         get { return _protein == null ? _maximumDays : _protein.MaximumDays; }
+         set
+         {
+            if (_protein == null)
+            {
+               _maximumDays = value;
+            }
+            else
+            {
+               _protein.MaximumDays = value;
+            }
+         }
       }
       
       public HistoryEntry SetProtein(Protein protein)
@@ -139,7 +281,7 @@ namespace HFM.Core.DataTypes
          return this;
       }
 
-      #region IEquatable<HistoryEntry> Members
+      #region IEquatable<HistoryEntry> Implementation
 
       public bool Equals(HistoryEntry other)
       {

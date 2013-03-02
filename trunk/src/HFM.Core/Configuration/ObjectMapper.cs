@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core ObjectMapper Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,6 +67,14 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.ResultValue, opt => opt.MapFrom(src => (int)src.UnitResult))
             .ForMember(dest => dest.DownloadDateTime, opt => opt.MapFrom(src => src.DownloadTime))
             .ForMember(dest => dest.CompletionDateTime, opt => opt.MapFrom(src => src.FinishedTime))
+            .ForMember(dest => dest.WorkUnitName, opt => opt.Ignore())
+            .ForMember(dest => dest.KFactor, opt => opt.Ignore())
+            .ForMember(dest => dest.Core, opt => opt.Ignore())
+            .ForMember(dest => dest.Frames, opt => opt.Ignore())
+            .ForMember(dest => dest.Atoms, opt => opt.Ignore())
+            .ForMember(dest => dest.Credit, opt => opt.Ignore())
+            .ForMember(dest => dest.PreferredDays, opt => opt.Ignore())
+            .ForMember(dest => dest.MaximumDays, opt => opt.Ignore())
             .ForMember(dest => dest.ProductionView, opt => opt.Ignore());
       }
    }
