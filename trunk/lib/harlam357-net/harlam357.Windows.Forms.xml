@@ -100,72 +100,82 @@
         </member>
         <member name="T:harlam357.Windows.Forms.IProgressProcessRunner">
             <summary>
-            Defines the Progress Process Class Interface
+            Represents an object that runs a process and reports progress.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Process">
             <summary>
-            Execute the Progress Process
+            Executes the runner.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Cancel">
             <summary>
-            Cancel the Progress Process
+            Cancels the runner.
             </summary>
         </member>
         <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProgressChanged">
             <summary>
-            Raised on Progress Process Changed
+            Occurs when the runner's progress has changed.
             </summary>
         </member>
         <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProcessFinished">
             <summary>
-            Raised on Progress Process Finished
+            Occurs when the runner's process has finished.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Exception">
             <summary>
-            Exception returned from Progress Process
+            Gets the exception that resulted from executing the runner or null if no exception occurred.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.SupportsCancellation">
             <summary>
-            Defines if this Progress Process supports being cancelled
+            Gets a value that defines if this runner supports being cancelled.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Processing">
             <summary>
-            Flag denoting if the Progress Process is in progress
+            Gets a value that reports if the runner is currently processing.
             </summary>
         </member>
         <member name="T:harlam357.Windows.Forms.IProgressDialogView">
             <summary>
-            Defines the Progress Dialog View Interface
+            Represents a view interface for a modal dialog that runs a process asynchronously and reports progress.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateProgress(System.Int32)">
             <summary>
-            Update Progress Bar Value
+            Updates the progress bar value.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateMessage(System.String)">
             <summary>
-            Update Text Message Value
+            Updates the text message value.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressDialogView.Process">
             <summary>
-            Show the Dialog and execute the Progress Process
+            Shows the modal dialog and executes the IProgressProcessRunner instance assigned to the ProcessRunner property.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressDialogView.OwnerWindow">
             <summary>
-            Window that owns this dialog
+            Gets or sets the window that owns this view.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressDialogView.Icon">
+            <summary>
+            Gets or sets the icon for the form.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.IProgressDialogView.StartPosition">
+            <summary>
+            Gets or sets the starting position of the form at run time.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressDialogView.ProcessRunner">
             <summary>
-            Progress Process Class to execute
+            Gets or sets the progress process runner that executes when the Process method is called.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressDialogView.Text">
@@ -178,42 +188,50 @@
             Progress Process Dialog Class
             </summary>
         </member>
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.#ctor">
+            <summary>
+            Initializes a new instance of the ProgressDialog class.
+            </summary>
+        </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateProgress(System.Int32)">
             <summary>
-            Update Progress Bar Value (safe to be called from a worker thread)
+            Updates the progress bar value.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateMessage(System.String)">
             <summary>
-            Update Text Message Value (safe to be called from a worker thread)
+            Updates the text message value.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.Process">
             <summary>
-            Show the Dialog and execute the Progress Process asynchronously
+            Shows the modal dialog and executes the IProgressProcessRunner instance assigned to the ProcessRunner property.
             </summary>
+            <exception cref="T:System.InvalidOperationException">The ProcessRunner property is null.</exception>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProgressChanged(System.Object,harlam357.Windows.Forms.ProgressEventArgs)">
             <summary>
-            Handles the given ProcessRunner's Progress Changed Event
+            Handles the runner's ProgressChanged event.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProcessFinished(System.Object,System.EventArgs)">
             <summary>
-            Handles the given ProcessRunner's Process Finished Event
+            Handles the runner's ProcessFinished event.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.OnFormClosing(System.Windows.Forms.FormClosingEventArgs)">
             <summary>
-            Handles the Dialog's FormClosing Event
+            Raises the <see cref="E:System.Windows.Forms.Form.FormClosing"/> event.
             </summary>
-            <remarks>If the ProcessRunner is Processing this event will be cancelled.
-            If the ProcessRunner supports cancellation then the Cancel() method will be 
-            called and the dialog will be closed when the ProcessRunner is finished.</remarks>
+            <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> that contains the event data.</param>
+            <remarks>
+            If the runner is processing and runner does not support cancellation then this event will be cancelled.
+            If the runner supports cancellation then the Cancel method will be called and the dialog will be closed when the runner is finished.
+            </remarks>
         </member>
         <member name="M:harlam357.Windows.Forms.ProgressDialog.Close">
             <summary>
-            Close the Dialog (safe to be called from a worker thread)
+            Closes the dialog.
             </summary>
         </member>
         <member name="F:harlam357.Windows.Forms.ProgressDialog.components">
@@ -235,27 +253,34 @@
         </member>
         <member name="P:harlam357.Windows.Forms.ProgressDialog.OwnerWindow">
             <summary>
-            Window that owns this dialog
+            Gets or sets the window that owns this view.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.ProgressDialog.ProcessRunner">
             <summary>
-            Progress Process Class to execute
+            Gets or sets the progress process runner that executes when the Process method is called.
             </summary>
         </member>
         <member name="T:harlam357.Windows.Forms.ProgressEventArgs">
             <summary>
-            Progress Process Event Arguments
+            Provides data for the event that is raised when the progress process runner's progress value has changed.
             </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressEventArgs.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the ProgressEventArgs class with progress and text message values.
+            </summary>
+            <param name="progress">The progress value.</param>
+            <param name="message">The text message value.</param>
         </member>
         <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Progress">
             <summary>
-            Progress Bar Value
+            Gets the progress value.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Message">
             <summary>
-            Text Message Value
+            Gets the text message value.
             </summary>
         </member>
         <member name="T:harlam357.Windows.Forms.RadioPanel">
