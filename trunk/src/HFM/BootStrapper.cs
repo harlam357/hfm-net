@@ -226,6 +226,7 @@ namespace HFM
          // Execute Asynchronous Operation
          var view = ServiceLocator.Resolve<IProgressDialogView>("ProgressDialog");
          view.ProcessRunner = e.Process;
+         view.Icon = Properties.Resources.hfm_48_48;
          view.Text = "Upgrading Database";
          view.StartPosition = FormStartPosition.CenterScreen;
          view.Process();
