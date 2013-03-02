@@ -199,8 +199,14 @@ namespace HFM
             }
 
             mainView.WorkUnitHistoryMenuEnabled = false;
-            Task<bool>.Factory.StartNew(() => ServiceLocator.Resolve<IUnitInfoDatabase>().Connected)
-               .ContinueWith(task => mainView.Invoke(new Action(() => mainView.WorkUnitHistoryMenuEnabled = task.Result), null));
+            var database = ServiceLocator.Resolve<IUnitInfoDatabase>();
+            if (database.Connected)
+            {
+               database.UpgradeExecuting += DatabaseUpgradeExecuting;
+               database.Upgrade();
+               database.UpgradeExecuting -= DatabaseUpgradeExecuting;
+               mainView.WorkUnitHistoryMenuEnabled = true;
+            }
 
             #endregion
 
@@ -213,6 +219,16 @@ namespace HFM
 
             System.Windows.Forms.Application.Run((Form)mainView);
          }
+      }
+
+      private static void DatabaseUpgradeExecuting(object sender, UpgradeExecutingEventArgs e)
+      {
+         // Execute Asynchronous Operation
+         var view = ServiceLocator.Resolve<IProgressDialogView>("ProgressDialog");
+         view.ProcessRunner = e.Process;
+         view.Text = "Upgrading Database";
+         view.StartPosition = FormStartPosition.CenterScreen;
+         view.Process();
       }
 
       private static void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
