@@ -30,6 +30,8 @@ using System.Text.RegularExpressions;
 
 using Castle.Core.Logging;
 
+using harlam357.Windows.Forms;
+
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
@@ -40,6 +42,22 @@ namespace HFM.Core
       Version
    }
 
+   public sealed class UpgradeExecutingEventArgs : EventArgs
+   {
+      private readonly IProgressProcessRunner _process;
+
+      public IProgressProcessRunner Process
+      {
+         get { return _process; }
+      }
+
+      public UpgradeExecutingEventArgs(IProgressProcessRunner process)
+      {
+         if (process == null) throw new ArgumentNullException("process");
+         _process = process;
+      }
+   }
+
    public interface IUnitInfoDatabase : IDisposable
    {
       /// <summary>
@@ -47,7 +65,9 @@ namespace HFM.Core
       /// </summary>
       bool Connected { get; }
 
-      SQLiteConnection Connection { get; }
+      void Upgrade();
+
+      event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
 
       void Insert(UnitInfoLogic unitInfoLogic);
 
@@ -107,7 +127,7 @@ namespace HFM.Core
 
       private SQLiteConnection _connection;
 
-      public SQLiteConnection Connection
+      private SQLiteConnection Connection
       {
          get { return _connection; }
       }
@@ -178,11 +198,11 @@ namespace HFM.Core
                                        Type = QueryFieldType.Equal,
                                        Value = 0
                                     });
-            if (exists)
-            {
-               PerformUpgrade();
-            }
-            Fetch(parameters);
+            //if (exists)
+            //{
+            //   PerformUpgrade();
+            //}
+            Select("SELECT * FROM [WuHistory] LIMIT 1");
             Connected = true;
          }
          catch (Exception ex)
@@ -203,12 +223,16 @@ namespace HFM.Core
 
       #region Database Upgrades
 
-      private void PerformUpgrade()
+      public void Upgrade()
       {
          string dbVersionString = "0.0.0.0";
          if (TableExists(SqlTable.Version))
          {
-            dbVersionString = GetDatabaseVersion();
+            string versionFromTable = GetDatabaseVersion();
+            if (!String.IsNullOrEmpty(versionFromTable))
+            {
+               dbVersionString = versionFromTable;
+            }
          }
          else
          {
@@ -222,7 +246,8 @@ namespace HFM.Core
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
             _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
-            DeleteDuplicates(_connection);
+            var duplicateDeleter = new DuplicateDeleter(this, _logger);
+            OnUpgradeExecuting(duplicateDeleter);
             UpgradeWuHistory1();
             upgraded = true;
          }
@@ -233,54 +258,20 @@ namespace HFM.Core
          }
       }
 
-      private void DeleteDuplicates(SQLiteConnection con)
+      public event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
+
+      private void OnUpgradeExecuting(IProgressProcessRunner process)
       {
-         Debug.Assert(TableExists(SqlTable.WuHistory));
-         Debug.Assert(con.State.Equals(ConnectionState.Open));
+         if (process == null) return;
 
-         const string select =
-            "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
-            "FROM WuHistory " +
-            "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
-            "HAVING COUNT(*) > 1 ";
-            //"ORDER BY ID ASC";
-
-         const string delete =
-            "DELETE FROM WuHistory " +
-            "WHERE ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)";
-
-         int count = 0;
-         _logger.Info("Checking for duplicate WU History entries...");
-
-         using (var adapter = new SQLiteDataAdapter(select, con))
-         using (var table = new DataTable())
+         var handler = UpgradeExecuting;
+         if (handler != null)
          {
-            adapter.Fill(table);
-            foreach (DataRow row in table.Rows)
-            {
-               using (var cmd = con.CreateCommand())
-               {
-                  cmd.CommandText = delete;
-                  for (int i = 0; i < row.ItemArray.Length; i++)
-                  {
-                     var param = cmd.CreateParameter();
-                     param.ParameterName = "@" + i;
-                     param.Value = row.ItemArray[i];
-                     cmd.Parameters.Add(param);
-                  }
-                  int result = cmd.ExecuteNonQuery();
-                  if (result != 0)
-                  {
-                     _logger.Debug("Deleted rows: {0}", result);
-                     count += result;
-                  }
-               }
-            }
+            handler(this, new UpgradeExecutingEventArgs(process));
          }
-
-         if (count != 0)
+         else
          {
-            _logger.Info("Total number of duplicate WU History entries deleted: {0}", count);
+            process.Process();
          }
       }
 
@@ -887,6 +878,141 @@ namespace HFM.Core
             {
                command.ExecuteNonQuery();
             }
+         }
+      }
+
+      private class DuplicateDeleter : IProgressProcessRunner
+      {
+         private readonly UnitInfoDatabase _database;
+         private readonly ILogger _logger;
+
+         public DuplicateDeleter(UnitInfoDatabase database, ILogger logger)
+         {
+            if (database == null) throw new ArgumentNullException("database");
+            if (logger == null) throw new ArgumentNullException("logger");
+
+            _database = database;
+            _logger = logger;
+         }
+
+         public void Process()
+         {
+            Processing = true;
+            try
+            {
+               ProcessInternal();
+            }
+            catch (Exception ex)
+            {
+               Exception = ex;
+            }
+            finally
+            {
+               Processing = false;
+               OnProcessFinished(EventArgs.Empty);
+            }
+         }
+
+         private void ProcessInternal()
+         {
+            Debug.Assert(_database.TableExists(SqlTable.WuHistory));
+
+            const string select =
+               "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
+               "FROM WuHistory " +
+               "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
+               "HAVING COUNT(*) > 1 ";
+               //"ORDER BY ID ASC";
+
+            const string delete =
+               "DELETE FROM WuHistory " +
+               "WHERE ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)";
+
+            int count = 0;
+            int totalCount = 0;
+            _logger.Info("Checking for duplicate WU History entries...");
+
+            using (var adapter = new SQLiteDataAdapter(select, _database.Connection))
+            using (var table = new DataTable())
+            {
+               adapter.Fill(table);
+
+               int lastProgress = 0;
+               using (var trans = _database.Connection.BeginTransaction())
+               {
+                  foreach (DataRow row in table.Rows)
+                  {
+                     using (var cmd = _database.Connection.CreateCommand())
+                     {
+                        cmd.CommandText = delete;
+                        for (int i = 0; i < row.ItemArray.Length; i++)
+                        {
+                           var param = cmd.CreateParameter();
+                           param.ParameterName = "@" + i;
+                           param.Value = row.ItemArray[i];
+                           cmd.Parameters.Add(param);
+                        }
+                        int result = cmd.ExecuteNonQuery();
+                        if (result != 0)
+                        {
+                           _logger.Debug("Deleted rows: {0}", result);
+                           totalCount += result;
+                        }
+                     }
+                     count++;
+
+                     int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
+                     if (progress != lastProgress)
+                     {
+                        string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
+                        OnProgressChanged(new ProgressEventArgs(progress, message));
+                        lastProgress = progress;
+                     }
+                  }
+                  trans.Commit();
+               }
+            }
+
+            if (totalCount != 0)
+            {
+               _logger.Info("Total number of duplicate WU History entries deleted: {0}", totalCount);
+            }
+         }
+
+         public void Cancel()
+         {
+            throw new NotImplementedException();
+         }
+
+         public Exception Exception { get; private set; }
+
+         public event EventHandler ProcessFinished;
+
+         private void OnProcessFinished(EventArgs e)
+         {
+            var handler = ProcessFinished;
+            if (handler != null)
+            {
+               handler(this, e);
+            }
+         }
+
+         public bool Processing { get; private set; }
+
+         public event EventHandler<ProgressEventArgs> ProgressChanged;
+
+         private void OnProgressChanged(ProgressEventArgs e)
+         {
+            var handler = ProgressChanged;
+            if (handler != null)
+            {
+               handler(this, e);
+            }
+         }
+
+         public bool SupportsCancellation
+         {
+            get { return false; }
          }
       }
 
