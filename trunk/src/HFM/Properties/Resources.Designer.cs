@@ -147,5 +147,14 @@ namespace HFM.Properties {
                 return ResourceManager.GetString("UserPreferencesFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Unit History Database upgrade failed..
+        /// </summary>
+        internal static string WuHistoryUpgradeFailed {
+            get {
+                return ResourceManager.GetString("WuHistoryUpgradeFailed", resourceCulture);
+            }
+        }
     }
 }

@@ -203,9 +203,19 @@ namespace HFM
             if (database.Connected)
             {
                database.UpgradeExecuting += DatabaseUpgradeExecuting;
-               database.Upgrade();
-               database.UpgradeExecuting -= DatabaseUpgradeExecuting;
-               mainView.WorkUnitHistoryMenuEnabled = true;
+               try
+               {
+                  database.Upgrade();
+                  mainView.WorkUnitHistoryMenuEnabled = true;
+               }
+               catch (Exception ex)
+               {
+                  ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
+               }
+               finally
+               {
+                  database.UpgradeExecuting -= DatabaseUpgradeExecuting;
+               }
             }
 
             #endregion
@@ -246,8 +256,13 @@ namespace HFM
 
       internal static void ShowStartupError(Exception ex, string message)
       {
+         ShowStartupError(ex, message, true);
+      }
+
+      internal static void ShowStartupError(Exception ex, string message, bool mustTerminate)
+      {
          ExceptionDialog.ShowErrorDialog(ex, Core.Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
-            message, Constants.GoogleGroupUrl, true);
+            message, Constants.GoogleGroupUrl, mustTerminate);
       }
       
       private static void ValidateMonoVersion(Version monoVersion)
