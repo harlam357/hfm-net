@@ -53,6 +53,8 @@ namespace HFM.Core.Tests
       private UnitInfoDatabase _database;
       private readonly IProteinDictionary _proteinDictionary = CreateProteinDictionary();
 
+      #region Setup and TearDown
+
       [SetUp]
       public void Init()
       {
@@ -64,6 +66,24 @@ namespace HFM.Core.Tests
          }
 
          _database = new UnitInfoDatabase(null, _proteinDictionary);
+      }
+
+      private void SetupTestDataFileCopies()
+      {
+         // sometimes the file is not finished
+         // copying before we attempt to open
+         // the copied file.  Halt the thread
+         // for a bit to ensure the copy has
+         // completed.
+
+         File.Copy(TestDataFile, _testDataFileCopy, true);
+         Thread.Sleep(100);
+
+         File.Copy(TestData2File, _testData2FileCopy, true);
+         Thread.Sleep(100);
+
+         File.Copy(TestData_1File, _testData_1FileCopy, true);
+         Thread.Sleep(100);
       }
 
       [TearDown]
@@ -88,6 +108,8 @@ namespace HFM.Core.Tests
          }
       }
 
+      #endregion
+
       [Test]
       public void TableExistsAndDropTableTest()
       {
@@ -110,10 +132,10 @@ namespace HFM.Core.Tests
 
       #endregion
 
-      #region PerformUpgrade
+      #region Upgrade
 
       [Test]
-      public void PerformUpgrade_v092_Test1()
+      public void Upgrade_v092_Test1()
       {
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
@@ -125,7 +147,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void PerformUpgrade_v092_AlreadyUpgraded_Test()
+      public void Upgrade_v092_AlreadyUpgraded_Test()
       {
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
@@ -137,7 +159,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void PerformUpgrade_v092_Test2()
+      public void Upgrade_v092_Test2()
       {
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
          Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
@@ -2533,24 +2555,6 @@ namespace HFM.Core.Tests
          proteins.Add(protein.ProjectNumber, protein);
 
          return proteins;
-      }
-
-      private void SetupTestDataFileCopies()
-      {
-         // sometimes the file is not finished
-         // copying before we attempt to open
-         // the copied file.  Halt the thread
-         // for a bit to ensure the copy has
-         // completed.
-
-         File.Copy(TestDataFile, _testDataFileCopy, true);
-         Thread.Sleep(100);
-
-         File.Copy(TestData2File, _testData2FileCopy, true);
-         Thread.Sleep(100);
-
-         File.Copy(TestData_1File, _testData_1FileCopy, true);
-         Thread.Sleep(100);
       }
    }
 }
