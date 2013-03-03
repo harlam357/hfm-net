@@ -76,12 +76,6 @@ namespace HFM.Core
       IList<HistoryEntry> Fetch(QueryParameters parameters);
 
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
-
-      bool TableExists(SqlTable sqlTable);
-
-      DataTable Select(string sql);
-
-      int Execute(string sql);
    }
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
@@ -249,6 +243,8 @@ namespace HFM.Core
             var duplicateDeleter = new DuplicateDeleter(this, _logger);
             OnUpgradeExecuting(duplicateDeleter);
             UpgradeWuHistory1();
+            var proteinDataPopulator = new HistoryEntryProteinDataPopulator(this, _proteinDictionary);
+            OnUpgradeExecuting(proteinDataPopulator);
             upgraded = true;
          }
 
@@ -423,14 +419,14 @@ namespace HFM.Core
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
 
-         if (_proteinDictionary == null) return query;
-            
-         var joinQuery = from entry in query
-                           join protein in _proteinDictionary.Values on entry.ProjectID equals protein.ProjectNumber into groupJoin
-                           from entryProtein in groupJoin.DefaultIfEmpty()
-                           select entry.SetProtein(entryProtein);
+         //if (_proteinDictionary == null) return query;
+         //   
+         //var joinQuery = from entry in query
+         //                  join protein in _proteinDictionary.Values on entry.ProjectID equals protein.ProjectNumber into groupJoin
+         //                  from entryProtein in groupJoin.DefaultIfEmpty()
+         //                  select entry.SetProtein(entryProtein);
 
-         return FilterProteinParameters(parameters, joinQuery);
+         return FilterProteinParameters(parameters, query);
       }
 
       private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
@@ -578,26 +574,13 @@ namespace HFM.Core
 
       #region Select
 
-      public DataTable Select(string sql)
+      private DataTable Select(string sql)
       {
          using (var adapter = new SQLiteDataAdapter(sql, _connection))
          {
             var table = new DataTable();
             adapter.Fill(table);
             return table;
-         }
-      }
-
-      #endregion
-
-      #region Execute
-
-      public int Execute(string sql)
-      {
-         using (var command = _connection.CreateCommand())
-         {
-            command.CommandText = sql;
-            return command.ExecuteNonQuery();
          }
       }
 
@@ -637,7 +620,7 @@ namespace HFM.Core
 
       #region Table Helpers
 
-      public bool TableExists(SqlTable sqlTable)
+      internal bool TableExists(SqlTable sqlTable)
       {
          using (DataTable table = _connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
          {
@@ -881,7 +864,7 @@ namespace HFM.Core
          }
       }
 
-      private class DuplicateDeleter : IProgressProcessRunner
+      private sealed class DuplicateDeleter : ProgressProcessRunnerBase
       {
          private readonly UnitInfoDatabase _database;
          private readonly ILogger _logger;
@@ -893,31 +876,15 @@ namespace HFM.Core
 
             _database = database;
             _logger = logger;
+
+            Debug.Assert(_database.Connected);
          }
 
-         public void Process()
-         {
-            Processing = true;
-            try
-            {
-               ProcessInternal();
-            }
-            catch (Exception ex)
-            {
-               Exception = ex;
-            }
-            finally
-            {
-               Processing = false;
-               OnProcessFinished(EventArgs.Empty);
-            }
-         }
-
-         private void ProcessInternal()
+         protected override void ProcessInternal()
          {
             Debug.Assert(_database.TableExists(SqlTable.WuHistory));
 
-            const string select =
+            const string sql =
                "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
                "FROM WuHistory " +
                "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
@@ -932,45 +899,41 @@ namespace HFM.Core
             int totalCount = 0;
             _logger.Info("Checking for duplicate WU History entries...");
 
-            using (var adapter = new SQLiteDataAdapter(select, _database.Connection))
-            using (var table = new DataTable())
+            var table = _database.Select(sql);
+
+            int lastProgress = 0;
+            using (var trans = _database.Connection.BeginTransaction())
             {
-               adapter.Fill(table);
-
-               int lastProgress = 0;
-               using (var trans = _database.Connection.BeginTransaction())
+               foreach (DataRow row in table.Rows)
                {
-                  foreach (DataRow row in table.Rows)
+                  using (var cmd = _database.Connection.CreateCommand())
                   {
-                     using (var cmd = _database.Connection.CreateCommand())
+                     cmd.CommandText = delete;
+                     for (int i = 0; i < row.ItemArray.Length; i++)
                      {
-                        cmd.CommandText = delete;
-                        for (int i = 0; i < row.ItemArray.Length; i++)
-                        {
-                           var param = cmd.CreateParameter();
-                           param.ParameterName = "@" + i;
-                           param.Value = row.ItemArray[i];
-                           cmd.Parameters.Add(param);
-                        }
-                        int result = cmd.ExecuteNonQuery();
-                        if (result != 0)
-                        {
-                           _logger.Debug("Deleted rows: {0}", result);
-                           totalCount += result;
-                        }
+                        var param = cmd.CreateParameter();
+                        param.ParameterName = "@" + i;
+                        param.Value = row.ItemArray[i];
+                        cmd.Parameters.Add(param);
                      }
-                     count++;
-
-                     int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
-                     if (progress != lastProgress)
+                     int result = cmd.ExecuteNonQuery();
+                     if (result != 0)
                      {
-                        string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                        OnProgressChanged(new ProgressEventArgs(progress, message));
-                        lastProgress = progress;
+                        _logger.Debug("Deleted rows: {0}", result);
+                        totalCount += result;
                      }
                   }
-                  trans.Commit();
+                  count++;
+
+                  int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
+                  if (progress != lastProgress)
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
+                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     lastProgress = progress;
+                  }
                }
+               trans.Commit();
             }
 
             if (totalCount != 0)
@@ -979,43 +942,143 @@ namespace HFM.Core
             }
          }
 
-         public void Cancel()
-         {
-            throw new NotImplementedException();
-         }
-
-         public Exception Exception { get; private set; }
-
-         public event EventHandler ProcessFinished;
-
-         private void OnProcessFinished(EventArgs e)
-         {
-            var handler = ProcessFinished;
-            if (handler != null)
-            {
-               handler(this, e);
-            }
-         }
-
-         public bool Processing { get; private set; }
-
-         public event EventHandler<ProgressEventArgs> ProgressChanged;
-
-         private void OnProgressChanged(ProgressEventArgs e)
-         {
-            var handler = ProgressChanged;
-            if (handler != null)
-            {
-               handler(this, e);
-            }
-         }
-
-         public bool SupportsCancellation
+         public override bool SupportsCancellation
          {
             get { return false; }
          }
       }
 
+      public sealed class HistoryEntryProteinDataPopulator : ProgressProcessRunnerBase
+      {
+         private readonly UnitInfoDatabase _database;
+         private readonly IProteinDictionary _proteinDictionary;
+
+         public HistoryEntryProteinDataPopulator(UnitInfoDatabase database, IProteinDictionary proteinDictionary)
+         {
+            if (database == null) throw new ArgumentNullException("database");
+            if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
+
+            _database = database;
+            _proteinDictionary = proteinDictionary;
+
+            Debug.Assert(_database.Connected);
+         }
+
+         public HistoryEntryProteinUpdateType UpdateType { get; set; }
+
+         public int UpdateArg { get; set; }
+
+         protected override void ProcessInternal()
+         {
+            Debug.Assert(_database.TableExists(SqlTable.WuHistory));
+
+            if (UpdateType.Equals(HistoryEntryProteinUpdateType.All) ||
+                UpdateType.Equals(HistoryEntryProteinUpdateType.Unknown))
+            {
+               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").GroupBy("ProjectID");
+               switch (UpdateType)
+               {
+                  case HistoryEntryProteinUpdateType.Unknown:
+                     selectSql = selectSql.Where("WorkUnitName IS NULL");
+                     // WHERE WorkUnitName IS NULL OR WorkUnitName = 'Unknown'
+                     break;
+               }
+
+               var table = _database.Select(selectSql.SQL);
+
+               int count = 0;
+               int lastProgress = 0;
+               foreach (DataRow row in table.Rows)
+               {
+                  if (CancelToken)
+                  {
+                     break;
+                  }
+
+                  var projectId = row.Field<int>("ProjectID");
+                  var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                  if (updateSql != null)
+                  {
+                     _database._database.Execute(updateSql);
+                  }
+                  count++;
+
+                  int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                  if (progress != lastProgress)
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture, "Updating protein {0} of {1}.", count, table.Rows.Count);
+                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     lastProgress = progress;
+                  }
+               }
+            }
+            else if (UpdateType.Equals(HistoryEntryProteinUpdateType.Project))
+            {
+               int projectId = UpdateArg;
+               var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+               if (updateSql != null)
+               {
+                  _database._database.Execute(updateSql);
+               }
+            }
+            else if (UpdateType.Equals(HistoryEntryProteinUpdateType.Id))
+            {
+               int id = UpdateArg;
+               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
+
+               var table = _database.Select(selectSql.SQL);
+               if (table.Rows.Count != 0)
+               {
+                  var projectId = table.Rows[0].Field<int>("ProjectID");
+                  var updateSql = GetUpdateSql(projectId, "ID", id);
+                  if (updateSql != null)
+                  {
+                     _database._database.Execute(updateSql);
+                  }
+               }
+            }
+         }
+
+         private PetaPoco.Sql GetUpdateSql(int projectId, string column, int arg)
+         {
+            // get the correct protein
+            var protein = _proteinDictionary.ContainsKey(projectId) ? _proteinDictionary[projectId] : null;
+            if (protein != null)
+            {
+               var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")
+                  .Append("SET [WorkUnitName] = @0,", protein.WorkUnitName)
+                  .Append("[KFactor] = @0,", protein.KFactor)
+                  .Append("[Core] = @0,", protein.Core)
+                  .Append("[Frames] = @0,", protein.Frames)
+                  .Append("[Atoms] = @0,", protein.NumberOfAtoms)
+                  .Append("[SlotType] = @0,", protein.Core.ToSlotType().ToString())
+                  .Append("[Credit] = @0,", protein.Credit)
+                  .Append("[PreferredDays] = @0,", protein.PreferredDays)
+                  .Append("[MaximumDays] = @0", protein.MaximumDays)
+                  .Where(column + " = @0", arg);
+               return updateSql;
+            }
+
+            return null;
+         }
+
+         /// <summary>
+         /// Gets a value that defines if this runner supports being cancelled.
+         /// </summary>
+         public override bool SupportsCancellation
+         {
+            get { return true; }
+         }
+      }
+
       #endregion
+   }
+
+   public enum HistoryEntryProteinUpdateType
+   {
+      All,
+      Unknown,
+      Project,
+      Id
    }
 }
