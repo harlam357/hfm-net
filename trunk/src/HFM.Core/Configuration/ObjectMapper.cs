@@ -72,9 +72,10 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.Core, opt => opt.Ignore())
             .ForMember(dest => dest.Frames, opt => opt.Ignore())
             .ForMember(dest => dest.Atoms, opt => opt.Ignore())
-            .ForMember(dest => dest.Credit, opt => opt.Ignore())
+            .ForMember(dest => dest.BaseCredit, opt => opt.Ignore())
             .ForMember(dest => dest.PreferredDays, opt => opt.Ignore())
             .ForMember(dest => dest.MaximumDays, opt => opt.Ignore())
+            .ForMember(dest => dest.SlotType, opt => opt.Ignore())
             .ForMember(dest => dest.ProductionView, opt => opt.Ignore());
       }
    }

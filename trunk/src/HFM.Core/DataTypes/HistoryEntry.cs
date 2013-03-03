@@ -169,63 +169,16 @@ namespace HFM.Core.DataTypes
          }
       }
 
-      public string SlotType { get; set; }
-      
-      [PetaPoco.Ignore]
-      public HistoryProductionView ProductionView { get; set; }
-
-      [PetaPoco.Ignore]
-      public double PPD
+      private double _baseCredit;
+      [PetaPoco.Column("Credit")]
+      public double BaseCredit
       {
-         get
-         {
-            if (_protein == null) return 0;
-         
-            switch (ProductionView)
-            {
-               case HistoryProductionView.Standard:
-                  return _protein.GetPPD(FrameTime);
-               case HistoryProductionView.BonusFrameTime:
-                  return _protein.GetPPD(FrameTime, TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
-               case HistoryProductionView.BonusDownloadTime:
-                  return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime), true);
-               default:
-                  // ReSharper disable HeuristicUnreachableCode
-                  Debug.Assert(false);
-                  return 0;
-                  // ReSharper restore HeuristicUnreachableCode
-            }
-         }
-      }
-
-      private double _credit;
-
-      public double Credit
-      {
-         get
-         {
-            if (_protein == null) return _credit;
-
-            switch (ProductionView)
-            {
-               case HistoryProductionView.Standard:
-                  return _protein.Credit;
-               case HistoryProductionView.BonusFrameTime:
-                  return _protein.GetCredit(TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
-               case HistoryProductionView.BonusDownloadTime:
-                  return _protein.GetCredit(CompletionDateTime.Subtract(DownloadDateTime), true);
-               default:
-                  // ReSharper disable HeuristicUnreachableCode
-                  Debug.Assert(false);
-                  return 0;
-                  // ReSharper restore HeuristicUnreachableCode
-            }
-         }
+         get { return _protein == null ? _baseCredit : _protein.Credit; }
          set
          {
             if (_protein == null)
             {
-               _credit = value;
+               _baseCredit = value;
             }
             else
             {
@@ -266,6 +219,59 @@ namespace HFM.Core.DataTypes
             else
             {
                _protein.MaximumDays = value;
+            }
+         }
+      }
+
+      public string SlotType { get; set; }
+      
+      [PetaPoco.Ignore]
+      public HistoryProductionView ProductionView { get; set; }
+
+      [PetaPoco.Ignore]
+      public double PPD
+      {
+         get
+         {
+            if (_protein == null) return 0;
+         
+            switch (ProductionView)
+            {
+               case HistoryProductionView.Standard:
+                  return _protein.GetPPD(FrameTime);
+               case HistoryProductionView.BonusFrameTime:
+                  return _protein.GetPPD(FrameTime, TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
+               case HistoryProductionView.BonusDownloadTime:
+                  return _protein.GetPPD(FrameTime, CompletionDateTime.Subtract(DownloadDateTime), true);
+               default:
+                  // ReSharper disable HeuristicUnreachableCode
+                  Debug.Assert(false);
+                  return 0;
+                  // ReSharper restore HeuristicUnreachableCode
+            }
+         }
+      }
+
+      [PetaPoco.Ignore]
+      public double Credit
+      {
+         get
+         {
+            if (_protein == null) return _baseCredit;
+
+            switch (ProductionView)
+            {
+               case HistoryProductionView.Standard:
+                  return _protein.Credit;
+               case HistoryProductionView.BonusFrameTime:
+                  return _protein.GetCredit(TimeSpan.FromSeconds(FrameTime.TotalSeconds * Frames), true);
+               case HistoryProductionView.BonusDownloadTime:
+                  return _protein.GetCredit(CompletionDateTime.Subtract(DownloadDateTime), true);
+               default:
+                  // ReSharper disable HeuristicUnreachableCode
+                  Debug.Assert(false);
+                  return 0;
+                  // ReSharper restore HeuristicUnreachableCode
             }
          }
       }
