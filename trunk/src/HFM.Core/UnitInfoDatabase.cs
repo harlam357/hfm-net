@@ -215,7 +215,7 @@ namespace HFM.Core
          }
       }
 
-      #region Database Upgrades
+      #region Upgrade
 
       public void Upgrade()
       {
@@ -239,13 +239,18 @@ namespace HFM.Core
          const string upgradeVersion1String = "0.9.2.0";
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
-            _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
-            var duplicateDeleter = new DuplicateDeleter(this, _logger);
-            OnUpgradeExecuting(duplicateDeleter);
-            UpgradeWuHistory1();
-            var proteinDataPopulator = new HistoryEntryProteinDataPopulator(this, _proteinDictionary);
-            OnUpgradeExecuting(proteinDataPopulator);
-            upgraded = true;
+            using (var trans = _connection.BeginTransaction())
+            {
+               _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
+               var duplicateDeleter = new DuplicateDeleter(this, _logger);
+               OnUpgradeExecuting(duplicateDeleter);
+               UpgradeWuHistory1();
+               var proteinDataPopulator = new HistoryEntryProteinDataPopulator(this, _proteinDictionary);
+               OnUpgradeExecuting(proteinDataPopulator);
+               upgraded = true;
+
+               trans.Commit();
+            }
          }
 
          if (upgraded)
@@ -896,31 +901,27 @@ namespace HFM.Core
             var table = _database.Select(selectSql.SQL);
 
             int lastProgress = 0;
-            using (var trans = _database.Connection.BeginTransaction())
+            foreach (DataRow row in table.Rows)
             {
-               foreach (DataRow row in table.Rows)
+               var deleteSql = PetaPoco.Sql.Builder.Append("DELETE FROM WuHistory")
+                  .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
+                  row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
+
+               int result = _database._database.Execute(deleteSql);
+               if (result != 0)
                {
-                  var deleteSql = PetaPoco.Sql.Builder.Append("DELETE FROM WuHistory")
-                     .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
-                     row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
-
-                  int result = _database._database.Execute(deleteSql);
-                  if (result != 0)
-                  {
-                     _logger.Debug("Deleted rows: {0}", result);
-                     totalCount += result;
-                  }
-                  count++;
-
-                  int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
-                  if (progress != lastProgress)
-                  {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                     OnProgressChanged(new ProgressEventArgs(progress, message));
-                     lastProgress = progress;
-                  }
+                  _logger.Debug("Deleted rows: {0}", result);
+                  totalCount += result;
                }
-               trans.Commit();
+               count++;
+
+               int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
+               if (progress != lastProgress)
+               {
+                  string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
+                  OnProgressChanged(new ProgressEventArgs(progress, message));
+                  lastProgress = progress;
+               }
             }
 
             if (totalCount != 0)
