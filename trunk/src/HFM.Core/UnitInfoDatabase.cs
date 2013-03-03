@@ -884,44 +884,31 @@ namespace HFM.Core
          {
             Debug.Assert(_database.TableExists(SqlTable.WuHistory));
 
-            const string sql =
-               "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
-               "FROM WuHistory " +
-               "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
-               "HAVING COUNT(*) > 1 ";
-               //"ORDER BY ID ASC";
-
-            const string delete =
-               "DELETE FROM WuHistory " +
-               "WHERE ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)";
+            var selectSql = PetaPoco.Sql.Builder.Select("ID", "ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime", "COUNT(*)")
+               .From("WuHistory")
+               .GroupBy("ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime")
+               .Append("HAVING COUNT(*) > 1");
 
             int count = 0;
             int totalCount = 0;
             _logger.Info("Checking for duplicate WU History entries...");
 
-            var table = _database.Select(sql);
+            var table = _database.Select(selectSql.SQL);
 
             int lastProgress = 0;
             using (var trans = _database.Connection.BeginTransaction())
             {
                foreach (DataRow row in table.Rows)
                {
-                  using (var cmd = _database.Connection.CreateCommand())
+                  var deleteSql = PetaPoco.Sql.Builder.Append("DELETE FROM WuHistory")
+                     .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
+                     row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
+
+                  int result = _database._database.Execute(deleteSql);
+                  if (result != 0)
                   {
-                     cmd.CommandText = delete;
-                     for (int i = 0; i < row.ItemArray.Length; i++)
-                     {
-                        var param = cmd.CreateParameter();
-                        param.ParameterName = "@" + i;
-                        param.Value = row.ItemArray[i];
-                        cmd.Parameters.Add(param);
-                     }
-                     int result = cmd.ExecuteNonQuery();
-                     if (result != 0)
-                     {
-                        _logger.Debug("Deleted rows: {0}", result);
-                        totalCount += result;
-                     }
+                     _logger.Debug("Deleted rows: {0}", result);
+                     totalCount += result;
                   }
                   count++;
 
