@@ -42,6 +42,14 @@ namespace HFM.Core
       Version
    }
 
+   public enum ProteinUpdateType
+   {
+      All,
+      Unknown,
+      Project,
+      Id
+   }
+
    public sealed class UpgradeExecutingEventArgs : EventArgs
    {
       private readonly IProgressProcessRunner _process;
@@ -76,6 +84,10 @@ namespace HFM.Core
       IList<HistoryEntry> Fetch(QueryParameters parameters);
 
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
+
+      DataTable Select(string sql);
+
+      int Execute(PetaPoco.Sql sql);
    }
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
@@ -120,12 +132,6 @@ namespace HFM.Core
                                                                                                  };  
 
       private SQLiteConnection _connection;
-
-      private SQLiteConnection Connection
-      {
-         get { return _connection; }
-      }
-
       private PetaPoco.Database _database;
 
       #endregion
@@ -245,8 +251,8 @@ namespace HFM.Core
                var duplicateDeleter = new DuplicateDeleter(this, _logger);
                OnUpgradeExecuting(duplicateDeleter);
                UpgradeWuHistory1();
-               var proteinDataPopulator = new HistoryEntryProteinDataPopulator(this, _proteinDictionary);
-               OnUpgradeExecuting(proteinDataPopulator);
+               var proteinDataUpdater = new ProteinDataUpdater(this, _proteinDictionary);
+               OnUpgradeExecuting(proteinDataUpdater);
                upgraded = true;
 
                trans.Commit();
@@ -389,7 +395,6 @@ namespace HFM.Core
       public int Delete(HistoryEntry entry)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
-
          return _database.Delete(entry);
       }
 
@@ -579,7 +584,7 @@ namespace HFM.Core
 
       #region Select
 
-      private DataTable Select(string sql)
+      public DataTable Select(string sql)
       {
          using (var adapter = new SQLiteDataAdapter(sql, _connection))
          {
@@ -587,6 +592,15 @@ namespace HFM.Core
             adapter.Fill(table);
             return table;
          }
+      }
+
+      #endregion
+
+      #region Execute
+
+      public int Execute(PetaPoco.Sql sql)
+      {
+         return _database.Execute(sql);
       }
 
       #endregion
@@ -656,14 +670,10 @@ namespace HFM.Core
             return null;
          }
 
-         using (var adapter = new SQLiteDataAdapter("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;", _connection))
-         using (var table = new DataTable())
+         var table = Select("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;");
+         if (table.Rows.Count != 0)
          {
-            adapter.Fill(table);
-            if (table.Rows.Count != 0)
-            {
-               return table.Rows[0]["Version"].ToString();
-            }
+            return table.Rows[0]["Version"].ToString();
          }
 
          return null;
@@ -907,7 +917,7 @@ namespace HFM.Core
                   .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
                   row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-               int result = _database._database.Execute(deleteSql);
+               int result = _database.Execute(deleteSql);
                if (result != 0)
                {
                   _logger.Debug("Deleted rows: {0}", result);
@@ -936,137 +946,129 @@ namespace HFM.Core
          }
       }
 
-      public sealed class HistoryEntryProteinDataPopulator : ProgressProcessRunnerBase
-      {
-         private readonly UnitInfoDatabase _database;
-         private readonly IProteinDictionary _proteinDictionary;
-
-         public HistoryEntryProteinDataPopulator(UnitInfoDatabase database, IProteinDictionary proteinDictionary)
-         {
-            if (database == null) throw new ArgumentNullException("database");
-            if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
-
-            _database = database;
-            _proteinDictionary = proteinDictionary;
-
-            Debug.Assert(_database.Connected);
-         }
-
-         public HistoryEntryProteinUpdateType UpdateType { get; set; }
-
-         public int UpdateArg { get; set; }
-
-         protected override void ProcessInternal()
-         {
-            Debug.Assert(_database.TableExists(SqlTable.WuHistory));
-
-            if (UpdateType.Equals(HistoryEntryProteinUpdateType.All) ||
-                UpdateType.Equals(HistoryEntryProteinUpdateType.Unknown))
-            {
-               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").GroupBy("ProjectID");
-               switch (UpdateType)
-               {
-                  case HistoryEntryProteinUpdateType.Unknown:
-                     selectSql = selectSql.Where("WorkUnitName IS NULL");
-                     // WHERE WorkUnitName IS NULL OR WorkUnitName = 'Unknown'
-                     break;
-               }
-
-               var table = _database.Select(selectSql.SQL);
-
-               int count = 0;
-               int lastProgress = 0;
-               foreach (DataRow row in table.Rows)
-               {
-                  if (CancelToken)
-                  {
-                     break;
-                  }
-
-                  var projectId = row.Field<int>("ProjectID");
-                  var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                  if (updateSql != null)
-                  {
-                     _database._database.Execute(updateSql);
-                  }
-                  count++;
-
-                  int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-                  if (progress != lastProgress)
-                  {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Updating protein {0} of {1}.", count, table.Rows.Count);
-                     OnProgressChanged(new ProgressEventArgs(progress, message));
-                     lastProgress = progress;
-                  }
-               }
-            }
-            else if (UpdateType.Equals(HistoryEntryProteinUpdateType.Project))
-            {
-               int projectId = UpdateArg;
-               var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-               if (updateSql != null)
-               {
-                  _database._database.Execute(updateSql);
-               }
-            }
-            else if (UpdateType.Equals(HistoryEntryProteinUpdateType.Id))
-            {
-               int id = UpdateArg;
-               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
-
-               var table = _database.Select(selectSql.SQL);
-               if (table.Rows.Count != 0)
-               {
-                  var projectId = table.Rows[0].Field<int>("ProjectID");
-                  var updateSql = GetUpdateSql(projectId, "ID", id);
-                  if (updateSql != null)
-                  {
-                     _database._database.Execute(updateSql);
-                  }
-               }
-            }
-         }
-
-         private PetaPoco.Sql GetUpdateSql(int projectId, string column, int arg)
-         {
-            // get the correct protein
-            var protein = _proteinDictionary.ContainsKey(projectId) ? _proteinDictionary[projectId] : null;
-            if (protein != null)
-            {
-               var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")
-                  .Append("SET [WorkUnitName] = @0,", protein.WorkUnitName)
-                  .Append("[KFactor] = @0,", protein.KFactor)
-                  .Append("[Core] = @0,", protein.Core)
-                  .Append("[Frames] = @0,", protein.Frames)
-                  .Append("[Atoms] = @0,", protein.NumberOfAtoms)
-                  .Append("[SlotType] = @0,", protein.Core.ToSlotType().ToString())
-                  .Append("[Credit] = @0,", protein.Credit)
-                  .Append("[PreferredDays] = @0,", protein.PreferredDays)
-                  .Append("[MaximumDays] = @0", protein.MaximumDays)
-                  .Where(column + " = @0", arg);
-               return updateSql;
-            }
-
-            return null;
-         }
-
-         /// <summary>
-         /// Gets a value that defines if this runner supports being cancelled.
-         /// </summary>
-         public override bool SupportsCancellation
-         {
-            get { return true; }
-         }
-      }
-
       #endregion
    }
 
-   public enum HistoryEntryProteinUpdateType
+   public sealed class ProteinDataUpdater : ProgressProcessRunnerBase
    {
-      All,
-      Unknown,
-      Project,
-      Id
+      private readonly UnitInfoDatabase _database;
+      private readonly IProteinDictionary _proteinDictionary;
+
+      public ProteinDataUpdater(UnitInfoDatabase database, IProteinDictionary proteinDictionary)
+      {
+         if (database == null) throw new ArgumentNullException("database");
+         if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
+
+         _database = database;
+         _proteinDictionary = proteinDictionary;
+
+         Debug.Assert(_database.Connected);
+      }
+
+      public ProteinUpdateType UpdateType { get; set; }
+
+      public int UpdateArg { get; set; }
+
+      protected override void ProcessInternal()
+      {
+         Debug.Assert(_database.TableExists(SqlTable.WuHistory));
+
+         if (UpdateType.Equals(ProteinUpdateType.All) ||
+             UpdateType.Equals(ProteinUpdateType.Unknown))
+         {
+            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").GroupBy("ProjectID");
+            switch (UpdateType)
+            {
+               case ProteinUpdateType.Unknown:
+                  selectSql = selectSql.Where("WorkUnitName IS NULL");
+                  // WHERE WorkUnitName IS NULL OR WorkUnitName = 'Unknown'
+                  break;
+            }
+
+            var table = _database.Select(selectSql.SQL);
+
+            int count = 0;
+            int lastProgress = 0;
+            foreach (DataRow row in table.Rows)
+            {
+               if (CancelToken)
+               {
+                  break;
+               }
+
+               var projectId = row.Field<int>("ProjectID");
+               var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+               if (updateSql != null)
+               {
+                  _database.Execute(updateSql);
+               }
+               count++;
+
+               int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+               if (progress != lastProgress)
+               {
+                  string message = String.Format(CultureInfo.CurrentCulture, "Updating protein {0} of {1}.", count, table.Rows.Count);
+                  OnProgressChanged(new ProgressEventArgs(progress, message));
+                  lastProgress = progress;
+               }
+            }
+         }
+         else if (UpdateType.Equals(ProteinUpdateType.Project))
+         {
+            int projectId = UpdateArg;
+            var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+            if (updateSql != null)
+            {
+               _database.Execute(updateSql);
+            }
+         }
+         else if (UpdateType.Equals(ProteinUpdateType.Id))
+         {
+            int id = UpdateArg;
+            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
+
+            var table = _database.Select(selectSql.SQL);
+            if (table.Rows.Count != 0)
+            {
+               var projectId = table.Rows[0].Field<int>("ProjectID");
+               var updateSql = GetUpdateSql(projectId, "ID", id);
+               if (updateSql != null)
+               {
+                  _database.Execute(updateSql);
+               }
+            }
+         }
+      }
+
+      private PetaPoco.Sql GetUpdateSql(int projectId, string column, int arg)
+      {
+         // get the correct protein
+         var protein = _proteinDictionary.ContainsKey(projectId) ? _proteinDictionary[projectId] : null;
+         if (protein != null)
+         {
+            var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")
+               .Append("SET [WorkUnitName] = @0,", protein.WorkUnitName)
+               .Append("[KFactor] = @0,", protein.KFactor)
+               .Append("[Core] = @0,", protein.Core)
+               .Append("[Frames] = @0,", protein.Frames)
+               .Append("[Atoms] = @0,", protein.NumberOfAtoms)
+               .Append("[SlotType] = @0,", protein.Core.ToSlotType().ToString())
+               .Append("[Credit] = @0,", protein.Credit)
+               .Append("[PreferredDays] = @0,", protein.PreferredDays)
+               .Append("[MaximumDays] = @0", protein.MaximumDays)
+               .Where(column + " = @0", arg);
+            return updateSql;
+         }
+
+         return null;
+      }
+
+      /// <summary>
+      /// Gets a value that defines if this runner supports being cancelled.
+      /// </summary>
+      public override bool SupportsCancellation
+      {
+         get { return true; }
+      }
    }
 }
