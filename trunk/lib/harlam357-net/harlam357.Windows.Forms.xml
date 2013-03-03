@@ -138,6 +138,46 @@
             Gets a value that reports if the runner is currently processing.
             </summary>
         </member>
+        <member name="T:harlam357.Windows.Forms.ProgressProcessRunnerBase">
+            <summary>
+            Represents an object that runs a process and reports progress.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.Process">
+            <summary>
+            Executes the runner.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.Cancel">
+            <summary>
+            Cancels the runner.
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.ProgressChanged">
+            <summary>
+            Occurs when the runner's progress has changed.
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.ProcessFinished">
+            <summary>
+            Occurs when the runner's process has finished.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.Exception">
+            <summary>
+            Gets the exception that resulted from executing the runner or null if no exception occurred.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.SupportsCancellation">
+            <summary>
+            Gets a value that defines if this runner supports being cancelled.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.Processing">
+            <summary>
+            Gets a value that reports if the runner is currently processing.
+            </summary>
+        </member>
         <member name="T:harlam357.Windows.Forms.IProgressDialogView">
             <summary>
             Represents a view interface for a modal dialog that runs a process asynchronously and reports progress.
