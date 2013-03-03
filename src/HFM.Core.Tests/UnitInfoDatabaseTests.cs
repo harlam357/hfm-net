@@ -526,7 +526,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "GROGPU2"
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Equal,
@@ -657,13 +657,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 2.3
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThan,
             Value = "GRO-A3"
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThan,
@@ -794,13 +794,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 2.3
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "GRO-A3"
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThanOrEqual,
@@ -931,13 +931,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 2.3
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThan,
             Value = "GRO-A3"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThan,
@@ -1068,13 +1068,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 2.3
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "GRO-A3"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThanOrEqual,
@@ -1211,7 +1211,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "GRO%"
          }));
-         FetchTestData(16, BuildParameters(new QueryField
+         FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Like,
@@ -1348,7 +1348,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "GRO%"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.NotLike,
@@ -1526,7 +1526,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "GRO-A5"
          }));
-         FetchTestData2(20, BuildParameters(new QueryField
+         FetchTestData2(253, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Equal,
@@ -1657,7 +1657,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 0.75
          }));
-         FetchTestData2(10, BuildParameters(new QueryField
+         FetchTestData2(243, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThan,
@@ -1794,13 +1794,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 0.75
          }));
-         FetchTestData2(20, BuildParameters(new QueryField
+         FetchTestData2(253, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "GRO-A4"
          }));
-         FetchTestData2(20, BuildParameters(new QueryField
+         FetchTestData2(253, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThanOrEqual,
@@ -1931,13 +1931,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 0.75
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThan,
             Value = "GRO-A4"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThan,
@@ -2068,7 +2068,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 0.75
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThanOrEqual,
@@ -2211,7 +2211,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "GRO%"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Like,
@@ -2348,7 +2348,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "GRO%"
          }));
-         FetchTestData2(20, BuildParameters(new QueryField
+         FetchTestData2(253, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.NotLike,
