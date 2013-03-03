@@ -321,17 +321,23 @@ namespace HFM.Core
    
       public void Insert(UnitInfoLogic unitInfoLogic)
       {
-         // validate the UnitInfoLogic before opening the connection
+         // if the work unit is not valid simply return
          if (!ValidateUnitInfo(unitInfoLogic.UnitInfoData)) return;
 
+         // The Insert operation does not setup a WuHistory table if
+         // it does not exist.  This was already handled when the
+         // the DatabaseFilePath was set.
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          // ensure this unit is not written twice
          if (!UnitInfoExists(unitInfoLogic))
          {
             var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoLogic.UnitInfoData);
+            // cannot map these two properties from a UnitInfo instance
+            // they only live at the UnitInfoLogic level
             entry.FramesCompleted = unitInfoLogic.FramesComplete;
             entry.FrameTimeValue = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames);
+            // SetProtein also sets the SlotType
             entry.SetProtein(unitInfoLogic.CurrentProtein);
             _database.Insert(entry);
          }

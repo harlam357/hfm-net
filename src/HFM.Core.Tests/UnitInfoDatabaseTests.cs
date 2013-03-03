@@ -55,6 +55,12 @@ namespace HFM.Core.Tests
 
       #region Setup and TearDown
 
+      [TestFixtureSetUp]
+      public void FixtureInit()
+      {
+         Core.Configuration.ObjectMapper.CreateMaps();
+      }
+
       [SetUp]
       public void Init()
       {
@@ -178,44 +184,42 @@ namespace HFM.Core.Tests
       [Test]
       public void InsertTest1()
       {
-         InsertTestInternal(BuildUnitInfo1(), BuildUnitInfo1VerifyAction());
+         InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
       }
 
       [Test]
       public void InsertTest1CzechCulture()
       {
          Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-         InsertTestInternal(BuildUnitInfo1(), BuildUnitInfo1VerifyAction());
+         InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
       }
 
       [Test]
       public void InsertTest2()
       {
-         InsertTestInternal(BuildUnitInfo2(), BuildUnitInfo2VerifyAction());
+         InsertTestInternal(BuildUnitInfo2(), BuildProtein2(), BuildUnitInfo2VerifyAction());
       }
 
       [Test]
       public void InsertTest3()
       {
-         InsertTestInternal(BuildUnitInfo3(), BuildUnitInfo3VerifyAction());
+         InsertTestInternal(BuildUnitInfo3(), BuildProtein3(), BuildUnitInfo3VerifyAction());
       }
 
       [Test]
       public void InsertTest4()
       {
-         InsertTestInternal(BuildUnitInfo4(), BuildUnitInfo4VerifyAction());
+         InsertTestInternal(BuildUnitInfo4(), BuildProtein4(), BuildUnitInfo4VerifyAction());
       }
 
-      private void InsertTestInternal(UnitInfo unitInfo, Action<IList<HistoryEntry>> verifyAction)
+      private void InsertTestInternal(UnitInfo unitInfo, Protein protein, Action<IList<HistoryEntry>> verifyAction)
       {
          _database.DatabaseFilePath = TestScratchFile;
-         Core.Configuration.ObjectMapper.CreateMaps();
 
-         var unitInfoLogic = new UnitInfoLogic(MockRepository.GenerateStub<IProteinBenchmarkCollection>())
-                             {
-                                CurrentProtein = new Protein(),
-                                UnitInfoData = unitInfo
-                             };
+         var unitInfoLogic = new UnitInfoLogic(MockRepository.GenerateStub<IProteinBenchmarkCollection>());
+         unitInfoLogic.CurrentProtein = protein;
+         unitInfoLogic.UnitInfoData = unitInfo;
+
          _database.Insert(unitInfoLogic);
 
          var rows = _database.Fetch(new QueryParameters());
@@ -231,6 +235,7 @@ namespace HFM.Core.Tests
       private static UnitInfo BuildUnitInfo1()
       {
          var unitInfo = new UnitInfo();
+
          unitInfo.ProjectID = 2669;
          unitInfo.ProjectRun = 1;
          unitInfo.ProjectClone = 2;
@@ -242,12 +247,34 @@ namespace HFM.Core.Tests
          unitInfo.Team = 32;
          unitInfo.CoreVersion = 2.09f;
          unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
-         unitInfo.DownloadTime = new DateTime(2010, 1, 1); //, 0 ,0 ,0, DateTimeKind.Utc);
-         unitInfo.FinishedTime = new DateTime(2010, 1, 2); //, 0, 0, 0, DateTimeKind.Utc);
+
+         // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
+         // connection string option to Utc will force SQLite to handle all DateTime 
+         // values as Utc regardless of the DateTimeKind specified in the value.
+         unitInfo.DownloadTime = new DateTime(2010, 1, 1, 0 ,0 ,0, DateTimeKind.Utc);
+         unitInfo.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+
+         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+
          return unitInfo;
+      }
+
+      private static Protein BuildProtein1()
+      {
+         return new Protein
+                {
+                   WorkUnitName = "TestUnit1",
+                   KFactor = 1.0,
+                   Core = "GRO-A3",
+                   Frames = 100,
+                   NumberOfAtoms = 1000,
+                   Credit = 100.0,
+                   PreferredDays = 3.0,
+                   MaximumDays = 5.0
+                };
       }
 
       private static Action<IList<HistoryEntry>> BuildUnitInfo1VerifyAction()
@@ -270,12 +297,22 @@ namespace HFM.Core.Tests
             Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
             Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
             Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
+            Assert.AreEqual("TestUnit1", entry.WorkUnitName);
+            Assert.AreEqual(1.0, entry.KFactor);
+            Assert.AreEqual("GRO-A3", entry.Core);
+            Assert.AreEqual(100, entry.Frames);
+            Assert.AreEqual(1000, entry.Atoms);
+            Assert.AreEqual(100.0, entry.BaseCredit);
+            Assert.AreEqual(3.0, entry.PreferredDays);
+            Assert.AreEqual(5.0, entry.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
          };
       }
 
       private static UnitInfo BuildUnitInfo2()
       {
          var unitInfo = new UnitInfo();
+
          unitInfo.ProjectID = 6900;
          unitInfo.ProjectRun = 4;
          unitInfo.ProjectClone = 5;
@@ -287,12 +324,33 @@ namespace HFM.Core.Tests
          unitInfo.Team = 100;
          unitInfo.CoreVersion = 2.27f;
          unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+
+         // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
+         // connection string option to Utc will force SQLite to handle all DateTime 
+         // values as Utc regardless of the DateTimeKind specified in the value.
          unitInfo.DownloadTime = new DateTime(2009, 5, 5);
          unitInfo.FinishedTime = DateTime.MinValue;
+
+         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 55, TimeOfFrame = TimeSpan.Zero });
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 56, TimeOfFrame = TimeSpan.FromSeconds(1000) });
          return unitInfo;
+      }
+
+      private static Protein BuildProtein2()
+      {
+         return new Protein
+         {
+            WorkUnitName = "TestUnit2",
+            KFactor = 2.0,
+            Core = "GRO-A4",
+            Frames = 200,
+            NumberOfAtoms = 2000,
+            Credit = 200.0,
+            PreferredDays = 6.0,
+            MaximumDays = 10.0
+         };
       }
 
       private static Action<IList<HistoryEntry>> BuildUnitInfo2VerifyAction()
@@ -315,12 +373,22 @@ namespace HFM.Core.Tests
             Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
             Assert.AreEqual(new DateTime(2009, 5, 5), entry.DownloadDateTime);
             Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
+            Assert.AreEqual("TestUnit2", entry.WorkUnitName);
+            Assert.AreEqual(2.0, entry.KFactor);
+            Assert.AreEqual("GRO-A4", entry.Core);
+            Assert.AreEqual(200, entry.Frames);
+            Assert.AreEqual(2000, entry.Atoms);
+            Assert.AreEqual(200.0, entry.BaseCredit);
+            Assert.AreEqual(6.0, entry.PreferredDays);
+            Assert.AreEqual(10.0, entry.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
          };
       }
 
       private static UnitInfo BuildUnitInfo3()
       {
          var unitInfo = new UnitInfo();
+
          unitInfo.ProjectID = 2670;
          unitInfo.ProjectRun = 2;
          unitInfo.ProjectClone = 3;
@@ -332,12 +400,33 @@ namespace HFM.Core.Tests
          unitInfo.Team = 32;
          unitInfo.CoreVersion = 2.09f;
          unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+
+         // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
+         // connection string option to Utc will force SQLite to handle all DateTime 
+         // values as Utc regardless of the DateTimeKind specified in the value.
          unitInfo.DownloadTime = new DateTime(2010, 2, 2);
          unitInfo.FinishedTime = DateTime.MinValue;
+
+         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
          return unitInfo;
+      }
+
+      private static Protein BuildProtein3()
+      {
+         return new Protein
+         {
+            WorkUnitName = "TestUnit3",
+            KFactor = 3.0,
+            Core = "GRO-A5",
+            Frames = 300,
+            NumberOfAtoms = 3000,
+            Credit = 300.0,
+            PreferredDays = 7.0,
+            MaximumDays = 12.0
+         };
       }
 
       private static Action<IList<HistoryEntry>> BuildUnitInfo3VerifyAction()
@@ -360,12 +449,22 @@ namespace HFM.Core.Tests
             Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
             Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
             Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
+            Assert.AreEqual("TestUnit3", entry.WorkUnitName);
+            Assert.AreEqual(3.0, entry.KFactor);
+            Assert.AreEqual("GRO-A5", entry.Core);
+            Assert.AreEqual(300, entry.Frames);
+            Assert.AreEqual(3000, entry.Atoms);
+            Assert.AreEqual(300.0, entry.BaseCredit);
+            Assert.AreEqual(7.0, entry.PreferredDays);
+            Assert.AreEqual(12.0, entry.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
          };
       }
 
       private static UnitInfo BuildUnitInfo4()
       {
          var unitInfo = new UnitInfo();
+
          unitInfo.ProjectID = 6903;
          unitInfo.ProjectRun = 2;
          unitInfo.ProjectClone = 3;
@@ -377,12 +476,33 @@ namespace HFM.Core.Tests
          unitInfo.Team = 32;
          unitInfo.CoreVersion = 2.27f;
          unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+
+         // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
+         // connection string option to Utc will force SQLite to handle all DateTime 
+         // values as Utc regardless of the DateTimeKind specified in the value.
          unitInfo.DownloadTime = new DateTime(2012, 1, 2);
          unitInfo.FinishedTime = new DateTime(2012, 1, 5);
+
+         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
          unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
          return unitInfo;
+      }
+
+      private static Protein BuildProtein4()
+      {
+         return new Protein
+         {
+            WorkUnitName = "TestUnit4",
+            KFactor = 4.0,
+            Core = "OPENMMGPU",
+            Frames = 400,
+            NumberOfAtoms = 4000,
+            Credit = 400.0,
+            PreferredDays = 2.0,
+            MaximumDays = 5.0
+         };
       }
 
       private static Action<IList<HistoryEntry>> BuildUnitInfo4VerifyAction()
@@ -405,6 +525,15 @@ namespace HFM.Core.Tests
             Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
             Assert.AreEqual(new DateTime(2012, 1, 2), entry.DownloadDateTime);
             Assert.AreEqual(new DateTime(2012, 1, 5), entry.CompletionDateTime);
+            Assert.AreEqual("TestUnit4", entry.WorkUnitName);
+            Assert.AreEqual(4.0, entry.KFactor);
+            Assert.AreEqual("OPENMMGPU", entry.Core);
+            Assert.AreEqual(400, entry.Frames);
+            Assert.AreEqual(4000, entry.Atoms);
+            Assert.AreEqual(400.0, entry.BaseCredit);
+            Assert.AreEqual(2.0, entry.PreferredDays);
+            Assert.AreEqual(5.0, entry.MaximumDays);
+            Assert.AreEqual(SlotType.GPU.ToString(), entry.SlotType);
          };
       }
 
