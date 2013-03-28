@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -187,11 +187,47 @@ namespace HFM.Forms
          }
          else
          {
-            var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", Core.Application.NameAndVersion);
+            var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
             if (result.Equals(DialogResult.Yes))
             {
                _model.DeleteHistoryEntry(entry);
             }
+         }
+      }
+      
+      public void RefreshProjectDataClick(ProteinUpdateType type)
+      {
+         var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
+         if (result.Equals(DialogResult.No))
+         {
+            return;
+         }
+
+         var processor = ServiceLocator.Resolve<ProteinDataUpdater>();
+         processor.UpdateType = type;
+         if (type.Equals(ProteinUpdateType.Project))
+         {
+            processor.UpdateArg = _model.SelectedHistoryEntry.ProjectID;   
+         }
+         else if (type.Equals(ProteinUpdateType.Id))
+         {
+            processor.UpdateArg = _model.SelectedHistoryEntry.ID;
+         }
+         // Execute Asynchronous Operation
+         var view = ServiceLocator.Resolve<IProgressDialogView>("ProgressDialog");
+         view.ProcessRunner = processor;
+         view.Icon = Properties.Resources.hfm_48_48;
+         view.Text = "Updating Project Data";
+         view.OwnerWindow = _view;
+         view.Process();
+
+         if (processor.Exception != null)
+         {
+            _messageBoxView.ShowError(_view, processor.Exception.Message, Core.Application.NameAndVersion);
+         }
+         else
+         {
+            RefreshClicked();
          }
       }
       

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History - Binding Model
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,21 +55,24 @@ namespace HFM.Forms.Models
       
       public HistoryPresenterModel(IUnitInfoDatabase database)
       {
+         if (database == null) throw new ArgumentNullException("database");
          _database = database;
+
+         Debug.Assert(_database.Connected);
 
          _queryList = new List<QueryParameters>();
          _queryList.Add(new QueryParameters());
          _queryList.Sort();
          _queryBindingSource = new BindingSource();
          _queryBindingSource.DataSource = _queryList;
-         _queryBindingSource.CurrentItemChanged += delegate
+         _queryBindingSource.CurrentItemChanged += (s, e) =>
                                                    {
                                                       OnPropertyChanged("EditAndDeleteButtonsEnabled");
                                                       ResetBindings(true);
                                                    };
 
          _historyList = new HistoryEntrySortableBindingList();
-         _historyList.Sorted += (sender, e) =>
+         _historyList.Sorted += (s, e) =>
          {
             SortColumnName = e.Name;
             SortOrder = e.Direction;
