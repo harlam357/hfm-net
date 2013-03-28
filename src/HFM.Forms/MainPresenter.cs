@@ -1211,13 +1211,19 @@ namespace HFM.Forms
          var downloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
          // Clear the Project Not Found Cache and Last Download Time
          _proteinDictionary.ClearProjectsNotFoundCache();
-         downloader.ResetLastDownloadTime();
          // Execute Asynchronous Download
-         var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>();
+         var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>("ProjectDownloadDialog");
          projectDownloadView.OwnerWindow = _view;
          projectDownloadView.ProcessRunner = downloader;
          projectDownloadView.UpdateMessage(_prefs.Get<string>(Preference.ProjectDownloadUrl));
          projectDownloadView.Process();
+
+         if (downloader.Exception != null)
+         {
+            _logger.Error(downloader.Exception.Message, downloader.Exception);
+            _messageBoxView.ShowError(_view, downloader.Exception.Message, Core.Application.NameAndVersion);
+            return;
+         }
 
          IEnumerable<ProteinLoadInfo> loadInfo;
          try

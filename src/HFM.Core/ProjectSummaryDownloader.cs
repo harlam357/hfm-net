@@ -40,11 +40,6 @@ namespace HFM.Core
       string DownloadFilePath { get; set; }
 
       /// <summary>
-      /// Reset the Last Download Time
-      /// </summary>
-      void ResetLastDownloadTime();
-
-      /// <summary>
       /// Download project information from Stanford University (THREAD SAFE)
       /// </summary>
       void DownloadFromStanford();
@@ -55,7 +50,7 @@ namespace HFM.Core
       void DownloadFromHfmWeb();
    }
 
-   public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
+   public sealed class ProjectSummaryDownloader : ProgressProcessRunnerBase, IProjectSummaryDownloader
    {
       #region Fields
       
@@ -79,17 +74,6 @@ namespace HFM.Core
       /// </summary>
       public IPreferenceSet Prefs { get; set; }
 
-      private bool _processing;
-      bool IProgressProcessRunner.Processing
-      {
-         get { return _processing; }
-      }
-
-      Exception IProgressProcessRunner.Exception
-      {
-         get { throw new NotImplementedException(); }
-      }
-
       private ILogger _logger = NullLogger.Instance;
 
       public ILogger Logger
@@ -105,60 +89,6 @@ namespace HFM.Core
       public ProjectSummaryDownloader()
       {
          LastDownloadTime = DateTime.MinValue;
-      }
-
-      #region Events and Event Wrappers
-
-      public event EventHandler<ProgressEventArgs> ProgressChanged;
-      private void OnProgressChanged(ProgressEventArgs e)
-      {
-         if (ProgressChanged != null)
-         {
-            ProgressChanged(this, e);
-         }
-      }
-
-      public event EventHandler ProcessFinished;
-      private void OnProcessFinished(EventArgs e)
-      {
-         if (ProcessFinished != null)
-         {
-            ProcessFinished(this, e);
-         }
-      }
-      
-      #endregion
-
-      /// <summary>
-      /// Reset the Last Download Time
-      /// </summary>
-      public void ResetLastDownloadTime()
-      {
-         LastDownloadTime = DateTime.MinValue;
-      }
-
-      void IProgressProcessRunner.Process()
-      {
-         _processing = true;
-         try
-         {
-            DownloadFromStanford();
-         }
-         finally
-         {
-            _processing = false;
-            OnProcessFinished(EventArgs.Empty);
-         }
-      }
-
-      bool IProgressProcessRunner.SupportsCancellation
-      {
-         get { return false; }
-      }
-
-      void IProgressProcessRunner.Cancel()
-      {
-         throw new NotImplementedException();
       }
 
       /// <summary>
@@ -182,7 +112,6 @@ namespace HFM.Core
             catch (Exception ex)
             {
                _logger.ErrorFormat(ex, "{0}", ex.Message);
-               OnProgressChanged(new ProgressEventArgs(0, ex.Message));
             }
          }
       }
@@ -208,7 +137,6 @@ namespace HFM.Core
             catch (Exception ex)
             {
                _logger.ErrorFormat(ex, "{0}", ex.Message);
-               OnProgressChanged(new ProgressEventArgs(0, ex.Message));
             }
          }
       }
@@ -240,6 +168,21 @@ namespace HFM.Core
          
          _logger.Debug("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
          return false;
+      }
+
+      protected override void ProcessInternal()
+      {
+         lock (DownloadLock)
+         {
+            _logger.Info("Downloading new project data from Stanford...");
+            PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
+            LastDownloadTime = DateTime.Now;
+         }
+      }
+
+      protected override bool SupportsCancellationInternal
+      {
+         get { return false; }
       }
    }
 }
