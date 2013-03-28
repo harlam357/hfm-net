@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using Castle.Core.Logging;
+
 using harlam357.Windows.Forms;
 
 using HFM.Core;
@@ -39,6 +41,16 @@ namespace HFM.Forms
       private readonly ISaveFileDialogView _saveFileView;
       private readonly IMessageBoxView _messageBoxView;
       private readonly HistoryPresenterModel _model;
+
+      private ILogger _logger = NullLogger.Instance;
+
+      public ILogger Logger
+      {
+         [CoverageExclude]
+         get { return _logger; }
+         [CoverageExclude]
+         set { _logger = value; }
+      }
       
       public event EventHandler PresenterClosed;
       
@@ -221,9 +233,11 @@ namespace HFM.Forms
          view.OwnerWindow = _view;
          view.Process();
 
-         if (processor.Exception != null)
+         var runner = view.ProcessRunner;
+         if (runner.Exception != null)
          {
-            _messageBoxView.ShowError(_view, processor.Exception.Message, Core.Application.NameAndVersion);
+            _logger.Error(runner.Exception.Message, runner.Exception);
+            _messageBoxView.ShowError(_view, runner.Exception.Message, Core.Application.NameAndVersion);
          }
          else
          {

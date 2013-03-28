@@ -270,6 +270,11 @@ namespace HFM.Core
          {
             process.Process();
          }
+
+         if (process.Exception != null)
+         {
+            throw new DataException("Database upgrade failed.", process.Exception);
+         }
       }
 
       private void UpgradeWuHistory1()
@@ -937,7 +942,7 @@ namespace HFM.Core
             }
          }
 
-         public override bool SupportsCancellation
+         protected override bool SupportsCancellationInternal
          {
             get { return false; }
          }
@@ -1062,7 +1067,7 @@ namespace HFM.Core
       /// <summary>
       /// Gets a value that defines if this runner supports being cancelled.
       /// </summary>
-      public override bool SupportsCancellation
+      protected override bool SupportsCancellationInternal
       {
          get { return true; }
       }
