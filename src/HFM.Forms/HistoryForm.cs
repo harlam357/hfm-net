@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History UI Form
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -189,6 +189,26 @@ namespace HFM.Forms
       private void btnRefresh_Click(object sender, EventArgs e)
       {
          _presenter.RefreshClicked();
+      }
+
+      private void RefreshAllMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.RefreshProjectDataClick(ProteinUpdateType.All);
+      }
+
+      private void RefreshUnknownMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.RefreshProjectDataClick(ProteinUpdateType.Unknown);
+      }
+
+      private void RefreshProjectMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.RefreshProjectDataClick(ProteinUpdateType.Project);
+      }
+
+      private void RefreshEntryMenuItem_Click(object sender, EventArgs e)
+      {
+         _presenter.RefreshProjectDataClick(ProteinUpdateType.Id);
       }
 
       private void frmHistory_FormClosing(object sender, FormClosingEventArgs e)

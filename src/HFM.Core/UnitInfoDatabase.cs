@@ -85,9 +85,9 @@ namespace HFM.Core
 
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
 
-      DataTable Select(string sql);
+      DataTable Select(string sql, params object[] args);
 
-      int Execute(PetaPoco.Sql sql);
+      int Execute(string sql, params object[] args);
    }
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
@@ -191,17 +191,7 @@ namespace HFM.Core
                CreateTable(SqlTable.Version);
                SetDatabaseVersion(Application.VersionWithRevision);
             }
-            var parameters = new QueryParameters();
-            parameters.Fields.Add(new QueryField
-                                    {
-                                       Name = QueryFieldName.ID,
-                                       Type = QueryFieldType.Equal,
-                                       Value = 0
-                                    });
-            //if (exists)
-            //{
-            //   PerformUpgrade();
-            //}
+            // verify the connection by performing a db operation
             Select("SELECT * FROM [WuHistory] LIMIT 1");
             Connected = true;
          }
@@ -590,9 +580,10 @@ namespace HFM.Core
 
       #region Select
 
-      public DataTable Select(string sql)
+      public DataTable Select(string sql, params object[] args)
       {
-         using (var adapter = new SQLiteDataAdapter(sql, _connection))
+         var cmd = _database.CreateCommand(_database.Connection, sql, args);
+         using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
          {
             var table = new DataTable();
             adapter.Fill(table);
@@ -604,9 +595,9 @@ namespace HFM.Core
 
       #region Execute
 
-      public int Execute(PetaPoco.Sql sql)
+      public int Execute(string sql, params object[] args)
       {
-         return _database.Execute(sql);
+         return _database.Execute(sql, args);
       }
 
       #endregion
@@ -923,7 +914,7 @@ namespace HFM.Core
                   .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
                   row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-               int result = _database.Execute(deleteSql);
+               int result = _database.Execute(deleteSql.SQL, deleteSql.Arguments);
                if (result != 0)
                {
                   _logger.Debug("Deleted rows: {0}", result);
@@ -957,10 +948,10 @@ namespace HFM.Core
 
    public sealed class ProteinDataUpdater : ProgressProcessRunnerBase
    {
-      private readonly UnitInfoDatabase _database;
+      private readonly IUnitInfoDatabase _database;
       private readonly IProteinDictionary _proteinDictionary;
 
-      public ProteinDataUpdater(UnitInfoDatabase database, IProteinDictionary proteinDictionary)
+      public ProteinDataUpdater(IUnitInfoDatabase database, IProteinDictionary proteinDictionary)
       {
          if (database == null) throw new ArgumentNullException("database");
          if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
@@ -973,16 +964,14 @@ namespace HFM.Core
 
       public ProteinUpdateType UpdateType { get; set; }
 
-      public int UpdateArg { get; set; }
+      public long UpdateArg { get; set; }
 
       protected override void ProcessInternal()
       {
-         Debug.Assert(_database.TableExists(SqlTable.WuHistory));
-
          if (UpdateType.Equals(ProteinUpdateType.All) ||
              UpdateType.Equals(ProteinUpdateType.Unknown))
          {
-            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").GroupBy("ProjectID");
+            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
             switch (UpdateType)
             {
                case ProteinUpdateType.Unknown:
@@ -990,6 +979,7 @@ namespace HFM.Core
                   // WHERE WorkUnitName IS NULL OR WorkUnitName = 'Unknown'
                   break;
             }
+            selectSql = selectSql.GroupBy("ProjectID");
 
             var table = _database.Select(selectSql.SQL);
 
@@ -1006,14 +996,14 @@ namespace HFM.Core
                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                if (updateSql != null)
                {
-                  _database.Execute(updateSql);
+                  _database.Execute(updateSql.SQL, updateSql.Arguments);
                }
                count++;
 
                int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
                if (progress != lastProgress)
                {
-                  string message = String.Format(CultureInfo.CurrentCulture, "Updating protein {0} of {1}.", count, table.Rows.Count);
+                  string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
                   OnProgressChanged(new ProgressEventArgs(progress, message));
                   lastProgress = progress;
                }
@@ -1021,32 +1011,32 @@ namespace HFM.Core
          }
          else if (UpdateType.Equals(ProteinUpdateType.Project))
          {
-            int projectId = UpdateArg;
+            int projectId = (int)UpdateArg;
             var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
             if (updateSql != null)
             {
-               _database.Execute(updateSql);
+               _database.Execute(updateSql.SQL, updateSql.Arguments);
             }
          }
          else if (UpdateType.Equals(ProteinUpdateType.Id))
          {
-            int id = UpdateArg;
+            long id = UpdateArg;
             var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
 
-            var table = _database.Select(selectSql.SQL);
+            var table = _database.Select(selectSql.SQL, selectSql.Arguments);
             if (table.Rows.Count != 0)
             {
                var projectId = table.Rows[0].Field<int>("ProjectID");
                var updateSql = GetUpdateSql(projectId, "ID", id);
                if (updateSql != null)
                {
-                  _database.Execute(updateSql);
+                  _database.Execute(updateSql.SQL, updateSql.Arguments);
                }
             }
          }
       }
 
-      private PetaPoco.Sql GetUpdateSql(int projectId, string column, int arg)
+      private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
       {
          // get the correct protein
          var protein = _proteinDictionary.ContainsKey(projectId) ? _proteinDictionary[projectId] : null;

@@ -66,6 +66,12 @@ namespace HFM.Forms
          this.ResultsGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
          this.ShowLastCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.splitContainerWrapper1 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.ToolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.RefreshProjectDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.RefreshAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.RefreshUnknownMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.RefreshEntryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.menuStrip1.SuspendLayout();
          this.dataGridMenuStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -73,6 +79,7 @@ namespace HFM.Forms
          this.rdoPanelProduction.SuspendLayout();
          this.DataViewGroupBox.SuspendLayout();
          this.ResultsGroupBox.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainerWrapper1)).BeginInit();
          this.splitContainerWrapper1.Panel1.SuspendLayout();
          this.splitContainerWrapper1.Panel2.SuspendLayout();
          this.splitContainerWrapper1.SuspendLayout();
@@ -82,7 +89,8 @@ namespace HFM.Forms
          // 
          this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
-            this.mnuView});
+            this.mnuView,
+            this.ToolsMenuItem});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
          this.menuStrip1.Size = new System.Drawing.Size(903, 24);
@@ -101,13 +109,13 @@ namespace HFM.Forms
          // mnuFileSep1
          // 
          this.mnuFileSep1.Name = "mnuFileSep1";
-         this.mnuFileSep1.Size = new System.Drawing.Size(89, 6);
+         this.mnuFileSep1.Size = new System.Drawing.Size(149, 6);
          this.mnuFileSep1.Visible = false;
          // 
          // mnuFileExit
          // 
          this.mnuFileExit.Name = "mnuFileExit";
-         this.mnuFileExit.Size = new System.Drawing.Size(92, 22);
+         this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
          this.mnuFileExit.Text = "&Exit";
          this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
          // 
@@ -146,12 +154,12 @@ namespace HFM.Forms
          this.dataGridMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dataGridDeleteWorkUnitMenuItem});
          this.dataGridMenuStrip.Name = "dataGridMenuStrip";
-         this.dataGridMenuStrip.Size = new System.Drawing.Size(167, 26);
+         this.dataGridMenuStrip.Size = new System.Drawing.Size(164, 26);
          // 
          // dataGridDeleteWorkUnitMenuItem
          // 
          this.dataGridDeleteWorkUnitMenuItem.Name = "dataGridDeleteWorkUnitMenuItem";
-         this.dataGridDeleteWorkUnitMenuItem.Size = new System.Drawing.Size(166, 22);
+         this.dataGridDeleteWorkUnitMenuItem.Size = new System.Drawing.Size(163, 22);
          this.dataGridDeleteWorkUnitMenuItem.Text = "Delete Work Unit";
          this.dataGridDeleteWorkUnitMenuItem.Click += new System.EventHandler(this.dataGridDeleteWorkUnitMenuItem_Click);
          // 
@@ -428,6 +436,53 @@ namespace HFM.Forms
          this.splitContainerWrapper1.SplitterDistance = 90;
          this.splitContainerWrapper1.TabIndex = 8;
          // 
+         // ToolsMenuItem
+         // 
+         this.ToolsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RefreshProjectDataMenuItem});
+         this.ToolsMenuItem.Name = "ToolsMenuItem";
+         this.ToolsMenuItem.Size = new System.Drawing.Size(48, 20);
+         this.ToolsMenuItem.Text = "&Tools";
+         // 
+         // RefreshProjectDataMenuItem
+         // 
+         this.RefreshProjectDataMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RefreshAllMenuItem,
+            this.RefreshUnknownMenuItem,
+            this.RefreshProjectMenuItem,
+            this.RefreshEntryMenuItem});
+         this.RefreshProjectDataMenuItem.Name = "RefreshProjectDataMenuItem";
+         this.RefreshProjectDataMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.RefreshProjectDataMenuItem.Text = "Refresh &Project Data";
+         // 
+         // RefreshAllMenuItem
+         // 
+         this.RefreshAllMenuItem.Name = "RefreshAllMenuItem";
+         this.RefreshAllMenuItem.Size = new System.Drawing.Size(158, 22);
+         this.RefreshAllMenuItem.Text = "All";
+         this.RefreshAllMenuItem.Click += new System.EventHandler(this.RefreshAllMenuItem_Click);
+         // 
+         // RefreshUnknownMenuItem
+         // 
+         this.RefreshUnknownMenuItem.Name = "RefreshUnknownMenuItem";
+         this.RefreshUnknownMenuItem.Size = new System.Drawing.Size(158, 22);
+         this.RefreshUnknownMenuItem.Text = "Unknown";
+         this.RefreshUnknownMenuItem.Click += new System.EventHandler(this.RefreshUnknownMenuItem_Click);
+         // 
+         // RefreshProjectMenuItem
+         // 
+         this.RefreshProjectMenuItem.Name = "RefreshProjectMenuItem";
+         this.RefreshProjectMenuItem.Size = new System.Drawing.Size(158, 22);
+         this.RefreshProjectMenuItem.Text = "Project Number";
+         this.RefreshProjectMenuItem.Click += new System.EventHandler(this.RefreshProjectMenuItem_Click);
+         // 
+         // RefreshEntryMenuItem
+         // 
+         this.RefreshEntryMenuItem.Name = "RefreshEntryMenuItem";
+         this.RefreshEntryMenuItem.Size = new System.Drawing.Size(158, 22);
+         this.RefreshEntryMenuItem.Text = "Single Entry";
+         this.RefreshEntryMenuItem.Click += new System.EventHandler(this.RefreshEntryMenuItem_Click);
+         // 
          // HistoryForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,6 +509,7 @@ namespace HFM.Forms
          this.ResultsGroupBox.PerformLayout();
          this.splitContainerWrapper1.Panel1.ResumeLayout(false);
          this.splitContainerWrapper1.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainerWrapper1)).EndInit();
          this.splitContainerWrapper1.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
@@ -493,5 +549,11 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuViewRefresh;
       private CheckBoxWrapper ShowLastCheckBox;
+      private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem RefreshProjectDataMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem RefreshAllMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem RefreshUnknownMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem RefreshProjectMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem RefreshEntryMenuItem;
    }
 }
