@@ -143,32 +143,32 @@
             Represents an object that runs a process and reports progress.
             </summary>
         </member>
-        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.Process">
+        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Process">
             <summary>
             Executes the runner.
             </summary>
         </member>
-        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.Cancel">
+        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Cancel">
             <summary>
             Cancels the runner.
             </summary>
         </member>
-        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.ProgressChanged">
+        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#ProgressChanged">
             <summary>
             Occurs when the runner's progress has changed.
             </summary>
         </member>
-        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.ProcessFinished">
+        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#ProcessFinished">
             <summary>
             Occurs when the runner's process has finished.
             </summary>
         </member>
-        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.Exception">
+        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Exception">
             <summary>
             Gets the exception that resulted from executing the runner or null if no exception occurred.
             </summary>
         </member>
-        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.SupportsCancellation">
+        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#SupportsCancellation">
             <summary>
             Gets a value that defines if this runner supports being cancelled.
             </summary>
