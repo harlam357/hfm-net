@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Container Installer
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -90,6 +90,11 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IUnitInfoDatabase>()
                .ImplementedBy<UnitInfoDatabase>());
+
+         // ProteinDataUpdater - Transient
+         container.Register(
+            Component.For<ProteinDataUpdater>()
+               .LifeStyle.Transient);
 
          // IClientDictionary - Singleton
          container.Register(
