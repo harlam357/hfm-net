@@ -157,6 +157,7 @@
     <Compile Include="QueryParametersCollection.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="StatusLogic.cs" />
+    <Compile Include="ThreadLocalDisposable.cs" />
     <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoLogic.cs" />
