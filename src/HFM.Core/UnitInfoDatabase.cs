@@ -27,6 +27,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 using Castle.Core.Logging;
 
@@ -131,8 +132,34 @@ namespace HFM.Core
                                                                                                     { SqlTable.Version, new VersionSqlTableCommands() }
                                                                                                  };  
 
-      private SQLiteConnection _connection;
-      private PetaPoco.Database _database;
+      private ThreadLocalDisposable<SQLiteConnection> _connection;
+
+      private SQLiteConnection Connection
+      {
+         get
+         {
+            if (_connection == null)
+            {
+               return null;
+            }
+            if (!_connection.IsValueCreated)
+            {
+               if (_connection.Value.State != ConnectionState.Open)
+               {  
+                  _logger.Debug("Opening new database connection on thread {0}.", Thread.CurrentThread.ManagedThreadId);
+                  _connection.Value.Open();
+               }
+            }
+            return _connection.Value;
+         }
+      }
+
+      private ThreadLocalDisposable<PetaPoco.Database> _database;
+
+      private PetaPoco.Database Database
+      {
+         get { return _database == null ? null : _database.Value; }
+      }
 
       #endregion
 
@@ -176,13 +203,12 @@ namespace HFM.Core
             {
                _connection.Dispose();
             }
-            _connection = new SQLiteConnection(ConnectionString);
-            _connection.Open();
+            _connection = new ThreadLocalDisposable<SQLiteConnection>(() => new SQLiteConnection(ConnectionString));
             if (_database != null)
             {
                _database.Dispose();
             }
-            _database = new PetaPoco.Database(_connection);
+            _database = new ThreadLocalDisposable<PetaPoco.Database>(() => new PetaPoco.Database(Connection));
 
             bool exists = TableExists(SqlTable.WuHistory);
             if (!exists)
@@ -235,7 +261,7 @@ namespace HFM.Core
          const string upgradeVersion1String = "0.9.2.0";
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
-            using (var trans = _connection.BeginTransaction())
+            using (var trans = Connection.BeginTransaction())
             {
                _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
                var duplicateDeleter = new DuplicateDeleter(this, _logger);
@@ -282,7 +308,7 @@ namespace HFM.Core
          var adder = new SQLiteColumnAdder
          {
             TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
-            Connection = _connection
+            Connection = Connection
          };
 
          adder.AddColumn("WorkUnitName", "VARCHAR(30)");
@@ -302,7 +328,7 @@ namespace HFM.Core
          Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
          _logger.Info("Setting database version to: v{0}", version);
-         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", _connection))
+         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", Connection))
          {
             var param = new SQLiteParameter("Version", DbType.String) { Value = version };
             cmd.Parameters.Add(param);
@@ -334,7 +360,7 @@ namespace HFM.Core
             entry.FrameTimeValue = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames);
             // SetProtein also sets the SlotType
             entry.SetProtein(unitInfoLogic.CurrentProtein);
-            _database.Insert(entry);
+            Database.Insert(entry);
          }
       }
 
@@ -396,7 +422,7 @@ namespace HFM.Core
       public int Delete(HistoryEntry entry)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
-         return _database.Delete(entry);
+         return Database.Delete(entry);
       }
 
       #endregion
@@ -426,7 +452,7 @@ namespace HFM.Core
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          PetaPoco.Sql where = WhereBuilder.Execute(parameters);
-         List<HistoryEntry> query = where != null ? _database.Fetch<HistoryEntry>(where) : _database.Fetch<HistoryEntry>(String.Empty);
+         List<HistoryEntry> query = where != null ? Database.Fetch<HistoryEntry>(where) : Database.Fetch<HistoryEntry>(String.Empty);
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
 
@@ -587,7 +613,7 @@ namespace HFM.Core
 
       public DataTable Select(string sql, params object[] args)
       {
-         var cmd = _database.CreateCommand(_database.Connection, sql, args);
+         var cmd = Database.CreateCommand(Database.Connection, sql, args);
          using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
          {
             var table = new DataTable();
@@ -602,7 +628,7 @@ namespace HFM.Core
 
       public int Execute(string sql, params object[] args)
       {
-         return _database.Execute(sql, args);
+         return Database.Execute(sql, args);
       }
 
       #endregion
@@ -643,7 +669,7 @@ namespace HFM.Core
 
       internal bool TableExists(SqlTable sqlTable)
       {
-         using (DataTable table = _connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
+         using (DataTable table = Connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
          {
             return table.Rows.Count != 0;
          }
@@ -651,7 +677,7 @@ namespace HFM.Core
 
       internal void CreateTable(SqlTable sqlTable)
       {
-         using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(_connection))
+         using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(Connection))
          {
             command.ExecuteNonQuery();
          }
@@ -659,7 +685,7 @@ namespace HFM.Core
 
       internal void DropTable(SqlTable sqlTable)
       {
-         using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(_connection))
+         using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(Connection))
          {
             command.ExecuteNonQuery();
          }

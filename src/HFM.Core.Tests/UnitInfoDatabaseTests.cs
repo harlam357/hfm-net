@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -115,6 +116,26 @@ namespace HFM.Core.Tests
       }
 
       #endregion
+
+      [Test]
+      public void MultiThreadTest()
+      {
+         _database.DatabaseFilePath = TestScratchFile;
+         var benchmarkCollection = MockRepository.GenerateStub<IProteinBenchmarkCollection>();
+         
+         Parallel.For(0, 100, i =>
+                              {
+                                 Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
+ 
+                                 var unitInfoLogic = new UnitInfoLogic(benchmarkCollection);
+                                 unitInfoLogic.CurrentProtein = BuildProtein1();
+                                 unitInfoLogic.UnitInfoData = BuildUnitInfo1(i);
+
+                                 _database.Insert(unitInfoLogic);
+                              });
+
+         Assert.AreEqual(100, _database.Fetch(QueryParameters.SelectAll).Count);
+      }
 
       [Test]
       public void TableExistsAndDropTableTest()
@@ -234,10 +255,15 @@ namespace HFM.Core.Tests
 
       private static UnitInfo BuildUnitInfo1()
       {
+         return BuildUnitInfo1(1);
+      }
+
+      private static UnitInfo BuildUnitInfo1(int run)
+      {
          var unitInfo = new UnitInfo();
 
          unitInfo.ProjectID = 2669;
-         unitInfo.ProjectRun = 1;
+         unitInfo.ProjectRun = run;
          unitInfo.ProjectClone = 2;
          unitInfo.ProjectGen = 3;
          unitInfo.OwningClientName = "Owner";
