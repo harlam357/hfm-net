@@ -179,13 +179,21 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == ReleaseMerge goto Merge
-goto End
-
-:Merge
-set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%25PATH%25
-..\..\..\..\tools\ILMerge\ILMerge.exe /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:v4 /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.Net35.dll
-:End</PostBuildEvent>
+    <PostBuildEvent>IF '$(ConfigurationName)'=='ReleaseMerge' (
+   IF '$(DelaySign)'=='true' (
+      IF '$(BuildingInsideVisualStudio)'=='true' (
+         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.Net35.dll
+      ) ELSE (
+         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.Net35.dll
+      )
+   ) ELSE (
+      IF '$(BuildingInsideVisualStudio)'=='true' (
+      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.Net35.dll
+      ) ELSE (
+      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.Net35.dll
+      )
+   )
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
