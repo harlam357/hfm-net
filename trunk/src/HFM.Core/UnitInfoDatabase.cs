@@ -455,6 +455,7 @@ namespace HFM.Core
          List<HistoryEntry> query = where != null ? Database.Fetch<HistoryEntry>(where) : Database.Fetch<HistoryEntry>(String.Empty);
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
+         return query;
 
          //if (_proteinDictionary == null) return query;
          //   
@@ -463,7 +464,7 @@ namespace HFM.Core
          //                  from entryProtein in groupJoin.DefaultIfEmpty()
          //                  select entry.SetProtein(entryProtein);
 
-         return FilterProteinParameters(parameters, query);
+         //return FilterProteinParameters(parameters, query);
       }
 
       private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
@@ -728,26 +729,9 @@ namespace HFM.Core
             PetaPoco.Sql sql = PetaPoco.Sql.Builder.Append("WHERE ");
             foreach (var field in parameters.Fields)
             {
-               if (field.Name.Equals(QueryFieldName.ID) ||
-                   field.Name.Equals(QueryFieldName.ProjectID) ||
-                   field.Name.Equals(QueryFieldName.ProjectRun) ||
-                   field.Name.Equals(QueryFieldName.ProjectClone) ||
-                   field.Name.Equals(QueryFieldName.ProjectGen) ||
-                   field.Name.Equals(QueryFieldName.Name) ||
-                   field.Name.Equals(QueryFieldName.Path) ||
-                   field.Name.Equals(QueryFieldName.Username) ||
-                   field.Name.Equals(QueryFieldName.Team) ||
-                   field.Name.Equals(QueryFieldName.CoreVersion) ||
-                   field.Name.Equals(QueryFieldName.FramesCompleted) ||
-                   field.Name.Equals(QueryFieldName.FrameTime) ||
-                   field.Name.Equals(QueryFieldName.Result) ||
-                   field.Name.Equals(QueryFieldName.DownloadDateTime) ||
-                   field.Name.Equals(QueryFieldName.CompletionDateTime))
-               {
-                  sql = sql.Append(appendAnd ? "AND " : String.Empty);
-                  sql = BuildWhereCondition(sql, field);
-                  appendAnd = true;
-               }
+               sql = sql.Append(appendAnd ? "AND " : String.Empty);
+               sql = BuildWhereCondition(sql, field);
+               appendAnd = true;
             }
             
             return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;

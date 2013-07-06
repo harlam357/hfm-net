@@ -703,7 +703,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "GROGPU2"
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Equal,
@@ -721,12 +721,12 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "GPU"
          }));
-         FetchTestData(6, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.Equal,
-            Value = 9482.92683
-         }));
+         //FetchTestData(6, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.Equal,
+         //   Value = 9482.92683
+         //}));
          FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
@@ -834,13 +834,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 2.3
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThan,
             Value = "GRO-A3"
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThan,
@@ -858,12 +858,12 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = "CPU"
          }));
-         FetchTestData(6, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.GreaterThan,
-            Value = 9482.92683
-         }));
+         //FetchTestData(6, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.GreaterThan,
+         //   Value = 9482.92683
+         //}));
          FetchTestData(3, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
@@ -971,19 +971,19 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 2.3
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "GRO-A3"
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 99
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.GreaterThanOrEqual,
@@ -995,12 +995,12 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "CPU"
          }));
-         FetchTestData(12, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.GreaterThanOrEqual,
-            Value = 9482.92683
-         }));
+         //FetchTestData(12, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.GreaterThanOrEqual,
+         //   Value = 9482.92683
+         //}));
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
@@ -1096,13 +1096,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = new DateTime(2010, 8, 21, 20, 57, 0)
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThan,
             Value = "WorkUnitName"
          }));
-         FetchTestData(41, BuildParameters(new QueryField
+         FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThan,
@@ -1126,19 +1126,19 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 0
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThan,
             Value = "CPU"
          }));
-         FetchTestData(32, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.LessThan,
-            Value = 9482.92683
-         }));
-         FetchTestData(28, BuildParameters(new QueryField
+         //FetchTestData(32, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.LessThan,
+         //   Value = 9482.92683
+         //}));
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
             Type = QueryFieldType.LessThan,
@@ -1233,13 +1233,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = new DateTime(2010, 8, 21, 20, 57, 0)
          }));
-         FetchTestData(41, BuildParameters(new QueryField
+         FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "WorkUnitName"
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThanOrEqual,
@@ -1257,25 +1257,25 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 99
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 0
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "CPU"
          }));
-         FetchTestData(38, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.LessThanOrEqual,
-            Value = 9482.92683
-         }));
-         FetchTestData(41, BuildParameters(new QueryField
+         //FetchTestData(38, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.LessThanOrEqual,
+         //   Value = 9482.92683
+         //}));
+         FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
             Type = QueryFieldType.LessThanOrEqual,
@@ -1376,7 +1376,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "Work%Name%"
          }));
-         FetchTestData(41, BuildParameters(new QueryField
+         FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.Like,
@@ -1388,13 +1388,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "GRO%"
          }));
-         FetchTestData(44, BuildParameters(new QueryField
+         FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Like,
             Value = "1%"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.Like,
@@ -1406,12 +1406,12 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "%U"
          }));
-         FetchTestData(9, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.Like,
-            Value = "9%"
-         }));
+         //FetchTestData(9, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.Like,
+         //   Value = "9%"
+         //}));
          FetchTestData(3, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
@@ -1507,7 +1507,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = new DateTime(2010, 8, 21, 20, 57, 0)
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.NotLike,
@@ -1519,7 +1519,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "0%"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.NotLike,
@@ -1537,19 +1537,19 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "0%"
          }));
-         FetchTestData(28, BuildParameters(new QueryField
+         FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.NotLike,
             Value = "%U"
          }));
-         FetchTestData(35, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.NotLike,
-            Value = "9%"
-         }));
-         FetchTestData(41, BuildParameters(new QueryField
+         //FetchTestData(35, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.NotLike,
+         //   Value = "9%"
+         //}));
+         FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
             Type = QueryFieldType.NotLike,
@@ -1703,7 +1703,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "GRO-A5"
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Equal,
@@ -1721,18 +1721,18 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = "CPU"
          }));
-         FetchTestData2(1, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.Equal,
-            Value = 486876.03173
-         }));
-         FetchTestData2(2, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.Equal,
-            Value = 869.4797
-         }));
+         //FetchTestData2(1, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.Equal,
+         //   Value = 486876.03173
+         //}));
+         //FetchTestData2(2, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.Equal,
+         //   Value = 869.4797
+         //}));
       }
 
       [Test]
@@ -1834,7 +1834,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = 0.75
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThan,
@@ -1858,18 +1858,18 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThan,
             Value = "CPU"
          }));
-         FetchTestData2(5, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.GreaterThan,
-            Value = 486876.03173
-         }));
-         FetchTestData2(14, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.GreaterThan,
-            Value = 869.4797
-         }));
+         //FetchTestData2(5, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.GreaterThan,
+         //   Value = 486876.03173
+         //}));
+         //FetchTestData2(14, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.GreaterThan,
+         //   Value = 869.4797
+         //}));
       }
 
       [Test]
@@ -1971,13 +1971,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = 0.75
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "GRO-A4"
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.GreaterThanOrEqual,
@@ -1995,18 +1995,18 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.GreaterThanOrEqual,
             Value = "CPU"
          }));
-         FetchTestData2(6, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.GreaterThanOrEqual,
-            Value = 486876.03173
-         }));
-         FetchTestData2(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.GreaterThanOrEqual,
-            Value = 869.4797
-         }));
+         //FetchTestData2(6, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.GreaterThanOrEqual,
+         //   Value = 486876.03173
+         //}));
+         //FetchTestData2(16, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.GreaterThanOrEqual,
+         //   Value = 869.4797
+         //}));
       }
 
       [Test]
@@ -2096,13 +2096,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = new DateTime(2012, 11, 19, 6, 56, 47)
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThan,
             Value = "WorkUnitName4"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThan,
@@ -2120,30 +2120,30 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 100
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.LessThan,
             Value = 11000
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThan,
             Value = "CPU"
          }));
-         FetchTestData2(247, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.LessThan,
-            Value = 486876.03173
-         }));
-         FetchTestData2(237, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.LessThan,
-            Value = 869.4797
-         }));
+         //FetchTestData2(247, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.LessThan,
+         //   Value = 486876.03173
+         //}));
+         //FetchTestData2(10, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.LessThan,
+         //   Value = 869.4797
+         //}));
       }
 
       [Test]
@@ -2233,13 +2233,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = new DateTime(2012, 11, 19, 6, 56, 47)
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "WorkUnitName4"
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThanOrEqual,
@@ -2251,36 +2251,36 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = "GRO-A4"
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 100
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 11000
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "CPU"
          }));
-         FetchTestData2(248, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.LessThanOrEqual,
-            Value = 486876.03173
-         }));
-         FetchTestData2(239, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.LessThanOrEqual,
-            Value = 869.4797
-         }));
+         //FetchTestData2(248, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.LessThanOrEqual,
+         //   Value = 486876.03173
+         //}));
+         //FetchTestData2(239, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.LessThanOrEqual,
+         //   Value = 869.4797
+         //}));
       }
 
       [Test]
@@ -2376,7 +2376,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "Work%Name%"
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
+         FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.Like,
@@ -2394,7 +2394,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "0%"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.Like,
@@ -2406,18 +2406,18 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "%U"
          }));
-         FetchTestData2(10, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.Like,
-            Value = "1%"
-         }));
-         FetchTestData2(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.Like,
-            Value = "9%"
-         }));
+         //FetchTestData2(10, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.Like,
+         //   Value = "1%"
+         //}));
+         //FetchTestData2(3, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.Like,
+         //   Value = "9%"
+         //}));
       }
 
       [Test]
@@ -2507,7 +2507,7 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = new DateTime(2012, 11, 19, 6, 56, 47)
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.NotLike,
@@ -2519,13 +2519,13 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "0%"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.NotLike,
             Value = "GRO%"
          }));
-         FetchTestData2(253, BuildParameters(new QueryField
+         FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.NotLike,
@@ -2537,24 +2537,24 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.NotLike,
             Value = "0%"
          }));
-         FetchTestData2(233, BuildParameters(new QueryField
+         FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.NotLike,
             Value = "%U"
          }));
-         FetchTestData2(243, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.PPD,
-            Type = QueryFieldType.NotLike,
-            Value = "1%"
-         }));
-         FetchTestData2(250, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.NotLike,
-            Value = "9%"
-         }));
+         //FetchTestData2(243, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.PPD,
+         //   Type = QueryFieldType.NotLike,
+         //   Value = "1%"
+         //}));
+         //FetchTestData2(250, BuildParameters(new QueryField
+         //{
+         //   Name = QueryFieldName.Credit,
+         //   Type = QueryFieldType.NotLike,
+         //   Value = "9%"
+         //}));
       }
 
       [Test]
