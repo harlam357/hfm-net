@@ -1567,7 +1567,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FetchLessThanOrEqualTest()
+      public void Fetch_LessThanOrEqual_ProjectID_Test()
       {
          FetchTestData(32, BuildParameters(new QueryField
          {
@@ -1575,126 +1575,231 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThanOrEqual,
             Value = 10502
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_ProjectRun_Test()
+      {
          FetchTestData(41, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectRun,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 79
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_ProjectClone_Test()
+      {
          FetchTestData(37, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectClone,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 761
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_ProjectGen_Test()
+      {
          FetchTestData(41, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectGen,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 279
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Name_Test()
+      {
          FetchTestData(23, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Name,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "nVidia GPU - GTX275"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Path_Test()
+      {
          FetchTestData(12, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Path,
             Type = QueryFieldType.LessThanOrEqual,
             Value = @"\\Mainworkstation\Folding@home-gpu\"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Username_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Username,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "harlam357"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Team_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Team,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 32
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_CoreVersion_Test()
+      {
          FetchTestData(40, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CoreVersion,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 2.09
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_FramesCompleted_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FramesCompleted,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 100
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_FrameTime_Test()
+      {
          FetchTestData(21, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FrameTime,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 41  // not a TimeSpan value
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Result_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Result,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 1   // not a String value
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_DownloadDateTime_Test()
+      {
          FetchTestData(37, BuildParameters(new QueryField
          {
             Name = QueryFieldName.DownloadDateTime,
             Type = QueryFieldType.LessThanOrEqual,
             Value = new DateTime(2010, 8, 22, 0, 42, 0)
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_CompletionDateTime_Test()
+      {
          FetchTestData(21, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CompletionDateTime,
             Type = QueryFieldType.LessThanOrEqual,
             Value = new DateTime(2010, 8, 21, 20, 57, 0)
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_WorkUnitName_Test()
+      {
          FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "WorkUnitName"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_KFactor_Test()
+      {
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 2.3
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Core_Test()
+      {
          FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "GRO-A3"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Frames_Test()
+      {
          FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 99
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Atoms_Test()
+      {
          FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.LessThanOrEqual,
             Value = 0
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThanOrEqual_SlotType_Test()
+      {
          FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThanOrEqual,
             Value = "CPU"
          }));
-         //FetchTestData(38, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.PPD,
-         //   Type = QueryFieldType.LessThanOrEqual,
-         //   Value = 9482.92683
-         //}));
+      }
+
+      //[Test]
+      //public void Fetch_LessThanOrEqual_PPD_Test()
+      //{
+      //   FetchTestData(38, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.PPD,
+      //      Type = QueryFieldType.LessThanOrEqual,
+      //      Value = 9482.92683
+      //   }));
+      //}
+
+      [Test]
+      public void Fetch_LessThanOrEqual_Credit_Test()
+      {
          FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
