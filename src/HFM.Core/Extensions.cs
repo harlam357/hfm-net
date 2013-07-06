@@ -315,11 +315,14 @@ namespace HFM.Core
             case "DGROMACSB":
             case "DGROMACSC":
             case "GRO-A4":
+            case "GRO_A4":
             case "PROTOMOL":
             case "GRO-SMP":
             case "GROCVS":
             case "GRO-A3":
+            case "GRO_A3":
             case "GRO-A5":
+            case "GRO_A5":
             case "GRO-A6":
                return SlotType.CPU;
             case "GROGPU2":
@@ -370,6 +373,7 @@ namespace HFM.Core
             case "14": // GPU2 - GROGPU2-MT
             case "15": // GPU3 - OPENMMGPU - NVIDIA
             case "16": // GPU3 - OPENMMGPU - ATI
+            case "17": // GPU3 - ???
                return SlotType.GPU;
             default:
                return SlotType.Unknown;
