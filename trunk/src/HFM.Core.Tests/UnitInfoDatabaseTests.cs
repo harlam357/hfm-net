@@ -1809,7 +1809,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FetchLikeTest()
+      public void Fetch_Like_ProjectID_Test()
       {
          FetchTestData(14, BuildParameters(new QueryField
          {
@@ -1817,126 +1817,231 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Like,
             Value = "10%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_ProjectRun_Test()
+      {
          FetchTestData(8, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectRun,
             Type = QueryFieldType.Like,
             Value = "1%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_ProjectClone_Test()
+      {
          FetchTestData(5, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectClone,
             Type = QueryFieldType.Like,
             Value = "9%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_ProjectGen_Test()
+      {
          FetchTestData(15, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectGen,
             Type = QueryFieldType.Like,
             Value = "2%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Name_Test()
+      {
          FetchTestData(40, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Name,
             Type = QueryFieldType.Like,
             Value = "nVidia GPU%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Path_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Path,
             Type = QueryFieldType.Like,
             Value = @"\\%\%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Username_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Username,
             Type = QueryFieldType.Like,
             Value = "h%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Team_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Team,
             Type = QueryFieldType.Like,
             Value = "%2"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_CoreVersion_Test()
+      {
          FetchTestData(15, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CoreVersion,
             Type = QueryFieldType.Like,
             Value = "2%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_FramesCompleted_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FramesCompleted,
             Type = QueryFieldType.Like,
             Value = "1%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_FrameTime_Test()
+      {
          FetchTestData(14, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FrameTime,
             Type = QueryFieldType.Like,
             Value = "4%"  // not a TimeSpan value
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Result_Test()
+      {
          FetchTestData(44, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Result,
             Type = QueryFieldType.Like,
             Value = "1%"   // not a String value
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_DownloadDateTime_Test()
+      {
          FetchTestData(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.DownloadDateTime,
             Type = QueryFieldType.Like,
             Value = new DateTime(2010, 8, 22, 0, 42, 0)
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_CompletionDateTime_Test()
+      {
          FetchTestData(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CompletionDateTime,
             Type = QueryFieldType.Like,
             Value = new DateTime(2010, 8, 21, 20, 57, 0)
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_WorkUnitName_Test()
+      {
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.Like,
             Value = "Work%Name%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_KFactor_Test()
+      {
          FetchTestData(13, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.Like,
             Value = "0%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Core_Test()
+      {
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.Like,
             Value = "GRO%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Frames_Test()
+      {
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Like,
             Value = "1%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_Atoms_Test()
+      {
          FetchTestData(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.Like,
             Value = "0%"
          }));
+      }
+
+      [Test]
+      public void Fetch_Like_SlotType_Test()
+      {
          FetchTestData(16, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.Like,
             Value = "%U"
          }));
-         //FetchTestData(9, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.PPD,
-         //   Type = QueryFieldType.Like,
-         //   Value = "9%"
-         //}));
+      }
+
+      //[Test]
+      //public void Fetch_Like_PPD_Test()
+      //{
+      //   FetchTestData(9, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.PPD,
+      //      Type = QueryFieldType.Like,
+      //      Value = "9%"
+      //   }));
+      //}
+
+      [Test]
+      public void Fetch_Like_Credit_Test()
+      {
          FetchTestData(3, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Credit,
