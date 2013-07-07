@@ -2327,14 +2327,14 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FetchAllTest2()
+      public void Fetch_All_Test2()
       {
          // Select All
          FetchTestData2(253, BuildParameters());
       }
 
       [Test]
-      public void FetchEqualTest2()
+      public void Fetch_Equal_ProjectID_Test2()
       {
          FetchTestData2(10, BuildParameters(new QueryField
          {
@@ -2342,133 +2342,238 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.Equal,
             Value = 8011
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_ProjectRun_Test2()
+      {
          FetchTestData2(72, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectRun,
             Type = QueryFieldType.Equal,
             Value = 0
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_ProjectClone_Test2()
+      {
          FetchTestData2(6, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectClone,
             Type = QueryFieldType.Equal,
             Value = 63
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_ProjectGen_Test2()
+      {
          FetchTestData2(2, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectGen,
             Type = QueryFieldType.Equal,
             Value = 188
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Name_Test2()
+      {
          FetchTestData2(12, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Name,
             Type = QueryFieldType.Equal,
             Value = "Windows - Test Workstation Slot 00"
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Path_Test2()
+      {
          FetchTestData2(30, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Path,
             Type = QueryFieldType.Equal,
             Value = "192.168.0.172-36330"
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Username_Test2()
+      {
          FetchTestData2(252, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Username,
             Type = QueryFieldType.Equal,
             Value = "harlam357"
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Team_Test2()
+      {
          FetchTestData2(253, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Team,
             Type = QueryFieldType.Equal,
             Value = 32
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_CoreVersion_Test2()
+      {
          FetchTestData2(63, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CoreVersion,
             Type = QueryFieldType.Equal,
             Value = 2.27
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_FramesCompleted_Test2()
+      {
          FetchTestData2(252, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FramesCompleted,
             Type = QueryFieldType.Equal,
             Value = 100
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_FrameTime_Test2()
+      {
          FetchTestData2(14, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FrameTime,
             Type = QueryFieldType.Equal,
             Value = 100  // not a TimeSpan value
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Result_Test2()
+      {
          FetchTestData2(252, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Result,
             Type = QueryFieldType.Equal,
             Value = 1   // not a String value
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_DownloadDateTime_Test2()
+      {
          FetchTestData2(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.DownloadDateTime,
             Type = QueryFieldType.Equal,
             Value = new DateTime(2012, 7, 5, 0, 25, 7)
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_CompletionDateTime_Test2()
+      {
          FetchTestData2(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CompletionDateTime,
             Type = QueryFieldType.Equal,
             Value = new DateTime(2012, 11, 19, 6, 56, 47)
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_WorkUnitName_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.Equal,
             Value = "WorkUnitName3"
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_KFactor_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.Equal,
             Value = 0.75
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Core_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.Equal,
             Value = "GRO-A5"
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Frames_Test2()
+      {
          FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.Equal,
             Value = 100
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_Atoms_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.Equal,
             Value = 11000
          }));
+      }
+
+      [Test]
+      public void Fetch_Equal_SlotType_Test2()
+      {
          FetchTestData2(20, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.Equal,
             Value = "CPU"
          }));
-         //FetchTestData2(1, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.PPD,
-         //   Type = QueryFieldType.Equal,
-         //   Value = 486876.03173
-         //}));
-         //FetchTestData2(2, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.Credit,
-         //   Type = QueryFieldType.Equal,
-         //   Value = 869.4797
-         //}));
       }
+
+      //[Test]
+      //public void Fetch_Equal_PPD_Test2()
+      //{
+      //   FetchTestData2(1, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.PPD,
+      //      Type = QueryFieldType.Equal,
+      //      Value = 486876.03173
+      //   }));
+      //}
+
+      //[Test]
+      //public void Fetch_Equal_Credit_Test2()
+      //{
+      //   FetchTestData2(2, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.Credit,
+      //      Type = QueryFieldType.Equal,
+      //      Value = 869.4797
+      //   }));
+      //}
 
       [Test]
       public void FetchGreaterThanTest2()
