@@ -3060,7 +3060,7 @@ namespace HFM.Core.Tests
       //}
 
       [Test]
-      public void FetchLessThanTest2()
+      public void Fetch_LessThan_ProjectID_Test2()
       {
          FetchTestData2(175, BuildParameters(new QueryField
          {
@@ -3068,133 +3068,238 @@ namespace HFM.Core.Tests
             Type = QueryFieldType.LessThan,
             Value = 7137
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_ProjectRun_Test2()
+      {
          FetchTestData2(202, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectRun,
             Type = QueryFieldType.LessThan,
             Value = 18
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_ProjectClone_Test2()
+      {
          FetchTestData2(148, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectClone,
             Type = QueryFieldType.LessThan,
             Value = 63
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_ProjectGen_Test2()
+      {
          FetchTestData2(105, BuildParameters(new QueryField
          {
             Name = QueryFieldName.ProjectGen,
             Type = QueryFieldType.LessThan,
             Value = 188
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Name_Test2()
+      {
          FetchTestData2(155, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Name,
             Type = QueryFieldType.LessThan,
             Value = "Windows - Test Workstation Slot 00"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Path_Test2()
+      {
          FetchTestData2(48, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Path,
             Type = QueryFieldType.LessThan,
             Value = @"\\192.168.0.133\FAH\"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Username_Test2()
+      {
          FetchTestData2(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Username,
             Type = QueryFieldType.LessThan,
             Value = "harlam357"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Team_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Team,
             Type = QueryFieldType.LessThan,
             Value = 32
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_CoreVersion_Test2()
+      {
          FetchTestData2(27, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CoreVersion,
             Type = QueryFieldType.LessThan,
             Value = 2.15
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_FramesCompleted_Test2()
+      {
          FetchTestData2(1, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FramesCompleted,
             Type = QueryFieldType.LessThan,
             Value = 100
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_FrameTime_Test2()
+      {
          FetchTestData2(89, BuildParameters(new QueryField
          {
             Name = QueryFieldName.FrameTime,
             Type = QueryFieldType.LessThan,
             Value = 100  // not a TimeSpan value
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Result_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Result,
             Type = QueryFieldType.LessThan,
             Value = 1   // not a String value
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_DownloadDateTime_Test2()
+      {
          FetchTestData2(210, BuildParameters(new QueryField
          {
             Name = QueryFieldName.DownloadDateTime,
             Type = QueryFieldType.LessThan,
             Value = new DateTime(2012, 7, 5, 0, 25, 7)
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_CompletionDateTime_Test2()
+      {
          FetchTestData2(236, BuildParameters(new QueryField
          {
             Name = QueryFieldName.CompletionDateTime,
             Type = QueryFieldType.LessThan,
             Value = new DateTime(2012, 11, 19, 6, 56, 47)
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_WorkUnitName_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.WorkUnitName,
             Type = QueryFieldType.LessThan,
             Value = "WorkUnitName4"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_KFactor_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.KFactor,
             Type = QueryFieldType.LessThan,
             Value = 0.75
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Core_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Core,
             Type = QueryFieldType.LessThan,
             Value = "GRO-A4"
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Frames_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Frames,
             Type = QueryFieldType.LessThan,
             Value = 100
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_Atoms_Test2()
+      {
          FetchTestData2(10, BuildParameters(new QueryField
          {
             Name = QueryFieldName.Atoms,
             Type = QueryFieldType.LessThan,
             Value = 11000
          }));
+      }
+
+      [Test]
+      public void Fetch_LessThan_SlotType_Test2()
+      {
          FetchTestData2(0, BuildParameters(new QueryField
          {
             Name = QueryFieldName.SlotType,
             Type = QueryFieldType.LessThan,
             Value = "CPU"
          }));
-         //FetchTestData2(247, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.PPD,
-         //   Type = QueryFieldType.LessThan,
-         //   Value = 486876.03173
-         //}));
-         //FetchTestData2(10, BuildParameters(new QueryField
-         //{
-         //   Name = QueryFieldName.Credit,
-         //   Type = QueryFieldType.LessThan,
-         //   Value = 869.4797
-         //}));
       }
+
+      //[Test]
+      //public void Fetch_LessThan_PPD_Test2()
+      //{
+      //   FetchTestData2(247, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.PPD,
+      //      Type = QueryFieldType.LessThan,
+      //      Value = 486876.03173
+      //   }));
+      //}
+
+      //[Test]
+      //public void Fetch_LessThan_Credit_Test2()
+      //{
+      //   FetchTestData2(10, BuildParameters(new QueryField
+      //   {
+      //      Name = QueryFieldName.Credit,
+      //      Type = QueryFieldType.LessThan,
+      //      Value = 869.4797
+      //   }));
+      //}
 
       [Test]
       public void FetchLessThanOrEqualTest2()
@@ -3661,6 +3766,23 @@ namespace HFM.Core.Tests
          _database.Upgrade();
          FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
       }
+
+      //[Test, TestCaseSource("FetchTestData2Cases")]
+      //public void FetchTestData_Test2(int expected, QueryParameters parameters)
+      //{
+      //   _database.DatabaseFilePath = _testData2FileCopy;
+      //   _database.Upgrade();
+      //   var entries = _database.Fetch(parameters, HistoryProductionView.BonusFrameTime);
+      //   Assert.AreEqual(expected, entries.Count);
+      //}
+
+      //private static object[] FetchTestData2Cases = 
+      //{
+      //   new object[] { 253, BuildParameters() },
+      //   new object[] { 175, BuildParameters(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.LessThan, Value = 7137 }) },
+      //   new object[] { 202, BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.LessThan, Value = 18 }) },
+      //   
+      //};
 
       private void FetchInternal(int count, QueryParameters parameters, HistoryProductionView productionView)
       {
