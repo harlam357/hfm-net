@@ -598,247 +598,37 @@ namespace HFM.Core.Tests
          FetchTestData(44, BuildParameters());
       }
 
-      [Test]
-      public void Fetch_Equal_ProjectID_Test()
+      [Test, TestCaseSource("FetchEqualCases")]
+      public void Fetch_Equal_Test(int expected, QueryParameters parameters)
       {
-         FetchTestData(13, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectID,
-            Type = QueryFieldType.Equal,
-            Value = 6600
-         }));
+         FetchTestData(expected, parameters);
       }
 
-      [Test]
-      public void Fetch_Equal_ProjectRun_Test()
+      private static object[] FetchEqualCases = 
       {
-         FetchTestData(4, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectRun,
-            Type = QueryFieldType.Equal,
-            Value = 7
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_ProjectClone_Test()
-      {
-         FetchTestData(1, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectClone,
-            Type = QueryFieldType.Equal,
-            Value = 18
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_ProjectGen_Test()
-      {
-         FetchTestData(1, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectGen,
-            Type = QueryFieldType.Equal,
-            Value = 18
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Name_Test()
-      {
-         FetchTestData(11, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Name,
-            Type = QueryFieldType.Equal,
-            Value = "nVidia GPU - GTX275"
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Path_Test()
-      {
-         FetchTestData(11, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Path,
-            Type = QueryFieldType.Equal,
-            Value = @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\"
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Username_Test()
-      {
-         FetchTestData(44, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Username,
-            Type = QueryFieldType.Equal,
-            Value = "harlam357"
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Team_Test()
-      {
-         FetchTestData(44, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Team,
-            Type = QueryFieldType.Equal,
-            Value = 32
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_CoreVersion_Test()
-      {
-         FetchTestData(11, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.CoreVersion,
-            Type = QueryFieldType.Equal,
-            Value = 2.09
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_FramesCompleted_Test()
-      {
-         FetchTestData(44, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.FramesCompleted,
-            Type = QueryFieldType.Equal,
-            Value = 100
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_FrameTime_Test()
-      {
-         FetchTestData(12, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.FrameTime,
-            Type = QueryFieldType.Equal,
-            Value = 41  // not a TimeSpan value
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Result_Test()
-      {
-         FetchTestData(44, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Result,
-            Type = QueryFieldType.Equal,
-            Value = 1   // not a String value
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_DownloadDateTime_Test()
-      {
-         FetchTestData(1, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.DownloadDateTime,
-            Type = QueryFieldType.Equal,
-            Value = new DateTime(2010, 8, 22, 0, 42, 0)
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_CompletionDateTime_Test()
-      {
-         FetchTestData(1, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.CompletionDateTime,
-            Type = QueryFieldType.Equal,
-            Value = new DateTime(2010, 8, 21, 20, 57, 0)
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_WorkUnitName_Test()
-      {
-         FetchTestData(13, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.WorkUnitName,
-            Type = QueryFieldType.Equal,
-            Value = "WorkUnitName"
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_KFactor_Test()
-      {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.KFactor,
-            Type = QueryFieldType.Equal,
-            Value = 2.3
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Core_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Core,
-            Type = QueryFieldType.Equal,
-            Value = "GROGPU2"
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Frames_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Frames,
-            Type = QueryFieldType.Equal,
-            Value = 100
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_Atoms_Test()
-      {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Atoms,
-            Type = QueryFieldType.Equal,
-            Value = 7000
-         }));
-      }
-
-      [Test]
-      public void Fetch_Equal_SlotType_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.SlotType,
-            Type = QueryFieldType.Equal,
-            Value = "GPU"
-         }));
-      }
-
-      //[Test]
-      //public void Fetch_Equal_PPD_Test()
-      //{
-      //   FetchTestData(6, BuildParameters(new QueryField
-      //   {
-      //      Name = QueryFieldName.PPD,
-      //      Type = QueryFieldType.Equal,
-      //      Value = 9482.92683
-      //   }));
-      //}
-
-      [Test]
-      public void Fetch_Equal_Credit_Test()
-      {
-         FetchTestData(13, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.Equal,
-            Value = 450
-         }));
-      }
+         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.Equal,  Value = 6600 }) },
+         new object[] { 4,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.Equal,  Value = 7 }) },
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectClone,       Type = QueryFieldType.Equal,  Value = 18 }) },
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectGen,         Type = QueryFieldType.Equal,  Value = 18 }) },
+         new object[] { 11,   BuildParameters(new QueryField { Name = QueryFieldName.Name,               Type = QueryFieldType.Equal,  Value = "nVidia GPU - GTX275" }) },
+         new object[] { 11,   BuildParameters(new QueryField { Name = QueryFieldName.Path,               Type = QueryFieldType.Equal,  Value = @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\" }) },
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Username,           Type = QueryFieldType.Equal,  Value = "harlam357" }) },
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Team,               Type = QueryFieldType.Equal,  Value = 32 }) },
+         new object[] { 11,   BuildParameters(new QueryField { Name = QueryFieldName.CoreVersion,        Type = QueryFieldType.Equal,  Value = 2.09 }) },
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.FramesCompleted,    Type = QueryFieldType.Equal,  Value = 100 }) },
+         new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.FrameTime,          Type = QueryFieldType.Equal,  Value = 41 })},  // not a TimeSpan value
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.Equal,  Value = 1 }) },   // not a String value
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.Equal,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.Equal,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
+         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.Equal,  Value = "WorkUnitName" }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.Equal,  Value = 2.3 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.Equal,  Value = "GROGPU2" }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Equal,  Value = 100 }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Equal,  Value = 7000 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Equal,  Value = "GPU" }) },
+         //new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 9482.92683 }) },
+         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 450 }) }
+      };
 
       [Test]
       public void Fetch_GreaterThan_ProjectID_Test()
