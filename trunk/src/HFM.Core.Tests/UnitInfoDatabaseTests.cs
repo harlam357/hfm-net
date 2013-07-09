@@ -630,247 +630,37 @@ namespace HFM.Core.Tests
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 450 }) }
       };
 
-      [Test]
-      public void Fetch_GreaterThan_ProjectID_Test()
+      [Test, TestCaseSource("FetchGreaterThanCases")]
+      public void Fetch_GreaterThan_Test(int expected, QueryParameters parameters)
       {
-         FetchTestData(12, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectID,
-            Type = QueryFieldType.GreaterThan,
-            Value = 10502
-         }));
+         FetchTestData(expected, parameters);
       }
 
-      [Test]
-      public void Fetch_GreaterThan_ProjectRun_Test()
+      private static object[] FetchGreaterThanCases = 
       {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectRun,
-            Type = QueryFieldType.GreaterThan,
-            Value = 79
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_ProjectClone_Test()
-      {
-         FetchTestData(7, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectClone,
-            Type = QueryFieldType.GreaterThan,
-            Value = 761
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_ProjectGen_Test()
-      {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.ProjectGen,
-            Type = QueryFieldType.GreaterThan,
-            Value = 279
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Name_Test()
-      {
-         FetchTestData(21, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Name,
-            Type = QueryFieldType.GreaterThan,
-            Value = "nVidia GPU - GTX275"
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Path_Test()
-      {
-         FetchTestData(32, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Path,
-            Type = QueryFieldType.GreaterThan,
-            Value = @"\\Mainworkstation\Folding@home-gpu\"
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Username_Test()
-      {
-         FetchTestData(0, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Username,
-            Type = QueryFieldType.GreaterThan,
-            Value = "harlam357"
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Team_Test()
-      {
-         FetchTestData(0, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Team,
-            Type = QueryFieldType.GreaterThan,
-            Value = 32
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_CoreVersion_Test()
-      {
-         FetchTestData(4, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.CoreVersion,
-            Type = QueryFieldType.GreaterThan,
-            Value = 2.09
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_FramesCompleted_Test()
-      {
-         FetchTestData(0, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.FramesCompleted,
-            Type = QueryFieldType.GreaterThan,
-            Value = 100
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_FrameTime_Test()
-      {
-         FetchTestData(23, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.FrameTime,
-            Type = QueryFieldType.GreaterThan,
-            Value = 41  // not a TimeSpan value
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Result_Test()
-      {
-         FetchTestData(0, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Result,
-            Type = QueryFieldType.GreaterThan,
-            Value = 1   // not a String value
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_DownloadDateTime_Test()
-      {
-         FetchTestData(7, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.DownloadDateTime,
-            Type = QueryFieldType.GreaterThan,
-            Value = new DateTime(2010, 8, 22, 0, 42, 0)
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_CompletionDateTime_Test()
-      {
-         FetchTestData(23, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.CompletionDateTime,
-            Type = QueryFieldType.GreaterThan,
-            Value = new DateTime(2010, 8, 21, 20, 57, 0)
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_WorkUnitName_Test()
-      {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.WorkUnitName,
-            Type = QueryFieldType.GreaterThan,
-            Value = "WorkUnitName"
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_KFactor_Test()
-      {
-         FetchTestData(0, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.KFactor,
-            Type = QueryFieldType.GreaterThan,
-            Value = 2.3
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Core_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Core,
-            Type = QueryFieldType.GreaterThan,
-            Value = "GRO-A3"
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Frames_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Frames,
-            Type = QueryFieldType.GreaterThan,
-            Value = 99
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_Atoms_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Atoms,
-            Type = QueryFieldType.GreaterThan,
-            Value = 0
-         }));
-      }
-
-      [Test]
-      public void Fetch_GreaterThan_SlotType_Test()
-      {
-         FetchTestData(16, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.SlotType,
-            Type = QueryFieldType.GreaterThan,
-            Value = "CPU"
-         }));
-      }
-
-      //[Test]
-      //public void Fetch_GreaterThan_PPD_Test()
-      //{
-      //   FetchTestData(6, BuildParameters(new QueryField
-      //   {
-      //      Name = QueryFieldName.PPD,
-      //      Type = QueryFieldType.GreaterThan,
-      //      Value = 9482.92683
-      //   }));
-      //}
-
-      [Test]
-      public void Fetch_GreaterThan_Credit_Test()
-      {
-         FetchTestData(3, BuildParameters(new QueryField
-         {
-            Name = QueryFieldName.Credit,
-            Type = QueryFieldType.GreaterThan,
-            Value = 450
-         }));
-      }
+         new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.GreaterThan,  Value = 10502 }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.GreaterThan,  Value = 79 }) },
+         new object[] { 7,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectClone,       Type = QueryFieldType.GreaterThan,  Value = 761 }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectGen,         Type = QueryFieldType.GreaterThan,  Value = 279 }) },
+         new object[] { 21,   BuildParameters(new QueryField { Name = QueryFieldName.Name,               Type = QueryFieldType.GreaterThan,  Value = "nVidia GPU - GTX275" }) },
+         new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.Path,               Type = QueryFieldType.GreaterThan,  Value = @"\\Mainworkstation\Folding@home-gpu\" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Username,           Type = QueryFieldType.GreaterThan,  Value = "harlam357" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Team,               Type = QueryFieldType.GreaterThan,  Value = 32 }) },
+         new object[] { 4,    BuildParameters(new QueryField { Name = QueryFieldName.CoreVersion,        Type = QueryFieldType.GreaterThan,  Value = 2.09 }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.FramesCompleted,    Type = QueryFieldType.GreaterThan,  Value = 100 }) },
+         new object[] { 23,   BuildParameters(new QueryField { Name = QueryFieldName.FrameTime,          Type = QueryFieldType.GreaterThan,  Value = 41 })},  // not a TimeSpan value
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.GreaterThan,  Value = 1 }) },   // not a String value
+         new object[] { 7,    BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.GreaterThan,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
+         new object[] { 23,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.GreaterThan,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.GreaterThan,  Value = "WorkUnitName" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.GreaterThan,  Value = 2.3 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.GreaterThan,  Value = "GRO-A3" }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThan,  Value = 99 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThan,  Value = 0 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThan,  Value = "CPU" }) },
+         //new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThan,  Value = 9482.92683 }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 450 }) }
+      };
 
       [Test]
       public void Fetch_GreaterThanOrEqual_ProjectID_Test()
