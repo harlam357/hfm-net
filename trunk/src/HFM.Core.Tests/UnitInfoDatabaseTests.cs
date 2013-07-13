@@ -46,8 +46,8 @@ namespace HFM.Core.Tests
       private readonly string _testData2FileCopy = Path.ChangeExtension(TestData2File, ".dbcopy");
 
       // this file is the same as TestDataFile but has already had UpgradeWuHistory1() run on it
-      private const string TestData_1File = "..\\..\\TestFiles\\TestData_1.db3";
-      private readonly string _testData_1FileCopy = Path.ChangeExtension(TestData_1File, ".dbcopy");
+      private const string TestDataFileUpgraded = "..\\..\\TestFiles\\TestData_1.db3";
+      private readonly string _testDataFileUpgradedCopy = Path.ChangeExtension(TestDataFileUpgraded, ".dbcopy");
       
       private const string TestScratchFile = "UnitInfoTest.db3";
 
@@ -89,7 +89,7 @@ namespace HFM.Core.Tests
          File.Copy(TestData2File, _testData2FileCopy, true);
          Thread.Sleep(100);
 
-         File.Copy(TestData_1File, _testData_1FileCopy, true);
+         File.Copy(TestDataFileUpgraded, _testDataFileUpgradedCopy, true);
          Thread.Sleep(100);
       }
 
@@ -176,11 +176,11 @@ namespace HFM.Core.Tests
       [Test]
       public void Upgrade_v092_AlreadyUpgraded_Test()
       {
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileUpgradedCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         _database.DatabaseFilePath = _testData_1FileCopy;
+         _database.DatabaseFilePath = _testDataFileUpgradedCopy;
          _database.Upgrade();
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData_1FileCopy));
+         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileUpgradedCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          Assert.IsTrue(Application.ParseVersion("0.9.2.0") <= Application.ParseVersion(_database.GetDatabaseVersion()));
       }
@@ -1157,6 +1157,8 @@ namespace HFM.Core.Tests
 
       #endregion
 
+      #region Static Helpers
+
       private static int GetWuHistoryColumnCount(string dataSource)
       {
          using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
@@ -1242,5 +1244,7 @@ namespace HFM.Core.Tests
 
          return proteins;
       }
+
+      #endregion
    }
 }
