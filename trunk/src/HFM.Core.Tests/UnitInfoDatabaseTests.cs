@@ -170,7 +170,7 @@ namespace HFM.Core.Tests
          _database.Upgrade();
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
+         Assert.AreEqual(Application.ParseVersion("0.9.2.0"), Application.ParseVersion(_database.GetDatabaseVersion()));
       }
 
       [Test]
@@ -195,7 +195,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(24, GetWuHistoryColumnCount(_testData2FileCopy));
          // 32 duplicates deleted
          Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
-         Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
+         Assert.AreEqual(Application.ParseVersion("0.9.2.0"), Application.ParseVersion(_database.GetDatabaseVersion()));
       }
 
       #endregion
