@@ -118,7 +118,7 @@ namespace HFM.Core.Tests
       #endregion
 
       [Test]
-      public void MultiThreadTest()
+      public void MultiThread_Test()
       {
          _database.DatabaseFilePath = TestScratchFile;
          var benchmarkCollection = MockRepository.GenerateStub<IProteinBenchmarkCollection>();
@@ -138,7 +138,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void TableExistsAndDropTableTest()
+      public void TableExists_DropTable_Test()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          Assert.AreEqual(true, _database.TableExists(SqlTable.WuHistory));
@@ -149,7 +149,7 @@ namespace HFM.Core.Tests
       #region Connected
 
       [Test]
-      public void ConnectedTest1()
+      public void Connected_Test1()
       {
          _database.DatabaseFilePath = TestScratchFile;
          Assert.AreEqual(24, GetWuHistoryColumnCount(TestScratchFile));
@@ -203,32 +203,32 @@ namespace HFM.Core.Tests
       #region Insert
 
       [Test]
-      public void InsertTest1()
+      public void Insert_Test1()
       {
          InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
       }
 
       [Test]
-      public void InsertTest1CzechCulture()
+      public void Insert_Test1_CzechCulture()
       {
          Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
          InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
       }
 
       [Test]
-      public void InsertTest2()
+      public void Insert_Test2()
       {
          InsertTestInternal(BuildUnitInfo2(), BuildProtein2(), BuildUnitInfo2VerifyAction());
       }
 
       [Test]
-      public void InsertTest3()
+      public void Insert_Test3()
       {
          InsertTestInternal(BuildUnitInfo3(), BuildProtein3(), BuildUnitInfo3VerifyAction());
       }
 
       [Test]
-      public void InsertTest4()
+      public void Insert_Test4()
       {
          InsertTestInternal(BuildUnitInfo4(), BuildProtein4(), BuildUnitInfo4VerifyAction());
       }
@@ -568,7 +568,7 @@ namespace HFM.Core.Tests
       #region Delete
 
       [Test]
-      public void DeleteTest()
+      public void Delete_Test()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
@@ -580,7 +580,7 @@ namespace HFM.Core.Tests
       }
       
       [Test]
-      public void DeleteNotExistTest()
+      public void Delete_NotExist_Test()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
@@ -823,7 +823,7 @@ namespace HFM.Core.Tests
       };
 
       [Test]
-      public void FetchComplexTest_1()
+      public void Fetch_Complex_Test1()
       {
          FetchTestData(33, BuildParameters(new QueryField
          {
@@ -840,7 +840,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FetchComplexTest_2()
+      public void Fetch_Complex_Test2()
       {
          FetchTestData(3, BuildParameters(new QueryField
          {
@@ -1088,7 +1088,7 @@ namespace HFM.Core.Tests
       };
 
       [Test]
-      public void FetchComplexTest2_1()
+      public void Fetch_Complex_Test3()
       {
          FetchTestData2(52, BuildParameters(new QueryField
          {
@@ -1105,7 +1105,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FetchComplexTest2_2()
+      public void Fetch_Complex_Test4()
       {
          FetchTestData2(77, BuildParameters(new QueryField
          {
