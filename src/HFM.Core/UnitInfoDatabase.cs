@@ -257,27 +257,25 @@ namespace HFM.Core
          int dbVersion = Application.ParseVersion(dbVersionString);
          _logger.Info("WU History database v{0}", dbVersionString);
 
-         bool upgraded = false;
+         UpgradeTo0920(dbVersion);
+      }
+
+      private void UpgradeTo0920(int dbVersion)
+      {
          const string upgradeVersion1String = "0.9.2.0";
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
-            using (var trans = Connection.BeginTransaction())
-            {
-               _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
-               var duplicateDeleter = new DuplicateDeleter(this, _logger);
-               OnUpgradeExecuting(duplicateDeleter);
-               UpgradeWuHistory1();
-               var proteinDataUpdater = new ProteinDataUpdater(this, _proteinDictionary);
-               OnUpgradeExecuting(proteinDataUpdater);
-               upgraded = true;
-
-               trans.Commit();
-            }
-         }
-
-         if (upgraded)
-         {
-            SetDatabaseVersion(Application.VersionWithRevision);
+            // delete duplicates
+            _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
+            var duplicateDeleter = new DuplicateDeleter(this, _logger);
+            OnUpgradeExecuting(duplicateDeleter);
+            // add columns to WuHistory table
+            AddProteinColumns();
+            // update the WuHistory table with protein info
+            var proteinDataUpdater = new ProteinDataUpdater(this, _proteinDictionary);
+            OnUpgradeExecuting(proteinDataUpdater);
+            // set database version
+            SetDatabaseVersion(upgradeVersion1String);
          }
       }
 
@@ -303,14 +301,9 @@ namespace HFM.Core
          }
       }
 
-      private void UpgradeWuHistory1()
+      private void AddProteinColumns()
       {
-         var adder = new SQLiteColumnAdder
-         {
-            TableName = SqlTableCommandDictionary[SqlTable.WuHistory].TableName,
-            Connection = Connection
-         };
-
+         var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, Connection);
          adder.AddColumn("WorkUnitName", "VARCHAR(30)");
          adder.AddColumn("KFactor", "FLOAT");
          adder.AddColumn("Core", "VARCHAR(20)");
@@ -862,31 +855,55 @@ namespace HFM.Core
       private class SQLiteColumnAdder
       // ReSharper restore InconsistentNaming
       {
+         private readonly string _tableName;
+         private readonly SQLiteConnection _connection;
+
+         public SQLiteColumnAdder(string tableName, SQLiteConnection connection)
+         {
+            _tableName = tableName;
+            _connection = connection;
+
+            Debug.Assert(_connection.State == ConnectionState.Open);
+         }
+
          private readonly List<DbCommand> _commands = new List<DbCommand>();
-
-         public string TableName { get; set; }
-
-         public SQLiteConnection Connection { get; set; }
+         private EnumerableRowCollection<DataRow> _rows;
 
          public void AddColumn(string name, string dataType)
          {
-            if (TableName == null || Connection == null)
+            if (name == null) throw new ArgumentNullException("name");
+            if (dataType == null) throw new ArgumentNullException("dataType");
+            
+            if (_rows == null)
             {
-               return;
+               using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", _connection))
+               using (var table = new DataTable())
+               {
+                  adapter.Fill(table);
+                  _rows = table.AsEnumerable();
+               }
             }
 
-            _commands.Add(new SQLiteCommand(Connection)
-                          {
-                             CommandText = String.Format(CultureInfo.InvariantCulture,
-                                              "ALTER TABLE [{0}] ADD COLUMN [{1}] {2}", TableName, name, dataType)
-                          });
+            bool columnExists = _rows.Any(row => row.Field<string>(1) == name);
+            if (!columnExists)
+            {
+               _commands.Add(new SQLiteCommand(_connection)
+                             {
+                                CommandText = String.Format(CultureInfo.InvariantCulture,
+                                                 "ALTER TABLE [{0}] ADD COLUMN [{1}] {2}", _tableName, name, dataType)
+                             });
+            }
          }
 
          public void Execute()
          {
-            foreach (var command in _commands)
+            using (var trans = _connection.BeginTransaction())
             {
-               command.ExecuteNonQuery();
+               foreach (var command in _commands)
+               {
+                  command.ExecuteNonQuery();
+               }
+               trans.Commit();
             }
          }
       }

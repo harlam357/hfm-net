@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Application Boot Strapper
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
