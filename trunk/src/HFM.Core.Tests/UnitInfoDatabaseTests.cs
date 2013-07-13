@@ -1145,14 +1145,35 @@ namespace HFM.Core.Tests
       private void FetchInternal(int count, QueryParameters parameters, HistoryProductionView productionView)
       {
          var entries = _database.Fetch(parameters, productionView);
-#if DEBUG
-         //Debug.WriteLine(parameters.Fields[0].Name);
-         foreach (var entry in entries)
-         {
-            Debug.WriteLine(entry.ID);
-         }
-#endif
+//#if DEBUG
+//         //Debug.WriteLine(parameters.Fields[0].Name);
+//         foreach (var entry in entries)
+//         {
+//            Debug.WriteLine(entry.ID);
+//         }
+//#endif
          Assert.AreEqual(count, entries.Count);
+      }
+
+      #endregion
+
+      #region Page
+
+      [Test]
+      public void Page_All_Test1()
+      {
+         // Select All
+         PageTestData(10, 44, BuildParameters());
+      }
+
+      private void PageTestData(long itemsPerPage, long totalItems, QueryParameters parameters)
+      {
+         _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
+         var page = _database.Page(1, itemsPerPage, parameters);
+         int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
+         Assert.AreEqual(totalItems, page.TotalItems);
+         Assert.AreEqual(expectedPages, page.TotalPages);
       }
 
       #endregion
