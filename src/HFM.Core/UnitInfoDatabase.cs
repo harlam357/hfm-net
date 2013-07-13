@@ -86,6 +86,10 @@ namespace HFM.Core
 
       IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
 
+      PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters);
+
+      PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView);
+
       DataTable Select(string sql, params object[] args);
 
       int Execute(string sql, params object[] args);
@@ -448,6 +452,44 @@ namespace HFM.Core
          List<HistoryEntry> query = where != null ? Database.Fetch<HistoryEntry>(where) : Database.Fetch<HistoryEntry>(String.Empty);
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
+         return query;
+
+         //if (_proteinDictionary == null) return query;
+         //   
+         //var joinQuery = from entry in query
+         //                  join protein in _proteinDictionary.Values on entry.ProjectID equals protein.ProjectNumber into groupJoin
+         //                  from entryProtein in groupJoin.DefaultIfEmpty()
+         //                  select entry.SetProtein(entryProtein);
+
+         //return FilterProteinParameters(parameters, query);
+      }
+
+      public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters)
+      {
+         return Page(page, itemsPerPage, parameters, HistoryProductionView.BonusDownloadTime);
+      }
+
+      public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView)
+      {
+         DateTime start = Instrumentation.ExecStart;
+         try
+         {
+            return PageInternal(page, itemsPerPage, parameters, productionView);
+         }
+         finally
+         {
+            _logger.Debug("Database Page Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
+         }
+      }
+
+      private PetaPoco.Page<HistoryEntry> PageInternal(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView)
+      {
+         Debug.Assert(TableExists(SqlTable.WuHistory));
+
+         PetaPoco.Sql where = WhereBuilder.Execute(parameters);
+         PetaPoco.Page<HistoryEntry> query = where != null ? Database.Page<HistoryEntry>(page, itemsPerPage, where) : Database.Page<HistoryEntry>(page, itemsPerPage, String.Empty);
+         Debug.Assert(query != null);
+         query.Items.ForEach(x => x.ProductionView = productionView);
          return query;
 
          //if (_proteinDictionary == null) return query;
