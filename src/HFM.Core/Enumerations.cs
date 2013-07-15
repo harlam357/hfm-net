@@ -276,8 +276,6 @@ namespace HFM.Core
       ProxyUser,
       ProxyPass,
       HistoryProductionType,
-      ShowFirstChecked,
-      ShowLastChecked,
       ShowEntriesValue,
       HistorySortColumnName,
       HistorySortOrder,
