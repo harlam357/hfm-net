@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -322,8 +322,6 @@ namespace HFM.Preferences
          _prefs.Add(Preference.ProxyPass, new Metadata<string>());
 
          _prefs.Add(Preference.HistoryProductionType, new Metadata<HistoryProductionView>());
-         _prefs.Add(Preference.ShowFirstChecked, new Metadata<bool>());
-         _prefs.Add(Preference.ShowLastChecked, new Metadata<bool>());
          _prefs.Add(Preference.ShowEntriesValue, new Metadata<int>());
          _prefs.Add(Preference.HistorySortColumnName, new Metadata<string>());
          _prefs.Add(Preference.HistorySortOrder, new Metadata<ListSortDirection>());
@@ -448,8 +446,6 @@ namespace HFM.Preferences
          Set(Preference.ProxyPass, DecryptProxyPass(Settings.Default.ProxyPass, symmetricProvider));
 
          Set(Preference.HistoryProductionType, (HistoryProductionView)Settings.Default.HistoryProductionView);
-         Set(Preference.ShowFirstChecked, Settings.Default.ShowFirstChecked);
-         Set(Preference.ShowLastChecked, Settings.Default.ShowLastChecked);
          Set(Preference.ShowEntriesValue, Settings.Default.ShowEntriesValue);
          Set(Preference.HistorySortColumnName, Settings.Default.HistorySortColumnName);
          Set(Preference.HistorySortOrder, Settings.Default.HistorySortOrder);
@@ -916,8 +912,6 @@ namespace HFM.Preferences
             Settings.Default.ProxyPass = EncryptProxyPass(Get<string>(Preference.ProxyPass), symmetricProvider);
 
             Settings.Default.HistoryProductionView = (int)Get<HistoryProductionView>(Preference.HistoryProductionType);
-            Settings.Default.ShowFirstChecked = Get<bool>(Preference.ShowFirstChecked);
-            Settings.Default.ShowLastChecked = Get<bool>(Preference.ShowLastChecked);
             Settings.Default.ShowEntriesValue = Get<int>(Preference.ShowEntriesValue);
             Settings.Default.HistorySortColumnName = Get<string>(Preference.HistorySortColumnName);
             Settings.Default.HistorySortOrder = Get<ListSortDirection>(Preference.HistorySortOrder);
