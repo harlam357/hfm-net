@@ -95,9 +95,7 @@ namespace HFM.Forms
          rdoPanelProduction.DataSource = model;
          rdoPanelProduction.ValueMember = "ProductionView";
          ResultsTextBox.DataBindings.Add("Text", model, "TotalEntries", false, DataSourceUpdateMode.OnPropertyChanged);
-         ShownTextBox.DataBindings.Add("Text", model, "ShownEntries", false, DataSourceUpdateMode.OnPropertyChanged);
-         ShowFirstCheckBox.DataBindings.Add("Checked", model, "ShowFirstChecked", false, DataSourceUpdateMode.OnPropertyChanged);
-         ShowLastCheckBox.DataBindings.Add("Checked", model, "ShowLastChecked", false, DataSourceUpdateMode.OnPropertyChanged);
+         PageNumberTextBox.DataBindings.Add("Text", model, "CurrentPage", false, DataSourceUpdateMode.OnValidation); //OnPropertyChanged);
          ResultNumberUpDownControl.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
 
          dataGridView1.DataSource = model.HistoryBindingSource;
@@ -179,6 +177,26 @@ namespace HFM.Forms
          // the visible entries if posssible... if not then some
          // set number like 100 entires.
          dataGridView1.AutoResizeColumns();
+      }
+
+      private void FirstPageButton_Click(object sender, EventArgs e)
+      {
+         _presenter.FirstPageClicked();
+      }
+
+      private void PreviousPageButton_Click(object sender, EventArgs e)
+      {
+         _presenter.PreviousPageClicked();
+      }
+
+      private void NextPageButton_Click(object sender, EventArgs e)
+      {
+         _presenter.NextPageClicked();
+      }
+
+      private void LastPageButton_Click(object sender, EventArgs e)
+      {
+         _presenter.LastPageClicked();
       }
 
       private void mnuViewRefresh_Click(object sender, EventArgs e)

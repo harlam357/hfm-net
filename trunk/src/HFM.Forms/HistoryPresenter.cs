@@ -114,6 +114,26 @@ namespace HFM.Forms
          _model.FormColumns = _view.GetColumnSettings();
          _model.Update(_prefs, _queryCollection);
       }
+
+      public void FirstPageClicked()
+      {
+         _model.CurrentPage = 1;
+      }
+
+      public void PreviousPageClicked()
+      {
+         _model.CurrentPage -= 1;
+      }
+
+      public void NextPageClicked()
+      {
+         _model.CurrentPage += 1;
+      }
+
+      public void LastPageClicked()
+      {
+         _model.CurrentPage = _model.TotalPages;
+      }
       
       public void RefreshClicked()
       {
