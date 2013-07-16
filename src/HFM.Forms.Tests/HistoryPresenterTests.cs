@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.Windows.Forms;
@@ -62,6 +61,7 @@ namespace HFM.Forms.Tests
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
 
          _database = MockRepository.GenerateMock<IUnitInfoDatabase>();
+         _database.Stub(x => x.Connected).Return(true);
          _model = new HistoryPresenterModel(_database);
       }
       
@@ -72,7 +72,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void ShowTest()
+      public void Show_Test()
       {
          // Arrange
          _view.Expect(x => x.Show());
@@ -85,7 +85,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void ShowFromMinimizedTest()
+      public void Show_FromMinimized_Test()
       {
          // Arrange
          _view.Expect(x => x.Show());
@@ -99,7 +99,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void CloseTest()
+      public void Close_Test()
       {
          bool presenterClosedFired = false;
          // Act
@@ -111,7 +111,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void OnClosingTest()
+      public void OnClosing_Test()
       {
          // Arrange
          var p = new Point();
@@ -132,7 +132,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void OnClosingWhileNotNormalWindowTest()
+      public void OnClosing_WhileNotNormalWindow_Test()
       {
          // Arrange
          var r = new Rectangle();
@@ -151,7 +151,7 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void NewQueryClickTest()
+      public void NewQueryClick_Test()
       {
          // Arrange
          _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
@@ -166,7 +166,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void NewQueryClickCancelTest()
+      public void NewQueryClick_Cancel_Test()
       {
          // Arrange
          _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
@@ -178,7 +178,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void NewQueryClickFailedTest()
+      public void NewQueryClick_Failed_Test()
       {
          // Arrange
          _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
@@ -193,7 +193,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClickTest()
+      public void EditQueryClick_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -215,7 +215,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClickCancelTest()
+      public void EditQueryClick_Cancel_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -231,7 +231,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClickFailedTest()
+      public void EditQueryClick_Failed_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -250,7 +250,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClickTest()
+      public void DeleteQueryClick_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -268,7 +268,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClickNoTest()
+      public void DeleteQueryClick_No_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -286,7 +286,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClickFailedTest()
+      public void DeleteQueryClick_Failed_Test()
       {
          // Arrange
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
@@ -299,14 +299,13 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void DeleteWorkUnitClickTest()
+      public void DeleteWorkUnitClick_Test()
       {
          // Arrange
          _model.HistoryBindingSource.Add(new HistoryEntry { ID = 1 });
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          _database.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
-         _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new List<HistoryEntry>());
          // Act
          _presenter = CreatePresenter();
          _presenter.DeleteWorkUnitClick();
@@ -316,7 +315,7 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void DeleteWorkUnitClickNoSelectionTest()
+      public void DeleteWorkUnitClick_NoSelection_Test()
       {
          // Arrange
          _messageBoxView.Expect(x => x.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();

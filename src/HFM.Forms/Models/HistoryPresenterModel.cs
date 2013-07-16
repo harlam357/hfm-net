@@ -50,8 +50,7 @@ namespace HFM.Forms.Models
          get { return _historyBindingSource; }
       }
 
-      private IList<HistoryEntry> _allEntries;
-      private IList<HistoryEntry> _shownEntries;
+      private PetaPoco.Page<HistoryEntry> _page;
       
       public HistoryPresenterModel(IUnitInfoDatabase database)
       {
@@ -68,6 +67,7 @@ namespace HFM.Forms.Models
          _queryBindingSource.CurrentItemChanged += (s, e) =>
                                                    {
                                                       OnPropertyChanged("EditAndDeleteButtonsEnabled");
+                                                      _currentPage = 1;
                                                       ResetBindings(true);
                                                    };
 
@@ -79,16 +79,13 @@ namespace HFM.Forms.Models
          };
          _historyBindingSource = new BindingSource();
          _historyBindingSource.DataSource = _historyList;
-         
-         _allEntries = new List<HistoryEntry>();
-         _shownEntries = new List<HistoryEntry>();
+
+         _page = new PetaPoco.Page<HistoryEntry> { Items = new List<HistoryEntry>() };
       }
 
       public void Load(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
       {
          _productionView = prefs.Get<HistoryProductionView>(Preference.HistoryProductionType);
-         _showFirstChecked = prefs.Get<bool>(Preference.ShowFirstChecked);
-         _showLastChecked = prefs.Get<bool>(Preference.ShowLastChecked);
          _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
          FormLocation = prefs.Get<Point>(Preference.HistoryFormLocation);
          FormSize = prefs.Get<Size>(Preference.HistoryFormSize);
@@ -113,8 +110,6 @@ namespace HFM.Forms.Models
       public void Update(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
       {
          prefs.Set(Preference.HistoryProductionType, _productionView);
-         prefs.Set(Preference.ShowFirstChecked, _showFirstChecked);
-         prefs.Set(Preference.ShowLastChecked, _showLastChecked);
          prefs.Set(Preference.ShowEntriesValue, _showEntriesValue);
          prefs.Set(Preference.HistoryFormLocation, FormLocation);
          prefs.Set(Preference.HistoryFormSize, FormSize);
@@ -210,7 +205,9 @@ namespace HFM.Forms.Models
       {
          if (_database.Delete(entry) != 0)
          {
-            ResetBindings(true);
+            _page.Items.Remove(entry);
+            _page.TotalItems--;
+            ResetBindings(false);
          }
       }
 
@@ -220,23 +217,14 @@ namespace HFM.Forms.Models
 
          if (executeQuery)
          {
-            _allEntries = _database.Fetch(SelectedQuery, ProductionView) ?? new List<HistoryEntry>();
-         }
-         _shownEntries = _allEntries;
-         if (ShowFirstChecked)
-         {
-            _shownEntries = _allEntries.Take(ShowEntriesValue).ToList();
-         }
-         else if (ShowLastChecked)
-         {
-            _shownEntries = _allEntries.Reverse().Take(ShowEntriesValue).ToList();
+            _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, ProductionView);
          }
 
          // halt binding source updates
          _historyBindingSource.RaiseListChangedEvents = false;
          _historyList.RaiseListChangedEvents = false;
          // refresh the underlying binding list
-         RefreshHistoryList(_shownEntries);
+         RefreshHistoryList(_page.Items);
          // sort the list
          _historyBindingSource.Sort = null;
          if (!String.IsNullOrEmpty(SortColumnName))
@@ -250,15 +238,18 @@ namespace HFM.Forms.Models
          _historyBindingSource.ResetBindings(false);
 
          OnPropertyChanged("TotalEntries");
-         OnPropertyChanged("ShownEntries");
+         OnPropertyChanged("CurrentPage");
       }
 
       private void RefreshHistoryList(IEnumerable<HistoryEntry> historyEntries)
       {
          _historyBindingSource.Clear();
-         foreach (var entry in historyEntries)
+         if (historyEntries != null)
          {
-            _historyBindingSource.Add(entry);
+            foreach (var entry in historyEntries)
+            {
+               _historyBindingSource.Add(entry);
+            }
          }
       }
 
@@ -308,48 +299,39 @@ namespace HFM.Forms.Models
          }
       }
 
-      public int TotalEntries
+      public long TotalEntries
       {
-         get { return _allEntries.Count; }
+         get { return _page.TotalItems; }
       }
 
-      public int ShownEntries
-      {
-         get { return _shownEntries.Count; }
-      }
+      private long _currentPage = 1;
 
-      private bool _showFirstChecked;
-
-      public bool ShowFirstChecked
+      public long CurrentPage
       {
-         get { return _showFirstChecked; }
+         get { return _currentPage; }
          set
          {
-            if (_showFirstChecked != value)
+            long newPage = value;
+            if (newPage < 1)
             {
-               _showFirstChecked = value;
-               if (_showFirstChecked) _showLastChecked = false;
-               OnPropertyChanged("ShowFirstChecked");
-               ResetBindings(false);
+               newPage = TotalPages;
+            }
+            else if (newPage > TotalPages)
+            {
+               newPage = 1;
+            }
+
+            if (_currentPage != newPage)
+            {
+               _currentPage = newPage;
+               ResetBindings(true);
             }
          }
       }
 
-      private bool _showLastChecked;
-
-      public bool ShowLastChecked
+      public long TotalPages
       {
-         get { return _showLastChecked; }
-         set
-         {
-            if (_showLastChecked != value)
-            {
-               _showLastChecked = value;
-               if (_showLastChecked) _showFirstChecked = false;
-               OnPropertyChanged("ShowLastChecked");
-               ResetBindings(false);
-            }
-         }
+         get { return _page.TotalPages > 0 ? _page.TotalPages : 1; }
       }
 
       private int _showEntriesValue;
@@ -363,7 +345,8 @@ namespace HFM.Forms.Models
             {
                _showEntriesValue = value;
                OnPropertyChanged("ShowEntriesValue");
-               ResetBindings(false);
+               _currentPage = 1;
+               ResetBindings(true);
             }
          }
       }
