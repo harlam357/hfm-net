@@ -42,8 +42,6 @@ namespace HFM.Forms
          this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuViewAutoSizeGrid = new System.Windows.Forms.ToolStripMenuItem();
-         this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
-         this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
          this.ToolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.RefreshProjectDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.RefreshAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +51,6 @@ namespace HFM.Forms
          this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridView1 = new HFM.Forms.Controls.HistoryGridViewWrapper();
-         this.ResultsRefreshButton = new HFM.Forms.Controls.ButtonWrapper();
          this.ResultsLabel = new HFM.Forms.Controls.LabelWrapper();
          this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
          this.ResultsTextBox = new HFM.Forms.Controls.TextBoxWrapper();
@@ -126,9 +123,7 @@ namespace HFM.Forms
          // mnuView
          // 
          this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewAutoSizeGrid,
-            this.mnuViewSep1,
-            this.mnuViewRefresh});
+            this.mnuViewAutoSizeGrid});
          this.mnuView.Name = "mnuView";
          this.mnuView.Size = new System.Drawing.Size(44, 20);
          this.mnuView.Text = "&View";
@@ -139,19 +134,6 @@ namespace HFM.Forms
          this.mnuViewAutoSizeGrid.Size = new System.Drawing.Size(199, 22);
          this.mnuViewAutoSizeGrid.Text = "Auto Size &Grid Columns";
          this.mnuViewAutoSizeGrid.Click += new System.EventHandler(this.mnuViewAutoSizeGrid_Click);
-         // 
-         // mnuViewSep1
-         // 
-         this.mnuViewSep1.Name = "mnuViewSep1";
-         this.mnuViewSep1.Size = new System.Drawing.Size(196, 6);
-         // 
-         // mnuViewRefresh
-         // 
-         this.mnuViewRefresh.Name = "mnuViewRefresh";
-         this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
-         this.mnuViewRefresh.Size = new System.Drawing.Size(199, 22);
-         this.mnuViewRefresh.Text = "&Refresh";
-         this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
          // 
          // ToolsMenuItem
          // 
@@ -260,16 +242,6 @@ namespace HFM.Forms
          this.dataGridView1.TabIndex = 0;
          this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
          this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
-         // 
-         // ResultsRefreshButton
-         // 
-         this.ResultsRefreshButton.Location = new System.Drawing.Point(481, 23);
-         this.ResultsRefreshButton.Name = "ResultsRefreshButton";
-         this.ResultsRefreshButton.Size = new System.Drawing.Size(70, 23);
-         this.ResultsRefreshButton.TabIndex = 2;
-         this.ResultsRefreshButton.Text = "Refresh";
-         this.ResultsRefreshButton.UseVisualStyleBackColor = true;
-         this.ResultsRefreshButton.Click += new System.EventHandler(this.btnRefresh_Click);
          // 
          // ResultsLabel
          // 
@@ -432,10 +404,9 @@ namespace HFM.Forms
          this.ResultsGroupBox.Controls.Add(this.ResultsTextBox);
          this.ResultsGroupBox.Controls.Add(this.ResultNumberUpDownControl);
          this.ResultsGroupBox.Controls.Add(this.ResultsLabel);
-         this.ResultsGroupBox.Controls.Add(this.ResultsRefreshButton);
          this.ResultsGroupBox.Location = new System.Drawing.Point(340, 3);
          this.ResultsGroupBox.Name = "ResultsGroupBox";
-         this.ResultsGroupBox.Size = new System.Drawing.Size(560, 84);
+         this.ResultsGroupBox.Size = new System.Drawing.Size(500, 84);
          this.ResultsGroupBox.TabIndex = 7;
          this.ResultsGroupBox.TabStop = false;
          this.ResultsGroupBox.Text = "Results";
@@ -568,7 +539,6 @@ namespace HFM.Forms
       private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
       private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
       private HistoryGridViewWrapper dataGridView1;
-      private ButtonWrapper ResultsRefreshButton;
       private LabelWrapper ResultsLabel;
       private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
       private TextBoxWrapper ResultsTextBox;
@@ -586,8 +556,6 @@ namespace HFM.Forms
       private SplitContainerWrapper splitContainerWrapper1;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
-      private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewRefresh;
       private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
       private System.Windows.Forms.ToolStripMenuItem RefreshProjectDataMenuItem;
       private System.Windows.Forms.ToolStripMenuItem RefreshAllMenuItem;
