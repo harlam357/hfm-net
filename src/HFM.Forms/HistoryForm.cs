@@ -199,16 +199,6 @@ namespace HFM.Forms
          _presenter.LastPageClicked();
       }
 
-      private void mnuViewRefresh_Click(object sender, EventArgs e)
-      {
-         _presenter.RefreshClicked();
-      }
-
-      private void btnRefresh_Click(object sender, EventArgs e)
-      {
-         _presenter.RefreshClicked();
-      }
-
       private void RefreshAllMenuItem_Click(object sender, EventArgs e)
       {
          _presenter.RefreshProjectDataClick(ProteinUpdateType.All);

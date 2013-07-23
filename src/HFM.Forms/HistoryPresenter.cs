@@ -135,11 +135,6 @@ namespace HFM.Forms
          _model.CurrentPage = _model.TotalPages;
       }
       
-      public void RefreshClicked()
-      {
-         _model.ResetBindings(true);
-      }
-      
       public void NewQueryClick()
       {
          var query = new QueryParameters { Name = "* New Query *" };
@@ -261,7 +256,7 @@ namespace HFM.Forms
          }
          else
          {
-            RefreshClicked();
+            _model.ResetBindings(true);
          }
       }
       
