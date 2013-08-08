@@ -150,7 +150,7 @@ namespace HFM.Core
          net.HttpDownloadHelper(downloadUrl, DownloadFilePath, String.Empty, String.Empty);
       }
 
-      private void HttpWebOperationProgress(object sender, harlam357.Net.WebOperationProgressEventArgs e)
+      private void HttpWebOperationProgress(object sender, harlam357.Net.WebOperationProgressChangedEventArgs e)
       {
          int progress = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
          string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);

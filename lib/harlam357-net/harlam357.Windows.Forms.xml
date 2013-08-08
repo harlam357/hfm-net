@@ -346,17 +346,44 @@
             An EventArgs class for radio button selection changed events. 
             </summary>
         </member>
+        <member name="T:harlam357.Windows.Forms.SortableBindingList`1">
+            <summary>
+            Provides a generic collection that supports data binding, sorting, and filtering.
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.OnSorted(harlam357.Windows.Forms.SortedEventArgs)">
+            <summary>
+            Raises the Sorted event.
+            </summary>
+            <param name="e">A SortedEventArgs that contains the event data.</param>
+        </member>
         <member name="M:harlam357.Windows.Forms.SortableBindingList`1.OnListChanged(System.ComponentModel.ListChangedEventArgs)">
             <summary>
             Raises the <see cref="E:System.ComponentModel.BindingList`1.ListChanged"/> event.
             </summary>
             <param name="e">A <see cref="T:System.ComponentModel.ListChangedEventArgs"/> that contains the event data.</param>
         </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.#ctor">
+            <summary>
+            Initializes a new instance of the SortableBindingList class.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+            Initializes a new instance of the SortableBindingList class with a list of items.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortableBindingList`1.#ctor(System.ComponentModel.ISynchronizeInvoke)">
+            <summary>
+            Initializes a new instance of the SortableBindingList class with a synchronization object.
+            </summary>
+        </member>
         <member name="M:harlam357.Windows.Forms.SortableBindingList`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
             <summary>
             Sorts the items if overridden in a derived class; otherwise, throws a <see cref="T:System.NotSupportedException"/>.
             </summary>
-            <param name="property">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
+            <param name="prop">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
             <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values.</param>
         </member>
         <member name="M:harlam357.Windows.Forms.SortableBindingList`1.ApplySortCoreInternal(System.Boolean)">
@@ -379,6 +406,21 @@
         <member name="M:harlam357.Windows.Forms.SortableBindingList`1.RemoveFilter">
             <summary>
             Removes the current filter applied to the data source.
+            </summary>
+        </member>
+        <member name="E:harlam357.Windows.Forms.SortableBindingList`1.Sorted">
+            <summary>
+            Occurs when the SortableBindingList completes a sorting operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.SortColumns">
+            <summary>
+            Gets or sets a value indicating if the columns are to be sorted.
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortableBindingList`1.IsSorted">
+            <summary>
+            Gets or sets a value indicating whether the list is sorted. 
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.SortableBindingList`1.IsSortedCore">
@@ -439,16 +481,42 @@
             </summary>
             <returns>The string used to filter items out in the item collection returned by the data source.</returns>
         </member>
+        <member name="T:harlam357.Windows.Forms.SortMode">
+            <summary>
+            Specifies the sorting mode.
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.SortMode.None">
+            <summary>
+            No sorting.
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.SortMode.Simple">
+            <summary>
+            Simple, single property sorting.
+            </summary>
+        </member>
+        <member name="F:harlam357.Windows.Forms.SortMode.Advanced">
+            <summary>
+            Advanced, multi property sorting.
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.SortComparer`1">
+            <summary>
+            Represents a comparer for the SortableBindingList that supports comparing one or more properties of two objects.
+            </summary>
+            <typeparam name="T">The type of objects to compare.</typeparam>
+        </member>
         <member name="M:harlam357.Windows.Forms.SortComparer`1.SetSortProperties(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
             <summary>
-            Set the sorting properties.
+            Sets the sorting properties.
             </summary>
             <param name="property">Property descriptor for a simple sort.</param>
             <param name="direction">Sort direction for a simple sort.</param>
         </member>
         <member name="M:harlam357.Windows.Forms.SortComparer`1.SetSortProperties(System.ComponentModel.ListSortDescriptionCollection)">
             <summary>
-            Set the sorting properties.
+            Sets the sorting properties.
             </summary>
             <param name="sortDescriptions">Sort description collection for an advanced sort.</param>
         </member>
@@ -456,22 +524,22 @@
             <summary>
             Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
             </summary>
-            <param name="xVal">The first object to compare.</param>
-            <param name="yVal">The second object to compare.</param>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
         </member>
         <member name="M:harlam357.Windows.Forms.SortComparer`1.CompareInternal(`0,`0)">
             <summary>
             Single property compare method.
             </summary>
-            <param name="xVal">The first object to compare.</param>
-            <param name="yVal">The second object to compare.</param>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
         </member>
         <member name="M:harlam357.Windows.Forms.SortComparer`1.RecursiveCompareInternal(`0,`0,System.Int32)">
             <summary>
             Multiple property compare method.
             </summary>
-            <param name="xVal">The first object to compare.</param>
-            <param name="yVal">The second object to compare.</param>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
             <param name="index">Zero based index of SortDescriptions collection.</param>
         </member>
         <member name="M:harlam357.Windows.Forms.SortComparer`1.CompareAscending(System.Object,System.Object)">
@@ -493,7 +561,7 @@
             Get the property value from the object.
             </summary>
             <param name="value">Object instance.</param>
-            <param name="property">The property descriptor.</param>
+            <param name="propertyDescriptor">The property descriptor.</param>
             <returns>The property value.</returns>
         </member>
         <member name="P:harlam357.Windows.Forms.SortComparer`1.SortMode">
@@ -524,6 +592,28 @@
         <member name="P:harlam357.Windows.Forms.SortComparer`1.SortDescriptions">
             <summary>
             Gets the sort description collection used in an advanced sort.
+            </summary>
+        </member>
+        <member name="T:harlam357.Windows.Forms.SortedEventArgs">
+            <summary>
+            Provides data for the SortableBindingList.Sorted event.
+            </summary>
+        </member>
+        <member name="M:harlam357.Windows.Forms.SortedEventArgs.#ctor(System.String,System.ComponentModel.ListSortDirection)">
+            <summary>
+            Initalizes a new instance of the SortedEventArgs class.
+            </summary>
+            <param name="name">The sorted property name.</param>
+            <param name="direction">The sort direction.</param>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortedEventArgs.Name">
+            <summary>
+            Gets the name of the property used to perform the sort (or the most significant in the case of an Advanced sort).
+            </summary>
+        </member>
+        <member name="P:harlam357.Windows.Forms.SortedEventArgs.Direction">
+            <summary>
+            Gets the current sort direction.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.UpdateDialog.SetSelectDownloadLabelTextDefault">

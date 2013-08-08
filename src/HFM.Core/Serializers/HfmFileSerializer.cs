@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Settings Serializer
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ using System.Xml;
 using Castle.Core.Logging;
 
 using harlam357.Security;
-using harlam357.Security.Encryption;
+using harlam357.Security.Cryptography;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
@@ -95,14 +95,14 @@ namespace HFM.Core.Serializers
 
       private void Encrypt(IEnumerable<ClientSettings> value)
       {
-         var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false) { IntializationVector = _iv };
+         var symetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
             if (settings.Password.Length == 0) continue;
 
             try
             {
-               settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).ToBase64();
+               settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).Base64;
             }
             catch (CryptographicException)
             {
@@ -113,15 +113,14 @@ namespace HFM.Core.Serializers
 
       private void Decrypt(IEnumerable<ClientSettings> value)
       {
-         var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false) { IntializationVector = _iv };
+         var symetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
             if (settings.Password.Length == 0) continue;
 
             try
             {
-               settings.Password = symetricProvider.Decrypt(new Data(
-                  Utils.FromBase64(settings.Password)), _symmetricKey).ToString();
+               settings.Password = symetricProvider.Decrypt(new Data(settings.Password.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
