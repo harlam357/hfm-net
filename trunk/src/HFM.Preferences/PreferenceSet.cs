@@ -35,7 +35,7 @@ using System.Text;
 //using Castle.Core.Logging;
 
 using harlam357.Security;
-using harlam357.Security.Encryption;
+using harlam357.Security.Cryptography;
 
 using HFM.Core;
 using HFM.Preferences.Properties;
@@ -340,7 +340,7 @@ namespace HFM.Preferences
       private void Load()
       {
          //DateTime start = Instrumentation.ExecStart;
-         var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false);
 
          var location = new Point();
          var size = new Size();
@@ -605,7 +605,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               webGenPassword = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
+               webGenPassword = symmetricProvider.Decrypt(new Data(value.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
@@ -678,7 +678,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               emailReportingServerPassword = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
+               emailReportingServerPassword = symmetricProvider.Decrypt(new Data(value.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
@@ -706,7 +706,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               proxyPass = symmetricProvider.Decrypt(new Data(Utils.FromBase64(value)), _symmetricKey).ToString();
+               proxyPass = symmetricProvider.Decrypt(new Data(value.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {
@@ -750,7 +750,7 @@ namespace HFM.Preferences
       public void Save()
       {
          //DateTime start = Instrumentation.ExecStart;
-         var symmetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false);
 
          bool raiseFormShowStyleChanged = false;
          bool raiseTimerSettingsChanged = false;
@@ -960,7 +960,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               webGenPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
+               webGenPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
             }
             catch (CryptographicException)
             {
@@ -980,7 +980,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
+               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
             }
             catch (CryptographicException)
             {
@@ -1000,7 +1000,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               proxyPass = symmetricProvider.Encrypt(new Data(value), _symmetricKey).ToBase64();
+               proxyPass = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
             }
             catch (CryptographicException)
             {

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Client Settings Serializer
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ using System.Xml;
 using Castle.Core.Logging;
 
 using harlam357.Security;
-using harlam357.Security.Encryption;
+using harlam357.Security.Cryptography;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
@@ -45,7 +45,7 @@ namespace HFM.Core.Serializers
       private const string xmlNodeFAHLog = "FAHLogFile";
       private const string xmlNodeUnitInfo = "UnitInfoFile";
       private const string xmlNodeQueue = "QueueFile";
-      private const string xmlNodeClientMHz = "ClientMHz";
+      //private const string xmlNodeClientMHz = "ClientMHz";
       private const string xmlNodeClientVM = "ClientVM";
       private const string xmlNodeClientOffset = "ClientOffset";
       private const string xmlPropType = "HostType";
@@ -198,7 +198,7 @@ namespace HFM.Core.Serializers
             settings.Username = String.Empty;
          }
 
-         var symetricProvider = new Symmetric(Symmetric.Provider.Rijndael, false);
+         var symetricProvider = new Symmetric(SymmetricProvider.Rijndael, false);
 
          try
          {
@@ -208,8 +208,7 @@ namespace HFM.Core.Serializers
                try
                {
                   symetricProvider.IntializationVector = _iv;
-                  settings.Password = symetricProvider.Decrypt(new Data(Utils.FromBase64(
-                     xmlData.SelectSingleNode(xmlPropPass).InnerText)), _symmetricKey).ToString();
+                  settings.Password = symetricProvider.Decrypt(new Data(xmlData.SelectSingleNode(xmlPropPass).InnerText.FromBase64()), _symmetricKey).ToString();
                }
                catch (FormatException)
                {

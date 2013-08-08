@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,6 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
 
@@ -829,6 +828,8 @@ namespace HFM.Forms
 
       #region Button Click Event Handlers
 
+      private delegate void FtpCheckConnectionDelegate(string server, int port, string path, string username, string password, FtpType ftpMode);
+
       private void TestConnectionButtonClick(object sender, EventArgs e)
       {
          if (_net == null)
@@ -851,8 +852,8 @@ namespace HFM.Forms
                int port = _scheduledTasksModel.WebGenPort;
                string username = _scheduledTasksModel.WebGenUsername;
                string password = _scheduledTasksModel.WebGenPassword;
-               
-               FtpCheckConnectionAction del = _net.FtpCheckConnection;
+
+               FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
                del.BeginInvoke(server, port, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
             }
          }
@@ -895,7 +896,7 @@ namespace HFM.Forms
       {
          try
          {
-            var del = (FtpCheckConnectionAction)result.AsyncState;
+            var del = (FtpCheckConnectionDelegate)result.AsyncState;
             del.EndInvoke(result);
             ShowConnectionSucceededMessage();
          }

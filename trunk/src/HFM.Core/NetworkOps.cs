@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,9 +30,6 @@ using harlam357.Net;
 
 namespace HFM.Core
 {
-   public delegate void FtpCheckConnectionAction(string server, int port, string ftpPath, string username, string password, FtpType ftpMode);
-   public delegate void HttpCheckConnectionAction(string url, string username, string password);
-
    public interface INetworkOps
    {
       /// <summary>
@@ -125,14 +122,14 @@ namespace HFM.Core
          _prefs = prefs;
       }
    
-      private IFtpWebOperation _ftpWebOperation;
-      public IFtpWebOperation FtpOperation
+      private IWebOperation _ftpWebOperation;
+      public IWebOperation FtpOperation
       {
          get { return _ftpWebOperation; }
       }
       
-      public event EventHandler<WebOperationProgressEventArgs> FtpWebOperationProgress;
-      protected void OnFtpWebOperationProgress(object sender, WebOperationProgressEventArgs e)
+      public event EventHandler<WebOperationProgressChangedEventArgs> FtpWebOperationProgress;
+      protected void OnFtpWebOperationProgress(object sender, WebOperationProgressChangedEventArgs e)
       {
          if (FtpWebOperationProgress != null)
          {
@@ -206,7 +203,7 @@ namespace HFM.Core
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
 
-         FtpUploadHelper((FtpWebOperation)WebOperation.Create(resourceUri), localFilePath, maximumLength, username, password, ftpMode);
+         FtpUploadHelper(WebOperation.Create(resourceUri), localFilePath, maximumLength, username, password, ftpMode);
       }
 
       /// <summary>
@@ -219,7 +216,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
       {
          FtpUploadHelper(ftpWebOperation, localFilePath, -1, username, password, ftpMode);
       }
@@ -235,17 +232,17 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _ftpWebOperation = ftpWebOperation;
-         _ftpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
-         _ftpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         SetFtpMode(_ftpWebOperation.FtpOperationRequest, ftpMode);
+         _ftpWebOperation.ProgressChanged += OnFtpWebOperationProgress;
+         _ftpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode((IFtpWebRequest)_ftpWebOperation.WebRequest, ftpMode);
 
-         SetNetworkCredentials(_ftpWebOperation.OperationRequest.Request, username, password);
+         SetNetworkCredentials(_ftpWebOperation.WebRequest, username, password);
          _ftpWebOperation.Upload(localFilePath, maximumLength);
       }
 
@@ -307,7 +304,7 @@ namespace HFM.Core
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
       
-         FtpDownloadHelper((FtpWebOperation)WebOperation.Create(resourceUri), localFilePath, username, password, ftpMode);
+         FtpDownloadHelper(WebOperation.Create(resourceUri), localFilePath, username, password, ftpMode);
       }
 
       /// <summary>
@@ -320,17 +317,17 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpDownloadHelper(IFtpWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpDownloadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _ftpWebOperation = ftpWebOperation;
-         _ftpWebOperation.WebOperationProgress += OnFtpWebOperationProgress;
-         _ftpWebOperation.FtpOperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         SetFtpMode(_ftpWebOperation.FtpOperationRequest, ftpMode);
+         _ftpWebOperation.ProgressChanged += OnFtpWebOperationProgress;
+         _ftpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode((IFtpWebRequest)_ftpWebOperation.WebRequest, ftpMode);
 
-         SetNetworkCredentials(_ftpWebOperation.OperationRequest.Request, username, password);
+         SetNetworkCredentials(_ftpWebOperation.WebRequest, username, password);
          _ftpWebOperation.Download(localFilePath);
       }
 
@@ -366,7 +363,7 @@ namespace HFM.Core
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'resourceUri' cannot be null.");
 
-         return GetFtpDownloadLength((IFtpWebOperation)WebOperation.Create(resourceUri), username, password, ftpMode);
+         return GetFtpDownloadLength(WebOperation.Create(resourceUri), username, password, ftpMode);
       }
 
       /// <summary>
@@ -377,16 +374,16 @@ namespace HFM.Core
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public long GetFtpDownloadLength(IFtpWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
+      public long GetFtpDownloadLength(IWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'httpWebOperation' cannot be null.");
 
          _ftpWebOperation = ftpWebOperation;
-         _ftpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
-         _ftpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         SetFtpMode(ftpWebOperation.FtpOperationRequest, ftpMode);
+         _ftpWebOperation.ProgressChanged += OnHttpWebOperationProgress;
+         _ftpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         SetFtpMode((IFtpWebRequest)ftpWebOperation.WebRequest, ftpMode);
 
-         SetNetworkCredentials(_ftpWebOperation.OperationRequest.Request, username, password);
+         SetNetworkCredentials(_ftpWebOperation.WebRequest, username, password);
          return _ftpWebOperation.GetDownloadLength();
       }
 
@@ -396,8 +393,8 @@ namespace HFM.Core
          get { return _httpWebOperation; }
       }
 
-      public event EventHandler<WebOperationProgressEventArgs> HttpWebOperationProgress;
-      protected void OnHttpWebOperationProgress(object sender, WebOperationProgressEventArgs e)
+      public event EventHandler<WebOperationProgressChangedEventArgs> HttpWebOperationProgress;
+      protected void OnHttpWebOperationProgress(object sender, WebOperationProgressChangedEventArgs e)
       {
          if (HttpWebOperationProgress != null)
          {
@@ -451,11 +448,11 @@ namespace HFM.Core
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
          _httpWebOperation = httpWebOperation;
-         _httpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
-         _httpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         _httpWebOperation.ProgressChanged += OnHttpWebOperationProgress;
+         _httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-         SetNetworkCredentials(_httpWebOperation.OperationRequest.Request, username, password);
-         SetProxy(_httpWebOperation.OperationRequest.Request);
+         SetNetworkCredentials(_httpWebOperation.WebRequest, username, password);
+         SetProxy(_httpWebOperation.WebRequest);
 
          _httpWebOperation.Download(localFilePath);
       }
@@ -500,11 +497,11 @@ namespace HFM.Core
          if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation");
 
          _httpWebOperation = httpWebOperation;
-         _httpWebOperation.WebOperationProgress += OnHttpWebOperationProgress;
-         _httpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         _httpWebOperation.ProgressChanged += OnHttpWebOperationProgress;
+         _httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-         SetNetworkCredentials(_httpWebOperation.OperationRequest.Request, username, password);
-         SetProxy(_httpWebOperation.OperationRequest.Request);
+         SetNetworkCredentials(_httpWebOperation.WebRequest, username, password);
+         SetProxy(_httpWebOperation.WebRequest);
 
          return _httpWebOperation.GetDownloadLength();
       }
@@ -541,8 +538,7 @@ namespace HFM.Core
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
 
-         var ftpWebOperation = (FtpWebOperation)WebOperation.Create(new Uri(
-            String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}", server, port, ftpPath)));
+         var ftpWebOperation = WebOperation.Create(new Uri(String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}", server, port, ftpPath)));
          FtpCheckConnection(ftpWebOperation, username, password, ftpMode);
       }
 
@@ -554,16 +550,17 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if ftpWebOperation is null.</exception>
-      public void FtpCheckConnection(IFtpWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
+      public void FtpCheckConnection(IWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
 
-         ftpWebOperation.FtpOperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         ftpWebOperation.FtpOperationRequest.KeepAlive = false; // Close the Request
-         ftpWebOperation.FtpOperationRequest.Timeout = 5000; // 5 second timeout
-         SetFtpMode(ftpWebOperation.FtpOperationRequest, ftpMode);
+         var ftpWebRequest = (IFtpWebRequest)ftpWebOperation.WebRequest;
+         ftpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         ftpWebRequest.KeepAlive = false; // Close the Request
+         ftpWebRequest.Timeout = 5000; // 5 second timeout
+         SetFtpMode(ftpWebRequest, ftpMode);
 
-         SetNetworkCredentials(ftpWebOperation.OperationRequest.Request, username, password);
+         SetNetworkCredentials(ftpWebOperation.WebRequest, username, password);
 
          ftpWebOperation.CheckConnection();
       }
@@ -608,16 +605,16 @@ namespace HFM.Core
       {
          if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
 
-         httpWebOperation.OperationRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         httpWebOperation.OperationRequest.Timeout = 5000; // 5 second timeout
+         httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         httpWebOperation.WebRequest.Timeout = 5000; // 5 second timeout
 
-         SetNetworkCredentials(httpWebOperation.OperationRequest.Request, username, password);
-         SetProxy(httpWebOperation.OperationRequest.Request);
+         SetNetworkCredentials(httpWebOperation.WebRequest, username, password);
+         SetProxy(httpWebOperation.WebRequest);
 
          httpWebOperation.CheckConnection();
       }
 
-      private static void SetFtpMode(IFtpWebOperationRequest request, FtpType ftpMode)
+      private static void SetFtpMode(IFtpWebRequest request, FtpType ftpMode)
       {
          Debug.Assert(request != null);
       
@@ -660,7 +657,7 @@ namespace HFM.Core
       /// <param name="username">Login Username.</param>
       /// <param name="password">Login Password.</param>
       /// <exception cref="ArgumentNullException">Throws if Request is null.</exception>
-      public static void SetNetworkCredentials(WebRequest request, string username, string password)
+      private static void SetNetworkCredentials(IWebRequest request, string username, string password)
       {
          if (request == null) throw new ArgumentNullException("request", "Argument 'Request' cannot be null.");
 
@@ -675,7 +672,7 @@ namespace HFM.Core
       /// Set Proxy Information on WebRequest.
       /// </summary>
       /// <param name="request">Makes a request to a Uniform Resource Identifier (URI).</param>
-      private void SetProxy(WebRequest request)
+      private void SetProxy(IWebRequest request)
       {
          Debug.Assert(request != null);
 
