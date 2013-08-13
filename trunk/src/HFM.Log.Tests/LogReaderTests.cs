@@ -814,7 +814,7 @@ namespace HFM.Log.Tests
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
          
          // Check Run 0 Positions
-         var expectedRun = new ClientRun(1);
+         var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 174, 272));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 236, 433));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 399, 609));
@@ -839,6 +839,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 3664, 3876));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 3827, 4053));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 4005, -1));
+         expectedRun.StartTime = new DateTime(2011, 5, 19, 18, 5, 3, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
@@ -889,7 +890,7 @@ namespace HFM.Log.Tests
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun(1);
+         var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 64, 293));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 60, 439));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 261, 690));
@@ -898,6 +899,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 928, 1163));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 755, 1324));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 1172, 1398));
+         expectedRun.StartTime = new DateTime(2011, 8, 21, 23, 5, 1, DateTimeKind.Utc);
          expectedRun.Arguments = "";
          expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
@@ -948,8 +950,9 @@ namespace HFM.Log.Tests
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun(1);
+         var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 114, -1));
+         expectedRun.StartTime = new DateTime(2011, 9, 6, 19, 55, 42, DateTimeKind.Utc);
          expectedRun.Arguments = "";
          expectedRun.FoldingID = String.Empty;
          expectedRun.Team = 0;
@@ -987,10 +990,11 @@ namespace HFM.Log.Tests
          IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun(1);
+         var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 120, 349));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 85, -1));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 319, -1));
+         expectedRun.StartTime = new DateTime(2012, 1, 11, 3, 24, 22, DateTimeKind.Utc);
          expectedRun.Arguments = "";
          expectedRun.ClientVersion = "";
          expectedRun.FoldingID = String.Empty;

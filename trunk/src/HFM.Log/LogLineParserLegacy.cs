@@ -36,7 +36,7 @@ namespace HFM.Log
       /// Regular expression to match the log opening data (client start date and time).
       /// </summary>
       private static readonly Regex LogOpenRegex =
-         new Regex(@"--- Opening Log file \[(?<StartTime>.* ([0-1]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?)(?: UTC)?\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+         new Regex(@"--- Opening Log file \[(?<StartTime>.+ ([0-1]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?)(?: UTC)?\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User (Folding ID) and Team string.
