@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line List Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ namespace HFM.Log
             return baseLineType;
          }
 
-         if (logLine.Contains("************************* Folding@home Client"))
+         if (logLine.Contains("*********************** Log Started"))
          {
             return LogLineType.LogOpen;
          }

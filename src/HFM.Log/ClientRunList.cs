@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Run List Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -65,6 +66,16 @@ namespace HFM.Log
 
          // remove all
          _unitIndexData.Clear();
+      }
+
+      protected override void HandleLogOpen(LogLine logLine)
+      {
+         base.HandleLogOpen(logLine);
+
+         if (CurrentClientRun != null)
+         {
+            CurrentClientRun.StartTime = (DateTime)logLine.LineData;
+         }
       }
 
       protected override void HandleWorkUnitWorking(LogLine logLine)

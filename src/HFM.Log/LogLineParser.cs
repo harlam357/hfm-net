@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Log Line Parser Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
@@ -27,6 +28,8 @@ namespace HFM.Log
    internal sealed class LogLineParser : LogLineParserBase
    {
       #region Regex (Static)
+
+      private static readonly Regex LogOpenRegex = new Regex(@"\*+ Log Started (?<StartTime>.+) \*+");
 
       // a copy of this regex exists in HFM.Core.DataTypes
       private static readonly Regex WorkUnitRunningRegex =
@@ -68,6 +71,28 @@ namespace HFM.Log
 
          switch (logLine.LineType)
          {
+            case LogLineType.LogOpen:
+               Match logOpenMatch;
+               if ((logOpenMatch = LogOpenRegex.Match(logLine.LineRaw)).Success)
+               {
+                  string startTime = logOpenMatch.Result("${StartTime}");
+                  // Similar code found in HFM.Client.Converters.DateTimeConverter
+                  // ISO 8601
+                  DateTime value;
+                  if (DateTime.TryParse(startTime, CultureInfo.InvariantCulture,
+                      DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out value))
+                  {
+                     return value;
+                  }
+
+                  // custom format for older v7 clients
+                  if (DateTime.TryParseExact(startTime, "dd/MMM/yyyy-HH:mm:ss", CultureInfo.InvariantCulture,
+                      DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out value))
+                  {
+                     return value;
+                  }
+               }
+               return new LogLineError(String.Format("Failed to parse Log Open value from '{0}'", logLine.LineRaw));
             case LogLineType.WorkUnitWorking:
                Match workUnitWorkingMatch;
                if ((workUnitWorkingMatch = WorkUnitWorkingRegex.Match(logLine.LineRaw)).Success)
