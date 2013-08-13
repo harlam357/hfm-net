@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Log Reader Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,6 +45,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(2);
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 30));
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 150));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 30, 0, 40, 27, DateTimeKind.Utc);
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
@@ -62,6 +63,7 @@ namespace HFM.Log.Tests
          expectedRun = new ClientRun(274);
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 302));
          expectedRun.UnitIndexes.Add(new UnitIndex(7, 402));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 31, 0, 7, 43, DateTimeKind.Utc);
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
@@ -98,6 +100,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(2);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 30));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 221));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 40, 5, DateTimeKind.Utc);
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.ClientVersion = "6.24beta";
          expectedRun.FoldingID = "harlam357";
@@ -137,6 +140,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(2);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 231));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 385));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37, DateTimeKind.Utc);
          expectedRun.Arguments = "-local -forceasm -smp 4";
          expectedRun.ClientVersion = "6.02";
          expectedRun.FoldingID = "harlam357";
@@ -174,6 +178,7 @@ namespace HFM.Log.Tests
          // Check Run 5 Positions
          var expectedRun = new ClientRun(401);
          expectedRun.UnitIndexes.Add(new UnitIndex(-1, 426));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 12, 11, 13, 20, 57, DateTimeKind.Utc);
          expectedRun.Arguments = "-configonly";
          expectedRun.ClientVersion = "6.24R3";
          expectedRun.FoldingID = "sneakysnowman";
@@ -242,6 +247,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(8, 3645));
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 3710));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 3760));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27, DateTimeKind.Utc);
          expectedRun.Arguments = "-smp -verbosity 9";
          expectedRun.ClientVersion = "6.30";
          expectedRun.FoldingID = "harlam357";
@@ -278,8 +284,9 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 24, -1));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 175, -1));
-         expectedRun.ClientVersion = "6.34";
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34, DateTimeKind.Utc);
          expectedRun.Arguments = "-smp -bigadv -betateam -verbosity 9";
+         expectedRun.ClientVersion = "6.34";
          expectedRun.FoldingID = "GreyWhiskers";
          expectedRun.Team = 0;
          expectedRun.UserID = "51EA5C9A7EF9D58E";
@@ -318,6 +325,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 449));
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 510));
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 571));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 5, 7, 18, DateTimeKind.Utc);
          expectedRun.Arguments = "-verbosity 9 -local";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -346,6 +354,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(7, 2518));
          expectedRun.UnitIndexes.Add(new UnitIndex(8, 2715));
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 2917));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 6, 18, 28, DateTimeKind.Utc);
          expectedRun.Arguments = "-verbosity 9 -local";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -383,6 +392,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(8, 34));
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 208));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 382));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 14, 4, 40, 2, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -418,6 +428,7 @@ namespace HFM.Log.Tests
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 24));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 26, 33, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "JollySwagman";
@@ -439,6 +450,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(9, 320));
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 373));
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 421));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "JollySwagman";
@@ -477,6 +489,7 @@ namespace HFM.Log.Tests
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(0, 24));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "Zagen30";
@@ -529,6 +542,7 @@ namespace HFM.Log.Tests
          var expectedRun = new ClientRun(2);
          expectedRun.UnitIndexes.Add(new UnitIndex(3, 27));
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 170));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 2, 17, 17, 19, 31, DateTimeKind.Utc);
          expectedRun.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
          expectedRun.ClientVersion = "6.41r2";
          expectedRun.FoldingID = "HayesK";
@@ -579,6 +593,7 @@ namespace HFM.Log.Tests
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(2);
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 15, 30, DateTimeKind.Utc);
          expectedRun.Arguments = "-configonly";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -595,6 +610,7 @@ namespace HFM.Log.Tests
          expectedRun = new ClientRun(30);
          expectedRun.UnitIndexes.Add(new UnitIndex(1, 179));
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 593));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 17, 46, DateTimeKind.Utc);
          expectedRun.Arguments = "-verbosity 9 -forceasm";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -611,6 +627,7 @@ namespace HFM.Log.Tests
          // Check Run 2 Positions
          expectedRun = new ClientRun(839);
          expectedRun.UnitIndexes.Add(new UnitIndex(2, 874));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 20, 4, 17, 29, DateTimeKind.Utc);
          expectedRun.Arguments = "-verbosity 9 -forceasm -oneunit";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "harlam357";
@@ -646,6 +663,7 @@ namespace HFM.Log.Tests
          // Check Run 3 Positions
          var expectedRun = new ClientRun(788);
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 820));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 28, 52, DateTimeKind.Utc);
          expectedRun.Arguments = "-oneunit -forceasm -verbosity 9";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "borden.b";
@@ -662,6 +680,7 @@ namespace HFM.Log.Tests
          // Check Run 4 Positions
          expectedRun = new ClientRun(927);
          expectedRun.UnitIndexes.Add(new UnitIndex(4, 961));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 07, DateTimeKind.Utc);
          expectedRun.Arguments = "-forceasm -verbosity 9 -oneunit";
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "borden.b";
@@ -723,6 +742,7 @@ namespace HFM.Log.Tests
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 1602));
          expectedRun.UnitIndexes.Add(new UnitIndex(6, 1870));
          expectedRun.UnitIndexes.Add(new UnitIndex(7, 2130));
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 10, 15, 48, 32, DateTimeKind.Utc);
          expectedRun.Arguments = String.Empty;
          expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "DrSpalding";
@@ -760,8 +780,9 @@ namespace HFM.Log.Tests
          // Check Run 0 Positions
          var expectedRun = new ClientRun(0);
          expectedRun.UnitIndexes.Add(new UnitIndex(5, 24, -1));
-         expectedRun.ClientVersion = "6.23";
+         expectedRun.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15, DateTimeKind.Utc);
          expectedRun.Arguments = "-oneunit -verbosity 9";
+         expectedRun.ClientVersion = "6.23";
          expectedRun.FoldingID = "Amaruk";
          expectedRun.Team = 50625;
          expectedRun.UserID = "1E53CB2Axxxxxxxx";
@@ -1027,6 +1048,7 @@ namespace HFM.Log.Tests
             Assert.AreEqual(expectedRun.UnitIndexes[i].EndIndex, run.UnitIndexes[i].EndIndex);
          }
 
+         Assert.AreEqual(expectedRun.StartTime, run.StartTime);
          Assert.AreEqual(expectedRun.Arguments, run.Arguments);
          Assert.AreEqual(expectedRun.FoldingID, run.FoldingID);
          Assert.AreEqual(expectedRun.Team, run.Team);

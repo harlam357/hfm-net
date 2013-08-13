@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Run List Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -214,12 +215,16 @@ namespace HFM.Log
             else // we're working on a client run prior to the last
             {
                // use the client start position for the next client run
-               end = this[i + 1].ClientStartIndex;
+               end = this[i + 1].ClientStartIndex - 1;
             }
 
             foreach (var line in logLines.WhereLineIndex(this[i].ClientStartIndex, end))
             {
-               if (line.LineType.Equals(LogLineType.ClientVersion))
+               if (line.LineType == LogLineType.LogOpen)
+               {
+                  this[i].StartTime = (DateTime)line.LineData;
+               }
+               else if (line.LineType.Equals(LogLineType.ClientVersion))
                {
                   this[i].ClientVersion = line.LineData.ToString();
                }

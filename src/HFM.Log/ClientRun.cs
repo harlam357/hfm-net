@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Run Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,6 +58,7 @@ namespace HFM.Log
          _clientStartIndex = clientStartIndex;
          _unitIndexes = new List<UnitIndex>();
 
+         StartTime = DateTime.MinValue;
          ClientVersion = String.Empty;
          Arguments = String.Empty;
          FoldingID = String.Empty;
@@ -69,6 +70,11 @@ namespace HFM.Log
       #endregion
    
       #region Properties
+
+      /// <summary>
+      /// Gets or sets the client start time.
+      /// </summary>
+      public DateTime StartTime { get; set; }
 
       /// <summary>
       /// Client Version Number

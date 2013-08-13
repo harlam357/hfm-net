@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Log Line Parser Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,12 @@ namespace HFM.Log
       #region Regex (Static)
 
       // ReSharper disable InconsistentNaming
+
+      /// <summary>
+      /// Regular expression to match the log opening data (client start date and time).
+      /// </summary>
+      private static readonly Regex LogOpenRegex =
+         new Regex(@"--- Opening Log file \[(?<StartTime>.* ([0-1]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?)(?: UTC)?\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       /// <summary>
       /// Regular Expression to match User (Folding ID) and Team string.
@@ -105,6 +111,15 @@ namespace HFM.Log
 
          switch (logLine.LineType)
          {
+            case LogLineType.LogOpen:
+               Match logOpenMatch;
+               if ((logOpenMatch = LogOpenRegex.Match(logLine.LineRaw)).Success)
+               {
+                  string startTime = logOpenMatch.Result("${StartTime}");
+                  return DateTime.SpecifyKind(DateTime.ParseExact(startTime, 
+                     "MMMM d HH:mm:ss", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+               }
+               return new LogLineError(String.Format("Failed to parse Log Open value from '{0}'", logLine.LineRaw));
             case LogLineType.ClientVersion:
                int versionIndex = logLine.LineRaw.IndexOf("Version", StringComparison.Ordinal) + 8;
                if (versionIndex < logLine.LineRaw.Length)
