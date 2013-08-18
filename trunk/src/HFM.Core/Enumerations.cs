@@ -137,50 +137,6 @@ namespace HFM.Core
       Standard
    }
 
-   /// <summary>
-   /// Work Unit History Query Field Names
-   /// </summary>
-   public enum QueryFieldName
-   {
-      ID = -1,
-      ProjectID = 0,
-      ProjectRun,
-      ProjectClone,
-      ProjectGen,
-      Name,
-      Path,
-      Username,
-      Team,
-      CoreVersion,
-      FramesCompleted,
-      FrameTime,
-      Result,
-      DownloadDateTime,
-      CompletionDateTime,
-      WorkUnitName,
-      KFactor,
-      Core,
-      Frames,
-      Atoms,
-      SlotType,
-      PPD,
-      Credit
-   }
-
-   /// <summary>
-   /// Work Unit History Query Field Types
-   /// </summary>
-   public enum QueryFieldType
-   {
-      Equal,
-      GreaterThan,
-      GreaterThanOrEqual,
-      LessThan,
-      LessThanOrEqual,
-      Like,
-      NotLike
-   }
-
    public enum WebGenType
    {
       Path,
