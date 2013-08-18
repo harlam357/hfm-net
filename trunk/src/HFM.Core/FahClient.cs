@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -480,7 +480,7 @@ namespace HFM.Core
          }
       }
 
-      private static void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
       {
          Debug.Assert(slotModel != null);
 
@@ -488,11 +488,15 @@ namespace HFM.Core
          {
             slotModel.ClientVersion = info.Build.Version;
          }
-         if (run != null)
-         {
-            slotModel.TotalRunCompletedUnits = run.CompletedUnits;
-            slotModel.TotalRunFailedUnits = run.FailedUnits;
-         }
+         //if (run != null)
+         //{
+         //   slotModel.TotalRunCompletedUnits = run.CompletedUnits;
+         //   slotModel.TotalRunFailedUnits = run.FailedUnits;
+         //}
+         slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+         slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
+         slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+         slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
       }
 
       internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, IEnumerable<UnitInfoLogic> parsedUnits, int currentUnitIndex)
