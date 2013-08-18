@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -224,7 +224,7 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
-      private static void PopulateRunLevelData(ClientRun run, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun run, SlotModel slotModel)
       {
          slotModel.Arguments = run.Arguments;
          slotModel.ClientVersion = run.ClientVersion;
@@ -232,9 +232,13 @@ namespace HFM.Core
          slotModel.UserId = run.UserID;
          slotModel.MachineId = run.MachineID;
 
-         slotModel.TotalRunCompletedUnits = run.CompletedUnits;
-         slotModel.TotalRunFailedUnits = run.FailedUnits;
-         slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
+         //slotModel.TotalRunCompletedUnits = run.CompletedUnits;
+         //slotModel.TotalRunFailedUnits = run.FailedUnits;
+         //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
+         slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+         slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
+         slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+         slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
       }
 
       private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel slotModel)
