@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,55 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
 {
+   // ReSharper disable InconsistentNaming
+
+   /// <summary>
+   /// Represents the fields in the work unit database.
+   /// </summary>
+   public enum QueryFieldName
+   {
+      ID = -1,
+      ProjectID = 0,
+      ProjectRun,
+      ProjectClone,
+      ProjectGen,
+      Name,
+      Path,
+      Username,
+      Team,
+      CoreVersion,
+      FramesCompleted,
+      FrameTime,
+      Result,
+      DownloadDateTime,
+      CompletionDateTime,
+      WorkUnitName,
+      KFactor,
+      Core,
+      Frames,
+      Atoms,
+      SlotType,
+      PPD,
+      Credit
+   }
+
+   // ReSharper restore InconsistentNaming
+
+   /// <summary>
+   /// Represents the query operators for the work unit database.
+   /// </summary>
+   public enum QueryFieldType
+   {
+      Equal,
+      GreaterThan,
+      GreaterThanOrEqual,
+      LessThan,
+      LessThanOrEqual,
+      Like,
+      NotLike,
+      NotEqual
+   }
+
    [DataContract]
    public class QueryParameters : IComparable<QueryParameters>, IEquatable<QueryParameters>
    {
@@ -240,13 +289,45 @@ namespace HFM.Core.DataTypes
             case QueryFieldType.LessThanOrEqual:
                return "<=";
             case QueryFieldType.Like:
-               return "Like";
+               return "LIKE";
             case QueryFieldType.NotLike:
-               return "Not Like";
+               return "NOT LIKE";
+            case QueryFieldType.NotEqual:
+               return "!=";
             default:
                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                   "Query Field Type '{0}' is not implemented.", type));
          }
+      }
+
+      public static string[] GetColumnNames()
+      {
+         // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
+         return new[]
+                {
+                   "ProjectID",
+                   "Run",
+                   "Clone",
+                   "Gen",
+                   "Name",
+                   "Path",
+                   "Username",
+                   "Team",
+                   "Core Version",
+                   "Frames Completed",
+                   "Frame Time (Seconds)",
+                   "Unit Result",
+                   "Download Date (UTC)",
+                   "Completion Date (UTC)",
+                   "Work Unit Name",
+                   "KFactor",
+                   "Core Name",
+                   "Total Frames",
+                   "Atoms",
+                   "Slot Type",
+                   "PPD",
+                   "Credit"
+                };
       }
    }
 }

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Query Parameters Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -159,58 +159,66 @@ namespace HFM.Core.Tests.DataTypes
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest1()
+      public void QueryField_Operator_Default_Test()
       {
          var field = new QueryField();
          Assert.AreEqual("=", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest2()
+      public void QueryField_Operator_Equal_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.GreaterThan;
+         var field = new QueryField { Type = QueryFieldType.Equal };
+         Assert.AreEqual("=", field.Operator);
+      }
+
+      [Test]
+      public void QueryField_Operator_GreaterThan_Test()
+      {
+         var field = new QueryField { Type = QueryFieldType.GreaterThan };
          Assert.AreEqual(">", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest3()
+      public void QueryField_Operator_GreaterThanOrEqual_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.GreaterThanOrEqual;
+         var field = new QueryField { Type = QueryFieldType.GreaterThanOrEqual };
          Assert.AreEqual(">=", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest4()
+      public void QueryField_Operator_LessThan_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.LessThan;
+         var field = new QueryField { Type = QueryFieldType.LessThan };
          Assert.AreEqual("<", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest5()
+      public void QueryField_Operator_LessThanOrEqual_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.LessThanOrEqual;
+         var field = new QueryField { Type = QueryFieldType.LessThanOrEqual };
          Assert.AreEqual("<=", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest6()
+      public void QueryField_Operator_Like_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.Like;
-         Assert.AreEqual("Like", field.Operator);
+         var field = new QueryField { Type = QueryFieldType.Like };
+         Assert.AreEqual("LIKE", field.Operator);
       }
 
       [Test]
-      public void QueryFieldGetOperatorTest7()
+      public void QueryField_Operator_NotLike_Test()
       {
-         var field = new QueryField();
-         field.Type = QueryFieldType.NotLike;
-         Assert.AreEqual("Not Like", field.Operator);
+         var field = new QueryField { Type = QueryFieldType.NotLike };
+         Assert.AreEqual("NOT LIKE", field.Operator);
+      }
+
+      [Test]
+      public void QueryField_Operator_NotEqual_Test()
+      {
+         var field = new QueryField { Type = QueryFieldType.NotEqual };
+         Assert.AreEqual("!=", field.Operator);
       }
 
       #endregion
