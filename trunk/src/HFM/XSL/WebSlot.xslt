@@ -60,7 +60,7 @@
                      Work Units
                   </td>
                   <td class="AltRightCol">
-                     Completed: <xsl:value-of select="TotalRunCompletedUnits"/> - Failed: <xsl:value-of select="TotalRunFailedUnits"/> - Total: <xsl:value-of select="TotalCompletedUnits"/>
+                     Completed: <xsl:value-of select="TotalRunCompletedUnits"/> - Failed: <xsl:value-of select="TotalRunFailedUnits"/> - Total Completed: <xsl:value-of select="TotalCompletedUnits"/> - Total Failed: <xsl:value-of select="TotalFailedUnits"/>
                   </td>
                </tr>
                <tr>
