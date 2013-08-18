@@ -146,7 +146,7 @@ namespace HFM.Forms
          }
          else
          {
-            var names = HistoryPresenter.GetQueryFieldColumnNames();
+            string[] names = QueryField.GetColumnNames();
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
             columnChoices.Add(new QueryColumnChoice(names[(int)QueryFieldName.Name], QueryFieldName.Name));
@@ -180,6 +180,7 @@ namespace HFM.Forms
          if (Core.Application.IsRunningOnMono)
          {
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.Equal.ToString(), QueryFieldType.Equal));
+            columnChoices.Add(new QueryColumnChoice(QueryFieldType.NotEqual.ToString(), QueryFieldType.NotEqual));
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.GreaterThan.ToString(), QueryFieldType.GreaterThan));
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.GreaterThanOrEqual.ToString(), QueryFieldType.GreaterThanOrEqual));
             columnChoices.Add(new QueryColumnChoice(QueryFieldType.LessThan.ToString(), QueryFieldType.LessThan));
@@ -190,6 +191,7 @@ namespace HFM.Forms
          else
          {
             columnChoices.Add(new QueryColumnChoice("Equal", QueryFieldType.Equal));
+            columnChoices.Add(new QueryColumnChoice("Not Equal", QueryFieldType.NotEqual));
             columnChoices.Add(new QueryColumnChoice("Greater Than", QueryFieldType.GreaterThan));
             columnChoices.Add(new QueryColumnChoice("Greater Than Or Equal", QueryFieldType.GreaterThanOrEqual));
             columnChoices.Add(new QueryColumnChoice("Less Than", QueryFieldType.LessThan));
