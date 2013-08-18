@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Slot Model Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -325,19 +325,24 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Number of completed units since the last client start
+      /// Gets or sets the number of completed units since the last client start.
       /// </summary>
       public int TotalRunCompletedUnits { get; set; }
 
       /// <summary>
-      /// Total Units Completed for lifetime of the client (read from log file)
+      /// Gets or sets the total number of completed units.
       /// </summary>
       public int TotalCompletedUnits { get; set; }
 
       /// <summary>
-      /// Number of failed units since the last client start
+      /// Gets or sets the number of failed units since the last client start.
       /// </summary>
       public int TotalRunFailedUnits { get; set; }
+
+      /// <summary>
+      /// Gets or sets the total number of failed units.
+      /// </summary>
+      public int TotalFailedUnits { get; set; }
 
       /// <summary>
       /// Combined Folding ID and Team String
