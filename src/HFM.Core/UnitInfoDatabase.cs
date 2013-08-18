@@ -51,6 +51,12 @@ namespace HFM.Core
       Id
    }
 
+   public enum CountType
+   {
+      Completed,
+      Failed
+   }
+
    public sealed class UpgradeExecutingEventArgs : EventArgs
    {
       private readonly IProgressProcessRunner _process;
@@ -93,6 +99,10 @@ namespace HFM.Core
       DataTable Select(string sql, params object[] args);
 
       int Execute(string sql, params object[] args);
+
+      long Count(string clientName, CountType type);
+
+      long Count(string clientName, CountType type, DateTime? clientStartTime);
    }
 
    public sealed class UnitInfoDatabase : IUnitInfoDatabase
@@ -665,6 +675,44 @@ namespace HFM.Core
       public int Execute(string sql, params object[] args)
       {
          return Database.Execute(sql, args);
+      }
+
+      #endregion
+
+      #region Count
+
+      public long Count(string clientName, CountType type)
+      {
+         return Count(clientName, type, null);
+      }
+
+      public long Count(string clientName, CountType type, DateTime? clientStartTime)
+      {
+         var parameters = new QueryParameters();
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Name,   Type = QueryFieldType.Equal, Value = clientName });
+         parameters.Fields.Add(new QueryField
+                               {
+                                  Name = QueryFieldName.Result,
+                                  Type = type == CountType.Completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, 
+                                  Value = (int)WorkUnitResult.FinishedUnit
+                               });
+         if (clientStartTime.HasValue)
+         {
+            parameters.Fields.Add(new QueryField
+                                  {
+                                     Name = type == CountType.Completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime, 
+                                     Type = QueryFieldType.GreaterThan, 
+                                     Value = clientStartTime.Value
+                                  });
+         }
+         PetaPoco.Sql where = WhereBuilder.Execute(parameters);
+
+         var countSql = PetaPoco.Sql.Builder.Select("ID", "InstanceName", "DownloadDateTime", "CompletionDateTime", "Result", "COUNT(*)")
+            .From("WuHistory")
+            .Append(where);
+
+         var table = Select(countSql.SQL, countSql.Arguments);
+         return (long)table.Rows[0][5];
       }
 
       #endregion
