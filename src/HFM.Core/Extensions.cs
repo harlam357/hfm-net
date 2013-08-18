@@ -225,6 +225,7 @@ namespace HFM.Core
             totals.TotalRunCompletedUnits += slot.TotalRunCompletedUnits;
             totals.TotalRunFailedUnits += slot.TotalRunFailedUnits;
             totals.TotalCompletedUnits += slot.TotalCompletedUnits;
+            totals.TotalFailedUnits += slot.TotalFailedUnits;
 
             if (slot.ProductionValuesOk)
             {

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Generator Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -314,6 +314,7 @@ namespace HFM.Core
          slotDetail.TotalRunCompletedUnits = slot.TotalRunCompletedUnits;
          slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
          slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
+         slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
          slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
          slotDetail.CurrentLogLines = slot.CurrentLogLines;
          slotDetail.Protein = slot.UnitInfoLogic.CurrentProtein;
