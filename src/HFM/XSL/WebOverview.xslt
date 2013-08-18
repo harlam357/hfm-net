@@ -130,6 +130,12 @@
                   </td>
                </tr>
                <tr>
+                  <td class="LeftCol">Total Failed Units</td>
+                  <td class="RightCol">
+                     <xsl:value-of select="SlotTotals/TotalFailedUnits"/>
+                  </td>
+               </tr>
+               <tr>
                   <td class="Plain" colspan="2" align="center">
                      <a href="mobile.html">
                         Mobile Version
