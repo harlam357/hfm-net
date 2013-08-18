@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
 
@@ -234,7 +235,7 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
       
-         var names = HistoryPresenter.GetQueryFieldColumnNames();
+         string[] names = QueryField.GetColumnNames();
       
          dataGridView1.AutoGenerateColumns = false;
          // ReSharper disable PossibleNullReferenceException
