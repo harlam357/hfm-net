@@ -630,6 +630,39 @@ namespace HFM.Core.Tests
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 450 }) }
       };
 
+      [Test, TestCaseSource("FetchNotEqualCases")]
+      public void Fetch_NotEqual_Test(int expected, QueryParameters parameters)
+      {
+         FetchTestData(expected, parameters);
+      }
+
+      private static object[] FetchNotEqualCases = 
+      {
+         new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotEqual,  Value = 6600 }) },
+         new object[] { 40,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotEqual,  Value = 7 }) },
+         new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectClone,       Type = QueryFieldType.NotEqual,  Value = 18 }) },
+         new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectGen,         Type = QueryFieldType.NotEqual,  Value = 18 }) },
+         new object[] { 33,   BuildParameters(new QueryField { Name = QueryFieldName.Name,               Type = QueryFieldType.NotEqual,  Value = "nVidia GPU - GTX275" }) },
+         new object[] { 33,   BuildParameters(new QueryField { Name = QueryFieldName.Path,               Type = QueryFieldType.NotEqual,  Value = @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Username,           Type = QueryFieldType.NotEqual,  Value = "harlam357" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Team,               Type = QueryFieldType.NotEqual,  Value = 32 }) },
+         new object[] { 33,   BuildParameters(new QueryField { Name = QueryFieldName.CoreVersion,        Type = QueryFieldType.NotEqual,  Value = 2.09 }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.FramesCompleted,    Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.FrameTime,          Type = QueryFieldType.NotEqual,  Value = 41 })},   // not a TimeSpan value
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotEqual,  Value = 1 }) },   // not a String value
+         new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotEqual,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
+         new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotEqual,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
+         // null entries in the database are NOT counted in the NotEqual results
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName" }) },
+         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 2.3 }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GROGPU2" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 7000 }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "GPU" }) },
+         //new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 9482.92683 }) },
+         new object[] { 3,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 450 }) }
+      };
+
       [Test, TestCaseSource("FetchGreaterThanCases")]
       public void Fetch_GreaterThan_Test(int expected, QueryParameters parameters)
       {
@@ -893,6 +926,39 @@ namespace HFM.Core.Tests
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Equal,  Value = "CPU" }) },
          //new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 486876.03173 }) },
          //new object[] { 2,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 869.4797 }) }
+      };
+
+      [Test, TestCaseSource("FetchNotEqualCases2")]
+      public void Fetch_NotEqual_Test2(int expected, QueryParameters parameters)
+      {
+         FetchTestData2(expected, parameters);
+      }
+
+      private static object[] FetchNotEqualCases2 = 
+      {
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotEqual,  Value = 8011 }) },
+         new object[] { 181,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotEqual,  Value = 0 }) },
+         new object[] { 247,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectClone,       Type = QueryFieldType.NotEqual,  Value = 63 }) },
+         new object[] { 251,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectGen,         Type = QueryFieldType.NotEqual,  Value = 188 }) },
+         new object[] { 241,  BuildParameters(new QueryField { Name = QueryFieldName.Name,               Type = QueryFieldType.NotEqual,  Value = "Windows - Test Workstation Slot 00" }) },
+         new object[] { 223,  BuildParameters(new QueryField { Name = QueryFieldName.Path,               Type = QueryFieldType.NotEqual,  Value = "192.168.0.172-36330" }) },
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.Username,           Type = QueryFieldType.NotEqual,  Value = "harlam357" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Team,               Type = QueryFieldType.NotEqual,  Value = 32 }) },
+         new object[] { 190,  BuildParameters(new QueryField { Name = QueryFieldName.CoreVersion,        Type = QueryFieldType.NotEqual,  Value = 2.27 }) },
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.FramesCompleted,    Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 239,  BuildParameters(new QueryField { Name = QueryFieldName.FrameTime,          Type = QueryFieldType.NotEqual,  Value = 100 })},  // not a TimeSpan value
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotEqual,  Value = 1 }) },   // not a String value
+         new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotEqual,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
+         new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotEqual,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
+         // null entries in the database are NOT counted in the NotEqual results
+         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName3" }) },
+         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 0.75 }) },
+         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GRO-A5" }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 11000 }) },
+         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "CPU" }) },
+         //new object[] { 284,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 486876.03173 }) },
+         //new object[] { 283,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchGreaterThanCases2")]
@@ -1174,6 +1240,46 @@ namespace HFM.Core.Tests
          int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
          Assert.AreEqual(totalItems, page.TotalItems);
          Assert.AreEqual(expectedPages, page.TotalPages);
+      }
+
+      #endregion
+
+      #region Count
+
+      [Test]
+      public void Count_Completed_Test1()
+      {
+         _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
+         long count = _database.Count("nVidia GPU - GTX285 - 1", CountType.Completed);
+         Assert.AreEqual(11, count);
+      }
+
+      [Test]
+      public void Count_Completed_Test2()
+      {
+         _database.DatabaseFilePath = _testDataFileCopy;
+         _database.Upgrade();
+         long count = _database.Count("nVidia GPU - GTX285 - 1", CountType.Completed, new DateTime(2010, 8, 21));
+         Assert.AreEqual(6, count);
+      }
+
+      [Test]
+      public void Count_Failed_Test1()
+      {
+         _database.DatabaseFilePath = _testData2FileCopy;
+         _database.Upgrade();
+         long count = _database.Count("nVidia GPU - GTX470", CountType.Failed);
+         Assert.AreEqual(1, count);
+      }
+
+      [Test]
+      public void Count_Failed_Test2()
+      {
+         _database.DatabaseFilePath = _testData2FileCopy;
+         _database.Upgrade();
+         long count = _database.Count("nVidia GPU - GTX470", CountType.Failed, new DateTime(2012, 2, 1));
+         Assert.AreEqual(0, count);
       }
 
       #endregion
