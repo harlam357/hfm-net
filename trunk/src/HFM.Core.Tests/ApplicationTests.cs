@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Application Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,28 +27,27 @@ namespace HFM.Core.Tests
    public class ApplicationTests
    {
       [Test]
-      public void ParseVersionTest1()
+      public void Application_ParseVersion_Test1()
       {
          Assert.AreEqual(1020030004, Application.ParseVersion("1.2.3.4"));
       }
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
-      public void ParseVersionTest2()
+      public void Application_ParseVersion_Test2()
       {
          Application.ParseVersion(null);
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void ParseVersionTest3()
+      public void Application_ParseVersion_Test3()
       {
-         Application.ParseVersion("1.2.3");
+         Assert.AreEqual(1020030000, Application.ParseVersion("1.2.3"));
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
-      public void ParseVersionTest4()
+      public void Application_ParseVersion_Test4()
       {
          Application.ParseVersion("1.2.3.b");
       }

@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Application Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -87,8 +87,8 @@ namespace HFM.Core
          {
             // Example: 0.3.1.50 == 30010050 / 1.3.4.75 == 1030040075
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            return GetVersionLongFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                           fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+            return GetVersionFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                       fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
          }
       }
       
@@ -102,13 +102,33 @@ namespace HFM.Core
          if (version == null) throw new ArgumentNullException("version");
 
          var versionNumbers = GetVersionNumbers(version);
-         return GetVersionLongFromArray(versionNumbers);
+         return GetVersionFromArray(versionNumbers);
       }
 
-      private static int GetVersionLongFromArray(params int[] versionNumbers)
+      private static int GetVersionFromArray(params int[] versionNumbers)
       {
-         return (versionNumbers[0] * 1000000000) + (versionNumbers[1] * 10000000) +
-                (versionNumbers[2] * 10000) + versionNumbers[3];
+         Debug.Assert(versionNumbers != null);
+
+         int value = 0;
+
+         if (versionNumbers.Length > 0)
+         {
+            value += versionNumbers[0] * 1000000000;
+         }
+         if (versionNumbers.Length > 1)
+         {
+            value += versionNumbers[1] * 10000000;
+         }
+         if (versionNumbers.Length > 2)
+         {
+            value += versionNumbers[2] * 10000;
+         }
+         if (versionNumbers.Length > 3)
+         {
+            value += versionNumbers[3];
+         }
+
+         return value;
       }
 
       public static int[] GetVersionNumbers()
@@ -135,6 +155,17 @@ namespace HFM.Core
             versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
             versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
             versionNumbers[3] = Int32.Parse(match.Result("${Revision}"), CultureInfo.InvariantCulture);
+            return versionNumbers;
+         }
+
+         regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))$", RegexOptions.ExplicitCapture);
+         match = regex.Match(version);
+         if (match.Success)
+         {
+            var versionNumbers = new int[3];
+            versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
+            versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
+            versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
             return versionNumbers;
          }
 
