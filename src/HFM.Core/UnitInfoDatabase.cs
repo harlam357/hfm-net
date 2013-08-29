@@ -195,6 +195,8 @@ namespace HFM.Core
             _logger = logger;
          }
 
+         SQLiteFunction.RegisterFunction(typeof(ToSlotType));
+
          ForceDateTimesToUtc = true;
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
          {
@@ -229,7 +231,7 @@ namespace HFM.Core
             {
                CreateTable(SqlTable.WuHistory);
                CreateTable(SqlTable.Version);
-               SetDatabaseVersion(Application.VersionWithRevision);
+               SetDatabaseVersion(Application.Version);
             }
             // verify the connection by performing a db operation
             Select("SELECT * FROM [WuHistory] LIMIT 1");
@@ -276,7 +278,7 @@ namespace HFM.Core
 
       private void UpgradeTo0920(int dbVersion)
       {
-         const string upgradeVersion1String = "0.9.2.0";
+         const string upgradeVersion1String = "0.9.2";
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
             // delete duplicates
@@ -323,7 +325,6 @@ namespace HFM.Core
          adder.AddColumn("Core", "VARCHAR(20)");
          adder.AddColumn("Frames", "INT");
          adder.AddColumn("Atoms", "INT");
-         adder.AddColumn("SlotType", "VARCHAR(20)");
          adder.AddColumn("Credit", "FLOAT");
          adder.AddColumn("PreferredDays", "FLOAT");
          adder.AddColumn("MaximumDays", "FLOAT");
@@ -365,8 +366,15 @@ namespace HFM.Core
             // they only live at the UnitInfoLogic level
             entry.FramesCompleted = unitInfoLogic.FramesComplete;
             entry.FrameTimeValue = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames);
-            // SetProtein also sets the SlotType
-            entry.SetProtein(unitInfoLogic.CurrentProtein);
+            // copy protein values for insert
+            entry.WorkUnitName = unitInfoLogic.CurrentProtein.WorkUnitName;
+            entry.KFactor = unitInfoLogic.CurrentProtein.KFactor;
+            entry.Core = unitInfoLogic.CurrentProtein.Core;
+            entry.Frames = unitInfoLogic.CurrentProtein.Frames;
+            entry.Atoms = unitInfoLogic.CurrentProtein.NumberOfAtoms;
+            entry.BaseCredit = unitInfoLogic.CurrentProtein.Credit;
+            entry.PreferredDays = unitInfoLogic.CurrentProtein.PreferredDays;
+            entry.MaximumDays = unitInfoLogic.CurrentProtein.MaximumDays;
             Database.Insert(entry);
          }
       }
@@ -385,7 +393,7 @@ namespace HFM.Core
       private static bool ValidateFinishedUnitInfo(UnitInfo unitInfo)
       {
          return unitInfo.ProjectIsUnknown() == false &&
-                unitInfo.UnitResult.Equals(WorkUnitResult.FinishedUnit) &&
+                unitInfo.UnitResult == WorkUnitResult.FinishedUnit &&
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false &&
                 unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
       }
@@ -397,11 +405,11 @@ namespace HFM.Core
          // download time - Issue 233
 
          return unitInfo.ProjectIsUnknown() == false &&
-               (unitInfo.UnitResult.Equals(WorkUnitResult.BadWorkUnit) ||
-                unitInfo.UnitResult.Equals(WorkUnitResult.CoreOutdated) ||
-                unitInfo.UnitResult.Equals(WorkUnitResult.EarlyUnitEnd) ||
-                unitInfo.UnitResult.Equals(WorkUnitResult.Interrupted) ||
-                unitInfo.UnitResult.Equals(WorkUnitResult.UnstableMachine)) &&
+               (unitInfo.UnitResult == WorkUnitResult.BadWorkUnit ||
+                unitInfo.UnitResult == WorkUnitResult.CoreOutdated ||
+                unitInfo.UnitResult == WorkUnitResult.EarlyUnitEnd ||
+                unitInfo.UnitResult == WorkUnitResult.Interrupted ||
+                unitInfo.UnitResult == WorkUnitResult.UnstableMachine) &&
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false;
       }
 
@@ -458,18 +466,12 @@ namespace HFM.Core
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
-         PetaPoco.Sql where = WhereBuilder.Execute(parameters);
-         List<HistoryEntry> query = where != null ? Database.Fetch<HistoryEntry>(where) : Database.Fetch<HistoryEntry>(String.Empty);
+         var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
+         select.Append(WhereBuilder.Execute(parameters));
+         List<HistoryEntry> query = Database.Fetch<HistoryEntry>(select);
          Debug.Assert(query != null);
          query.ForEach(x => x.ProductionView = productionView);
          return query;
-
-         //if (_proteinDictionary == null) return query;
-         //   
-         //var joinQuery = from entry in query
-         //                  join protein in _proteinDictionary.Values on entry.ProjectID equals protein.ProjectNumber into groupJoin
-         //                  from entryProtein in groupJoin.DefaultIfEmpty()
-         //                  select entry.SetProtein(entryProtein);
 
          //return FilterProteinParameters(parameters, query);
       }
@@ -496,18 +498,12 @@ namespace HFM.Core
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
-         PetaPoco.Sql where = WhereBuilder.Execute(parameters);
-         PetaPoco.Page<HistoryEntry> query = where != null ? Database.Page<HistoryEntry>(page, itemsPerPage, where) : Database.Page<HistoryEntry>(page, itemsPerPage, String.Empty);
+         var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
+         select.Append(WhereBuilder.Execute(parameters));
+         PetaPoco.Page<HistoryEntry> query = Database.Page<HistoryEntry>(page, itemsPerPage, select);
          Debug.Assert(query != null);
          query.Items.ForEach(x => x.ProductionView = productionView);
          return query;
-
-         //if (_proteinDictionary == null) return query;
-         //   
-         //var joinQuery = from entry in query
-         //                  join protein in _proteinDictionary.Values on entry.ProjectID equals protein.ProjectNumber into groupJoin
-         //                  from entryProtein in groupJoin.DefaultIfEmpty()
-         //                  select entry.SetProtein(entryProtein);
 
          //return FilterProteinParameters(parameters, query);
       }
@@ -851,6 +847,11 @@ namespace HFM.Core
 
          public abstract string TableName { get; }
 
+         public virtual string SelectSql
+         {
+            get { return String.Empty; }
+         }
+
          public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
 
          public DbCommand GetDropTableCommand(SQLiteConnection connection)
@@ -868,7 +869,7 @@ namespace HFM.Core
 
          private const string WuHistoryTableName = "WuHistory";
 
-         private const string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
+         private static readonly string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
                                                         "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                                         "[ProjectID] INT  NOT NULL," +
                                                         "[ProjectRun] INT  NOT NULL," +
@@ -884,24 +885,31 @@ namespace HFM.Core
                                                         "[Result] INT  NOT NULL," +
                                                         "[DownloadDateTime] DATETIME  NOT NULL," +
                                                         "[CompletionDateTime] DATETIME  NOT NULL," +
-                                                        "[WorkUnitName] VARCHAR(30)," +
-                                                        "[KFactor] FLOAT," +
-                                                        "[Core] VARCHAR(20)," +
-                                                        "[Frames] INT," +
-                                                        "[Atoms] INT," +
-                                                        "[SlotType] VARCHAR(20)," +
-                                                        "[Credit] FLOAT," +
-                                                        "[PreferredDays] FLOAT," +
-                                                        "[MaximumDays] FLOAT" +
+                                                        SetDefaultValue("[WorkUnitName] VARCHAR(30) DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[KFactor] FLOAT DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[Core] VARCHAR(20) DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[Frames] INT DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[Atoms] INT DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[Credit] FLOAT DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[PreferredDays] FLOAT DEFAULT {0} NOT NULL,") +
+                                                        SetDefaultValue("[MaximumDays] FLOAT DEFAULT {0} NOT NULL") +
                                                         ");";
 
-         
+         private static string SetDefaultValue(string columnDef)
+         {
+            return String.Format(CultureInfo.InvariantCulture, columnDef, SQLiteColumnAdder.GetDefaultValue(columnDef));
+         }
 
          #endregion
 
          public override string TableName
          {
             get { return WuHistoryTableName; }
+         }
+
+         public override string SelectSql
+         {
+            get { return "SELECT * FROM (SELECT [ID], [ProjectID], [ProjectRun], [ProjectClone], [ProjectGen], [InstanceName], [InstancePath], [Username], [Team], [CoreVersion], [FramesCompleted], [FrameTime], [Result], [DownloadDateTime], [CompletionDateTime], [WorkUnitName], [KFactor], [Core], [Frames], [Atoms], [Credit], [PreferredDays], [MaximumDays], ToSlotType(Core) As SlotType FROM [WuHistory])"; }
          }
 
          public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
@@ -980,9 +988,28 @@ namespace HFM.Core
                _commands.Add(new SQLiteCommand(_connection)
                              {
                                 CommandText = String.Format(CultureInfo.InvariantCulture,
-                                                 "ALTER TABLE [{0}] ADD COLUMN [{1}] {2}", _tableName, name, dataType)
+                                                 "ALTER TABLE [{0}] ADD COLUMN [{1}] {2} DEFAULT {3} NOT NULL", _tableName, name, dataType, GetDefaultValue(dataType))
                              });
             }
+         }
+
+         public static object GetDefaultValue(string dataType)
+         {
+            if (dataType.Contains("VARCHAR"))
+            {
+               return "''";
+            }
+            if (dataType.Contains("INT"))
+            {
+               return 0;
+            }
+            if (dataType.Contains("FLOAT"))
+            {
+               return 0.0f;
+            }
+
+            string message = String.Format(CultureInfo.CurrentCulture, "Data type {0} is not valid.", dataType);
+            throw new ArgumentException(message, "dataType");
          }
 
          public void Execute()
@@ -1065,6 +1092,16 @@ namespace HFM.Core
          }
       }
 
+      [SQLiteFunction(Name = "ToSlotType", Arguments = 1, FuncType = FunctionType.Scalar)]
+      private sealed class ToSlotType : SQLiteFunction
+      {
+         public override object Invoke(object[] args)
+         {
+            var core = (string)args[0];
+            return String.IsNullOrEmpty(core) ? String.Empty : core.ToSlotType().ToString();
+         }
+      }
+
       #endregion
    }
 
@@ -1090,16 +1127,13 @@ namespace HFM.Core
 
       protected override void ProcessInternal()
       {
-         if (UpdateType.Equals(ProteinUpdateType.All) ||
-             UpdateType.Equals(ProteinUpdateType.Unknown))
+         if (UpdateType == ProteinUpdateType.All ||
+             UpdateType == ProteinUpdateType.Unknown)
          {
             var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
-            switch (UpdateType)
+            if (UpdateType == ProteinUpdateType.Unknown)
             {
-               case ProteinUpdateType.Unknown:
-                  selectSql = selectSql.Where("WorkUnitName IS NULL");
-                  // WHERE WorkUnitName IS NULL OR WorkUnitName = 'Unknown'
-                  break;
+               selectSql = selectSql.Where("WorkUnitName = ''");
             }
             selectSql = selectSql.GroupBy("ProjectID");
 
@@ -1118,6 +1152,10 @@ namespace HFM.Core
                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                if (updateSql != null)
                {
+                  if (UpdateType == ProteinUpdateType.Unknown)
+                  {
+                     updateSql = updateSql.Where("WorkUnitName = ''");
+                  }
                   _database.Execute(updateSql.SQL, updateSql.Arguments);
                }
                count++;
@@ -1170,7 +1208,6 @@ namespace HFM.Core
                .Append("[Core] = @0,", protein.Core)
                .Append("[Frames] = @0,", protein.Frames)
                .Append("[Atoms] = @0,", protein.NumberOfAtoms)
-               .Append("[SlotType] = @0,", protein.Core.ToSlotType().ToString())
                .Append("[Credit] = @0,", protein.Credit)
                .Append("[PreferredDays] = @0,", protein.PreferredDays)
                .Append("[MaximumDays] = @0", protein.MaximumDays)
