@@ -24,14 +24,13 @@ namespace HFM.Core.DataTypes
 {
    [PetaPoco.TableName("WuHistory")]
    [PetaPoco.PrimaryKey("ID")]
-   public class HistoryEntry : IEquatable<HistoryEntry>
+   public class HistoryEntry
    {
-      private Protein _protein;
+      private readonly Protein _protein;
 
       public HistoryEntry()
       {
          _protein = new Protein();
-
          ProductionView = HistoryProductionView.BonusDownloadTime;
       }
 
@@ -79,150 +78,56 @@ namespace HFM.Core.DataTypes
 
       public DateTime CompletionDateTime { get; set; }
 
-      private string _workUnitName = String.Empty;
-
       public string WorkUnitName
       {
-         get { return _protein == null ? _workUnitName : _protein.WorkUnitName; }
-         set
-         {
-            if (_protein == null)
-            {
-               _workUnitName = value;
-            }
-            else
-            {
-               _protein.WorkUnitName = value;
-            }
-         }
+         get { return _protein.WorkUnitName; }
+         set { _protein.WorkUnitName = value; }
       }
-
-      private double _kfactor;
 
       public double KFactor
       {
-         get { return _protein == null ? _kfactor : _protein.KFactor; }
-         set
-         {
-            if (_protein == null)
-            {
-               _kfactor = value;
-            }
-            else
-            {
-               _protein.KFactor = value;
-            }
-         }
+         get { return _protein.KFactor; }
+         set { _protein.KFactor = value; }
       }
-
-      private string _core = String.Empty;
 
       public string Core
       {
-         get { return _protein == null ? _core : _protein.Core; }
-         set
-         {
-            if (_protein == null)
-            {
-               _core = value;
-            }
-            else
-            {
-               _protein.Core = value;
-            }
-         }
+         get { return _protein.Core; }
+         set { _protein.Core = value; }
       }
-
-      private int _frames;
 
       public int Frames
       {
-         get { return _protein == null ? _frames : _protein.Frames; }
-         set
-         {
-            if (_protein == null)
-            {
-               _frames = value;
-            }
-            else
-            {
-               _protein.Frames = value;
-            }
-         }
+         get { return _protein.Frames; }
+         set { _protein.Frames = value; }
       }
-
-      private int _atoms;
 
       public int Atoms
       {
-         get { return _protein == null ? _atoms : _protein.NumberOfAtoms; }
-         set
-         {
-            if (_protein == null)
-            {
-               _atoms = value;
-            }
-            else
-            {
-               _protein.NumberOfAtoms = value;
-            }
-         }
+         get { return _protein.NumberOfAtoms; }
+         set { _protein.NumberOfAtoms = value; }
       }
 
-      private double _baseCredit;
       [PetaPoco.Column("Credit")]
       public double BaseCredit
       {
-         get { return _protein == null ? _baseCredit : _protein.Credit; }
-         set
-         {
-            if (_protein == null)
-            {
-               _baseCredit = value;
-            }
-            else
-            {
-               _protein.Credit = value;
-            }
-         }
+         get { return _protein.Credit; }
+         set { _protein.Credit = value; }
       }
-
-      private double _preferredDays;
 
       public double PreferredDays
       {
-         get { return _protein == null ? _preferredDays : _protein.PreferredDays; }
-         set
-         {
-            if (_protein == null)
-            {
-               _preferredDays = value;
-            }
-            else
-            {
-               _protein.PreferredDays = value;
-            }
-         }
+         get { return _protein.PreferredDays; }
+         set { _protein.PreferredDays = value; }
       }
-
-      private double _maximumDays;
 
       public double MaximumDays
       {
-         get { return _protein == null ? _maximumDays : _protein.MaximumDays; }
-         set
-         {
-            if (_protein == null)
-            {
-               _maximumDays = value;
-            }
-            else
-            {
-               _protein.MaximumDays = value;
-            }
-         }
+         get { return _protein.MaximumDays; }
+         set { _protein.MaximumDays = value; }
       }
 
+      [PetaPoco.ResultColumn]
       public string SlotType { get; set; }
       
       [PetaPoco.Ignore]
@@ -233,8 +138,6 @@ namespace HFM.Core.DataTypes
       {
          get
          {
-            if (_protein == null) return 0;
-         
             switch (ProductionView)
             {
                case HistoryProductionView.Standard:
@@ -257,8 +160,6 @@ namespace HFM.Core.DataTypes
       {
          get
          {
-            if (_protein == null) return _baseCredit;
-
             switch (ProductionView)
             {
                case HistoryProductionView.Standard:
@@ -275,31 +176,5 @@ namespace HFM.Core.DataTypes
             }
          }
       }
-      
-      public HistoryEntry SetProtein(Protein protein)
-      {
-         _protein = protein;
-         if (protein != null)
-         {
-            SlotType = protein.Core.ToSlotType().ToString();
-         }
-
-         return this;
-      }
-
-      #region IEquatable<HistoryEntry> Implementation
-
-      public bool Equals(HistoryEntry other)
-      {
-         if (other == null) return false;
-
-         return (ProjectID == other.ProjectID &&
-                 ProjectRun == other.ProjectRun &&
-                 ProjectClone == other.ProjectClone &&
-                 ProjectGen == other.ProjectGen &&
-                 DownloadDateTime == other.DownloadDateTime);
-      }
-
-      #endregion
    }
 }

@@ -285,7 +285,7 @@ namespace HFM.Core
       public static SlotType ToSlotType(this string value)
       {
          SlotType type = ToSlotTypeFromCoreName(value);
-         if (type.Equals(SlotType.Unknown))
+         if (type == SlotType.Unknown)
          {
             type = ToSlotTypeFromCoreId(value);
          }

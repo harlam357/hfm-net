@@ -152,8 +152,8 @@ namespace HFM.Core.Tests
       public void Connected_Test1()
       {
          _database.DatabaseFilePath = TestScratchFile;
-         Assert.AreEqual(24, GetWuHistoryColumnCount(TestScratchFile));
-         Assert.AreEqual(Application.VersionWithRevision, _database.GetDatabaseVersion());
+         VerifyWuHistoryTableSchema(TestScratchFile);
+         Assert.AreEqual(Application.Version, _database.GetDatabaseVersion());
          Assert.AreEqual(true, _database.Connected);
       }
 
@@ -168,21 +168,21 @@ namespace HFM.Core.Tests
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileCopy));
+         VerifyWuHistoryTableSchema(_testDataFileCopy);
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         Assert.AreEqual(Application.ParseVersion("0.9.2.0"), Application.ParseVersion(_database.GetDatabaseVersion()));
+         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_database.GetDatabaseVersion()));
       }
 
       [Test]
       public void Upgrade_v092_AlreadyUpgraded_Test()
       {
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileUpgradedCopy));
-         Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
+         VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
+         Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
          _database.DatabaseFilePath = _testDataFileUpgradedCopy;
          _database.Upgrade();
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testDataFileUpgradedCopy));
-         Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         Assert.IsTrue(Application.ParseVersion("0.9.2.0") <= Application.ParseVersion(_database.GetDatabaseVersion()));
+         VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
+         Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
+         Assert.IsTrue(Application.ParseVersion("0.9.2") <= Application.ParseVersion(_database.GetDatabaseVersion()));
       }
 
       [Test]
@@ -192,10 +192,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
          _database.DatabaseFilePath = _testData2FileCopy;
          _database.Upgrade();
-         Assert.AreEqual(24, GetWuHistoryColumnCount(_testData2FileCopy));
+         VerifyWuHistoryTableSchema(_testData2FileCopy);
          // 32 duplicates deleted
          Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
-         Assert.AreEqual(Application.ParseVersion("0.9.2.0"), Application.ParseVersion(_database.GetDatabaseVersion()));
+         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_database.GetDatabaseVersion()));
       }
 
       #endregion
@@ -652,15 +652,14 @@ namespace HFM.Core.Tests
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotEqual,  Value = 1 }) },   // not a String value
          new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotEqual,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
          new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotEqual,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
-         // null entries in the database are NOT counted in the NotEqual results
-         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName" }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 2.3 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GROGPU2" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 7000 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "GPU" }) },
+         new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName" }) },
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 2.3 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GROGPU2" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 7000 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "GPU" }) },
          //new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 9482.92683 }) },
-         new object[] { 3,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 450 }) }
+         new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 450 }) }
       };
 
       [Test, TestCaseSource("FetchGreaterThanCases")]
@@ -721,7 +720,7 @@ namespace HFM.Core.Tests
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.GreaterThanOrEqual,  Value = 2.3 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.GreaterThanOrEqual,  Value = "GRO-A3" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 99 }) },
-         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThanOrEqual,  Value = 0 }) },
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThanOrEqual,  Value = 0 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThanOrEqual,  Value = "CPU" }) },
          //new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThanOrEqual,  Value = 9482.92683 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 450 }) }
@@ -749,14 +748,14 @@ namespace HFM.Core.Tests
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.LessThan,  Value = 1 }) },   // not a String value
          new object[] { 36,   BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.LessThan,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.LessThan,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThan,  Value = "WorkUnitName" }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThan,  Value = 2.3 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThan,  Value = "GRO-A3" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 99 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThan,  Value = "WorkUnitName" }) },
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThan,  Value = 2.3 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThan,  Value = "GRO-A3" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 99 }) },
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThan,  Value = 0 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
          //new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 9482.92683 }) },
-         new object[] { 0,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 450 }) }
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 450 }) }
       };
 
       [Test, TestCaseSource("FetchLessThanOrEqualCases")]
@@ -781,14 +780,14 @@ namespace HFM.Core.Tests
          new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.LessThanOrEqual,  Value = 1 }) },   // not a String value
          new object[] { 37,   BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.LessThanOrEqual,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
          new object[] { 21,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.LessThanOrEqual,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThanOrEqual,  Value = "WorkUnitName" }) },
-         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThanOrEqual,  Value = 2.3 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThanOrEqual,  Value = "GRO-A3" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 99 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 0 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThanOrEqual,  Value = "WorkUnitName" }) },
+         new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThanOrEqual,  Value = 2.3 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThanOrEqual,  Value = "GRO-A3" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 99 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 0 }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
          //new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 9482.92683 }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 450 }) }
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 450 }) }
       };
 
       [Test, TestCaseSource("FetchLikeCases")]
@@ -814,10 +813,10 @@ namespace HFM.Core.Tests
          new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.Like,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
          new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.Like,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.Like,  Value = "Work%Name%" }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.Like,  Value = "0%" }) },
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.Like,  Value = "GRO%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Like,  Value = "1%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Like,  Value = "%U" }) },
          //new object[] { 9,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "9%" }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "6%" }) }
@@ -845,14 +844,14 @@ namespace HFM.Core.Tests
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotLike,  Value = "1%" }) },    // not a String value
          new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotLike,  Value = new DateTime(2010, 8, 22, 0, 42, 0) }) },
          new object[] { 43,   BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotLike,  Value = new DateTime(2010, 8, 21, 20, 57, 0) }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotLike,  Value = "Work%Name%" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotLike,  Value = "Work%Name%" }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotLike,  Value = "0%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotLike,  Value = "GRO%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotLike,  Value = "1%" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotLike,  Value = "GRO%" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotLike,  Value = "1%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotLike,  Value = "0%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
+         new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
          //new object[] { 35,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "9%" }) },
-         new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "6%" }) }
+         new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "6%" }) }
       };
 
       [Test]
@@ -950,13 +949,12 @@ namespace HFM.Core.Tests
          new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotEqual,  Value = 1 }) },   // not a String value
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotEqual,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotEqual,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
-         // null entries in the database are NOT counted in the NotEqual results
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName3" }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 0.75 }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GRO-A5" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 11000 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "CPU" }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotEqual,  Value = "WorkUnitName3" }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotEqual,  Value = 0.75 }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotEqual,  Value = "GRO-A5" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 11000 }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "CPU" }) },
          //new object[] { 284,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 486876.03173 }) },
          //new object[] { 283,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 869.4797 }) }
       };
@@ -1047,12 +1045,12 @@ namespace HFM.Core.Tests
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.LessThan,  Value = 1 }) },   // not a String value
          new object[] { 210,  BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.LessThan,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
          new object[] { 236,  BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.LessThan,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThan,  Value = "WorkUnitName4" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThan,  Value = 0.75 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThan,  Value = "GRO-A4" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 100 }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThan,  Value = 11000 }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThan,  Value = "WorkUnitName4" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThan,  Value = 0.75 }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThan,  Value = "GRO-A4" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 100 }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThan,  Value = 11000 }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
          //new object[] { 247,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 486876.03173 }) },
          //new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 869.4797 }) }
       };
@@ -1079,12 +1077,12 @@ namespace HFM.Core.Tests
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.LessThanOrEqual,  Value = 1 }) },   // not a String value
          new object[] { 211,  BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.LessThanOrEqual,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
          new object[] { 237,  BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.LessThanOrEqual,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
-         new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThanOrEqual,  Value = "WorkUnitName4" }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThanOrEqual,  Value = 0.75 }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThanOrEqual,  Value = "GRO-A4" }) },
-         new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 100 }) },
-         new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 11000 }) },
-         new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
+         new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.LessThanOrEqual,  Value = "WorkUnitName4" }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.LessThanOrEqual,  Value = 0.75 }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.LessThanOrEqual,  Value = "GRO-A4" }) },
+         new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 100 }) },
+         new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 11000 }) },
+         new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
          //new object[] { 248,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 486876.03173 }) },
          //new object[] { 239,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 869.4797 }) }
       };
@@ -1112,10 +1110,10 @@ namespace HFM.Core.Tests
          new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.Like,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
          new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.Like,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.Like,  Value = "Work%Name%" }) },
-         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.Like,  Value = "0%" }) },
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.Like,  Value = "GRO%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Like,  Value = "0%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Like,  Value = "0%" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Like,  Value = "%U" }) },
          //new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "1%" }) },
          //new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "9%" }) }
@@ -1143,12 +1141,12 @@ namespace HFM.Core.Tests
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.Result,             Type = QueryFieldType.NotLike,  Value = "3%" }) },    // not a String value
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.DownloadDateTime,   Type = QueryFieldType.NotLike,  Value = new DateTime(2012, 7, 5, 0, 25, 7) }) },
          new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.CompletionDateTime, Type = QueryFieldType.NotLike,  Value = new DateTime(2012, 11, 19, 6, 56, 47) }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotLike,  Value = "Work%Name%" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.WorkUnitName,       Type = QueryFieldType.NotLike,  Value = "Work%Name%" }) },
          new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.KFactor,            Type = QueryFieldType.NotLike,  Value = "0%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotLike,  Value = "GRO%" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Core,               Type = QueryFieldType.NotLike,  Value = "GRO%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotLike,  Value = "0%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotLike,  Value = "0%" }) },
-         new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
+         new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
          //new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "1%" }) },
          //new object[] { 250,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "9%" }) }
       };
@@ -1229,11 +1227,61 @@ namespace HFM.Core.Tests
       public void Page_All_Test1()
       {
          // Select All
-         PageTestData(10, 44, BuildParameters());
+         PageTestData(44, BuildParameters());
       }
 
-      private void PageTestData(long itemsPerPage, long totalItems, QueryParameters parameters)
+      [Test, TestCaseSource("FetchEqualCases")]
+      public void Page_Equal_Test(int expected, QueryParameters parameters)
       {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchNotEqualCases")]
+      public void Page_NotEqual_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchGreaterThanCases")]
+      public void Page_GreaterThan_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchGreaterThanOrEqualCases")]
+      public void Page_GreaterThanOrEqual_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchLessThanCases")]
+      public void Page_LessThan_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchLessThanOrEqualCases")]
+      public void Page_LessThanOrEqual_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchLikeCases")]
+      public void Page_Like_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      [Test, TestCaseSource("FetchNotLikeCases")]
+      public void Page_NotLike_Test(int expected, QueryParameters parameters)
+      {
+         PageTestData(expected, parameters);
+      }
+
+      private void PageTestData(long totalItems, QueryParameters parameters)
+      {
+         const long itemsPerPage = 10;
+
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
          var page = _database.Page(1, itemsPerPage, parameters);
@@ -1300,6 +1348,39 @@ namespace HFM.Core.Tests
                   Debug.WriteLine(row[1].ToString());
                }
                return table.Rows.Count;
+            }
+         }
+      }
+
+      private static void VerifyWuHistoryTableSchema(string dataSource)
+      {
+         using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
+         {
+            con.Open();
+            using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
+            using (var table = new DataTable())
+            {
+               adapter.Fill(table);
+               Assert.AreEqual(23, table.Rows.Count);
+
+               for (int i = 0; i < table.Rows.Count; i++)
+               {
+                  var row = table.Rows[i];
+                  // notnull check
+                  Assert.AreEqual(1, row[3]);
+                  // dflt_value check
+                  if (i < 15)
+                  {
+                     Assert.IsTrue(row[4].Equals(DBNull.Value));
+                  }
+                  else
+                  {
+                     Assert.IsFalse(row[4].Equals(DBNull.Value));
+                  }
+                  // pk check
+                  Assert.AreEqual(i == 0 ? 1 : 0, row[5]);
+               }
+
             }
          }
       }
