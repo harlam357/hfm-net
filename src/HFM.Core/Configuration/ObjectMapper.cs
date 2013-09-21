@@ -76,7 +76,9 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.PreferredDays, opt => opt.Ignore())
             .ForMember(dest => dest.MaximumDays, opt => opt.Ignore())
             .ForMember(dest => dest.SlotType, opt => opt.Ignore())
-            .ForMember(dest => dest.ProductionView, opt => opt.Ignore());
+            .ForMember(dest => dest.ProductionView, opt => opt.Ignore())
+            .ForMember(dest => dest.PPD, opt => opt.Ignore())
+            .ForMember(dest => dest.Credit, opt => opt.Ignore());
       }
    }
 }

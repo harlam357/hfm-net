@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Info Logic Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ using System;
 using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Core
 {
@@ -299,7 +300,7 @@ namespace HFM.Core
       /// </summary>
       public double GetUPD(PpdCalculationType calculationType)
       {
-         return CurrentProtein.GetUPD(GetFrameTime(calculationType));
+         return ProductionCalculator.GetUPD(GetFrameTime(calculationType), CurrentProtein.Frames);
       }
 
       /// <summary>
@@ -412,14 +413,14 @@ namespace HFM.Core
             if (status.Equals(SlotStatus.RunningAsync) ||
                 status.Equals(SlotStatus.RunningNoFrameTimes))
             {
-               return CurrentProtein.GetCredit(eftByFrameTime, true);
+               return ProductionCalculator.GetCredit(CurrentProtein, eftByFrameTime);
             }
 
-            return CurrentProtein.GetCredit(eftByDownloadTime, true);
+            return ProductionCalculator.GetCredit(CurrentProtein, eftByDownloadTime);
          }
          if (calculateBonus.Equals(BonusCalculationType.FrameTime))
          {
-            return CurrentProtein.GetCredit(eftByFrameTime, true);
+            return ProductionCalculator.GetCredit(CurrentProtein, eftByFrameTime);
          }
 
          return CurrentProtein.Credit;
@@ -439,20 +440,20 @@ namespace HFM.Core
             if (status.Equals(SlotStatus.RunningAsync) ||
                 status.Equals(SlotStatus.RunningNoFrameTimes))
             {
-               return CurrentProtein.GetPPD(frameTime, eftByFrameTime, true);
+               return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByFrameTime);
             }
 
-            return CurrentProtein.GetPPD(frameTime, eftByDownloadTime, true);
+            return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByDownloadTime);
          }
          if (calculateBonus.Equals(BonusCalculationType.FrameTime))
          {
-            return CurrentProtein.GetPPD(frameTime, eftByFrameTime, true);
+            return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByFrameTime);
          }
 
-         return CurrentProtein.GetPPD(frameTime);
+         return ProductionCalculator.GetPPD(frameTime, CurrentProtein);
       }
 
-      public void ShowPPDTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
+      public void ShowPPDTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType bonusCalculationType)
       {
          // test the level
          if (!logger.IsDebugEnabled) return;
@@ -464,7 +465,7 @@ namespace HFM.Core
          }
 
          // Issue 125
-         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
+         if (bonusCalculationType == BonusCalculationType.DownloadTime)
          {
             // Issue 183
             if (status.Equals(SlotStatus.RunningAsync) ||
@@ -477,7 +478,7 @@ namespace HFM.Core
                logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Download Time.");
             }
          }
-         else if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         else if (bonusCalculationType == BonusCalculationType.FrameTime)
          {
             logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
          }
@@ -487,7 +488,7 @@ namespace HFM.Core
          }
 
          TimeSpan frameTime = GetFrameTime(calculationType);
-         var values = CurrentProtein.GetProductionValues(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), calculateBonus.IsEnabled());
+         var values = ProductionCalculator.GetProductionValues(frameTime, CurrentProtein, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime));
          logger.Debug(values.ToMultiLineString());
       }
       

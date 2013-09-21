@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - ZedGraph Drawing Manager Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,7 @@ using System.Text;
 using ZedGraph;
 
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
@@ -78,8 +79,8 @@ namespace HFM.Forms
                double averageFrameTimePPD = 0;
                if (protein != null)
                {
-                  minimumFrameTimePPD = protein.GetPPD(benchmark.MinimumFrameTime, calculateBonus);
-                  averageFrameTimePPD = protein.GetPPD(benchmark.AverageFrameTime, calculateBonus);
+                  minimumFrameTimePPD = ProductionCalculator.GetPPD(benchmark.MinimumFrameTime, protein, calculateBonus);
+                  averageFrameTimePPD = ProductionCalculator.GetPPD(benchmark.AverageFrameTime, protein, calculateBonus);
                }
 
                if (minimumFrameTimePPD >= 1000 || averageFrameTimePPD >= 1000)

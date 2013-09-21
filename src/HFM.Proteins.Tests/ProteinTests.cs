@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
@@ -29,7 +27,7 @@ namespace HFM.Proteins.Tests
    public class ProteinTests
    {
       [Test]
-      public void DefaultValueTest()
+      public void Protein_DefaultValues_Test()
       {
          var protein = new Protein();
          Assert.AreEqual(0, protein.ProjectNumber);
@@ -47,75 +45,45 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      public void GetPPDTest1()
+      public void Protein_IsUnknown_Test1()
       {
-         var protein = new Protein { Credit = 500 };
-         Assert.AreEqual(1440.0, protein.GetPPD(TimeSpan.FromMinutes(5)));
+         var protein = new Protein { ProjectNumber = 1 };
+         Assert.IsFalse(protein.IsUnknown());
       }
 
       [Test]
-      public void GetPPDTest2()
-      {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(39307.35, protein.GetPPD(TimeSpan.FromMinutes(5), true), 0.01);
-      }
-
-      [Test]
-      public void GetPPDTest3()
+      public void Protein_IsUnknown_Test2()
       {
          var protein = new Protein();
-         Assert.AreEqual(0.0, protein.GetPPD(TimeSpan.Zero));
+         Assert.IsTrue(protein.IsUnknown());
       }
 
       [Test]
-      public void GetUPDTest1()
+      public void Protein_IsUnknown_Test3()
       {
-         var protein = new Protein { Credit = 500 };
-         Assert.AreEqual(2.88, protein.GetUPD(TimeSpan.FromMinutes(5)));
+         Protein protein = null;
+         Assert.IsTrue(protein.IsUnknown());
       }
 
       [Test]
-      public void GetCreditTest1()
+      public void Protein_IsValid_Test1()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(700, protein.GetCredit(TimeSpan.FromMinutes(5 * 100), false));
+         var protein = new Protein { ProjectNumber = 1, PreferredDays = 3, MaximumDays = 5, Credit = 500, Frames = 100, KFactor = 26.4 };
+         Assert.IsTrue(protein.IsValid());
       }
 
       [Test]
-      public void GetCreditTest2()
+      public void Protein_IsValid_Test2()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(13648.383, protein.GetCredit(TimeSpan.FromMinutes(5 * 100), true));
+         var protein = new Protein();
+         Assert.IsFalse(protein.IsValid());
       }
 
       [Test]
-      public void GetMultiplierTest1()
+      public void Protein_IsValid_Test3()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(19.5, protein.GetMultiplier(TimeSpan.FromMinutes(5 * 100), true), 0.01);
-      }
-
-      [Test]
-      public void GetProductionValuesTest1()
-      {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         var values = protein.GetProductionValues(TimeSpan.FromMinutes(5), 
-                                                  TimeSpan.FromMinutes(5 * 100).Add(TimeSpan.FromMinutes(10)), 
-                                                  TimeSpan.FromMinutes(5 * 100), true);
-         Assert.AreEqual(TimeSpan.FromMinutes(5), values.TimePerFrame);
-         Assert.AreEqual(700, values.BaseCredit);
-         Assert.AreEqual(2016.0, values.BasePPD);
-         Assert.AreEqual(TimeSpan.FromDays(3), values.PreferredTime);
-         Assert.AreEqual(TimeSpan.FromDays(5), values.MaximumTime);
-         Assert.AreEqual(26.4, values.KFactor);
-         Assert.AreEqual(TimeSpan.FromMinutes(5 * 100).Add(TimeSpan.FromMinutes(10)), values.EftByDownloadTime);
-         Assert.AreEqual(19.31, values.DownloadTimeBonusMulti, 0.01);
-         Assert.AreEqual(13513.913, values.DownloadTimeBonusCredit);
-         Assert.AreEqual(38920.07, values.DownloadTimeBonusPPD, 0.01);
-         Assert.AreEqual(TimeSpan.FromMinutes(5 * 100), values.EftByFrameTime);
-         Assert.AreEqual(19.5, values.FrameTimeBonusMulti, 0.01);
-         Assert.AreEqual(13648.383, values.FrameTimeBonusCredit);
-         Assert.AreEqual(39307.35, values.FrameTimeBonusPPD, 0.01);
+         Protein protein = null;
+         Assert.IsFalse(protein.IsValid());
       }
    }
 }

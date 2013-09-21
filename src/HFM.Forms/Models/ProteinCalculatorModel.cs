@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Calculator Model
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ using Castle.Core.Logging;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Forms.Models
 {
@@ -76,7 +77,7 @@ namespace HFM.Forms.Models
          }
 
          var decimalPlaces = _prefs.Get<int>(Preference.DecimalPlaces);
-         var values = protein.GetProductionValues(frameTime, totalTimeByUser, totalTimeByFrame, true);
+         var values = ProductionCalculator.GetProductionValues(frameTime, protein, totalTimeByUser, totalTimeByFrame);
          CoreName = protein.Core;
          SlotType = protein.Core.ToSlotType().ToString();
          NumberOfAtoms = protein.NumberOfAtoms;
