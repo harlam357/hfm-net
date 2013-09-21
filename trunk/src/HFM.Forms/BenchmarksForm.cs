@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,15 +24,14 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using ZedGraph;
-
 using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
+using ZedGraph;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
@@ -298,9 +297,9 @@ namespace HFM.Forms
             output.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             output.Add(String.Empty);
             output.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.MinimumFrameTime, protein.GetPPD(benchmark.MinimumFrameTime, calculateBonus.IsEnabled())));
+               benchmark.MinimumFrameTime, ProductionCalculator.GetPPD(benchmark.MinimumFrameTime, protein, calculateBonus.IsEnabled())));
             output.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-               benchmark.AverageFrameTime, protein.GetPPD(benchmark.AverageFrameTime, calculateBonus.IsEnabled())));
+               benchmark.AverageFrameTime, ProductionCalculator.GetPPD(benchmark.AverageFrameTime, protein, calculateBonus.IsEnabled())));
 
             if (unitInfoLogic != null && unitInfoLogic.UnitInfoData.ProjectID.Equals(protein.ProjectNumber) && valuesOk)
             {
