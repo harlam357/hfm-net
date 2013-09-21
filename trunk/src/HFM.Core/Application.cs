@@ -93,9 +93,9 @@ namespace HFM.Core
       }
       
       /// <summary>
-      /// Parse version number from 'x.x.x.x' formatted string.
+      /// Parses a version number from a 'x.x.x.x' or 'x.x.x' formatted string.
       /// </summary>
-      /// <exception cref="ArgumentNullException">Throws when argument is null.</exception>
+      /// <exception cref="ArgumentNullException">version is null.</exception>
       /// <exception cref="FormatException">Throws when given version cannot be parsed.</exception>
       public static int ParseVersion(string version)
       {
