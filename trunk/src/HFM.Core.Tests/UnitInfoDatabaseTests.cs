@@ -626,7 +626,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Equal,  Value = 100 }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Equal,  Value = 7000 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Equal,  Value = "GPU" }) },
-         //new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 9482.92683 }) },
+         new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 9482.92683 }) },
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 450 }) }
       };
 
@@ -658,7 +658,7 @@ namespace HFM.Core.Tests
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
          new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 7000 }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "GPU" }) },
-         //new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 9482.92683 }) },
+         new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 9482.92683 }) },
          new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 450 }) }
       };
 
@@ -690,7 +690,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThan,  Value = 99 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThan,  Value = 0 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThan,  Value = "CPU" }) },
-         //new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThan,  Value = 9482.92683 }) },
+         new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThan,  Value = 9482.92683 }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 450 }) }
       };
 
@@ -722,7 +722,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 99 }) },
          new object[] { 44,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThanOrEqual,  Value = 0 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThanOrEqual,  Value = "CPU" }) },
-         //new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThanOrEqual,  Value = 9482.92683 }) },
+         new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThanOrEqual,  Value = 9482.92683 }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 450 }) }
       };
 
@@ -754,7 +754,7 @@ namespace HFM.Core.Tests
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 99 }) },
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThan,  Value = 0 }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
-         //new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 9482.92683 }) },
+         new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 9482.92683 }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 450 }) }
       };
 
@@ -786,7 +786,7 @@ namespace HFM.Core.Tests
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 99 }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 0 }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
-         //new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 9482.92683 }) },
+         new object[] { 38,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 9482.92683 }) },
          new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 450 }) }
       };
 
@@ -818,7 +818,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Like,  Value = "1%" }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Like,  Value = "%U" }) },
-         //new object[] { 9,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "9%" }) },
+         new object[] { 9,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "9%" }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "6%" }) }
       };
 
@@ -850,7 +850,7 @@ namespace HFM.Core.Tests
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotLike,  Value = "1%" }) },
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotLike,  Value = "0%" }) },
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
-         //new object[] { 35,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "9%" }) },
+         new object[] { 35,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "9%" }) },
          new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "6%" }) }
       };
 
@@ -923,8 +923,8 @@ namespace HFM.Core.Tests
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Equal,  Value = 100 }) },
          new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Equal,  Value = 11000 }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Equal,  Value = "CPU" }) },
-         //new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 486876.03173 }) },
-         //new object[] { 2,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 869.4797 }) }
+         new object[] { 1,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Equal,  Value = 486876.03173 }) },
+         new object[] { 2,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchNotEqualCases2")]
@@ -955,8 +955,8 @@ namespace HFM.Core.Tests
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotEqual,  Value = 100 }) },
          new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotEqual,  Value = 11000 }) },
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotEqual,  Value = "CPU" }) },
-         //new object[] { 284,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 486876.03173 }) },
-         //new object[] { 283,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 869.4797 }) }
+         new object[] { 252,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotEqual,  Value = 486876.03173 }) },
+         new object[] { 251,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchGreaterThanCases2")]
@@ -987,8 +987,8 @@ namespace HFM.Core.Tests
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThan,  Value = 100 }) },
          new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThan,  Value = 9000 }) },
          new object[] { 0,    BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThan,  Value = "CPU" }) },
-         //new object[] { 5,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThan,  Value = 486876.03173 }) },
-         //new object[] { 14,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 869.4797 }) }
+         new object[] { 5,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThan,  Value = 486876.03173 }) },
+         new object[] { 14,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchGreaterThanOrEqualCases2")]
@@ -1019,8 +1019,8 @@ namespace HFM.Core.Tests
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 100 }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.GreaterThanOrEqual,  Value = 9000 }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.GreaterThanOrEqual,  Value = "CPU" }) },
-         //new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThanOrEqual,  Value = 486876.03173 }) },
-         //new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 869.4797 }) }
+         new object[] { 6,    BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.GreaterThanOrEqual,  Value = 486876.03173 }) },
+         new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchLessThanCases2")]
@@ -1051,8 +1051,8 @@ namespace HFM.Core.Tests
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThan,  Value = 100 }) },
          new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThan,  Value = 11000 }) },
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThan,  Value = "CPU" }) },
-         //new object[] { 247,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 486876.03173 }) },
-         //new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 869.4797 }) }
+         new object[] { 247,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThan,  Value = 486876.03173 }) },
+         new object[] { 237,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchLessThanOrEqualCases2")]
@@ -1083,8 +1083,8 @@ namespace HFM.Core.Tests
          new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.LessThanOrEqual,  Value = 100 }) },
          new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.LessThanOrEqual,  Value = 11000 }) },
          new object[] { 253,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.LessThanOrEqual,  Value = "CPU" }) },
-         //new object[] { 248,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 486876.03173 }) },
-         //new object[] { 239,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 869.4797 }) }
+         new object[] { 248,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.LessThanOrEqual,  Value = 486876.03173 }) },
+         new object[] { 239,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 869.4797 }) }
       };
 
       [Test, TestCaseSource("FetchLikeCases2")]
@@ -1115,8 +1115,8 @@ namespace HFM.Core.Tests
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.Like,  Value = "0%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.Like,  Value = "%U" }) },
-         //new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "1%" }) },
-         //new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "9%" }) }
+         new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.Like,  Value = "1%" }) },
+         new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "9%" }) }
       };
 
       [Test, TestCaseSource("FetchNotLikeCases2")]
@@ -1147,8 +1147,8 @@ namespace HFM.Core.Tests
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Frames,             Type = QueryFieldType.NotLike,  Value = "0%" }) },
          new object[] { 20,   BuildParameters(new QueryField { Name = QueryFieldName.Atoms,              Type = QueryFieldType.NotLike,  Value = "0%" }) },
          new object[] { 233,  BuildParameters(new QueryField { Name = QueryFieldName.SlotType,           Type = QueryFieldType.NotLike,  Value = "%U" }) },
-         //new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "1%" }) },
-         //new object[] { 250,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "9%" }) }
+         new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.PPD,                Type = QueryFieldType.NotLike,  Value = "1%" }) },
+         new object[] { 250,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotLike,  Value = "9%" }) }
       };
 
       [Test]
