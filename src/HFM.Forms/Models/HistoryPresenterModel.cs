@@ -219,10 +219,6 @@ namespace HFM.Forms.Models
          {
             _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, ProductionView);
          }
-         else
-         {
-            _page.Items.ForEach(x => x.ProductionView = ProductionView);
-         }
 
          // halt binding source updates
          _historyBindingSource.RaiseListChangedEvents = false;
@@ -299,7 +295,7 @@ namespace HFM.Forms.Models
             {
                _productionView = value;
                OnPropertyChanged("ProductionView");
-               ResetBindings(false);
+               ResetBindings(true);
             }
          }
       }

@@ -34,6 +34,7 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Core
 {
@@ -196,6 +197,7 @@ namespace HFM.Core
          }
 
          SQLiteFunction.RegisterFunction(typeof(ToSlotType));
+         SQLiteFunction.RegisterFunction(typeof(GetProduction));
 
          ForceDateTimesToUtc = true;
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
@@ -468,12 +470,9 @@ namespace HFM.Core
 
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
+         GetProduction.ProductionView = productionView;
          List<HistoryEntry> query = Database.Fetch<HistoryEntry>(select);
-         Debug.Assert(query != null);
-         query.ForEach(x => x.ProductionView = productionView);
          return query;
-
-         //return FilterProteinParameters(parameters, query);
       }
 
       public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters)
@@ -500,12 +499,10 @@ namespace HFM.Core
 
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
+         GetProduction.ProductionView = productionView;
          PetaPoco.Page<HistoryEntry> query = Database.Page<HistoryEntry>(page, itemsPerPage, select);
          Debug.Assert(query != null);
-         query.Items.ForEach(x => x.ProductionView = productionView);
          return query;
-
-         //return FilterProteinParameters(parameters, query);
       }
 
       private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
@@ -834,6 +831,7 @@ namespace HFM.Core
          {
             { QueryFieldName.Name, "InstanceName" },   
             { QueryFieldName.Path, "InstancePath" },
+            { QueryFieldName.Credit, "CalcCredit" },
          };
       }
 
@@ -900,6 +898,34 @@ namespace HFM.Core
             return String.Format(CultureInfo.InvariantCulture, columnDef, SQLiteColumnAdder.GetDefaultValue(columnDef));
          }
 
+         private const string WuHistoryTableSelect = "SELECT * FROM (SELECT [ID], " +
+                                                                           "[ProjectID], " +
+                                                                           "[ProjectRun], " +
+                                                                           "[ProjectClone], " +
+                                                                           "[ProjectGen], " +
+                                                                           "[InstanceName], " +
+                                                                           "[InstancePath], " +
+                                                                           "[Username], " +
+                                                                           "[Team], " +
+                                                                           "[CoreVersion], " +
+                                                                           "[FramesCompleted], " +
+                                                                           "[FrameTime], " +
+                                                                           "[Result], " +
+                                                                           "[DownloadDateTime], " +
+                                                                           "[CompletionDateTime], " +
+                                                                           "[WorkUnitName], " +
+                                                                           "[KFactor], " +
+                                                                           "[Core], " +
+                                                                           "[Frames], " +
+                                                                           "[Atoms], " +
+                                                                           "[Credit], " +
+                                                                           "[PreferredDays], " +
+                                                                           "[MaximumDays], " +
+                                                                           "ToSlotType(Core) As [SlotType], " +
+                                                                           "CAST(GetProduction(FrameTime, Frames, Credit, KFactor, PreferredDays, MaximumDays, datetime(DownloadDateTime), datetime(CompletionDateTime), 0) As FLOAT) As [PPD], " +
+                                                                           "CAST(GetProduction(FrameTime, Frames, Credit, KFactor, PreferredDays, MaximumDays, datetime(DownloadDateTime), datetime(CompletionDateTime), 1) As FLOAT) As [CalcCredit] " +
+                                                                           "FROM [WuHistory])";
+
          #endregion
 
          public override string TableName
@@ -909,7 +935,7 @@ namespace HFM.Core
 
          public override string SelectSql
          {
-            get { return "SELECT * FROM (SELECT [ID], [ProjectID], [ProjectRun], [ProjectClone], [ProjectGen], [InstanceName], [InstancePath], [Username], [Team], [CoreVersion], [FramesCompleted], [FrameTime], [Result], [DownloadDateTime], [CompletionDateTime], [WorkUnitName], [KFactor], [Core], [Frames], [Atoms], [Credit], [PreferredDays], [MaximumDays], ToSlotType(Core) As SlotType FROM [WuHistory])"; }
+            get { return WuHistoryTableSelect; }
          }
 
          public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
@@ -1099,6 +1125,50 @@ namespace HFM.Core
          {
             var core = (string)args[0];
             return String.IsNullOrEmpty(core) ? String.Empty : core.ToSlotType().ToString();
+         }
+      }
+
+      [SQLiteFunction(Name = "GetProduction", Arguments = 9, FuncType = FunctionType.Scalar)]
+      private sealed class GetProduction : SQLiteFunction
+      {
+         [ThreadStatic]
+         public static HistoryProductionView ProductionView;
+
+         public override object Invoke(object[] args)
+         {
+            var frameTime = TimeSpan.FromSeconds((long)args[0]);
+            // unbox then cast to int
+            var frames = (int)((long)args[1]);
+            var baseCredit = (double)args[2];
+            var kFactor = (double)args[3];
+            var preferredDays = (double)args[4];
+            var maximumDays = (double)args[5];
+            DateTime downloadDateTime;
+            DateTime.TryParseExact((string)args[6], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                                   DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                                   out downloadDateTime);
+            DateTime completionDateTime;
+            DateTime.TryParseExact((string)args[7], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                                   DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                                   out completionDateTime);
+            var calcOption = (long)args[8];
+
+            TimeSpan unitTime = TimeSpan.Zero;
+            switch (ProductionView)
+            {
+               case HistoryProductionView.BonusFrameTime:
+                  unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * frames);
+                  break;
+               case HistoryProductionView.BonusDownloadTime:
+                  unitTime = completionDateTime.Subtract(downloadDateTime);
+                  break;
+            }
+
+            if (calcOption != 0)
+            {
+               return ProductionCalculator.GetCredit(baseCredit, kFactor, preferredDays, maximumDays, unitTime);
+            }
+            return ProductionCalculator.GetPPD(frameTime, frames, baseCredit, kFactor, preferredDays, maximumDays, unitTime);
          }
       }
 
