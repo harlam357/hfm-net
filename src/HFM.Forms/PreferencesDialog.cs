@@ -186,7 +186,7 @@ namespace HFM.Forms
       private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
-         if (Core.Application.IsRunningOnMono)
+         if (Core.Application.IsRunningOnMono && this.Enabled)
          {
             HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
             HandleScheduledTasksPropertyChangedForMono(e.PropertyName);
@@ -209,12 +209,12 @@ namespace HFM.Forms
                chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
                chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
                TestConnectionButton.Enabled = _scheduledTasksModel.GenerateWeb;
+               WebGenTypePanel.Enabled = _scheduledTasksModel.GenerateWeb;
                break;
             case "GenerateIntervalEnabled":
                txtWebGenMinutes.Enabled = _scheduledTasksModel.GenerateIntervalEnabled;
                break;
             case "FtpModeEnabled":
-               WebGenTypePanel.Enabled = _scheduledTasksModel.FtpModeEnabled;
                WebSiteServerTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
                WebSiteServerLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
                WebSitePortTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
@@ -249,7 +249,7 @@ namespace HFM.Forms
       
       private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (Core.Application.IsRunningOnMono)
+         if (Core.Application.IsRunningOnMono && this.Enabled)
          {
             HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
             HandleStartupAndExternalPropertyChangedForMono(e.PropertyName);
@@ -286,7 +286,7 @@ namespace HFM.Forms
       private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
-         if (Core.Application.IsRunningOnMono) HandleReportingPropertyEnabledForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono && this.Enabled) HandleReportingPropertyEnabledForMono(e.PropertyName);
       }
 
       private void HandleReportingPropertyEnabledForMono(string propertyName)
@@ -310,7 +310,7 @@ namespace HFM.Forms
       private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
       {
          SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
-         if (Core.Application.IsRunningOnMono) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono && this.Enabled) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
       }
 
       private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
@@ -331,7 +331,7 @@ namespace HFM.Forms
 
       private void WebVisualStylesPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (Core.Application.IsRunningOnMono) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+         if (Core.Application.IsRunningOnMono && this.Enabled) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
       }
 
       private void HandleWebVisualStylesPropertyChangedForMono(string propertyName)
@@ -646,6 +646,10 @@ namespace HFM.Forms
          _propertyCollection[(int)TabName.WebVisualStyles] = TypeDescriptor.GetProperties(_webVisualStylesModel);
          _models[(int)TabName.WebVisualStyles] = _webVisualStylesModel;
       
+         if (Core.Application.IsRunningOnMono)
+         {
+            StyleList.Sorted = false;
+         }
          StyleList.DataSource = _webVisualStylesModel.CssFileList;
          StyleList.DisplayMember = "DisplayMember";
          StyleList.ValueMember = "ValueMember";
