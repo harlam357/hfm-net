@@ -132,7 +132,7 @@ namespace HFM.Core
       {
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show '{0}'.", url);
-         return RunProcess(url, String.Empty, errorMessage);
+         return RunProcess(url, null, errorMessage);
       }
 
       /// <summary>
@@ -141,7 +141,7 @@ namespace HFM.Core
       public string ShowHfmGoogleCode()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Code page.";
-         return RunProcess(Constants.GoogleCodeUrl, String.Empty, errorMessage);
+         return RunProcess(Constants.GoogleCodeUrl, null, errorMessage);
       }
       
       /// <summary>
@@ -150,7 +150,7 @@ namespace HFM.Core
       public string ShowHfmGoogleGroup()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Group.";
-         return RunProcess(Constants.GoogleGroupUrl, String.Empty, errorMessage);
+         return RunProcess(Constants.GoogleGroupUrl, null, errorMessage);
       }
       
       /// <summary>
@@ -159,7 +159,7 @@ namespace HFM.Core
       public string ShowEocUserPage()
       {
          const string errorMessage = "An error occured while attempting to show the EOC User Stats page.";
-         return RunProcess(_prefs.EocUserUrl.AbsoluteUri, String.Empty, errorMessage);
+         return RunProcess(_prefs.EocUserUrl.AbsoluteUri, null, errorMessage);
       }
 
       /// <summary>
@@ -168,7 +168,7 @@ namespace HFM.Core
       public string ShowEocTeamPage()
       {
          const string errorMessage = "An error occured while attempting to show the EOC Team Stats page.";
-         return RunProcess(_prefs.EocTeamUrl.AbsoluteUri, String.Empty, errorMessage);
+         return RunProcess(_prefs.EocTeamUrl.AbsoluteUri, null, errorMessage);
       }
       
       /// <summary>
@@ -177,7 +177,7 @@ namespace HFM.Core
       public string ShowStanfordUserPage()
       {
          const string errorMessage = "An error occured while attempting to show the Stanford User Stats page.";
-         return RunProcess(_prefs.StanfordUserUrl.AbsoluteUri, String.Empty, errorMessage);
+         return RunProcess(_prefs.StanfordUserUrl.AbsoluteUri, null, errorMessage);
       }
       
       private string RunProcess(string fileName, string arguments, string errorMessage)
@@ -196,7 +196,7 @@ namespace HFM.Core
 
       private static string PrepArguments(string arguments)
       {
-         return Application.IsRunningOnMono ? String.Format(CultureInfo.InvariantCulture, "\"{0}\"", arguments) : arguments;
+         return Application.IsRunningOnMono && arguments != null ? String.Format(CultureInfo.InvariantCulture, "\"{0}\"", arguments) : arguments;
       }
    }
 }

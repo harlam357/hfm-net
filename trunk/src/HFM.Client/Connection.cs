@@ -34,6 +34,8 @@ namespace HFM.Client
    /// </summary>
    public class Connection : IDisposable
    {
+      private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
+
       #region Constants
 
       /// <summary>
@@ -55,7 +57,7 @@ namespace HFM.Client
       /// <summary>
       /// Default Socket Receive Timer Length
       /// </summary>
-      private const int DefaultSocketTimerLength = 1;
+      private const int DefaultSocketTimerLength = 10;
 
       #endregion
 
@@ -88,11 +90,6 @@ namespace HFM.Client
       private readonly ITcpClientFactory _tcpClientFactory;
       private readonly StringBuilder _readBuffer;
       private readonly Timer _timer;
-
-      /// <summary>
-      /// Don't allow Update() to be called more than once.
-      /// </summary>
-      private bool _updating;
 
       private static readonly object BufferLock = new object();
 
@@ -226,6 +223,7 @@ namespace HFM.Client
          _readBuffer = new StringBuilder();
          _timer = new Timer(DefaultSocketTimerLength);
          _timer.Elapsed += SocketTimerElapsed;
+         _timer.AutoReset = false;
       }
 
       #endregion
@@ -299,6 +297,36 @@ namespace HFM.Client
          }
          finally
          {
+            /*
+             * when running on Mono, if we time out connecting,
+             * TcpClient.Close() (above) causes asynchronous access
+             * (coming from BeginConnect-related path) to AsyncWaitHandle.
+             * This opens a race window with closing the handle below.
+             *
+             * Unfortunate chain of events results in the following:
+
+Unhandled Exception: System.ObjectDisposedException: The object was used after being disposed.
+  at System.Threading.WaitHandle.CheckDisposed ()
+  at System.Threading.EventWaitHandle.Set () 
+  at (wrapper remoting-invoke-with-check) System.Threading.EventWaitHandle:Set ()
+  at System.Net.Sockets.Socket+SocketAsyncResult.set_IsCompleted (Boolean value)
+  at System.Net.Sockets.Socket+SocketAsyncResult.Complete ()
+  at System.Net.Sockets.Socket+SocketAsyncResult.Complete (System.Exception e)
+  at System.Net.Sockets.Socket+Worker.Connect ()
+  at System.Net.Sockets.Socket+Worker.DispatcherCB (System.Net.Sockets.SocketAsyncResult sar)
+
+             * As Mono's TcpClient.Close() signals AsyncWaitHandle, we can
+             * just wait on it before proceeding.
+             *
+             * Note: we can't wait on the handle right after closing TcpClient
+             * because closing the client may throw.
+             *
+             */
+            if (IsRunningOnMono)
+            {
+               ar.AsyncWaitHandle.WaitOne();
+            }
+
             ar.AsyncWaitHandle.Close();
          } 
       }
@@ -429,27 +457,28 @@ namespace HFM.Client
       internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
       {
          Debug.Assert(Connected);
-
-         if (!_updating)
+         try
          {
-            try
+            Update();
+         }
+         catch (Exception ex)
+         {
+            if (!IsCancelBlockingCallSocketError(ex))
             {
-               _updating = true;
-
-               Update();
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Update failed: {0}", ex.Message), TraceLevel.Error));
             }
-            catch (Exception ex)
+            Close();
+         }
+         finally
+         {
+            if (_tcpClient.Connected)
             {
-               if (!IsCancelBlockingCallSocketError(ex))
+               var timer = sender as Timer;
+               if (timer != null)
                {
-                  OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                     "Update failed: {0}", ex.Message), TraceLevel.Error));
-                  Close();
+                  ((Timer)sender).Start();
                }
-            }
-            finally
-            {
-               _updating = false;
             }
          }
       }
