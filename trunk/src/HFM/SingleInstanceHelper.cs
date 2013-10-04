@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Single Instance Helper Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ namespace HFM
       
       private const string ObjectName = "SingleInstanceProxy";
       private static readonly string AssemblyGuid = GetAssemblyGuid();
-      private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\{0}", AssemblyGuid);
+      private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\hfm-{0}-{1}", Environment.UserName, AssemblyGuid);
 
       public bool Start()
       {
@@ -56,7 +56,7 @@ namespace HFM
       
       public static void RegisterIpcChannel(NewInstanceDetectedHandler handler)
       {
-         IChannel ipcChannel = new IpcServerChannel(AssemblyGuid);
+         IChannel ipcChannel = new IpcServerChannel(String.Format(CultureInfo.InvariantCulture, "hfm-{0}-{1}", Environment.UserName, AssemblyGuid));
          ChannelServices.RegisterChannel(ipcChannel, false);
 
          var obj = new IpcObject(handler);
@@ -70,7 +70,7 @@ namespace HFM
          // if we accurately detected if another instance was
          // running or not, then this would not be a problem.
       
-         string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://{0}/{1}", AssemblyGuid, ObjectName);
+         string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://hfm-{0}-{1}/{2}", Environment.UserName, AssemblyGuid, ObjectName);
 
          IChannel ipcChannel = new IpcClientChannel();
          ChannelServices.RegisterChannel(ipcChannel, false);
