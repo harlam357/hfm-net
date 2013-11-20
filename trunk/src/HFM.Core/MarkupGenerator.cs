@@ -110,7 +110,9 @@ namespace HFM.Core
       {
          try
          {
-            HtmlFilePaths = DoHtmlGeneration(Path.GetTempPath(), slots);
+            string tempPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
+            Directory.CreateDirectory(tempPath);
+            HtmlFilePaths = DoHtmlGeneration(tempPath, slots);
          }
          catch (Exception ex)
          {
@@ -257,7 +259,9 @@ namespace HFM.Core
       {
          try
          {
-            XmlFilePaths = DoXmlGeneration(Path.GetTempPath(), slots);
+            string tempPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
+            Directory.CreateDirectory(tempPath);
+            XmlFilePaths = DoXmlGeneration(tempPath, slots);
          }
          catch (Exception ex)
          {
@@ -275,7 +279,7 @@ namespace HFM.Core
          DateTime updateDateTime = DateTime.Now;
          var slotSummary = CreateSlotSummary(slots, updateDateTime);
          var serializer = new XmlFileSerializer<SlotSummary>();
-         string filePath = Path.Combine(Path.GetTempPath(), "SlotSummary.xml");
+         string filePath = Path.Combine(folderPath, "SlotSummary.xml");
          fileList.Add(filePath);
          serializer.Serialize(filePath, slotSummary);
 
@@ -283,7 +287,7 @@ namespace HFM.Core
          foreach (var slot in slots)
          {
             var slotDetail = CreateSlotDetail(slot, updateDateTime);
-            filePath = Path.Combine(Path.GetTempPath(), String.Concat(slot.Name, ".xml"));
+            filePath = Path.Combine(folderPath, String.Concat(slot.Name, ".xml"));
             fileList.Add(filePath);
             slotDetailSerializer.Serialize(filePath, slotDetail);
          }

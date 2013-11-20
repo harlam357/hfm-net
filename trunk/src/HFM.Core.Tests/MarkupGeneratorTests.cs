@@ -101,11 +101,12 @@ namespace HFM.Core.Tests
          
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateXml(slots);
-         
+
+         string folderPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
          Assert.AreEqual(3, markupGenerator.XmlFilePaths.Count());
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "SlotSummary.xml"), markupGenerator.XmlFilePaths.ElementAt(0));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test2.xml"), markupGenerator.XmlFilePaths.ElementAt(1));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test1.xml"), markupGenerator.XmlFilePaths.ElementAt(2));
+         Assert.AreEqual(Path.Combine(folderPath, "SlotSummary.xml"), markupGenerator.XmlFilePaths.ElementAt(0));
+         Assert.AreEqual(Path.Combine(folderPath, "Test2.xml"), markupGenerator.XmlFilePaths.ElementAt(1));
+         Assert.AreEqual(Path.Combine(folderPath, "Test1.xml"), markupGenerator.XmlFilePaths.ElementAt(2));
       }
 
       [Test]
@@ -117,13 +118,14 @@ namespace HFM.Core.Tests
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateHtml(slots);
 
+         string folderPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
          Assert.AreEqual(6, markupGenerator.HtmlFilePaths.Count());
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "index.html"), markupGenerator.HtmlFilePaths.ElementAt(0));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "mobile.html"), markupGenerator.HtmlFilePaths.ElementAt(1));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "summary.html"), markupGenerator.HtmlFilePaths.ElementAt(2));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "mobilesummary.html"), markupGenerator.HtmlFilePaths.ElementAt(3));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test2.html"), markupGenerator.HtmlFilePaths.ElementAt(4));
-         Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Test1.html"), markupGenerator.HtmlFilePaths.ElementAt(5));
+         Assert.AreEqual(Path.Combine(folderPath, "index.html"), markupGenerator.HtmlFilePaths.ElementAt(0));
+         Assert.AreEqual(Path.Combine(folderPath, "mobile.html"), markupGenerator.HtmlFilePaths.ElementAt(1));
+         Assert.AreEqual(Path.Combine(folderPath, "summary.html"), markupGenerator.HtmlFilePaths.ElementAt(2));
+         Assert.AreEqual(Path.Combine(folderPath, "mobilesummary.html"), markupGenerator.HtmlFilePaths.ElementAt(3));
+         Assert.AreEqual(Path.Combine(folderPath, "Test2.html"), markupGenerator.HtmlFilePaths.ElementAt(4));
+         Assert.AreEqual(Path.Combine(folderPath, "Test1.html"), markupGenerator.HtmlFilePaths.ElementAt(5));
       }
 
       private static IPreferenceSet CreatePreferenceSet()
