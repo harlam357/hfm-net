@@ -295,7 +295,7 @@ namespace HFM.Core
             _slots.Clear();
             if (_messages.SlotCollection != null)
             {
-               // itterate through slot collection);
+               // itterate through slot collection
                foreach (var slot in _messages.SlotCollection)
                {
                   // add slot model to the collection
