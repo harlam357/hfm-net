@@ -1,0 +1,14 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "RUNNING",
+    "description": "smp:8",
+    "options": {
+      "cpus": "-1",
+      "pause-on-start": "true"
+    }
+  }
+]
+---
+

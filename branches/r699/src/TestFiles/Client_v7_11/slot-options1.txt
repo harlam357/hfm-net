@@ -1,0 +1,17 @@
+PyON 1 slot-options
+{
+  "client-type": "normal",
+  "client-subtype": "SMP",
+  "cpu-usage": "100",
+  "machine-id": "0",
+  "max-packet-size": "normal",
+  "core-priority": "idle",
+  "next-unit-percentage": "99",
+  "max-units": "0",
+  "checkpoint": "15",
+  "pause-on-start": "true",
+  "gpu-index": None,
+  "gpu-usage": "100"
+}
+---
+

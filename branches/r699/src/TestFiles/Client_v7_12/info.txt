@@ -1,0 +1,138 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009-2013 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      ""
+    ],
+    [
+      "Config",
+      "C:/Program Files (x86)/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.3.2"
+    ],
+    [
+      "Date",
+      "Feb  1 2013"
+    ],
+    [
+      "Time",
+      "01:46:52"
+    ],
+    [
+      "SVN Rev",
+      "3852"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1200"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /Qdiag-disable:4297,4103,1786,279 /Ox -arch:SSE /QaxSSE2,SSE3,SSSE3,SSE4.1,SSE4.2 /Qopenmp /Qrestrict /MT /Qmkl"
+    ],
+    [
+      "Platform",
+      "win32 XP"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "CPU",
+      "       Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 58 Stepping 9"
+    ],
+    [
+      "CPUs",
+      "4"
+    ],
+    [
+      "Memory",
+      "3.45GiB"
+    ],
+    [
+      "Free Memory",
+      "2.80GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "Has Battery",
+      "false"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-8"
+    ],
+    [
+      "PID",
+      "584"
+    ],
+    [
+      "CWD",
+      "C:/Program Files (x86)/FAHClient"
+    ],
+    [
+      "OS",
+      "Windows 8 Pro"
+    ],
+    [
+      "OS Arch",
+      "AMD64"
+    ],
+    [
+      "GPUs",
+      "0"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+

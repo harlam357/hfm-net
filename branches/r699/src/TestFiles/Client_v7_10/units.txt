@@ -1,0 +1,134 @@
+PyON 1 units
+[
+  {
+    "id": "01",
+    "state": "RUNNING",
+    "error": "OK",
+    "project": 7610,
+    "run": 630,
+    "clone": 0,
+    "gen": 59,
+    "core": "0xa4",
+    "unit": "0x00000050664f2dd04de6d4f93deb418d",
+    "percentdone": "33.00%",
+    "totalframes": 2000,
+    "framesdone": 660,
+    "assigned": "2012-01-10T23:20:27",
+    "timeout": "2012-01-22T16:22:51",
+    "deadline": "2012-01-30T11:49:15",
+    "ws": "171.64.65.104",
+    "cs": "171.67.108.49",
+    "waitingon": "",
+    "attempts": 0,
+    "nextattempt": "0.00 secs",
+    "slot": 0,
+    "eta": "2 hours 38 mins",
+    "ppd": "30495.84",
+    "tpf": "2 mins 26 secs",
+    "basecredit": "788.00",
+    "creditestimate": "5172.29",
+    "description": "This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.
+"
+  },
+  {
+    "id": "02",
+    "state": "RUNNING",
+    "error": "OK",
+    "project": 5772,
+    "run": 7,
+    "clone": 364,
+    "gen": 252,
+    "core": "0x11",
+    "unit": "0x241a68704f0d0e3a00fc016c0007168c",
+    "percentdone": "51.00%",
+    "totalframes": 15000,
+    "framesdone": 7650,
+    "assigned": "2012-01-11T04:21:14",
+    "timeout": "<invalid>",
+    "deadline": "2012-01-14T04:21:14",
+    "ws": "171.67.108.11",
+    "cs": "171.67.108.25",
+    "waitingon": "",
+    "attempts": 0,
+    "nextattempt": "0.00 secs",
+    "slot": 1,
+    "eta": "27 mins 14 secs",
+    "ppd": "0.00",
+    "tpf": "33.82 secs",
+    "basecredit": "0.00",
+    "creditestimate": "0.00",
+    "description": "These projects are constant-temperature simulations of a small alpha/beta protein called NTL9, so named after the \"N-terminal domain of ribosomal protein L9\". [Ribosomal proteins][3] are interesting targets for simulation, as the full structure of the ribosome has been solved only recently, and the function of the many proteins bound to the ribosomal RNA remain unknown. 
+
+Here, though, we are mainly interested in NTL9 as a model system for fast protein folding. The simulation entails the first 39 residues of the sequence of L9, which has been well studied, and shown to fold autonomously on a millisecond time scale. 
+
+These are full production runs designed to be run on the GPU clients. The small size of this protein should be very amenable to fast folding simulations out to microseconds time scales relatively quickly. 
+
+**Points and deadlines:**  
+
+project
+points
+deadline
+timeout
+forcefield
+temperature
+
+p5765
+353
+2 days
+3 days
+ff03
+300K
+
+p5766
+353
+2 days
+3 days
+ff03
+330K
+
+p5767
+353
+2 days
+3 days
+ff03
+370K
+
+p5768
+353
+2 days
+3 days
+ff03
+450K
+
+p5769
+353
+2 days
+3 days
+ff96
+300K
+
+p5770
+353
+2 days
+3 days
+ff96
+330K
+
+p5771
+353
+2 days
+3 days
+ff96
+370K
+
+p5772
+353
+2 days
+3 days
+ff96
+450K
+"
+  }
+]
+---
+

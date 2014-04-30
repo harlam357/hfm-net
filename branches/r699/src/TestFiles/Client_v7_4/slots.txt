@@ -1,0 +1,33 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "RUNNING",
+    "description": "smp:4",
+    "options": {
+      "client-type": "beta",
+      "max-packet-size": "big",
+      "next-unit-percentage": "100"
+    }
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:0:\"GT200 [GeForce GTX 260]\"",
+    "options": {
+      "client-type": "beta",
+      "core-priority": "low"
+    }
+  },
+  {
+    "id": "02",
+    "status": "RUNNING",
+    "description": "gpu:1:\"G92 [GeForce 9800 GTX]\"",
+    "options": {
+      "client-type": "beta",
+      "core-priority": "low"
+    }
+  }
+]
+---
+

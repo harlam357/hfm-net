@@ -1,0 +1,134 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 3540 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/FAH/SMPBeta/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.24"
+    ],
+    [
+      "Date",
+      "Apr  6 2011"
+    ],
+    [
+      "Time",
+      "21:37:58"
+    ],
+    [
+      "SVN Rev",
+      "2908"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1110"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE2 /QaxSSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 Vista"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Microsoft Windows 7 Professional"
+    ],
+    [
+      "CPU",
+      "AMD Phenom(tm) II X4 945 Processor"
+    ],
+    [
+      "CPU ID",
+      "AuthenticAMD Family 16 Model 4 Stepping 3"
+    ],
+    [
+      "CPUs",
+      "4"
+    ],
+    [
+      "Memory",
+      "4.00GiB"
+    ],
+    [
+      "Free Memory",
+      "2.64GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "ATI:4 Radeon HD 5870 (Cypress)"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-4"
+    ],
+    [
+      "PID",
+      "760"
+    ],
+    [
+      "CWD",
+      "C:/FAH/SMPBeta/FAHClient"
+    ],
+    [
+      "Win32 Service",
+      "false"
+    ]
+  ]
+]
+---
+

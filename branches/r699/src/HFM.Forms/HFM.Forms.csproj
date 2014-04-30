@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HFM.Forms</RootNamespace>
+    <AssemblyName>HFM.Forms</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\hfm-net\src\HFM.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\hfm-net\src\HFM.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\lib\AutoMapper\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="harlam357.Windows.Forms">
+      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph">
+      <HintPath>..\..\lib\ZedGraph\zedgraph_dll_v5.1.5\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BenchmarksForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BenchmarksForm.Designer.cs">
+      <DependentUpon>BenchmarksForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ContainerInstaller.cs" />
+    <Compile Include="Configuration\ObjectMapper.cs" />
+    <Compile Include="Controls\ButtonWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ButtonWrapper.Designer.cs">
+      <DependentUpon>ButtonWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CheckBoxWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CheckBoxWrapper.Designer.cs">
+      <DependentUpon>CheckBoxWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ComboBoxWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ComboBoxWrapper.Designer.cs">
+      <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DataGridViewColumnSelector.cs" />
+    <Compile Include="Controls\DataGridViewQueryValueColumn.cs" />
+    <Compile Include="Controls\DataGridViewQueryValueTextBoxCell.cs" />
+    <Compile Include="Controls\RichTextBoxExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RichTextBoxExt.Designer.cs">
+      <DependentUpon>RichTextBoxExt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridViewExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DataGridViewExt.Designer.cs">
+      <DependentUpon>DataGridViewExt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridViewProgressColumn.cs" />
+    <Compile Include="Controls\FormWrapper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FormWrapper.Designer.cs">
+      <DependentUpon>FormWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GroupBoxWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\GroupBoxWrapper.Designer.cs">
+      <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FahClientSetupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FahClientSetupDialog.Designer.cs">
+      <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FahClientSetupPresenter.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainFormGridHandlers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HistoryEntrySortableBindingList.cs" />
+    <Compile Include="Controls\HistoryGridViewWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryGridViewWrapper.Designer.cs">
+      <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LabelWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\LabelWrapper.Designer.cs">
+      <DependentUpon>LabelWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HistoryForm.Designer.cs">
+      <DependentUpon>HistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LegacyClientSetupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LegacyClientSetupDialog.Designer.cs">
+      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LegacyClientSetupPresenter.cs" />
+    <Compile Include="MainPresenter.cs" />
+    <Compile Include="MessagesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MessagesForm.Designer.cs">
+      <DependentUpon>MessagesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FahClientSettingsModel.cs" />
+    <Compile Include="Models\LegacyClientSettingsModel.cs" />
+    <Compile Include="Models\MainGridModel.cs" />
+    <Compile Include="Models\ProteinCalculatorModel.cs" />
+    <Compile Include="Models\UserStatsDataModel.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Controls\QueueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\QueueControl.Designer.cs">
+      <DependentUpon>QueueControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RadioButtonWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RadioButtonWrapper.Designer.cs">
+      <DependentUpon>RadioButtonWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SplitContainerWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SplitContainerWrapper.Designer.cs">
+      <DependentUpon>SplitContainerWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBoxWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TextBoxWrapper.Designer.cs">
+      <DependentUpon>TextBoxWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PreferencesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreferencesDialog.Designer.cs">
+      <DependentUpon>PreferencesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectDownloadDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectDownloadDialog.Designer.cs">
+      <DependentUpon>ProjectDownloadDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProteinCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProteinCalculatorForm.Designer.cs">
+      <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProteinLoadResultsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProteinLoadResultsDialog.Designer.cs">
+      <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QueryDialog.Designer.cs">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RetrievalLogic.cs" />
+    <Compile Include="SlotModelSortableBindingList.cs" />
+    <Compile Include="UpdateLogic.cs" />
+    <Compile Include="HistoryPresenter.cs" />
+    <Compile Include="Models\HistoryPresenterModel.cs" />
+    <Compile Include="Models\OptionsModel.cs" />
+    <Compile Include="Models\ReportingModel.cs" />
+    <Compile Include="Models\ScheduledTasksModel.cs" />
+    <Compile Include="Models\StartupAndExternalModel.cs" />
+    <Compile Include="Models\WebSettingsModel.cs" />
+    <Compile Include="Models\WebVisualStylesModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ZedGraphManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BenchmarksForm.resx">
+      <DependentUpon>BenchmarksForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\QueueControl.resx">
+      <DependentUpon>QueueControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FahClientSetupDialog.resx">
+      <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistoryForm.resx">
+      <DependentUpon>HistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LegacyClientSetupDialog.resx">
+      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MessagesForm.resx">
+      <DependentUpon>MessagesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PreferencesDialog.resx">
+      <DependentUpon>PreferencesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectDownloadDialog.resx">
+      <DependentUpon>ProjectDownloadDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProteinCalculatorForm.resx">
+      <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProteinLoadResultsDialog.resx">
+      <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryDialog.resx">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\harlam357public.snk">
+      <Link>Properties\harlam357public.snk</Link>
+    </None>
+    <None Include="Resources\About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HelpContents.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hfm_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hfm_logo_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Maximize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SaveAs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\UpArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
+      <Project>{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}</Project>
+      <Name>HFM.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
+      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
+      <Name>HFM.Core.DataTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
+      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
+      <Name>HFM.Core.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
+      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
+      <Name>HFM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
+      <Name>HFM.Proteins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>Properties\CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hfm_48_48.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DataContainer_MovePreviousHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DataContainer_MoveNextHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DataContainer_MoveFirstHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DataContainer_MoveLastHS.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

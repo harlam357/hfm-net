@@ -1,0 +1,133 @@
+PyON 1 info
+[
+  [
+    "Folding@home Client",
+    [
+      "Website",
+      "http://folding.stanford.edu/"
+    ],
+    [
+      "Copyright",
+      "(c) 2009,2010 Stanford University"
+    ],
+    [
+      "Author",
+      "Joseph Coffland <joseph@cauldrondevelopment.com>"
+    ],
+    [
+      "Args",
+      " --lifeline 1232 --command-port=36330"
+    ],
+    [
+      "Config",
+      "C:/Documents and Settings/user/Application Data/FAHClient/config.xml"
+    ]
+  ],
+  [
+    "Build",
+    [
+      "Version",
+      "7.1.24"
+    ],
+    [
+      "Date",
+      "Apr  6 2011"
+    ],
+    [
+      "Time",
+      "21:37:58"
+    ],
+    [
+      "SVN Rev",
+      "2908"
+    ],
+    [
+      "Branch",
+      "fah/trunk/client"
+    ],
+    [
+      "Compiler",
+      "Intel(R) C++ MSVC 1500 mode 1110"
+    ],
+    [
+      "Options",
+      "/TP /nologo /EHa /wd4297 /wd4103 /wd1786 /Ox -arch:SSE2 /QaxSSE3,SSSE3,SSE4.1,SSE4.2 /Qrestrict /MT"
+    ],
+    [
+      "Platform",
+      "win32 Vista"
+    ],
+    [
+      "Bits",
+      "32"
+    ],
+    [
+      "Mode",
+      "Release"
+    ]
+  ],
+  [
+    "System",
+    [
+      "OS",
+      "Microsoft(R) Windows(R) XP Professional x64 Edition"
+    ],
+    [
+      "CPU",
+      "Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz"
+    ],
+    [
+      "CPU ID",
+      "GenuineIntel Family 6 Model 15 Stepping 11"
+    ],
+    [
+      "CPUs",
+      "4"
+    ],
+    [
+      "Memory",
+      "4.00GiB"
+    ],
+    [
+      "Free Memory",
+      "3.10GiB"
+    ],
+    [
+      "Threads",
+      "WINDOWS_THREADS"
+    ],
+    [
+      "GPUs",
+      "1"
+    ],
+    [
+      "GPU 0",
+      "ATI:2 Mobility Radeon HD 3600 Series"
+    ],
+    [
+      "CUDA",
+      "Not detected"
+    ],
+    [
+      "On Battery",
+      "false"
+    ],
+    [
+      "UTC offset",
+      "-5"
+    ],
+    [
+      "PID",
+      "3080"
+    ],
+    [
+      "CWD",
+      "C:/Documents and Settings/user/Application Data/FAHClient"
+    ],
+    [
+      "Win32 Service",
+      "true"
+    ]
+  ]
+]
+---

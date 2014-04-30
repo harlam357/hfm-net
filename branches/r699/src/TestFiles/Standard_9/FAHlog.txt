@@ -1,0 +1,277 @@
+--- Opening Log file [March 16 18:46:15 UTC]
+
+
+# Windows CPU Console Edition #################################################
+###############################################################################
+
+                       Folding@Home Client Version 6.23
+
+                          http://folding.stanford.edu
+
+###############################################################################
+###############################################################################
+
+Launch directory: E:\Folding\WorkingFiles\UNI-3
+Executable: D:\F@H\UNI-Con\Folding@home-Win32-x86.exe
+Arguments: -oneunit -verbosity 9
+
+[18:46:15] - Ask before connecting: No
+[18:46:15] - User name: Amaruk (Team 50625)
+[18:46:15] - User ID: 1E53CB2Axxxxxxxx
+[18:46:15] - Machine ID: 14
+[18:46:15]
+[18:46:15] Loaded queue successfully.
+[18:46:15]
+[18:46:15] + Processing work unit
+[18:46:15] - Autosending finished units... [March 16 18:46:15 UTC]
+[18:46:15] Core required: FahCore_a4.exe[18:46:15] Trying to send all finished work units
+
+[18:46:15] + No unsent completed units remaining.
+[18:46:15] - Autosend completed
+[18:46:15] Core found.
+[18:46:15] Working on queue slot 05 [March 16 18:46:15 UTC]
+[18:46:15] + Working ...
+[18:46:15] - Calling '.\FahCore_a4.exe -dir work/ -suffix 05 -checkpoint 15 -verbose -lifeline 128 -version 623'
+
+[18:46:15]
+[18:46:15] *------------------------------*
+[18:46:15] Folding@Home Gromacs GB Core
+[18:46:15] Version 2.27 (Dec. 15, 2010)
+[18:46:15]
+[18:46:15] Preparing to commence simulation
+[18:46:15] - Looking at optimizations...
+[18:46:15] - Files status OK
+[18:46:15] - Expanded 84506 -> 100484 (decompressed 118.9 percent)
+[18:46:15] Called DecompressByteArray: compressed_data_size=84506 data_size=100484, decompressed_data_size=100484 diff=0
+[18:46:15] - Digital signature verified
+[18:46:15]
+[18:46:15] Project: 10741 (Run 0, Clone 1996, Gen 3)
+[18:46:15]
+[18:46:15] Assembly optimizations on if available.
+[18:46:15] Entering M.D.
+[18:46:21] Using Gromacs checkpoints
+[18:46:21] Mapping NT from 1 to 1
+[18:46:21] Resuming from checkpoint
+[18:46:21] Verified work/wudata_05.log
+[18:46:21] Verified work/wudata_05.trr
+[18:46:21] Verified work/wudata_05.xtc
+[18:46:21] Verified work/wudata_05.edr
+[18:46:22] Completed 435109 out of 7000001 steps  (6%)
+[20:05:15] Completed 490001 out of 7000001 steps  (7%)
+[21:27:28] Completed 560001 out of 7000001 steps  (8%)
+[23:07:19] Completed 630001 out of 7000001 steps  (9%)
+[00:31:12] Completed 700001 out of 7000001 steps  (10%)
+[00:46:15] - Autosending finished units... [March 17 00:46:15 UTC]
+[00:46:15] Trying to send all finished work units
+[00:46:15] + No unsent completed units remaining.
+[00:46:15] - Autosend completed
+[01:38:35] Completed 770001 out of 7000001 steps  (11%)
+[03:08:03] Completed 840001 out of 7000001 steps  (12%)
+[04:15:27] Completed 910001 out of 7000001 steps  (13%)
+[05:22:40] Completed 980001 out of 7000001 steps  (14%)
+[06:30:13] Completed 1050001 out of 7000001 steps  (15%)
+[06:46:15] - Autosending finished units... [March 17 06:46:15 UTC]
+[06:46:15] Trying to send all finished work units
+[06:46:15] + No unsent completed units remaining.
+[06:46:15] - Autosend completed
+[07:44:46] Completed 1120001 out of 7000001 steps  (16%)
+[08:52:16] Completed 1190001 out of 7000001 steps  (17%)
+[10:02:11] Completed 1260001 out of 7000001 steps  (18%)
+[11:14:14] Completed 1330001 out of 7000001 steps  (19%)
+[12:21:30] Completed 1400001 out of 7000001 steps  (20%)
+[12:46:15] - Autosending finished units... [March 17 12:46:15 UTC]
+[12:46:15] Trying to send all finished work units
+[12:46:15] + No unsent completed units remaining.
+[12:46:15] - Autosend completed
+[13:35:40] Completed 1470001 out of 7000001 steps  (21%)
+[14:43:38] Completed 1540001 out of 7000001 steps  (22%)
+[15:57:45] Completed 1610001 out of 7000001 steps  (23%)
+[17:20:31] Completed 1680001 out of 7000001 steps  (24%)
+[18:28:03] Completed 1750001 out of 7000001 steps  (25%)
+[18:46:15] - Autosending finished units... [March 17 18:46:15 UTC]
+[18:46:15] Trying to send all finished work units
+[18:46:15] + No unsent completed units remaining.
+[18:46:15] - Autosend completed
+[19:35:16] Completed 1820001 out of 7000001 steps  (26%)
+[20:42:28] Completed 1890001 out of 7000001 steps  (27%)
+[21:49:51] Completed 1960001 out of 7000001 steps  (28%)
+[23:18:58] Completed 2030001 out of 7000001 steps  (29%)
+[00:26:46] Completed 2100001 out of 7000001 steps  (30%)
+[00:46:15] - Autosending finished units... [March 18 00:46:15 UTC]
+[00:46:15] Trying to send all finished work units
+[00:46:15] + No unsent completed units remaining.
+[00:46:15] - Autosend completed
+[01:45:43] Completed 2170001 out of 7000001 steps  (31%)
+[03:03:28] Completed 2240001 out of 7000001 steps  (32%)
+[04:11:54] Completed 2310001 out of 7000001 steps  (33%)
+[05:40:20] Completed 2380001 out of 7000001 steps  (34%)
+[06:46:15] - Autosending finished units... [March 18 06:46:15 UTC]
+[06:46:15] Trying to send all finished work units
+[06:46:15] + No unsent completed units remaining.
+[06:46:15] - Autosend completed
+[06:47:42] Completed 2450001 out of 7000001 steps  (35%)
+[07:54:42] Completed 2520001 out of 7000001 steps  (36%)
+[09:03:48] Completed 2590001 out of 7000001 steps  (37%)
+[10:23:55] Completed 2660001 out of 7000001 steps  (38%)
+[11:31:15] Completed 2730001 out of 7000001 steps  (39%)
+[12:38:27] Completed 2800001 out of 7000001 steps  (40%)
+[12:46:15] - Autosending finished units... [March 18 12:46:15 UTC]
+[12:46:15] Trying to send all finished work units
+[12:46:15] + No unsent completed units remaining.
+[12:46:15] - Autosend completed
+[13:45:45] Completed 2870001 out of 7000001 steps  (41%)
+[14:53:14] Completed 2940001 out of 7000001 steps  (42%)
+[16:08:57] Completed 3010001 out of 7000001 steps  (43%)
+[17:35:28] Completed 3080001 out of 7000001 steps  (44%)
+[18:46:15] - Autosending finished units... [March 18 18:46:15 UTC]
+[18:46:15] Trying to send all finished work units
+[18:46:15] + No unsent completed units remaining.
+[18:46:15] - Autosend completed
+[19:11:13] Completed 3150001 out of 7000001 steps  (45%)
+[20:52:16] Completed 3220001 out of 7000001 steps  (46%)
+[22:32:39] Completed 3290001 out of 7000001 steps  (47%)
+[00:13:23] Completed 3360001 out of 7000001 steps  (48%)
+[00:46:09] - Autosending finished units... [March 19 00:46:09 UTC]
+[00:46:09] Trying to send all finished work units
+[00:46:09] + No unsent completed units remaining.
+[00:46:09] - Autosend completed
+[01:53:31] Completed 3430001 out of 7000001 steps  (49%)
+[03:34:24] Completed 3500001 out of 7000001 steps  (50%)
+[05:14:30] Completed 3570001 out of 7000001 steps  (51%)
+[06:46:09] - Autosending finished units... [March 19 06:46:09 UTC]
+[06:46:09] Trying to send all finished work units
+[06:46:09] + No unsent completed units remaining.
+[06:46:09] - Autosend completed
+[06:55:24] Completed 3640001 out of 7000001 steps  (52%)
+[08:35:28] Completed 3710001 out of 7000001 steps  (53%)
+[10:16:25] Completed 3780001 out of 7000001 steps  (54%)
+[11:56:01] Completed 3850001 out of 7000001 steps  (55%)
+[12:46:09] - Autosending finished units... [March 19 12:46:09 UTC]
+[12:46:09] Trying to send all finished work units
+[12:46:09] + No unsent completed units remaining.
+[12:46:09] - Autosend completed
+[13:35:05] Completed 3920001 out of 7000001 steps  (56%)
+[15:13:50] Completed 3990001 out of 7000001 steps  (57%)
+[16:54:23] Completed 4060001 out of 7000001 steps  (58%)
+[18:30:58] Completed 4130001 out of 7000001 steps  (59%)
+[18:46:09] - Autosending finished units... [March 19 18:46:09 UTC]
+[18:46:09] Trying to send all finished work units
+[18:46:09] + No unsent completed units remaining.
+[18:46:09] - Autosend completed
+[19:09:58] Completed 4200001 out of 7000001 steps  (60%)
+[19:55:16] Completed 4270001 out of 7000001 steps  (61%)
+[21:03:22] Completed 4340001 out of 7000001 steps  (62%)
+[22:14:50] Completed 4410001 out of 7000001 steps  (63%)
+[23:39:18] Completed 4480001 out of 7000001 steps  (64%)
+[00:46:09] - Autosending finished units... [March 20 00:46:09 UTC]
+[00:46:09] Trying to send all finished work units
+[00:46:09] + No unsent completed units remaining.
+[00:46:09] - Autosend completed
+[01:20:38] Completed 4550001 out of 7000001 steps  (65%)
+[03:01:56] Completed 4620001 out of 7000001 steps  (66%)
+[04:43:27] Completed 4690001 out of 7000001 steps  (67%)
+[06:24:50] Completed 4760001 out of 7000001 steps  (68%)
+[06:46:09] - Autosending finished units... [March 20 06:46:09 UTC]
+[06:46:09] Trying to send all finished work units
+[06:46:09] + No unsent completed units remaining.
+[06:46:09] - Autosend completed
+[08:06:04] Completed 4830001 out of 7000001 steps  (69%)
+[09:47:21] Completed 4900001 out of 7000001 steps  (70%)
+[11:26:44] Completed 4970001 out of 7000001 steps  (71%)
+[12:46:09] - Autosending finished units... [March 20 12:46:09 UTC]
+[12:46:09] Trying to send all finished work units
+[12:46:09] + No unsent completed units remaining.
+[12:46:09] - Autosend completed
+[13:05:57] Completed 5040001 out of 7000001 steps  (72%)
+[14:45:31] Completed 5110001 out of 7000001 steps  (73%)
+[16:24:47] Completed 5180001 out of 7000001 steps  (74%)
+[18:04:13] Completed 5250001 out of 7000001 steps  (75%)
+[18:46:09] - Autosending finished units... [March 20 18:46:09 UTC]
+[18:46:09] Trying to send all finished work units
+[18:46:09] + No unsent completed units remaining.
+[18:46:09] - Autosend completed
+[19:43:15] Completed 5320001 out of 7000001 steps  (76%)
+[21:22:50] Completed 5390001 out of 7000001 steps  (77%)
+[23:03:16] Completed 5460001 out of 7000001 steps  (78%)
+[00:44:10] Completed 5530001 out of 7000001 steps  (79%)
+[00:46:09] - Autosending finished units... [March 21 00:46:09 UTC]
+[00:46:09] Trying to send all finished work units
+[00:46:09] + No unsent completed units remaining.
+[00:46:09] - Autosend completed
+[02:24:46] Completed 5600001 out of 7000001 steps  (80%)
+[04:05:53] Completed 5670001 out of 7000001 steps  (81%)
+[05:26:25] Completed 5740001 out of 7000001 steps  (82%)
+[06:02:29] Completed 5810001 out of 7000001 steps  (83%)
+[06:38:35] Completed 5880001 out of 7000001 steps  (84%)
+[06:46:09] - Autosending finished units... [March 21 06:46:09 UTC]
+[06:46:09] Trying to send all finished work units
+[06:46:09] + No unsent completed units remaining.
+[06:46:09] - Autosend completed
+[07:14:41] Completed 5950001 out of 7000001 steps  (85%)
+[07:55:22] Completed 6020001 out of 7000001 steps  (86%)
+[09:02:14] Completed 6090001 out of 7000001 steps  (87%)
+[10:43:28] Completed 6160001 out of 7000001 steps  (88%)
+[12:24:01] Completed 6230001 out of 7000001 steps  (89%)
+[12:46:09] - Autosending finished units... [March 21 12:46:09 UTC]
+[12:46:09] Trying to send all finished work units
+[12:46:09] + No unsent completed units remaining.
+[12:46:09] - Autosend completed
+[14:05:15] Completed 6300001 out of 7000001 steps  (90%)
+[15:45:53] Completed 6370001 out of 7000001 steps  (91%)
+[17:27:00] Completed 6440001 out of 7000001 steps  (92%)
+[18:46:09] - Autosending finished units... [March 21 18:46:09 UTC]
+[18:46:09] Trying to send all finished work units
+[18:46:09] + No unsent completed units remaining.
+[18:46:09] - Autosend completed
+[19:07:30] Completed 6510001 out of 7000001 steps  (93%)
+[20:48:50] Completed 6580001 out of 7000001 steps  (94%)
+[22:29:15] Completed 6650001 out of 7000001 steps  (95%)
+[00:04:09] Completed 6720001 out of 7000001 steps  (96%)
+[00:46:09] - Autosending finished units... [March 22 00:46:09 UTC]
+[00:46:09] Trying to send all finished work units
+[00:46:09] + No unsent completed units remaining.
+[00:46:09] - Autosend completed
+[01:12:44] Completed 6790001 out of 7000001 steps  (97%)
+[02:16:02] Completed 6860001 out of 7000001 steps  (98%)
+[03:57:18] Completed 6930001 out of 7000001 steps  (99%)
+[05:37:54] Completed 7000001 out of 7000001 steps  (100%)
+[05:37:54] DynamicWrapper: Finished Work Unit: sleep=10000
+[05:38:04]
+[05:38:04] Finished Work Unit:
+[05:38:04] - Reading up to 1818120 from "work/wudata_05.trr": Read 1818120
+[05:38:05] trr file hash check passed.
+[05:38:05] - Reading up to 168556 from "work/wudata_05.xtc": Read 168556
+[05:38:05] xtc file hash check passed.
+[05:38:05] edr file hash check passed.
+[05:38:05] logfile size: 63474
+[05:38:05] Leaving Run
+[05:38:07] - Writing 2059762 bytes of core data to disk...
+[05:38:08] Done: 2059250 -> 1896027 (compressed to 92.0 percent)
+[05:38:08]   ... Done.
+[05:38:09] - Shutting down core
+[05:38:09]
+[05:38:09] Folding@home Core Shutdown: FINISHED_UNIT
+[05:38:11] CoreStatus = 64 (100)
+[05:38:11] Unit 5 finished with 73 percent of time to deadline remaining.
+[05:38:11] Updated performance fraction: 0.922933
+[05:38:11] Sending work to server
+[05:38:11] Project: 10741 (Run 0, Clone 1996, Gen 3)
+
+
+[05:38:11] + Attempting to send results [March 22 05:38:11 UTC]
+[05:38:11] - Reading file work/wuresults_05.dat from core
+[05:38:11]   (Read 1896539 bytes from disk)
+[05:38:11] Connecting to http://171.67.108.42:8080/
+[05:38:16] Posted data.
+[05:38:16] Initial: 0000; - Uploaded at ~370 kB/s
+[05:38:16] - Averaged speed for that direction ~296 kB/s
+[05:38:16] + Results successfully sent
+[05:38:16] Thank you for your contribution to Folding@Home.
+[05:38:16] + Number of Units Completed: 173
+
+[05:38:20] Trying to send all finished work units
+[05:38:20] + No unsent completed units remaining.
+[05:38:20] + -oneunit flag given and have now finished a unit. Exiting.***** Got a SIGTERM signal (2)
+[05:38:20] Killing all core threads
+
+Folding@Home Client Shutdown.
