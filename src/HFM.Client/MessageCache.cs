@@ -170,6 +170,8 @@ namespace HFM.Client
          buffer.SubstringBuilder(startIndex, message.Value, endIndex - startIndex);
          // replace PyON values with JSON values
          message.Value.Replace(": None", ": null");
+         message.Value.Replace(": True", ": true");
+         message.Value.Replace(": False", ": false");
 
          // set the index so we know where to trim the string (end plus footer length)
          int nextStartIndex = endIndex + PyonFooter.Length;
