@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - HTML Serializer
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,13 +32,6 @@ namespace HFM.Proteins
 {
    public class HtmlSerializer : IFileSerializer<List<Protein>>
    {
-      private readonly HTMLparser _htmlParser;
-
-      public HtmlSerializer()
-      {
-         _htmlParser = new HTMLparser();
-      }
-
       #region IFileSerializer<List<Protein>> Members
 
       public string FileExtension
@@ -38,11 +49,13 @@ namespace HFM.Proteins
          var proteins = new List<Protein>();
 
          string[] lines = File.ReadAllLines(fileName);
+
+         var htmlParser = new HTMLparser();
          foreach (string line in lines)
          {
             try
             {
-               Protein p = ParseProteinRow(line);
+               Protein p = ParseProteinRow(htmlParser, line);
                if (p != null && p.IsValid())
                {
                   proteins.Add(p);
@@ -62,20 +75,20 @@ namespace HFM.Proteins
       /// <summary>
       /// Parse the HTML Table Row (tr) into a Protein Instance.
       /// </summary>
-      private Protein ParseProteinRow(string html)
+      private Protein ParseProteinRow(HTMLparser htmlParser, string html)
       {
-         _htmlParser.Init(html);
+         htmlParser.Init(html);
          var p = new Protein();
 
          HTMLchunk oChunk;
-         while ((oChunk = _htmlParser.ParseNext()) != null)
+         while ((oChunk = htmlParser.ParseNext()) != null)
          {
             // Look for an Open "tr" Tag
             if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
                 oChunk.sTag.ToLower() == "tr")
             {
                int projectNumber;
-               if (Int32.TryParse(GetNextTdValue(_htmlParser), NumberStyles.Integer, CultureInfo.InvariantCulture,
+               if (Int32.TryParse(GetNextTdValue(htmlParser), NumberStyles.Integer, CultureInfo.InvariantCulture,
                                     out projectNumber))
                {
                   p.ProjectNumber = projectNumber;
@@ -84,24 +97,24 @@ namespace HFM.Proteins
                {
                   return null;
                }
-               p.ServerIP = GetNextTdValue(_htmlParser);
-               p.WorkUnitName = GetNextTdValue(_htmlParser);
+               p.ServerIP = GetNextTdValue(htmlParser);
+               p.WorkUnitName = GetNextTdValue(htmlParser);
                try
                {
-                  p.NumberOfAtoms = Int32.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+                  p.NumberOfAtoms = Int32.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
                }
                catch (FormatException)
                {
                   p.NumberOfAtoms = 0;
                }
-               p.PreferredDays = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
-               p.MaximumDays = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
-               p.Credit = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
-               p.Frames = Int32.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
-               p.Core = GetNextTdValue(_htmlParser);
-               p.Description = GetNextTdValue(_htmlParser, "href");
-               p.Contact = GetNextTdValue(_htmlParser);
-               p.KFactor = Double.Parse(GetNextTdValue(_htmlParser), CultureInfo.InvariantCulture);
+               p.PreferredDays = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.MaximumDays = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.Credit = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.Frames = Int32.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.Core = GetNextTdValue(htmlParser);
+               p.Description = GetNextTdValue(htmlParser, "href");
+               p.Contact = GetNextTdValue(htmlParser);
+               p.KFactor = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
 
                return p;
             }

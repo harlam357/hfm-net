@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,12 +35,6 @@ namespace HFM.Core
 {
    public sealed class FahClient : Client
    {
-      #region Injection Properties
-
-      public IFahClientDataAggregator DataAggregator { get; set; }
-
-      #endregion
-
       #region Properties
 
       private ClientSettings _settings;
@@ -401,16 +395,17 @@ namespace HFM.Core
 
                #region Run the Aggregator
 
-               DataAggregator.ClientName = slotModel.Name;
+               var dataAggregator = new FahClientDataAggregator { Logger = Logger };
+               dataAggregator.ClientName = slotModel.Name;
                var lines = LogReader.GetLogLines(_logText.Split('\n').Where(x => x.Length != 0), LogFileType.FahClient);
                lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
-               IDictionary<int, UnitInfo> units = DataAggregator.AggregateData(lines, _messages.UnitCollection, info, options,
+               IDictionary<int, UnitInfo> units = dataAggregator.AggregateData(lines, _messages.UnitCollection, info, options,
                                                                                slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
-               PopulateRunLevelData(DataAggregator.CurrentClientRun, info, slotModel);
+               PopulateRunLevelData(dataAggregator.CurrentClientRun, info, slotModel);
 
-               slotModel.Queue = DataAggregator.Queue;
-               slotModel.CurrentLogLines = DataAggregator.CurrentLogLines;
-               //slotModel.UnitLogLines = DataAggregator.UnitLogLines;
+               slotModel.Queue = dataAggregator.Queue;
+               slotModel.CurrentLogLines = dataAggregator.CurrentLogLines;
+               //slotModel.UnitLogLines = dataAggregator.UnitLogLines;
 
                #endregion
 
@@ -424,12 +419,12 @@ namespace HFM.Core
                }
 
                // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, DataAggregator.CurrentUnitIndex);
+               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, dataAggregator.CurrentUnitIndex);
 
                // Update the UnitInfoLogic if we have a current unit index
-               if (DataAggregator.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(DataAggregator.CurrentUnitIndex))
+               if (dataAggregator.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(dataAggregator.CurrentUnitIndex))
                {
-                  slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
+                  slotModel.UnitInfoLogic = parsedUnits[dataAggregator.CurrentUnitIndex];
                }
 
                SetSlotStatus(slotModel);
@@ -493,10 +488,13 @@ namespace HFM.Core
          //   slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          //   slotModel.TotalRunFailedUnits = run.FailedUnits;
          //}
-         slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
-         slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-         slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
-         slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+         if (UnitInfoDatabase.Connected)
+         {
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+         }
       }
 
       internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, IEnumerable<UnitInfoLogic> parsedUnits, int currentUnitIndex)
