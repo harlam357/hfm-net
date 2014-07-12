@@ -52,11 +52,6 @@ namespace HFM.Core
          get { return Prefs.Get<int>(Preference.DecimalPlaces); }
       }
 
-      private CompletedCountDisplayType CompletedCountDisplay
-      {
-         get { return Prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay); }
-      }
-
       public bool ShowETADate
       {
          get { return Prefs.Get<bool>(Preference.EtaDate); }
@@ -97,7 +92,7 @@ namespace HFM.Core
       {
          //if (Settings.IsFahClient())
          //{
-         //   if (value.OwningSlotName.Equals(Name) &&
+         //   if (value.OwningSlotName == Name &&
          //       value.OwningClientPath.Equals(Settings.DataPath()))
          //   {
          //      return true;
@@ -105,7 +100,7 @@ namespace HFM.Core
          //}
          //else if (Settings.IsLegacy())
          //{
-            if (value.OwningSlotName.Equals(Name) &&
+            if (value.OwningSlotName == Name &&
                 Paths.Equal(value.OwningClientPath, Settings.DataPath()))
             {
                return true;
@@ -321,7 +316,12 @@ namespace HFM.Core
 
       public int Completed
       {
-         get { return CompletedCountDisplay.Equals(CompletedCountDisplayType.ClientTotal) ? TotalCompletedUnits : TotalRunCompletedUnits; }
+         get 
+         { 
+            return Prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay) == CompletedCountDisplayType.ClientTotal 
+               ? TotalCompletedUnits 
+               : TotalRunCompletedUnits; 
+         }
       }
 
       /// <summary>

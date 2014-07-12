@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main Grid Data Model
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,24 +69,32 @@ namespace HFM.Forms.Models
       }
 
       /// <summary>
-      /// Specifies if the UI Menu Item for 'View Client Files' is Visible
+      /// Gets a value that specifies if the UI menu item 'View Client Files' is visible.
       /// </summary>
       public bool ClientFilesMenuItemVisible
       {
-         get { return SelectedSlot != null && SelectedSlot.Settings.LegacyClientSubType.Equals(LegacyClientSubType.Path); }
+         get { return SelectedSlot != null && SelectedSlot.Settings.LegacyClientSubType == LegacyClientSubType.Path; }
       }
 
       /// <summary>
-      /// Specifies if the UI Menu Item for 'View Cached Log File' is Visible
+      /// Gets a value that specifies if the UI menu item 'View Cached Log File' is visible.
       /// </summary>
       public bool CachedLogMenuItemVisible
       {
          get 
          { 
-            return SelectedSlot != null && (SelectedSlot.Settings.ClientType.Equals(ClientType.Legacy) ||
-                                            SelectedSlot.Settings.ClientType.Equals(ClientType.FahClient)); 
+            return SelectedSlot != null && (SelectedSlot.Settings.ClientType == ClientType.Legacy ||
+                                            SelectedSlot.Settings.ClientType == ClientType.FahClient); 
          }
       }
+
+      ///// <summary>
+      ///// Gets a value that specifies if the UI menu items 'xxx' are visible.
+      ///// </summary>
+      //public bool FahClientMenuItemsVisible
+      //{
+      //   get { return SelectedSlot != null && SelectedSlot.Settings.ClientType == ClientType.FahClient; }
+      //}
 
       /// <summary>
       /// Holds current Sort Column Name
