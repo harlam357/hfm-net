@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Database
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,6 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 using Castle.Core.Logging;
 
@@ -147,35 +146,6 @@ namespace HFM.Core
                                                                                                     { SqlTable.Version, new VersionSqlTableCommands() }
                                                                                                  };  
 
-      private ThreadLocalDisposable<SQLiteConnection> _connection;
-
-      private SQLiteConnection Connection
-      {
-         get
-         {
-            if (_connection == null)
-            {
-               return null;
-            }
-            if (!_connection.IsValueCreated)
-            {
-               if (_connection.Value.State != ConnectionState.Open)
-               {  
-                  _logger.Debug("Opening new database connection on thread {0}.", Thread.CurrentThread.ManagedThreadId);
-                  _connection.Value.Open();
-               }
-            }
-            return _connection.Value;
-         }
-      }
-
-      private ThreadLocalDisposable<PetaPoco.Database> _database;
-
-      private PetaPoco.Database Database
-      {
-         get { return _database == null ? null : _database.Value; }
-      }
-
       #endregion
 
       #region Constructor
@@ -217,17 +187,6 @@ namespace HFM.Core
       {
          try
          {
-            if (_connection != null)
-            {
-               _connection.Dispose();
-            }
-            _connection = new ThreadLocalDisposable<SQLiteConnection>(() => new SQLiteConnection(ConnectionString));
-            if (_database != null)
-            {
-               _database.Dispose();
-            }
-            _database = new ThreadLocalDisposable<PetaPoco.Database>(() => new PetaPoco.Database(Connection));
-
             bool exists = TableExists(SqlTable.WuHistory);
             if (!exists)
             {
@@ -236,21 +195,16 @@ namespace HFM.Core
                SetDatabaseVersion(Application.Version);
             }
             // verify the connection by performing a db operation
-            Select("SELECT * FROM [WuHistory] LIMIT 1");
+            using (var table = Select("SELECT * FROM [WuHistory] LIMIT 1"))
+            {
+               Debug.Assert(table != null);
+            }
             Connected = true;
          }
          catch (Exception ex)
          {
             _logger.ErrorFormat(ex, "{0}", ex.Message);
 
-            if (_connection != null)
-            {
-               _connection.Dispose();
-            }
-            if (_database != null)
-            {
-               _database.Dispose();
-            }
             Connected = false;
          }
       }
@@ -321,16 +275,22 @@ namespace HFM.Core
 
       private void AddProteinColumns()
       {
-         var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, Connection);
-         adder.AddColumn("WorkUnitName", "VARCHAR(30)");
-         adder.AddColumn("KFactor", "FLOAT");
-         adder.AddColumn("Core", "VARCHAR(20)");
-         adder.AddColumn("Frames", "INT");
-         adder.AddColumn("Atoms", "INT");
-         adder.AddColumn("Credit", "FLOAT");
-         adder.AddColumn("PreferredDays", "FLOAT");
-         adder.AddColumn("MaximumDays", "FLOAT");
-         adder.Execute();
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
+            {
+               adder.AddColumn("WorkUnitName", "VARCHAR(30)");
+               adder.AddColumn("KFactor", "FLOAT");
+               adder.AddColumn("Core", "VARCHAR(20)");
+               adder.AddColumn("Frames", "INT");
+               adder.AddColumn("Atoms", "INT");
+               adder.AddColumn("Credit", "FLOAT");
+               adder.AddColumn("PreferredDays", "FLOAT");
+               adder.AddColumn("MaximumDays", "FLOAT");
+               adder.Execute();
+            }
+         }
       }
 
       private void SetDatabaseVersion(string version)
@@ -338,11 +298,15 @@ namespace HFM.Core
          Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
          _logger.Info("Setting database version to: v{0}", version);
-         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", Connection))
+         using (var connection = new SQLiteConnection(ConnectionString))
          {
-            var param = new SQLiteParameter("Version", DbType.String) { Value = version };
-            cmd.Parameters.Add(param);
-            cmd.ExecuteNonQuery();
+            connection.Open();
+            using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
+            {
+               var param = new SQLiteParameter("Version", DbType.String) { Value = version };
+               cmd.Parameters.Add(param);
+               cmd.ExecuteNonQuery();
+            }
          }
       }
 
@@ -377,7 +341,14 @@ namespace HFM.Core
             entry.BaseCredit = unitInfoLogic.CurrentProtein.Credit;
             entry.PreferredDays = unitInfoLogic.CurrentProtein.PreferredDays;
             entry.MaximumDays = unitInfoLogic.CurrentProtein.MaximumDays;
-            Database.Insert(entry);
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+               connection.Open();
+               using (var database = new PetaPoco.Database(connection))
+               {
+                  database.Insert(entry);
+               }
+            }
          }
       }
 
@@ -439,7 +410,14 @@ namespace HFM.Core
       public int Delete(HistoryEntry entry)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
-         return Database.Delete(entry);
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
+            {
+               return database.Delete(entry);
+            }
+         }
       }
 
       #endregion
@@ -471,8 +449,15 @@ namespace HFM.Core
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
          GetProduction.ProductionView = productionView;
-         List<HistoryEntry> query = Database.Fetch<HistoryEntry>(select);
-         return query;
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
+            {
+               List<HistoryEntry> query = database.Fetch<HistoryEntry>(select);
+               return query;
+            }
+         }
       }
 
       public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters)
@@ -500,9 +485,16 @@ namespace HFM.Core
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
          GetProduction.ProductionView = productionView;
-         PetaPoco.Page<HistoryEntry> query = Database.Page<HistoryEntry>(page, itemsPerPage, select);
-         Debug.Assert(query != null);
-         return query;
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
+            {
+               PetaPoco.Page<HistoryEntry> query = database.Page<HistoryEntry>(page, itemsPerPage, select);
+               Debug.Assert(query != null);
+               return query;
+            }
+         }
       }
 
       private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
@@ -650,14 +642,22 @@ namespace HFM.Core
 
       #region Select
 
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
       public DataTable Select(string sql, params object[] args)
       {
-         var cmd = Database.CreateCommand(Database.Connection, sql, args);
-         using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
+         using (var connection = new SQLiteConnection(ConnectionString))
          {
-            var table = new DataTable();
-            adapter.Fill(table);
-            return table;
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
+            using (var cmd = database.CreateCommand(database.Connection, sql, args))
+            {
+               using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
+               {
+                  var table = new DataTable();
+                  adapter.Fill(table);
+                  return table;
+               }
+            }
          }
       }
 
@@ -667,7 +667,14 @@ namespace HFM.Core
 
       public int Execute(string sql, params object[] args)
       {
-         return Database.Execute(sql, args);
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
+            {
+               return database.Execute(sql, args);
+            }
+         }
       }
 
       #endregion
@@ -704,8 +711,10 @@ namespace HFM.Core
             .From("WuHistory")
             .Append(where);
 
-         var table = Select(countSql.SQL, countSql.Arguments);
-         return (long)table.Rows[0][5];
+         using (var table = Select(countSql.SQL, countSql.Arguments))
+         {
+            return (long)table.Rows[0][5];
+         }
       }
 
       #endregion
@@ -726,14 +735,6 @@ namespace HFM.Core
          {
             if (disposing)
             {
-               if (_connection != null)
-               {
-                  _connection.Dispose();
-               }
-               if (_database != null)
-               {
-                  _database.Dispose();
-               }
             }
          }
 
@@ -746,25 +747,37 @@ namespace HFM.Core
 
       internal bool TableExists(SqlTable sqlTable)
       {
-         using (DataTable table = Connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
+         using (var connection = new SQLiteConnection(ConnectionString))
          {
-            return table.Rows.Count != 0;
+            connection.Open();
+            using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
+            {
+               return table.Rows.Count != 0;
+            }
          }
       }
 
       internal void CreateTable(SqlTable sqlTable)
       {
-         using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(Connection))
+         using (var connection = new SQLiteConnection(ConnectionString))
          {
-            command.ExecuteNonQuery();
+            connection.Open();
+            using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(connection))
+            {
+               command.ExecuteNonQuery();
+            }
          }
       }
 
       internal void DropTable(SqlTable sqlTable)
       {
-         using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(Connection))
+         using (var connection = new SQLiteConnection(ConnectionString))
          {
-            command.ExecuteNonQuery();
+            connection.Open();
+            using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(connection))
+            {
+               command.ExecuteNonQuery();
+            }
          }
       }
 
@@ -775,10 +788,12 @@ namespace HFM.Core
             return null;
          }
 
-         var table = Select("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;");
-         if (table.Rows.Count != 0)
+         using (var table = Select("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;"))
          {
-            return table.Rows[0]["Version"].ToString();
+            if (table.Rows.Count != 0)
+            {
+               return table.Rows[0]["Version"].ToString();
+            }
          }
 
          return null;
@@ -852,6 +867,7 @@ namespace HFM.Core
 
          public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
 
+         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
          public DbCommand GetDropTableCommand(SQLiteConnection connection)
          {
             return new SQLiteCommand(connection)
@@ -938,6 +954,7 @@ namespace HFM.Core
             get { return WuHistoryTableSelect; }
          }
 
+         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
          public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
          {
             return new SQLiteCommand(connection)
@@ -965,6 +982,7 @@ namespace HFM.Core
             get { return VersionTableName; }
          }
 
+         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
          public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
          {
             return new SQLiteCommand(connection)
@@ -976,7 +994,7 @@ namespace HFM.Core
       }
 
       // ReSharper disable InconsistentNaming
-      private class SQLiteColumnAdder
+      private sealed class SQLiteColumnAdder : IDisposable
       // ReSharper restore InconsistentNaming
       {
          private readonly string _tableName;
@@ -1049,6 +1067,14 @@ namespace HFM.Core
                trans.Commit();
             }
          }
+
+         public void Dispose()
+         {
+            foreach (var command in _commands)
+            {
+               command.Dispose();
+            }
+         }
       }
 
       private sealed class DuplicateDeleter : ProgressProcessRunnerBase
@@ -1080,29 +1106,30 @@ namespace HFM.Core
             int totalCount = 0;
             _logger.Info("Checking for duplicate WU History entries...");
 
-            var table = _database.Select(selectSql.SQL);
-
-            int lastProgress = 0;
-            foreach (DataRow row in table.Rows)
+            using (var table = _database.Select(selectSql.SQL))
             {
-               var deleteSql = PetaPoco.Sql.Builder.Append("DELETE FROM WuHistory")
-                  .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
-                  row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
-
-               int result = _database.Execute(deleteSql.SQL, deleteSql.Arguments);
-               if (result != 0)
+               int lastProgress = 0;
+               foreach (DataRow row in table.Rows)
                {
-                  _logger.Debug("Deleted rows: {0}", result);
-                  totalCount += result;
-               }
-               count++;
+                  var deleteSql = PetaPoco.Sql.Builder.Append("DELETE FROM WuHistory")
+                     .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
+                        row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-               int progress = Convert.ToInt32((count/(double)table.Rows.Count)*100);
-               if (progress != lastProgress)
-               {
-                  string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                  OnProgressChanged(new ProgressEventArgs(progress, message));
-                  lastProgress = progress;
+                  int result = _database.Execute(deleteSql.SQL, deleteSql.Arguments);
+                  if (result != 0)
+                  {
+                     _logger.Debug("Deleted rows: {0}", result);
+                     totalCount += result;
+                  }
+                  count++;
+
+                  int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                  if (progress != lastProgress)
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
+                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     lastProgress = progress;
+                  }
                }
             }
 
@@ -1207,35 +1234,36 @@ namespace HFM.Core
             }
             selectSql = selectSql.GroupBy("ProjectID");
 
-            var table = _database.Select(selectSql.SQL);
-
-            int count = 0;
-            int lastProgress = 0;
-            foreach (DataRow row in table.Rows)
+            using (var table = _database.Select(selectSql.SQL))
             {
-               if (CancelToken)
+               int count = 0;
+               int lastProgress = 0;
+               foreach (DataRow row in table.Rows)
                {
-                  break;
-               }
-
-               var projectId = row.Field<int>("ProjectID");
-               var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-               if (updateSql != null)
-               {
-                  if (UpdateType == ProteinUpdateType.Unknown)
+                  if (CancelToken)
                   {
-                     updateSql = updateSql.Where("WorkUnitName = ''");
+                     break;
                   }
-                  _database.Execute(updateSql.SQL, updateSql.Arguments);
-               }
-               count++;
 
-               int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-               if (progress != lastProgress)
-               {
-                  string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                  OnProgressChanged(new ProgressEventArgs(progress, message));
-                  lastProgress = progress;
+                  var projectId = row.Field<int>("ProjectID");
+                  var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                  if (updateSql != null)
+                  {
+                     if (UpdateType == ProteinUpdateType.Unknown)
+                     {
+                        updateSql = updateSql.Where("WorkUnitName = ''");
+                     }
+                     _database.Execute(updateSql.SQL, updateSql.Arguments);
+                  }
+                  count++;
+
+                  int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                  if (progress != lastProgress)
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
+                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     lastProgress = progress;
+                  }
                }
             }
          }
@@ -1253,14 +1281,16 @@ namespace HFM.Core
             long id = UpdateArg;
             var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
 
-            var table = _database.Select(selectSql.SQL, selectSql.Arguments);
-            if (table.Rows.Count != 0)
+            using (var table = _database.Select(selectSql.SQL, selectSql.Arguments))
             {
-               var projectId = table.Rows[0].Field<int>("ProjectID");
-               var updateSql = GetUpdateSql(projectId, "ID", id);
-               if (updateSql != null)
+               if (table.Rows.Count != 0)
                {
-                  _database.Execute(updateSql.SQL, updateSql.Arguments);
+                  var projectId = table.Rows[0].Field<int>("ProjectID");
+                  var updateSql = GetUpdateSql(projectId, "ID", id);
+                  if (updateSql != null)
+                  {
+                     _database.Execute(updateSql.SQL, updateSql.Arguments);
+                  }
                }
             }
          }

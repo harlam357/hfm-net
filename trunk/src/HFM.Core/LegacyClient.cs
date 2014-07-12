@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,8 +35,6 @@ namespace HFM.Core
       public IStatusLogic StatusLogic { get; set; }
 
       public IDataRetriever DataRetriever { get; set; }
-
-      public ILegacyDataAggregator DataAggregator { get; set; }
 
       #endregion
 
@@ -140,27 +138,28 @@ namespace HFM.Core
 
          #region Setup Aggregator
 
-         DataAggregator.ClientName = Settings.Name;
-         DataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
-         DataAggregator.FahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         DataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName()); 
+         var dataAggregator = new LegacyDataAggregator { Logger = Logger };
+         dataAggregator.ClientName = Settings.Name;
+         dataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
+         dataAggregator.FahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         dataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName()); 
          
          #endregion
          
          #region Run the Aggregator
          
-         IList<UnitInfo> units = DataAggregator.AggregateData();
+         IList<UnitInfo> units = dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(DataAggregator.CurrentClientRun, _slotModel);
-         if (DataAggregator.Queue != null)
+         PopulateRunLevelData(dataAggregator.CurrentClientRun, _slotModel);
+         if (dataAggregator.Queue != null)
          {
-            PopulateRunLevelData(DataAggregator.Queue.CurrentQueueEntry, _slotModel);
+            PopulateRunLevelData(dataAggregator.Queue.CurrentQueueEntry, _slotModel);
          }
 
-         _slotModel.Queue = DataAggregator.Queue;
-         _slotModel.CurrentLogLines = DataAggregator.CurrentLogLines;
-         _slotModel.UnitLogLines = DataAggregator.UnitLogLines;
+         _slotModel.Queue = dataAggregator.Queue;
+         _slotModel.CurrentLogLines = dataAggregator.CurrentLogLines;
+         _slotModel.UnitLogLines = dataAggregator.UnitLogLines;
          
          #endregion
          
@@ -174,13 +173,13 @@ namespace HFM.Core
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, DataAggregator.CurrentUnitIndex);
+         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, dataAggregator.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
-         SlotStatus currentWorkUnitStatus = DataAggregator.CurrentClientRun.Status;
+         SlotStatus currentWorkUnitStatus = dataAggregator.CurrentClientRun.Status;
          if (!currentWorkUnitStatus.Equals(SlotStatus.Unknown))
          {
-            _slotModel.UnitInfoLogic = parsedUnits[DataAggregator.CurrentUnitIndex];
+            _slotModel.UnitInfoLogic = parsedUnits[dataAggregator.CurrentUnitIndex];
          }
 
          HandleReturnedStatus(currentWorkUnitStatus, _slotModel);
@@ -235,10 +234,13 @@ namespace HFM.Core
          //slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          //slotModel.TotalRunFailedUnits = run.FailedUnits;
          //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
-         slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
-         slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-         slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
-         slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+         if (UnitInfoDatabase.Connected)
+         {
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+         }
       }
 
       private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel slotModel)

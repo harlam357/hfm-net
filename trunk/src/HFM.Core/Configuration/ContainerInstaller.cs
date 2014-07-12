@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Container Installer
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,18 +40,6 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<ILogger>()
                .ImplementedBy<Logging.Logger>());
-
-         // IFahClientDataAggregator - Transient
-         container.Register(
-            Component.For<IFahClientDataAggregator>()
-               .ImplementedBy<FahClientDataAggregator>()
-               .LifeStyle.Transient);
-
-         // ILegacyDataAggregator - Transient
-         container.Register(
-            Component.For<ILegacyDataAggregator>()
-               .ImplementedBy<LegacyDataAggregator>()
-               .LifeStyle.Transient);
 
          // IDataRetriever - Transient
          container.Register(
