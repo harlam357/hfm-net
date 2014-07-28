@@ -267,7 +267,7 @@ namespace HFM
       private static void ValidateMonoVersion(Version monoVersion)
       {
          Debug.Assert(monoVersion != null);
-         if (monoVersion.Major < 2 || monoVersion.Minor < 8)
+         if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
          {
             throw new InvalidOperationException(Properties.Resources.MonoTooOld);
          }
