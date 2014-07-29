@@ -68,14 +68,21 @@ namespace HFM.Log
          _unitIndexData.Clear();
       }
 
+      private bool _logOpenObserved;
+
       protected override void HandleLogOpen(LogLine logLine)
       {
-         base.HandleLogOpen(logLine);
-
-         if (CurrentClientRun != null)
+         // only respect the first LogOpen line that is observed - 7/28/14
+         if (!_logOpenObserved)
          {
-            CurrentClientRun.StartTime = (DateTime)logLine.LineData;
+            base.HandleLogOpen(logLine);
+
+            if (CurrentClientRun != null)
+            {
+               CurrentClientRun.StartTime = (DateTime)logLine.LineData;
+            }
          }
+         _logOpenObserved = true;
       }
 
       protected override void HandleWorkUnitWorking(LogLine logLine)

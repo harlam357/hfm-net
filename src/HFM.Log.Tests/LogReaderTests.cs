@@ -1038,6 +1038,75 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
       }
 
+      [Test]
+      public void Client_v7_13()
+      {
+         // Scan
+         IList<LogLine> logLines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), LogFileType.FahClient).ToList();
+         IList<ClientRun> clientRuns = LogReader.GetClientRuns(logLines, LogFileType.FahClient);
+
+         // Check Run 0 Positions
+         var expectedRun = new ClientRun(0);
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 74, 212));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 79, 271));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 178, 522));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 236, 581));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 488, 831));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 546, 890));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 797, 1141));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 855, 1200));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1107, 1451));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 1165, 1510));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1417, 1760));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 1475, 1819));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 1726, 2070));
+         expectedRun.UnitIndexes.Add(new UnitIndex(0, 1784, 2129));
+         expectedRun.UnitIndexes.Add(new UnitIndex(2, 2095, -1));
+         expectedRun.UnitIndexes.Add(new UnitIndex(1, 2036, -1));
+         expectedRun.StartTime = new DateTime(2014, 7, 25, 13, 57, 36, DateTimeKind.Utc);
+         expectedRun.Arguments = "";
+         expectedRun.ClientVersion = "";
+         expectedRun.FoldingID = String.Empty;
+         expectedRun.Team = 0;
+         expectedRun.UserID = "";
+         expectedRun.MachineID = 0;
+         expectedRun.CompletedUnits = 14;
+         expectedRun.FailedUnits = 0;
+         expectedRun.TotalCompletedUnits = 0;
+         expectedRun.Status = SlotStatus.Unknown;
+
+         DoClientRunCheck(expectedRun, clientRuns[0]);
+
+         var logInterpreter = new LogInterpreter(logLines, clientRuns);
+         Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 13001, ProjectRun = 430, ProjectClone = 2, ProjectGen = 48 });
+         Assert.AreEqual(147, logLines.Count);
+         FahLogUnitData fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(16, 59, 51), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(0.0f, fahLogData.CoreVersion);
+         Assert.AreEqual(101, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(101, fahLogData.FramesObserved);
+         Assert.AreEqual(13001, fahLogData.ProjectID);
+         Assert.AreEqual(430, fahLogData.ProjectRun);
+         Assert.AreEqual(2, fahLogData.ProjectClone);
+         Assert.AreEqual(48, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.FinishedUnit, fahLogData.UnitResult);
+
+         logLines = logInterpreter.GetLogLinesForQueueIndex(2, new ProjectInfo { ProjectID = 13000, ProjectRun = 671, ProjectClone = 1, ProjectGen = 50 });
+         Assert.AreEqual(104, logLines.Count);
+         fahLogData = LogReader.GetFahLogDataFromLogLines(logLines);
+         Assert.AreEqual(new TimeSpan(4, 41, 56), fahLogData.UnitStartTimeStamp);
+         Assert.AreEqual(0.0f, fahLogData.CoreVersion);
+         Assert.AreEqual(86, fahLogData.FrameDataList.Count);
+         Assert.AreEqual(86, fahLogData.FramesObserved);
+         Assert.AreEqual(13000, fahLogData.ProjectID);
+         Assert.AreEqual(671, fahLogData.ProjectRun);
+         Assert.AreEqual(1, fahLogData.ProjectClone);
+         Assert.AreEqual(50, fahLogData.ProjectGen);
+         Assert.AreEqual(WorkUnitResult.Unknown, fahLogData.UnitResult);
+      }
+
       #endregion
       
       private static void DoClientRunCheck(ClientRun expectedRun, ClientRun run)

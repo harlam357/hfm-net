@@ -207,10 +207,10 @@ namespace HFM.Core
             unitInfo.UnitRetrievalTime = LastRetrievalTime;
             unitInfo.OwningClientName = Settings.Name;
             unitInfo.OwningClientPath = Settings.DataPath();
-            if (unitInfo.SlotType.Equals(SlotType.Unknown))
+            if (unitInfo.SlotType == SlotType.Unknown)
             {
                unitInfo.SlotType = protein.Core.ToSlotType();
-               if (unitInfo.SlotType.Equals(SlotType.Unknown))
+               if (unitInfo.SlotType == SlotType.Unknown)
                {
                   unitInfo.SlotType = unitInfo.CoreID.ToSlotType();
                }
