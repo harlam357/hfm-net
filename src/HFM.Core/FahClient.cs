@@ -458,7 +458,14 @@ namespace HFM.Core
          unitInfo.OwningClientName = Settings.Name;
          unitInfo.OwningClientPath = Settings.DataPath();
          unitInfo.OwningSlotId = slotModel.SlotId;
-         //unitInfo.SlotType = UnitInfo.DetermineSlotType(protein.Core, unitInfo.CoreID);
+         if (unitInfo.SlotType == SlotType.Unknown)
+         {
+            unitInfo.SlotType = protein.Core.ToSlotType();
+            if (unitInfo.SlotType == SlotType.Unknown)
+            {
+               unitInfo.SlotType = unitInfo.CoreID.ToSlotType();
+            }
+         }
          // build unit info logic
          var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
          unitInfoLogic.CurrentProtein = protein;
