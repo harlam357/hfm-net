@@ -174,16 +174,16 @@ namespace HFM.Log
       {
          if (CurrentClientRun != null)
          {
-            if (result.Equals(WorkUnitResult.FinishedUnit))
+            if (result == WorkUnitResult.FinishedUnit)
             {
                CurrentClientRun.CompletedUnits++;
             }
-            else if (result.Equals(WorkUnitResult.EarlyUnitEnd) ||
-                     result.Equals(WorkUnitResult.UnstableMachine) ||
-                     result.Equals(WorkUnitResult.Interrupted) ||
-                     result.Equals(WorkUnitResult.BadWorkUnit) ||
-                     result.Equals(WorkUnitResult.CoreOutdated) ||
-                     result.Equals(WorkUnitResult.ClientCoreError))
+            else if (result == WorkUnitResult.EarlyUnitEnd ||
+                     result == WorkUnitResult.UnstableMachine ||
+                     result == WorkUnitResult.Interrupted ||
+                     result == WorkUnitResult.BadWorkUnit ||
+                     result == WorkUnitResult.CoreOutdated ||
+                     result == WorkUnitResult.ClientCoreError)
             {
                CurrentClientRun.FailedUnits++;
             }
