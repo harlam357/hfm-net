@@ -406,7 +406,8 @@ namespace HFM.Core
          /* FoldingID and Team from Queue Entry */
          unit.FoldingID = options.User ?? Constants.DefaultFoldingID;
          unit.Team = options.Team ?? Constants.DefaultTeam;
-         unit.SlotType = (SlotType)Enum.Parse(typeof(SlotType), slotOptions.FahClientSubTypeEnum.ToString());
+         // turn off slot type detection from v7 client sub-type - 7/28/14
+         //unit.SlotType = (SlotType)Enum.Parse(typeof(SlotType), slotOptions.FahClientSubTypeEnum.ToString());
 
          /* Core ID */
          unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
