@@ -332,6 +332,7 @@ namespace HFM.Core
             case "OPENMM_OPENCL":
             case "ATI-DEV":
             case "NVIDIA-DEV":
+            case "ZETA":
                return SlotType.GPU;
             default:
                return SlotType.Unknown;
@@ -374,7 +375,7 @@ namespace HFM.Core
             case "14": // GPU2 - GROGPU2-MT
             case "15": // GPU3 - OPENMMGPU - NVIDIA
             case "16": // GPU3 - OPENMMGPU - ATI
-            case "17": // GPU3 - ???
+            case "17": // GPU3 - ZETA
                return SlotType.GPU;
             default:
                return SlotType.Unknown;
