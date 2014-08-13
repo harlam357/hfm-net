@@ -118,7 +118,6 @@
     <Compile Include="LegacyClientTests.cs" />
     <Compile Include="LegacyDataAggregatorTests.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
-    <Compile Include="MarkupReaderTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
     <Compile Include="ApplicationTests.cs" />
