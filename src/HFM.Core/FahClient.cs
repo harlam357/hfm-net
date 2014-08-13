@@ -467,7 +467,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = ServiceLocator.Resolve<UnitInfoLogic>();
+         var unitInfoLogic = new UnitInfoLogic(ServiceLocator.Resolve<IProteinBenchmarkCollection>());
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;
