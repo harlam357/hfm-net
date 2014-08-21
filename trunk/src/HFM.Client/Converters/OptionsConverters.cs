@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Options Data Converters
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,6 +39,8 @@ namespace HFM.Client.Converters
                return FahClientType.BigAdv;
             case "beta":
                return FahClientType.Beta;
+            case "bigbeta":
+               return FahClientType.BigBeta;
          }
 
          throw new FormatException(String.Format(CultureInfo.InvariantCulture,

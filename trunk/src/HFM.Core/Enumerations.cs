@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Enumerations
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,11 +49,11 @@ namespace HFM.Core
    /// </summary>
    public enum SlotType
    {
-      Unknown,
+      Unknown = 0,
       [Obsolete("Use CPU.")]
-      Uniprocessor,
-      CPU,
-      GPU
+      Uniprocessor = 1,
+      CPU = 2,
+      GPU = 3
    }
 
    // ReSharper restore InconsistentNaming

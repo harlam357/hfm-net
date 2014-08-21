@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Slot Model Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -228,7 +228,7 @@ namespace HFM.Core
       {
          get
          {
-            string slotType = SlotOptions != null ? SlotOptions.FahClientSubTypeEnum.ToString() : UnitInfo.SlotType.ToString();
+            string slotType = UnitInfo.SlotType.ToString();
             if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
             {
                return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
@@ -291,7 +291,7 @@ namespace HFM.Core
       {
          get
          {
-            if (ShowVersions && UnitInfo.CoreVersion != 0)
+            if (ShowVersions && Math.Abs(UnitInfo.CoreVersion) > Single.Epsilon)
             {
                return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoLogic.CurrentProtein.Core, UnitInfo.CoreVersion);
             }
@@ -397,7 +397,7 @@ namespace HFM.Core
          // Check the UnitLogLines array against the requested Queue Index - Issue 171
          if (queueIndex < 0 || queueIndex > UnitLogLines.Length - 1)
          {
-            throw new ArgumentOutOfRangeException("QueueIndex", String.Format(CultureInfo.CurrentCulture,
+            throw new ArgumentOutOfRangeException("queueIndex", String.Format(CultureInfo.CurrentCulture,
                "Index is out of range.  Requested Index: {0}.  Array Length: {1}", queueIndex, UnitLogLines.Length));
          }
 

@@ -193,7 +193,7 @@ namespace HFM.Core
 
       private static string GetCpuString(Info info, SlotOptions slotOptions)
       {
-         if (slotOptions.FahClientSubTypeEnum.Equals(FahClientSubType.GPU))
+         if (slotOptions.GpuIndex.HasValue)
          {
             switch (slotOptions.GpuIndex)
             {
@@ -406,8 +406,7 @@ namespace HFM.Core
          /* FoldingID and Team from Queue Entry */
          unit.FoldingID = options.User ?? Constants.DefaultFoldingID;
          unit.Team = options.Team ?? Constants.DefaultTeam;
-         // turn off slot type detection from v7 client sub-type - 7/28/14
-         //unit.SlotType = (SlotType)Enum.Parse(typeof(SlotType), slotOptions.FahClientSubTypeEnum.ToString());
+         unit.SlotType = slotOptions.ToSlotType();
 
          /* Core ID */
          unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
