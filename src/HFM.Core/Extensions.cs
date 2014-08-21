@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Extension Methods
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 
+using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
@@ -161,12 +162,12 @@ namespace HFM.Core
 
       public static bool IsFahClient(this ClientSettings settings)
       {
-         return settings == null ? false : settings.ClientType.Equals(ClientType.FahClient);
+         return settings != null && settings.ClientType == ClientType.FahClient;
       }
 
       public static bool IsLegacy(this ClientSettings settings)
       {
-         return settings == null ? false : settings.ClientType.Equals(ClientType.Legacy);
+         return settings != null && settings.ClientType == ClientType.Legacy;
       }
 
       /// <summary>
@@ -281,6 +282,11 @@ namespace HFM.Core
       #endregion
 
       #region SlotType
+
+      public static SlotType ToSlotType(this SlotOptions value)
+      {
+         return (SlotType)Enum.Parse(typeof(SlotType), value.GpuIndex.HasValue ? "GPU" : "CPU");
+      }
 
       public static SlotType ToSlotType(this string value)
       {

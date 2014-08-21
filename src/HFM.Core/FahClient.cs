@@ -49,9 +49,9 @@ namespace HFM.Core
             // settings already exist
             if (_settings != null)
             {
-               if (!_settings.Server.Equals(value.Server) ||
-                   !_settings.Port.Equals(value.Port) ||
-                   !_settings.Password.Equals(value.Password))
+               if (_settings.Server != value.Server ||
+                   _settings.Port != value.Port ||
+                   _settings.Password != value.Password)
                {
                   // connection settings have changed
                   // reset settings BEFORE Close()
