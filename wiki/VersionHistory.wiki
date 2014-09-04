@@ -1,6 +1,41 @@
 #summary HFM.NET Version History
 #labels Featured
 
+=Change Log - Version 0.9.1 - Revision 595=
+
+  * Release Date: July 19, 2012
+  
+  * Change: Requires the .NET Framework 4.0 Client Profile on Windows or Mono 2.8+ (2.10 recommended) on Linux.
+  * Change: HFM is now offered in a 32-bit only package.  This build has "x86" in the file name.  The only difference in this build vs. the existing distribution, now with "Any CPU" in the file name, is that the "x86" build will run as a 32-bit process on a 64-bit OS.  The builds are mutually exclusive and cannot be installed side-by-side with windows installer.  If you have a 32-bit OS then either the "Any CPU" or "x86" build will offer the same experience.
+
+  * Fix: Memory consumption issues.
+  * Fix: Issue 234 - User experiencing exception on startup due to Log Viewer Splitter location.
+  * Fix: Issue 236 - Add a user prompt when existing HFM instance is detected but cannot be signaled.  Allow the user to start HFM anyway. 
+  * Fix: Issue 255 - Show command line argument usage when arguments fail parsing. 
+  * Fix: Issue 273 - Problem writing to Work Unit History Database running under Czech Culture (or possibly any other culture which uses a comma as the decimal separator).
+  * Fix: Issue 276 - Exception thrown setting the update timer length for user stats data.
+  * Fix: Issue 277 - Exception thrown accessing UnitInfo class data.
+  * Fix: Issue 279 - v0.9.0.548 web generation will not run on Ubuntu 12.04 + Mono 2.10.  Remove use of msxsl and C# script.  Use native XSLT v1.0 functions to format number and date/time.
+  * Fix: Issue 280 - Exception thrown calculating client totals.  Thanks Hayes!
+  * Fix: Legacy Client Hung email notification.  Thanks Rick!
+
+  * Enhancement: Add HFM.NET build instructions to source control.
+  * Enhancement: Add Mono version detection (contributed by Shelnutt).
+
+  * Change: Increase default connection timeout for v7 clients to 5 seconds.
+  * Change: v7 log buffer size.  Now 20 million bytes (~19 MB).
+  * Change: Receipt time of v7 client messages is now written to the log in Debug mode.
+
+
+=HFM v7 Client API Change Log - Version 0.9.1 - Revision 595=
+
+  * Release Date: July 19, 2012
+
+  * Change: Increase default connection timeout to 5 seconds.
+  * Change: Decrease the default receive loop time from 100ms to 1ms.
+  * Change: Add GetBufferChunks() method to Connection class.  Returns the buffer value in an enumerable collection of up to 8000 element char arrays.
+
+
 =Change Log - Version 0.9.0 - Revision 548=
   
   * Release Date: March 21, 2012
