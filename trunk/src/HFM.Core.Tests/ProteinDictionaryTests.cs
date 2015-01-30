@@ -40,7 +40,7 @@ namespace HFM.Core.Tests
          
          var proteins = new ProteinDictionary(prefs, downloader);
          var protein = CreateValidProtein(2483);
-         proteins.Add(protein.ProjectNumber, protein);
+         proteins.Add(protein);
          // Act
          Protein p = proteins.GetProteinOrDownload(2483);
          Assert.AreEqual(false, p.IsUnknown());

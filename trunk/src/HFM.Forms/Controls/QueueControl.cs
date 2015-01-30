@@ -130,7 +130,8 @@ namespace HFM.Forms.Controls
             WaitingOnTextBox.Text = String.IsNullOrEmpty(entry.WaitingOn) ? "(No Action)" : entry.WaitingOn;
             AttemptsTextBox.Text = entry.Attempts.ToString();
             NextAttemptTextBox.Text = entry.NextAttempt.ToString();
-            txtCredit.Text = _proteinCollection.ContainsKey(entry.ProjectID) ? _proteinCollection[entry.ProjectID].Credit.ToString(CultureInfo.CurrentCulture) : "0";
+            var protein = _proteinCollection.Get(entry.ProjectID);
+            txtCredit.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (entry.BeginTimeUtc.IsUnknown())
             {
                txtBeginDate.Text = "(Unknown)";

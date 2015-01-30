@@ -53,8 +53,8 @@ namespace HFM.Forms.Models
       public void Calculate()
       {
          //_logger.Debug("Selected Project: {0}", SelectedProject);
-         Protein value;
-         if (!_proteinDictionary.TryGetValue(SelectedProject, out value))
+         Protein value = _proteinDictionary.Get(SelectedProject);
+         if (value == null)
          {
             return;
          }
@@ -96,7 +96,7 @@ namespace HFM.Forms.Models
 
       public IEnumerable<int> Projects
       {
-         get { return _proteinDictionary.Keys; }   
+         get { return _proteinDictionary.GetProjects(); }
       }
 
       private int _selectedProject;

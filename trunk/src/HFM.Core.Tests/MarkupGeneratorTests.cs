@@ -145,8 +145,6 @@ namespace HFM.Core.Tests
       {
          // setup stubs
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         var proteinCollection = MockRepository.GenerateStub<IProteinDictionary>();
-         proteinCollection.Stub(x => x.GetProteinOrDownload(0)).IgnoreArguments().Return(new Protein());
 
          var slots = new List<SlotModel>();
 
