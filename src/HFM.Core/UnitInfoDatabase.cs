@@ -1299,7 +1299,7 @@ namespace HFM.Core
       private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
       {
          // get the correct protein
-         var protein = _proteinDictionary.ContainsKey(projectId) ? _proteinDictionary[projectId] : null;
+         var protein = _proteinDictionary.Get(projectId);
          if (protein != null)
          {
             var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")

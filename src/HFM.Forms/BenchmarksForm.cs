@@ -156,16 +156,15 @@ namespace HFM.Forms
       private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
       {
          txtBenchmarks.Text = String.Empty;
-         int projectID = (int)listBox1.SelectedItem;
+         int projectId = (int)listBox1.SelectedItem;
 
-         string[] lines = UpdateProteinInformation(projectID);
+         string[] lines = UpdateProteinInformation(projectId);
 
          UpdateBenchmarkText(lines);
 
-         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectID).ToList();
+         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectId).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
-         Protein protein;
-         _proteinDictionary.TryGetValue(projectID, out protein);
+         Protein protein = _proteinDictionary.Get(projectId);
 
          foreach (ProteinBenchmark benchmark in list)
          {
@@ -285,8 +284,7 @@ namespace HFM.Forms
       {
          var output = new List<string>(12);
 
-         Protein protein;
-         _proteinDictionary.TryGetValue(benchmark.ProjectID, out protein);
+         Protein protein = _proteinDictionary.Get(benchmark.ProjectID);
          if (protein != null)
          {
             var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
@@ -508,13 +506,11 @@ namespace HFM.Forms
          txtBenchmarks.Lines = lines.ToArray();
       }
 
-      private string[] UpdateProteinInformation(int projectID)
+      private string[] UpdateProteinInformation(int projectId)
       {
          var lines = new List<string>(5);
 
-         Protein protein;
-         _proteinDictionary.TryGetValue(projectID, out protein);
-
+         Protein protein = _proteinDictionary.Get(projectId);
          if (protein != null)
          {
             txtProjectID.Text = protein.WorkUnitName;

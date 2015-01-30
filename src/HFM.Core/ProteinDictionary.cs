@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Protein Dictionary
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,12 @@ using HFM.Proteins;
 
 namespace HFM.Core
 {
-   public interface IProteinDictionary : IDictionary<int, Protein>
+   public interface IProteinDictionary
    {
+      Protein Get(int projectId);
+
+      IEnumerable<int> GetProjects();
+
       /// <summary>
       /// Clear the Projects not found cache
       /// </summary>
@@ -96,6 +100,21 @@ namespace HFM.Core
 
       #endregion
 
+      public Protein Get(int projectId)
+      {
+         return _dictionary.ContainsKey(projectId) ? _dictionary[projectId] : null;
+      }
+
+      public IEnumerable<int> GetProjects()
+      {
+         return _dictionary.Keys;
+      }
+
+      internal void Add(Protein protein)
+      {
+         _dictionary.Add(protein.ProjectNumber, protein);
+      }
+
       /// <summary>
       /// Clear the Projects not found cache
       /// </summary>
@@ -107,7 +126,7 @@ namespace HFM.Core
       public Protein GetProteinOrDownload(int projectId)
       {
          if (projectId == 0) return new Protein();
-         if (ContainsKey(projectId)) return this[projectId];
+         if (_dictionary.ContainsKey(projectId)) return _dictionary[projectId];
 
          if (CheckProjectsNotFound(projectId))
          {
@@ -134,11 +153,11 @@ namespace HFM.Core
                Logger.ErrorFormat(ex, "{0}", ex.Message);
             }
 
-            if (ContainsKey(projectId))
+            if (_dictionary.ContainsKey(projectId))
             {
                // remove it from the not found list and return it
                _projectsNotFound.Remove(projectId);
-               return this[projectId];
+               return _dictionary[projectId];
             }
 
             /*** Disable HFM Web Download For Now ***/
@@ -223,7 +242,7 @@ namespace HFM.Core
          // add each protein to the Dictionary<int, Protein>
          foreach (var protein in Data)
          {
-            Add(protein.ProjectNumber, protein);
+            Add(protein);
          }
       }
 
@@ -232,103 +251,6 @@ namespace HFM.Core
          Data = _dictionary.Values.ToList();
 
          base.Write();
-      }
-
-      #endregion
-
-      #region IDictionary<int,Protein> Members
-
-      public void Add(int key, Protein value)
-      {
-         _dictionary.Add(key, value);
-      }
-
-      public bool ContainsKey(int key)
-      {
-         return _dictionary.ContainsKey(key);
-      }
-
-      public ICollection<int> Keys
-      {
-         get { return _dictionary.Keys; }
-      }
-
-      public bool Remove(int key)
-      {
-         return _dictionary.Remove(key);
-      }
-
-      public bool TryGetValue(int key, out Protein value)
-      {
-         return _dictionary.TryGetValue(key, out value);
-      }
-
-      public ICollection<Protein> Values
-      {
-         get { return _dictionary.Values; }
-      }
-
-      public Protein this[int key]
-      {
-         get { return _dictionary[key]; }
-         set { _dictionary[key] = value; }
-      }
-
-      #endregion
-
-      #region ICollection<KeyValuePair<int,Protein>> Members
-
-      void ICollection<KeyValuePair<int, Protein>>.Add(KeyValuePair<int, Protein> item)
-      {
-         throw new NotImplementedException();
-      }
-
-      public void Clear()
-      {
-         _dictionary.Clear();
-      }
-
-      bool ICollection<KeyValuePair<int, Protein>>.Contains(KeyValuePair<int, Protein> item)
-      {
-         throw new NotImplementedException();
-      }
-
-      public void CopyTo(KeyValuePair<int, Protein>[] array, int index)
-      {
-         _dictionary.CopyTo(array, index);
-      }
-
-      public int Count
-      {
-         get { return _dictionary.Count; }
-      }
-
-      bool ICollection<KeyValuePair<int, Protein>>.IsReadOnly
-      {
-         get { return false; }
-      }
-
-      bool ICollection<KeyValuePair<int, Protein>>.Remove(KeyValuePair<int, Protein> item)
-      {
-         throw new NotImplementedException();
-      }
-
-      #endregion
-
-      #region IEnumerable<KeyValuePair<int,Protein>> Members
-
-      public IEnumerator<KeyValuePair<int, Protein>> GetEnumerator()
-      {
-         return _dictionary.GetEnumerator();
-      }
-
-      #endregion
-
-      #region IEnumerable Members
-
-      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
       }
 
       #endregion
