@@ -125,6 +125,9 @@
     <Content Include="TestFiles\psummary.html" />
     <Content Include="TestFiles\psummaryB.html" />
     <Content Include="TestFiles\psummaryC.html" />
+    <Content Include="TestFiles\psummaryNew.html" />
+    <Content Include="TestFiles\psummaryNewB.html" />
+    <Content Include="TestFiles\psummaryNewC.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

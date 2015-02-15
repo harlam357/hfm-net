@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - HTML Serializer
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -46,56 +45,34 @@ namespace HFM.Proteins
 
       public List<Protein> Deserialize(string fileName)
       {
-         var proteins = new List<Protein>();
-
-         string[] lines = File.ReadAllLines(fileName);
-
-         var htmlParser = new HTMLparser();
-         foreach (string line in lines)
-         {
-            try
-            {
-               Protein p = ParseProteinRow(htmlParser, line);
-               if (p != null && p.IsValid())
-               {
-                  proteins.Add(p);
-               }
-            }
-            catch (Exception)
-            {
-               Debug.Assert(false);   
-            }
-         }
-
-         return proteins;
+         string text = File.ReadAllText(fileName);
+         return ParseProteins(text);
       }
 
       #region HTML Parsing Methods
 
-      /// <summary>
-      /// Parse the HTML Table Row (tr) into a Protein Instance.
-      /// </summary>
-      private Protein ParseProteinRow(HTMLparser htmlParser, string html)
+      private static List<Protein> ParseProteins(string html)
       {
+         var htmlParser = new HTMLparser();
          htmlParser.Init(html);
-         var p = new Protein();
+         var list = new List<Protein>();
 
-         HTMLchunk oChunk;
-         while ((oChunk = htmlParser.ParseNext()) != null)
+         HTMLchunk chunk;
+         while ((chunk = htmlParser.ParseNext()) != null)
          {
             // Look for an Open "tr" Tag
-            if (oChunk.oType.Equals(HTMLchunkType.OpenTag) &&
-                oChunk.sTag.ToLower() == "tr")
+            if (chunk.oType.Equals(HTMLchunkType.OpenTag) &&
+                chunk.sTag.ToLower() == "tr")
             {
+               var p = new Protein();
                int projectNumber;
-               if (Int32.TryParse(GetNextTdValue(htmlParser), NumberStyles.Integer, CultureInfo.InvariantCulture,
-                                    out projectNumber))
+               if (Int32.TryParse(GetNextTdValue(htmlParser), NumberStyles.Integer, CultureInfo.InvariantCulture, out projectNumber))
                {
                   p.ProjectNumber = projectNumber;
                }
                else
                {
-                  return null;
+                  continue;
                }
                p.ServerIP = GetNextTdValue(htmlParser);
                p.WorkUnitName = GetNextTdValue(htmlParser);
@@ -116,11 +93,11 @@ namespace HFM.Proteins
                p.Contact = GetNextTdValue(htmlParser);
                p.KFactor = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
 
-               return p;
+               list.Add(p);
             }
          }
 
-         return null;
+         return list;
       }
 
       /// <summary>
