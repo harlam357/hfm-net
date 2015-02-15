@@ -1225,11 +1225,11 @@ namespace HFM.Forms
             return;
          }
 
-         IEnumerable<ProteinLoadInfo> loadInfo;
+         IList<ProteinLoadInfo> loadInfo;
          try
          {
-            loadInfo = _proteinDictionary.Load(downloader.DownloadFilePath);
-            foreach (var info in loadInfo.Where(info => !info.Result.Equals(ProteinLoadResult.NoChange)))
+            loadInfo = _proteinDictionary.Load(downloader.DownloadFilePath).Where(info => info.Result != ProteinLoadResult.NoChange).ToList();
+            foreach (var info in loadInfo)
             {
                Logger.Info(info.ToString());
             }
@@ -1242,7 +1242,7 @@ namespace HFM.Forms
             return;
          }
 
-         if (loadInfo.Where(x => !x.Result.Equals(ProteinLoadResult.NoChange)).Count() != 0)
+         if (loadInfo.Count > 0)
          {
             _retrievalLogic.QueueNewRetrieval();
             using (var dlg = new ProteinLoadResultsDialog())

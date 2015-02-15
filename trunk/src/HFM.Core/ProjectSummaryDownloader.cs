@@ -43,11 +43,6 @@ namespace HFM.Core
       /// Download project information from Stanford University (THREAD SAFE)
       /// </summary>
       void DownloadFromStanford();
-
-      /// <summary>
-      /// Download project information from HFM.NET website (THREAD SAFE)
-      /// </summary>
-      void DownloadFromHfmWeb();
    }
 
    public sealed class ProjectSummaryDownloader : ProgressProcessRunnerBase, IProjectSummaryDownloader
@@ -107,31 +102,6 @@ namespace HFM.Core
             try
             {
                PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
-               LastDownloadTime = DateTime.Now;
-            }
-            catch (Exception ex)
-            {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
-            }
-         }
-      }
-
-      /// <summary>
-      /// Download project information from HFM.NET website (THREAD SAFE)
-      /// </summary>
-      public void DownloadFromHfmWeb()
-      {
-         lock (DownloadLock)
-         {
-            if (!CheckLastDownloadTime())
-            {
-               return;
-            }
-
-            _logger.Info("Downloading new project data from HFM website...");
-            try
-            {
-               PerformDownload("http://www.htm-net.com/ProjectInfo/ProjectInfo.xml");
                LastDownloadTime = DateTime.Now;
             }
             catch (Exception ex)

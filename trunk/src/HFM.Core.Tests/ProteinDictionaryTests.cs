@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Dictionary Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,27 +28,25 @@ namespace HFM.Core.Tests
    public class ProteinDictionaryTests
    {
       [Test]
-      public void GetProteinOrDownloadTest1()
+      public void Get_Test1()
       {
          // Arrange
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
          downloader.Expect(x => x.DownloadFromStanford());
-         downloader.Expect(x => x.DownloadFilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
-         //downloader.Expect(x => x.DownloadFromHfmWeb());
-         //downloader.Expect(x => x.DownloadFilePath).Return("..\\..\\TestFiles\\ProjectInfo.xml");
+         downloader.Stub(x => x.DownloadFilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
          
          var proteins = new ProteinDictionary(prefs, downloader);
          var protein = CreateValidProtein(2483);
          proteins.Add(protein);
          // Act
-         Protein p = proteins.GetProteinOrDownload(2483);
-         Assert.AreEqual(false, p.IsUnknown());
-         p = proteins.GetProteinOrDownload(2482);
-         Assert.AreEqual(true, p.IsUnknown());
+         Protein p = proteins.Get(2483, true);
+         Assert.IsNotNull(p);
+         p = proteins.Get(2482, true);
+         Assert.IsNull(p);
          // Do it twice to exercise the projects not found list
-         p = proteins.GetProteinOrDownload(2482);
-         Assert.AreEqual(true, p.IsUnknown());
+         p = proteins.Get(2482, true);
+         Assert.IsNull(p);
          // Assert
          downloader.VerifyAllExpectations();
       }

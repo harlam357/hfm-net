@@ -37,7 +37,7 @@ namespace HFM.Core
       /// </summary>
       void ClearProjectsNotFoundCache();
 
-      Protein GetProteinOrDownload(int projectId);
+      Protein Get(int projectId, bool allowRefresh);
 
       /// <summary>
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
@@ -45,14 +45,6 @@ namespace HFM.Core
       /// <param name="fileName">File name to load into the dictionary.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
       IEnumerable<ProteinLoadInfo> Load(string fileName);
-
-      /// <summary>
-      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
-      /// </summary>
-      /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
-      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values);
 
       #region DataContainer<T>
 
@@ -73,7 +65,7 @@ namespace HFM.Core
       private readonly Proteins.ProteinDictionary _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
 
-      public ProteinDictionary()
+      internal ProteinDictionary()
          : this(null, null)
       {
          
@@ -102,7 +94,7 @@ namespace HFM.Core
 
       public Protein Get(int projectId)
       {
-         return _dictionary.ContainsKey(projectId) ? _dictionary[projectId] : null;
+         return Get(projectId, false);
       }
 
       public IEnumerable<int> GetProjects()
@@ -123,18 +115,19 @@ namespace HFM.Core
          _projectsNotFound.Clear();
       }
 
-      public Protein GetProteinOrDownload(int projectId)
+      public Protein Get(int projectId, bool allowRefresh)
       {
-         if (projectId == 0) return new Protein();
-         if (_dictionary.ContainsKey(projectId)) return _dictionary[projectId];
-
-         if (CheckProjectsNotFound(projectId))
+         if (_dictionary.ContainsKey(projectId))
          {
-            return new Protein();
+            return _dictionary[projectId];
+         }
+
+         if (!allowRefresh || projectId == 0 || CheckProjectsNotFound(projectId))
+         {
+            return null;
          }
 
          Logger.Info("Project ID '{0}' not found.", projectId);
-
          if (_downloader != null)
          {
             // Execute a Download (Stanford)
@@ -142,7 +135,7 @@ namespace HFM.Core
             try
             {
                var loadInfo = Load(_downloader.DownloadFilePath);
-               foreach (var info in loadInfo.Where(info => !info.Result.Equals(ProteinLoadResult.NoChange)))
+               foreach (var info in loadInfo.Where(info => info.Result != ProteinLoadResult.NoChange))
                {
                   Logger.Info(info.ToString());
                }
@@ -159,38 +152,11 @@ namespace HFM.Core
                _projectsNotFound.Remove(projectId);
                return _dictionary[projectId];
             }
-
-            /*** Disable HFM Web Download For Now ***/
-
-            //// Execute a Download (HFM Web)
-            //_downloader.DownloadFromHfmWeb();
-            //try
-            //{
-            //   var proteinList = Read(_downloader.DownloadFilePath, new Serializers.XmlFileSerializer<List<Protein>>());
-            //   var protein = proteinList.FirstOrDefault(x => x.ProjectNumber == projectId);
-            //   if (protein != null)
-            //   {
-            //      Add(protein.ProjectNumber, protein);
-            //      Write();
-            //   }
-            //}
-            //catch (Exception ex)
-            //{
-            //   Logger.ErrorFormat(ex, "{0}", ex.Message);
-            //}
-
-            //if (ContainsKey(projectId))
-            //{
-            //   // remove it from the not found list and return it
-            //   _projectsNotFound.Remove(projectId);
-            //   return this[projectId];
-            //}
          }
 
          AddToProjectsNotFound(projectId);
 
-         // return a blank protein
-         return new Protein();
+         return null;
       }
 
       private bool CheckProjectsNotFound(int projectId)
@@ -226,11 +192,6 @@ namespace HFM.Core
       public IEnumerable<ProteinLoadInfo> Load(string fileName)
       {
          return _dictionary.Load(fileName);
-      }
-
-      public IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values)
-      {
-         return _dictionary.Load(values);
       }
 
       #region DataContainer<T>
