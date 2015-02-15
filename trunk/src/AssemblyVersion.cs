@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("harlam357")]
 [assembly: AssemblyProduct("HFM.NET")]
-[assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009-2014.")]
+[assembly: AssemblyCopyright("Copyright © Ryan Harlamert 2009-2015.")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("0.9.2.0")]
+[assembly: AssemblyFileVersion("0.9.3.0")]
 
 
