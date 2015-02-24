@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Simulation Info Data Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,9 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using HFM.Client.Converters;
@@ -131,8 +133,15 @@ namespace HFM.Client.DataTypes
       {
          Debug.Assert(message != null);
 
+         JObject jObject;
+         using (var reader = (JsonReader)new JsonTextReader(new StringReader(message.Value.ToString())))
+         {
+            reader.DateParseHandling = DateParseHandling.None;
+            jObject = JObject.Load(reader);
+         }
+
          var propertySetter = new MessagePropertySetter(this);
-         foreach (var prop in JObject.Parse(message.Value.ToString()).Properties())
+         foreach (var prop in jObject.Properties())
          {
             propertySetter.SetProperty(prop);
          }

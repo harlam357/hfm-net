@@ -231,13 +231,13 @@ namespace HFM.Client.DataTypes
       {
          if (jProperty == null) return;
 
-         var properties = GetProperties(jProperty.Name);
-         if (properties.Count() == 0)
+         var properties = GetProperties(jProperty.Name).ToList();
+         if (!properties.Any())
          {
             return;
          }
 
-         if (jProperty.Value.Type.Equals(JTokenType.Object))
+         if (jProperty.Value.Type == JTokenType.Object)
          {
             var propertyValue = GetPropertyValue(jProperty.Name);
             if (propertyValue != null)
@@ -255,11 +255,11 @@ namespace HFM.Client.DataTypes
             {
                try
                {
-                  if (jProperty.Value.Type.Equals(JTokenType.String))
+                  if (jProperty.Value.Type == JTokenType.String)
                   {
                      SetPropertyValue(classProperty, (string)jProperty);
                   }
-                  else if (jProperty.Value.Type.Equals(JTokenType.Integer))
+                  else if (jProperty.Value.Type == JTokenType.Integer)
                   {
                      SetPropertyValue(classProperty, (int)jProperty);
                   }
@@ -280,8 +280,8 @@ namespace HFM.Client.DataTypes
       {
          if (key == null) return;
 
-         var properties = GetProperties(key);
-         if (properties.Count() == 0)
+         var properties = GetProperties(key).ToList();
+         if (!properties.Any())
          {
             return;
          }

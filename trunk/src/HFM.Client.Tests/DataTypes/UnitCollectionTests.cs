@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Collection Data Class Tests
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -765,7 +765,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(new TimeSpan(0, 2, 26), unitCollection[0].TpfTimeSpan);
          Assert.AreEqual(788, unitCollection[0].BaseCredit);
          Assert.AreEqual(5172.29, unitCollection[0].CreditEstimate);
-         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", unitCollection[0].Description);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r\n", unitCollection[0].Description);
 
          Assert.AreEqual(2, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
@@ -803,7 +803,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(new TimeSpan(0, 0, 0, 33, 820), unitCollection[1].TpfTimeSpan);
          Assert.AreEqual(0, unitCollection[1].BaseCredit);
          Assert.AreEqual(0, unitCollection[1].CreditEstimate);
-         Assert.AreEqual(1196, unitCollection[1].Description.Length);
+         Assert.AreEqual(1266, unitCollection[1].Description.Length);
       }
 
       [Test]
@@ -848,7 +848,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(new TimeSpan(0, 4, 51), unitCollection[0].TpfTimeSpan);
          Assert.AreEqual(788, unitCollection[0].BaseCredit);
          Assert.AreEqual(4825.61, unitCollection[0].CreditEstimate);
-         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", unitCollection[0].Description);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r\n", unitCollection[0].Description);
       }
 
       [Test]

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Simulation Info Data Class Tests
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -473,7 +473,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(59, simulationInfo.Gen);
          Assert.AreEqual(164, simulationInfo.CoreType);
          Assert.AreEqual("GROGBA4", simulationInfo.Core);
-         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", simulationInfo.Description);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r\n", simulationInfo.Description);
          Assert.AreEqual(2000, simulationInfo.TotalIterations);
          Assert.AreEqual(660, simulationInfo.IterationsDone);
          Assert.AreEqual(0, simulationInfo.Energy);
@@ -508,7 +508,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(252, simulationInfo.Gen);
          Assert.AreEqual(17, simulationInfo.CoreType);
          Assert.AreEqual("GROGPU2", simulationInfo.Core);
-         Assert.AreEqual(1196, simulationInfo.Description.Length);
+         Assert.AreEqual(1266, simulationInfo.Description.Length);
          Assert.AreEqual(15000, simulationInfo.TotalIterations);
          Assert.AreEqual(7650, simulationInfo.IterationsDone);
          Assert.AreEqual(0, simulationInfo.Energy);
@@ -543,7 +543,7 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(58, simulationInfo.Gen);
          Assert.AreEqual(164, simulationInfo.CoreType);
          Assert.AreEqual("GROGBA4", simulationInfo.Core);
-         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r", simulationInfo.Description);
+         Assert.AreEqual("This project involves additional sampling of the FiP35 WW domain shot from the ultra-long trajectories run by DE Shaw on their new supercomputer ANTON. We are testing the differences between these new ultra-long trajectories and shorter ones from FAH, to test how simulations run on FAH stack up to more traditional methods.\r\n", simulationInfo.Description);
          Assert.AreEqual(2000, simulationInfo.TotalIterations);
          Assert.AreEqual(1900, simulationInfo.IterationsDone);
          Assert.AreEqual(0, simulationInfo.Energy);
