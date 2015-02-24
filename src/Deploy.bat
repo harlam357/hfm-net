@@ -35,8 +35,8 @@ copy /Y protobuf-net.dll %1
 copy /Y protobuf-net.xml %1
 copy /Y System.Linq.Dynamic.dll %1
 copy /Y AutoMapper.dll %1
-copy /Y Newtonsoft.Json.Net35.dll %1
-copy /Y Newtonsoft.Json.Net35.xml %1
+copy /Y Newtonsoft.Json.dll %1
+copy /Y Newtonsoft.Json.xml %1
 
 if not exist %1\SQLite md %1\SQLite
 if not exist %1\SQLite\x86 md %1\SQLite\x86
@@ -61,7 +61,7 @@ copy /Y "..\..\..\..\lib\Castle Windsor\ASL - Apache Software Foundation License
 copy /Y "..\..\..\..\lib\protobuf-net\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\protobuf-net\protoc-license.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\AutoMapper\AutoMapper License.txt" %1\Documentation\License
-copy /Y "..\..\..\..\lib\Json.NET\Json.NET License.txt" %1\Documentation\License
+copy /Y "..\..\..\..\doc\Json.NET License.txt" %1\Documentation\License
 
 echo Copying Support Files and Folders...
 if not exist %1\CSS md %1\CSS

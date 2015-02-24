@@ -44,8 +44,8 @@
       <ComponentRef Id="comp_308C3509A90F486C95EE95CBF66DEFF1" />
       <ComponentRef Id="comp_0B2DAA04632D46EC8B7ED33388277AC1" />
       <ComponentRef Id="comp_C13762917B1D4DCCA6614A290E61F08F" />
-      <ComponentRef Id="comp_78967A9F97614F28B2D34B23CA6A10FE" />
-      <ComponentRef Id="comp_EFB35E055C43489CB2B935B780B0FE6A" />
+      <ComponentRef Id="comp_1A538E03366D42D5A290527F938DD55D" />
+      <ComponentRef Id="comp_A5F7372831F94A4ABA7D9B28E18CEFAE" />
       <ComponentRef Id="comp_7F086DD4D9F346FDA51AA4095E287466" />
       <ComponentRef Id="comp_1B0779A8AB3D48B3B3C3FBC181EB54C5" />
       <ComponentRef Id="comp_5A2651031D1B44D085E1AD62B99D6E5E" />
@@ -155,11 +155,11 @@
       <Component Id="comp_C13762917B1D4DCCA6614A290E61F08F" DiskId="1" Guid="AB3B052D-BAF2-478D-A1D6-A21F510A1ECB">
         <File Id="file_15DF9F66CC634463A945DAF33F805572" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\HTMLparser.dll" KeyPath="yes" />
       </Component>
-      <Component Id="comp_78967A9F97614F28B2D34B23CA6A10FE" Guid="A7CD6C3B-EBAC-40B1-A775-83F654BF2FEA">
-        <File Id="file_250C04E8CF8441FE85CA99E336A5BD40" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Newtonsoft.Json.Net35.dll" />
+      <Component Id="comp_1A538E03366D42D5A290527F938DD55D" Guid="EC5307DC-39B5-40A6-A95D-9154283A8C49">
+        <File Id="file_99564AD51B854ACF8CB3D387BB24E71F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Newtonsoft.Json.dll" />
       </Component>
-      <Component Id="comp_EFB35E055C43489CB2B935B780B0FE6A" Guid="F350E183-6216-460C-A6F0-FA4C94E8B38F">
-        <File Id="file_75D619399D00450690235F2433D2F9AA" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Newtonsoft.Json.Net35.xml" />
+      <Component Id="comp_A5F7372831F94A4ABA7D9B28E18CEFAE" Guid="190D0AB8-ECC5-4168-B7ED-2CE6D3CBFF0B">
+        <File Id="file_235D8CA96BFC471B8D50E5C2A302833D" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Newtonsoft.Json.xml" />
       </Component>
       <Component Id="comp_7F086DD4D9F346FDA51AA4095E287466" DiskId="1" Guid="27712DD2-7EB7-417C-B948-8E58E1D8168D">
         <File Id="file_3BB200BAC01548049263DA0623507A16" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\protobuf-net.dll" KeyPath="yes" />

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Collection Data Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using HFM.Client.Converters;
@@ -76,8 +78,15 @@ namespace HFM.Client.DataTypes
                   "Type {0} cannot be converted to type Unit.", typeof(T)));
             }
 
+            JObject jObject;
+            using (var reader = (JsonReader)new JsonTextReader(new StringReader(token.ToString())))
+            {
+               reader.DateParseHandling = DateParseHandling.None;
+               jObject = JObject.Load(reader);
+            }
+
             var propertySetter = new MessagePropertySetter(unit);
-            foreach (var prop in JObject.Parse(token.ToString()).Properties())
+            foreach (var prop in jObject.Properties())
             {
                propertySetter.SetProperty(prop);
             }
