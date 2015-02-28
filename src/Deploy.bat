@@ -56,7 +56,7 @@ if not exist %1\Documentation md %1\Documentation
 if not exist %1\Documentation\License md %1\Documentation\License
 copy /Y "..\..\..\..\doc\GPLv2.TXT" %1\Documentation\License
 copy /Y "..\..\..\..\lib\HTMLparser2\HTMLparser License.txt" %1\Documentation\License
-copy /Y "..\..\..\..\lib\ZedGraph\ZedGraph License.txt" %1\Documentation\License
+copy /Y "..\..\..\..\doc\ZedGraph License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\Castle Windsor\ASL - Apache Software Foundation License.txt" "%1\Documentation\License\Windsor License.txt"
 copy /Y "..\..\..\..\doc\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\doc\protoc-license.txt" %1\Documentation\License
