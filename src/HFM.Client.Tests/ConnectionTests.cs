@@ -178,7 +178,7 @@ namespace HFM.Client.Tests
       private static void SetupSuccessfulConnectionExpectations(ITcpClient tcpClient, INetworkStream stream, bool withPassword = true)
       {
          // client not connected
-         tcpClient.Expect(x => x.Client).Return(null);
+         tcpClient.Expect(x => x.Client).Return(null).Repeat.Once();
 
          // setup connect expectations
          var asyncResult = MockRepository.GenerateStub<IAsyncResult>();

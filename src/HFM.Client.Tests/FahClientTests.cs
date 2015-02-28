@@ -91,13 +91,13 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithClientInfoData1));
-            _stream.Expect(x => x.DataAvailable).Return(true);
+               new Func<byte[], int, int, int>(FillBufferWithClientInfoData1)).Repeat.Once();
+            _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithClientInfoData2));
-            _stream.Expect(x => x.DataAvailable).Return(true);
+               new Func<byte[], int, int, int>(FillBufferWithClientInfoData2)).Repeat.Once();
+            _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithClientInfoData3));
+               new Func<byte[], int, int, int>(FillBufferWithClientInfoData3)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -138,13 +138,13 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithOptionsData1));
-            _stream.Expect(x => x.DataAvailable).Return(true);
+               new Func<byte[], int, int, int>(FillBufferWithOptionsData1)).Repeat.Once();
+            _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithOptionsData2));
-            _stream.Expect(x => x.DataAvailable).Return(true);
+               new Func<byte[], int, int, int>(FillBufferWithOptionsData2)).Repeat.Once();
+            _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithOptionsData3));
+               new Func<byte[], int, int, int>(FillBufferWithOptionsData3)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -185,7 +185,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithSimulationInfoData));
+               new Func<byte[], int, int, int>(FillBufferWithSimulationInfoData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -216,7 +216,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithSlotsData));
+               new Func<byte[], int, int, int>(FillBufferWithSlotsData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -244,7 +244,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithSlotsData));
+               new Func<byte[], int, int, int>(FillBufferWithSlotsData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -277,7 +277,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithSlotOptionsData));
+               new Func<byte[], int, int, int>(FillBufferWithSlotOptionsData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -308,7 +308,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithUnitsData));
+               new Func<byte[], int, int, int>(FillBufferWithUnitsData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
@@ -336,7 +336,7 @@ namespace HFM.Client.Tests
 
             var buffer = fahClient.InternalBuffer;
             _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithUnitsData));
+               new Func<byte[], int, int, int>(FillBufferWithUnitsData)).Repeat.Once();
 
             MessageUpdatedEventArgs e = null;
             fahClient.MessageUpdated += (sender, args) => e = args;
