@@ -219,6 +219,10 @@ namespace HFM.Forms.Models
          {
             _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, ProductionView);
          }
+         if (_page == null)
+         {
+            return;
+         }
 
          // halt binding source updates
          _historyBindingSource.RaiseListChangedEvents = false;

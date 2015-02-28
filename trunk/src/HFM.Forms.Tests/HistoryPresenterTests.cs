@@ -181,7 +181,7 @@ namespace HFM.Forms.Tests
       public void NewQueryClick_Failed_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
+         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
          _queryView.Stub(x => x.Query).Return(new QueryParameters());
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
@@ -218,10 +218,6 @@ namespace HFM.Forms.Tests
       public void EditQueryClick_Cancel_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
-
          _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
          // Act
          _presenter = CreatePresenter();
@@ -234,12 +230,8 @@ namespace HFM.Forms.Tests
       public void EditQueryClick_Failed_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
-
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         _queryView.Stub(x => x.Query).Return(new QueryParameters());
+         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
+         //_queryView.Stub(x => x.Query).Return(new QueryParameters());
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
          _presenter = CreatePresenter();
