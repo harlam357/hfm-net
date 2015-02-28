@@ -60,7 +60,7 @@ copy /Y "..\..\..\..\lib\ZedGraph\ZedGraph License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\lib\Castle Windsor\ASL - Apache Software Foundation License.txt" "%1\Documentation\License\Windsor License.txt"
 copy /Y "..\..\..\..\doc\protobuf-net Licence.txt" %1\Documentation\License
 copy /Y "..\..\..\..\doc\protoc-license.txt" %1\Documentation\License
-copy /Y "..\..\..\..\lib\AutoMapper\AutoMapper License.txt" %1\Documentation\License
+copy /Y "..\..\..\..\doc\AutoMapper License.txt" %1\Documentation\License
 copy /Y "..\..\..\..\doc\Json.NET License.txt" %1\Documentation\License
 
 echo Copying Support Files and Folders...
