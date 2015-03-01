@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FahClient Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,10 +25,63 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
+   // TODO: Split this interface up and document
+   public interface IFahClient : IDisposable
+   {
+      #region Properties
+
+      bool Connected { get; }
+
+      int ConnectTimeout { get; set; }
+
+      int SendBufferSize { get; set; }
+
+      int ReceiveBufferSize { get; set; }
+
+      double ReceiveLoopTime { get; set; }
+
+      bool UpdateEnabled { get; set; }
+
+      bool DataAvailable { get; }
+
+      #endregion
+
+      #region Events
+
+      event EventHandler<ConnectedChangedEventArgs> ConnectedChanged;
+      event EventHandler<DataLengthEventArgs> DataLengthReceived;
+      event EventHandler<DataLengthEventArgs> DataLengthSent;
+      event EventHandler<MessageUpdatedEventArgs> MessageUpdated;
+      event EventHandler<StatusMessageEventArgs> StatusMessage;
+      event EventHandler UpdateFinished;
+
+      #endregion
+
+      #region Methods
+
+      void Connect(string host, int port, string password);
+
+      void Close();
+
+      void ClearBuffer();
+
+      void SendCommand(string command);
+
+      JsonMessage GetJsonMessage(string key);
+
+      T GetMessage<T>() where T : TypedMessage, new();
+
+      T GetMessage<T, TCollectionType>()
+         where T : TypedMessageCollection, new()
+         where TCollectionType : ITypedMessageObject, new();
+
+      #endregion
+   }
+
    /// <summary>
    /// Folding@Home client class.  Provides functionality for accessing strongly typed objects that represent the JSON messages returned by the Folding@Home client.
    /// </summary>
-   public class FahClient : MessageCache
+   public class FahClient : MessageCache, IFahClient
    {
       private static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type>
                                                                  {

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Factory
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,8 @@ namespace HFM.Core
       IEnumerable<IClient> CreateCollection(IEnumerable<ClientSettings> settingsCollection);
 
       IClient Create(ClientSettings settings);
+
+      void Release(IClient client);
    }
 
    public class ClientFactory : IClientFactory
@@ -46,6 +48,10 @@ namespace HFM.Core
          [CoverageExclude]
          set { _logger = value; }
       }
+
+      public IFahClientFactory FahClientFactory { get; set; }
+
+      public ILegacyClientFactory LegacyClientFactory { get; set; }
 
       public IEnumerable<IClient> CreateCollection(IEnumerable<ClientSettings> settingsCollection)
       {
@@ -86,12 +92,12 @@ namespace HFM.Core
             throw new ArgumentException("Failed to create client.  No path given.");
          }
       
-         string preCleanInstanceName = settings.Name;
+         string preCleanName = settings.Name;
          ICollection<string> cleanupWarnings = CleanupSettings(settings);
          if (!Validate.ClientName(settings.Name))
          {
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-               "Failed to create client.  Client name '{0}' is not valid after cleaning.", preCleanInstanceName));
+               "Failed to create client.  Client name '{0}' is not valid after cleaning.", preCleanName));
          }
          
          if (cleanupWarnings.Count != 0)
@@ -110,11 +116,11 @@ namespace HFM.Core
          IClient client;
          if (settings.IsFahClient())
          {
-            client = ServiceLocator.Resolve<FahClient>();
+            client = FahClientFactory != null ? FahClientFactory.Create() : null;
          }
          else if (settings.IsLegacy())
          {
-            client = ServiceLocator.Resolve<LegacyClient>();
+            client = LegacyClientFactory != null ? LegacyClientFactory.Create() : null;
          }
          else
          {
@@ -122,7 +128,10 @@ namespace HFM.Core
             throw new InvalidOperationException("Client type is not supported.");
          }
 
-         client.Settings = settings;
+         if (client != null)
+         {
+            client.Settings = settings;
+         }
          return client;
       }
 
@@ -183,6 +192,28 @@ namespace HFM.Core
          }
          
          return warnings.AsReadOnly();
+      }
+
+      public void Release(IClient client)
+      {
+         var fahClient = client as FahClient;
+         if (fahClient != null)
+         {
+            if (FahClientFactory != null)
+            {
+               FahClientFactory.Release(fahClient);
+            }
+            return;
+         }
+
+         var legacyClient = client as LegacyClient;
+         if (legacyClient != null)
+         {
+            if (LegacyClientFactory != null)
+            {
+               LegacyClientFactory.Release(legacyClient);
+            }
+         }
       }
    }
 }

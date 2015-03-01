@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Legacy Client Class
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,13 @@ using HFM.Log;
 
 namespace HFM.Core
 {
+   public interface ILegacyClientFactory
+   {
+      LegacyClient Create();
+
+      void Release(LegacyClient legacyClient);
+   }
+
    public sealed class LegacyClient : Client
    {
       #region Injection Properties

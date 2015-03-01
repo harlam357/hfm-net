@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Factory Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,28 +20,16 @@
 using System;
 using System.Linq;
 
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Tests
 {
    [TestFixture]
-   public class ClientInstanceFactoryTests
+   public class ClientFactoryTests
    {
-      private WindsorContainer _container;
-   
-      [SetUp]
-      public void Init()
-      {
-         _container = new WindsorContainer();
-         _container.Kernel.Register(Component.For(typeof(LegacyClient)).LifeStyle.Transient);
-         //_container.Kernel.Register(Component.For(typeof(FahClient)).LifeStyle.Transient);
-         ServiceLocator.SetContainer(_container);
-      }
       
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
@@ -54,7 +42,9 @@ namespace HFM.Core.Tests
       [Test]
       public void CreateCollectionTest()
       {
-         var builder = new ClientFactory();
+         var legacyClientFactory = MockRepository.GenerateStub<ILegacyClientFactory>();
+         legacyClientFactory.Stub(x => x.Create()).Return(new LegacyClient());
+         var builder = new ClientFactory { LegacyClientFactory = legacyClientFactory };
          var result1 = new ClientSettings(ClientType.Legacy)
                        {
                           LegacyClientSubType = LegacyClientSubType.Path,
@@ -118,7 +108,9 @@ namespace HFM.Core.Tests
       [Test]
       public void CreateTest()
       {
-         var builder = new ClientFactory();
+         var legacyClientFactory = MockRepository.GenerateStub<ILegacyClientFactory>();
+         legacyClientFactory.Stub(x => x.Create()).Return(new LegacyClient());
+         var builder = new ClientFactory { LegacyClientFactory = legacyClientFactory };
          var settings = new ClientSettings(ClientType.Legacy)
                         {
                            Name = "Client{ 1",
@@ -127,6 +119,32 @@ namespace HFM.Core.Tests
          var instance = builder.Create(settings);
          Assert.IsNotNull(instance);
          Assert.AreEqual("Client 1", instance.Settings.Name);                       
+      }
+
+      [Test]
+      public void Create_FahClientFactoryNull_Test()
+      {
+         var builder = new ClientFactory();
+         var settings = new ClientSettings(ClientType.FahClient)
+         {
+            Name = "FahClient",
+            Server = "192.168.100.200"
+         };
+         var instance = builder.Create(settings);
+         Assert.IsNull(instance);
+      }
+
+      [Test]
+      public void Create_LegacyClientFactoryNull_Test()
+      {
+         var builder = new ClientFactory();
+         var settings = new ClientSettings(ClientType.Legacy)
+         {
+            Name = "LegacyClient",
+            Path = @"\\test\path\"
+         };
+         var instance = builder.Create(settings);
+         Assert.IsNull(instance);
       }
    }
 }

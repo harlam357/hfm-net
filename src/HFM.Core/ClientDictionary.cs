@@ -177,6 +177,8 @@ namespace HFM.Core
 
       public ClientDictionary(IClientFactory factory)
       {
+         if (factory == null) throw new ArgumentNullException("factory");
+
          _factory = factory;
          _clientDictionary = new Dictionary<string, IClient>();
          _cacheLock = new ReaderWriterLockSlim();
@@ -373,6 +375,8 @@ namespace HFM.Core
             {
                _clientDictionary[key].ClearEventSubscriptions();
                _clientDictionary[key].Abort();
+               // Release from the Factory
+               _factory.Release(_clientDictionary[key]);
             }
             result = _clientDictionary.Remove(key);
          }

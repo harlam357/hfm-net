@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Dictionary Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,11 @@
  */
 
 using System;
+
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Tests
@@ -36,6 +38,14 @@ namespace HFM.Core.Tests
       {
          _factory = MockRepository.GenerateMock<IClientFactory>();
          _clientDictionary = new ClientDictionary(_factory);
+      }
+
+      [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void ClientDictionary_ArgumentNullException_Test()
+      {
+         // ReSharper disable once ObjectCreationAsStatement
+         new ClientDictionary(null);
       }
 
       [Test]
@@ -156,7 +166,7 @@ namespace HFM.Core.Tests
          // Arrange
          var settings = new ClientSettings { Name = "test" };
          _factory.Expect(x => x.Create(settings)).Return(
-            new FahClient(MockRepository.GenerateStub<IFahClientInterface>()));
+            new FahClient(MockRepository.GenerateStub<IFahClient>()));
          // Act
          _clientDictionary.Add(settings);
          // Assert
@@ -255,7 +265,7 @@ namespace HFM.Core.Tests
       public void EditTest2()
       {
          // Arrange
-         _clientDictionary.Add("test", new FahClient(MockRepository.GenerateStub<IFahClientInterface>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
+         _clientDictionary.Add("test", new FahClient(MockRepository.GenerateStub<IFahClient>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
          Assert.AreEqual(1, _clientDictionary.Count);
          bool dictionaryChangedFired = false;
          _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
@@ -358,10 +368,12 @@ namespace HFM.Core.Tests
          _clientDictionary.Add("test", client);
          client.Expect(x => x.ClearEventSubscriptions());
          client.Expect(x => x.Abort());
+         _factory.Expect(x => x.Release(client));
          // Act
          _clientDictionary.Remove("test");
          // Assert
          client.VerifyAllExpectations();
+         _factory.VerifyAllExpectations();
       }
 
       [Test]

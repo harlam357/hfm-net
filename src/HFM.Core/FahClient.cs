@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,13 @@ using HFM.Log;
 
 namespace HFM.Core
 {
+   public interface IFahClientFactory
+   {
+      FahClient Create();
+
+      void Release(FahClient fahClient);
+   }
+
    public sealed class FahClient : Client
    {
       #region Properties
@@ -138,13 +145,13 @@ namespace HFM.Core
       //   }
       //}
 
-      private readonly IFahClientInterface _fahClient;
+      private readonly IFahClient _fahClient;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
       private readonly StringBuilder _logText;
       private readonly FahClientMessages _messages;
 
-      public FahClient(IFahClientInterface fahClient)
+      public FahClient(IFahClient fahClient)
       {
          _fahClient = fahClient;
          _slots = new List<SlotModel>();

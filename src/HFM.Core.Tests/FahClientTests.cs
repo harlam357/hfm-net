@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Tests
@@ -36,7 +37,7 @@ namespace HFM.Core.Tests
          // setup
          var benchmarkCollection = new ProteinBenchmarkCollection();
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var fahClient = new FahClient(MockRepository.GenerateStub<IFahClientInterface>()) { BenchmarkCollection = benchmarkCollection, UnitInfoDatabase = database };
+         var fahClient = new FahClient(MockRepository.GenerateStub<IFahClient>()) { BenchmarkCollection = benchmarkCollection, UnitInfoDatabase = database };
 
          var unitInfo1 = new UnitInfo();
          unitInfo1.OwningClientName = "Owner";
