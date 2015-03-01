@@ -56,7 +56,7 @@
       <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\harlam357public.snk</AssemblyOriginatorKeyFile>
    </PropertyGroup>
 
-   <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder">
+   <Target Name="Compile" DependsOnTargets="AssemblyVersion;CreateArtifactsFolder;NuGetRestore">
       <MSBuild Projects="HFM.All.sln"
                Targets="Rebuild"
                Properties="Configuration=ScriptedRelease;Platform=$(Platform);AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
@@ -72,12 +72,17 @@
       <MakeDir Directories="$(ArtifactsPath)"/>
    </Target>
 
+   <Target Name="NuGetRestore">
+      <Exec Command="$(NuGetPath) restore HFM.All.sln" />
+   </Target>
+
    <PropertyGroup>
       <!--<NCoverPath>&quot;..\tools\NCover\NCover.Console.exe&quot;</NCoverPath>-->
       <NCoverExcludeList>System.Runtime.CompilerServices.CompilerGeneratedAttribute;HFM.Core.CoverageExcludeAttribute;HFM.Client.CoverageExcludeAttribute</NCoverExcludeList>
       <NCoverExpPath>&quot;..\tools\NCoverExplorer\NCoverExplorer.Console.exe&quot;</NCoverExpPath>
       <NUnitPath>&quot;packages\NUnit.Runners.2.6.4\tools\nunit-console-x86.exe&quot;</NUnitPath>
       <FxCopPath>&quot;$(ProgramFiles)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe&quot;</FxCopPath>
+      <NuGetPath>&quot;.nuget\NuGet.exe&quot;</NuGetPath>
    </PropertyGroup>
 
    <PropertyGroup>
@@ -98,6 +103,7 @@
       <!--<Exec Command="$(NCoverExpPath) $(ArtifactsPath)\*.Tests.Coverage.xml /s:$(ArtifactsPath)\Coverage.xml" />-->
       <Exec Command="$(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml" />
       <Exec Command="$(NUnitPath) .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Core.Tests.Results.xml" />
+      <!--<Exec Command="$(NUnitPath) .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Core.Tests.Results.xml /exclude=HFM.Core.UnitInfoDatabase.Fetch,HFM.Core.UnitInfoDatabase.Page" />-->
       <Exec Command="$(NUnitPath) .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Forms.Tests.Results.xml" />
       <Exec Command="$(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Log.Tests.Results.xml" />
       <Exec Command="$(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Proteins.Tests.Results.xml" />
