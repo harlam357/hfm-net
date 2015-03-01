@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,6 @@
  */
  
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -31,6 +30,13 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
+   public interface IHistoryPresenterFactory
+   {
+      HistoryPresenter Create();
+
+      void Release(HistoryPresenter presenter);
+   }
+
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
@@ -54,9 +60,14 @@ namespace HFM.Forms
       
       public event EventHandler PresenterClosed;
       
-      public HistoryPresenter(IPreferenceSet prefs, IQueryParametersCollection queryCollection, IHistoryView view, 
-                              IQueryView queryView, IOpenFileDialogView openFileView, ISaveFileDialogView saveFileView, 
-                              IMessageBoxView messageBoxView, HistoryPresenterModel model)
+      public HistoryPresenter(IPreferenceSet prefs, 
+                              IQueryParametersCollection queryCollection, 
+                              IHistoryView view, 
+                              IQueryView queryView, 
+                              IOpenFileDialogView openFileView, 
+                              ISaveFileDialogView saveFileView, 
+                              IMessageBoxView messageBoxView, 
+                              HistoryPresenterModel model)
       {
          _prefs = prefs;
          _queryCollection = queryCollection;

@@ -66,6 +66,8 @@ namespace HFM.Forms
          [CoverageExclude]
          set { _logger = value; }
       }
+
+      public IHistoryPresenterFactory HistoryPresenterFactory { get; set; }
       
       #endregion
       
@@ -1292,14 +1294,21 @@ namespace HFM.Forms
       {
          Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
       
-         if (_historyPresenter == null)
+         if (_historyPresenter == null && HistoryPresenterFactory != null)
          {
-            _historyPresenter = ServiceLocator.Resolve<HistoryPresenter>();
+            _historyPresenter = HistoryPresenterFactory.Create();
             _historyPresenter.Initialize();
-            _historyPresenter.PresenterClosed += delegate { _historyPresenter = null; };
+            _historyPresenter.PresenterClosed += (sender, args) =>
+            {
+               HistoryPresenterFactory.Release(_historyPresenter);
+               _historyPresenter = null;
+            };
          }
 
-         _historyPresenter.Show();
+         if (_historyPresenter != null)
+         {
+            _historyPresenter.Show();
+         }
       }
 
       internal void ToolsPointsCalculatorClick()
