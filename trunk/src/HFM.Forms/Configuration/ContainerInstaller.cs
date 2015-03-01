@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Forms Container Installer
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -148,18 +149,20 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<IFahClientSetupPresenter>()
                .ImplementedBy<FahClientSetupPresenter>()
-               .LifeStyle.Transient);
+                  .LifeStyle.Transient);
 
          // ILegacyClientSetupPresenter - Transient
          container.Register(
             Component.For<ILegacyClientSetupPresenter>()
                .ImplementedBy<LegacyClientSetupPresenter>()
-               .LifeStyle.Transient);
+                  .LifeStyle.Transient);
 
          // HistoryPresenter - Transient
          container.Register(
             Component.For<HistoryPresenter>()
-               .LifeStyle.Transient);
+               .LifeStyle.Transient,
+            Component.For<IHistoryPresenterFactory>()
+               .AsFactory());
 
          #endregion
 
