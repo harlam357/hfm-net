@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Container Installer
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Castle.Core.Logging;
+using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -58,12 +59,6 @@ namespace HFM.Core.Configuration
                .ImplementedBy<NetworkOps>()
                .LifeStyle.Transient);
 
-         // IFahClientInterface - Transient
-         container.Register(
-            Component.For<IFahClientInterface>()
-               .ImplementedBy<FahClientInterfaceAdapter>()
-               .LifeStyle.Transient);
-
          // IStatusLogic - Singleton
          container.Register(
             Component.For<IStatusLogic>()
@@ -92,12 +87,16 @@ namespace HFM.Core.Configuration
          // FahClient - Transient
          container.Register(
             Component.For<FahClient>()
-            .LifeStyle.Transient);
+               .LifeStyle.Transient,
+            Component.For<IFahClientFactory>()
+               .AsFactory());
 
          // LegacyClient - Transient
          container.Register(
             Component.For<LegacyClient>()
-            .LifeStyle.Transient);
+               .LifeStyle.Transient,
+            Component.For<ILegacyClientFactory>()
+               .AsFactory());
 
          // IClientSettingsManager - Singleton
          container.Register(

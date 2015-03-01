@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FAH Client Setup Presenter
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,7 @@ using Castle.Core.Logging;
 
 using harlam357.Windows.Forms;
 
+using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core;
 using HFM.Forms.Models;
@@ -74,13 +75,13 @@ namespace HFM.Forms
       }
 
       private readonly IFahClientSetupView _settingsView;
-      private readonly IFahClientInterface _fahClient;
+      private readonly IFahClient _fahClient;
       private readonly IMessageBoxView _messageBoxView;
       private readonly List<IValidatingControl> _validatingControls;
 
       private SlotCollection _slotCollection;
 
-      public FahClientSetupPresenter(IFahClientSetupView settingsView, IFahClientInterface fahClient, IMessageBoxView messageBoxView)
+      public FahClientSetupPresenter(IFahClientSetupView settingsView, IFahClient fahClient, IMessageBoxView messageBoxView)
       {
          _settingsView = settingsView;
          _settingsView.AttachPresenter(this);
