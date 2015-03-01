@@ -153,6 +153,8 @@ namespace HFM.Core
 
       public FahClient(IFahClient fahClient)
       {
+         if (fahClient == null) throw new ArgumentNullException("fahClient");
+
          _fahClient = fahClient;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
@@ -474,7 +476,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = new UnitInfoLogic(ServiceLocator.Resolve<IProteinBenchmarkCollection>());
+         var unitInfoLogic = new UnitInfoLogic(BenchmarkCollection);
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;

@@ -46,7 +46,7 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IDataRetriever>()
                .ImplementedBy<LegacyDataRetriever>()
-               .LifeStyle.Transient);
+                  .LifeStyle.Transient);
 
          // IExternalProcessStarter - Singleton
          container.Register(
@@ -57,7 +57,7 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<INetworkOps>()
                .ImplementedBy<NetworkOps>()
-               .LifeStyle.Transient);
+                  .LifeStyle.Transient);
 
          // IStatusLogic - Singleton
          container.Register(
@@ -84,12 +84,18 @@ namespace HFM.Core.Configuration
             Component.For<IClientFactory>()
                .ImplementedBy<ClientFactory>());
 
-         // FahClient - Transient
+         // HFM.Core.FahClient - Transient
          container.Register(
             Component.For<FahClient>()
                .LifeStyle.Transient,
             Component.For<IFahClientFactory>()
                .AsFactory());
+
+         // HFM.Client.FahClient - Transient
+         container.Register(
+            Component.For<HFM.Client.IFahClient>()
+               .ImplementedBy<HFM.Client.FahClient>()
+                  .LifeStyle.Transient);
 
          // LegacyClient - Transient
          container.Register(
@@ -117,42 +123,42 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IQueryParametersCollection>()
                .ImplementedBy<QueryParametersCollection>()
-               .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate((kernel, instance) => instance.Read()));
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(
             Component.For<IProteinBenchmarkCollection>()
                .ImplementedBy<ProteinBenchmarkCollection>()
-               .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate((kernel, instance) => instance.Read()));
 
          // IUnitInfoCollection - Singleton
          container.Register(
             Component.For<IUnitInfoCollection>()
                .ImplementedBy<UnitInfoCollection>()
-               .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate((kernel, instance) => instance.Read()));
 
          // IXmlStatsDataContainer - Singleton
          container.Register(
             Component.For<IXmlStatsDataContainer>()
                .ImplementedBy<XmlStatsDataContainer>()
-               .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate((kernel, instance) => instance.Read()));
 
          // IProteinDictionary - Singleton
          container.Register(
             Component.For<IProteinDictionary>()
                .ImplementedBy<ProteinDictionary>()
-               .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate((kernel, instance) => instance.Read()));
 
          // PluginLoader - Transient
          container.Register(
             Component.For<Plugins.PluginLoader>()
-            .LifeStyle.Transient);
+               .LifeStyle.Transient);
 
          // IProjectSummaryDownloader - Singleton
          container.Register(
             Component.For<IProjectSummaryDownloader>()
                .ImplementedBy<ProjectSummaryDownloader>()
-               .OnCreate((kernel, instance) => instance.DownloadFilePath = Path.GetTempFileName()));
+                  .OnCreate((kernel, instance) => instance.DownloadFilePath = Path.GetTempFileName()));
 
          #region Plugins
 
