@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Protein Benchmark Data Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,7 +186,7 @@ namespace HFM.Core.DataTypes
       
       #endregion
 
-      #region IEquatable<ProteinBenchmark> Members
+      #region IEquatable<IOwnedByClient> Members
 
       public bool Equals(IOwnedByClient other)
       {

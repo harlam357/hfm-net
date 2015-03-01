@@ -32,6 +32,14 @@ namespace HFM.Core.Tests
    public class FahClientTests
    {
       [Test]
+      [ExpectedException(typeof(ArgumentNullException))]
+      public void FahClient_ArgumentNullException_Test()
+      {
+         // ReSharper disable once ObjectCreationAsStatement
+         new FahClient(null);
+      }
+
+      [Test]
       public void UpdateBenchmarkDataTest()
       {
          // setup
