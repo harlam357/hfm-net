@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Application Entry Point
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Application = System.Windows.Forms.Application;
 
+using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
 
 namespace HFM
@@ -44,6 +45,7 @@ namespace HFM
          {
             // Configure Container
             IWindsorContainer container = new WindsorContainer();
+            container.AddFacility<TypedFactoryFacility>();
             container.Install(new Configuration.ContainerInstaller(),
                               new Preferences.Configuration.ContainerInstaller(),
                               new Core.Configuration.ContainerInstaller(),
