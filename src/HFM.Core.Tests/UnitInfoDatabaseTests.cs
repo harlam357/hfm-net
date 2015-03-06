@@ -591,14 +591,14 @@ namespace HFM.Core.Tests
 
       #region Fetch
 
-      [Test]
+      [Test, Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_All_Test()
       {
          // Select All
          FetchTestData(44, BuildParameters());
       }
 
-      [Test, TestCaseSource("FetchEqualCases")]
+      [Test, TestCaseSource("FetchEqualCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_Equal_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -630,7 +630,7 @@ namespace HFM.Core.Tests
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchNotEqualCases")]
+      [Test, TestCaseSource("FetchNotEqualCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_NotEqual_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -662,7 +662,7 @@ namespace HFM.Core.Tests
          new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchGreaterThanCases")]
+      [Test, TestCaseSource("FetchGreaterThanCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_GreaterThan_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -694,7 +694,7 @@ namespace HFM.Core.Tests
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchGreaterThanOrEqualCases")]
+      [Test, TestCaseSource("FetchGreaterThanOrEqualCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_GreaterThanOrEqual_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -726,7 +726,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchLessThanCases")]
+      [Test, TestCaseSource("FetchLessThanCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_LessThan_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -758,7 +758,7 @@ namespace HFM.Core.Tests
          new object[] { 28,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchLessThanOrEqualCases")]
+      [Test, TestCaseSource("FetchLessThanOrEqualCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_LessThanOrEqual_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -790,7 +790,7 @@ namespace HFM.Core.Tests
          new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 450 }) }
       };
 
-      [Test, TestCaseSource("FetchLikeCases")]
+      [Test, TestCaseSource("FetchLikeCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_Like_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -822,7 +822,7 @@ namespace HFM.Core.Tests
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "6%" }) }
       };
 
-      [Test, TestCaseSource("FetchNotLikeCases")]
+      [Test, TestCaseSource("FetchNotLikeCases"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_NotLike_Test(int expected, QueryParameters parameters)
       {
          FetchTestData(expected, parameters);
@@ -888,14 +888,14 @@ namespace HFM.Core.Tests
          }));
       }
 
-      [Test]
+      [Test, Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_All_Test2()
       {
          // Select All
          FetchTestData2(253, BuildParameters());
       }
 
-      [Test, TestCaseSource("FetchEqualCases2")]
+      [Test, TestCaseSource("FetchEqualCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_Equal_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -927,7 +927,7 @@ namespace HFM.Core.Tests
          new object[] { 2,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Equal,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchNotEqualCases2")]
+      [Test, TestCaseSource("FetchNotEqualCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_NotEqual_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -959,7 +959,7 @@ namespace HFM.Core.Tests
          new object[] { 251,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.NotEqual,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchGreaterThanCases2")]
+      [Test, TestCaseSource("FetchGreaterThanCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_GreaterThan_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -991,7 +991,7 @@ namespace HFM.Core.Tests
          new object[] { 14,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThan,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchGreaterThanOrEqualCases2")]
+      [Test, TestCaseSource("FetchGreaterThanOrEqualCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_GreaterThanOrEqual_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -1023,7 +1023,7 @@ namespace HFM.Core.Tests
          new object[] { 16,   BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.GreaterThanOrEqual,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchLessThanCases2")]
+      [Test, TestCaseSource("FetchLessThanCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_LessThan_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -1055,7 +1055,7 @@ namespace HFM.Core.Tests
          new object[] { 237,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThan,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchLessThanOrEqualCases2")]
+      [Test, TestCaseSource("FetchLessThanOrEqualCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_LessThanOrEqual_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -1087,7 +1087,7 @@ namespace HFM.Core.Tests
          new object[] { 239,  BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.LessThanOrEqual,  Value = 869.4797 }) }
       };
 
-      [Test, TestCaseSource("FetchLikeCases2")]
+      [Test, TestCaseSource("FetchLikeCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_Like_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -1119,7 +1119,7 @@ namespace HFM.Core.Tests
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.Credit,             Type = QueryFieldType.Like,  Value = "9%" }) }
       };
 
-      [Test, TestCaseSource("FetchNotLikeCases2")]
+      [Test, TestCaseSource("FetchNotLikeCases2"), Category("HFM.Core.UnitInfoDatabase.Fetch")]
       public void Fetch_NotLike_Test2(int expected, QueryParameters parameters)
       {
          FetchTestData2(expected, parameters);
@@ -1223,56 +1223,56 @@ namespace HFM.Core.Tests
 
       #region Page
 
-      [Test]
+      [Test, Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_All_Test1()
       {
          // Select All
          PageTestData(44, BuildParameters());
       }
 
-      [Test, TestCaseSource("FetchEqualCases")]
+      [Test, TestCaseSource("FetchEqualCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_Equal_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchNotEqualCases")]
+      [Test, TestCaseSource("FetchNotEqualCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_NotEqual_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchGreaterThanCases")]
+      [Test, TestCaseSource("FetchGreaterThanCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_GreaterThan_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchGreaterThanOrEqualCases")]
+      [Test, TestCaseSource("FetchGreaterThanOrEqualCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_GreaterThanOrEqual_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchLessThanCases")]
+      [Test, TestCaseSource("FetchLessThanCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_LessThan_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchLessThanOrEqualCases")]
+      [Test, TestCaseSource("FetchLessThanOrEqualCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_LessThanOrEqual_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchLikeCases")]
+      [Test, TestCaseSource("FetchLikeCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_Like_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
       }
 
-      [Test, TestCaseSource("FetchNotLikeCases")]
+      [Test, TestCaseSource("FetchNotLikeCases"), Category("HFM.Core.UnitInfoDatabase.Page")]
       public void Page_NotLike_Test(int expected, QueryParameters parameters)
       {
          PageTestData(expected, parameters);
