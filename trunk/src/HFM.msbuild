@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
    <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks" />
    <PropertyGroup>
@@ -8,6 +8,7 @@
       <Build>3</Build>
       <Revision>0</Revision>
       <SolutionFileName>HFM.All.sln</SolutionFileName>
+      <SetupSolutionFileName>HFM.Setup.sln</SetupSolutionFileName>
       <Configuration Condition=" '$(Configuration)' == '' ">ScriptedRelease</Configuration>
       <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
       <AssemblyOriginatorKeyFile Condition=" '$(PlatformAssemblyOriginatorKeyFile)' == '' ">$(MSBuildProjectDirectory)\harlam357public.snk</AssemblyOriginatorKeyFile>
@@ -48,7 +49,7 @@
       <Exec Command="$(NuGetPath) restore $(SolutionFileName)" />
    </Target>
    <Target Name="Deploy" DependsOnTargets="CleanArtifactsFolder">
-      <Exec Command="..\..\..\Deploy.bat ..\..\..\Artifacts\HFM.NET" WorkingDirectory="HFM\bin\Release" />
+      <Exec Command="..\..\..\Deploy.bat ..\..\..\$(ArtifactsHFM)" WorkingDirectory="HFM\bin\Release" />
    </Target>
    <Target Name="CleanArtifactsFolder">
       <RemoveDir Directories="$(ArtifactsPath)" />
@@ -56,15 +57,10 @@
       <MakeDir Directories="$(ArtifactsPackages)" />
    </Target>
    <PropertyGroup>
-      <!--<ArtifactsPath>.\Artifacts</ArtifactsPath>-->
-      <!--<ArtifactsHFM>.\Artifacts\HFM.NET</ArtifactsHFM>-->
-      <!--<ArtifactsPlugins>.\Artifacts\Plugins</ArtifactsPlugins>-->
-      <!--<ArtifactsPackages>.\Artifacts\Packages</ArtifactsPackages>-->
       <ArtifactsPath>Artifacts</ArtifactsPath>
       <ArtifactsHFM>Artifacts\HFM.NET</ArtifactsHFM>
       <!--<ArtifactsPlugins>Artifacts\Plugins</ArtifactsPlugins>-->
       <ArtifactsPackages>Artifacts\Packages</ArtifactsPackages>
-      <SetupSolutionFileName>HFM.Setup.sln</SetupSolutionFileName>
    </PropertyGroup>
    <PropertyGroup>
       <NUnitPath>&quot;packages\NUnit.Runners.2.6.4\tools\nunit-console-x86.exe&quot;</NUnitPath>
@@ -78,11 +74,13 @@
    <Target Name="Test">
       <Message Text="Sequential Test Run - TestLevel: $(TestLevel)" />
       <CallTarget Targets="TestClient;TestCore;TestForms;TestLog;TestProteins;TestQueue" />
+      <Message Text="Test Run Complete" />
    </Target>
    <!--PRIMARY TARGET: TestParallel-->
    <Target Name="TestParallel">
       <Message Text="Parallel Test Run - TestLevel: $(TestLevel)" />
-      <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="TestClient;TestCore;TestForms;TestLog;TestProteins;TestQueue" />
+      <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="TestClient;TestCore;TestForms;TestLog;TestProteins;TestQueue" AdditionalProperties="TestLevel=$(TestLevel)" />
+      <Message Text="Test Run Complete" />
    </Target>
    <Target Name="TestClient">
       <Exec Command="$(NUnitPath) .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Client.Tests.Results.xml" />
@@ -103,11 +101,9 @@
    <Target Name="TestQueue">
       <Exec Command="$(NUnitPath) .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Queue.Tests.Results.xml" />
    </Target>
-
-   <Target Name="FxCop">
+   <Target Name="Analyze">
       <Exec Command="$(FxCopPath) /f:$(ArtifactsHFM)\HFM.exe /f:$(ArtifactsHFM)\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:.\Artifacts\FxCopReport.xml /gac" />
    </Target>
-
    <ItemGroup>
       <ZipFiles Include="$(ArtifactsHFM)\**\*.*" Exclude="$(ArtifactsHFM)\Documentation\API Docs\*.*" />
       <ClientZipFiles Include="$(ArtifactsHFM)\HFM.Client.dll;$(ArtifactsHFM)\HFM.Client.xml;$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm;$(ArtifactsHFM)\HFM.Core.DataTypes.dll;$(ArtifactsHFM)\HFM.Core.DataTypes.xml;$(ArtifactsHFM)\Documentation\License\GPLv2.txt;$(ArtifactsHFM)\Newtonsoft.Json.dll;$(ArtifactsHFM)\Newtonsoft.Json.xml;$(ArtifactsHFM)\Documentation\License\Json.NET License.txt" />
@@ -117,31 +113,23 @@
    <!--PRIMARY TARGET: BuildPackages-->
    <Target Name="BuildPackages">
       <Message Text="Sequential Package Build" />
-      <!--<CallTarget Targets="BuildZip;CopyZip;BuildMsi;CopyMsi;BuildApiZips;CopyApiZips" />-->
       <CallTarget Targets="BuildZip;BuildMsi;BuildApiZips" />
    </Target>
    <!--PRIMARY TARGET: BuildPackagesParallel-->
    <Target Name="BuildPackagesParallel">
       <Message Text="SequentialParallel Package Build" />
-      <!--<MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="BuildZip;CopyZip;BuildMsi;CopyMsi;BuildApiZips;CopyApiZips" />-->
       <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="BuildZip;BuildMsi;BuildApiZips" />
    </Target>
    <Target Name="BuildZip" DependsOnTargets="GetVersion">
       <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <Zip Files="@(ZipFiles)" WorkingDirectory="$(ArtifactsHFM)" ZipFileName="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
-   <Target Name ="CopyZip" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-   </Target>
    <Target Name="BuildMsi" DependsOnTargets="GetVersion">
       <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <MSBuild Projects="$(SetupSolutionFileName)" Targets="Rebuild" Properties="Configuration=Release" />
       <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
-   <Target Name ="CopyMsi" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
-   </Target>
-   <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="GetVersion;BuildDocs">
+   <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="GetVersion;BuildApiDocs">
       <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <Zip Files="@(ClientZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
@@ -153,37 +141,43 @@
            WorkingDirectory="$(ArtifactsHFM)"
            ZipFileName="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
-   <Target Name="BuildDocs">
+   <Target Name="BuildApiDocs">
       <MSBuild Projects="HFM.Client\HFM.Client.shfbproj" Properties="Configuration=Release;Platform=Any CPU;CleanIntermediates=True" />
       <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsHFM)\Documentation\API Docs\HFM.Client.chm" />
+   </Target>
+   <!--PRIMARY TARGET: CopyPackages--> 
+   <Target Name="CopyPackages">
+      <CallTarget Targets="CopyZip;CopyMsi;CopyApiZips" />
+   </Target>
+   <Target Name ="CopyZip" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
+   </Target>
+   <Target Name ="CopyMsi" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
+      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
    </Target>
    <Target Name ="CopyApiZips" Condition="'$(Platform)' == 'Any CPU' AND '$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
-      
+  
    <!--<Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
       <Message Text="HFM.NET Plugins Build Complete"/>
    </Target>
-
    <Target Name="CompilePlugins" DependsOnTargets="CreateAssemblyVersion">
       <MSBuild Projects=".\HFM.Plugins.ClientSettings\FahMon\HFM.Plugins.ClientSettings.FahMon.sln"
                Targets="Rebuild"
                Properties="Configuration=ScriptedRelease" />
    </Target>
-
    <ItemGroup>
       <PluginsFahMonZipFiles Include="$(ArtifactsPlugins)\FahMon\**\*.*" />
    </ItemGroup>
-
    <Target Name="BuildPluginsZip" DependsOnTargets="GetVersion">
       <MakeDir Directories="$(ArtifactsPackages)" />
       <Zip Files="@(PluginsFahMonZipFiles)"
            WorkingDirectory="$(ArtifactsPlugins)\FahMon"
            ZipFileName="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
-
    <Target Name ="CopyPluginsPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
       <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>-->
