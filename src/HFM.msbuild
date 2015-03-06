@@ -114,23 +114,22 @@
    <Target Name="BuildPackages">
       <Message Text="Sequential Package Build" />
       <CallTarget Targets="BuildZip;BuildMsi;BuildApiZips" />
+      <Message Text="Package Build Complete" />
    </Target>
    <!--PRIMARY TARGET: BuildPackagesParallel-->
    <Target Name="BuildPackagesParallel">
-      <Message Text="SequentialParallel Package Build" />
+      <Message Text="Parallel Package Build" />
       <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="BuildZip;BuildMsi;BuildApiZips" />
+      <Message Text="Package Build Complete" />
    </Target>
    <Target Name="BuildZip" DependsOnTargets="GetVersion">
-      <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <Zip Files="@(ZipFiles)" WorkingDirectory="$(ArtifactsHFM)" ZipFileName="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" />
    </Target>
    <Target Name="BuildMsi" DependsOnTargets="GetVersion">
-      <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <MSBuild Projects="$(SetupSolutionFileName)" Targets="Rebuild" Properties="Configuration=Release" />
       <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
    <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="GetVersion;BuildApiDocs">
-      <!--<MakeDir Directories="$(ArtifactsPackages)" />-->
       <Zip Files="@(ClientZipFiles)"
            WorkingDirectory="$(ArtifactsHFM)"
            ZipFileName="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" />
