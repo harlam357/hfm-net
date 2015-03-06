@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <!--PRIMARY TARGETS: Build;Test;TestParallel;BuildPackages;BuildPackagesParallel;CopyPackages-->
    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
    <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks" />
    <PropertyGroup>
@@ -159,25 +160,4 @@
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
       <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
-  
-   <!--<Target Name="BuildPlugins" DependsOnTargets="CompilePlugins">
-      <Message Text="HFM.NET Plugins Build Complete"/>
-   </Target>
-   <Target Name="CompilePlugins" DependsOnTargets="CreateAssemblyVersion">
-      <MSBuild Projects=".\HFM.Plugins.ClientSettings\FahMon\HFM.Plugins.ClientSettings.FahMon.sln"
-               Targets="Rebuild"
-               Properties="Configuration=ScriptedRelease" />
-   </Target>
-   <ItemGroup>
-      <PluginsFahMonZipFiles Include="$(ArtifactsPlugins)\FahMon\**\*.*" />
-   </ItemGroup>
-   <Target Name="BuildPluginsZip" DependsOnTargets="GetVersion">
-      <MakeDir Directories="$(ArtifactsPackages)" />
-      <Zip Files="@(PluginsFahMonZipFiles)"
-           WorkingDirectory="$(ArtifactsPlugins)\FahMon"
-           ZipFileName="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" />
-   </Target>
-   <Target Name ="CopyPluginsPackages" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM FahMon Plugin $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-   </Target>-->
 </Project>
