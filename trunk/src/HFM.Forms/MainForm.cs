@@ -201,7 +201,7 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
          // Give the Queue Control access to the Protein Collection
-         queueControl.SetProteinCollection(ServiceLocator.Resolve<IProteinService>());
+         queueControl.SetProteinService(ServiceLocator.Resolve<IProteinService>());
 
          #endregion
 
