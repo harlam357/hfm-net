@@ -52,7 +52,7 @@ namespace HFM.Core.Tests
       private const string TestScratchFile = "UnitInfoTest.db3";
 
       private UnitInfoDatabase _database;
-      private readonly IProteinDictionary _proteinDictionary = CreateProteinDictionary();
+      private readonly IProteinService _proteinService = CreateProteinService();
 
       #region Setup and TearDown
 
@@ -72,7 +72,7 @@ namespace HFM.Core.Tests
             File.Delete(TestScratchFile);
          }
 
-         _database = new UnitInfoDatabase(null, _proteinDictionary);
+         _database = new UnitInfoDatabase(null, _proteinService);
       }
 
       private void SetupTestDataFileCopies()
@@ -655,9 +655,9 @@ namespace HFM.Core.Tests
          }
       }
 
-      public static IProteinDictionary CreateProteinDictionary()
+      public static IProteinService CreateProteinService()
       {
-         var proteins = new ProteinDictionary();
+         var service = new ProteinService();
 
          var protein = new Protein();
          protein.ProjectNumber = 6600;
@@ -669,7 +669,7 @@ namespace HFM.Core.Tests
          protein.NumberOfAtoms = 5000;
          protein.PreferredDays = 2;
          protein.MaximumDays = 3;
-         proteins.Add(protein);
+         service.Add(protein);
 
          protein = new Protein();
          protein.ProjectNumber = 5797;
@@ -681,7 +681,7 @@ namespace HFM.Core.Tests
          protein.NumberOfAtoms = 7000;
          protein.PreferredDays = 2;
          protein.MaximumDays = 3;
-         proteins.Add(protein);
+         service.Add(protein);
 
          protein = new Protein();
          protein.ProjectNumber = 8011;
@@ -693,7 +693,7 @@ namespace HFM.Core.Tests
          protein.NumberOfAtoms = 9000;
          protein.PreferredDays = 2.13;
          protein.MaximumDays = 4.62;
-         proteins.Add(protein);
+         service.Add(protein);
 
          protein = new Protein();
          protein.ProjectNumber = 6903;
@@ -705,9 +705,9 @@ namespace HFM.Core.Tests
          protein.NumberOfAtoms = 11000;
          protein.PreferredDays = 5;
          protein.MaximumDays = 12;
-         proteins.Add(protein);
+         service.Add(protein);
 
-         return proteins;
+         return service;
       }
 
       #endregion

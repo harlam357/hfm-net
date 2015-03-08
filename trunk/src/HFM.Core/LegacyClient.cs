@@ -206,7 +206,7 @@ namespace HFM.Core
       {
          Debug.Assert(unitInfo != null);
 
-         Protein protein = ProteinDictionary.Get(unitInfo.ProjectID, true) ?? new Protein();
+         Protein protein = ProteinService.Get(unitInfo.ProjectID, true) ?? new Protein();
 
          if (updateUnitInfo)
          {

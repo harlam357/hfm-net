@@ -114,7 +114,7 @@ namespace HFM.Core
 
       public IPreferenceSet Prefs { get; set; }
 
-      public IProteinDictionary ProteinDictionary { get; set; }
+      public IProteinService ProteinService { get; set; }
 
       public IUnitInfoCollection UnitInfoCollection { get; set; }
 

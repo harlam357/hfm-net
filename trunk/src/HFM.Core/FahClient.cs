@@ -460,7 +460,7 @@ namespace HFM.Core
          Debug.Assert(slotModel != null);
          Debug.Assert(unitInfo != null);
 
-         Protein protein = ProteinDictionary.Get(unitInfo.ProjectID, true) ?? new Protein();
+         Protein protein = ProteinService.Get(unitInfo.ProjectID, true) ?? new Protein();
 
          // update the data
          unitInfo.UnitRetrievalTime = LastRetrievalTime;

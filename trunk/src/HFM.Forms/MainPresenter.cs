@@ -90,7 +90,7 @@ namespace HFM.Forms
 
       private readonly IClientDictionary _clientDictionary;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
-      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinService _proteinService;
       private readonly IUnitInfoCollection _unitInfoCollection;
 
       #endregion
@@ -117,7 +117,7 @@ namespace HFM.Forms
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
                            IClientDictionary clientDictionary, IProteinBenchmarkCollection benchmarkCollection,
-                           IProteinDictionary proteinDictionary, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
+                           IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
@@ -147,7 +147,7 @@ namespace HFM.Forms
          // Collections
          _clientDictionary = clientDictionary;
          _benchmarkCollection = benchmarkCollection;
-         _proteinDictionary = proteinDictionary;
+         _proteinService = proteinService;
          _unitInfoCollection = unitInfoCollection;
          // Logic Services
          _updateLogic = updateLogic;
@@ -841,7 +841,7 @@ namespace HFM.Forms
          using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
          {
             dialog.SettingsModel = new FahClientSettingsModel(_view);
-            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
                var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                //if (_clientDictionary.ContainsKey(settings.Name))
@@ -870,7 +870,7 @@ namespace HFM.Forms
          using (var dialog = ServiceLocator.Resolve<ILegacyClientSetupPresenter>())
          {
             dialog.SettingsModel = new LegacyClientSettingsModel();
-            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
                var settings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                // perform the add
@@ -1212,7 +1212,7 @@ namespace HFM.Forms
       {
          var downloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
          // Clear the Project Not Found Cache and Last Download Time
-         _proteinDictionary.ClearProjectsNotFoundCache();
+         _proteinService.ClearProjectsNotFoundCache();
          // Execute Asynchronous Download
          var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>("ProjectDownloadDialog");
          projectDownloadView.OwnerWindow = _view;
@@ -1230,13 +1230,13 @@ namespace HFM.Forms
          IList<ProteinLoadInfo> loadInfo;
          try
          {
-            loadInfo = _proteinDictionary.Load(downloader.DownloadFilePath).Where(info => info.Result != ProteinLoadResult.NoChange).ToList();
+            loadInfo = _proteinService.Load(downloader.DownloadFilePath).Where(info => info.Result != ProteinLoadResult.NoChange).ToList();
             foreach (var info in loadInfo)
             {
                Logger.Info(info.ToString());
             }
-            _proteinDictionary.Write();
-            //_proteinDictionary.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
+            _proteinService.Write();
+            //_proteinService.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
          }
          catch (Exception ex)
          {

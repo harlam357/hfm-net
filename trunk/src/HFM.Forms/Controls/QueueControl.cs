@@ -61,7 +61,7 @@ namespace HFM.Forms.Controls
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
       private ClientQueue _queue;
-      private IProteinDictionary _proteinCollection;
+      private IProteinService _proteinService;
 
       private SlotType _slotType = SlotType.Unknown;
       private bool _utcOffsetIsZero;
@@ -73,9 +73,9 @@ namespace HFM.Forms.Controls
          InitializeComponent();
       }
       
-      public void SetProteinCollection(IProteinDictionary proteinCollection)
+      public void SetProteinService(IProteinService proteinService)
       {
-         _proteinCollection = proteinCollection;
+         _proteinService = proteinService;
       }
 
       private void OnQueueIndexChanged(QueueIndexChangedEventArgs e)
@@ -130,7 +130,7 @@ namespace HFM.Forms.Controls
             WaitingOnTextBox.Text = String.IsNullOrEmpty(entry.WaitingOn) ? "(No Action)" : entry.WaitingOn;
             AttemptsTextBox.Text = entry.Attempts.ToString();
             NextAttemptTextBox.Text = entry.NextAttempt.ToString();
-            var protein = _proteinCollection.Get(entry.ProjectID);
+            var protein = _proteinService.Get(entry.ProjectID);
             txtCredit.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
             if (entry.BeginTimeUtc.IsUnknown())
             {

@@ -42,18 +42,18 @@ namespace HFM.Forms.Models
       }
 
       private readonly IPreferenceSet _prefs;
-      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinService _proteinService;
 
-      public ProteinCalculatorModel(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
+      public ProteinCalculatorModel(IPreferenceSet prefs, IProteinService proteinService)
       {
          _prefs = prefs;
-         _proteinDictionary = proteinDictionary;
+         _proteinService = proteinService;
       }
 
       public void Calculate()
       {
          //_logger.Debug("Selected Project: {0}", SelectedProject);
-         Protein value = _proteinDictionary.Get(SelectedProject);
+         Protein value = _proteinService.Get(SelectedProject);
          if (value == null)
          {
             return;
@@ -96,7 +96,7 @@ namespace HFM.Forms.Models
 
       public IEnumerable<int> Projects
       {
-         get { return _proteinDictionary.GetProjects(); }
+         get { return _proteinService.GetProjects(); }
       }
 
       private int _selectedProject;

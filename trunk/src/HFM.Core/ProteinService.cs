@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Core Protein Dictionary
+ * HFM.NET - Protein Service
  * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -26,55 +26,49 @@ using HFM.Proteins;
 
 namespace HFM.Core
 {
-   public interface IProteinDictionary
+   public interface IProteinService
    {
       Protein Get(int projectId);
 
       IEnumerable<int> GetProjects();
 
       /// <summary>
-      /// Clear the Projects not found cache
+      /// Clear the projects not found cache.
       /// </summary>
       void ClearProjectsNotFoundCache();
 
       Protein Get(int projectId, bool allowRefresh);
 
       /// <summary>
-      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// Loads data and returns an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.
       /// </summary>
-      /// <param name="fileName">File name to load into the dictionary.</param>
-      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      IEnumerable<ProteinLoadInfo> Load(string fileName);
-
-      #region DataContainer<T>
-
-      void Read();
+      /// <param name="path">The file containing data to load into the service.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.</returns>
+      IEnumerable<ProteinLoadInfo> Load(string path);
 
       void Write();
-
-      #endregion
    }
 
    [CoverageExclude]
-   public sealed class ProteinDictionary : DataContainer<List<Protein>>, IProteinDictionary
+   public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
       /// <summary>
       /// List of Projects that were not found.
       /// </summary>
       private readonly Dictionary<Int32, DateTime> _projectsNotFound;
-      private readonly Proteins.ProteinDictionary _dictionary;
+      private readonly ProteinDictionary _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
 
-      internal ProteinDictionary()
+      internal ProteinService()
          : this(null, null)
       {
          
       }
 
-      public ProteinDictionary(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
+      public ProteinService(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
       {
          _projectsNotFound = new Dictionary<Int32, DateTime>(); 
-         _dictionary = new Proteins.ProteinDictionary();
+         _dictionary = new ProteinDictionary();
          _downloader = downloader;
 
          if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
@@ -84,6 +78,11 @@ namespace HFM.Core
       }
 
       #region Properties
+
+      internal IDictionary<int, DateTime> ProjectsNotFound
+      {
+         get { return _projectsNotFound; }
+      }
 
       public override Plugins.IFileSerializer<List<Protein>> DefaultSerializer
       {
@@ -108,7 +107,7 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Clear the Projects not found cache
+      /// Clear the projects not found cache.
       /// </summary>
       public void ClearProjectsNotFoundCache()
       {
@@ -189,9 +188,14 @@ namespace HFM.Core
          }
       }
 
-      public IEnumerable<ProteinLoadInfo> Load(string fileName)
+      /// <summary>
+      /// Loads data and returns an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.
+      /// </summary>
+      /// <param name="path">The file containing data to load into the service.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.</returns>
+      public IEnumerable<ProteinLoadInfo> Load(string path)
       {
-         return _dictionary.Load(fileName);
+         return _dictionary.Load(path);
       }
 
       #region DataContainer<T>
