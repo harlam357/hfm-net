@@ -139,7 +139,7 @@ namespace HFM.Core
 
       private readonly ILogger _logger = NullLogger.Instance;
 
-      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinService _proteinService;
       private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
                                                                                                  {
                                                                                                     { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
@@ -150,16 +150,16 @@ namespace HFM.Core
 
       #region Constructor
 
-      public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary)
-         : this(prefs, proteinDictionary, null)
+      public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService)
+         : this(prefs, proteinService, null)
       {
 
       }
 
-      public UnitInfoDatabase(IPreferenceSet prefs, IProteinDictionary proteinDictionary, ILogger logger)
+      public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
       {
-         if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
-         _proteinDictionary = proteinDictionary;
+         if (proteinService == null) throw new ArgumentNullException("proteinService");
+         _proteinService = proteinService;
 
          if (logger != null)
          {
@@ -244,7 +244,7 @@ namespace HFM.Core
             // add columns to WuHistory table
             AddProteinColumns();
             // update the WuHistory table with protein info
-            var proteinDataUpdater = new ProteinDataUpdater(this, _proteinDictionary);
+            var proteinDataUpdater = new ProteinDataUpdater(this, _proteinService);
             OnUpgradeExecuting(proteinDataUpdater);
             // set database version
             SetDatabaseVersion(upgradeVersion1String);
@@ -1205,15 +1205,15 @@ namespace HFM.Core
    public sealed class ProteinDataUpdater : ProgressProcessRunnerBase
    {
       private readonly IUnitInfoDatabase _database;
-      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinService _proteinService;
 
-      public ProteinDataUpdater(IUnitInfoDatabase database, IProteinDictionary proteinDictionary)
+      public ProteinDataUpdater(IUnitInfoDatabase database, IProteinService proteinService)
       {
          if (database == null) throw new ArgumentNullException("database");
-         if (proteinDictionary == null) throw new ArgumentNullException("proteinDictionary");
+         if (proteinService == null) throw new ArgumentNullException("proteinService");
 
          _database = database;
-         _proteinDictionary = proteinDictionary;
+         _proteinService = proteinService;
 
          Debug.Assert(_database.Connected);
       }
@@ -1299,7 +1299,7 @@ namespace HFM.Core
       private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
       {
          // get the correct protein
-         var protein = _proteinDictionary.Get(projectId);
+         var protein = _proteinService.Get(projectId);
          if (protein != null)
          {
             var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")

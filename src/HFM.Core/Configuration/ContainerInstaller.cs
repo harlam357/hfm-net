@@ -143,11 +143,11 @@ namespace HFM.Core.Configuration
                .ImplementedBy<XmlStatsDataContainer>()
                   .OnCreate((kernel, instance) => instance.Read()));
 
-         // IProteinDictionary - Singleton
+         // IProteinService - Singleton
          container.Register(
-            Component.For<IProteinDictionary>()
-               .ImplementedBy<ProteinDictionary>()
-                  .OnCreate((kernel, instance) => instance.Read()));
+            Component.For<IProteinService>()
+               .ImplementedBy<ProteinService>()
+                  .OnCreate((kernel, instance) => ((ProteinService)instance).Read()));
 
          // PluginLoader - Transient
          container.Register(

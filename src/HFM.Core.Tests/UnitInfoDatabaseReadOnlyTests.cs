@@ -39,7 +39,7 @@ namespace HFM.Core.Tests
       private readonly string _testData2FileCopy = Path.ChangeExtension(TestData2File, ".dbcopy");
 
       private UnitInfoDatabase _database;
-      private readonly IProteinDictionary _proteinDictionary = UnitInfoDatabaseTests.CreateProteinDictionary();
+      private readonly IProteinService _proteinService = UnitInfoDatabaseTests.CreateProteinService();
 
       #region Setup and TearDown
 
@@ -47,7 +47,7 @@ namespace HFM.Core.Tests
       public void FixtureInit()
       {
          SetupTestDataFileCopies();
-         _database = new UnitInfoDatabase(null, _proteinDictionary);
+         _database = new UnitInfoDatabase(null, _proteinService);
       }
 
       private void SetupTestDataFileCopies()

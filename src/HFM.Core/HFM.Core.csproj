@@ -109,7 +109,7 @@
     <Compile Include="LegacyDataAggregator.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
-    <Compile Include="ProteinDictionary.cs" />
+    <Compile Include="ProteinService.cs" />
     <Compile Include="Serializers\HfmFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="Serializers\XmlFileSerializer.cs" />

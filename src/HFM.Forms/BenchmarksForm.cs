@@ -83,7 +83,7 @@ namespace HFM.Forms
       private int _currentNumberOfGraphs = 1;
 
       private readonly IPreferenceSet _prefs;
-      private readonly IProteinDictionary _proteinDictionary;
+      private readonly IProteinService _proteinService;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IList<Color> _graphColors;
       private readonly IClientDictionary _clientDictionary;
@@ -97,11 +97,11 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public BenchmarksForm(IPreferenceSet prefs, IProteinDictionary proteinDictionary, IProteinBenchmarkCollection benchmarkCollection,
+      public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkCollection benchmarkCollection,
                             IClientDictionary clientDictionary, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
-         _proteinDictionary = proteinDictionary;
+         _proteinService = proteinService;
          _benchmarkCollection = benchmarkCollection;
          _graphColors = _prefs.Get<List<Color>>(Preference.GraphColors);
          _clientDictionary = clientDictionary;
@@ -164,7 +164,7 @@ namespace HFM.Forms
 
          List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectId).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
-         Protein protein = _proteinDictionary.Get(projectId);
+         Protein protein = _proteinService.Get(projectId);
 
          foreach (ProteinBenchmark benchmark in list)
          {
@@ -284,7 +284,7 @@ namespace HFM.Forms
       {
          var output = new List<string>(12);
 
-         Protein protein = _proteinDictionary.Get(benchmark.ProjectID);
+         Protein protein = _proteinService.Get(benchmark.ProjectID);
          if (protein != null)
          {
             var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
@@ -510,7 +510,7 @@ namespace HFM.Forms
       {
          var lines = new List<string>(5);
 
-         Protein protein = _proteinDictionary.Get(projectId);
+         Protein protein = _proteinService.Get(projectId);
          if (protein != null)
          {
             txtProjectID.Text = protein.WorkUnitName;
