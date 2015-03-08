@@ -148,6 +148,7 @@
     <Compile Include="QueryParametersCollectionTests.cs" />
     <Compile Include="StatusTests.cs" />
     <Compile Include="UnitInfoCollectionTests.cs" />
+    <Compile Include="UnitInfoDatabaseReadOnlyTests.cs" />
     <Compile Include="UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoLogicTests.cs" />
     <Compile Include="ValidateTests.cs" />
