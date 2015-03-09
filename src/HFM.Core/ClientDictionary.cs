@@ -50,10 +50,22 @@ namespace HFM.Core
       /// </summary>
       IEnumerable<SlotModel> Slots { get; }
 
+      /// <summary>
+      /// Gets the number of clients in the configuration.
+      /// </summary>
       int Count { get; }
 
+      /// <summary>
+      /// Gets all the clients in the configuration.
+      /// </summary>
+      /// <returns></returns>
       IEnumerable<IClient> GetClients();
 
+      /// <summary>
+      /// Gets the client with the specified key value.
+      /// </summary>
+      /// <param name="key">The key of the client to get.</param>
+      /// <returns>The client with the specified key value or null if the key does not exist.</returns>
       IClient Get(string key);
 
       /// <summary>
@@ -74,16 +86,6 @@ namespace HFM.Core
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="settings"/> is null.</exception>
       /// <exception cref="T:System.ArgumentException">If the settings name changed, an element with the new settings name already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
       void Edit(string key, ClientSettings settings);
-
-      /// <summary>
-      /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-      /// </summary>
-      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
-      /// <param name="key">The string to use as the key of the element to add.</param>
-      /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
-      /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
-      void Add(string key, IClient value);
 
       /// <summary>
       /// Removes the <see cref="T:HFM.Core.IClient"/> element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
@@ -301,7 +303,15 @@ namespace HFM.Core
          OnClientDataDirty(new ClientDataDirtyEventArgs(settings.Name));
       }
 
-      public void Add(string key, IClient value)
+      /// <summary>
+      /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+      /// </summary>
+      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <param name="key">The string to use as the key of the element to add.</param>
+      /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
+      internal void Add(string key, IClient value)
       {
          if (key == null) throw new ArgumentNullException("key");
          if (value == null) throw new ArgumentNullException("value");
