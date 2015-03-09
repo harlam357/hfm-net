@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Retrieval Logic Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
@@ -108,18 +109,18 @@ namespace HFM.Forms
       {
          _prefs = prefs;
          _clientDictionary = clientDictionary;
-         _clientDictionary.DictionaryChanged += delegate { SetTimerState(); };
+         _clientDictionary.DictionaryChanged += (sender, e) => SetTimerState();
          _clientDictionary.ClientDataDirty += (sender, e) =>
-                                                    {
-                                                       if (e.Name == null)
-                                                       {
-                                                          QueueNewRetrieval();
-                                                       }
-                                                       else
-                                                       {
-                                                          RetrieveSingleClient(e.Name);
-                                                       }
-                                                    };
+                                              {
+                                                 if (e.Name == null)
+                                                 {
+                                                    QueueNewRetrieval();
+                                                 }
+                                                 else
+                                                 {
+                                                    RetrieveSingleClient(e.Name);
+                                                 }
+                                              };
          _mainGridModel = mainGridModel;
       }
 
@@ -225,7 +226,6 @@ namespace HFM.Forms
             // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
             _doRetrievalThread = new Thread(DoRetrievalWrapper) { IsBackground = true, Name = "DoRetrievalWrapper" };
             _doRetrievalThread.Start();
-            //new Action(DoRetrievalWrapper).BeginInvoke(null, null);
          }
       }
 
@@ -260,7 +260,6 @@ namespace HFM.Forms
                // do a web gen (on another thread)
                var webGen = new Thread(DoWebGeneration) { IsBackground = true, Name = "DoWebGeneration" };
                webGen.Start();
-               //new Action(DoWebGeneration).BeginInvoke(null, null);
             }
 
             // Enable the data retrieval timer
@@ -287,58 +286,17 @@ namespace HFM.Forms
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         bool synchronous = _prefs.Get<bool>(Preference.SyncOnLoad);
+         var synchronous = _prefs.Get<bool>(Preference.SyncOnLoad);
 
-         // copy the current instance keys into local array
-         int numInstances = _clientDictionary.Count;
-         var instanceKeys = new string[numInstances];
-         _clientDictionary.Keys.CopyTo(instanceKeys, 0);
-
-         var waitHandleList = new List<WaitHandle>();
-         for (int i = 0; i < numInstances; )
+         var clients = _clientDictionary.GetClients().ToList();
+         if (synchronous) // do the individual retrieves on a single thread
          {
-            waitHandleList.Clear();
-            // loop through the instances (can only handle up to 64 wait handles at a time)
-            // limiting to 20 to reduce threadpool starvation
-            for (int j = 0; j < 20 && i < numInstances; j++)
-            {
-               // try to get the key value from the collection, if the value is not found then
-               // the user removed a client in the middle of a retrieve process, ignore the key
-               IClient client;
-               if (_clientDictionary.TryGetValue(instanceKeys[i], out client))
-               {
-                  if (synchronous) // do the individual retrieves on a single thread
-                  {
-                     RetrieveInstance(client);
-                  }
-                  else // fire individual threads to do the their own retrieve simultaneously
-                  {
-                     IAsyncResult async = QueueNewRetrieval(client);
-
-                     // get the wait handle for each invoked delegate
-                     waitHandleList.Add(async.AsyncWaitHandle);
-                  }
-               }
-
-               i++; // increment the outer loop counter
-            }
-
-            if (synchronous == false)
-            {
-               WaitHandle[] waitHandles = waitHandleList.ToArray();
-               // wait for all invoked threads to complete
-               WaitHandle.WaitAll(waitHandles);
-            }
+            clients.ForEach(RetrieveInstance);
          }
-      }
-
-      /// <summary>
-      /// Stick this Instance in the background thread queue to retrieve the info for the given Instance
-      /// </summary>
-      private static IAsyncResult QueueNewRetrieval(IClient client)
-      {
-         var retrieveInstance = new Action<IClient>(RetrieveInstance);
-         return retrieveInstance.BeginInvoke(client, RetrieveInstanceCallback, retrieveInstance);
+         else // fire individual threads to do the their own retrieve simultaneously
+         {
+            Parallel.ForEach(clients, RetrieveInstance);
+         }
       }
 
       /// <summary>
@@ -357,41 +315,13 @@ namespace HFM.Forms
       /// </summary>
       public void RetrieveSingleClient(string name)
       {
-         RetrieveSingleClient(_clientDictionary[name]);
-      }
-
-      /// <summary>
-      /// Retrieve the given Client Instance
-      /// </summary>
-      public void RetrieveSingleClient(IClient client)
-      {
-         // fire the actual retrieval thread
-         var retrieveInstance = new Action<IClient>(DoSingleClientRetieval);
-         retrieveInstance.BeginInvoke(client, RetrieveInstanceCallback, retrieveInstance);
-      }
-
-      /// <summary>
-      /// Do a single retrieval operation on the given Client Instance
-      /// </summary>
-      private static void DoSingleClientRetieval(IClient client)
-      {
-         if (client.RetrievalInProgress == false)
-         {
-            IAsyncResult async = QueueNewRetrieval(client);
-            async.AsyncWaitHandle.WaitOne();
-         }
-      }
-
-      private static void RetrieveInstanceCallback(IAsyncResult async)
-      {
-         var retrieveInstance = (Action<IClient>)async.AsyncState;
-         retrieveInstance.EndInvoke(async);
+         Task.Factory.StartNew(() => RetrieveInstance(_clientDictionary.Get(name)));
       }
 
       /// <summary>
       /// Disable and enable the background work timers
       /// </summary>
-      public void SetTimerState()
+      private void SetTimerState()
       {
          // Disable timers if no hosts
          if (_clientDictionary.Count == 0)

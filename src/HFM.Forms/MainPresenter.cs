@@ -744,7 +744,7 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _settingsManager.FileName, 
+               _settingsManager.Write(_clientDictionary.GetClients().Select(x => x.Settings), _settingsManager.FileName, 
                                       _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
                _clientDictionary.IsDirty = false;
             }
@@ -769,7 +769,7 @@ namespace HFM.Forms
             try
             {
                // Issue 75
-               _settingsManager.Write(_clientDictionary.Values.Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
+               _settingsManager.Write(_clientDictionary.GetClients().Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
                _clientDictionary.IsDirty = false;
             }
             catch (Exception ex)
@@ -911,7 +911,7 @@ namespace HFM.Forms
       private void EditFahClient()
       {
          Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientDictionary[_gridModel.SelectedSlot.Settings.Name];
+         IClient client = _clientDictionary.Get(_gridModel.SelectedSlot.Settings.Name);
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsFahClient());
 
@@ -939,7 +939,7 @@ namespace HFM.Forms
       private void EditLegacyClient()
       {
          Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientDictionary[_gridModel.SelectedSlot.Settings.Name];
+         IClient client = _clientDictionary.Get(_gridModel.SelectedSlot.Settings.Name);
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsLegacy());
 
