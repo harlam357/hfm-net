@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Client Dictionary Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IClientDictionary : IDictionary<string, IClient>
+   public interface IClientDictionary
    {
       event EventHandler DictionaryChanged;
       event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
@@ -50,6 +50,12 @@ namespace HFM.Core
       /// </summary>
       IEnumerable<SlotModel> Slots { get; }
 
+      int Count { get; }
+
+      IEnumerable<IClient> GetClients();
+
+      IClient Get(string key);
+
       /// <summary>
       /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </summary>
@@ -69,10 +75,6 @@ namespace HFM.Core
       /// <exception cref="T:System.ArgumentException">If the settings name changed, an element with the new settings name already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
       void Edit(string key, ClientSettings settings);
 
-      #region IDictionary<string,IClient> Members
-
-      // Override Default Interface Documentation
-
       /// <summary>
       /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </summary>
@@ -81,7 +83,7 @@ namespace HFM.Core
       /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
       /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
-      new void Add(string key, IClient value);
+      void Add(string key, IClient value);
 
       /// <summary>
       /// Removes the <see cref="T:HFM.Core.IClient"/> element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
@@ -92,21 +94,13 @@ namespace HFM.Core
       /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event when successful.</remarks>
       /// <param name="key">The key of the element to remove.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.</exception>
-      new bool Remove(string key);
-      
-      #endregion
-
-      #region ICollection<KeyValuePair<string,IClient>> Members
-
-      // Override Default Interface Documentation
+      bool Remove(string key);
 
       /// <summary>
       /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </summary>
       /// <remarks>Sets the IsDirty property to false and raises the DictionaryChanged event if values existed before this call.</remarks>
-      new void Clear();
-
-      #endregion
+      void Clear();
    }
 
    public sealed class ClientDictionary : IClientDictionary
@@ -200,8 +194,8 @@ namespace HFM.Core
             {
                if (client != null)
                {
-                  client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
-                  client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+                  client.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+                  client.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
                   _clientDictionary.Add(client.Settings.Name, client);
                   added++;
                }
@@ -283,8 +277,8 @@ namespace HFM.Core
                _clientDictionary.Remove(key);
                _clientDictionary.Add(settings.Name, client);
             }
-            client.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
-            client.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+            client.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+            client.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
             
             if (settings.IsFahClient() || settings.IsLegacy())
             {
@@ -307,8 +301,6 @@ namespace HFM.Core
          OnClientDataDirty(new ClientDataDirtyEventArgs(settings.Name));
       }
 
-      #region IDictionary<string,IClient> Members
-
       public void Add(string key, IClient value)
       {
          if (key == null) throw new ArgumentNullException("key");
@@ -317,8 +309,8 @@ namespace HFM.Core
          _cacheLock.EnterWriteLock();
          try
          {
-            value.SlotsChanged += delegate { OnClientDataInvalidated(EventArgs.Empty); };
-            value.RetrievalFinished += delegate { OnClientDataInvalidated(EventArgs.Empty); };
+            value.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+            value.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
             _clientDictionary.Add(key, value);
          }
          finally
@@ -342,23 +334,6 @@ namespace HFM.Core
          finally
          {
             _cacheLock.ExitReadLock();
-         }
-      }
-
-      public ICollection<string> Keys
-      {
-         [CoverageExclude]
-         get
-         {
-            _cacheLock.EnterReadLock();
-            try
-            {
-               return _clientDictionary.Keys;
-            }
-            finally
-            {
-               _cacheLock.ExitReadLock();
-            }
          }
       }
 
@@ -395,12 +370,12 @@ namespace HFM.Core
       }
 
       [CoverageExclude]
-      public bool TryGetValue(string key, out IClient value)
+      public IEnumerable<IClient> GetClients()
       {
          _cacheLock.EnterReadLock();
          try
          {
-            return _clientDictionary.TryGetValue(key, out value);
+            return _clientDictionary.Values;
          }
          finally
          {
@@ -408,50 +383,18 @@ namespace HFM.Core
          }
       }
 
-      public ICollection<IClient> Values
-      {
-         [CoverageExclude]
-         get
-         {
-            _cacheLock.EnterReadLock();
-            try
-            {
-               return _clientDictionary.Values;
-            }
-            finally
-            {
-               _cacheLock.ExitReadLock();
-            }
-         }
-      }
-
-      public IClient this[string key]
-      {
-         [CoverageExclude]
-         get
-         {
-            _cacheLock.EnterReadLock();
-            try
-            {
-               return _clientDictionary[key];
-            }
-            finally
-            {
-               _cacheLock.ExitReadLock();
-            }
-         }
-         [CoverageExclude]
-         set { throw new NotImplementedException(); }
-      }
-
-      #endregion
-
-      #region ICollection<KeyValuePair<string,IClient>> Members
-
       [CoverageExclude]
-      void ICollection<KeyValuePair<string, IClient>>.Add(KeyValuePair<string, IClient> item)
+      public IClient Get(string key)
       {
-         throw new NotImplementedException();
+         _cacheLock.EnterReadLock();
+         try
+         {
+            return _clientDictionary[key];
+         }
+         finally
+         {
+            _cacheLock.ExitReadLock();
+         }
       }
 
       public void Clear()
@@ -482,18 +425,6 @@ namespace HFM.Core
          }
       }
 
-      [CoverageExclude]
-      bool ICollection<KeyValuePair<string, IClient>>.Contains(KeyValuePair<string, IClient> item)
-      {
-         throw new NotImplementedException();
-      }
-
-      [CoverageExclude]
-      void ICollection<KeyValuePair<string, IClient>>.CopyTo(KeyValuePair<string, IClient>[] array, int arrayIndex)
-      {
-         throw new NotImplementedException();
-      }
-
       public int Count
       {
          [CoverageExclude]
@@ -510,48 +441,6 @@ namespace HFM.Core
             }
          }
       }
-
-      bool ICollection<KeyValuePair<string,IClient>>.IsReadOnly
-      {
-         [CoverageExclude]
-         get { return false; }
-      }
-
-      [CoverageExclude]
-      bool ICollection<KeyValuePair<string, IClient>>.Remove(KeyValuePair<string, IClient> item)
-      {
-         throw new NotImplementedException();
-      }
-
-      #endregion
-
-      #region IEnumerable<KeyValuePair<string,IClient>> Members
-
-      [CoverageExclude]
-      public IEnumerator<KeyValuePair<string, IClient>> GetEnumerator()
-      {
-         _cacheLock.EnterReadLock();
-         try
-         {
-            return _clientDictionary.GetEnumerator();
-         }
-         finally 
-         {
-            _cacheLock.ExitReadLock();
-         }
-      }
-
-      #endregion
-
-      #region IEnumerable Members
-
-      [CoverageExclude]
-      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
-
-      #endregion
    }
 
    public sealed class ClientDataDirtyEventArgs : EventArgs
