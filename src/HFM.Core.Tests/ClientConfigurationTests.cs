@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Client Dictionary Class Tests
+ * HFM.NET - Client Configuration Class Tests
  * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@ using HFM.Core.DataTypes;
 namespace HFM.Core.Tests
 {
    [TestFixture]
-   public class ClientDictionaryTests
+   public class ClientConfigurationTests
    {
       private IClientFactory _factory;
-      private ClientDictionary _clientDictionary;
+      private ClientConfiguration _clientConfiguration;
 
       [SetUp]
       public void Init()
       {
          _factory = MockRepository.GenerateMock<IClientFactory>();
-         _clientDictionary = new ClientDictionary(_factory);
+         _clientConfiguration = new ClientConfiguration(_factory);
       }
 
       [Test]
@@ -45,7 +45,7 @@ namespace HFM.Core.Tests
       public void ClientDictionary_ArgumentNullException_Test()
       {
          // ReSharper disable once ObjectCreationAsStatement
-         new ClientDictionary(null);
+         new ClientConfiguration(null);
       }
 
       [Test]
@@ -55,10 +55,10 @@ namespace HFM.Core.Tests
          var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
          // Act
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Load(settingsCollection);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Load(settingsCollection);
          // Assert
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
          _factory.VerifyAllExpectations();
       }
 
@@ -69,12 +69,12 @@ namespace HFM.Core.Tests
          var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
          // Act
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Load(settingsCollection);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Load(settingsCollection);
          // Assert
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
          _factory.VerifyAllExpectations();
       }
 
@@ -85,14 +85,14 @@ namespace HFM.Core.Tests
          var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
          // Act
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Remove("test");
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Load(settingsCollection);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Remove("test");
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Load(settingsCollection);
          // Assert
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
          _factory.VerifyAllExpectations();
       }
 
@@ -103,11 +103,11 @@ namespace HFM.Core.Tests
          var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientDictionary.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
-         _clientDictionary.Load(settingsCollection);
+         _clientConfiguration.Load(settingsCollection);
          // Assert
          Assert.IsTrue(dictionaryChangedFired);
          Assert.IsNull(dataDirtyEventArgs.Name);
@@ -123,7 +123,7 @@ namespace HFM.Core.Tests
          client1.Stub(x => x.Settings).Return(settingsCollection[0]);
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { client1 });
          // Act
-         _clientDictionary.Load(settingsCollection);
+         _clientConfiguration.Load(settingsCollection);
          // Assert
          _factory.VerifyAllExpectations();
          client1.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
@@ -134,15 +134,15 @@ namespace HFM.Core.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void LoadTestArgumentNullException1()
       {
-         _clientDictionary.Load(null);
+         _clientConfiguration.Load(null);
       }
 
       [Test]
       public void AddTest1()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.IsDirty);
       }
 
       [Test]
@@ -150,11 +150,11 @@ namespace HFM.Core.Tests
       {
          // Arrange
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientDictionary.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
-         _clientDictionary.Add("test", new LegacyClient());
+         _clientConfiguration.Add("test", new LegacyClient());
          // Assert
          Assert.IsTrue(dictionaryChangedFired);
          Assert.AreEqual("test", dataDirtyEventArgs.Name);
@@ -168,7 +168,7 @@ namespace HFM.Core.Tests
          _factory.Expect(x => x.Create(settings)).Return(
             new FahClient(MockRepository.GenerateStub<IFahClient>()));
          // Act
-         _clientDictionary.Add(settings);
+         _clientConfiguration.Add(settings);
          // Assert
          _factory.VerifyAllExpectations();
       }
@@ -179,7 +179,7 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          // Act
-         _clientDictionary.Add("test", client);
+         _clientConfiguration.Add("test", client);
          // Assert
          client.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
          client.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
@@ -191,8 +191,8 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          bool clientDataInvalidatedFired = false;
-         _clientDictionary.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
-         _clientDictionary.Add("test", client);
+         _clientConfiguration.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
+         _clientConfiguration.Add("test", client);
          // Act
          client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
          // Assert
@@ -205,8 +205,8 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          bool clientDataInvalidatedFired = false;
-         _clientDictionary.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
-         _clientDictionary.Add("test", client);
+         _clientConfiguration.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
+         _clientConfiguration.Add("test", client);
          // Act
          client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
          // Assert
@@ -218,7 +218,7 @@ namespace HFM.Core.Tests
       public void AddTestArgumentNullException1()
       {
          // ReSharper disable AssignNullToNotNullAttribute
-         _clientDictionary.Add(null, new LegacyClient());
+         _clientConfiguration.Add(null, new LegacyClient());
          // ReSharper restore AssignNullToNotNullAttribute
       }
 
@@ -226,33 +226,33 @@ namespace HFM.Core.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void AddTestArgumentNullException2()
       {
-         _clientDictionary.Add("test", null);
+         _clientConfiguration.Add("test", null);
       }
 
       [Test]
       [ExpectedException]
       public void AddTestArgumentNullException3()
       {
-         _clientDictionary.Add(null);
+         _clientConfiguration.Add(null);
       }
 
       [Test]
       public void EditTest1()
       {
          // Arrange
-         _clientDictionary.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
-         Assert.AreEqual(1, _clientDictionary.Count);
+         _clientConfiguration.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
+         Assert.AreEqual(1, _clientConfiguration.Count);
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          ClientEditedEventArgs editedEventArgs = null;
-         _clientDictionary.ClientEdited += (sender, e) => editedEventArgs = e;
+         _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
          ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientDictionary.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
-         _clientDictionary.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "test2", Path = "/home/harlam357/FAH/" });
+         _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "test2", Path = "/home/harlam357/FAH/" });
          // Assert
-         Assert.AreEqual(1, _clientDictionary.Count);
-         Assert.IsTrue(_clientDictionary.ContainsKey("test2"));
+         Assert.AreEqual(1, _clientConfiguration.Count);
+         Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
          Assert.IsTrue(dictionaryChangedFired);
          Assert.AreEqual("test", editedEventArgs.PreviousName);
          Assert.AreEqual("/home/harlam357/", editedEventArgs.PreviousPath);
@@ -265,19 +265,19 @@ namespace HFM.Core.Tests
       public void EditTest2()
       {
          // Arrange
-         _clientDictionary.Add("test", new FahClient(MockRepository.GenerateStub<IFahClient>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
-         Assert.AreEqual(1, _clientDictionary.Count);
+         _clientConfiguration.Add("test", new FahClient(MockRepository.GenerateStub<IFahClient>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
+         Assert.AreEqual(1, _clientConfiguration.Count);
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          ClientEditedEventArgs editedEventArgs = null;
-         _clientDictionary.ClientEdited += (sender, e) => editedEventArgs = e;
+         _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
          ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientDictionary.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
-         _clientDictionary.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
+         _clientConfiguration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
          // Assert
-         Assert.AreEqual(1, _clientDictionary.Count);
-         Assert.IsTrue(_clientDictionary.ContainsKey("test2"));
+         Assert.AreEqual(1, _clientConfiguration.Count);
+         Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
          Assert.IsTrue(dictionaryChangedFired);
          Assert.AreEqual("test", editedEventArgs.PreviousName);
          Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
@@ -291,42 +291,42 @@ namespace HFM.Core.Tests
       public void EditTestArgumentException1()
       {
          // Arrange
-         _clientDictionary.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
-         _clientDictionary.Add("other", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/other/" } });
-         Assert.AreEqual(2, _clientDictionary.Count);
+         _clientConfiguration.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
+         _clientConfiguration.Add("other", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/other/" } });
+         Assert.AreEqual(2, _clientConfiguration.Count);
          // Act
-         _clientDictionary.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/harlam357/FAH/" });
+         _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/harlam357/FAH/" });
       }
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
       public void EditTestArgumentNullException1()
       {
-         _clientDictionary.Edit(null, new ClientSettings());
+         _clientConfiguration.Edit(null, new ClientSettings());
       }
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
       public void EditTestArgumentNullException2()
       {
-         _clientDictionary.Edit("test", null);
+         _clientConfiguration.Edit("test", null);
       }
 
       [Test]
       public void RemoveTest1()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         Assert.IsFalse(_clientDictionary.Remove("test"));
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         Assert.IsFalse(_clientConfiguration.Remove("test"));
+         Assert.IsFalse(_clientConfiguration.IsDirty);
       }
 
       [Test]
       public void RemoveTest2()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.Remove("test"));
-         Assert.IsTrue(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.Remove("test"));
+         Assert.IsTrue(_clientConfiguration.IsDirty);
       }
 
       [Test]
@@ -334,11 +334,11 @@ namespace HFM.Core.Tests
       {
          // Arrange
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          bool clientRemovedFired = false;
-         _clientDictionary.ClientRemoved += delegate { clientRemovedFired = true; };
+         _clientConfiguration.ClientRemoved += delegate { clientRemovedFired = true; };
          // Act
-         Assert.IsFalse(_clientDictionary.Remove("test"));
+         Assert.IsFalse(_clientConfiguration.Remove("test"));
          // Assert
          Assert.IsFalse(dictionaryChangedFired);
          Assert.IsFalse(clientRemovedFired);
@@ -349,12 +349,12 @@ namespace HFM.Core.Tests
       {
          // Arrange
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
          bool clientRemovedFired = false;
-         _clientDictionary.ClientRemoved += delegate { clientRemovedFired = true; };
-         _clientDictionary.Add("test", new LegacyClient());
+         _clientConfiguration.ClientRemoved += delegate { clientRemovedFired = true; };
+         _clientConfiguration.Add("test", new LegacyClient());
          // Act
-         Assert.IsTrue(_clientDictionary.Remove("test"));
+         Assert.IsTrue(_clientConfiguration.Remove("test"));
          // Assert
          Assert.IsTrue(dictionaryChangedFired);
          Assert.IsTrue(clientRemovedFired);
@@ -365,12 +365,12 @@ namespace HFM.Core.Tests
       {
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
-         _clientDictionary.Add("test", client);
+         _clientConfiguration.Add("test", client);
          client.Expect(x => x.ClearEventSubscriptions());
          client.Expect(x => x.Abort());
          _factory.Expect(x => x.Release(client));
          // Act
-         _clientDictionary.Remove("test");
+         _clientConfiguration.Remove("test");
          // Assert
          client.VerifyAllExpectations();
          _factory.VerifyAllExpectations();
@@ -381,73 +381,73 @@ namespace HFM.Core.Tests
       public void RemoveArgumentNullExceptionTest1()
       {
          // ReSharper disable AssignNullToNotNullAttribute
-         Assert.IsFalse(_clientDictionary.Remove(null));
+         Assert.IsFalse(_clientConfiguration.Remove(null));
          // ReSharper restore AssignNullToNotNullAttribute
       }
 
       [Test]
       public void ClearTest1()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Clear();
+         Assert.IsFalse(_clientConfiguration.IsDirty);
       }
 
       [Test]
       public void ClearTest2()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Clear();
+         Assert.IsFalse(_clientConfiguration.IsDirty);
       }
 
       [Test]
       public void ClearTest3()
       {
-         Assert.IsFalse(_clientDictionary.IsDirty);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Remove("test");
-         Assert.IsTrue(_clientDictionary.IsDirty);
-         _clientDictionary.Clear();
-         Assert.IsFalse(_clientDictionary.IsDirty);
+         Assert.IsFalse(_clientConfiguration.IsDirty);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Remove("test");
+         Assert.IsTrue(_clientConfiguration.IsDirty);
+         _clientConfiguration.Clear();
+         Assert.IsFalse(_clientConfiguration.IsDirty);
       }
 
       [Test]
       public void ClearTest4()
       {
-         Assert.AreEqual(0, _clientDictionary.Count);
+         Assert.AreEqual(0, _clientConfiguration.Count);
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         _clientDictionary.Clear();
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.Clear();
          Assert.IsFalse(dictionaryChangedFired);
       }
 
       [Test]
       public void ClearTest5()
       {
-         Assert.AreEqual(0, _clientDictionary.Count);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.AreEqual(1, _clientDictionary.Count);
+         Assert.AreEqual(0, _clientConfiguration.Count);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.AreEqual(1, _clientConfiguration.Count);
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         _clientDictionary.Clear();
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.Clear();
          Assert.IsTrue(dictionaryChangedFired);
       }
 
       [Test]
       public void ClearTest6()
       {
-         Assert.AreEqual(0, _clientDictionary.Count);
-         _clientDictionary.Add("test", new LegacyClient());
-         Assert.AreEqual(1, _clientDictionary.Count);
-         _clientDictionary.Remove("test");
-         Assert.AreEqual(0, _clientDictionary.Count);
+         Assert.AreEqual(0, _clientConfiguration.Count);
+         _clientConfiguration.Add("test", new LegacyClient());
+         Assert.AreEqual(1, _clientConfiguration.Count);
+         _clientConfiguration.Remove("test");
+         Assert.AreEqual(0, _clientConfiguration.Count);
          bool dictionaryChangedFired = false;
-         _clientDictionary.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         _clientDictionary.Clear();
+         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         _clientConfiguration.Clear();
          Assert.IsFalse(dictionaryChangedFired);
       }
 
@@ -456,15 +456,15 @@ namespace HFM.Core.Tests
       {
          // Arrange
          var client1 = MockRepository.GenerateMock<IClient>();
-         _clientDictionary.Add("test", client1);
+         _clientConfiguration.Add("test", client1);
          client1.Expect(x => x.ClearEventSubscriptions());
          client1.Expect(x => x.Abort());
          var client2 = MockRepository.GenerateMock<IClient>();
-         _clientDictionary.Add("test2", client2);
+         _clientConfiguration.Add("test2", client2);
          client2.Expect(x => x.ClearEventSubscriptions());
          client2.Expect(x => x.Abort());
          // Act
-         _clientDictionary.Clear();
+         _clientConfiguration.Clear();
          // Assert
          client1.VerifyAllExpectations();
          client2.VerifyAllExpectations();

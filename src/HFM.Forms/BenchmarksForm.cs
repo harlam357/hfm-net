@@ -86,7 +86,7 @@ namespace HFM.Forms
       private readonly IProteinService _proteinService;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IList<Color> _graphColors;
-      private readonly IClientDictionary _clientDictionary;
+      private readonly IClientConfiguration _clientConfiguration;
       private readonly IMessageBoxView _messageBoxView;
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
@@ -98,13 +98,13 @@ namespace HFM.Forms
       #region Constructor
 
       public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkCollection benchmarkCollection,
-                            IClientDictionary clientDictionary, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                            IClientConfiguration clientConfiguration, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinService = proteinService;
          _benchmarkCollection = benchmarkCollection;
          _graphColors = _prefs.Get<List<Color>>(Preference.GraphColors);
-         _clientDictionary = clientDictionary;
+         _clientConfiguration = clientConfiguration;
          _messageBoxView = messageBoxView;
          _processStarter = processStarter;
          _zedGraphManager = new ZedGraphManager();
@@ -173,7 +173,7 @@ namespace HFM.Forms
             SlotStatus status = SlotStatus.Unknown;
 
             ProteinBenchmark benchmark1 = benchmark;
-            var slotModel = _clientDictionary.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
+            var slotModel = _clientConfiguration.Slots.FirstOrDefault(x => x.Name.Equals(benchmark1.OwningSlotName));
             if (slotModel != null && slotModel.Owns(benchmark))
             {
                unit = slotModel.UnitInfoLogic;

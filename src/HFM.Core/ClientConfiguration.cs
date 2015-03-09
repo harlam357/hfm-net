@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Client Dictionary Class
+ * HFM.NET - Client Configuration Class
  * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IClientDictionary
+   public interface IClientConfiguration
    {
       event EventHandler DictionaryChanged;
       event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
@@ -105,7 +105,7 @@ namespace HFM.Core
       void Clear();
    }
 
-   public sealed class ClientDictionary : IClientDictionary
+   public sealed class ClientConfiguration : IClientConfiguration
    {
       #region Events
 
@@ -169,15 +169,15 @@ namespace HFM.Core
 
       private readonly IClientFactory _factory;
       private readonly Dictionary<string, IClient> _clientDictionary;
-      private readonly ReaderWriterLockSlim _cacheLock;
+      private readonly ReaderWriterLockSlim _syncLock;
 
-      public ClientDictionary(IClientFactory factory)
+      public ClientConfiguration(IClientFactory factory)
       {
          if (factory == null) throw new ArgumentNullException("factory");
 
          _factory = factory;
          _clientDictionary = new Dictionary<string, IClient>();
-         _cacheLock = new ReaderWriterLockSlim();
+         _syncLock = new ReaderWriterLockSlim();
       }
 
       public void Load(IEnumerable<ClientSettings> settingsCollection)
@@ -188,7 +188,7 @@ namespace HFM.Core
 
          int added = 0;
          // don't enter write lock before Clear(), would result in deadlock
-         _cacheLock.EnterWriteLock();
+         _syncLock.EnterWriteLock();
          try
          {
             // add each instance to the collection
@@ -205,7 +205,7 @@ namespace HFM.Core
          }
          finally
          {
-            _cacheLock.ExitWriteLock();
+            _syncLock.ExitWriteLock();
          }
 
          if (added != 0)
@@ -219,14 +219,14 @@ namespace HFM.Core
       {
          get
          {
-            _cacheLock.EnterReadLock();
+            _syncLock.EnterReadLock();
             try
             {
                return _clientDictionary.Values.SelectMany(client => client.Slots).ToArray();
             }
             finally
             {
-               _cacheLock.ExitReadLock();               
+               _syncLock.ExitReadLock();               
             }
          } 
       }
@@ -252,7 +252,7 @@ namespace HFM.Core
 
          ClientEditedEventArgs e;
 
-         _cacheLock.EnterWriteLock();
+         _syncLock.EnterWriteLock();
          try
          {
             bool keyChanged = key != settings.Name;
@@ -294,7 +294,7 @@ namespace HFM.Core
          }
          finally
          {
-            _cacheLock.ExitWriteLock();
+            _syncLock.ExitWriteLock();
          }
 
          IsDirty = true;
@@ -316,7 +316,7 @@ namespace HFM.Core
          if (key == null) throw new ArgumentNullException("key");
          if (value == null) throw new ArgumentNullException("value");
 
-         _cacheLock.EnterWriteLock();
+         _syncLock.EnterWriteLock();
          try
          {
             value.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
@@ -325,7 +325,7 @@ namespace HFM.Core
          }
          finally
          {
-            _cacheLock.ExitWriteLock();
+            _syncLock.ExitWriteLock();
          }
 
          IsDirty = true;
@@ -336,14 +336,14 @@ namespace HFM.Core
       [CoverageExclude]
       public bool ContainsKey(string key)
       {
-         _cacheLock.EnterReadLock();
+         _syncLock.EnterReadLock();
          try
          {
             return _clientDictionary.ContainsKey(key);
          }
          finally
          {
-            _cacheLock.ExitReadLock();
+            _syncLock.ExitReadLock();
          }
       }
 
@@ -353,7 +353,7 @@ namespace HFM.Core
 
          bool result;
 
-         _cacheLock.EnterWriteLock();
+         _syncLock.EnterWriteLock();
          try
          {
             if (_clientDictionary.ContainsKey(key))
@@ -367,7 +367,7 @@ namespace HFM.Core
          }
          finally
          {
-            _cacheLock.ExitWriteLock();
+            _syncLock.ExitWriteLock();
          }
 
          if (result)
@@ -382,28 +382,28 @@ namespace HFM.Core
       [CoverageExclude]
       public IEnumerable<IClient> GetClients()
       {
-         _cacheLock.EnterReadLock();
+         _syncLock.EnterReadLock();
          try
          {
             return _clientDictionary.Values;
          }
          finally
          {
-            _cacheLock.ExitReadLock();
+            _syncLock.ExitReadLock();
          }
       }
 
       [CoverageExclude]
       public IClient Get(string key)
       {
-         _cacheLock.EnterReadLock();
+         _syncLock.EnterReadLock();
          try
          {
             return _clientDictionary[key];
          }
          finally
          {
-            _cacheLock.ExitReadLock();
+            _syncLock.ExitReadLock();
          }
       }
 
@@ -411,7 +411,7 @@ namespace HFM.Core
       {
          bool hasValues;
 
-         _cacheLock.EnterWriteLock();
+         _syncLock.EnterWriteLock();
          try
          {
             hasValues = _clientDictionary.Count != 0;
@@ -425,7 +425,7 @@ namespace HFM.Core
          }
          finally
          {
-            _cacheLock.ExitWriteLock();
+            _syncLock.ExitWriteLock();
          }
 
          IsDirty = false;
@@ -440,14 +440,14 @@ namespace HFM.Core
          [CoverageExclude]
          get
          {
-            _cacheLock.EnterReadLock();
+            _syncLock.EnterReadLock();
             try
             {
                return _clientDictionary.Count;
             }
             finally
             {
-               _cacheLock.ExitReadLock();
+               _syncLock.ExitReadLock();
             }
          }
       }

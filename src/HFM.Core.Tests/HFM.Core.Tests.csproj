@@ -130,7 +130,7 @@
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
-    <Compile Include="ClientDictionaryTests.cs" />
+    <Compile Include="ClientConfigurationTests.cs" />
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="FahClientDataAggregatorTests.cs" />
     <Compile Include="FahClientTests.cs" />
