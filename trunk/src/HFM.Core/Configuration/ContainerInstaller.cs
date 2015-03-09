@@ -74,10 +74,10 @@ namespace HFM.Core.Configuration
             Component.For<ProteinDataUpdater>()
                .LifeStyle.Transient);
 
-         // IClientDictionary - Singleton
+         // IClientConfiguration - Singleton
          container.Register(
-            Component.For<IClientDictionary>()
-               .ImplementedBy<ClientDictionary>());
+            Component.For<IClientConfiguration>()
+               .ImplementedBy<ClientConfiguration>());
 
          // IClientFactory - Singleton
          container.Register(

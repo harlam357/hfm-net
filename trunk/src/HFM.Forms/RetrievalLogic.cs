@@ -96,7 +96,7 @@ namespace HFM.Forms
       private IWebsiteDeployer _websiteDeployer;
 
       private readonly IPreferenceSet _prefs;
-      private readonly IClientDictionary _clientDictionary;
+      private readonly IClientConfiguration _clientConfiguration;
       private readonly MainGridModel _mainGridModel;
 
       private Thread _doRetrievalThread;
@@ -105,22 +105,22 @@ namespace HFM.Forms
 
       #endregion
 
-      public RetrievalLogic(IPreferenceSet prefs, IClientDictionary clientDictionary, MainGridModel mainGridModel)
+      public RetrievalLogic(IPreferenceSet prefs, IClientConfiguration clientConfiguration, MainGridModel mainGridModel)
       {
          _prefs = prefs;
-         _clientDictionary = clientDictionary;
-         _clientDictionary.DictionaryChanged += (sender, e) => SetTimerState();
-         _clientDictionary.ClientDataDirty += (sender, e) =>
-                                              {
-                                                 if (e.Name == null)
+         _clientConfiguration = clientConfiguration;
+         _clientConfiguration.DictionaryChanged += (sender, e) => SetTimerState();
+         _clientConfiguration.ClientDataDirty += (sender, e) =>
                                                  {
-                                                    QueueNewRetrieval();
-                                                 }
-                                                 else
-                                                 {
-                                                    RetrieveSingleClient(e.Name);
-                                                 }
-                                              };
+                                                    if (e.Name == null)
+                                                    {
+                                                       QueueNewRetrieval();
+                                                    }
+                                                    else
+                                                    {
+                                                       RetrieveSingleClient(e.Name);
+                                                    }
+                                                 };
          _mainGridModel = mainGridModel;
       }
 
@@ -218,7 +218,7 @@ namespace HFM.Forms
          }
 
          // only fire if there are Hosts
-         if (_clientDictionary.Count != 0)
+         if (_clientConfiguration.Count != 0)
          {
             _logger.Info("Stopping retrieval timer loop.");
             _workTimer.Stop();
@@ -288,7 +288,7 @@ namespace HFM.Forms
          // in the middle of a retrieve, so grab it now and use the local copy
          var synchronous = _prefs.Get<bool>(Preference.SyncOnLoad);
 
-         var clients = _clientDictionary.GetClients().ToList();
+         var clients = _clientConfiguration.GetClients().ToList();
          if (synchronous) // do the individual retrieves on a single thread
          {
             clients.ForEach(RetrieveInstance);
@@ -315,7 +315,7 @@ namespace HFM.Forms
       /// </summary>
       public void RetrieveSingleClient(string name)
       {
-         Task.Factory.StartNew(() => RetrieveInstance(_clientDictionary.Get(name)));
+         Task.Factory.StartNew(() => RetrieveInstance(_clientConfiguration.Get(name)));
       }
 
       /// <summary>
@@ -324,7 +324,7 @@ namespace HFM.Forms
       private void SetTimerState()
       {
          // Disable timers if no hosts
-         if (_clientDictionary.Count == 0)
+         if (_clientConfiguration.Count == 0)
          {
             if (_workTimer.Enabled || _webTimer.Enabled)
             {

@@ -88,7 +88,7 @@ namespace HFM.Forms
 
       #region Collections
 
-      private readonly IClientDictionary _clientDictionary;
+      private readonly IClientConfiguration _clientConfiguration;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IProteinService _proteinService;
       private readonly IUnitInfoCollection _unitInfoCollection;
@@ -116,7 +116,7 @@ namespace HFM.Forms
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
                            IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
-                           IClientDictionary clientDictionary, IProteinBenchmarkCollection benchmarkCollection,
+                           IClientConfiguration clientConfiguration, IProteinBenchmarkCollection benchmarkCollection,
                            IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
@@ -145,7 +145,7 @@ namespace HFM.Forms
          _openFileDialogView = openFileDialogView;
          _saveFileDialogView = saveFileDialogView;
          // Collections
-         _clientDictionary = clientDictionary;
+         _clientConfiguration = clientConfiguration;
          _benchmarkCollection = benchmarkCollection;
          _proteinService = proteinService;
          _unitInfoCollection = unitInfoCollection;
@@ -159,8 +159,8 @@ namespace HFM.Forms
          _prefs = prefs;
          _settingsManager = settingsManager;
 
-         _clientDictionary.ClientEdited += HandleClientEdit;
-         _clientDictionary.DictionaryChanged += delegate { AutoSaveConfig(); };
+         _clientConfiguration.ClientEdited += HandleClientEdit;
+         _clientConfiguration.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
       
       #endregion
@@ -668,21 +668,21 @@ namespace HFM.Forms
          // clear the clients and UI
          _settingsManager.ClearFileName();
          // 
-         if (_clientDictionary.Count != 0)
+         if (_clientConfiguration.Count != 0)
          {
             SaveCurrentUnitInfo();
          }
-         _clientDictionary.Clear();
+         _clientConfiguration.Clear();
       }
 
       private void SaveCurrentUnitInfo()
       {
          // If no clients loaded, stub out
-         if (_clientDictionary.Count == 0) return;
+         if (_clientConfiguration.Count == 0) return;
 
          _unitInfoCollection.Clear();
 
-         foreach (var slotModel in _clientDictionary.Slots)
+         foreach (var slotModel in _clientConfiguration.Slots)
          {
             // Don't save the UnitInfo object if the contained Project is Unknown
             if (!slotModel.UnitInfo.ProjectIsUnknown())
@@ -701,9 +701,9 @@ namespace HFM.Forms
          try
          {
             // Read the config file
-            _clientDictionary.Load(_settingsManager.Read(filePath, filterIndex));
+            _clientConfiguration.Load(_settingsManager.Read(filePath, filterIndex));
 
-            if (_clientDictionary.Count == 0)
+            if (_clientConfiguration.Count == 0)
             {
                _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
             }
@@ -719,7 +719,7 @@ namespace HFM.Forms
       private void AutoSaveConfig()
       {
          if (_prefs.Get<bool>(Preference.AutoSaveConfig) &&
-             _clientDictionary.IsDirty)
+             _clientConfiguration.IsDirty)
          {
             FileSaveClick();
          }
@@ -728,7 +728,7 @@ namespace HFM.Forms
       public void FileSaveClick()
       {
          // no clients, stub out
-         if (_clientDictionary.Count == 0) return;
+         if (_clientConfiguration.Count == 0) return;
 
          // index 2 is hard coded to legacy serializer
          if (_settingsManager.FilterIndex == 2)
@@ -744,9 +744,9 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientDictionary.GetClients().Select(x => x.Settings), _settingsManager.FileName, 
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName, 
                                       _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
-               _clientDictionary.IsDirty = false;
+               _clientConfiguration.IsDirty = false;
             }
             catch (Exception ex)
             {
@@ -760,7 +760,7 @@ namespace HFM.Forms
       public void FileSaveAsClick()
       {
          // no clients, stub out
-         if (_clientDictionary.Count == 0) return;
+         if (_clientConfiguration.Count == 0) return;
 
          _saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
          _saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
@@ -769,8 +769,8 @@ namespace HFM.Forms
             try
             {
                // Issue 75
-               _settingsManager.Write(_clientDictionary.GetClients().Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
-               _clientDictionary.IsDirty = false;
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
+               _clientConfiguration.IsDirty = false;
             }
             catch (Exception ex)
             {
@@ -783,7 +783,7 @@ namespace HFM.Forms
 
       private bool CheckForConfigurationChanges()
       {
-         if (_clientDictionary.Count != 0 && _clientDictionary.IsDirty)
+         if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
          {
             DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view,
                String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
@@ -793,7 +793,7 @@ namespace HFM.Forms
             {
                case DialogResult.Yes:
                   FileSaveClick();
-                  return !(_clientDictionary.IsDirty);
+                  return !(_clientConfiguration.IsDirty);
                case DialogResult.No:
                   return true;
                case DialogResult.Cancel:
@@ -853,7 +853,7 @@ namespace HFM.Forms
                // perform the add
                try
                {
-                  _clientDictionary.Add(settings);
+                  _clientConfiguration.Add(settings);
                   break;
                }
                catch (ArgumentException ex)
@@ -876,7 +876,7 @@ namespace HFM.Forms
                // perform the add
                try
                {
-                  _clientDictionary.Add(settings);
+                  _clientConfiguration.Add(settings);
                   break;
                }
                catch (ArgumentException ex)
@@ -911,7 +911,7 @@ namespace HFM.Forms
       private void EditFahClient()
       {
          Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientDictionary.Get(_gridModel.SelectedSlot.Settings.Name);
+         IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsFahClient());
 
@@ -924,7 +924,7 @@ namespace HFM.Forms
                // perform the edit
                try
                {
-                  _clientDictionary.Edit(originalSettings.Name, newSettings);
+                  _clientConfiguration.Edit(originalSettings.Name, newSettings);
                   break;
                }
                catch (ArgumentException ex)
@@ -939,7 +939,7 @@ namespace HFM.Forms
       private void EditLegacyClient()
       {
          Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientDictionary.Get(_gridModel.SelectedSlot.Settings.Name);
+         IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsLegacy());
 
@@ -952,7 +952,7 @@ namespace HFM.Forms
                // perform the edit
                try
                {
-                  _clientDictionary.Edit(originalSettings.Name, newSettings);
+                  _clientConfiguration.Edit(originalSettings.Name, newSettings);
                   break;
                }
                catch (ArgumentException ex)
@@ -985,7 +985,7 @@ namespace HFM.Forms
          // Check for SelectedSlot, and get out if not found
          if (_gridModel.SelectedSlot == null) return;
 
-         _clientDictionary.Remove(_gridModel.SelectedSlot.Settings.Name);
+         _clientConfiguration.Remove(_gridModel.SelectedSlot.Settings.Name);
       }
 
       public void ClientsMergeClick()
@@ -1412,7 +1412,7 @@ namespace HFM.Forms
       /// </summary>
       public SlotModel FindSlotModel(string key)
       {
-         return _clientDictionary.Slots.FirstOrDefault(slot => slot.Name == key);
+         return _clientConfiguration.Slots.FirstOrDefault(slot => slot.Name == key);
       }
    }
 }

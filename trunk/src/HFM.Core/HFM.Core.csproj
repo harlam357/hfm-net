@@ -104,7 +104,7 @@
     <Compile Include="DataTypes\SlotTotals.cs" />
     <Compile Include="FahClient.cs" />
     <Compile Include="FahClientDataAggregator.cs" />
-    <Compile Include="ClientDictionary.cs" />
+    <Compile Include="ClientConfiguration.cs" />
     <Compile Include="ClientSettingsManager.cs" />
     <Compile Include="LegacyDataAggregator.cs" />
     <Compile Include="Logging\Logger.cs" />

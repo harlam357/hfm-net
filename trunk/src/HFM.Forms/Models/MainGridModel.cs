@@ -112,7 +112,7 @@ namespace HFM.Forms.Models
 
       private readonly IPreferenceSet _prefs;
       private readonly ISynchronizeInvoke _syncObject;
-      private readonly IClientDictionary _clientDictionary;
+      private readonly IClientConfiguration _clientConfiguration;
       private readonly SlotModelSortableBindingList _slotList;
       private readonly BindingSource _bindingSource;
 
@@ -146,11 +146,11 @@ namespace HFM.Forms.Models
          get { return _bindingSource; }
       }
 
-      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientDictionary clientDictionary)
+      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientConfiguration clientConfiguration)
       {
          _prefs = prefs;
          _syncObject = syncObject;
-         _clientDictionary = clientDictionary;
+         _clientConfiguration = clientConfiguration;
          _slotList = new SlotModelSortableBindingList(_syncObject);
          _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
          _slotList.Sorted += (sender, e) =>
@@ -162,33 +162,24 @@ namespace HFM.Forms.Models
                              };
          _bindingSource = new BindingSource();
          _bindingSource.DataSource = _slotList;
-         _bindingSource.CurrentItemChanged += delegate
-                                              {
-                                                 SelectedSlot = (SlotModel)_bindingSource.Current;
-                                              };
+         _bindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)_bindingSource.Current;
 #if DEBUG
-         _slotList.ListChanged += (s, e) =>
-                                  {
-                                     Debug.WriteLine("BindingList: " + e.ListChangedType);
-                                  };
-         _bindingSource.ListChanged += (s, e) =>
-                                       {
-                                          Debug.WriteLine("BindingSource: " + e.ListChangedType);
-                                       };
+         _slotList.ListChanged += (s, e) => Debug.WriteLine("BindingList: " + e.ListChangedType);
+         _bindingSource.ListChanged += (s, e) => Debug.WriteLine("BindingSource: " + e.ListChangedType);
 #endif
          // Subscribe to PreferenceSet events
-         _prefs.OfflineLastChanged += delegate
+         _prefs.OfflineLastChanged += (sender, args) =>
                                       {
                                          _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
                                          Sort();
                                       };
-         _prefs.PpdCalculationChanged += delegate { ResetBindings(); };
-         _prefs.DecimalPlacesChanged += delegate { ResetBindings(); };
-         _prefs.CalculateBonusChanged += delegate { ResetBindings(); };
+         _prefs.PpdCalculationChanged += (sender, args) => ResetBindings();
+         _prefs.DecimalPlacesChanged += (sender, args) => ResetBindings();
+         _prefs.CalculateBonusChanged += (sender, args) => ResetBindings();
 
          // Subscribe to ClientDictionary events
-         _clientDictionary.DictionaryChanged += delegate { ResetBindings(); };
-         _clientDictionary.ClientDataInvalidated += delegate { ResetBindings(); };
+         _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
+         _clientConfiguration.ClientDataInvalidated += (sender, args) => ResetBindings();
       }
 
       private volatile bool _resetInProgress;
@@ -233,7 +224,7 @@ namespace HFM.Forms.Models
             // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = false;
             // get slots from the dictionary
-            var slots = _clientDictionary.Slots;
+            var slots = _clientConfiguration.Slots;
             // refresh the underlying binding list
             _bindingSource.Clear();
             foreach (var slot in slots)
