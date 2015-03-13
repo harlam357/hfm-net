@@ -48,15 +48,17 @@ namespace HFM.Forms
       private readonly IMessageBoxView _messageBoxView;
       private readonly HistoryPresenterModel _model;
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
+
+      public IProgressDialogViewFactory ProgressDialogViewFactory { get; set; }
       
       public event EventHandler PresenterClosed;
       
@@ -236,23 +238,23 @@ namespace HFM.Forms
       public void RefreshProjectDataClick(ProteinUpdateType type)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
-         if (result.Equals(DialogResult.No))
+         if (result == DialogResult.No)
          {
             return;
          }
 
          var processor = ServiceLocator.Resolve<ProteinDataUpdater>();
          processor.UpdateType = type;
-         if (type.Equals(ProteinUpdateType.Project))
+         if (type == ProteinUpdateType.Project)
          {
             processor.UpdateArg = _model.SelectedHistoryEntry.ProjectID;   
          }
-         else if (type.Equals(ProteinUpdateType.Id))
+         else if (type == ProteinUpdateType.Id)
          {
             processor.UpdateArg = _model.SelectedHistoryEntry.ID;
          }
          // Execute Asynchronous Operation
-         var view = ServiceLocator.Resolve<IProgressDialogView>("ProgressDialog");
+         var view = ProgressDialogViewFactory.GetProgressDialog();
          view.ProcessRunner = processor;
          view.Icon = Properties.Resources.hfm_48_48;
          view.Text = "Updating Project Data";
@@ -269,6 +271,7 @@ namespace HFM.Forms
          {
             _model.ResetBindings(true);
          }
+         ProgressDialogViewFactory.Release(view);
       }
    }
 }

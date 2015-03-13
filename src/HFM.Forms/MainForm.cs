@@ -75,7 +75,7 @@ namespace HFM.Forms
       
       #region Methods
 
-      void Initialize(MainPresenter presenter);
+      void Initialize(MainPresenter presenter, IProteinService service);
 
       void SetGridDataSource(object dataSource);
 
@@ -184,7 +184,7 @@ namespace HFM.Forms
       
       #region Initialize
 
-      public void Initialize(MainPresenter presenter)
+      public void Initialize(MainPresenter presenter, IProteinService service)
       {
          _presenter = presenter;
          // Resize can be invoked when InitializeComponent() is called
@@ -201,7 +201,7 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
          // Give the Queue Control access to the Protein Collection
-         queueControl.SetProteinService(ServiceLocator.Resolve<IProteinService>());
+         queueControl.SetProteinService(service);
 
          #endregion
 
@@ -456,10 +456,7 @@ namespace HFM.Forms
 
       private void mnuEditPreferences_Click(object sender, EventArgs e)
       {
-         var prefDialog = ServiceLocator.Resolve<PreferencesDialog>();
-         prefDialog.ShowDialog();
-         
-         dataGridView1.Invalidate();
+         _presenter.EditPreferencesClick();
       }
 
       #endregion
