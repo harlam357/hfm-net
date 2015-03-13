@@ -242,6 +242,7 @@
     <Compile Include="PreferencesDialog.Designer.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProgressDialogViewFactory.cs" />
     <Compile Include="ProjectDownloadDialog.cs">
       <SubType>Form</SubType>
     </Compile>

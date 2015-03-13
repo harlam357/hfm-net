@@ -127,15 +127,14 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<IProgressDialogView>()
                .ImplementedBy<ProjectDownloadDialog>()
-               .Named("ProjectDownloadDialog")
-               .LifeStyle.Transient);
-
-         // IProgressDialogView - Transient
-         container.Register(
+                  .Named("ProjectDownloadDialog")
+                     .LifeStyle.Transient,
             Component.For<IProgressDialogView>()
                .ImplementedBy<ProgressDialog>()
-               .Named("ProgressDialog")
-               .LifeStyle.Transient);
+                  .Named("ProgressDialog")
+                     .LifeStyle.Transient,
+            Component.For<IProgressDialogViewFactory>()
+               .AsFactory());
 
          #endregion
 

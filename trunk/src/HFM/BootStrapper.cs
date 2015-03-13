@@ -189,7 +189,7 @@ namespace HFM
             mainPresenter.Arguments = arguments;
             try
             {
-               mainView.Initialize(mainPresenter);
+               mainView.Initialize(mainPresenter, ServiceLocator.Resolve<IProteinService>());
             }
             catch (Exception ex)
             {

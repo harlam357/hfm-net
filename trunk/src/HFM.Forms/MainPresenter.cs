@@ -67,6 +67,8 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
+      public IProgressDialogViewFactory ProgressDialogViewFactory { get; set; }
+
       public IHistoryPresenterFactory HistoryPresenterFactory { get; set; }
       
       #endregion
@@ -807,6 +809,18 @@ namespace HFM.Forms
 
       #endregion
 
+      #region Edit Menu Handling Methods
+
+      public void EditPreferencesClick()
+      {
+         var prefDialog = ServiceLocator.Resolve<PreferencesDialog>();
+         prefDialog.ShowDialog();
+
+         _view.DataGridView.Invalidate();
+      }
+
+      #endregion
+
       #region Help Menu Handling Methods
 
       public void ShowHfmLogFile()
@@ -1214,7 +1228,7 @@ namespace HFM.Forms
          // Clear the Project Not Found Cache and Last Download Time
          _proteinService.ClearProjectsNotFoundCache();
          // Execute Asynchronous Download
-         var projectDownloadView = ServiceLocator.Resolve<IProgressDialogView>("ProjectDownloadDialog");
+         var projectDownloadView = ProgressDialogViewFactory.GetProjectDownloadDialog();
          projectDownloadView.OwnerWindow = _view;
          projectDownloadView.ProcessRunner = downloader;
          projectDownloadView.UpdateMessage(_prefs.Get<string>(Preference.ProjectDownloadUrl));
