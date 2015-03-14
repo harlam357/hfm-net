@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Legacy Client Settings Serializer
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,8 +24,8 @@ using System.Xml;
 
 using Castle.Core.Logging;
 
-using harlam357.Security;
-using harlam357.Security.Cryptography;
+using harlam357.Core.Security;
+using harlam357.Core.Security.Cryptography;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
