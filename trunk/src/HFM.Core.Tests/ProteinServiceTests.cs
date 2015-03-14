@@ -48,7 +48,7 @@ namespace HFM.Core.Tests
       {
          // Arrange
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.DownloadFromStanford()).Repeat.Once();
+         downloader.Expect(x => x.Download()).Repeat.Once();
          downloader.Stub(x => x.DownloadFilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
          
          var service = new ProteinService(null, downloader);

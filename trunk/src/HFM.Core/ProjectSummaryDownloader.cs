@@ -30,51 +30,48 @@ namespace HFM.Core
    public interface IProjectSummaryDownloader : IProgressProcessRunner
    {
       /// <summary>
-      /// Time of Last Successful Download
+      /// Gets the time of last successful download.
       /// </summary>
       DateTime LastDownloadTime { get; }
 
       /// <summary>
-      /// Destination Path for the psummary file
+      /// Gets or sets the destination path for the psummary file.
       /// </summary>
       string DownloadFilePath { get; set; }
 
       /// <summary>
-      /// Download project information from Stanford University (THREAD SAFE)
+      /// Downloads the project information (THREAD SAFE).
       /// </summary>
-      void DownloadFromStanford();
+      void Download();
    }
 
    public sealed class ProjectSummaryDownloader : ProgressProcessRunnerBase, IProjectSummaryDownloader
    {
       #region Fields
       
-      /// <summary>
-      /// Collection Load Class Lock
-      /// </summary>
       private static readonly object DownloadLock = new object();
 
       /// <summary>
-      /// Time of Last Successful Download
+      /// Gets the time of last successful download.
       /// </summary>
       public DateTime LastDownloadTime { get; private set; }
 
       /// <summary>
-      /// Destination Path for the psummary file
+      /// Gets or sets the destination path for the psummary file.
       /// </summary>
       public string DownloadFilePath { get; set; }
 
       /// <summary>
-      /// Preferences Interface
+      /// Gets or sets the preferences service instance.
       /// </summary>
       public IPreferenceSet Prefs { get; set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -87,9 +84,9 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Download project information from Stanford University (THREAD SAFE)
+      /// Downloads the project information (THREAD SAFE).
       /// </summary>
-      public void DownloadFromStanford()
+      public void Download()
       {
          lock (DownloadLock)
          {
@@ -98,7 +95,7 @@ namespace HFM.Core
                return;
             }
 
-            _logger.Info("Downloading new project data from Stanford...");
+            Logger.Info("Downloading new project data from Stanford...");
             try
             {
                PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
@@ -106,7 +103,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
             }
          }
       }
@@ -136,7 +133,7 @@ namespace HFM.Core
             return true;
          }
          
-         _logger.Debug("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
+         Logger.Debug("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
          return false;
       }
 
@@ -144,7 +141,7 @@ namespace HFM.Core
       {
          lock (DownloadLock)
          {
-            _logger.Info("Downloading new project data from Stanford...");
+            Logger.Info("Downloading new project data from Stanford...");
             PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
             LastDownloadTime = DateTime.Now;
          }
