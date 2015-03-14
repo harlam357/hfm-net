@@ -129,8 +129,7 @@ namespace HFM.Core
          Logger.Info("Project ID '{0}' not found.", projectId);
          if (_downloader != null)
          {
-            // Execute a Download (Stanford)
-            _downloader.DownloadFromStanford();
+            _downloader.Download();
             try
             {
                var loadInfo = Load(_downloader.DownloadFilePath);
