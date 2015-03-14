@@ -23,7 +23,7 @@ using System.Globalization;
 
 using Castle.Core.Logging;
 
-using harlam357.Windows.Forms;
+using harlam357.Core.ComponentModel;
 
 namespace HFM.Core
 {

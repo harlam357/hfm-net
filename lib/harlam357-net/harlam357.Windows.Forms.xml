@@ -98,86 +98,6 @@
             Companion Controls List
             </summary>
         </member>
-        <member name="T:harlam357.Windows.Forms.IProgressProcessRunner">
-            <summary>
-            Represents an object that runs a process and reports progress.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Process">
-            <summary>
-            Executes the runner.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressProcessRunner.Cancel">
-            <summary>
-            Cancels the runner.
-            </summary>
-        </member>
-        <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProgressChanged">
-            <summary>
-            Occurs when the runner's progress has changed.
-            </summary>
-        </member>
-        <member name="E:harlam357.Windows.Forms.IProgressProcessRunner.ProcessFinished">
-            <summary>
-            Occurs when the runner's process has finished.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Exception">
-            <summary>
-            Gets the exception that resulted from executing the runner or null if no exception occurred.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.SupportsCancellation">
-            <summary>
-            Gets a value that defines if this runner supports being cancelled.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressProcessRunner.Processing">
-            <summary>
-            Gets a value that reports if the runner is currently processing.
-            </summary>
-        </member>
-        <member name="T:harlam357.Windows.Forms.ProgressProcessRunnerBase">
-            <summary>
-            Represents an object that runs a process and reports progress.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Process">
-            <summary>
-            Executes the runner.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Cancel">
-            <summary>
-            Cancels the runner.
-            </summary>
-        </member>
-        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#ProgressChanged">
-            <summary>
-            Occurs when the runner's progress has changed.
-            </summary>
-        </member>
-        <member name="E:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#ProcessFinished">
-            <summary>
-            Occurs when the runner's process has finished.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#Exception">
-            <summary>
-            Gets the exception that resulted from executing the runner or null if no exception occurred.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.harlam357#Windows#Forms#IProgressProcessRunner#SupportsCancellation">
-            <summary>
-            Gets a value that defines if this runner supports being cancelled.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressProcessRunnerBase.Processing">
-            <summary>
-            Gets a value that reports if the runner is currently processing.
-            </summary>
-        </member>
         <member name="T:harlam357.Windows.Forms.IProgressDialogView">
             <summary>
             Represents a view interface for a modal dialog that runs a process asynchronously and reports progress.
@@ -249,7 +169,7 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">The ProcessRunner property is null.</exception>
         </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProgressChanged(System.Object,harlam357.Windows.Forms.ProgressEventArgs)">
+        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProgressChanged(System.Object,harlam357.Core.ComponentModel.ProgressEventArgs)">
             <summary>
             Handles the runner's ProgressChanged event.
             </summary>
@@ -299,28 +219,6 @@
         <member name="P:harlam357.Windows.Forms.ProgressDialog.ProcessRunner">
             <summary>
             Gets or sets the progress process runner that executes when the Process method is called.
-            </summary>
-        </member>
-        <member name="T:harlam357.Windows.Forms.ProgressEventArgs">
-            <summary>
-            Provides data for the event that is raised when the progress process runner's progress value has changed.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressEventArgs.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of the ProgressEventArgs class with progress and text message values.
-            </summary>
-            <param name="progress">The progress value.</param>
-            <param name="message">The text message value.</param>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Progress">
-            <summary>
-            Gets the progress value.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressEventArgs.Message">
-            <summary>
-            Gets the text message value.
             </summary>
         </member>
         <member name="T:harlam357.Windows.Forms.RadioPanel">
