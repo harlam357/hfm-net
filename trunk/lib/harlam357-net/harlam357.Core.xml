@@ -1,0 +1,1475 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>harlam357.Core</name>
+    </assembly>
+    <members>
+        <member name="T:harlam357.Core.IO.StreamExtensions">
+            <summary>
+            Provides a set of static methods for operating on System.IO.Stream objects.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.IO.StreamExtensions.CopyTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Copies the input stream to the output stream.
+            </summary>
+            <param name="input">The input stream.</param>
+            <param name="output">The output stream.</param>
+            <exception cref="T:System.ArgumentNullException">input -or- output is null.</exception>
+            <exception cref="T:System.InvalidOperationException">input is not open for reading.</exception>
+            <exception cref="T:System.InvalidOperationException">output is not open for writing.</exception>
+        </member>
+        <member name="M:harlam357.Core.IO.StreamExtensions.CopyTo(System.IO.Stream,System.IO.Stream,System.Int32)">
+            <summary>
+            Copies the input stream to the output stream using the supplied buffer size.
+            </summary>
+            <param name="input">The input stream.</param>
+            <param name="output">The output stream.</param>
+            <param name="bufferSize">The size of the copy buffer.</param>
+            <exception cref="T:System.ArgumentNullException">input -or- output is null.</exception>
+            <exception cref="T:System.ArgumentException">bufferSize is negative.</exception>
+            <exception cref="T:System.InvalidOperationException">input is not open for reading.</exception>
+            <exception cref="T:System.InvalidOperationException">output is not open for writing.</exception>
+        </member>
+        <member name="M:harlam357.Core.IO.StreamExtensions.FindLastIndex(System.IO.Stream,System.Predicate{System.Int32})">
+            <summary>
+            Searches for a byte that matches the conditions defined by the specified predicate, and returns the zero-based index of the last occurrence within the entire System.IO.Stream.
+            </summary>
+            <param name="stream">The stream instance.</param>
+            <param name="match">The predicate delegate that defines the conditions of the byte to search for.</param>
+            <exception cref="T:System.ArgumentNullException">stream -or- match is null.</exception>
+            <returns>The zero-based index of the last occurrence of a byte that matches the conditions defined by match, if found; otherwise, –1.</returns>
+        </member>
+        <member name="M:harlam357.Core.IO.StreamExtensions.FindLastIndex(System.IO.Stream,System.Int64,System.Predicate{System.Int32})">
+            <summary>
+            Searches for a byte that matches the conditions defined by the specified predicate, and returns the zero-based index of the last occurrence within the range of bytes in the System.IO.Stream that extends from the first byte to the specified index.
+            </summary>
+            <param name="stream">The stream instance.</param>
+            <param name="startIndex">The zero-based starting index of the backward search.</param>
+            <param name="match">The predicate delegate that defines the conditions of the byte to search for.</param>
+            <exception cref="T:System.ArgumentNullException">stream -or- match is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">startIndex is less than zero -or- greater than stream length.</exception>
+            <returns>The zero-based index of the last occurrence of a byte that matches the conditions defined by match, if found; otherwise, –1.</returns>
+        </member>
+        <member name="P:harlam357.Core.IO.StreamPosition.Value">
+            <summary>
+            Gets the last position of the stream.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.IO.StreamPosition.CheckBuffer">
+            <summary>
+            Gets a byte array containing a number of bytes from the end of the last stream read.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.IFtpWebRequest">
+            <summary>
+            Represents an object that implements a File Transfer Protocol (FTP) client.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.IWebRequest">
+            <summary>
+            Represents an object that makes a request to a Uniform Resource Identifier (URI).
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.Abort">
+            <summary>
+            Aborts the Request.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+            <summary>
+            Provides an asynchronous version of the System.Net.WebRequest.GetRequestStream() method.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">An object containing state information for this asynchronous request.</param>
+            <returns>An System.IAsyncResult that references the asynchronous request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.EndGetRequestStream(System.IAsyncResult)">
+            <summary>
+            Returns a System.IO.Stream for writing data to the Internet resource.
+            </summary>
+            <param name="asyncResult">An System.IAsyncResult that references a pending request for a stream.</param>
+            <returns>A System.IO.Stream to write data to.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous request for an Internet resource.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">An object containing state information for this asynchronous request.</param>
+            <returns>An System.IAsyncResult that references the asynchronous request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.EndGetResponse(System.IAsyncResult)">
+            <summary>
+            Returns an IWebResponse.
+            </summary>
+            <param name="asyncResult">An System.IAsyncResult that references a pending request for a response.</param>
+            <returns>An IWebResponse that contains a response to the Internet request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.GetRequestStream">
+            <summary>
+            Returns a System.IO.Stream for writing data to the Internet resource.
+            </summary>
+            <returns>A System.IO.Stream for writing data to the Internet resource.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebRequest.GetResponse">
+            <summary>
+            Returns a response to an Internet request.
+            </summary>
+            <returns>An IWebResponse containing the response to the Internet request.</returns>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.AuthenticationLevel">
+            <summary>
+            Gets or sets values indicating the level of authentication and impersonation used for this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.CachePolicy">
+            <summary>
+            Gets or sets the cache policy for this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.ConnectionGroupName">
+            <summary>
+            Gets or sets the name of the connection group for the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.ContentLength">
+            <summary>
+            Gets or sets the content length of the request data being sent.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.ContentType">
+            <summary>
+            Gets or sets the content type of the request data being sent.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.Credentials">
+            <summary>
+            Gets or sets the network credentials used for authenticating the request with the Internet resource.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.Headers">
+            <summary>
+            Gets or sets the collection of header name/value pairs associated with the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.ImpersonationLevel">
+            <summary>
+            Gets or sets the impersonation level for the current request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.Method">
+            <summary>
+            Gets or sets the protocol method to use in this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.PreAuthenticate">
+            <summary>
+            Indicates whether to pre-authenticate the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.Proxy">
+            <summary>
+            Gets or sets the network proxy to use to access this Internet resource.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.RequestUri">
+            <summary>
+            Gets the URI of the Internet resource associated with the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.Timeout">
+            <summary>
+            Gets or sets the length of time, in milliseconds, before the request times out.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebRequest.UseDefaultCredentials">
+            <summary>
+            Gets or sets a System.Boolean value that controls whether System.Net.CredentialCache.DefaultCredentials are sent with requests.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.ClientCertificates">
+            <summary>
+            Gets or sets the certificates used for establishing an encrypted connection to the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.ContentOffset">
+            <summary>
+            Gets or sets a byte offset into the file being downloaded by this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.EnableSsl">
+            <summary>
+            Gets or sets a System.Boolean that specifies that an SSL connection should be used.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.KeepAlive">
+            <summary>
+            Gets or sets a System.Boolean value that specifies whether the control connection to the FTP server is closed after the request completes.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.ReadWriteTimeout">
+            <summary>
+            Gets or sets a time-out when reading from or writing to a stream.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.RenameTo">
+            <summary>
+            Gets or sets the new name of a file being renamed.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.ServicePoint">
+            <summary>
+            Gets the System.Net.ServicePoint object used to connect to the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.UsePassive">
+            <summary>
+            Gets or sets the behavior of a client application's data transfer process.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebRequest.UseBinary">
+            <summary>
+            Gets or sets a System.Boolean value that specifies the data type for file transfers.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.FtpWebRequestAdapter">
+            <summary>
+            Wraps a System.Net.FtpWebRequest object that implements a File Transfer Protocol (FTP) client.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebRequestAdapter">
+            <summary>
+            Wraps a System.Net.WebRequest object that makes a request to a Uniform Resource Identifier (URI).
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.#ctor(System.Net.WebRequest)">
+            <summary>
+            Initializes a new instance of the WebRequestAdapter class.
+            </summary>
+            <param name="webRequest">The System.Net.WebRequest instance this object wraps.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.Abort">
+            <summary>
+            Aborts the Request.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+            <summary>
+            Provides an asynchronous version of the System.Net.WebRequest.GetRequestStream() method.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">An object containing state information for this asynchronous request.</param>
+            <returns>An System.IAsyncResult that references the asynchronous request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.EndGetRequestStream(System.IAsyncResult)">
+            <summary>
+            Returns a System.IO.Stream for writing data to the Internet resource.
+            </summary>
+            <param name="asyncResult">An System.IAsyncResult that references a pending request for a stream.</param>
+            <returns>A System.IO.Stream to write data to.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.BeginGetResponse(System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous request for an Internet resource.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">An object containing state information for this asynchronous request.</param>
+            <returns>An System.IAsyncResult that references the asynchronous request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.EndGetResponse(System.IAsyncResult)">
+            <summary>
+            Returns an IWebResponse.
+            </summary>
+            <param name="asyncResult">An System.IAsyncResult that references a pending request for a response.</param>
+            <returns>An IWebResponse that contains a response to the Internet request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.GetRequestStream">
+            <summary>
+            Returns a System.IO.Stream for writing data to the Internet resource.
+            </summary>
+            <returns>A System.IO.Stream for writing data to the Internet resource.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebRequestAdapter.GetResponse">
+            <summary>
+            Returns a response to an Internet request.
+            </summary>
+            <returns>An IWebResponse containing the response to the Internet request.</returns>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.AuthenticationLevel">
+            <summary>
+            Gets or sets values indicating the level of authentication and impersonation used for this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.CachePolicy">
+            <summary>
+            Gets or sets the cache policy for this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.ConnectionGroupName">
+            <summary>
+            Gets or sets the name of the connection group for the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.ContentLength">
+            <summary>
+            Gets or sets the content length of the request data being sent.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.ContentType">
+            <summary>
+            Gets or sets the content type of the request data being sent.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.Credentials">
+            <summary>
+            Gets or sets the network credentials used for authenticating the request with the Internet resource.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.Headers">
+            <summary>
+            Gets or sets the collection of header name/value pairs associated with the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.ImpersonationLevel">
+            <summary>
+            Gets or sets the impersonation level for the current request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.Method">
+            <summary>
+            Gets or sets the protocol method to use in this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.PreAuthenticate">
+            <summary>
+            Indicates whether to pre-authenticate the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.Proxy">
+            <summary>
+            Gets or sets the network proxy to use to access this Internet resource.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.RequestUri">
+            <summary>
+            Gets the URI of the Internet resource associated with the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.Timeout">
+            <summary>
+            Gets or sets the length of time, in milliseconds, before the request times out.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebRequestAdapter.UseDefaultCredentials">
+            <summary>
+            Gets or sets a System.Boolean value that controls whether System.Net.CredentialCache.DefaultCredentials are sent with requests.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.FtpWebRequestAdapter.#ctor(System.Net.FtpWebRequest)">
+            <summary>
+            Initializes a new instance of the FtpWebRequestAdapter class.
+            </summary>
+            <param name="ftpWebRequest">The System.Net.FtpWebRequest instance this object wraps.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.FtpWebRequestAdapter.EndGetResponse(System.IAsyncResult)">
+            <summary>
+            Returns an IWebResponse.
+            </summary>
+            <param name="asyncResult">An System.IAsyncResult that references a pending request for a response.</param>
+            <returns>An IWebResponse that contains a response to the Internet request.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.FtpWebRequestAdapter.GetResponse">
+            <summary>
+            Returns a response to an Internet request.
+            </summary>
+            <returns>An IWebResponse containing the response to the Internet request.</returns>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.ClientCertificates">
+            <summary>
+            Gets or sets the certificates used for establishing an encrypted connection to the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.ContentOffset">
+            <summary>
+            Gets or sets a byte offset into the file being downloaded by this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.EnableSsl">
+            <summary>
+            Gets or sets a System.Boolean that specifies that an SSL connection should be used.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.KeepAlive">
+            <summary>
+            Gets or sets a System.Boolean value that specifies whether the control connection to the FTP server is closed after the request completes.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.ReadWriteTimeout">
+            <summary>
+            Gets or sets a time-out when reading from or writing to a stream.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.RenameTo">
+            <summary>
+            Gets or sets the new name of a file being renamed.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.ServicePoint">
+            <summary>
+            Gets the System.Net.ServicePoint object used to connect to the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.UsePassive">
+            <summary>
+            Gets or sets the behavior of a client application's data transfer process.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebRequestAdapter.UseBinary">
+            <summary>
+            Gets or sets a System.Boolean value that specifies the data type for file transfers.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.IFtpWebResponse">
+            <summary>
+            Represents an object that encapsulates a File Transfer Protocol (FTP) server's response to a request.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.IWebResponse">
+            <summary>
+            Represents an object that provides a response from a Uniform Resource Identifier (URI).
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebResponse.Close">
+            <summary>
+            Closes the response stream.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebResponse.GetResponseStream">
+            <summary>
+            Returns the data stream from the Internet resource.
+            </summary>
+            <returns>An instance of the System.IO.Stream class for reading data from the Internet resource.</returns>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.ContentLength">
+            <summary>
+            Gets or sets the content length of data being received.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.ContentType">
+            <summary>
+            Gets or sets the content type of the data being received.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.Headers">
+            <summary>
+            Gets a collection of header name-value pairs associated with this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.IsFromCache">
+            <summary>
+            Gets a System.Boolean value that indicates whether this response was obtained from the cache.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.IsMutuallyAuthenticated">
+            <summary>
+            Gets a System.Boolean value that indicates whether mutual authentication occurred.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebResponse.ResponseUri">
+            <summary>
+            Gets the URI of the Internet resource that actually responded to the request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.BannerMessage">
+            <summary>
+            Gets the message sent by the FTP server when a connection is established prior to logon.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.ExitMessage">
+            <summary>
+            Gets the message sent by the server when the FTP session is ending.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.LastModified">
+            <summary>
+            Gets the date and time that a file on an FTP server was last modified.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.StatusCode">
+            <summary>
+            Gets the most recent status code sent from the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.StatusDescription">
+            <summary>
+            Gets text that describes a status code sent from the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IFtpWebResponse.WelcomeMessage">
+            <summary>
+            Gets the message sent by the FTP server when authentication is complete.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.FtpWebResponseAdapter">
+            <summary>
+            Wraps a System.Net.FtpWebResponse object that encapsulates a File Transfer Protocol (FTP) server's response to a request.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebResponseAdapter">
+            <summary>
+            Wraps a System.Net.WebResponse object that provides a response from a Uniform Resource Identifier (URI).
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebResponseAdapter.#ctor(System.Net.WebResponse)">
+            <summary>
+            Initializes a new instance of the WebResponseAdapter class.
+            </summary>
+            <param name="webResponse">The System.Net.WebResponse instance this object wraps.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebResponseAdapter.Close">
+            <summary>
+            Closes the response stream.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebResponseAdapter.GetResponseStream">
+            <summary>
+            Returns the data stream from the Internet resource.
+            </summary>
+            <returns>An instance of the System.IO.Stream class for reading data from the Internet resource.</returns>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.ContentLength">
+            <summary>
+            Gets or sets the content length of data being received.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.ContentType">
+            <summary>
+            Gets or sets the content type of the data being received.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.Headers">
+            <summary>
+            Gets a collection of header name-value pairs associated with this request.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.IsFromCache">
+            <summary>
+            Gets a System.Boolean value that indicates whether this response was obtained from the cache.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.IsMutuallyAuthenticated">
+            <summary>
+            Gets a System.Boolean value that indicates whether mutual authentication occurred.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebResponseAdapter.ResponseUri">
+            <summary>
+            Gets the URI of the Internet resource that actually responded to the request.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.FtpWebResponseAdapter.#ctor(System.Net.FtpWebResponse)">
+            <summary>
+            Initializes a new instance of the FtpWebResponseAdapter class.
+            </summary>
+            <param name="ftpWebResponse">The System.Net.FtpWebResponse instance this object wraps.</param>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.BannerMessage">
+            <summary>
+            Gets the message sent by the FTP server when a connection is established prior to logon.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.ExitMessage">
+            <summary>
+            Gets the message sent by the server when the FTP session is ending.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.LastModified">
+            <summary>
+            Gets the date and time that a file on an FTP server was last modified.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.StatusCode">
+            <summary>
+            Gets the most recent status code sent from the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.StatusDescription">
+            <summary>
+            Gets text that describes a status code sent from the FTP server.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.FtpWebResponseAdapter.WelcomeMessage">
+            <summary>
+            Gets the message sent by the FTP server when authentication is complete.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebOperationState">
+            <summary>
+            Specifies the current state of the operation.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Net.WebOperationState.Idle">
+            <summary>
+            No operation is running.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Net.WebOperationState.InProgress">
+            <summary>
+            An operation is in progress.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebOperationResult">
+            <summary>
+            Specifies the result of the operation.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Net.WebOperationResult.None">
+            <summary>
+            No result.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Net.WebOperationResult.Completed">
+            <summary>
+            The operation completed.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Net.WebOperationResult.Canceled">
+            <summary>
+            The operation was canceled.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.IWebOperation">
+            <summary>
+            Provides common methods for sending and receiving data using a WebRequest.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Download(System.String)">
+            <summary>
+            Downloads the resource to a local file.
+            </summary>
+            <param name="fileName">The name of the local file that is to receive the data.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.GetDownloadLength">
+            <summary>
+            Gets the length of the data being received.
+            </summary>
+            <returns>The length of the data being received in bytes.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Upload(System.String)">
+            <summary>
+            Uploads the specified local file to the resource.
+            </summary>
+            <param name="fileName">The file to send to the resource.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Upload(System.String,System.Int32)">
+            <summary>
+            Uploads the specified local file to the resource.
+            </summary>
+            <param name="fileName">The file to send to the resource.</param>
+            <param name="maximumLength">The maximum number of bytes to upload.  If the value is 0 or less the entire file will be uploaded.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.CheckConnection">
+            <summary>
+            Returns a value indicating if a connection can be made to the resource.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Cancel">
+            <summary>
+            Cancels the operation.
+            </summary>
+        </member>
+        <member name="E:harlam357.Core.Net.IWebOperation.ProgressChanged">
+            <summary>
+            Occurs when the operation successfully transfers some data.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebOperation.WebRequest">
+            <summary>
+            Gets the inner WebRequest object.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebOperation.State">
+            <summary>
+            Gets the state of the operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebOperation.Result">
+            <summary>
+            Gets the result of the last operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebOperation.AutoSizeBuffer">
+            <summary>
+            Indicates whether the buffer will be automatically sized.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.IWebOperation.Buffer">
+            <summary>
+            Gets or sets the internal buffer size.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebOperation">
+            <summary>
+            Provides common methods for sending and receiving data using a WebRequest.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Download(System.String)">
+            <summary>
+            Downloads the resource to a local file.
+            </summary>
+            <param name="fileName">The name of the local file that is to receive the data.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.GetDownloadLength">
+            <summary>
+            Gets the length of the data being received.
+            </summary>
+            <returns>The length of the data being received in bytes.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Upload(System.String)">
+            <summary>
+            Uploads the specified local file to the resource.
+            </summary>
+            <param name="fileName">The file to send to the resource.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Upload(System.String,System.Int32)">
+            <summary>
+            Uploads the specified local file to the resource.
+            </summary>
+            <param name="fileName">The file to send to the resource.</param>
+            <param name="maximumLength">The maximum number of bytes to upload.  If the value is 0 or less the entire file will be uploaded.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.CheckConnection">
+            <summary>
+            Returns a value indicating if a connection can be made to the resource.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Cancel">
+            <summary>
+            Cancels the operation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.CalculateBufferSize(System.Int64)">
+            <summary>
+            Calculates a buffer size approximately 0.5% the size of the stream length.
+            </summary>
+            <param name="streamLength">The length of the stream.</param>
+            <returns>The buffer size in bytes.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.OnWebOperationProgress(harlam357.Core.Net.WebOperationProgressChangedEventArgs)">
+            <summary>
+            Raises the WebOperationProgress event.
+            </summary>
+            <param name="e">A WebOperationProgressEventArgs object containing event data.  If e is null the event will be canceled.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.GetWebDownloadMethod">
+            <summary>
+            When overridden in a descendant class, returns a string specifying the download method name.
+            </summary>
+            <returns>A string specifying the download method name.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.GetWebUploadMethod">
+            <summary>
+            When overridden in a descendant class, returns a string specifying the upload method name.
+            </summary>
+            <returns>A string specifying the upload method name.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.GetWebCheckConnectionMethod">
+            <summary>
+            When overridden in a descendant class, returns a string specifying the check connection method name.
+            </summary>
+            <returns>A string specifying the check connection method name.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Create(System.String)">
+            <summary>
+            Initializes a new WebOperation instance for the specified URI scheme.
+            </summary>
+            <param name="requestUriString">The URI that identifies the Internet resource.</param>
+            <returns>A WebOperation descendant for the specific URI scheme.</returns>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Create(System.Uri)">
+            <summary>
+            Initializes a new WebOperation instance for the specified URI scheme.
+            </summary>
+            <param name="requestUri">A System.Uri containing the URI of the requested resource.</param>
+            <returns>A WebOperation descendant for the specific URI scheme.</returns>
+        </member>
+        <member name="E:harlam357.Core.Net.WebOperation.ProgressChanged">
+            <summary>
+            Occurs when the operation successfully transfers some data.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperation.WebRequest">
+            <summary>
+            Gets or sets the inner WebRequest object.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperation.State">
+            <summary>
+            Gets the state of the operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperation.Result">
+            <summary>
+            Gets the result of the last operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperation.AutoSizeBuffer">
+            <summary>
+            Indicates whether the buffer will be automatically sized.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperation.Buffer">
+            <summary>
+            Gets or sets the internal buffer size.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Net.WebOperation.FileWebRequestAdapter">
+            <summary>
+            Represents an object that makes a request to a file system Uniform Resource Identifier (URI).
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.FileWebRequestAdapter.#ctor(System.Net.FileWebRequest)">
+            <summary>
+            Initializes a new instance of the FileWebRequestAdapter class.
+            </summary>
+            <param name="fileWebRequest">The System.Net.WebRequest instance this object wraps.</param>
+        </member>
+        <member name="T:harlam357.Core.Net.WebOperationProgressChangedEventArgs">
+            <summary>
+            Provides data for the WebOperation.ProgressChanged event of a WebOperation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperationProgressChangedEventArgs.#ctor(System.Int64,System.Int64,harlam357.Core.Net.WebOperationState,harlam357.Core.Net.WebOperationResult)">
+            <summary>
+            Initializes a new instance of the WebOperationProgressChangedEventArgs class.
+            </summary>
+            <param name="length">The number of bytes received</param>
+            <param name="totalLength">The total number of bytes to receive.</param>
+            <param name="state">The current state of the operation.</param>
+            <param name="result">The result of the operation.</param>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperationProgressChangedEventArgs.Length">
+            <summary>
+            Gets the number of bytes received.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperationProgressChangedEventArgs.TotalLength">
+            <summary>
+            Gets the total number of bytes to receive.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperationProgressChangedEventArgs.State">
+            <summary>
+            Indicates the current state of the operation.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Net.WebOperationProgressChangedEventArgs.Result">
+            <summary>
+            Indicates the result of the operation.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Cryptography.Asymmetric">
+            <summary>
+            Represents an object that performs asymmetric encryption.
+            </summary>
+            <remarks>The only provider supported is the RSACryptoServiceProvider.</remarks>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.#ctor">
+            <summary>
+            Initializes a new instance of the Asymmetric class using the default key size.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the Asymmetric class using the specified key size.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.GenerateNewKeyset">
+            <summary>
+            Generates a new public/private key pair as objects.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.GenerateNewXmlKeyset">
+            <summary>
+            Generates a new public/private key pair as XML strings.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Encrypt(harlam357.Core.Security.Data)">
+            <summary>
+            Encrypts data using the default public key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Encrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Cryptography.PublicKey)">
+            <summary>
+            Encrypts data using the provided public key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data or publicKey is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Encrypt(harlam357.Core.Security.Data,System.String)">
+            <summary>
+            Encrypts data using the provided public key XML.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data or publicKeyXml is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Decrypt(harlam357.Core.Security.Data)">
+            <summary>
+            Decrypts data using the default private key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Decrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Cryptography.PrivateKey)">
+            <summary>
+            Decrypts data using the provided private key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data or privateKey is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.Decrypt(harlam357.Core.Security.Data,System.String)">
+            <summary>
+            Decrypts data using the provided private key XML.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data or privateKeyXml is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Asymmetric.GetRsaProvider">
+            <summary>
+            Returns the default RSA provider using the specified key size.
+            </summary>
+            <remarks>
+            Note that Microsoft's CryptoAPI has an underlying file system dependency that is unavoidable.
+            http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q322/3/71.asp&amp;NoWebContent=1
+            </remarks>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.KeyContainerName">
+            <summary>
+            Gets or sets the name of the key container used to store this key on disk. 
+            </summary>
+            <remarks>
+            This is an unavoidable side effect of the underlying Microsoft CryptoAPI.
+            http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q322/3/71.asp&amp;NoWebContent=1
+            </remarks>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.KeySizeBits">
+            <summary>
+            Gets the current key size, in bits.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.KeySizeMaxBits">
+            <summary>
+            Gets the maximum supported key size, in bits.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.KeySizeMinBits">
+            <summary>
+            Gets the minimum supported key size, in bits.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.KeySizeStepBits">
+            <summary>
+            Gets the valid key step sizes, in bits.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Asymmetric.DefaultPublicKey">
+            <summary>
+            Gets the default public key as stored in the *.config file.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.KeyPairUtils.GetXmlElement(System.String,System.String)">
+            <summary>
+            Gets an element from an XML string.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.KeyPairUtils.GetConfigString(System.String,System.Boolean)">
+            <summary>
+            Gets the specified string value from the application .config file.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Cryptography.PublicKey">
+            <summary>
+            Represents a public encryption key.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.#ctor">
+            <summary>
+            Initializes a new instance of the PublicKey class.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the PublicKey class.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.LoadFromConfig">
+            <summary>
+            Loads the public key from the *.config file.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.ToConfigSection">
+            <summary>
+            Returns the *.config file XML section representing this public key.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.ExportToConfigFile(System.String)">
+            <summary>
+            Writes the *.config file representation of this public key to a file.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.LoadFromXml(System.String)">
+            <summary>
+            Loads the public key from an XML string.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.ToParameters">
+            <summary>
+            Converts this public key to an RSAParameters object.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.ToXml">
+            <summary>
+            Converts this public key to its XML string representation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PublicKey.ExportToXmlFile(System.String)">
+            <summary>
+            Writes the XML representation of this public key to a file.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PublicKey.Modulus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PublicKey.Exponent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Cryptography.PrivateKey">
+            <summary>
+            Represents a private encryption key.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.#ctor">
+            <summary>
+            Initializes a new instance of the PrivateKey class.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the PrivateKey class.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.LoadFromConfig">
+            <summary>
+            Loads the private key from the *.config file.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.ToConfigSection">
+            <summary>
+            Returns the *.config file XML section representing this private key.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.ExportToConfigFile(System.String)">
+            <summary>
+            Writes the *.config file representation of this private key to a file.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.LoadFromXml(System.String)">
+            <summary>
+            Loads the private key from an XML string.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.ToParameters">
+            <summary>
+            Converts this private key to an RSAParameters object.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.ToXml">
+            <summary>
+            Converts this private key to its XML string representation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.PrivateKey.ExportToXmlFile(System.String)">
+            <summary>
+            Writes the XML representation of this private key to a file.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.Modulus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.Exponent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.PrimeP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.PrimeQ">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.PrimeExponentP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.PrimeExponentQ">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.Coefficient">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.PrivateKey.PrivateExponent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Cryptography.SymmetricProvider">
+            <summary>
+            Specifies the symmetric encryption algorithm.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.Cryptography.SymmetricProvider.DES">
+            <summary>
+            The Data Encryption Standard provider supports a 64 bit key only.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.Cryptography.SymmetricProvider.RC2">
+            <summary>
+            The Rivest Cipher 2 provider supports keys ranging from 40 to 128 bits, default is 128 bits.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.Cryptography.SymmetricProvider.Rijndael">
+            <summary>
+            The Rijndael (also known as AES) provider supports keys of 128, 192, or 256 bits with a default of 256 bits.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.Cryptography.SymmetricProvider.TripleDES">
+            <summary>
+            The TripleDES provider (also known as 3DES) supports keys of 128 or 192 bits with a default of 192 bits.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Cryptography.Symmetric">
+            <summary>
+            Represents an object that performs symmetric encryption.
+            </summary>
+            <remarks>Symmetric encryption uses a single key to encrypt and decrypt. Both parties (encryptor and decryptor) must share the same secret key.</remarks>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.#ctor(harlam357.Core.Security.Cryptography.SymmetricProvider)">
+            <summary>
+            Initializes a new instance of the Symmetric class using the specified provider.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.#ctor(harlam357.Core.Security.Cryptography.SymmetricProvider,System.Boolean)">
+            <summary>
+            Initializes a new instance of the Symmetric class using the specified provider.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.RandomInitializationVector">
+            <summary>
+            Generates a random initialization vector.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.RandomKey">
+            <summary>
+            Generates a random key.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.ValidateKeyAndIv(System.Boolean)">
+            <summary>
+            Ensures that the _crypto object has valid Key and IV prior to any attempt to encrypt or decrypt.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+            <summary>
+            Encrypts the specified data using the provided key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(harlam357.Core.Security.Data)">
+            <summary>
+            Encrypts the specified data using the preset key and initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+            <summary>
+            Encrypts the specified stream to memory using the provided key and initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">stream is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Data)">
+            <summary>
+            Encrypts the specified stream to memory using the provided key.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">stream is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream)">
+            <summary>
+            Encrypts the specified stream to memory using the preset key and initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">stream is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(System.IO.Stream,harlam357.Core.Security.Data)">
+            <summary>
+            Decrypts the specified stream using the provided key and preset initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">stream is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(System.IO.Stream)">
+            <summary>
+            Decrypts the specified stream using the preset key and initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">stream is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+            <summary>
+            Decrypts the specified data using provided key and preset initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">Unable to decrypt data.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(harlam357.Core.Security.Data)">
+            <summary>
+            Decrypts the specified data using preset key and initialization vector.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">Unable to decrypt data.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Dispose(System.Boolean)">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Symmetric.Key">
+            <summary>
+            Gets or sets the key used to encrypt or decrypt data.
+            </summary>
+            <remarks>Setting a null value will be ignored.</remarks>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.Symmetric.IntializationVector">
+            <summary>
+            Gets or sets the initialization vector.
+            </summary>
+            <remarks>Setting a null value will be ignored.</remarks>
+        </member>
+        <member name="T:harlam357.Core.Security.Data">
+            <summary>
+            Represents Hex, Byte, Base64, or String data to encrypt or decrypt.
+             </summary>
+            <remarks>
+            Use the Text property to get/set a string representation.
+            Use the Hex property to get/set a string-based Hexadecimal representation.
+            Use the Base64 to get/set a string-based Base64 representation.
+            </remarks>
+        </member>
+        <member name="M:harlam357.Core.Security.Data.#ctor">
+            <summary>
+            Initializes a new instance of the Data class that is empty.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Data.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the Data class with the byte array value.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Data.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the Data class with the string value.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Data.#ctor(System.String,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of the Data class with the string value.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Data.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.DefaultEncoding">
+            <summary>
+            Gets the default text encoding for all Data instances.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.Encoding">
+            <summary>
+            Gets or sets the text encoding for this Data instance.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.IsEmpty">
+            <summary>
+            Indicates if no data is present in this instance.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.StepBytes">
+            <summary>
+            Gets or sets the allowed step interval, in bytes, for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.MinBytes">
+            <summary>
+            Gets or sets the minimum number of bytes allowed for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.MaxBytes">
+            <summary>
+            Gets or sets the maximum number of bytes allowed for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.MaxBits">
+            <summary>
+            Gets or sets the maximum number of bits allowed for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.Bytes">
+            <summary>
+            Gets or sets the byte representation of the data. This will be padded to MinBytes and trimmed to MaxBytes as necessary.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.Text">
+            <summary>
+            Gets or sets the text representation of the data using the Encoding value.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.Hex">
+            <summary>
+            Gets or sets the Hex string representation of this data.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Data.Base64">
+            <summary>
+            Gets or sets the Base64 string representation of this data.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Extensions">
+            <summary>
+            Contains extension methods for hexidecimal and base64 conversions.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Extensions.ToHex(System.Byte[])">
+            <summary>
+            Converts an array of bytes to a Hex string representation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Extensions.FromHex(System.String)">
+            <summary>
+            Converts a Hex string representation to an array of bytes.
+            </summary>
+            <exception cref="T:System.FormatException">The length of value is not zero or a multiple of 2. -or- The format of value is invalid. value contains a non-hex character.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Extensions.ToBase64(System.Byte[])">
+            <summary>
+            Converts an array of bytes to a Base64 string representation.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Extensions.FromBase64(System.String)">
+            <summary>
+            Converts a Base64 string representation to an array of bytes.
+            </summary>
+            <exception cref="T:System.FormatException">The length of value, ignoring white-space characters, is not zero or a multiple of 4. -or- The format of value is invalid. value contains a non-base-64 character, more than two padding characters, or a non-white space-character among the padding characters.</exception>
+        </member>
+        <member name="T:harlam357.Core.Security.HashProvider">
+            <summary>
+            Specifies the type of hash.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.CRC32">
+            <summary>
+            Cyclic Redundancy Check provider, 32-bit.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.SHA1">
+            <summary>
+            Secure Hashing Algorithm provider, SHA-1 variant, 160-bit.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.SHA256">
+            <summary>
+            Secure Hashing Algorithm provider, SHA-2 variant, 256-bit.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.SHA384">
+            <summary>
+            Secure Hashing Algorithm provider, SHA-2 variant, 384-bit.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.SHA512">
+            <summary>
+            Secure Hashing Algorithm provider, SHA-2 variant, 512-bit.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.Security.HashProvider.MD5">
+            <summary>
+            Message Digest algorithm 5, 128-bit.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Security.Hash">
+            <summary>
+            Represents an object that performs hashing.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.#ctor(harlam357.Core.Security.HashProvider)">
+            <summary>
+            Initializes a new instance of the Hash class with the specified hash provider.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Calculate(System.IO.Stream)">
+            <summary>
+            Calculates the hash on a stream of arbitrary length.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Calculate(harlam357.Core.Security.Data)">
+            <summary>
+            Calculates the hash for fixed length data.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">data is null.</exception>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Calculate(harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+            <summary>
+            Calculates the hash for fixed length data with a prefixed salt value.
+             </summary>
+            <exception cref="T:System.ArgumentNullException">data or salt is null.</exception>
+            <remarks>A "salt" value is random data prefixed to every hashed value to prevent common dictionary attacks.</remarks>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Dispose(System.Boolean)">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:harlam357.Core.Security.Hash.Value">
+            <summary>
+            Gets the previously calculated hash value.
+            </summary>
+        </member>
+    </members>
+</doc>
