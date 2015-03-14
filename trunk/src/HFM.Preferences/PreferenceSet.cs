@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Class
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,8 +34,8 @@ using System.Text;
 
 //using Castle.Core.Logging;
 
-using harlam357.Security;
-using harlam357.Security.Cryptography;
+using harlam357.Core.Security;
+using harlam357.Core.Security.Cryptography;
 
 using HFM.Core;
 using HFM.Preferences.Properties;

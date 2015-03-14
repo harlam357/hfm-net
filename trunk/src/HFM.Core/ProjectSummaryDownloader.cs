@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Project Summary Downloader Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,7 +120,7 @@ namespace HFM.Core
          net.HttpDownloadHelper(downloadUrl, DownloadFilePath, String.Empty, String.Empty);
       }
 
-      private void HttpWebOperationProgress(object sender, harlam357.Net.WebOperationProgressChangedEventArgs e)
+      private void HttpWebOperationProgress(object sender, harlam357.Core.Net.WebOperationProgressChangedEventArgs e)
       {
          int progress = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
          string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);

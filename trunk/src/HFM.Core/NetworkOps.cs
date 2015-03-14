@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ using System.Net;
 using System.Net.Cache;
 using System.Net.Mail;
 
-using harlam357.Net;
+using harlam357.Core.Net;
 
 namespace HFM.Core
 {
