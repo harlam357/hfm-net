@@ -1127,7 +1127,7 @@ namespace HFM.Core
                   if (progress != lastProgress)
                   {
                      string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     OnProgressChanged(new ProgressChangedEventArgs(progress, message));
                      lastProgress = progress;
                   }
                }
@@ -1261,7 +1261,7 @@ namespace HFM.Core
                   if (progress != lastProgress)
                   {
                      string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                     OnProgressChanged(new ProgressEventArgs(progress, message));
+                     OnProgressChanged(new ProgressChangedEventArgs(progress, message));
                      lastProgress = progress;
                   }
                }

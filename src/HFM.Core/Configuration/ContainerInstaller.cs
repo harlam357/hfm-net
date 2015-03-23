@@ -158,7 +158,7 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IProjectSummaryDownloader>()
                .ImplementedBy<ProjectSummaryDownloader>()
-                  .OnCreate((kernel, instance) => instance.DownloadFilePath = Path.GetTempFileName()));
+                  .OnCreate((kernel, instance) => ((ProjectSummaryDownloader)instance).DownloadFilePath = Path.GetTempFileName()));
 
          #region Plugins
 
