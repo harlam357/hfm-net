@@ -4,6 +4,44 @@
         <name>harlam357.Core</name>
     </assembly>
     <members>
+        <member name="T:harlam357.Core.ComponentModel.ProgressChangedEventArgs">
+            <summary>
+            Provides data for the a ProgressChanged event.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.ProgressChangedEventArgs.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
+            </summary>
+            <param name="progressPercentage">The progress value.</param>
+            <param name="message">The text message value.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.ProgressChangedEventArgs.#ctor(System.Int32,System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
+            </summary>
+            <param name="progressPercentage">A percentage value indicating the task progress.</param>
+            <param name="message">A message value indicating the task progress.</param>
+            <param name="userState">A unique user state.</param>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.ProgressPercentage">
+            <summary>
+            Gets the task progress percentage.
+            </summary>
+            <returns>A percentage value indicating the task progress.</returns>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.Message">
+            <summary>
+            Gets a message value indicating the task progress.
+            </summary>
+            <returns>A System.String message value indicating the task progress.</returns>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.UserState">
+            <summary>
+            Gets a unique user state.
+            </summary>
+            <returns>A unique System.Object indicating the user state.</returns>
+        </member>
         <member name="T:harlam357.Core.ComponentModel.IProgressProcessRunner">
             <summary>
             Represents an object that runs a process and reports progress.
@@ -83,44 +121,6 @@
             <summary>
             Gets a value that reports if the runner is currently processing.
             </summary>
-        </member>
-        <member name="T:harlam357.Core.ComponentModel.ProgressEventArgs">
-            <summary>
-            Provides data for the event that is raised when the progress process runner's progress value has changed.
-            </summary>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressEventArgs.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
-            </summary>
-            <param name="progress">The progress value.</param>
-            <param name="message">The text message value.</param>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressEventArgs.#ctor(System.Int32,System.String,System.Object)">
-            <summary>
-            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
-            </summary>
-            <param name="progress">A percentage value indicating the task progress.</param>
-            <param name="message">A message value indicating the task progress.</param>
-            <param name="userState">A unique user state.</param>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressEventArgs.Progress">
-            <summary>
-            Gets a percentage value indicating the task progress.
-            </summary>
-            <returns>A percentage value indicating the task progress.</returns>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressEventArgs.Message">
-            <summary>
-            Gets a message value indicating the task progress.
-            </summary>
-            <returns>A System.String message value indicating the task progress.</returns>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressEventArgs.UserState">
-            <summary>
-            Gets a unique user state.
-            </summary>
-            <returns>A unique System.Object indicating the user state.</returns>
         </member>
         <member name="T:harlam357.Core.IO.StreamExtensions">
             <summary>
@@ -1587,6 +1587,36 @@
         <member name="P:harlam357.Core.Security.Hash.Value">
             <summary>
             Gets the previously calculated hash value.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.Threading.Tasks.CurrentThreadTaskScheduler">
+            <summary>
+            Provides a task scheduler that runs tasks on the current thread.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Threading.Tasks.CurrentThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)">
+            <summary>
+            Runs the provided Task synchronously on the current thread.
+            </summary>
+            <param name="task">The task to be executed.</param>
+        </member>
+        <member name="M:harlam357.Core.Threading.Tasks.CurrentThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)">
+            <summary>
+            Runs the provided Task synchronously on the current thread.
+            </summary>
+            <param name="task">The task to be executed.</param>
+            <param name="taskWasPreviouslyQueued">Whether the Task was previously queued to the scheduler.</param>
+            <returns>True if the Task was successfully executed; otherwise, false.</returns>
+        </member>
+        <member name="M:harlam357.Core.Threading.Tasks.CurrentThreadTaskScheduler.GetScheduledTasks">
+            <summary>
+            Gets the Tasks currently scheduled to this scheduler.
+            </summary>
+            <returns>An empty enumerable, as Tasks are never queued, only executed.</returns>
+        </member>
+        <member name="P:harlam357.Core.Threading.Tasks.CurrentThreadTaskScheduler.MaximumConcurrencyLevel">
+            <summary>
+            Gets the maximum degree of parallelism for this scheduler.
             </summary>
         </member>
     </members>
