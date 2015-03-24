@@ -123,17 +123,21 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<QueryDialog>()
                .LifeStyle.Transient);
 
-         // IProgressDialogView - Transient
+         // IProgressDialogView/IProgressDialogAsyncView - Transient
          container.Register(
-            Component.For<IProgressDialogView>()
-               .ImplementedBy<ProjectDownloadDialog>()
-                  .Named("ProjectDownloadDialog")
-                     .LifeStyle.Transient,
             Component.For<IProgressDialogView>()
                .ImplementedBy<ProgressDialog>()
                   .Named("ProgressDialog")
                      .LifeStyle.Transient,
-            Component.For<IProgressDialogViewFactory>()
+            Component.For<IProgressDialogAsyncView>()
+               .ImplementedBy<ProjectDownloadDialog>()
+                  .Named("ProjectDownloadDialog")
+                     .LifeStyle.Transient,
+            Component.For<IProgressDialogAsyncView>()
+               .ImplementedBy<ProgressDialogAsync>()
+                  .Named("ProgressDialogAsync")
+                     .LifeStyle.Transient,
+            Component.For<IViewFactory>()
                .AsFactory());
 
          #endregion

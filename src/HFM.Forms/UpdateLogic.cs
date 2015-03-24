@@ -109,7 +109,7 @@ namespace HFM.Forms
          
          // set globals
          _userInvoked = userInvoked;
-         _proxy = new NetworkOps(_prefs).GetProxy();
+         _proxy = _prefs.GetWebProxy();
          
          Func<ApplicationUpdate> func = DoCheckForUpdate;
          func.BeginInvoke(CheckForUpdateCallback, func);

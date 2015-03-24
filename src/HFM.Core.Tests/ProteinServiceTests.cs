@@ -17,7 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -29,6 +31,18 @@ namespace HFM.Core.Tests
    [TestFixture]
    public class ProteinServiceTests
    {
+      [Test]
+      public void ProteinService_FileName_Test()
+      {
+         // Arrange
+         var prefs = MockRepository.GenerateStub<IPreferenceSet>();
+         prefs.Stub(x => x.ApplicationDataFolderPath).Return(Environment.CurrentDirectory);
+         // Act
+         var service = new ProteinService(prefs, null);
+         // Assert
+         Assert.AreEqual(System.IO.Path.Combine(Environment.CurrentDirectory, Constants.ProjectInfoFileName), service.FileName);
+      }
+
       [Test]
       public void ProteinService_Get_Test1()
       {
@@ -49,7 +63,7 @@ namespace HFM.Core.Tests
          // Arrange
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
          downloader.Expect(x => x.Download()).Repeat.Once();
-         downloader.Stub(x => x.DownloadFilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
+         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
          
          var service = new ProteinService(null, downloader);
          var protein = CreateValidProtein(2483);
@@ -59,7 +73,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(p);
          p = service.Get(2482, true);
          Assert.IsNull(p);
-         // Do it twice to exercise the projects not found list
+         // Call twice to internally exercise the projects not found list
          p = service.Get(2482, true);
          Assert.IsNull(p);
          // Assert
@@ -70,11 +84,31 @@ namespace HFM.Core.Tests
       public void ProteinService_Get_Test3()
       {
          // Arrange
-         var service = new ProteinService();
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         var service = new ProteinService(null, downloader);
          // Act
          service.Get(2482, true);
          // Assert
          Assert.IsTrue(service.ProjectsNotFound.ContainsKey(2482));
+      }
+
+      [Test]
+      public void ProteinService_Get_Test4()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         downloader.Expect(x => x.Download()).Repeat.Once();
+         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
+
+         var service = new ProteinService(null, downloader);
+         // Set project not found to excercise removal code
+         service.ProjectsNotFound.Add(2968, DateTime.MinValue);
+         // Act
+         Protein p = service.Get(2968, true);
+         Assert.IsNotNull(p);
+         // Assert
+         downloader.VerifyAllExpectations();
+         Assert.IsFalse(service.ProjectsNotFound.ContainsKey(2968));
       }
 
       [Test]
@@ -94,13 +128,50 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void ProteinService_Load_Test1()
+      public void ProteinService_ResetRefreshParameters_Test()
       {
          // Arrange
-         var service = new ProteinService();
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         downloader.Expect(x => x.ResetDownloadParameters()).Repeat.Once();
+         var service = new ProteinService(null, downloader);
+         service.ProjectsNotFound.Add(2968, DateTime.MinValue);
+         // Act
+         service.ResetRefreshParameters();
+         // Assert
+         Assert.IsFalse(service.ProjectsNotFound.ContainsKey(2968));
+         downloader.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void ProteinService_Refresh_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         downloader.Expect(x => x.Download()).Repeat.Once();
+         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
+
+         var service = new ProteinService(null, downloader);
          Assert.AreEqual(0, service.GetProjects().Count());
          // Act
-         service.Load("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
+         service.Refresh();
+         // Assert
+         Assert.AreNotEqual(0, service.GetProjects().Count());
+      }
+
+      [Test]
+      public void ProteinService_RefreshAsync_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         var taskSource = new TaskCompletionSource<object>();
+         taskSource.SetResult(null);
+         downloader.Expect(x => x.DownloadAsync(null)).Return(taskSource.Task).Repeat.Once();
+         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\psummary.html");
+
+         var service = new ProteinService(null, downloader);
+         Assert.AreEqual(0, service.GetProjects().Count());
+         // Act
+         service.RefreshAsync(null).Wait();
          // Assert
          Assert.AreNotEqual(0, service.GetProjects().Count());
       }

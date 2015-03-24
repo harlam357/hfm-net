@@ -58,7 +58,7 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      public IProgressDialogViewFactory ProgressDialogViewFactory { get; set; }
+      public IViewFactory ViewFactory { get; set; }
       
       public event EventHandler PresenterClosed;
       
@@ -254,7 +254,7 @@ namespace HFM.Forms
             processor.UpdateArg = _model.SelectedHistoryEntry.ID;
          }
          // Execute Asynchronous Operation
-         var view = ProgressDialogViewFactory.GetProgressDialog();
+         var view = ViewFactory.GetProgressDialog();
          view.ProcessRunner = processor;
          view.Icon = Properties.Resources.hfm_48_48;
          view.Text = "Updating Project Data";
@@ -271,7 +271,7 @@ namespace HFM.Forms
          {
             _model.ResetBindings(true);
          }
-         ProgressDialogViewFactory.Release(view);
+         ViewFactory.Release(view);
       }
    }
 }

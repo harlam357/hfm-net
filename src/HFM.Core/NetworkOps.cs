@@ -102,12 +102,6 @@ namespace HFM.Core
       /// <param name="password">Http Login Password.</param>
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
       void HttpCheckConnection(string url, string username, string password);
-
-      /// <summary>
-      /// Get Web Proxy Interface based on Preferences.
-      /// </summary>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      IWebProxy GetProxy();
    }
 
    /// <summary>
@@ -116,19 +110,21 @@ namespace HFM.Core
    public class NetworkOps : INetworkOps
    {
       private readonly IPreferenceSet _prefs;
-      
+
       public NetworkOps(IPreferenceSet prefs)
       {
          _prefs = prefs;
       }
-   
+
       private IWebOperation _ftpWebOperation;
+
       public IWebOperation FtpOperation
       {
          get { return _ftpWebOperation; }
       }
-      
+
       public event EventHandler<WebOperationProgressChangedEventArgs> FtpWebOperationProgress;
+
       protected void OnFtpWebOperationProgress(object sender, WebOperationProgressChangedEventArgs e)
       {
          if (FtpWebOperationProgress != null)
@@ -303,7 +299,7 @@ namespace HFM.Core
       public void FtpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpType ftpMode)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
-      
+
          FtpDownloadHelper(WebOperation.Create(resourceUri), localFilePath, username, password, ftpMode);
       }
 
@@ -388,12 +384,14 @@ namespace HFM.Core
       }
 
       private IWebOperation _httpWebOperation;
+
       public IWebOperation HttpOperation
       {
          get { return _httpWebOperation; }
       }
 
       public event EventHandler<WebOperationProgressChangedEventArgs> HttpWebOperationProgress;
+
       protected void OnHttpWebOperationProgress(object sender, WebOperationProgressChangedEventArgs e)
       {
          if (HttpWebOperationProgress != null)
@@ -413,7 +411,7 @@ namespace HFM.Core
       public void HttpDownloadHelper(string url, string localFilePath, string username, string password)
       {
          if (String.IsNullOrEmpty(url)) throw new ArgumentException("Argument 'url' cannot be a null or empty string.");
-         
+
          HttpDownloadHelper(new Uri(url), localFilePath, username, password);
       }
 
@@ -429,7 +427,7 @@ namespace HFM.Core
       public void HttpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
-      
+
          HttpDownloadHelper(WebOperation.Create(resourceUri), localFilePath, username, password);
       }
 
@@ -470,7 +468,7 @@ namespace HFM.Core
 
          return GetHttpDownloadLength(new Uri(url), username, password);
       }
-      
+
       /// <summary>
       /// Get the Length of the Http Download.
       /// </summary>
@@ -481,7 +479,7 @@ namespace HFM.Core
       public long GetHttpDownloadLength(Uri resourceUri, string username, string password)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
-      
+
          return GetHttpDownloadLength(WebOperation.Create(resourceUri), username, password);
       }
 
@@ -522,7 +520,7 @@ namespace HFM.Core
          var action = new Action(() => FtpCheckConnection(server, port, ftpPath, username, password, ftpMode));
          return action.BeginInvoke(callback, action);
       }
-      
+
       /// <summary>
       /// Check an FTP Connection.
       /// </summary>
@@ -617,7 +615,7 @@ namespace HFM.Core
       private static void SetFtpMode(IFtpWebRequest request, FtpType ftpMode)
       {
          Debug.Assert(request != null);
-      
+
          switch (ftpMode)
          {
             case FtpType.Passive:
@@ -631,7 +629,7 @@ namespace HFM.Core
                   "FTP Type '{0}' is not valid.", ftpMode));
          }
       }
-      
+
       /// <summary>
       /// Sends an e-mail message
       /// </summary>
@@ -642,26 +640,26 @@ namespace HFM.Core
          using (var message = new MailMessage(messageFrom, messageTo, messageSubject, messageBody))
          {
             var client = new SmtpClient(smtpHost, smtpPort)
-                         {
-                            Credentials = GetNetworkCredential(smtpHostUsername, smtpHostPassword),
-                            EnableSsl = enableSsl
-                         };
+            {
+               Credentials = NetworkCredentialFactory.Create(smtpHostUsername, smtpHostPassword),
+               EnableSsl = enableSsl
+            };
             client.Send(message);
          }
       }
 
       /// <summary>
-      /// Set WebRequest Username and Password.
+      /// Sets the Credentials property with the username and password.
       /// </summary>
-      /// <param name="request">Makes a request to a Uniform Resource Identifier (URI).</param>
-      /// <param name="username">Login Username.</param>
-      /// <param name="password">Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if Request is null.</exception>
+      /// <param name="request">The object that makes a request to a Uniform Resource Identifier (URI).</param>
+      /// <param name="username">The login username.</param>
+      /// <param name="password">The login password.</param>
+      /// <exception cref="ArgumentNullException">request is null.</exception>
       private static void SetNetworkCredentials(IWebRequest request, string username, string password)
       {
          if (request == null) throw new ArgumentNullException("request", "Argument 'Request' cannot be null.");
 
-         NetworkCredential credentials = GetNetworkCredential(username, password);
+         NetworkCredential credentials = NetworkCredentialFactory.Create(username, password);
          if (credentials != null)
          {
             request.Credentials = credentials;
@@ -676,42 +674,23 @@ namespace HFM.Core
       {
          Debug.Assert(request != null);
 
-         IWebProxy proxy = GetProxy();
+         IWebProxy proxy = _prefs.GetWebProxy();
          if (proxy != null)
          {
             request.Proxy = proxy;
          }
          // Don't set request.Proxy = null - Issue 49
       }
-      
-      /// <summary>
-      /// Get Web Proxy Interface based on Preferences.
-      /// </summary>
-      [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-      public IWebProxy GetProxy()
-      {
-         if (_prefs.Get<bool>(Preference.UseProxy))
-         {
-            IWebProxy proxy = new WebProxy(_prefs.Get<string>(Preference.ProxyServer),
-                                           _prefs.Get<int>(Preference.ProxyPort));
-            if (_prefs.Get<bool>(Preference.UseProxyAuth))
-            {
-               proxy.Credentials = GetNetworkCredential(_prefs.Get<string>(Preference.ProxyUser),
-                                                        _prefs.Get<string>(Preference.ProxyPass));
-            }
+   }
 
-            return proxy;
-         }
-
-         return null;
-      }
-      
+   public static class NetworkCredentialFactory
+   {
       /// <summary>
-      /// Creates and Returns a new Network Credential object.
+      /// Creates and returns a new NetworkCredential object.
       /// </summary>
-      /// <param name="username">Network Credential Username or Domain\Username</param>
-      /// <param name="password">Network Credential Password</param>
-      private static NetworkCredential GetNetworkCredential(string username, string password)
+      /// <param name="username">The username literal or in domain\username format.</param>
+      /// <param name="password">The password literal.</param>
+      public static NetworkCredential Create(string username, string password)
       {
          if (Validate.UsernamePasswordPair(username, password))
          {
