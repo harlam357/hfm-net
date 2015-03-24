@@ -3,12 +3,15 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms
 {
-   public interface IProgressDialogViewFactory
+   // TODO: Rename source file
+   public interface IViewFactory
    {
       IProgressDialogView GetProgressDialog();
 
-      IProgressDialogView GetProjectDownloadDialog();
+      IProgressDialogAsyncView GetProgressDialogAsync();
 
-      void Release(IProgressDialogView view);
+      IProgressDialogAsyncView GetProjectDownloadDialog();
+
+      void Release(object view);
    }
 }

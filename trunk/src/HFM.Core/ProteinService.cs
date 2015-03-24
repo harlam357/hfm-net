@@ -20,6 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
+using harlam357.Core;
 
 using HFM.Core.DataTypes;
 using HFM.Proteins;
@@ -28,33 +31,49 @@ namespace HFM.Core
 {
    public interface IProteinService
    {
+      /// <summary>
+      /// Gets the protein with the given project id.
+      /// </summary>
+      /// <param name="projectId">The project id of the protein to return.</param>
+      /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
       Protein Get(int projectId);
 
-      IEnumerable<int> GetProjects();
-
       /// <summary>
-      /// Clear the projects not found cache.
+      /// Gets the protein with the given project id.
       /// </summary>
-      void ClearProjectsNotFoundCache();
-
+      /// <param name="projectId">The project id of the protein to return.</param>
+      /// <param name="allowRefresh">true to allow this Get method to refresh the service.</param>
+      /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
       Protein Get(int projectId, bool allowRefresh);
 
       /// <summary>
-      /// Loads data and returns an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.
+      /// Gets a collection of all protein project id numbers.
       /// </summary>
-      /// <param name="path">The file containing data to load into the service.</param>
-      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.</returns>
-      IEnumerable<ProteinLoadInfo> Load(string path);
+      /// <returns>A collection of all protein project id numbers.</returns>
+      IEnumerable<int> GetProjects();
 
-      void Write();
+      /// <summary>
+      /// Resets the data that halts redundant service refresh calls.
+      /// </summary>
+      void ResetRefreshParameters();
+
+      /// <summary>
+      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// </summary>
+      /// <returns>A collection of objects detailing how the service data was changed</returns>
+      IEnumerable<ProteinLoadInfo> Refresh();
+
+      /// <summary>
+      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// </summary>
+      /// <param name="progress">The object used to report refresh progress.</param>
+      /// <returns>A collection of objects detailing how the service data was changed</returns>
+      Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress);
    }
 
    [CoverageExclude]
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
-      /// <summary>
-      /// List of Projects that were not found.
-      /// </summary>
       private readonly Dictionary<Int32, DateTime> _projectsNotFound;
       private readonly ProteinDictionary _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
@@ -79,6 +98,9 @@ namespace HFM.Core
 
       #region Properties
 
+      /// <summary>
+      /// Gets the dictionary that contains previously queried project id numbers that were not found and the date and time of the query.
+      /// </summary>
       internal IDictionary<int, DateTime> ProjectsNotFound
       {
          get { return _projectsNotFound; }
@@ -91,11 +113,20 @@ namespace HFM.Core
 
       #endregion
 
+      /// <summary>
+      /// Gets the protein with the given project id.
+      /// </summary>
+      /// <param name="projectId">The project id of the protein to return.</param>
+      /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
       public Protein Get(int projectId)
       {
          return Get(projectId, false);
       }
 
+      /// <summary>
+      /// Gets a collection of all protein project id numbers.
+      /// </summary>
+      /// <returns>A collection of all protein project id numbers.</returns>
       public IEnumerable<int> GetProjects()
       {
          return _dictionary.Keys;
@@ -107,13 +138,23 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Clear the projects not found cache.
+      /// Resets the data that halts redundant service refresh calls.
       /// </summary>
-      public void ClearProjectsNotFoundCache()
+      public void ResetRefreshParameters()
       {
          _projectsNotFound.Clear();
+         if (_downloader != null)
+         {
+            _downloader.ResetDownloadParameters();
+         }
       }
 
+      /// <summary>
+      /// Gets the protein with the given project id.
+      /// </summary>
+      /// <param name="projectId">The project id of the protein to return.</param>
+      /// <param name="allowRefresh">true to allow this Get method to refresh the service.</param>
+      /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
       public Protein Get(int projectId, bool allowRefresh)
       {
          if (_dictionary.ContainsKey(projectId))
@@ -126,18 +167,13 @@ namespace HFM.Core
             return null;
          }
 
-         Logger.Info("Project ID '{0}' not found.", projectId);
          if (_downloader != null)
          {
-            _downloader.Download();
+            Logger.Info("Project ID {0} triggering project data refresh.", projectId);
+
             try
             {
-               var loadInfo = Load(_downloader.DownloadFilePath);
-               foreach (var info in loadInfo.Where(info => info.Result != ProteinLoadResult.NoChange))
-               {
-                  Logger.Info(info.ToString());
-               }
-               Write();
+               Refresh();
             }
             catch (Exception ex)
             {
@@ -150,11 +186,47 @@ namespace HFM.Core
                _projectsNotFound.Remove(projectId);
                return _dictionary[projectId];
             }
+
+            // update the last download attempt date
+            _projectsNotFound[projectId] = DateTime.Now;
          }
 
-         AddToProjectsNotFound(projectId);
-
          return null;
+      }
+
+      /// <summary>
+      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// </summary>
+      /// <returns>A collection of objects detailing how the service data was changed</returns>
+      public IEnumerable<ProteinLoadInfo> Refresh()
+      {
+         _downloader.Download();
+         return Load();
+      }
+
+      /// <summary>
+      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// </summary>
+      /// <param name="progress">The object used to report refresh progress.</param>
+      /// <returns>A collection of objects detailing how the service data was changed</returns>
+      public Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress)
+      {
+         return Task.Factory.StartNew(() =>
+         {
+            _downloader.DownloadAsync(progress).Wait();
+            return Load();
+         });
+      }
+
+      private IEnumerable<ProteinLoadInfo> Load()
+      {
+         IEnumerable<ProteinLoadInfo> loadInfo = _dictionary.Load(_downloader.FilePath).ToList();
+         foreach (var info in loadInfo.Where(info => info.Result != ProteinLoadResult.NoChange))
+         {
+            Logger.Info(info.ToString());
+         }
+         Write();
+         return loadInfo;
       }
 
       private bool CheckProjectsNotFound(int projectId)
@@ -171,30 +243,6 @@ namespace HFM.Core
          }
 
          return false;
-      }
-
-      private void AddToProjectsNotFound(int projectId)
-      {
-         // if already on the not found list
-         if (_projectsNotFound.ContainsKey(projectId))
-         {
-            // update the last download attempt date
-            _projectsNotFound[projectId] = DateTime.Now;
-         }
-         else
-         {
-            _projectsNotFound.Add(projectId, DateTime.Now);
-         }
-      }
-
-      /// <summary>
-      /// Loads data and returns an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.
-      /// </summary>
-      /// <param name="path">The file containing data to load into the service.</param>
-      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing details on how the data was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(string path)
-      {
-         return _dictionary.Load(path);
       }
 
       #region DataContainer<T>

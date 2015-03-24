@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Project Download Dialog
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ using HFM.Core;
 namespace HFM.Forms
 {
    [CoverageExclude]
-   public partial class ProjectDownloadDialog : ProgressDialog
+   public partial class ProjectDownloadDialog : ProgressDialogAsync
    {
       private readonly System.Timers.Timer _timer;
 
@@ -38,12 +38,14 @@ namespace HFM.Forms
          InitializeComponent();
       }
 
-      protected override void ProcessRunnerProcessFinished(object sender, EventArgs e)
+      protected override void OnFormClosing(System.Windows.Forms.FormClosingEventArgs e)
       {
-         ProcessRunner.ProgressChanged -= base.ProcessRunnerProgressChanged;
-         ProcessRunner.ProcessFinished -= base.ProcessRunnerProcessFinished;
-      
-         DoDelayedClose();
+         base.OnFormClosing(e);
+
+         if (!e.Cancel)
+         {
+            DoDelayedClose();
+         }
       }
 
       private void DoDelayedClose()

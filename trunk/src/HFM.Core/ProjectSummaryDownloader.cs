@@ -20,36 +20,43 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.Cache;
+using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
+using harlam357.Core;
 using harlam357.Core.ComponentModel;
+using harlam357.Core.Net;
 
 namespace HFM.Core
 {
-   public interface IProjectSummaryDownloader : IProgressProcessRunner
+   public interface IProjectSummaryDownloader
    {
       /// <summary>
-      /// Gets the time of last successful download.
+      /// Gets the destination path for the psummary file.
       /// </summary>
-      DateTime LastDownloadTime { get; }
+      string FilePath { get; }
 
       /// <summary>
-      /// Gets or sets the destination path for the psummary file.
+      /// Resets the data that halts redundant download calls.
       /// </summary>
-      string DownloadFilePath { get; set; }
+      void ResetDownloadParameters();
 
       /// <summary>
-      /// Downloads the project information (THREAD SAFE).
+      /// Downloads the project information.
       /// </summary>
       void Download();
+
+      /// <summary>
+      /// Downloads the project information asynchronously.
+      /// </summary>
+      Task DownloadAsync(IProgress<ProgressChangedEventArgs> progress);
    }
 
-   public sealed class ProjectSummaryDownloader : ProgressProcessRunnerBase, IProjectSummaryDownloader
+   public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
    {
-      #region Fields
-      
-      private static readonly object DownloadLock = new object();
+      #region Properties
 
       /// <summary>
       /// Gets the time of last successful download.
@@ -59,7 +66,7 @@ namespace HFM.Core
       /// <summary>
       /// Gets or sets the destination path for the psummary file.
       /// </summary>
-      public string DownloadFilePath { get; set; }
+      public string FilePath { get; set; }
 
       /// <summary>
       /// Gets or sets the preferences service instance.
@@ -80,15 +87,42 @@ namespace HFM.Core
 
       public ProjectSummaryDownloader()
       {
-         LastDownloadTime = DateTime.MinValue;
+         ResetDownloadParameters();
       }
 
       /// <summary>
-      /// Downloads the project information (THREAD SAFE).
+      /// Resets the data that halts redundant download calls.
       /// </summary>
+      public void ResetDownloadParameters()
+      {
+         LastDownloadTime = DateTime.MinValue;
+      }
+
+      private static readonly object DownloadSyncRoot = new object();
+
+      /// <summary>
+      /// Downloads the project information.
+      /// </summary>
+      /// <remarks>Access to the Download and DownloadAsync methods is synchronized.</remarks>
       public void Download()
       {
-         lock (DownloadLock)
+         DownloadInternal(null);
+      }
+
+      /// <summary>
+      /// Downloads the project information.
+      /// </summary>
+      /// <remarks>Access to the Download and DownloadAsync methods is synchronized.</remarks>
+      public Task DownloadAsync(IProgress<ProgressChangedEventArgs> progress)
+      {
+         return Task.Factory.StartNew(() => DownloadInternal(progress));
+      }
+
+      private void DownloadInternal(IProgress<ProgressChangedEventArgs> progress)
+      {
+         Debug.Assert(Prefs != null);
+
+         lock (DownloadSyncRoot)
          {
             if (!CheckLastDownloadTime())
             {
@@ -96,32 +130,23 @@ namespace HFM.Core
             }
 
             Logger.Info("Downloading new project data from Stanford...");
-            try
+
+            IWebOperation httpWebOperation = WebOperation.Create(Prefs.Get<string>(Preference.ProjectDownloadUrl));
+            if (progress != null)
             {
-               PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
-               LastDownloadTime = DateTime.Now;
+               httpWebOperation.ProgressChanged += (sender, e) =>
+               {
+                  int progressPercentage = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
+                  string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
+                  progress.Report(new ProgressChangedEventArgs(progressPercentage, message));
+               };
             }
-            catch (Exception ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-            }
+            httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            httpWebOperation.WebRequest.Proxy = Prefs.GetWebProxy();
+            httpWebOperation.Download(FilePath);
+
+            LastDownloadTime = DateTime.Now;
          }
-      }
-
-      private void PerformDownload(string downloadUrl)
-      {
-         Debug.Assert(Prefs != null);
-
-         var net = new NetworkOps(Prefs);
-         net.HttpWebOperationProgress += HttpWebOperationProgress;
-         net.HttpDownloadHelper(downloadUrl, DownloadFilePath, String.Empty, String.Empty);
-      }
-
-      private void HttpWebOperationProgress(object sender, harlam357.Core.Net.WebOperationProgressChangedEventArgs e)
-      {
-         int progress = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
-         string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
-         OnProgressChanged(new ProgressEventArgs(progress, message));
       }
 
       private bool CheckLastDownloadTime()
@@ -135,21 +160,6 @@ namespace HFM.Core
          
          Logger.Debug("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
          return false;
-      }
-
-      protected override void ProcessInternal()
-      {
-         lock (DownloadLock)
-         {
-            Logger.Info("Downloading new project data from Stanford...");
-            PerformDownload(Prefs.Get<string>(Preference.ProjectDownloadUrl));
-            LastDownloadTime = DateTime.Now;
-         }
-      }
-
-      protected override bool SupportsCancellationInternal
-      {
-         get { return false; }
       }
    }
 }

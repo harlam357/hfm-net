@@ -1,6 +1,6 @@
 /*
  * HFM.NET - User Preferences Interface
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace HFM.Core
 {
@@ -144,5 +145,29 @@ namespace HFM.Core
       /// PPD String Formatter
       /// </summary>
       string PpdFormatString { get; }
+   }
+
+   public static class PreferenceSetExtensions
+   {
+      /// <summary>
+      /// Gets a WebProxy object based on preference settings.
+      /// </summary>
+      public static IWebProxy GetWebProxy(this IPreferenceSet prefs)
+      {
+         if (prefs == null || !prefs.Get<bool>(Preference.UseProxy))
+         {
+            return null;
+         }
+
+         IWebProxy proxy = new WebProxy(prefs.Get<string>(Preference.ProxyServer), 
+                                        prefs.Get<int>(Preference.ProxyPort));
+
+         if (prefs.Get<bool>(Preference.UseProxyAuth))
+         {
+            proxy.Credentials = NetworkCredentialFactory.Create(prefs.Get<string>(Preference.ProxyUser),
+                                                                prefs.Get<string>(Preference.ProxyPass));
+         }
+         return proxy;
+      }
    }
 }

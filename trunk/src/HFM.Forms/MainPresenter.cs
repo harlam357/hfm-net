@@ -31,6 +31,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -67,7 +69,7 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      public IProgressDialogViewFactory ProgressDialogViewFactory { get; set; }
+      public IViewFactory ViewFactory { get; set; }
 
       public IHistoryPresenterFactory HistoryPresenterFactory { get; set; }
       
@@ -1224,47 +1226,36 @@ namespace HFM.Forms
 
       public void ToolsDownloadProjectsClick()
       {
-         var downloader = ServiceLocator.Resolve<IProjectSummaryDownloader>();
-         // Clear the Project Not Found Cache and Last Download Time
-         _proteinService.ClearProjectsNotFoundCache();
-         // Execute Asynchronous Download
-         var projectDownloadView = ProgressDialogViewFactory.GetProjectDownloadDialog();
-         projectDownloadView.OwnerWindow = _view;
-         projectDownloadView.ProcessRunner = downloader;
-         projectDownloadView.UpdateMessage(_prefs.Get<string>(Preference.ProjectDownloadUrl));
-         projectDownloadView.Process();
+         _proteinService.ResetRefreshParameters();
 
-         if (downloader.Exception != null)
-         {
-            _logger.Error(downloader.Exception.Message, downloader.Exception);
-            _messageBoxView.ShowError(_view, downloader.Exception.Message, Core.Application.NameAndVersion);
-            return;
-         }
+         var progress = new harlam357.Core.Progress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
+         var projectDownloadView = ViewFactory.GetProjectDownloadDialog();
+         projectDownloadView.Progress = progress;
 
-         IList<ProteinLoadInfo> loadInfo;
-         try
+         Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
+         projectDownloadView.Shown += (s, args) =>
          {
-            loadInfo = _proteinService.Load(downloader.DownloadFilePath).Where(info => info.Result != ProteinLoadResult.NoChange).ToList();
-            foreach (var info in loadInfo)
+            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            refreshTask =_proteinService.RefreshAsync(progress);
+            refreshTask
+               .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
+                     CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
+               .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
+         };
+         projectDownloadView.ShowDialog(_view);
+         ViewFactory.Release(projectDownloadView);
+
+         if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
+         {
+            var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
+            if (proteinChanges.Count > 0)
             {
-               Logger.Info(info.ToString());
-            }
-            _proteinService.Write();
-            //_proteinService.Write(Path.Combine(_prefs.ApplicationDataFolderPath, "ProjectInfo.xml"), new Core.Serializers.XmlFileSerializer<List<Protein>>());
-         }
-         catch (Exception ex)
-         {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
-            return;
-         }
-
-         if (loadInfo.Count > 0)
-         {
-            _retrievalLogic.QueueNewRetrieval();
-            using (var dlg = new ProteinLoadResultsDialog())
-            {
-               dlg.DataBind(loadInfo);
-               dlg.ShowDialog(_view);
+               _retrievalLogic.QueueNewRetrieval();
+               using (var dlg = new ProteinLoadResultsDialog())
+               {
+                  dlg.DataBind(proteinChanges);
+                  dlg.ShowDialog(_view);
+               }
             }
          }
       }
