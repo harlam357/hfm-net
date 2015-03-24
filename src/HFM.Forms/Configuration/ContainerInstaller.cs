@@ -59,30 +59,6 @@ namespace HFM.Forms.Configuration
 
          #region View Interfaces
 
-         // IMessageBoxView - Transient
-         container.Register(
-            Component.For<IMessageBoxView>()
-               .ImplementedBy<MessageBoxView>()
-               .LifeStyle.Transient);
-
-         // IOpenFileDialogView - Transient
-         container.Register(
-            Component.For<IOpenFileDialogView>()
-               .ImplementedBy<OpenFileDialogView>()
-               .LifeStyle.Transient);
-
-         // ISaveFileDialogView - Transient
-         container.Register(
-            Component.For<ISaveFileDialogView>()
-               .ImplementedBy<SaveFileDialogView>()
-               .LifeStyle.Transient);
-
-         // IFolderBrowserView - Transient
-         container.Register(
-            Component.For<IFolderBrowserView>()
-               .ImplementedBy<FolderBrowserView>()
-               .LifeStyle.Transient);
-
          // IBenchmarksView - Transient
          container.Register(
             Component.For<IBenchmarksView>()
@@ -107,24 +83,29 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<LegacyClientSetupDialog>()
                .LifeStyle.Transient);
 
-         // IMainView - Singleton
+         // Singleton Views
          container.Register(
-            Component.For<System.ComponentModel.ISynchronizeInvoke, IMainView>()
-               .ImplementedBy<MainForm>());
-
-         // IMessagesView - Singleton
-         container.Register(
+            Component.For<IMainView, System.ComponentModel.ISynchronizeInvoke>()
+               .ImplementedBy<MainForm>(),
             Component.For<IMessagesView>()
-               .ImplementedBy<MessagesForm>());
+               .ImplementedBy<MessagesForm>(),
+            Component.For<IMessageBoxView>()
+               .ImplementedBy<MessageBoxView>());
 
-         // IQueryView - Transient
+         // Transient Views
          container.Register(
-            Component.For<IQueryView>()
-               .ImplementedBy<QueryDialog>()
-               .LifeStyle.Transient);
-
-         // IProgressDialogView/IProgressDialogAsyncView - Transient
-         container.Register(
+            Component.For<IOpenFileDialogView>()
+               .ImplementedBy<OpenFileDialogView>()
+                  .Named("OpenFileDialogView")
+                     .LifeStyle.Transient,
+            Component.For<ISaveFileDialogView>()
+               .ImplementedBy<SaveFileDialogView>()
+                  .Named("SaveFileDialogView")
+                     .LifeStyle.Transient,
+            Component.For<IFolderBrowserView>()
+               .ImplementedBy<FolderBrowserView>()
+                  .Named("FolderBrowserView")
+                     .LifeStyle.Transient,
             Component.For<IProgressDialogView>()
                .ImplementedBy<ProgressDialog>()
                   .Named("ProgressDialog")
@@ -136,6 +117,10 @@ namespace HFM.Forms.Configuration
             Component.For<IProgressDialogAsyncView>()
                .ImplementedBy<ProgressDialogAsync>()
                   .Named("ProgressDialogAsync")
+                     .LifeStyle.Transient,
+            Component.For<IQueryView>()
+               .ImplementedBy<QueryDialog>()
+                  .Named("QueryDialog")
                      .LifeStyle.Transient,
             Component.For<IViewFactory>()
                .AsFactory());

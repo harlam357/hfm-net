@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter Tests
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,9 +39,7 @@ namespace HFM.Forms.Tests
       private IPreferenceSet _prefs;
       private IQueryParametersCollection _queryCollection;
       private IHistoryView _view;
-      private IQueryView _queryView;
-      private IOpenFileDialogView _openFileView;
-      private ISaveFileDialogView _saveFileView;
+      private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
 
       private IUnitInfoDatabase _database;
@@ -55,9 +53,7 @@ namespace HFM.Forms.Tests
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
          _queryCollection = MockRepository.GenerateStub<IQueryParametersCollection>();
          _view = MockRepository.GenerateMock<IHistoryView>();
-         _queryView = MockRepository.GenerateMock<IQueryView>();
-         _openFileView = MockRepository.GenerateMock<IOpenFileDialogView>();
-         _saveFileView = MockRepository.GenerateMock<ISaveFileDialogView>();
+         _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
 
          _database = MockRepository.GenerateMock<IUnitInfoDatabase>();
@@ -67,8 +63,7 @@ namespace HFM.Forms.Tests
       
       private HistoryPresenter CreatePresenter()
       {
-         return new HistoryPresenter(_prefs, _queryCollection, _view, _queryView,
-                                     _openFileView, _saveFileView, _messageBoxView, _model);
+         return new HistoryPresenter(_prefs, _queryCollection, _view, _viewFactory, _messageBoxView, _model);
       }
 
       [Test]
@@ -154,41 +149,50 @@ namespace HFM.Forms.Tests
       public void NewQueryClick_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField { Value = 6606 });
-         _queryView.Stub(x => x.Query).Return(parameters);
+         queryView.Stub(x => x.Query).Return(parameters);
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
          _presenter.NewQueryClick();
          // Assert
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
       }
 
       [Test]
       public void NewQueryClick_Cancel_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
          _presenter.NewQueryClick();
          // Assert
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
       }
 
       [Test]
       public void NewQueryClick_Failed_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         _queryView.Stub(x => x.Query).Return(new QueryParameters());
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
+         queryView.Stub(x => x.Query).Return(new QueryParameters());
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
          _presenter = CreatePresenter();
          _presenter.NewQueryClick();
          // Assert
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
          _messageBoxView.VerifyAllExpectations();
       }
 
@@ -200,10 +204,12 @@ namespace HFM.Forms.Tests
          parameters.Fields.Add(new QueryField { Value = 6606 });
          _model.AddQuery(parameters);
 
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
          var parameters2 = new QueryParameters { Name = "Test2" };
          parameters2.Fields.Add(new QueryField { Value = 6606 });
-         _queryView.Stub(x => x.Query).Return(parameters2);
+         queryView.Stub(x => x.Query).Return(parameters2);
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
@@ -211,33 +217,40 @@ namespace HFM.Forms.Tests
          // Assert
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
          Assert.AreEqual("Test2", _model.SelectedQuery.Name);
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
       }
 
       [Test]
       public void EditQueryClick_Cancel_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
          _presenter.EditQueryClick();
          // Assert
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
       }
 
       [Test]
       public void EditQueryClick_Failed_Test()
       {
          // Arrange
-         _queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         //_queryView.Stub(x => x.Query).Return(new QueryParameters());
+         var queryView = MockRepository.GenerateMock<IQueryView>();
+         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
+         //queryView.Stub(x => x.Query).Return(new QueryParameters());
+         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
          _presenter = CreatePresenter();
          _presenter.EditQueryClick();
          // Assert
-         _queryView.VerifyAllExpectations();
+         queryView.VerifyAllExpectations();
+         _viewFactory.VerifyAllExpectations();
          _messageBoxView.VerifyAllExpectations();
       }
 
