@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main View Presenter
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,8 +69,6 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      public IViewFactory ViewFactory { get; set; }
-
       public IHistoryPresenterFactory HistoryPresenterFactory { get; set; }
       
       #endregion
@@ -84,9 +82,8 @@ namespace HFM.Forms
    
       private readonly IMainView _view;
       private readonly IMessagesView _messagesView;
+      private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
-      private readonly IOpenFileDialogView _openFileDialogView;
-      private readonly ISaveFileDialogView _saveFileDialogView;
 
       #endregion
 
@@ -118,8 +115,8 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IMessageBoxView messageBoxView,
-                           IOpenFileDialogView openFileDialogView, ISaveFileDialogView saveFileDialogView,
+      public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
+                           IMessageBoxView messageBoxView,
                            IClientConfiguration clientConfiguration, IProteinBenchmarkCollection benchmarkCollection,
                            IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
@@ -145,9 +142,8 @@ namespace HFM.Forms
          // Views
          _view = view;
          _messagesView = messagesView;
+         _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
-         _openFileDialogView = openFileDialogView;
-         _saveFileDialogView = saveFileDialogView;
          // Collections
          _clientConfiguration = clientConfiguration;
          _benchmarkCollection = benchmarkCollection;
@@ -648,16 +644,17 @@ namespace HFM.Forms
 
          if (CheckForConfigurationChanges())
          {
-            _openFileDialogView.DefaultExt = _settingsManager.FileExtension;
-            _openFileDialogView.Filter = _settingsManager.FileTypeFilters;
-            _openFileDialogView.FileName = _settingsManager.FileName;
-            _openFileDialogView.RestoreDirectory = true;
-            if (_openFileDialogView.ShowDialog().Equals(DialogResult.OK))
+            var openFileDialogView = _viewFactory.GetOpenFileDialogView();
+            openFileDialogView.DefaultExt = _settingsManager.FileExtension;
+            openFileDialogView.Filter = _settingsManager.FileTypeFilters;
+            openFileDialogView.FileName = _settingsManager.FileName;
+            openFileDialogView.RestoreDirectory = true;
+            if (openFileDialogView.ShowDialog() == DialogResult.OK)
             {
                ClearConfiguration();
-               // 
-               LoadConfigFile(_openFileDialogView.FileName, _openFileDialogView.FilterIndex);
+               LoadConfigFile(openFileDialogView.FileName, openFileDialogView.FilterIndex);
             }
+            _viewFactory.Release(openFileDialogView);
          }
       }
 
@@ -766,14 +763,15 @@ namespace HFM.Forms
          // no clients, stub out
          if (_clientConfiguration.Count == 0) return;
 
-         _saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
-         _saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
-         if (_saveFileDialogView.ShowDialog().Equals(DialogResult.OK))
+         var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
+         saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
+         saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
+         if (saveFileDialogView.ShowDialog() == DialogResult.OK)
          {
             try
             {
                // Issue 75
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _saveFileDialogView.FileName, _saveFileDialogView.FilterIndex);
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
                _clientConfiguration.IsDirty = false;
             }
             catch (Exception ex)
@@ -783,6 +781,7 @@ namespace HFM.Forms
                   "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
          }
+         _viewFactory.Release(saveFileDialogView);
       }
 
       private bool CheckForConfigurationChanges()
@@ -1229,7 +1228,7 @@ namespace HFM.Forms
          _proteinService.ResetRefreshParameters();
 
          var progress = new harlam357.Core.Progress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         var projectDownloadView = ViewFactory.GetProjectDownloadDialog();
+         var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
          projectDownloadView.Progress = progress;
 
          Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
@@ -1243,7 +1242,7 @@ namespace HFM.Forms
                .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
          };
          projectDownloadView.ShowDialog(_view);
-         ViewFactory.Release(projectDownloadView);
+         _viewFactory.Release(projectDownloadView);
 
          if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
          {

@@ -42,9 +42,7 @@ namespace HFM.Forms
       private readonly IPreferenceSet _prefs;
       private readonly IQueryParametersCollection _queryCollection;
       private readonly IHistoryView _view;
-      private readonly IQueryView _queryView;
-      private readonly IOpenFileDialogView _openFileView;
-      private readonly ISaveFileDialogView _saveFileView;
+      private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
       private readonly HistoryPresenterModel _model;
 
@@ -58,25 +56,19 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      public IViewFactory ViewFactory { get; set; }
-      
       public event EventHandler PresenterClosed;
       
       public HistoryPresenter(IPreferenceSet prefs, 
                               IQueryParametersCollection queryCollection, 
                               IHistoryView view, 
-                              IQueryView queryView, 
-                              IOpenFileDialogView openFileView, 
-                              ISaveFileDialogView saveFileView, 
+                              IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
                               HistoryPresenterModel model)
       {
          _prefs = prefs;
          _queryCollection = queryCollection;
          _view = view;
-         _queryView = queryView;
-         _openFileView = openFileView;
-         _saveFileView = saveFileView;
+         _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
          _model = model;
       }
@@ -91,7 +83,7 @@ namespace HFM.Forms
       public void Show()
       {
          _view.Show();
-         if (_view.WindowState.Equals(FormWindowState.Minimized))
+         if (_view.WindowState == FormWindowState.Minimized)
          {
             _view.WindowState = FormWindowState.Normal;            
          }
@@ -103,9 +95,10 @@ namespace HFM.Forms
 
       public void Close()
       {
-         if (PresenterClosed != null)
+         var handler = PresenterClosed;
+         if (handler != null)
          {
-            PresenterClosed(this, EventArgs.Empty);
+            handler(this, EventArgs.Empty);
          }
       }
       
@@ -150,18 +143,19 @@ namespace HFM.Forms
       
       public void NewQueryClick()
       {
+         var queryView = _viewFactory.GetQueryDialog();
          var query = new QueryParameters { Name = "* New Query *" };
          query.Fields.Add(new QueryField());
-         _queryView.Query = query;
+         queryView.Query = query;
          
          bool showDialog = true;
          while (showDialog)
          {
-            if (_queryView.ShowDialog(_view).Equals(DialogResult.OK))
+            if (queryView.ShowDialog(_view) == DialogResult.OK)
             {
                try
                {
-                  _model.AddQuery(_queryView.Query);
+                  _model.AddQuery(queryView.Query);
                   showDialog = false;
                }
                catch (ArgumentException ex)
@@ -174,20 +168,22 @@ namespace HFM.Forms
                showDialog = false;
             }
          }
+         _viewFactory.Release(queryView);
       }
       
       public void EditQueryClick()
       {
-         _queryView.Query = _model.SelectedQuery.DeepClone();
+         var queryView = _viewFactory.GetQueryDialog();
+         queryView.Query = _model.SelectedQuery.DeepClone();
 
          bool showDialog = true;
          while (showDialog)
          {
-            if (_queryView.ShowDialog(_view).Equals(DialogResult.OK))
+            if (queryView.ShowDialog(_view) == DialogResult.OK)
             {
                try
                {
-                  _model.ReplaceQuery(_queryView.Query);
+                  _model.ReplaceQuery(queryView.Query);
                   showDialog = false;
                }
                catch (ArgumentException ex)
@@ -200,12 +196,13 @@ namespace HFM.Forms
                showDialog = false;
             }
          }
+         _viewFactory.Release(queryView);
       }
 
       public void DeleteQueryClick()
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?", Core.Application.NameAndVersion);
-         if (result.Equals(DialogResult.Yes))
+         if (result == DialogResult.Yes)
          {
             try
             {
@@ -228,7 +225,7 @@ namespace HFM.Forms
          else
          {
             var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
-            if (result.Equals(DialogResult.Yes))
+            if (result == DialogResult.Yes)
             {
                _model.DeleteHistoryEntry(entry);
             }
@@ -254,7 +251,7 @@ namespace HFM.Forms
             processor.UpdateArg = _model.SelectedHistoryEntry.ID;
          }
          // Execute Asynchronous Operation
-         var view = ViewFactory.GetProgressDialog();
+         var view = _viewFactory.GetProgressDialog();
          view.ProcessRunner = processor;
          view.Icon = Properties.Resources.hfm_48_48;
          view.Text = "Updating Project Data";
@@ -271,7 +268,7 @@ namespace HFM.Forms
          {
             _model.ResetBindings(true);
          }
-         ViewFactory.Release(view);
+         _viewFactory.Release(view);
       }
    }
 }
