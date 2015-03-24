@@ -3,14 +3,21 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms
 {
-   // TODO: Rename source file
    public interface IViewFactory
    {
+      IOpenFileDialogView GetOpenFileDialogView();
+
+      ISaveFileDialogView GetSaveFileDialogView();
+
+      IFolderBrowserView GetFolderBrowserView();
+
       IProgressDialogView GetProgressDialog();
 
       IProgressDialogAsyncView GetProgressDialogAsync();
 
       IProgressDialogAsyncView GetProjectDownloadDialog();
+
+      IQueryView GetQueryDialog();
 
       void Release(object view);
    }
