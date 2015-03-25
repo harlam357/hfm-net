@@ -21,6 +21,8 @@ namespace HFM.Forms
 
       IBenchmarksView GetBenchmarksForm();
 
+      IPreferencesView GetPreferencesDialog();
+
       void Release(object view);
    }
 }

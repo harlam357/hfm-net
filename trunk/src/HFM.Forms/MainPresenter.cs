@@ -814,8 +814,9 @@ namespace HFM.Forms
 
       public void EditPreferencesClick()
       {
-         var prefDialog = ServiceLocator.Resolve<PreferencesDialog>();
-         prefDialog.ShowDialog();
+         var prefDialog = _viewFactory.GetPreferencesDialog();
+         prefDialog.ShowDialog(_view);
+         _viewFactory.Release(prefDialog);
 
          _view.DataGridView.Invalidate();
       }
