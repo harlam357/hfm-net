@@ -124,6 +124,10 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<PreferencesDialog>()
                   .Named("PreferencesDialog")
                      .LifeStyle.Transient,
+            Component.For<IProteinCalculatorView>()
+               .ImplementedBy<ProteinCalculatorForm>()
+                  .Named("ProteinCalculatorForm")
+                     .LifeStyle.Transient,
             Component.For<IViewFactory>()
                .AsFactory());
 
@@ -164,11 +168,6 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<UpdateLogic>());
 
          #endregion
-
-         // ProteinCalculatorForm - Transient
-         container.Register(
-            Component.For<ProteinCalculatorForm>()
-               .LifeStyle.Transient);
 
          // RetrievalLogic - Singleton
          container.Register(

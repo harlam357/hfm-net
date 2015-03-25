@@ -23,6 +23,8 @@ namespace HFM.Forms
 
       IPreferencesView GetPreferencesDialog();
 
+      IProteinCalculatorView GetProteinCalculatorForm();
+
       void Release(object view);
    }
 }
