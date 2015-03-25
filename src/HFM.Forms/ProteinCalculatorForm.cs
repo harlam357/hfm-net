@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Calculator Form
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -25,7 +26,14 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public partial class ProteinCalculatorForm : Form
+   public interface IProteinCalculatorView
+   {
+      event EventHandler Closed;
+
+      void Show(IWin32Window owner);
+   }
+
+   public partial class ProteinCalculatorForm : Form, IProteinCalculatorView
    {
       private readonly ProteinCalculatorModel _model;
 

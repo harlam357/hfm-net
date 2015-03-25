@@ -1318,8 +1318,9 @@ namespace HFM.Forms
 
       internal void ToolsPointsCalculatorClick()
       {
-         var dlg = ServiceLocator.Resolve<ProteinCalculatorForm>();
-         dlg.Show(_view);
+         var calculatorForm = _viewFactory.GetProteinCalculatorForm();
+         calculatorForm.Closed += (s, e) => _viewFactory.Release(calculatorForm);
+         calculatorForm.Show(_view);
       }
       
       #endregion
