@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,41 +37,37 @@ namespace HFM.Forms
 {
    public interface IBenchmarksView
    {
+      event EventHandler Closed;
+
       /// <summary>
-      /// ProjectID to Load when View is Shown
+      /// Gets or sets the project ID to load when shown.
       /// </summary>
-      int LoadProjectID { get; set; }
-
-      void SetManualStartPosition();
-   
-      #region System.Windows.Forms.Form Exposure
-
-      void Show();
+      int ProjectId { get; set; }
 
       Point Location { get; set; }
 
       Size Size { get; set; }
 
-      #endregion
+      void Show();
    }
 
    public partial class BenchmarksForm : FormWrapper, IBenchmarksView
    {
       #region Properties
-      
+
       /// <summary>
-      /// ProjectID to Load when View is Shown
+      /// Gets or sets the project ID to load when shown.
       /// </summary>
-      public int LoadProjectID { get; set; }
+      public int ProjectId { get; set; }
 
       public GraphLayoutType GraphLayoutType { get; set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -110,21 +106,17 @@ namespace HFM.Forms
          _zedGraphManager = new ZedGraphManager();
 
          InitializeComponent();
+         StartPosition = FormStartPosition.Manual;
       }
 
       #endregion
       
-      public void SetManualStartPosition()
-      {
-         StartPosition = FormStartPosition.Manual;
-      }
-
       // ReSharper disable InconsistentNaming
 
       private void frmBenchmarks_Shown(object sender, EventArgs e)
       {
          UpdateClientsComboBinding();
-         UpdateProjectListBoxBinding(LoadProjectID);
+         UpdateProjectListBoxBinding(ProjectId);
          lstColors.DataSource = _graphColors;
          GraphLayoutType = _prefs.Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
          pnlClientLayout.DataSource = this;
@@ -369,7 +361,11 @@ namespace HFM.Forms
 
       private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         HandleProcessStartResult(_processStarter.ShowWebBrowser(linkDescription.Text));
+         string message = _processStarter.ShowWebBrowser(linkDescription.Text);
+         if (message != null)
+         {
+            _messageBoxView.ShowError(this, message, Text);
+         }
       }
 
       private void picDeleteClient_Click(object sender, EventArgs e)
@@ -602,13 +598,5 @@ namespace HFM.Forms
       #endregion
 
       #endregion
-
-      private void HandleProcessStartResult(string message)
-      {
-         if (message != null)
-         {
-            _messageBoxView.ShowError(this, message, Text);
-         }
-      }
    }
 }

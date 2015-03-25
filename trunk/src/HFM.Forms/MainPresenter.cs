@@ -1269,9 +1269,9 @@ namespace HFM.Forms
             projectId = _gridModel.SelectedSlot.UnitInfo.ProjectID;
          }
 
-         var frm = ServiceLocator.Resolve<IBenchmarksView>();
-         frm.SetManualStartPosition();
-         frm.LoadProjectID = projectId;
+         var benchmarksView = _viewFactory.GetBenchmarksForm();
+         benchmarksView.Closed += (s, e) => _viewFactory.Release(benchmarksView);
+         benchmarksView.ProjectId = projectId;
 
          // Restore state data
          var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
@@ -1279,19 +1279,19 @@ namespace HFM.Forms
 
          if (location.X != 0 && location.Y != 0)
          {
-            frm.Location = location;
+            benchmarksView.Location = location;
          }
          else
          {
-            frm.Location = new Point(_view.Location.X + 50, _view.Location.Y + 50);
+            benchmarksView.Location = new Point(_view.Location.X + 50, _view.Location.Y + 50);
          }
 
          if (size.Width != 0 && size.Height != 0)
          {
-            frm.Size = size;
+            benchmarksView.Size = size;
          }
 
-         frm.Show();
+         benchmarksView.Show();
       }
 
       public void ToolsHistoryClick()
