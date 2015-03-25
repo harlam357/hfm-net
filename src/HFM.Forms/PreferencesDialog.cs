@@ -1,7 +1,7 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,12 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   public partial class PreferencesDialog : FormWrapper
+   public interface IPreferencesView
+   {
+      DialogResult ShowDialog(IWin32Window owner);
+   }
+
+   public partial class PreferencesDialog : FormWrapper, IPreferencesView
    {
       /// <summary>
       /// Tab Name Enumeration (maintain in same order as tab pages)
@@ -71,12 +76,12 @@ namespace HFM.Forms
       
       private readonly WebBrowser _cssSampleBrowser;
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -99,6 +104,9 @@ namespace HFM.Forms
 
       public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
       {
+         if (prefs == null) throw new ArgumentNullException("prefs");
+         if (autoRun == null) throw new ArgumentNullException("autoRun");
+
          _prefs = prefs;
          _autoRun = autoRun;
       
@@ -966,7 +974,7 @@ namespace HFM.Forms
       {
          if (CheckForErrorConditions() == false)
          {
-            GetAutoRun();
+            SetAutoRun();
             _scheduledTasksModel.Update(_prefs);
             _startupAndExternalModel.Update(_prefs);
             _optionsModel.Update(_prefs);
@@ -1002,20 +1010,13 @@ namespace HFM.Forms
          return false;
       }
 
-      private void GetAutoRun()
+      private void SetAutoRun()
       {
          if (Core.Application.IsRunningOnMono) return;
          
          try
          {
-            if (chkAutoRun.Checked)
-            {
-               _autoRun.SetFilePath(System.Windows.Forms.Application.ExecutablePath);
-            }
-            else
-            {
-               _autoRun.SetFilePath(String.Empty);
-            }
+            _autoRun.SetFilePath(chkAutoRun.Checked ? System.Windows.Forms.Application.ExecutablePath : null);
          }
          catch (InvalidOperationException ex)
          {

@@ -120,6 +120,10 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<BenchmarksForm>()
                   .Named("BenchmarksForm")
                      .LifeStyle.Transient,
+            Component.For<IPreferencesView>()
+               .ImplementedBy<PreferencesDialog>()
+                  .Named("PreferencesDialog")
+                     .LifeStyle.Transient,
             Component.For<IViewFactory>()
                .AsFactory());
 
@@ -160,11 +164,6 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<UpdateLogic>());
 
          #endregion
-
-         // PreferencesDialog - Transient
-         container.Register(
-            Component.For<PreferencesDialog>()
-               .LifeStyle.Transient);
 
          // ProteinCalculatorForm - Transient
          container.Register(
