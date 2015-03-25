@@ -19,6 +19,8 @@ namespace HFM.Forms
 
       IQueryView GetQueryDialog();
 
+      IBenchmarksView GetBenchmarksForm();
+
       void Release(object view);
    }
 }

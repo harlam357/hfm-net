@@ -59,12 +59,6 @@ namespace HFM.Forms.Configuration
 
          #region View Interfaces
 
-         // IBenchmarksView - Transient
-         container.Register(
-            Component.For<IBenchmarksView>()
-               .ImplementedBy<BenchmarksForm>()
-               .LifeStyle.Transient);
-
          // IHistoryView - Transient
          container.Register(
             Component.For<IHistoryView>()
@@ -121,6 +115,10 @@ namespace HFM.Forms.Configuration
             Component.For<IQueryView>()
                .ImplementedBy<QueryDialog>()
                   .Named("QueryDialog")
+                     .LifeStyle.Transient,
+            Component.For<IBenchmarksView>()
+               .ImplementedBy<BenchmarksForm>()
+                  .Named("BenchmarksForm")
                      .LifeStyle.Transient,
             Component.For<IViewFactory>()
                .AsFactory());
