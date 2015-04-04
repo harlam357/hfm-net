@@ -167,6 +167,7 @@
       <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="FahClientSetupPresenter.cs" />
+    <Compile Include="IPresenterFactory.cs" />
     <Compile Include="IViewFactory.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

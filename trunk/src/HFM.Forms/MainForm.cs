@@ -75,7 +75,7 @@ namespace HFM.Forms
       
       #region Methods
 
-      void Initialize(MainPresenter presenter, IProteinService service);
+      void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel);
 
       void SetGridDataSource(object dataSource);
 
@@ -155,19 +155,14 @@ namespace HFM.Forms
       private NotifyIcon _notifyIcon;
 
       private readonly IPreferenceSet _prefs;
-      private readonly UserStatsDataModel _userStatsDataModel;
 
       #endregion
 
       #region Constructor
 
-      /// <summary>
-      /// Main Form Constructor
-      /// </summary>
-      public MainForm(IPreferenceSet prefs, UserStatsDataModel userStatsDataModel)
+      public MainForm(IPreferenceSet prefs)
       {
          _prefs = prefs;
-         _userStatsDataModel = userStatsDataModel;
 
          // This call is Required by the Windows Form Designer
          InitializeComponent();
@@ -184,7 +179,7 @@ namespace HFM.Forms
       
       #region Initialize
 
-      public void Initialize(MainPresenter presenter, IProteinService service)
+      public void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel)
       {
          _presenter = presenter;
          // Resize can be invoked when InitializeComponent() is called
@@ -208,11 +203,9 @@ namespace HFM.Forms
          // Initialize the Presenter
          _presenter.Initialize();
 
-         BindToUserStatsDataModel();
+         BindToUserStatsDataModel(userStatsDataModel);
          // Hook-up Status Label Event Handlers
          SubscribeToStatsLabelEvents();
-         // Hook-up Preferences Events
-         _prefs.StatsIdChanged += delegate { _userStatsDataModel.Refresh(); };
          
          #region Hook-up DataGridView Event Handlers for Mono
 
@@ -235,47 +228,47 @@ namespace HFM.Forms
          #endregion
       }
 
-      private void BindToUserStatsDataModel()
+      private void BindToUserStatsDataModel(UserStatsDataModel userStatsDataModel)
       {
-         statusUserTeamRank.DataBindings.Add("Text", _userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserProjectRank.DataBindings.Add("Text", _userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUser24hr.DataBindings.Add("Text", _userStatsDataModel, "TwentyFourHourAvgerage", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserToday.DataBindings.Add("Text", _userStatsDataModel, "PointsToday", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserWeek.DataBindings.Add("Text", _userStatsDataModel, "PointsWeek", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserTotal.DataBindings.Add("Text", _userStatsDataModel, "PointsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserWUs.DataBindings.Add("Text", _userStatsDataModel, "WorkUnitsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTeamRank.DataBindings.Add("Text", userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserProjectRank.DataBindings.Add("Text", userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUser24hr.DataBindings.Add("Text", userStatsDataModel, "TwentyFourHourAvgerage", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserToday.DataBindings.Add("Text", userStatsDataModel, "PointsToday", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWeek.DataBindings.Add("Text", userStatsDataModel, "PointsWeek", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTotal.DataBindings.Add("Text", userStatsDataModel, "PointsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWUs.DataBindings.Add("Text", userStatsDataModel, "WorkUnitsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
 
-         statusUserTeamRank.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserProjectRank.DataBindings.Add("Visible", _userStatsDataModel, "OverallRankVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUser24hr.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserToday.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserWeek.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserTotal.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUserWUs.DataBindings.Add("Visible", _userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTeamRank.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserProjectRank.DataBindings.Add("Visible", userStatsDataModel, "OverallRankVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUser24hr.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserToday.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWeek.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserTotal.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUserWUs.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
 
          if (Core.Application.IsRunningOnMono)
          {
-            _userStatsDataModel.PropertyChanged += UserStatsDataModelPropertyChangedForMono;
+            userStatsDataModel.PropertyChanged += (s, e) => UserStatsDataModelPropertyChangedForMono(userStatsDataModel);
          }
       }
 
-      private void UserStatsDataModelPropertyChangedForMono(object sender, PropertyChangedEventArgs e)
+      private void UserStatsDataModelPropertyChangedForMono(UserStatsDataModel userStatsDataModel)
       {
-         statusUserTeamRank.Text = _userStatsDataModel.Rank;
-         statusUserProjectRank.Text = _userStatsDataModel.OverallRank;
-         statusUser24hr.Text = _userStatsDataModel.TwentyFourHourAvgerage;
-         statusUserToday.Text = _userStatsDataModel.PointsToday;
-         statusUserWeek.Text = _userStatsDataModel.PointsWeek;
-         statusUserTotal.Text = _userStatsDataModel.PointsTotal;
-         statusUserWUs.Text = _userStatsDataModel.WorkUnitsTotal;
+         statusUserTeamRank.Text = userStatsDataModel.Rank;
+         statusUserProjectRank.Text = userStatsDataModel.OverallRank;
+         statusUser24hr.Text = userStatsDataModel.TwentyFourHourAvgerage;
+         statusUserToday.Text = userStatsDataModel.PointsToday;
+         statusUserWeek.Text = userStatsDataModel.PointsWeek;
+         statusUserTotal.Text = userStatsDataModel.PointsTotal;
+         statusUserWUs.Text = userStatsDataModel.WorkUnitsTotal;
 
-         statusUserTeamRank.Visible = _userStatsDataModel.ControlsVisible;
-         statusUserProjectRank.Visible = _userStatsDataModel.OverallRankVisible;
-         statusUser24hr.Visible = _userStatsDataModel.ControlsVisible;
-         statusUserToday.Visible = _userStatsDataModel.ControlsVisible;
-         statusUserWeek.Visible = _userStatsDataModel.ControlsVisible;
-         statusUserTotal.Visible = _userStatsDataModel.ControlsVisible;
-         statusUserWUs.Visible = _userStatsDataModel.ControlsVisible;
+         statusUserTeamRank.Visible = userStatsDataModel.ControlsVisible;
+         statusUserProjectRank.Visible = userStatsDataModel.OverallRankVisible;
+         statusUser24hr.Visible = userStatsDataModel.ControlsVisible;
+         statusUserToday.Visible = userStatsDataModel.ControlsVisible;
+         statusUserWeek.Visible = userStatsDataModel.ControlsVisible;
+         statusUserTotal.Visible = userStatsDataModel.ControlsVisible;
+         statusUserWUs.Visible = userStatsDataModel.ControlsVisible;
       }
       
       private void SubscribeToStatsLabelEvents()
@@ -677,7 +670,7 @@ namespace HFM.Forms
 
       private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
       {
-         _userStatsDataModel.Refresh();
+         _presenter.RefreshUserStatsData();
       }
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
@@ -766,7 +759,7 @@ namespace HFM.Forms
 
       private void StatsLabelMouseDown(object sender, MouseEventArgs e)
       {
-         if (e.Button.Equals(MouseButtons.Right))
+         if (e.Button == MouseButtons.Right)
          {
             var statusLabel = (ToolStripStatusLabel)sender;
             // Issue 235
@@ -783,12 +776,12 @@ namespace HFM.Forms
 
       private void mnuContextShowUserStats_Click(object sender, EventArgs e)
       {
-         _userStatsDataModel.SetViewStyle(false);
+         _presenter.SetUserStatsDataViewStyle(false);
       }
 
       private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
       {
-         _userStatsDataModel.SetViewStyle(true);
+         _presenter.SetUserStatsDataViewStyle(true);
       }
 
       #endregion

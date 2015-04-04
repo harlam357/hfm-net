@@ -30,13 +30,6 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface IHistoryPresenterFactory
-   {
-      HistoryPresenter Create();
-
-      void Release(HistoryPresenter presenter);
-   }
-
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
