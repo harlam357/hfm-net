@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Application Boot Strapper
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Forms;
+using HFM.Forms.Models;
 
 namespace HFM
 {
@@ -189,7 +190,7 @@ namespace HFM
             mainPresenter.Arguments = arguments;
             try
             {
-               mainView.Initialize(mainPresenter, ServiceLocator.Resolve<IProteinService>());
+               mainView.Initialize(mainPresenter, ServiceLocator.Resolve<IProteinService>(), ServiceLocator.Resolve<UserStatsDataModel>());
             }
             catch (Exception ex)
             {

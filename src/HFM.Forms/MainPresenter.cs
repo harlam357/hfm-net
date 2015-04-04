@@ -69,54 +69,39 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      public IHistoryPresenterFactory HistoryPresenterFactory { get; set; }
-      
       #endregion
       
       #region Fields
 
       private HistoryPresenter _historyPresenter;
       private readonly MainGridModel _gridModel;
-   
-      #region Views
+      private readonly UserStatsDataModel _userStatsDataModel;
    
       private readonly IMainView _view;
       private readonly IMessagesView _messagesView;
-      private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
 
-      #endregion
-
-      #region Collections
+      private readonly IViewFactory _viewFactory;
+      private readonly IPresenterFactory _presenterFactory;
 
       private readonly IClientConfiguration _clientConfiguration;
       private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IProteinService _proteinService;
       private readonly IUnitInfoCollection _unitInfoCollection;
 
-      #endregion
-
-      #region Logic Services
-
       private readonly IUpdateLogic _updateLogic;
       private readonly RetrievalLogic _retrievalLogic;
       private readonly IExternalProcessStarter _processStarter;
-
-      #endregion
-
-      #region Data Services
 
       private readonly IPreferenceSet _prefs;
       private readonly IClientSettingsManager _settingsManager;
       
       #endregion
 
-      #endregion
-
       #region Constructor
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
-                           IMessageBoxView messageBoxView,
+                           IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                            IClientConfiguration clientConfiguration, IProteinBenchmarkCollection benchmarkCollection,
                            IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
@@ -138,12 +123,15 @@ namespace HFM.Forms
                                                  DisplaySelectedSlotData();
                                               }
                                            };
+         _userStatsDataModel = userStatsDataModel;
 
          // Views
          _view = view;
          _messagesView = messagesView;
-         _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
+         //
+         _viewFactory = viewFactory;
+         _presenterFactory = presenterFactory;
          // Collections
          _clientConfiguration = clientConfiguration;
          _benchmarkCollection = benchmarkCollection;
@@ -174,8 +162,9 @@ namespace HFM.Forms
          // 
          _view.SetGridDataSource(_gridModel.BindingSource);
          // 
-         _prefs.FormShowStyleSettingsChanged += delegate { SetViewShowStyle(); };
-         _prefs.ColorLogFileChanged += delegate { ApplyColorLogFileSetting(); };
+         _prefs.FormShowStyleSettingsChanged += (s, e) => SetViewShowStyle();
+         _prefs.ColorLogFileChanged += (s, e) => ApplyColorLogFileSetting();
+         _prefs.StatsIdChanged += (s, e) => _userStatsDataModel.Refresh();
       }
 
       private void RestoreViewPreferences()
@@ -1299,13 +1288,13 @@ namespace HFM.Forms
       {
          Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
       
-         if (_historyPresenter == null && HistoryPresenterFactory != null)
+         if (_historyPresenter == null)
          {
-            _historyPresenter = HistoryPresenterFactory.Create();
+            _historyPresenter = _presenterFactory.GetHistoryPresenter();
             _historyPresenter.Initialize();
             _historyPresenter.PresenterClosed += (sender, args) =>
             {
-               HistoryPresenterFactory.Release(_historyPresenter);
+               _presenterFactory.Release(_historyPresenter);
                _historyPresenter = null;
             };
          }
@@ -1340,6 +1329,11 @@ namespace HFM.Forms
       public void ShowEocTeamPage()
       {
          HandleProcessStartResult(_processStarter.ShowEocTeamPage());
+      }
+
+      public void RefreshUserStatsData()
+      {
+         _userStatsDataModel.Refresh();
       }
 
       public void ShowHfmGoogleCode()
@@ -1411,6 +1405,11 @@ namespace HFM.Forms
          }
       }
       
+      public void SetUserStatsDataViewStyle(bool showTeamStats)
+      {
+         _userStatsDataModel.SetViewStyle(showTeamStats);
+      }
+
       #endregion
 
       /// <summary>

@@ -35,20 +35,30 @@ namespace HFM.Forms.Configuration
 
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
-         #region Data Models
+         #region MVP
 
-         // MainGridModel - Singleton
+         // MainPresenter - Singleton
          container.Register(
-            Component.For<Models.MainGridModel>());
-
-         // UserStatsDataModel - Singleton
-         container.Register(
+            Component.For<MainPresenter>(),
+            Component.For<IMainView, System.ComponentModel.ISynchronizeInvoke>()
+               .ImplementedBy<MainForm>(),
+            Component.For<Models.MainGridModel>(),
             Component.For<Models.UserStatsDataModel>());
 
          // HistoryPresenterModel - Transient
          container.Register(
+            Component.For<HistoryPresenter>()
+               .Named("HistoryPresenter")
+                  .LifeStyle.Transient,
+            Component.For<IHistoryView>()
+               .ImplementedBy<HistoryForm>()
+                  .LifeStyle.Transient,
             Component.For<Models.HistoryPresenterModel>()
                .LifeStyle.Transient);
+
+         container.Register(
+            Component.For<IPresenterFactory>()
+               .AsFactory());
 
          // ProteinCalculatorModel - Transient
          container.Register(
@@ -58,12 +68,6 @@ namespace HFM.Forms.Configuration
          #endregion
 
          #region View Interfaces
-
-         // IHistoryView - Transient
-         container.Register(
-            Component.For<IHistoryView>()
-               .ImplementedBy<HistoryForm>()
-               .LifeStyle.Transient);
 
          // IFahClientSetupView - Transient
          container.Register(
@@ -79,8 +83,6 @@ namespace HFM.Forms.Configuration
 
          // Singleton Views
          container.Register(
-            Component.For<IMainView, System.ComponentModel.ISynchronizeInvoke>()
-               .ImplementedBy<MainForm>(),
             Component.For<IMessagesView>()
                .ImplementedBy<MessagesForm>(),
             Component.For<IMessageBoxView>()
@@ -135,10 +137,6 @@ namespace HFM.Forms.Configuration
 
          #region Presenters
 
-         // MainPresenter - Singleton
-         container.Register(
-            Component.For<MainPresenter>());
-
          // IFahClientSetupPresenter - Transient
          container.Register(
             Component.For<IFahClientSetupPresenter>()
@@ -150,13 +148,6 @@ namespace HFM.Forms.Configuration
             Component.For<ILegacyClientSetupPresenter>()
                .ImplementedBy<LegacyClientSetupPresenter>()
                   .LifeStyle.Transient);
-
-         // HistoryPresenter - Transient
-         container.Register(
-            Component.For<HistoryPresenter>()
-               .LifeStyle.Transient,
-            Component.For<IHistoryPresenterFactory>()
-               .AsFactory());
 
          #endregion
 
