@@ -843,54 +843,52 @@ namespace HFM.Forms
 
       internal void ClientsAddClick()
       {
-         using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
+         var dialog = _presenterFactory.GetFahClientSetupPresenter();
+         dialog.SettingsModel = new FahClientSettingsModel();
+         while (dialog.ShowDialog(_view) == DialogResult.OK)
          {
-            dialog.SettingsModel = new FahClientSettingsModel(_view);
-            while (dialog.ShowDialog(_view) == DialogResult.OK)
+            var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+            //if (_clientDictionary.ContainsKey(settings.Name))
+            //{
+            //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
+            //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
+            //   continue;
+            //}
+            // perform the add
+            try
             {
-               var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-               //if (_clientDictionary.ContainsKey(settings.Name))
-               //{
-               //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
-               //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
-               //   continue;
-               //}
-               // perform the add
-               try
-               {
-                  _clientConfiguration.Add(settings);
-                  break;
-               }
-               catch (ArgumentException ex)
-               {
-                  _logger.ErrorFormat(ex, "{0}", ex.Message);
-                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-               }
+               _clientConfiguration.Add(settings);
+               break;
+            }
+            catch (ArgumentException ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
+         _presenterFactory.Release(dialog);
       }
 
       internal void ClientsAddLegacyClick()
       {
-         using (var dialog = ServiceLocator.Resolve<ILegacyClientSetupPresenter>())
+         var dialog = _presenterFactory.GetLegacyClientSetupPresenter();
+         dialog.SettingsModel = new LegacyClientSettingsModel();
+         while (dialog.ShowDialog(_view) == DialogResult.OK)
          {
-            dialog.SettingsModel = new LegacyClientSettingsModel();
-            while (dialog.ShowDialog(_view) == DialogResult.OK)
+            var settings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+            // perform the add
+            try
             {
-               var settings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-               // perform the add
-               try
-               {
-                  _clientConfiguration.Add(settings);
-                  break;
-               }
-               catch (ArgumentException ex)
-               {
-                  _logger.ErrorFormat(ex, "{0}", ex.Message);
-                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-               }
+               _clientConfiguration.Add(settings);
+               break;
+            }
+            catch (ArgumentException ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
+         _presenterFactory.Release(dialog);
       }
 
       public void ClientsEditClick()
@@ -920,25 +918,24 @@ namespace HFM.Forms
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsFahClient());
 
-         using (var dialog = ServiceLocator.Resolve<IFahClientSetupPresenter>())
+         var dialog = _presenterFactory.GetFahClientSetupPresenter();
+         dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+         while (dialog.ShowDialog(_view) == DialogResult.OK)
          {
-            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
-            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+            // perform the edit
+            try
             {
-               var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-               // perform the edit
-               try
-               {
-                  _clientConfiguration.Edit(originalSettings.Name, newSettings);
-                  break;
-               }
-               catch (ArgumentException ex)
-               {
-                  _logger.ErrorFormat(ex, "{0}", ex.Message);
-                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-               }
+               _clientConfiguration.Edit(originalSettings.Name, newSettings);
+               break;
+            }
+            catch (ArgumentException ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
+         _presenterFactory.Release(dialog);
       }
 
       private void EditLegacyClient()
@@ -948,25 +945,24 @@ namespace HFM.Forms
          ClientSettings originalSettings = client.Settings;
          Debug.Assert(originalSettings.IsLegacy());
 
-         using (var dialog = ServiceLocator.Resolve<ILegacyClientSetupPresenter>())
+         var dialog = _presenterFactory.GetLegacyClientSetupPresenter();
+         dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, LegacyClientSettingsModel>(originalSettings);
+         while (dialog.ShowDialog(_view) == DialogResult.OK)
          {
-            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, LegacyClientSettingsModel>(originalSettings);
-            while (dialog.ShowDialog(_view).Equals(DialogResult.OK))
+            var newSettings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+            // perform the edit
+            try
             {
-               var newSettings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-               // perform the edit
-               try
-               {
-                  _clientConfiguration.Edit(originalSettings.Name, newSettings);
-                  break;
-               }
-               catch (ArgumentException ex)
-               {
-                  _logger.ErrorFormat(ex, "{0}", ex.Message);
-                  _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-               }
+               _clientConfiguration.Edit(originalSettings.Name, newSettings);
+               break;
+            }
+            catch (ArgumentException ex)
+            {
+               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
+         _presenterFactory.Release(dialog);
       }
 
       private void HandleClientEdit(object sender, ClientEditedEventArgs e)

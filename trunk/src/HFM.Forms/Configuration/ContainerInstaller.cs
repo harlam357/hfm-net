@@ -45,6 +45,20 @@ namespace HFM.Forms.Configuration
             Component.For<Models.MainGridModel>(),
             Component.For<Models.UserStatsDataModel>());
 
+         // IFahClientSetupPresenter - Transient
+         container.Register(
+            Component.For<IFahClientSetupPresenter>()
+               .ImplementedBy<FahClientSetupPresenter>()
+                  .Named("FahClientSetupPresenter")
+                     .LifeStyle.Transient);
+
+         // ILegacyClientSetupPresenter - Transient
+         container.Register(
+            Component.For<ILegacyClientSetupPresenter>()
+               .ImplementedBy<LegacyClientSetupPresenter>()
+                  .Named("LegacyClientSetupPresenter")
+                     .LifeStyle.Transient);
+
          // HistoryPresenterModel - Transient
          container.Register(
             Component.For<HistoryPresenter>()
@@ -132,22 +146,6 @@ namespace HFM.Forms.Configuration
                      .LifeStyle.Transient,
             Component.For<IViewFactory>()
                .AsFactory());
-
-         #endregion
-
-         #region Presenters
-
-         // IFahClientSetupPresenter - Transient
-         container.Register(
-            Component.For<IFahClientSetupPresenter>()
-               .ImplementedBy<FahClientSetupPresenter>()
-                  .LifeStyle.Transient);
-
-         // ILegacyClientSetupPresenter - Transient
-         container.Register(
-            Component.For<ILegacyClientSetupPresenter>()
-               .ImplementedBy<LegacyClientSetupPresenter>()
-                  .LifeStyle.Transient);
 
          #endregion
 

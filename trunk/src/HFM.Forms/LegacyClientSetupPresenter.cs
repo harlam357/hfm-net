@@ -35,7 +35,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface ILegacyClientSetupPresenter : IDisposable
+   public interface ILegacyClientSetupPresenter
    {
       LegacyClientSettingsModel SettingsModel { get; set; }
 
@@ -66,12 +66,12 @@ namespace HFM.Forms
 
       private PropertyDescriptorCollection _propertyCollection;
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -298,14 +298,5 @@ namespace HFM.Forms
 
          return true;
       }
-
-      #region IDisposable Members
-
-      public void Dispose()
-      {
-         _settingsView.Dispose();
-      }
-
-      #endregion
    }
 }
