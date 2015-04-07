@@ -23,6 +23,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -36,7 +38,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms
 {
-   public interface IFahClientSetupPresenter : IDisposable
+   public interface IFahClientSetupPresenter
    {
       FahClientSettingsModel SettingsModel { get; set; }
 
@@ -64,12 +66,12 @@ namespace HFM.Forms
 
       private PropertyDescriptorCollection _propertyCollection;
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -82,19 +84,26 @@ namespace HFM.Forms
       private SlotCollection _slotCollection;
 
       public FahClientSetupPresenter(IFahClientSetupView settingsView, IFahClient fahClient, IMessageBoxView messageBoxView)
+         : this(settingsView, fahClient, messageBoxView, null)
+      {
+         
+      }
+
+      internal FahClientSetupPresenter(IFahClientSetupView settingsView, IFahClient fahClient, IMessageBoxView messageBoxView, TaskScheduler taskScheduler)
       {
          _settingsView = settingsView;
          _settingsView.AttachPresenter(this);
          _fahClient = fahClient;
          _messageBoxView = messageBoxView;
          _validatingControls = _settingsView.FindValidatingControls();
+         var fahClientEventTaskScheduler = taskScheduler ?? TaskScheduler.FromCurrentSynchronizationContext();
 
-         // wire events
-         _fahClient.ConnectedChanged += ConnectedChanged;
-         _fahClient.MessageUpdated += MessageUpdated;
+         // wire events - these may be raised on a thread other than the UI thread
+         _fahClient.ConnectedChanged += (s, e) => Task.Factory.StartNew(() => ConnectedChanged(e), CancellationToken.None, TaskCreationOptions.None, fahClientEventTaskScheduler);
+         _fahClient.MessageUpdated += (s, e) => Task.Factory.StartNew(() => MessageUpdated(e), CancellationToken.None, TaskCreationOptions.None, fahClientEventTaskScheduler);
       }
 
-      private void ConnectedChanged(object sender, Client.ConnectedChangedEventArgs e)
+      private void ConnectedChanged(ConnectedChangedEventArgs e)
       {
          _settingsView.SetConnectButtonEnabled(!e.Connected);
          if (e.Connected)
@@ -103,9 +112,9 @@ namespace HFM.Forms
          }
       }
 
-      private void MessageUpdated(object sender, Client.MessageUpdatedEventArgs e)
+      private void MessageUpdated(MessageUpdatedEventArgs e)
       {
-         if (e.DataType.Equals(typeof(SlotCollection)))
+         if (e.DataType == typeof(SlotCollection))
          {
             _slotCollection = _fahClient.GetMessage<SlotCollection>();
             foreach (var slot in _slotCollection)
@@ -114,7 +123,7 @@ namespace HFM.Forms
             }
             _settingsModel.RefreshSlots(_slotCollection);
          }
-         else if (e.DataType.Equals(typeof(SlotOptions)))
+         else if (e.DataType == typeof(SlotOptions))
          {
             var options = _fahClient.GetMessage<SlotOptions>();
             if (options.MachineId.HasValue)
@@ -216,7 +225,6 @@ namespace HFM.Forms
          catch (Exception ex)
          {
             _messageBoxView.ShowError(_settingsView, ex.Message, Core.Application.NameAndVersion);
-            return;
          }
       }
 
@@ -248,18 +256,5 @@ namespace HFM.Forms
 
          return true;
       }
-
-      #region IDisposable Members
-
-      public void Dispose()
-      {
-         _settingsView.Dispose();
-         if (_fahClient != null)
-         {
-            _fahClient.Dispose();
-         }
-      }
-
-      #endregion
    }
 }

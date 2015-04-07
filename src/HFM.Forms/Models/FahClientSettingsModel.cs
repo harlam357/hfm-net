@@ -29,12 +29,8 @@ namespace HFM.Forms.Models
 {
    public class FahClientSettingsModel : INotifyPropertyChanged
    {
-      private readonly ISynchronizeInvoke _syncObject;
-
-      public FahClientSettingsModel(ISynchronizeInvoke syncObject)
+      public FahClientSettingsModel()
       {
-         _syncObject = syncObject;
-
          _slots = new List<FahClientSettingsSlotModel>();
       }
 
@@ -143,12 +139,6 @@ namespace HFM.Forms.Models
 
       public void RefreshSlots(SlotCollection slots)
       {
-         if (_syncObject.InvokeRequired)
-         {
-            _syncObject.BeginInvoke(new Action<SlotCollection>(RefreshSlots), new object[] { slots });
-            return;
-         }
-
          _slots.Clear();
          foreach (var slot in slots)
          {
