@@ -18,6 +18,8 @@
  */
  
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
@@ -37,6 +39,7 @@ namespace HFM.Forms
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
+      private readonly IUnitInfoDatabase _database;
       private readonly HistoryPresenterModel _model;
 
       private ILogger _logger;
@@ -56,6 +59,7 @@ namespace HFM.Forms
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
+                              IUnitInfoDatabase database,
                               HistoryPresenterModel model)
       {
          _prefs = prefs;
@@ -63,6 +67,7 @@ namespace HFM.Forms
          _view = view;
          _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
+         _database = database;
          _model = model;
       }
       
@@ -233,35 +238,44 @@ namespace HFM.Forms
             return;
          }
 
-         var processor = ServiceLocator.Resolve<ProteinDataUpdater>();
-         processor.UpdateType = type;
-         if (type == ProteinUpdateType.Project)
-         {
-            processor.UpdateArg = _model.SelectedHistoryEntry.ProjectID;   
-         }
-         else if (type == ProteinUpdateType.Id)
-         {
-            processor.UpdateArg = _model.SelectedHistoryEntry.ID;
-         }
-         // Execute Asynchronous Operation
-         var view = _viewFactory.GetProgressDialog();
-         view.ProcessRunner = processor;
-         view.Icon = Properties.Resources.hfm_48_48;
-         view.Text = "Updating Project Data";
-         view.OwnerWindow = _view;
-         view.Process();
+         var progress = new harlam357.Core.Progress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
+         var cancellationTokenSource = new CancellationTokenSource();
+         var projectDownloadView = _viewFactory.GetProgressDialogAsync();
+         projectDownloadView.Icon = Properties.Resources.hfm_48_48;
+         projectDownloadView.Text = "Updating Project Data";
+         projectDownloadView.CancellationTokenSource = cancellationTokenSource;
+         projectDownloadView.Progress = progress;
 
-         var runner = view.ProcessRunner;
-         if (runner.Exception != null)
+         projectDownloadView.Shown += (s, args) =>
          {
-            _logger.Error(runner.Exception.Message, runner.Exception);
-            _messageBoxView.ShowError(_view, runner.Exception.Message, Core.Application.NameAndVersion);
-         }
-         else
-         {
-            _model.ResetBindings(true);
-         }
-         _viewFactory.Release(view);
+            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            long updateArg = 0;
+            if (type == ProteinUpdateType.Project)
+            {
+               updateArg = _model.SelectedHistoryEntry.ProjectID;
+            }
+            else if (type == ProteinUpdateType.Id)
+            {
+               updateArg = _model.SelectedHistoryEntry.ID;
+            }
+            _database.UpdateProteinDataAsync(type, updateArg, cancellationTokenSource.Token, progress)
+               .ContinueWith(t =>
+               {
+                  if (t.IsFaulted)
+                  {
+                     var ex = t.Exception.Flatten().InnerException;
+                     _logger.Error(ex.Message, ex);
+                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                  }
+                  else
+                  {
+                     _model.ResetBindings(true);
+                  }
+                  projectDownloadView.Close();
+               }, uiTaskScheduler);
+         };
+         projectDownloadView.ShowDialog(_view);
+         _viewFactory.Release(projectDownloadView);
       }
    }
 }
