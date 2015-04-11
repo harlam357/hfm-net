@@ -63,7 +63,7 @@ namespace HFM.Forms.Tests
       
       private HistoryPresenter CreatePresenter()
       {
-         return new HistoryPresenter(_prefs, _queryCollection, _view, _viewFactory, _messageBoxView, _model);
+         return new HistoryPresenter(_prefs, _queryCollection, _view, _viewFactory, _messageBoxView, _database, _model);
       }
 
       [Test]

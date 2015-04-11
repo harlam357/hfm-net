@@ -74,11 +74,6 @@ namespace HFM.Core.Configuration
             Component.For<IUnitInfoDatabase>()
                .ImplementedBy<UnitInfoDatabase>());
 
-         // ProteinDataUpdater - Transient
-         container.Register(
-            Component.For<ProteinDataUpdater>()
-               .LifeStyle.Transient);
-
          // IClientConfiguration - Singleton
          container.Register(
             Component.For<IClientConfiguration>()
