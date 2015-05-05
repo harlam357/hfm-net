@@ -31,7 +31,6 @@ namespace HFM.Core
    {
       event EventHandler DictionaryChanged;
       event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
-      event EventHandler ClientRemoved;
       event EventHandler<ClientEditedEventArgs> ClientEdited;
       event EventHandler ClientDataInvalidated;
 
@@ -113,9 +112,10 @@ namespace HFM.Core
 
       private void OnDictionaryChanged(EventArgs e)
       {
-         if (DictionaryChanged != null)
+         var handler = DictionaryChanged;
+         if (handler != null)
          {
-            DictionaryChanged(this, e);
+            handler(this, e);
          }
       }
 
@@ -123,19 +123,10 @@ namespace HFM.Core
 
       private void OnClientDataDirty(ClientDataDirtyEventArgs e)
       {
-         if (ClientDataDirty != null)
+         var handler = ClientDataDirty;
+         if (handler != null)
          {
-            ClientDataDirty(this, e);
-         }
-      }
-
-      public event EventHandler ClientRemoved;
-
-      private void OnClientRemoved(EventArgs e)
-      {
-         if (ClientRemoved != null)
-         {
-            ClientRemoved(this, e);
+            handler(this, e);
          }
       }
 
@@ -143,9 +134,10 @@ namespace HFM.Core
 
       private void OnClientEdited(ClientEditedEventArgs e)
       {
-         if (ClientEdited != null)
+         var handler = ClientEdited;
+         if (handler != null)
          {
-            ClientEdited(this, e);
+            handler(this, e);
          }
       }
 
@@ -153,9 +145,10 @@ namespace HFM.Core
 
       private void OnClientDataInvalidated(EventArgs e)
       {
-         if (ClientDataInvalidated != null)
+         var handler = ClientDataInvalidated;
+         if (handler != null)
          {
-            ClientDataInvalidated(this, e);
+            handler(this, e);
          }   
       }
 
@@ -374,7 +367,6 @@ namespace HFM.Core
          {
             IsDirty = true;
             OnDictionaryChanged(EventArgs.Empty);
-            OnClientRemoved(EventArgs.Empty);
          }
          return result;
       }

@@ -31,8 +31,6 @@ namespace HFM.Core.Configuration
    [CoverageExclude]
    public class ContainerInstaller : IWindsorInstaller
    {
-      #region IWindsorInstaller Members
-
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
          #region Service Interfaces
@@ -77,7 +75,10 @@ namespace HFM.Core.Configuration
          // IClientConfiguration - Singleton
          container.Register(
             Component.For<IClientConfiguration>()
-               .ImplementedBy<ClientConfiguration>());
+               .ImplementedBy<ClientConfiguration>()
+                  .OnCreate((kernel, instance) => 
+                     instance.ClientEdited += (s, e) => 
+                        UpdateBenchmarkData(kernel.Resolve<IProteinBenchmarkCollection>(), e)));
 
          // IClientFactory - Singleton
          container.Register(
@@ -179,6 +180,20 @@ namespace HFM.Core.Configuration
          #endregion
       }
 
-      #endregion
+      private static void UpdateBenchmarkData(IProteinBenchmarkCollection benchmarkCollection, ClientEditedEventArgs e)
+      {
+         // the name changed
+         if (e.PreviousName != e.NewName)
+         {
+            // update the Names in the benchmark collection
+            benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
+         }
+         // the path changed
+         if (!Paths.Equal(e.PreviousPath, e.NewPath))
+         {
+            // update the Paths in the benchmark collection
+            benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
+         }
+      }
    }
 }

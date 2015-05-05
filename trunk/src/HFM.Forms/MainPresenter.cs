@@ -85,7 +85,6 @@ namespace HFM.Forms
       private readonly IPresenterFactory _presenterFactory;
 
       private readonly IClientConfiguration _clientConfiguration;
-      private readonly IProteinBenchmarkCollection _benchmarkCollection;
       private readonly IProteinService _proteinService;
       private readonly IUnitInfoCollection _unitInfoCollection;
 
@@ -102,7 +101,7 @@ namespace HFM.Forms
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                           IClientConfiguration clientConfiguration, IProteinBenchmarkCollection benchmarkCollection,
+                           IClientConfiguration clientConfiguration, 
                            IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
@@ -134,7 +133,6 @@ namespace HFM.Forms
          _presenterFactory = presenterFactory;
          // Collections
          _clientConfiguration = clientConfiguration;
-         _benchmarkCollection = benchmarkCollection;
          _proteinService = proteinService;
          _unitInfoCollection = unitInfoCollection;
          // Logic Services
@@ -147,7 +145,6 @@ namespace HFM.Forms
          _prefs = prefs;
          _settingsManager = settingsManager;
 
-         _clientConfiguration.ClientEdited += HandleClientEdit;
          _clientConfiguration.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
       
@@ -963,22 +960,6 @@ namespace HFM.Forms
             }
          }
          _presenterFactory.Release(dialog);
-      }
-
-      private void HandleClientEdit(object sender, ClientEditedEventArgs e)
-      {
-         // the name changed
-         if (e.PreviousName != e.NewName)
-         {
-            // update the Names in the benchmark collection
-            _benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
-         }
-         // the path changed
-         if (!Paths.Equal(e.PreviousPath, e.NewPath))
-         {
-            // update the Paths in the benchmark collection
-            _benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
-         }
       }
 
       public void ClientsDeleteClick()
