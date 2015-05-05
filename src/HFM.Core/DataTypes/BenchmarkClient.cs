@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Client Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,13 +29,13 @@ namespace HFM.Core.DataTypes
    {
       #region Fields and Properties
 
-      /// <summary>
-      /// Self Referencing Property
-      /// </summary>
-      public BenchmarkClient Client
-      {
-         get { return this; }
-      }
+      ///// <summary>
+      ///// Self Referencing Property
+      ///// </summary>
+      //public BenchmarkClient Client
+      //{
+      //   get { return this; }
+      //}
 
       private readonly string _name = String.Empty;
       /// <summary>
