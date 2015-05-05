@@ -1113,7 +1113,7 @@ namespace HFM.Forms
       public void ViewToggleDateTimeClick()
       {
          var style = _prefs.Get<TimeStyleType>(Preference.TimeStyle);
-         _prefs.Set(Preference.TimeStyle, style.Equals(TimeStyleType.Standard) 
+         _prefs.Set(Preference.TimeStyle, style == TimeStyleType.Standard
                                  ? TimeStyleType.Formatted 
                                  : TimeStyleType.Standard);
          _prefs.Save();
@@ -1123,7 +1123,7 @@ namespace HFM.Forms
       public void ViewToggleCompletedCountStyleClick()
       {
          var style = _prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
-         _prefs.Set(Preference.CompletedCountDisplay, style.Equals(CompletedCountDisplayType.ClientTotal)
+         _prefs.Set(Preference.CompletedCountDisplay, style == CompletedCountDisplayType.ClientTotal
                                  ? CompletedCountDisplayType.ClientRunTotal
                                  : CompletedCountDisplayType.ClientTotal);
          _prefs.Save();
@@ -1142,7 +1142,7 @@ namespace HFM.Forms
          var calculationType = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
          int typeIndex = 0;
          // None is always LAST entry
-         if (calculationType.Equals(BonusCalculationType.None) == false)
+         if (calculationType != BonusCalculationType.None)
          {
             typeIndex = (int)calculationType;
             typeIndex++;
@@ -1164,7 +1164,7 @@ namespace HFM.Forms
          var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          int typeIndex = 0;
          // EffectiveRate is always LAST entry
-         if (calculationType.Equals(PpdCalculationType.EffectiveRate) == false)
+         if (calculationType != PpdCalculationType.EffectiveRate)
          {
             typeIndex = (int)calculationType;
             typeIndex++;
