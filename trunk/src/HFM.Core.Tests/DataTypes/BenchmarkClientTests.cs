@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Benchmark Client Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,7 +64,7 @@ namespace HFM.Core.Tests.DataTypes
          Assert.AreEqual(String.Empty, client.Path);
          Assert.AreEqual("All Clients", client.NameAndPath);
          Assert.IsTrue(client.AllClients);
-         Assert.AreSame(client, client.Client);
+         //Assert.AreSame(client, client.Client);
       }
 
       [Test]
@@ -75,7 +75,7 @@ namespace HFM.Core.Tests.DataTypes
          Assert.AreEqual("path", client.Path);
          Assert.AreEqual("name (path)", client.NameAndPath);
          Assert.IsFalse(client.AllClients);
-         Assert.AreSame(client, client.Client);
+         //Assert.AreSame(client, client.Client);
       }
 
       [Test]

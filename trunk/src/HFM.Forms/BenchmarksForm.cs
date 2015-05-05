@@ -557,7 +557,8 @@ namespace HFM.Forms
          cboClients.DataBindings.Clear();
          cboClients.DataSource = _benchmarkCollection.BenchmarkClients;
          cboClients.DisplayMember = "NameAndPath";
-         cboClients.ValueMember = "Client";
+         // TODO: Is this required for Mono compatibility?
+         //cboClients.ValueMember = "Client";
          
          if (index > -1 && cboClients.Items.Count > 0)
          {
