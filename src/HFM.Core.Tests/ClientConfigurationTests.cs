@@ -335,13 +335,10 @@ namespace HFM.Core.Tests
          // Arrange
          bool dictionaryChangedFired = false;
          _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         bool clientRemovedFired = false;
-         _clientConfiguration.ClientRemoved += delegate { clientRemovedFired = true; };
          // Act
          Assert.IsFalse(_clientConfiguration.Remove("test"));
          // Assert
          Assert.IsFalse(dictionaryChangedFired);
-         Assert.IsFalse(clientRemovedFired);
       }
 
       [Test]
@@ -350,14 +347,11 @@ namespace HFM.Core.Tests
          // Arrange
          bool dictionaryChangedFired = false;
          _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         bool clientRemovedFired = false;
-         _clientConfiguration.ClientRemoved += delegate { clientRemovedFired = true; };
          _clientConfiguration.Add("test", new LegacyClient());
          // Act
          Assert.IsTrue(_clientConfiguration.Remove("test"));
          // Assert
          Assert.IsTrue(dictionaryChangedFired);
-         Assert.IsTrue(clientRemovedFired);
       }
 
       [Test]
