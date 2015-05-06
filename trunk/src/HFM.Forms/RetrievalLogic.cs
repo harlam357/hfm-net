@@ -109,18 +109,22 @@ namespace HFM.Forms
       {
          _prefs = prefs;
          _clientConfiguration = clientConfiguration;
-         _clientConfiguration.DictionaryChanged += (sender, e) => SetTimerState();
-         _clientConfiguration.ClientDataDirty += (sender, e) =>
-                                                 {
-                                                    if (e.Name == null)
-                                                    {
-                                                       QueueNewRetrieval();
-                                                    }
-                                                    else
-                                                    {
-                                                       RetrieveSingleClient(e.Name);
-                                                    }
-                                                 };
+         _clientConfiguration.DictionaryChanged += (sender, e) =>
+                                                   {
+                                                      SetTimerState();
+                                                      if (e.ChangedType == ConfigurationChangedType.Add ||
+                                                          e.ChangedType == ConfigurationChangedType.Edit)
+                                                      {
+                                                         if (e.Client == null)
+                                                         {
+                                                            QueueNewRetrieval();
+                                                         }
+                                                         else
+                                                         {
+                                                            RetrieveSingleClient(e.Client.Settings.Name);
+                                                         }
+                                                      }
+                                                   };
          _mainGridModel = mainGridModel;
       }
 

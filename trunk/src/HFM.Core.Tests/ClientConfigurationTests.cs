@@ -102,15 +102,13 @@ namespace HFM.Core.Tests
          // Arrange
          var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
          _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          // Act
          _clientConfiguration.Load(settingsCollection);
          // Assert
-         Assert.IsTrue(dictionaryChangedFired);
-         Assert.IsNull(dataDirtyEventArgs.Name);
+         Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+         Assert.IsNull(eventArgs.Client);
          _factory.VerifyAllExpectations();
       }
 
@@ -149,15 +147,13 @@ namespace HFM.Core.Tests
       public void AddTest2()
       {
          // Arrange
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
-         ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          // Act
          _clientConfiguration.Add("test", new LegacyClient());
          // Assert
-         Assert.IsTrue(dictionaryChangedFired);
-         Assert.AreEqual("test", dataDirtyEventArgs.Name);
+         Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+         Assert.IsNotNull(eventArgs.Client);
       }
 
       [Test]
@@ -242,23 +238,22 @@ namespace HFM.Core.Tests
          // Arrange
          _clientConfiguration.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
          Assert.AreEqual(1, _clientConfiguration.Count);
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          ClientEditedEventArgs editedEventArgs = null;
          _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
-         ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
          _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "test2", Path = "/home/harlam357/FAH/" });
          // Assert
          Assert.AreEqual(1, _clientConfiguration.Count);
          Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
-         Assert.IsTrue(dictionaryChangedFired);
+         Assert.AreEqual(ConfigurationChangedType.Edit, eventArgs.ChangedType);
+         Assert.AreEqual("test2", eventArgs.Client.Settings.Name);
+         Assert.AreEqual("/home/harlam357/FAH/", eventArgs.Client.Settings.Path);
          Assert.AreEqual("test", editedEventArgs.PreviousName);
          Assert.AreEqual("/home/harlam357/", editedEventArgs.PreviousPath);
          Assert.AreEqual("test2", editedEventArgs.NewName);
          Assert.AreEqual("/home/harlam357/FAH/", editedEventArgs.NewPath);
-         Assert.AreEqual("test2", dataDirtyEventArgs.Name);
       }
 
       [Test]
@@ -267,23 +262,22 @@ namespace HFM.Core.Tests
          // Arrange
          _clientConfiguration.Add("test", new FahClient(MockRepository.GenerateStub<IFahClient>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
          Assert.AreEqual(1, _clientConfiguration.Count);
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          ClientEditedEventArgs editedEventArgs = null;
          _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
-         ClientDataDirtyEventArgs dataDirtyEventArgs = null;
-         _clientConfiguration.ClientDataDirty += (sender, e) => dataDirtyEventArgs = e;
          // Act
          _clientConfiguration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
          // Assert
          Assert.AreEqual(1, _clientConfiguration.Count);
          Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
-         Assert.IsTrue(dictionaryChangedFired);
+         Assert.AreEqual(ConfigurationChangedType.Edit, eventArgs.ChangedType);
+         Assert.AreEqual("test2", eventArgs.Client.Settings.Name);
+         Assert.AreEqual("server1-36331", eventArgs.Client.Settings.DataPath());
          Assert.AreEqual("test", editedEventArgs.PreviousName);
          Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
          Assert.AreEqual("test2", editedEventArgs.NewName);
          Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
-         Assert.AreEqual("test2", dataDirtyEventArgs.Name);
       }
 
       [Test]
@@ -333,25 +327,26 @@ namespace HFM.Core.Tests
       public void RemoveTest3()
       {
          // Arrange
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          // Act
          Assert.IsFalse(_clientConfiguration.Remove("test"));
          // Assert
-         Assert.IsFalse(dictionaryChangedFired);
+         Assert.IsNull(eventArgs);
       }
 
       [Test]
       public void RemoveTest4()
       {
          // Arrange
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          _clientConfiguration.Add("test", new LegacyClient());
          // Act
          Assert.IsTrue(_clientConfiguration.Remove("test"));
          // Assert
-         Assert.IsTrue(dictionaryChangedFired);
+         Assert.AreEqual(ConfigurationChangedType.Remove, eventArgs.ChangedType);
+         Assert.IsNotNull(eventArgs.Client);
       }
 
       [Test]
@@ -413,10 +408,10 @@ namespace HFM.Core.Tests
       public void ClearTest4()
       {
          Assert.AreEqual(0, _clientConfiguration.Count);
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          _clientConfiguration.Clear();
-         Assert.IsFalse(dictionaryChangedFired);
+         Assert.IsNull(eventArgs);
       }
 
       [Test]
@@ -425,10 +420,11 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, _clientConfiguration.Count);
          _clientConfiguration.Add("test", new LegacyClient());
          Assert.AreEqual(1, _clientConfiguration.Count);
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          _clientConfiguration.Clear();
-         Assert.IsTrue(dictionaryChangedFired);
+         Assert.AreEqual(ConfigurationChangedType.Clear, eventArgs.ChangedType);
+         Assert.IsNull(eventArgs.Client);
       }
 
       [Test]
@@ -439,10 +435,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, _clientConfiguration.Count);
          _clientConfiguration.Remove("test");
          Assert.AreEqual(0, _clientConfiguration.Count);
-         bool dictionaryChangedFired = false;
-         _clientConfiguration.DictionaryChanged += delegate { dictionaryChangedFired = true; };
+         ConfigurationChangedEventArgs eventArgs = null;
+         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
          _clientConfiguration.Clear();
-         Assert.IsFalse(dictionaryChangedFired);
+         Assert.IsNull(eventArgs);
       }
 
       [Test]

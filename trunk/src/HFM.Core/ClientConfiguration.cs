@@ -29,8 +29,7 @@ namespace HFM.Core
 {
    public interface IClientConfiguration
    {
-      event EventHandler DictionaryChanged;
-      event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
+      event EventHandler<ConfigurationChangedEventArgs> DictionaryChanged;
       event EventHandler<ClientEditedEventArgs> ClientEdited;
       event EventHandler ClientDataInvalidated;
 
@@ -108,22 +107,11 @@ namespace HFM.Core
    {
       #region Events
 
-      public event EventHandler DictionaryChanged;
+      public event EventHandler<ConfigurationChangedEventArgs> DictionaryChanged;
 
-      private void OnDictionaryChanged(EventArgs e)
+      private void OnDictionaryChanged(ConfigurationChangedEventArgs e)
       {
          var handler = DictionaryChanged;
-         if (handler != null)
-         {
-            handler(this, e);
-         }
-      }
-
-      public event EventHandler<ClientDataDirtyEventArgs> ClientDataDirty;
-
-      private void OnClientDataDirty(ClientDataDirtyEventArgs e)
-      {
-         var handler = ClientDataDirty;
          if (handler != null)
          {
             handler(this, e);
@@ -203,8 +191,7 @@ namespace HFM.Core
 
          if (added != 0)
          {
-            OnDictionaryChanged(EventArgs.Empty);
-            OnClientDataDirty(new ClientDataDirtyEventArgs());
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Add, null));
          }
       }
 
@@ -243,6 +230,7 @@ namespace HFM.Core
          // have a value here.
          Debug.Assert(!String.IsNullOrEmpty(settings.Name));
 
+         IClient client;
          ClientEditedEventArgs e;
 
          _syncLock.EnterWriteLock();
@@ -257,7 +245,7 @@ namespace HFM.Core
                throw new ArgumentException("An element with the same key already exists.");
             }
          
-            IClient client = _clientDictionary[key];
+            client = _clientDictionary[key];
             string existingName = client.Settings.Name;
             string existingPath = client.Settings.DataPath();
             
@@ -291,9 +279,8 @@ namespace HFM.Core
          }
 
          IsDirty = true;
-         OnDictionaryChanged(EventArgs.Empty);
          OnClientEdited(e);
-         OnClientDataDirty(new ClientDataDirtyEventArgs(settings.Name));
+         OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Edit, client));
       }
 
       /// <summary>
@@ -322,8 +309,7 @@ namespace HFM.Core
          }
 
          IsDirty = true;
-         OnDictionaryChanged(EventArgs.Empty);
-         OnClientDataDirty(new ClientDataDirtyEventArgs(key));
+         OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Add, value));
       }
 
       [CoverageExclude]
@@ -345,16 +331,18 @@ namespace HFM.Core
          if (key == null) throw new ArgumentNullException("key");
 
          bool result;
+         IClient client = null;
 
          _syncLock.EnterWriteLock();
          try
          {
             if (_clientDictionary.ContainsKey(key))
             {
-               _clientDictionary[key].ClearEventSubscriptions();
-               _clientDictionary[key].Abort();
+               client = _clientDictionary[key];
+               client.ClearEventSubscriptions();
+               client.Abort();
                // Release from the Factory
-               _factory.Release(_clientDictionary[key]);
+               _factory.Release(client);
             }
             result = _clientDictionary.Remove(key);
          }
@@ -366,7 +354,7 @@ namespace HFM.Core
          if (result)
          {
             IsDirty = true;
-            OnDictionaryChanged(EventArgs.Empty);
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Remove, client));
          }
          return result;
       }
@@ -423,7 +411,7 @@ namespace HFM.Core
          IsDirty = false;
          if (hasValues)
          {
-            OnDictionaryChanged(EventArgs.Empty);
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Clear, null));
          }
       }
 
@@ -445,23 +433,34 @@ namespace HFM.Core
       }
    }
 
-   public sealed class ClientDataDirtyEventArgs : EventArgs
+   public enum ConfigurationChangedType
    {
-      private readonly string _name;
+      Add,
+      Remove,
+      Edit,
+      Clear
+   }
 
-      public string Name
+   public sealed class ConfigurationChangedEventArgs : EventArgs
+   {
+      private readonly ConfigurationChangedType _type;
+
+      public ConfigurationChangedType ChangedType
       {
-         get { return _name; }
+         get { return _type; }
       }
 
-      public ClientDataDirtyEventArgs()
+      private readonly IClient _client;
+
+      public IClient Client
       {
-         _name = null;
+         get { return _client; }
       }
 
-      public ClientDataDirtyEventArgs(string name)
+      public ConfigurationChangedEventArgs(ConfigurationChangedType type, IClient client)
       {
-         _name = name;
+         _type = type;
+         _client = client;
       }
    }
 
