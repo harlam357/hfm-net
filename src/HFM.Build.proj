@@ -41,10 +41,14 @@
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' " />
    </Target>
+   <!-- Workaround for missing task declaration in MSBuildTasks project -->
+   <UsingTask Condition="Exists($(MSBuildCommunityTasksLib))" 
+              AssemblyFile="$(MSBuildCommunityTasksLib)" 
+              TaskName="MSBuild.Community.Tasks.Git.GitCommits" />
    <Target Name="GetVersion">
-      <SvnVersion LocalPath="." ToolPath="$(ProgramFiles)\CollabNet\Subversion Client">
-         <Output TaskParameter="Revision" PropertyName="Revision" />
-      </SvnVersion>
+      <GitCommits>
+         <Output TaskParameter="CommitsCount" PropertyName="Revision" />
+      </GitCommits>
       <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)" />
    </Target>
    <Target Name="NuGetRestore">
