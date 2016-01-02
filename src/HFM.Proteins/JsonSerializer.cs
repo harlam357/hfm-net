@@ -55,22 +55,31 @@ namespace HFM.Proteins
             }
 
             var p = new Protein();
-            p.ProjectNumber = (int)token["id"];
-            p.ServerIP = (string)token["ws"];
-            p.WorkUnitName = (string)token["title"];
-            p.NumberOfAtoms = (int)token["atoms"];
-            p.PreferredDays = ((int)token["timeout"]) / secondsToDays;
-            p.MaximumDays = ((int)token["deadline"]) / secondsToDays;
-            p.Credit = Convert.ToDouble(token["credit"].ToString());
-            //p.Frames = 100;
-            p.Core = (string)token["type"];
+            p.ProjectNumber = GetTokenValue<int>(token, "id");
+            p.ServerIP = GetTokenValue<string>(token, "ws");
+            p.WorkUnitName = GetTokenValue<string>(token, "title");
+            p.NumberOfAtoms = GetTokenValue<int>(token, "atoms");
+            p.PreferredDays = Math.Round(GetTokenValue<int>(token, "timeout") / secondsToDays, 3, MidpointRounding.AwayFromZero);
+            p.MaximumDays = Math.Round(GetTokenValue<int>(token, "deadline") / secondsToDays, 3, MidpointRounding.AwayFromZero);
+            p.Credit = GetTokenValue<double>(token, "credit");
+            p.Frames = 100;
+            p.Core = GetTokenValue<string>(token, "type");
             p.Description = @"http://fah-web.stanford.edu/cgi-bin/fahproject.overusingIPswillbebanned?p=" + p.ProjectNumber;
-            p.Contact = (string)token["contact"];
-            p.KFactor = Convert.ToDouble(token["bonus"].ToString());
+            p.Contact = GetTokenValue<string>(token, "contact");
+            p.KFactor = GetTokenValue<double>(token, "bonus");
             proteins.Add(p);
          }
 
          return proteins;
+      }
+
+      private static T GetTokenValue<T>(JToken token, string path)
+      {
+         for (var selected = token.SelectToken(path); selected != null; )
+         {
+            return selected.Value<T>();
+         }
+         return default(T);
       }
 
       public void Serialize(string fileName, List<Protein> value)

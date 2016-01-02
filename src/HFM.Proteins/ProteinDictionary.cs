@@ -43,7 +43,7 @@ namespace HFM.Proteins
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
       public IEnumerable<ProteinLoadInfo> Load(string fileName)
       {
-         return Load(fileName, new HtmlSerializer());
+         return Load(fileName, new JsonSerializer());
       }
 
       /// <summary>

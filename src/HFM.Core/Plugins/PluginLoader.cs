@@ -48,6 +48,7 @@ namespace HFM.Core.Plugins
          // register built in types
          _proteinPluginManager.RegisterPlugin(typeof(TabSerializer).Name, new TabSerializer());
          _proteinPluginManager.RegisterPlugin(typeof(HtmlSerializer).Name, new HtmlSerializer());
+         _proteinPluginManager.RegisterPlugin(typeof(JsonSerializer).Name, new JsonSerializer());
          // load from plugin folder
          string path = Path.Combine(PluginsFolder, Constants.PluginsProteinsFolderName);
          if (Directory.Exists(path))

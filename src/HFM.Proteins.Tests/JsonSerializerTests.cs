@@ -13,7 +13,7 @@ namespace HFM.Proteins.Tests
       {
          var serializer = new JsonSerializer();
          var proteins = serializer.Deserialize("..\\..\\TestFiles\\summary.json").ToList();
-         Assert.AreEqual(600, proteins.Count);
+         Assert.AreEqual(627, proteins.Count);
       }
    }
 }

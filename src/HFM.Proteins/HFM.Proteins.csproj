@@ -67,6 +67,10 @@
     <Reference Include="HTMLparser">
       <HintPath>..\..\lib\HTMLparser2\bin\Release\HTMLparser.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,6 +82,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="HtmlSerializer.cs" />
+    <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,6 +124,7 @@
     <None Include="..\harlam357public.snk">
       <Link>Properties\harlam357public.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
