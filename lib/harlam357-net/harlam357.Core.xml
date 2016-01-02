@@ -1277,6 +1277,19 @@
             The TripleDES provider (also known as 3DES) supports keys of 128 or 192 bits with a default of 192 bits.
             </summary>
         </member>
+        <member name="T:harlam357.Core.Security.Cryptography.SymmetricAlgorithmFactory">
+            <summary>
+            Provides access to factory methods for creating SymmetricAlgorithm instances.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.SymmetricAlgorithmFactory.Create(harlam357.Core.Security.Cryptography.SymmetricProvider)">
+            <summary>
+            Creates a new instance of the SymmetricAlgorithm class based on the specified provider.
+            </summary>
+            <param name="provider">Provides the type of symmetric algorithm to create.</param>
+            <returns>The SymmetricAlgorithm object.</returns>
+            <exception cref="T:System.ArgumentException">The provider is unknown.</exception>
+        </member>
         <member name="T:harlam357.Core.Security.Cryptography.Symmetric">
             <summary>
             Represents an object that performs symmetric encryption.
@@ -1285,12 +1298,12 @@
         </member>
         <member name="M:harlam357.Core.Security.Cryptography.Symmetric.#ctor(harlam357.Core.Security.Cryptography.SymmetricProvider)">
             <summary>
-            Initializes a new instance of the Symmetric class using the specified provider.
+            Initializes a new instance of the Symmetric class based on the specified provider.
             </summary>
         </member>
         <member name="M:harlam357.Core.Security.Cryptography.Symmetric.#ctor(harlam357.Core.Security.Cryptography.SymmetricProvider,System.Boolean)">
             <summary>
-            Initializes a new instance of the Symmetric class using the specified provider.
+            Initializes a new instance of the Symmetric class based on the specified provider.
             </summary>
         </member>
         <member name="M:harlam357.Core.Security.Cryptography.Symmetric.RandomInitializationVector">
@@ -1308,7 +1321,7 @@
             Ensures that the _crypto object has valid Key and IV prior to any attempt to encrypt or decrypt.
             </summary>
         </member>
-        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Cryptography.SymmetricKeyData)">
             <summary>
             Encrypts the specified data using the provided key.
             </summary>
@@ -1320,13 +1333,13 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">data is null.</exception>
         </member>
-        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Cryptography.SymmetricKeyData,harlam357.Core.Security.Cryptography.SymmetricKeyData)">
             <summary>
             Encrypts the specified stream to memory using the provided key and initialization vector.
             </summary>
             <exception cref="T:System.ArgumentNullException">stream is null.</exception>
         </member>
-        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Data)">
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Encrypt(System.IO.Stream,harlam357.Core.Security.Cryptography.SymmetricKeyData)">
             <summary>
             Encrypts the specified stream to memory using the provided key.
             </summary>
@@ -1338,7 +1351,7 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">stream is null.</exception>
         </member>
-        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(System.IO.Stream,harlam357.Core.Security.Data)">
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(System.IO.Stream,harlam357.Core.Security.Cryptography.SymmetricKeyData)">
             <summary>
             Decrypts the specified stream using the provided key and preset initialization vector.
             </summary>
@@ -1350,7 +1363,7 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">stream is null.</exception>
         </member>
-        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Data)">
+        <member name="M:harlam357.Core.Security.Cryptography.Symmetric.Decrypt(harlam357.Core.Security.Data,harlam357.Core.Security.Cryptography.SymmetricKeyData)">
             <summary>
             Decrypts the specified data using provided key and preset initialization vector.
             </summary>
@@ -1389,14 +1402,17 @@
             </summary>
             <remarks>Setting a null value will be ignored.</remarks>
         </member>
+        <member name="T:harlam357.Core.Security.Cryptography.SymmetricKeyData">
+            <summary>
+            Represents symmetric key data used to encrypt or decrypt data.
+            </summary>
+        </member>
         <member name="T:harlam357.Core.Security.Data">
             <summary>
-            Represents Hex, Byte, Base64, or String data to encrypt or decrypt.
-             </summary>
+            Represents data to encrypt or decrypt.
+            </summary>
             <remarks>
             Use the Text property to get/set a string representation.
-            Use the Hex property to get/set a string-based Hexadecimal representation.
-            Use the Base64 to get/set a string-based Base64 representation.
             </remarks>
         </member>
         <member name="M:harlam357.Core.Security.Data.#ctor">
@@ -1441,29 +1457,9 @@
             Indicates if no data is present in this instance.
             </summary>
         </member>
-        <member name="P:harlam357.Core.Security.Data.StepBytes">
-            <summary>
-            Gets or sets the allowed step interval, in bytes, for this data; if 0, no limit.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.Security.Data.MinBytes">
-            <summary>
-            Gets or sets the minimum number of bytes allowed for this data; if 0, no limit.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.Security.Data.MaxBytes">
-            <summary>
-            Gets or sets the maximum number of bytes allowed for this data; if 0, no limit.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.Security.Data.MaxBits">
-            <summary>
-            Gets or sets the maximum number of bits allowed for this data; if 0, no limit.
-            </summary>
-        </member>
         <member name="P:harlam357.Core.Security.Data.Bytes">
             <summary>
-            Gets or sets the byte representation of the data. This will be padded to MinBytes and trimmed to MaxBytes as necessary.
+            Gets or sets the byte representation of the data.
             </summary>
         </member>
         <member name="P:harlam357.Core.Security.Data.Text">
@@ -1471,14 +1467,39 @@
             Gets or sets the text representation of the data using the Encoding value.
             </summary>
         </member>
-        <member name="P:harlam357.Core.Security.Data.Hex">
+        <member name="M:harlam357.Core.Security.Cryptography.SymmetricKeyData.#ctor">
             <summary>
-            Gets or sets the Hex string representation of this data.
+            Initializes a new instance of the SymmetricKeyData class that is empty.
             </summary>
         </member>
-        <member name="P:harlam357.Core.Security.Data.Base64">
+        <member name="M:harlam357.Core.Security.Cryptography.SymmetricKeyData.#ctor(System.Byte[])">
             <summary>
-            Gets or sets the Base64 string representation of this data.
+            Initializes a new instance of the SymmetricKeyData class with the byte array value.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.SymmetricKeyData.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SymmetricKeyData class with the string value.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.Cryptography.SymmetricKeyData.#ctor(System.String,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of the SymmetricKeyData class with the string value.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.SymmetricKeyData.MinBytes">
+            <summary>
+            Gets or sets the minimum number of bytes allowed for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.SymmetricKeyData.MaxBytes">
+            <summary>
+            Gets or sets the maximum number of bytes allowed for this data; if 0, no limit.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.Security.Cryptography.SymmetricKeyData.Bytes">
+            <summary>
+            Gets or sets the byte representation of the data. This will be padded to MinBytes and trimmed to MaxBytes as necessary.
             </summary>
         </member>
         <member name="T:harlam357.Core.Security.Extensions">
@@ -1543,6 +1564,19 @@
             Message Digest algorithm 5, 128-bit.
             </summary>
         </member>
+        <member name="T:harlam357.Core.Security.HashAlgorithmFactory">
+            <summary>
+            Provides access to factory methods for creating HashAlgorithm instances.
+            </summary>
+        </member>
+        <member name="M:harlam357.Core.Security.HashAlgorithmFactory.Create(harlam357.Core.Security.HashProvider)">
+            <summary>
+            Creates a new instance of the HashAlgorithm class based on the specified provider.
+            </summary>
+            <param name="provider">Provides the type of hash algorithm to create.</param>
+            <returns>The HashAlgorithm object.</returns>
+            <exception cref="T:System.ArgumentException">The provider is unknown.</exception>
+        </member>
         <member name="T:harlam357.Core.Security.Hash">
             <summary>
             Represents an object that performs hashing.
@@ -1570,6 +1604,11 @@
              </summary>
             <exception cref="T:System.ArgumentNullException">data or salt is null.</exception>
             <remarks>A "salt" value is random data prefixed to every hashed value to prevent common dictionary attacks.</remarks>
+        </member>
+        <member name="M:harlam357.Core.Security.Hash.Calculate(System.IO.Stream,harlam357.Core.IProgress{System.Int32})">
+            <summary>
+            Calculates the hash on a seekable stream while reporting progress.
+            </summary>
         </member>
         <member name="M:harlam357.Core.Security.Hash.Dispose">
             <summary>

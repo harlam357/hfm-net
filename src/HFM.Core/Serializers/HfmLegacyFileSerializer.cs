@@ -72,8 +72,8 @@ namespace HFM.Core.Serializers
       }
 
       // Encryption Key and Initialization Vector
-      private readonly Data _iv = new Data("zX!1=D,^7K@u33+d");
-      private readonly Data _symmetricKey = new Data("cNx/7+,?%ubm*?j8");
+      private readonly SymmetricKeyData _iv = new SymmetricKeyData("zX!1=D,^7K@u33+d");
+      private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("cNx/7+,?%ubm*?j8");
 
       #endregion
       

@@ -24,6 +24,7 @@ using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
+using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
@@ -238,7 +239,7 @@ namespace HFM.Forms
             return;
          }
 
-         var progress = new harlam357.Core.Progress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
+         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
          var cancellationTokenSource = new CancellationTokenSource();
          var projectDownloadView = _viewFactory.GetProgressDialogAsync();
          projectDownloadView.Icon = Properties.Resources.hfm_48_48;

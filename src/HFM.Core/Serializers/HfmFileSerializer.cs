@@ -49,8 +49,8 @@ namespace HFM.Core.Serializers
       }
 
       // Encryption Key and Initialization Vector
-      private readonly Data _iv = new Data("CH/&QE;NsT.2z+Me");
-      private readonly Data _symmetricKey = new Data("usPP'/Cb5?NWC*60");
+      private readonly SymmetricKeyData _iv = new SymmetricKeyData("CH/&QE;NsT.2z+Me");
+      private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("usPP'/Cb5?NWC*60");
 
       #endregion
 
@@ -102,7 +102,7 @@ namespace HFM.Core.Serializers
 
             try
             {
-               settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).Base64;
+               settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {

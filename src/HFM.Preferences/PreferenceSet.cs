@@ -46,8 +46,8 @@ namespace HFM.Preferences
    {
       #region Fields
 
-      private readonly Data _iv = new Data("3k1vKL=Cz6!wZS`I");
-      private readonly Data _symmetricKey = new Data("%`Bb9ega;$.GUDaf");
+      private readonly SymmetricKeyData _iv = new SymmetricKeyData("3k1vKL=Cz6!wZS`I");
+      private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("%`Bb9ega;$.GUDaf");
 
       private readonly Dictionary<Preference, IMetadata> _prefs = new Dictionary<Preference, IMetadata>();
 
@@ -960,7 +960,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               webGenPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
+               webGenPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {
@@ -980,7 +980,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
+               emailReportingServerPassword = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {
@@ -1000,7 +1000,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = _iv;
-               proxyPass = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Base64;
+               proxyPass = symmetricProvider.Encrypt(new Data(value), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {

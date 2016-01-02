@@ -37,6 +37,7 @@ using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
+using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
@@ -1194,7 +1195,7 @@ namespace HFM.Forms
       {
          _proteinService.ResetRefreshParameters();
 
-         var progress = new harlam357.Core.Progress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
+         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
          var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
          projectDownloadView.Progress = progress;
 
