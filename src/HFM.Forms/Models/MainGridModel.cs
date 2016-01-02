@@ -179,7 +179,6 @@ namespace HFM.Forms.Models
 
          // Subscribe to ClientDictionary events
          _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
-         _clientConfiguration.ClientDataInvalidated += (sender, args) => ResetBindings();
       }
 
       private volatile bool _resetInProgress;

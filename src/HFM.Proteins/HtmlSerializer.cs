@@ -76,28 +76,33 @@ namespace HFM.Proteins
                }
                p.ServerIP = GetNextTdValue(htmlParser);
                p.WorkUnitName = GetNextTdValue(htmlParser);
-               try
-               {
-                  p.NumberOfAtoms = Int32.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
-               }
-               catch (FormatException)
-               {
-                  p.NumberOfAtoms = 0;
-               }
-               p.PreferredDays = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
-               p.MaximumDays = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
-               p.Credit = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
-               p.Frames = Int32.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.NumberOfAtoms = ToInt32OrDefault(GetNextTdValue(htmlParser));
+               p.PreferredDays = ToDoubleOrDefault(GetNextTdValue(htmlParser));
+               p.MaximumDays = ToDoubleOrDefault(GetNextTdValue(htmlParser));
+               p.Credit = ToDoubleOrDefault(GetNextTdValue(htmlParser));
+               p.Frames = ToInt32OrDefault(GetNextTdValue(htmlParser));
                p.Core = GetNextTdValue(htmlParser);
                p.Description = GetNextTdValue(htmlParser, "href");
                p.Contact = GetNextTdValue(htmlParser);
-               p.KFactor = Double.Parse(GetNextTdValue(htmlParser), CultureInfo.InvariantCulture);
+               p.KFactor = ToDoubleOrDefault(GetNextTdValue(htmlParser));
 
                list.Add(p);
             }
          }
 
          return list;
+      }
+
+      private static int ToInt32OrDefault(string value)
+      {
+         int result;
+         return Int32.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result) ? result : 0;
+      }
+
+      private static double ToDoubleOrDefault(string value)
+      {
+         double result;
+         return Double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result) ? result : 0.0;
       }
 
       /// <summary>

@@ -187,7 +187,10 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          bool clientDataInvalidatedFired = false;
-         _clientConfiguration.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
+         _clientConfiguration.DictionaryChanged += (sender, args) =>
+         {
+            if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
+         };
          _clientConfiguration.Add("test", client);
          // Act
          client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
@@ -201,7 +204,10 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          bool clientDataInvalidatedFired = false;
-         _clientConfiguration.ClientDataInvalidated += delegate { clientDataInvalidatedFired = true; };
+         _clientConfiguration.DictionaryChanged += (sender, args) =>
+         {
+            if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
+         };
          _clientConfiguration.Add("test", client);
          // Act
          client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);

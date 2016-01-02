@@ -31,7 +31,6 @@ namespace HFM.Core
    {
       event EventHandler<ConfigurationChangedEventArgs> DictionaryChanged;
       event EventHandler<ClientEditedEventArgs> ClientEdited;
-      event EventHandler ClientDataInvalidated;
 
       bool IsDirty { get; set; }
 
@@ -129,17 +128,6 @@ namespace HFM.Core
          }
       }
 
-      public event EventHandler ClientDataInvalidated;
-
-      private void OnClientDataInvalidated(EventArgs e)
-      {
-         var handler = ClientDataInvalidated;
-         if (handler != null)
-         {
-            handler(this, e);
-         }   
-      }
-
       #endregion
 
       #region Properties
@@ -177,8 +165,9 @@ namespace HFM.Core
             {
                if (client != null)
                {
-                  client.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
-                  client.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+                  EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
+                  client.SlotsChanged += handler;
+                  client.RetrievalFinished += handler;
                   _clientDictionary.Add(client.Settings.Name, client);
                   added++;
                }
@@ -260,8 +249,9 @@ namespace HFM.Core
                _clientDictionary.Remove(key);
                _clientDictionary.Add(settings.Name, client);
             }
-            client.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
-            client.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+            EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
+            client.SlotsChanged += handler;
+            client.RetrievalFinished += handler;
             
             if (settings.IsFahClient() || settings.IsLegacy())
             {
@@ -299,8 +289,9 @@ namespace HFM.Core
          _syncLock.EnterWriteLock();
          try
          {
-            value.SlotsChanged += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
-            value.RetrievalFinished += (sender, args) => OnClientDataInvalidated(EventArgs.Empty);
+            EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
+            value.SlotsChanged += handler;
+            value.RetrievalFinished += handler;
             _clientDictionary.Add(key, value);
          }
          finally
@@ -438,7 +429,8 @@ namespace HFM.Core
       Add,
       Remove,
       Edit,
-      Clear
+      Clear,
+      Invalidate
    }
 
    public sealed class ConfigurationChangedEventArgs : EventArgs
