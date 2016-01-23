@@ -1250,13 +1250,15 @@ namespace HFM.Core
 
          private void ExecuteInternal(CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress)
          {
+            const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
+
             if (UpdateType == ProteinUpdateType.All ||
                 UpdateType == ProteinUpdateType.Unknown)
             {
                var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
                if (UpdateType == ProteinUpdateType.Unknown)
                {
-                  selectSql = selectSql.Where("WorkUnitName = ''");
+                  selectSql = selectSql.Where(workUnitNameUnknown);
                }
                selectSql = selectSql.GroupBy("ProjectID");
 
@@ -1281,7 +1283,7 @@ namespace HFM.Core
                      {
                         if (UpdateType == ProteinUpdateType.Unknown)
                         {
-                           updateSql = updateSql.Where("WorkUnitName = ''");
+                           updateSql = updateSql.Where(workUnitNameUnknown);
                         }
                         _database.Execute(updateSql.SQL, updateSql.Arguments);
                      }
