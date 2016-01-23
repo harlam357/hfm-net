@@ -23,7 +23,7 @@ namespace HFM.Proteins
 
       public string FileTypeFilter
       {
-         get { return "Project Info Tab Deliimited Files|*.tab"; }
+         get { return "Project Info Tab Delimited Files|*.tab"; }
       }
 
       public List<Protein> Deserialize(string fileName)

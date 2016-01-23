@@ -168,9 +168,37 @@ namespace HFM.Preferences
          if (Settings.Default.ApplicationVersion != appVersionString)
          {
             Settings.Default.Upgrade();
+            Version settingsVersion;
+            if (Version.TryParse(Settings.Default.ApplicationVersion, out settingsVersion))
+            {
+               ExecuteVersionUpgrades(settingsVersion);
+            }
             Settings.Default.ApplicationVersion = appVersionString;
             Settings.Default.Save();
          }
+      }
+
+      private static void ExecuteVersionUpgrades(Version settingsVersion)
+      {
+         foreach (var upgrade in CreateVersionUpgrades().Where(upgrade => settingsVersion < upgrade.Version))
+         {
+            upgrade.Action(Settings.Default);
+         }
+      }
+
+      private static IEnumerable<VersionUpgrade> CreateVersionUpgrades()
+      {
+         return new[]
+         {
+            new VersionUpgrade { Version = new Version(0, 9, 5), Action = settings => settings.ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary" }
+         };
+      }
+
+      private sealed class VersionUpgrade
+      {
+         public Version Version { get; set; }
+
+         public Action<Settings> Action { get; set; }
       }
       
       public void Initialize()

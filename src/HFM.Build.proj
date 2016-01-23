@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-   <!--PRIMARY TARGETS: Build;Test;TestParallel;Analyze;BuildPackages;BuildPackagesParallel;CopyPackages-->
+   <!--PRIMARY TARGETS: Rebuild;Build;Clean;Test;TestParallel;Analyze;Pack-->
    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
    <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks" />
    <PropertyGroup>
       <Major>0</Major>
       <Minor>9</Minor>
-      <Build>4</Build>
+      <Build>5</Build>
       <Revision>0</Revision>
       <ProductName>HFM.NET</ProductName>
       <SolutionFileName>HFM.All.sln</SolutionFileName>
@@ -15,13 +15,13 @@
       <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
       <AssemblyOriginatorKeyFile Condition=" '$(PlatformAssemblyOriginatorKeyFile)' == '' ">$(MSBuildProjectDirectory)\harlam357public.snk</AssemblyOriginatorKeyFile>
    </PropertyGroup>
+   <!--PRIMARY TARGET: Rebuild-->
+   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
    <!--PRIMARY TARGET: Build-->
-   <Target Name="Build" DependsOnTargets="Compile">
+   <Target Name="Build" DependsOnTargets="CreateAssemblyVersion;NuGetRestore">
+      <MSBuild Projects="$(SolutionFileName)" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform);AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
       <CallTarget Targets="Deploy" ContinueOnError="true" />
       <Message Text="$(ProductName) Build Complete" />
-   </Target>
-   <Target Name="Compile" DependsOnTargets="CreateAssemblyVersion;NuGetRestore">
-      <MSBuild Projects="$(SolutionFileName)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform);AssemblyOriginatorKeyFile=$(AssemblyOriginatorKeyFile);NoWarn=1591" />
    </Target>
    <Target Name="CreateAssemblyVersion" DependsOnTargets="GetVersion">
       <AssemblyInfo CodeLanguage="CS"
@@ -50,6 +50,11 @@
          <Output TaskParameter="CommitsCount" PropertyName="Revision" />
       </GitCommits>
       <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)" />
+   </Target>
+   <!--PRIMARY TARGET: Clean-->
+   <Target Name="Clean" DependsOnTargets="CleanArtifactsFolder">
+      <MSBuild Projects="$(SolutionFileName)" Targets="Clean" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+      <Message Text="$(ProductName) Clean Complete" />
    </Target>
    <Target Name="NuGetRestore">
       <Exec Command="$(NuGetPath) restore $(SolutionFileName)" />
@@ -112,17 +117,10 @@
       <LogZipFiles Include="$(ArtifactsBin)\HFM.Log.dll;$(ArtifactsBin)\HFM.Log.xml;$(ArtifactsBin)\HFM.Core.DataTypes.dll;$(ArtifactsBin)\HFM.Core.DataTypes.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />
       <QueueZipFiles Include="$(ArtifactsBin)\HFM.Queue.dll;$(ArtifactsBin)\HFM.Queue.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />
    </ItemGroup>
-   <!--PRIMARY TARGET: BuildPackages-->
-   <Target Name="BuildPackages">
-      <Message Text="Sequential Package Build" />
+   <!--PRIMARY TARGET: Pack-->
+   <Target Name="Pack">
       <CallTarget Targets="BuildZip;BuildMsi;BuildApiZips" />
-      <Message Text="Package Build Complete" />
-   </Target>
-   <!--PRIMARY TARGET: BuildPackagesParallel-->
-   <Target Name="BuildPackagesParallel">
-      <Message Text="Parallel Package Build" />
-      <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="BuildZip;BuildMsi;BuildApiZips" />
-      <Message Text="Package Build Complete" />
+      <Message Text="Pack Complete" />
    </Target>
    <Target Name="BuildZip" DependsOnTargets="GetVersion">
       <Zip Files="@(ZipFiles)" WorkingDirectory="$(ArtifactsBin)" ZipFileName="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" />
@@ -145,20 +143,5 @@
    <Target Name="BuildApiDocs">
       <MSBuild Projects="HFM.Client\HFM.Client.shfbproj" Properties="Configuration=Release;Platform=Any CPU;CleanIntermediates=True" />
       <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsBin)\Documentation\API Docs\HFM.Client.chm" />
-   </Target>
-   <!--PRIMARY TARGET: CopyPackages--> 
-   <Target Name="CopyPackages">
-      <CallTarget Targets="CopyZip;CopyMsi;CopyApiZips" />
-   </Target>
-   <Target Name ="CopyZip" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-   </Target>
-   <Target Name ="CopyMsi" Condition="'$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" DestinationFolder="$(PackageDestination)" />
-   </Target>
-   <Target Name ="CopyApiZips" Condition="'$(Platform)' == 'Any CPU' AND '$(PackageDestination)' != ''" DependsOnTargets="GetVersion">
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Log $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
-      <Copy SourceFiles="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" DestinationFolder="$(PackageDestination)" />
    </Target>
 </Project>

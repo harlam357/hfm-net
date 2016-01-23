@@ -139,6 +139,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\ProjectInfo.tab" />
+    <None Include="TestFiles\summary.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\psummary.html" />

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Data Container
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,18 +54,16 @@ namespace HFM.Core
 
       #region Serialization Support
 
-      private static readonly object SerializeLock = new object();
+      private readonly object _serializeLock = new object();
 
       /// <summary>
       /// Read data file.
       /// </summary>
       public virtual void Read()
       {
-         //DateTime start = HfmTrace.ExecStart;
-
          T data = null;
 
-         lock (SerializeLock)
+         lock (_serializeLock)
          {
             try
             {
@@ -77,8 +75,6 @@ namespace HFM.Core
             }
          }
 
-         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
-
          Data = data ?? new T();
       }
 
@@ -87,9 +83,7 @@ namespace HFM.Core
       /// </summary>
       public virtual void Write()
       {
-         //DateTime start = HfmTrace.ExecStart;
-
-         lock (SerializeLock)
+         lock (_serializeLock)
          {
             try
             {
@@ -100,8 +94,6 @@ namespace HFM.Core
                Logger.ErrorFormat(ex, "{0}", ex.Message);
             }
          }
-
-         //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, start);
       }
 
       #endregion
