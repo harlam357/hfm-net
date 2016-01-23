@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Service Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +20,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Castle.Core.Logging;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -67,7 +65,7 @@ namespace HFM.Core.Tests
          downloader.Expect(x => x.Download()).Repeat.Once();
          downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
          
-         var service = new ProteinService(null, downloader) { Logger = new ConsoleLogger() };
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          var protein = CreateValidProtein(2483);
          service.Add(protein);
          // Act
@@ -87,7 +85,7 @@ namespace HFM.Core.Tests
       {
          // Arrange
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         var service = new ProteinService(null, downloader) { Logger = new ConsoleLogger() };
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          // Act
          service.Get(2482, true);
          // Assert
@@ -102,7 +100,7 @@ namespace HFM.Core.Tests
          downloader.Expect(x => x.Download()).Repeat.Once();
          downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
 
-         var service = new ProteinService(null, downloader) { Logger = new ConsoleLogger() };
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          // Set project not found to excercise removal code
          service.ProjectsNotFound.Add(6940, DateTime.MinValue);
          // Act
@@ -152,7 +150,7 @@ namespace HFM.Core.Tests
          downloader.Expect(x => x.Download()).Repeat.Once();
          downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
 
-         var service = new ProteinService(null, downloader) { Logger = new ConsoleLogger() };
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          Assert.AreEqual(0, service.GetProjects().Count());
          // Act
          service.Refresh();
@@ -170,7 +168,7 @@ namespace HFM.Core.Tests
          downloader.Expect(x => x.DownloadAsync(null)).Return(taskSource.Task).Repeat.Once();
          downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
 
-         var service = new ProteinService(null, downloader) { Logger = new ConsoleLogger() };
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          Assert.AreEqual(0, service.GetProjects().Count());
          // Act
          service.RefreshAsync(null).Wait();

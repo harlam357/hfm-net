@@ -65,7 +65,7 @@ namespace HFM.Core.Logging
          {
             if (loggerLevel <= Level)
             {
-               var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x));
+               var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x)).ToList();
                OnTextMessage(new TextMessageEventArgs(lines));
                foreach (var line in lines)
                {

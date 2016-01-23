@@ -136,6 +136,7 @@
     <Compile Include="FahClientTests.cs" />
     <Compile Include="LegacyClientTests.cs" />
     <Compile Include="LegacyDataAggregatorTests.cs" />
+    <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="PathsTests.cs" />
