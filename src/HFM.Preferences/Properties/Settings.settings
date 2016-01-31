@@ -96,7 +96,7 @@
       <Value Profile="(Default)">explorer.exe</Value>
     </Setting>
     <Setting Name="ProjectDownloadUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://fah-web.stanford.edu/psummary.html</Value>
+      <Value Profile="(Default)">http://assign.stanford.edu/api/project/summary</Value>
     </Setting>
     <Setting Name="WebGenAfterRefresh" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
