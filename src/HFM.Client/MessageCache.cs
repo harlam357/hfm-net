@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - MessageCache Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,11 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 using HFM.Client.DataTypes;
@@ -57,8 +59,10 @@ namespace HFM.Client
 
       #region Fields
 
-      //private readonly StringBuilder _readBuffer;
+      private readonly StringBuilder _readBuffer;
       private readonly Dictionary<string, JsonMessage> _messages;
+
+      private readonly object _bufferLock = new object();
 
       #endregion
 
@@ -80,7 +84,7 @@ namespace HFM.Client
       internal MessageCache(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
       {
-         //_readBuffer = new StringBuilder();
+         _readBuffer = new StringBuilder();
          _messages = new Dictionary<string, JsonMessage>();
       }
 
@@ -101,19 +105,20 @@ namespace HFM.Client
       /// <summary>
       /// Update the local data buffer with data from the remote network stream.
       /// </summary>
-      protected override void Update()
+      protected override void ProcessData(string buffer, int totalBytesRead)
       {
-         // first, update the connection's buffer
-         base.Update();
+         base.ProcessData(buffer, totalBytesRead);
 
-         // get the connection buffer and clear the connection buffer
-         //_readBuffer.Append(GetBuffer());
-
-         JsonMessage json;
-         while ((json = GetNextJsonMessage(ReadBuffer)) != null)
+         lock (_bufferLock)
          {
-            UpdateMessageCache(json);
-            OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
+            _readBuffer.Append(buffer);
+
+            JsonMessage json;
+            while ((json = GetNextJsonMessage(_readBuffer)) != null)
+            {
+               UpdateMessageCache(json);
+               OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
+            }
          }
          // send update finished event
          OnUpdateFinished(EventArgs.Empty);
@@ -232,17 +237,19 @@ namespace HFM.Client
       {
          if (e == null) return;
 
-         if (MessageUpdated != null)
+         var handler = MessageUpdated;
+         if (handler != null)
          {
-            MessageUpdated(this, e);
+            handler(this, e);
          }
       }
 
       private void OnUpdateFinished(EventArgs e)
       {
-         if (UpdateFinished != null)
+         var handler = UpdateFinished;
+         if (handler != null)
          {
-            UpdateFinished(this, e);
+            handler(this, e);
          }
       }
 

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Connection Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,14 +18,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
-using System.Timers;
-
-using HFM.Core.DataTypes;
 
 namespace HFM.Client
 {
@@ -54,10 +50,6 @@ namespace HFM.Client
       /// Default Connection, Send, and Receive Timeout Length
       /// </summary>
       private const int DefaultTimeoutLength = 5000;
-      /// <summary>
-      /// Default Socket Receive Timer Length
-      /// </summary>
-      private const int DefaultSocketTimerLength = 10;
 
       #endregion
 
@@ -89,9 +81,6 @@ namespace HFM.Client
       private byte[] _internalBuffer;
       private readonly ITcpClientFactory _tcpClientFactory;
       private readonly StringBuilder _readBuffer;
-      private readonly Timer _timer;
-
-      private static readonly object BufferLock = new object();
 
       #endregion
 
@@ -108,53 +97,13 @@ namespace HFM.Client
       /// </summary>
       public bool Connected
       {
-         get { return _tcpClient.Client == null ? false : _tcpClient.Connected; }
-      }
-
-      /// <summary>
-      /// Gets a value that indicates whether data is available to be read from the buffer.
-      /// </summary>
-      public bool DataAvailable
-      {
-         get { return _readBuffer.Length != 0; }
-      }
-
-      /// <summary>
-      /// Gets the read buffer for the Connection.
-      /// </summary>
-      protected StringBuilder ReadBuffer
-      {
-         get
-         {
-            lock (BufferLock)
-            {
-               return _readBuffer;
-            }
-         }
-      }
-
-      /// <summary>
-      /// Gets or sets a value indicating whether the Connection should process updates.
-      /// </summary>
-      public bool UpdateEnabled
-      {
-         get { return _timer.Enabled; }
-         set { _timer.Enabled = value; }
+         get { return _tcpClient.Client != null && _tcpClient.Connected; }
       }
 
       /// <summary>
       /// Gets or sets the length of time to wait for a response to a connection request (default - 5 seconds).
       /// </summary>
       public int ConnectTimeout { get; set; }
-
-      /// <summary>
-      /// Gets or sets the length of time between each network stream read attempt (default - 1ms).
-      /// </summary>
-      public double ReceiveLoopTime
-      {
-         get { return _timer.Interval; }
-         set { _timer.Interval = value; }
-      }
 
       private int _sendBufferSize = DefaultSendBufferSize;
 
@@ -207,7 +156,7 @@ namespace HFM.Client
       public Connection()
          : this(new TcpClientFactory())
       {
-         
+
       }
 
       /// <summary>
@@ -221,9 +170,6 @@ namespace HFM.Client
          _tcpClient = CreateClient();
          _internalBuffer = new byte[InternalBufferSize];
          _readBuffer = new StringBuilder();
-         _timer = new Timer(DefaultSocketTimerLength);
-         _timer.Elapsed += SocketTimerElapsed;
-         _timer.AutoReset = false;
       }
 
       #endregion
@@ -288,11 +234,11 @@ namespace HFM.Client
                // send connected event
                OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
                // send status message
-               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture, 
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
                   "Connected to {0}:{1}", host, port), TraceLevel.Info));
                // start listening for messages
                // from the network stream
-               _timer.Start();
+               Update();
             }
          }
          finally
@@ -328,7 +274,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             }
 
             ar.AsyncWaitHandle.Close();
-         } 
+         }
       }
 
       private ITcpClient CreateClient()
@@ -344,8 +290,6 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// </summary>
       public void Close()
       {
-         // stop the timer
-         _timer.Stop();
          // close the network stream
          if (_stream != null)
          {
@@ -454,35 +398,6 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          return command.Replace("\n", String.Empty);
       }
 
-      internal void SocketTimerElapsed(object sender, ElapsedEventArgs e)
-      {
-         Debug.Assert(Connected);
-         try
-         {
-            Update();
-         }
-         catch (Exception ex)
-         {
-            if (!IsCancelBlockingCallSocketError(ex))
-            {
-               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Update failed: {0}", ex.Message), TraceLevel.Error));
-            }
-            Close();
-         }
-         finally
-         {
-            if (_tcpClient.Connected)
-            {
-               var timer = sender as Timer;
-               if (timer != null)
-               {
-                  ((Timer)sender).Start();
-               }
-            }
-         }
-      }
-
       private static bool IsCancelBlockingCallSocketError(Exception ex)
       {
          var ioEx = ex as System.IO.IOException;
@@ -501,33 +416,67 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// <summary>
       /// Update the local data buffer with data from the remote network stream.
       /// </summary>
-      protected virtual void Update()
+      private void Update()
       {
-         int totalBytesRead = 0;
-         do
+         AsyncCallback callback = null;
+         callback = result =>
          {
-            int bytesRead = _stream.Read(_internalBuffer, 0, _internalBuffer.Length);
-            if (bytesRead == 0)
+            if (_stream == null)
             {
-               throw new System.IO.IOException("The underlying socket has been closed.");
+               return;
             }
 
-            // lock so we're not appending to and reading from the buffer at the same time
-            lock (BufferLock)
+            int bytesRead;
+            int totalBytesRead = (int)result.AsyncState;
+            try
             {
-               _readBuffer.Append(Encoding.ASCII.GetChars(_internalBuffer, 0, bytesRead));
+               bytesRead = _stream.EndRead(result);
+               if (bytesRead == 0)
+               {
+                  OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                     "Update failed: {0}", "The underlying socket has been closed."), TraceLevel.Error));
+                  Close();
+                  return;
+               }
+            }
+            catch (Exception ex)
+            {
+               if (!IsCancelBlockingCallSocketError(ex))
+               {
+                  OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                     "Update failed: {0}", ex.Message), TraceLevel.Error));
+               }
+               Close();
+               return;
             }
 
+            _readBuffer.Append(Encoding.ASCII.GetChars(_internalBuffer, 0, bytesRead));
             totalBytesRead += bytesRead;
-         } 
-         while (_stream.DataAvailable);
-         // send data received event
+
+            if (_stream.DataAvailable)
+            {
+               _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, totalBytesRead);
+               return;
+            }
+
+            string buffer = _readBuffer.ToString();
+            _readBuffer.Clear();
+            ProcessData(buffer, totalBytesRead);
+
+            _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0);
+         };
+
+         _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0);
+      }
+
+      protected virtual void ProcessData(string buffer, int totalBytesRead)
+      {
          OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
          if (DebugReceiveBuffer && !String.IsNullOrEmpty(DebugBufferFileName))
          {
             try
             {
-               System.IO.File.AppendAllText(DebugBufferFileName, 
+               System.IO.File.AppendAllText(DebugBufferFileName,
                   _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
             }
             catch (Exception ex)
@@ -535,70 +484,6 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
                OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
                   "Debug buffer write failed: {0}", ex.Message), TraceLevel.Error));
             }
-         }
-      }
-
-      /// <summary>
-      /// Get the value of the local data buffer and clear that value from the local data buffer.
-      /// </summary>
-      /// <returns>The buffer value as a string.</returns>
-      /// <remarks>If the buffer value is large this string allocation may end up on the Large Object Heap.</remarks>
-      public string GetBuffer()
-      {
-         return GetBuffer(true);
-      }
-
-      /// <summary>
-      /// Get the value of the local data buffer and optionally clear that value from the local data buffer.
-      /// </summary>
-      /// <param name="clear">true to clear the local data buffer.</param>
-      /// <returns>The buffer value as a string.</returns>
-      /// <remarks>If the buffer value is large this string allocation may end up on the Large Object Heap.</remarks>
-      public string GetBuffer(bool clear)
-      {
-         // lock so we're not append to and reading from the buffer at the same time
-         lock (BufferLock)
-         {
-            string value = _readBuffer.ToString();
-            if (clear) _readBuffer.Clear();
-            return value;
-         }
-      }
-
-      /// <summary>
-      /// Get the value of the local data buffer and clear that value from the local data buffer.
-      /// </summary>
-      /// <returns>The buffer value in an enumerable collection of up to 8000 element char arrays.</returns>
-      public IEnumerable<char[]> GetBufferChunks()
-      {
-         return GetBufferChunks(true);
-      }
-
-      /// <summary>
-      /// Get the value of the local data buffer and optionally clear that value from the local data buffer.
-      /// </summary>
-      /// <param name="clear">true to clear the local data buffer.</param>
-      /// <returns>The buffer value in an enumerable collection of up to 8000 element char arrays.</returns>
-      public IEnumerable<char[]> GetBufferChunks(bool clear)
-      {
-         // lock so we're not append to and reading from the buffer at the same time
-         lock (BufferLock)
-         {
-            IEnumerable<char[]> value = _readBuffer.GetChunks();
-            if (clear) _readBuffer.Clear();
-            return value;
-         }
-      }
-
-      /// <summary>
-      /// Clear the value of the local data buffer.
-      /// </summary>
-      public void ClearBuffer()
-      {
-         // lock so we're not append to and reading from the buffer at the same time
-         lock (BufferLock)
-         {
-            _readBuffer.Clear();
          }
       }
 
@@ -611,33 +496,38 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          if (e == null) return;
 
          Debug.WriteLine(e.Status);
-         if (StatusMessage != null)
+
+         var handler = StatusMessage;
+         if (handler != null)
          {
-            StatusMessage(this, e);
+            handler(this, e);
          }
       }
 
       private void OnConnectedChanged(ConnectedChangedEventArgs e)
       {
-         if (ConnectedChanged != null)
+         var handler = ConnectedChanged;
+         if (handler != null)
          {
-            ConnectedChanged(this, e);
+            handler(this, e);
          }
       }
 
       private void OnDataLengthSent(DataLengthEventArgs e)
       {
-         if (DataLengthSent != null)
+         var handler = DataLengthSent;
+         if (handler != null)
          {
-            DataLengthSent(this, e);
+            handler(this, e);
          }
       }
 
       private void OnDataLengthReceived(DataLengthEventArgs e)
       {
-         if (DataLengthReceived != null)
+         var handler = DataLengthReceived;
+         if (handler != null)
          {
-            DataLengthReceived(this, e);
+            handler(this, e);
          }
       }
 
@@ -667,8 +557,6 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             {
                // close connection
                Close();
-               // dispose of timer
-               _timer.Dispose();
             }
          }
 

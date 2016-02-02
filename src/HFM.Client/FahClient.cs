@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FahClient Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,12 +38,6 @@ namespace HFM.Client
 
       int ReceiveBufferSize { get; set; }
 
-      double ReceiveLoopTime { get; set; }
-
-      bool UpdateEnabled { get; set; }
-
-      bool DataAvailable { get; }
-
       #endregion
 
       #region Events
@@ -62,8 +56,6 @@ namespace HFM.Client
       void Connect(string host, int port, string password);
 
       void Close();
-
-      void ClearBuffer();
 
       void SendCommand(string command);
 
@@ -155,7 +147,7 @@ namespace HFM.Client
 
       private static string GetKey(Type type)
       {
-         return TypeMap.FirstOrDefault(x => type.Equals(x.Value) || type.IsSubclassOf(x.Value)).Key;
+         return TypeMap.FirstOrDefault(x => type == x.Value || type.IsSubclassOf(x.Value)).Key;
       }
 
       /// <summary>
