@@ -92,10 +92,10 @@ namespace HFM.Core.Configuration
             Component.For<IFahClientFactory>()
                .AsFactory());
 
-         // HFM.Client.FahClient - Transient
+         // HFM.Client.TypedMessageConnection - Transient
          container.Register(
             Component.For<HFM.Client.IFahClient>()
-               .ImplementedBy<HFM.Client.FahClient>()
+               .ImplementedBy<HFM.Client.TypedMessageConnection>()
                   .LifeStyle.Transient);
 
          // LegacyClient - Transient

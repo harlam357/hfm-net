@@ -34,7 +34,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -107,7 +107,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -178,7 +178,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -249,7 +249,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -322,7 +322,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -393,7 +393,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -464,7 +464,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -535,7 +535,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009-2012 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
@@ -606,7 +606,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009-2013 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);

@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - MessageCache Class
+ * HFM.NET - JsonMessageConnection Class
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -18,11 +18,8 @@
  */
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 using HFM.Client.DataTypes;
@@ -31,16 +28,16 @@ using HFM.Core.DataTypes;
 namespace HFM.Client
 {
    /// <summary>
-   /// Folding@Home client message cache class.  Provides functionality for parsing, storing, and accessing the raw JSON messages returned by the Folding@Home client.
+   /// Folding@Home client JSON message connection class.  Provides functionality for parsing raw network data into JSON messages.
    /// </summary>
-   public class MessageCache : Connection
+   public class JsonMessageConnection : Connection
    {
       #region Events
 
       /// <summary>
-      /// Occurs when an updated message is received.
+      /// Occurs when a message is received.
       /// </summary>
-      public event EventHandler<MessageUpdatedEventArgs> MessageUpdated;
+      public event EventHandler<MessageReceivedEventArgs> MessageReceived;
       /// <summary>
       /// Occurs when the local data buffer update is finished.
       /// </summary>
@@ -60,7 +57,6 @@ namespace HFM.Client
       #region Fields
 
       private readonly StringBuilder _readBuffer;
-      private readonly Dictionary<string, JsonMessage> _messages;
 
       private readonly object _bufferLock = new object();
 
@@ -72,7 +68,7 @@ namespace HFM.Client
       /// Initializes a new instance of the MessageCache class.
       /// </summary>
       [CoverageExclude]
-      public MessageCache()
+      public JsonMessageConnection()
          : this(new TcpClientFactory())
       {
 
@@ -81,26 +77,15 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the MessageCache class.
       /// </summary>
-      internal MessageCache(ITcpClientFactory tcpClientFactory)
+      internal JsonMessageConnection(ITcpClientFactory tcpClientFactory)
          : base(tcpClientFactory)
       {
          _readBuffer = new StringBuilder();
-         _messages = new Dictionary<string, JsonMessage>();
       }
 
       #endregion
 
       #region Methods
-
-      /// <summary>
-      /// Get a Folding@Home client message as a JSON message object.  Returns null if the requested message is not available in the cache.
-      /// </summary>
-      /// <param name="key">The JSON message key.</param>
-      /// <returns>Message value as a JSON message object.</returns>
-      public JsonMessage GetJsonMessage(string key)
-      {
-         return _messages.ContainsKey(key) ? _messages[key] : null;
-      }
 
       /// <summary>
       /// Update the local data buffer with data from the remote network stream.
@@ -116,8 +101,9 @@ namespace HFM.Client
             JsonMessage json;
             while ((json = GetNextJsonMessage(_readBuffer)) != null)
             {
-               UpdateMessageCache(json);
-               OnMessageUpdated(new MessageUpdatedEventArgs(json.Key));
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Received message: {0} ({1} bytes)", json.Key, json.Value.Length), TraceLevel.Info));
+               OnMessageReceived(new MessageReceivedEventArgs(json));
             }
          }
          // send update finished event
@@ -222,22 +208,15 @@ namespace HFM.Client
          return -1;
       }
 
-      private void UpdateMessageCache(JsonMessage message)
-      {
-         _messages[message.Key] = message;
-         OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-            "Received message: {0} ({1} bytes)", message.Key, message.Value.Length), TraceLevel.Info));
-      }
-
       /// <summary>
       /// Raise the MessageUpdated event.
       /// </summary>
       /// <param name="e">Event arguments (if null the event is cancelled).</param>
-      protected virtual void OnMessageUpdated(MessageUpdatedEventArgs e)
+      protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
       {
          if (e == null) return;
 
-         var handler = MessageUpdated;
+         var handler = MessageReceived;
          if (handler != null)
          {
             handler(this, e);
@@ -257,26 +236,35 @@ namespace HFM.Client
    }
 
    /// <summary>
-   /// Provides data for message updated events of a MessageCache connection.
+   /// Provides data for message received events.
    /// </summary>
-   public class MessageUpdatedEventArgs : EventArgs
+   public class MessageReceivedEventArgs : EventArgs
    {
       /// <summary>
-      /// Gets the message key that was updated.
+      /// Gets the JSON message that was received.
       /// </summary>
-      public string Key { get; private set; }
+      public JsonMessage JsonMessage { get; private set; }
+
       /// <summary>
-      /// Gets the message data type that was updated (FahClient connections only).
+      /// Gets the typed message that was received (FahClient connections only).
       /// </summary>
-      public Type DataType { get; internal set; }
+      public TypedMessage TypedMessage { get; internal set; }
+
+      /// <summary>
+      /// Gets the data type of the typed message that was received (FahClient connections only).
+      /// </summary>
+      public Type DataType
+      {
+         get { return TypedMessage != null ? TypedMessage.GetType() : null; }
+      }
 
       /// <summary>
       /// Initializes a new instance of the MessageUpdatedEventArgs class.
       /// </summary>
-      /// <param name="key">The JSON message key.</param>
-      public MessageUpdatedEventArgs(string key)
+      /// <param name="jsonMessage">The JSON message.</param>
+      public MessageReceivedEventArgs(JsonMessage jsonMessage)
       {
-         Key = key;
+         JsonMessage = jsonMessage;
       }
    }
 

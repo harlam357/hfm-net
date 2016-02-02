@@ -34,7 +34,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
@@ -48,7 +48,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill<SlotDerived>(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill<SlotDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("00", ((SlotDerived)slotCollection[0]).IdString);
@@ -66,7 +66,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill<SlotNotDerived>(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill<SlotNotDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
       }
 
       [Test]
@@ -74,7 +74,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
@@ -87,7 +87,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
@@ -100,7 +100,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(3, slotCollection.Count);
 
          Assert.AreEqual(0, slotCollection[0].Id);
@@ -137,7 +137,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, slotCollection.Count);
 
          Assert.AreEqual(0, slotCollection[0].Id);
@@ -156,7 +156,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
          Assert.AreEqual(0, slotCollection[0].Id);
          Assert.AreEqual("RUNNING", slotCollection[0].Status);
@@ -169,7 +169,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, slotCollection.Count);
 
          Assert.AreEqual(0, slotCollection[0].Id);
@@ -193,7 +193,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, slotCollection.Count);
 
          Assert.AreEqual(0, slotCollection[0].Id);
@@ -214,7 +214,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slots.txt");
          var slotCollection = new SlotCollection();
-         slotCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, slotCollection.Count);
 
          Assert.AreEqual(0, slotCollection[0].Id);

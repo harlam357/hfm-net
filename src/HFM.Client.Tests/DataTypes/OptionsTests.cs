@@ -34,7 +34,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -149,7 +149,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -264,7 +264,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -379,7 +379,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -494,7 +494,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -609,7 +609,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -724,7 +724,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureSockets);
@@ -844,7 +844,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("assign3.stanford.edu:8080 assign4.stanford.edu:80", options.AssignmentServers);
          Assert.AreEqual("capture", options.CaptureDirectory);
          Assert.AreEqual(false, options.CaptureOnError);

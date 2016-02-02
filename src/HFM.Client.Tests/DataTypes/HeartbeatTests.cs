@@ -33,7 +33,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\heartbeat.txt");
          var heartbeat = new Heartbeat();
-         heartbeat.Fill(MessageCache.GetNextJsonMessage(ref message));
+         heartbeat.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(12, heartbeat.Value);
       }
    }

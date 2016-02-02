@@ -26,7 +26,7 @@ using System.Text;
 namespace HFM.Client
 {
    /// <summary>
-   /// Folding@Home client connection class.  Provides functionality for connecting to a Folding@Home client, sending data, receiving data, and accessing the raw data returned by the client connection.
+   /// Folding@Home client connection class.  Provides functionality for connecting to a Folding@Home client, sending client commands, and receiving raw network data.
    /// </summary>
    public class Connection : IDisposable
    {
@@ -66,11 +66,11 @@ namespace HFM.Client
       /// <summary>
       /// Occurs when data is sent by the Connection.
       /// </summary>
-      public event EventHandler<DataLengthEventArgs> DataLengthSent;
+      public event EventHandler<DataEventArgs> DataSent;
       /// <summary>
       /// Occurs when data is received by the Connection.
       /// </summary>
-      public event EventHandler<DataLengthEventArgs> DataLengthReceived;
+      public event EventHandler<DataEventArgs> DataReceived;
 
       #endregion
 
@@ -335,7 +335,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          {
             _stream.Write(buffer, 0, buffer.Length);
             // send data sent event
-            OnDataLengthSent(new DataLengthEventArgs(buffer.Length));
+            OnDataSent(new DataEventArgs(command, buffer.Length));
             // send status message
             OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
                "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
@@ -471,7 +471,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
 
       protected virtual void ProcessData(string buffer, int totalBytesRead)
       {
-         OnDataLengthReceived(new DataLengthEventArgs(totalBytesRead));
+         OnDataReceived(new DataEventArgs(buffer, totalBytesRead));
          if (DebugReceiveBuffer && !String.IsNullOrEmpty(DebugBufferFileName))
          {
             try
@@ -513,18 +513,18 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          }
       }
 
-      private void OnDataLengthSent(DataLengthEventArgs e)
+      private void OnDataSent(DataEventArgs e)
       {
-         var handler = DataLengthSent;
+         var handler = DataSent;
          if (handler != null)
          {
             handler(this, e);
          }
       }
 
-      private void OnDataLengthReceived(DataLengthEventArgs e)
+      private void OnDataReceived(DataEventArgs e)
       {
-         var handler = DataLengthReceived;
+         var handler = DataReceived;
          if (handler != null)
          {
             handler(this, e);
@@ -621,18 +621,24 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
    }
 
    /// <summary>
-   /// Provides data for data length events of a Connection. This class cannot be inherited.
+   /// Provides data for sent and received events of a Connection. This class cannot be inherited.
    /// </summary>
-   public sealed class DataLengthEventArgs : EventArgs
+   public sealed class DataEventArgs : EventArgs
    {
+      /// <summary>
+      /// Gets the command text value.
+      /// </summary>
+      public string Value { get; private set; }
+
       /// <summary>
       /// Gets the data length in bytes.
       /// </summary>
-      public int DataLength { get; private set; }
+      public int Length { get; private set; }
 
-      internal DataLengthEventArgs(int dataLength)
+      internal DataEventArgs(string value, int length)
       {
-         DataLength = dataLength;
+         Value = value;
+         Length = length;
       }
    }
 }

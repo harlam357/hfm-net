@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client.Tool Main Form
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ namespace HFM.Client.Tool
 {
    public partial class MainForm : Form
    {
-      private readonly FahClient _fahClient;
+      private readonly TypedMessageConnection _fahClient;
 
       private int _totalBytesSent;
       private int _totalBytesReceived;
@@ -36,11 +36,11 @@ namespace HFM.Client.Tool
 
       public MainForm()
       {
-         _fahClient = new FahClient();
-         _fahClient.MessageUpdated += FahClientMessageUpdated;
+         _fahClient = new TypedMessageConnection();
+         _fahClient.MessageReceived += FahClientMessageReceived;
          _fahClient.ConnectedChanged += FahClientConnectedChanged;
-         _fahClient.DataLengthSent += FahClientDataLengthSent;
-         _fahClient.DataLengthReceived += FahClientDataLengthReceived;
+         _fahClient.DataSent += FahClientDataSent;
+         _fahClient.DataReceived += FahClientDataReceived;
          _fahClient.StatusMessage += FahClientStatusMessage;
 
          InitializeComponent();
@@ -48,15 +48,13 @@ namespace HFM.Client.Tool
          base.Text = String.Format("HFM Client Tool v{0}", Core.Application.VersionWithRevision);
       }
 
-      private void FahClientMessageUpdated(object sender, MessageUpdatedEventArgs e)
+      private void FahClientMessageReceived(object sender, MessageReceivedEventArgs e)
       {
-         JsonMessage jsonMessage = _fahClient.GetJsonMessage(e.Key);
          AppendToMessageDisplayTextBox(String.Empty);
-         AppendToMessageDisplayTextBox(jsonMessage.ToString());
+         AppendToMessageDisplayTextBox(e.JsonMessage.ToString());
          
-         if (e.DataType == typeof(SlotCollection))
+         for (var slotCollection = e.TypedMessage as SlotCollection; slotCollection != null; slotCollection = null)
          {
-            var slotCollection = _fahClient.GetMessage<SlotCollection>();
             foreach (var slot in slotCollection)
             {
                _fahClient.SendCommand("slot-options " + slot.Id + " client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage");
@@ -221,11 +219,11 @@ namespace HFM.Client.Tool
          MessageDisplayTextBox.Clear();
       }
 
-      private void FahClientDataLengthSent(object sender, DataLengthEventArgs e)
+      private void FahClientDataSent(object sender, DataEventArgs e)
       {
          unchecked
          {
-            _totalBytesSent += e.DataLength;
+            _totalBytesSent += e.Length;
          }
          UpdateDataSentValueLabel(_totalBytesSent);
       }
@@ -242,11 +240,11 @@ namespace HFM.Client.Tool
             "{0:0.0} KBs", value / 1024.0);
       }
 
-      private void FahClientDataLengthReceived(object sender, DataLengthEventArgs e)
+      private void FahClientDataReceived(object sender, DataEventArgs e)
       {
          unchecked
          {
-            _totalBytesReceived += e.DataLength;
+            _totalBytesReceived += e.Length;
          }
          UpdateDataReceivedValueLabel(_totalBytesReceived);
       }

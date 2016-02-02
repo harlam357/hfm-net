@@ -37,7 +37,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\simulation-info.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(11020, simulationInfo.Project);
@@ -72,7 +72,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\simulation-info.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("Shelnutt2", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(10083, simulationInfo.Project);
@@ -106,7 +106,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\simulation-info.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("Adak", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7018, simulationInfo.Project);
@@ -141,7 +141,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("ChasR", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7507, simulationInfo.Project);
@@ -176,7 +176,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\simulation-info2.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("ChasR", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(5788, simulationInfo.Project);
@@ -215,7 +215,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\simulation-info3.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("ChasR", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(5796, simulationInfo.Project);
@@ -254,7 +254,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("The_Penguin", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7611, simulationInfo.Project);
@@ -289,7 +289,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\simulation-info2.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("The_Penguin", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(11294, simulationInfo.Project);
@@ -324,7 +324,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("Bayna", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7600, simulationInfo.Project);
@@ -359,7 +359,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("HayesK", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(11051, simulationInfo.Project);
@@ -394,7 +394,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\simulation-info2.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("HayesK", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(6801, simulationInfo.Project);
@@ -429,7 +429,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_9\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7905, simulationInfo.Project);
@@ -464,7 +464,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7610, simulationInfo.Project);
@@ -499,7 +499,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\simulation-info2.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(5772, simulationInfo.Project);
@@ -534,7 +534,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7610, simulationInfo.Project);
@@ -569,7 +569,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\simulation-info1.txt");
          var simulationInfo = new SimulationInfo();
-         simulationInfo.Fill(MessageCache.GetNextJsonMessage(ref message));
+         simulationInfo.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual("harlam357", simulationInfo.User);
          Assert.AreEqual(32, simulationInfo.Team);
          Assert.AreEqual(7006, simulationInfo.Project);

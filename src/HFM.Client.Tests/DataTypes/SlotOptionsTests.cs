@@ -35,7 +35,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slot-options.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -59,7 +59,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\slot-options.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -83,7 +83,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\slot-options.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -107,7 +107,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
@@ -131,7 +131,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options2.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
@@ -155,7 +155,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\slot-options3.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
@@ -179,7 +179,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
@@ -203,7 +203,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\slot-options2.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
@@ -227,7 +227,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("advanced", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Advanced, slotOptions.FahClientTypeEnum);
@@ -251,7 +251,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("beta", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Beta, slotOptions.FahClientTypeEnum);
@@ -275,7 +275,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\slot-options2.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -299,7 +299,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -323,7 +323,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -347,7 +347,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);
@@ -371,7 +371,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(null, slotOptions.Cpus);
          Assert.AreEqual("normal", slotOptions.FahClientType);
          Assert.AreEqual(FahClientType.Normal, slotOptions.FahClientTypeEnum);

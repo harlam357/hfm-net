@@ -54,19 +54,19 @@ namespace HFM.Core.Tests
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
@@ -129,19 +129,19 @@ namespace HFM.Core.Tests
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
@@ -202,19 +202,19 @@ namespace HFM.Core.Tests
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
@@ -277,19 +277,19 @@ namespace HFM.Core.Tests
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt");
          var info = new Info();
-         info.Fill(MessageCache.GetNextJsonMessage(ref message));
+         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt");
          var options = new Options();
-         options.Fill(MessageCache.GetNextJsonMessage(ref message));
+         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
          var slotOptions = new SlotOptions();
-         slotOptions.Fill(MessageCache.GetNextJsonMessage(ref message));
+         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
          var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);

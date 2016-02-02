@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - FAH Client Setup Presenter
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +100,7 @@ namespace HFM.Forms
 
          // wire events - these may be raised on a thread other than the UI thread
          _fahClient.ConnectedChanged += (s, e) => Task.Factory.StartNew(() => ConnectedChanged(e), CancellationToken.None, TaskCreationOptions.None, fahClientEventTaskScheduler);
-         _fahClient.MessageUpdated += (s, e) => Task.Factory.StartNew(() => MessageUpdated(e), CancellationToken.None, TaskCreationOptions.None, fahClientEventTaskScheduler);
+         _fahClient.MessageReceived += (s, e) => Task.Factory.StartNew(() => MessageReceived(e), CancellationToken.None, TaskCreationOptions.None, fahClientEventTaskScheduler);
       }
 
       private void ConnectedChanged(ConnectedChangedEventArgs e)
@@ -112,11 +112,11 @@ namespace HFM.Forms
          }
       }
 
-      private void MessageUpdated(MessageUpdatedEventArgs e)
+      private void MessageReceived(MessageReceivedEventArgs e)
       {
          if (e.DataType == typeof(SlotCollection))
          {
-            _slotCollection = _fahClient.GetMessage<SlotCollection>();
+            _slotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _slotCollection)
             {
                _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
@@ -125,7 +125,7 @@ namespace HFM.Forms
          }
          else if (e.DataType == typeof(SlotOptions))
          {
-            var options = _fahClient.GetMessage<SlotOptions>();
+            var options = (SlotOptions)e.TypedMessage;
             if (options.MachineId.HasValue)
             {
                var slot = _slotCollection.FirstOrDefault(x => x.Id == options.MachineId);

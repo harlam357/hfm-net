@@ -35,7 +35,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -79,7 +79,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill<UnitDerived>(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill<UnitDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("00", ((UnitDerived)unitCollection[0]).IdString);
          Assert.AreEqual(null, ((UnitDerived)unitCollection[0]).IdBool);
@@ -122,7 +122,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill<UnitNotDerived>(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill<UnitNotDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
       }
 
       [Test]
@@ -130,7 +130,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -173,7 +173,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -217,7 +217,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -335,7 +335,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -416,7 +416,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(3, unitCollection[0].Id);
          Assert.AreEqual("SEND", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Send, unitCollection[0].StateEnum);
@@ -603,7 +603,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -684,7 +684,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_9\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -728,7 +728,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -811,7 +811,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
@@ -856,7 +856,7 @@ namespace HFM.Client.Tests.DataTypes
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\units.txt");
          var unitCollection = new UnitCollection();
-         unitCollection.Fill(MessageCache.GetNextJsonMessage(ref message));
+         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("READY", unitCollection[0].State);
          Assert.AreEqual(FahUnitStatus.Ready, unitCollection[0].StateEnum);
@@ -903,10 +903,10 @@ namespace HFM.Client.Tests.DataTypes
 
          string messageCopy = message;
          var unitCollection1 = new UnitCollection();
-         unitCollection1.Fill(MessageCache.GetNextJsonMessage(ref messageCopy));
+         unitCollection1.Fill(JsonMessageConnection.GetNextJsonMessage(ref messageCopy));
          var unitCollection2 = new UnitCollection();
          messageCopy = message;
-         unitCollection2.Fill(MessageCache.GetNextJsonMessage(ref messageCopy));
+         unitCollection2.Fill(JsonMessageConnection.GetNextJsonMessage(ref messageCopy));
          Assert.IsTrue(unitCollection1.Equals(unitCollection2));
       }
    }

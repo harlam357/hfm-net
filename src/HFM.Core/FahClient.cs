@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Fah Client Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -163,30 +163,37 @@ namespace HFM.Core
 
          //_fahClient.CacheMessage<Info>(true);
          //_fahClient.CacheMessage<Options>(true);
-         _fahClient.MessageUpdated += FahClientMessageUpdated;
+         _fahClient.MessageReceived += FahClientMessageReceived;
          _fahClient.UpdateFinished += FahClientUpdateFinished;
          _fahClient.ConnectedChanged += FahClientConnectedChanged;
       }
 
-      private void FahClientMessageUpdated(object sender, MessageUpdatedEventArgs e)
+      private void FahClientMessageReceived(object sender, MessageReceivedEventArgs e)
       {
          if (AbortFlag) return;
 
          _messages.Add(e);
-         JsonMessage message = _fahClient.GetJsonMessage(e.Key);
-         Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, message.GetHeader());
+         Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, e.JsonMessage.GetHeader());
 
          if (e.DataType == typeof(Heartbeat))
          {
-            _messages.SetHeartbeat(_fahClient.GetMessage<Heartbeat>());
+            _messages.SetHeartbeat((Heartbeat)e.TypedMessage);
+         }
+         else if (e.DataType == typeof(Options))
+         {
+            _messages.Options = (Options)e.TypedMessage;
+         }
+         else if (e.DataType == typeof(Info))
+         {
+            _messages.Info = (Info)e.TypedMessage;
          }
          else if (e.DataType == typeof(UnitCollection))
          {
-            _messages.UnitCollection = _fahClient.GetMessage<UnitCollection>();
+            _messages.UnitCollection = (UnitCollection)e.TypedMessage;
          }
          else if (e.DataType == typeof(SlotCollection))
          {
-            _messages.SlotCollection = _fahClient.GetMessage<SlotCollection>();
+            _messages.SlotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _messages.SlotCollection)
             {
                _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
@@ -194,11 +201,11 @@ namespace HFM.Core
          }
          else if (e.DataType == typeof(SlotOptions))
          {
-            _messages.AddSlotOptions(_fahClient.GetMessage<SlotOptions>());
+            _messages.AddSlotOptions((SlotOptions)e.TypedMessage);
          }
          else if (e.DataType == typeof(LogRestart))
          {
-            LogFragment logFragment = _fahClient.GetMessage<LogRestart>();
+            LogFragment logFragment = (LogRestart)e.TypedMessage;
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
 
             // clear
@@ -208,7 +215,7 @@ namespace HFM.Core
          }
          else if (e.DataType == typeof(LogUpdate))
          {
-            LogFragment logFragment = _fahClient.GetMessage<LogUpdate>();
+            LogFragment logFragment = (LogUpdate)e.TypedMessage;
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
 
             WriteToLocalFahLogCache(chunks);
@@ -391,8 +398,8 @@ namespace HFM.Core
          // Set successful Last Retrieval Time
          LastRetrievalTime = DateTime.Now;
 
-         var options = _fahClient.GetMessage<Options>();
-         var info = _fahClient.GetMessage<Info>();
+         var options = _messages.Options;
+         var info = _messages.Info;
 
          _slotsLock.EnterReadLock();
          try
@@ -581,7 +588,7 @@ namespace HFM.Core
          }
 
          private readonly IList<SlotOptions> _slotOptions;
-         private readonly IList<MessageUpdatedEventArgs> _receivedMessages;
+         private readonly IList<MessageReceivedEventArgs> _receivedMessages;
 
          #endregion
 
@@ -590,7 +597,7 @@ namespace HFM.Core
          public FahClientMessages()
          {
             _slotOptions = new List<SlotOptions>();        
-            _receivedMessages = new List<MessageUpdatedEventArgs>();    
+            _receivedMessages = new List<MessageReceivedEventArgs>();    
          }
 
          #endregion
@@ -611,6 +618,10 @@ namespace HFM.Core
          {
             _lastHeartbeat = heartbeat;
          }
+
+         public Options Options { get; set; }
+
+         public Info Info { get; set; }
 
          public bool HeartbeatOverdue
          {
@@ -655,7 +666,7 @@ namespace HFM.Core
             return false;
          }
 
-         public void Add(MessageUpdatedEventArgs item)
+         public void Add(MessageReceivedEventArgs item)
          {
             _receivedMessages.Add(item);
          }
