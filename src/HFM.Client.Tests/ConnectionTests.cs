@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Connection Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,6 @@ using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Client.Tests
 {
    [TestFixture]
@@ -46,26 +44,23 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void TimeAndBufferValueTest1()
+      public void Connection_TimeAndBufferValue_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
             Assert.AreEqual(5000, connection.ConnectTimeout);
-            Assert.AreEqual(10, connection.ReceiveLoopTime);
             Assert.AreEqual(1024 * 8, connection.SendBufferSize);
             Assert.AreEqual(1024 * 8, connection.ReceiveBufferSize);
          }
       }
 
       [Test]
-      public void TimeAndBufferValueTest2()
+      public void Connection_TimeAndBufferValue_Test2()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
             connection.ConnectTimeout = 3000;
             Assert.AreEqual(3000, connection.ConnectTimeout);
-            connection.ReceiveLoopTime = 1500;
-            Assert.AreEqual(1500, connection.ReceiveLoopTime);
 
             _tcpClient.Expect(x => x.SendBufferSize = 2048);
             _tcpClient.Expect(x => x.ReceiveBufferSize = 2048);
@@ -80,7 +75,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void ConnectedTest1()
+      public void Connection_Connected_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -89,7 +84,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void ConnectedTest2()
+      public void Connection_Connected_Test2()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -102,7 +97,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void ConnectedTest3()
+      public void Connection_Connected_Test3()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -115,20 +110,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void UpdateEnabledTest1()
-      {
-         using (var connection = new Connection(CreateClientFactory()))
-         {
-            Connect(connection);
-
-            Assert.IsTrue(connection.UpdateEnabled);
-            connection.UpdateEnabled = false;
-            Assert.IsFalse(connection.UpdateEnabled);
-         }
-      }
-
-      [Test]
-      public void ConnectTest1()
+      public void Connection_Connect_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -138,13 +120,10 @@ namespace HFM.Client.Tests
             bool statusMessageFired = false;
             connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
-            // set to 5 minutes so the update loop never gets a chance to fire
-            connection.ReceiveLoopTime = 300000;
             connection.Connect("server", 10000, "password");
 
             Assert.IsTrue(connectedChangedFired);
             Assert.IsTrue(statusMessageFired);
-            Assert.IsTrue(connection.UpdateEnabled);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -152,7 +131,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void ConnectTest1NoPassword()
+      public void Connection_Connect_NoPassword_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -162,13 +141,10 @@ namespace HFM.Client.Tests
             bool statusMessageFired = false;
             connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
-            // set to 5 minutes so the update loop never gets a chance to fire
-            connection.ReceiveLoopTime = 300000;
             connection.Connect("server", 10000);
 
             Assert.IsTrue(connectedChangedFired);
             Assert.IsTrue(statusMessageFired);
-            Assert.IsTrue(connection.UpdateEnabled);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -207,13 +183,11 @@ namespace HFM.Client.Tests
       internal static void Connect(Connection connection, ITcpClient tcpClient, INetworkStream stream)
       {
          SetupSuccessfulConnectionExpectations(tcpClient, stream);
-         // set to 5 minutes so the update loop never gets a chance to fire
-         connection.ReceiveLoopTime = 300000;
          connection.Connect("server", 10000, "password");
       }
 
       [Test]
-      public void ConnectTest2()
+      public void Connection_Connect_Test2()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -235,7 +209,6 @@ namespace HFM.Client.Tests
             }
             catch (TimeoutException)
             { }
-            Assert.IsFalse(connection.UpdateEnabled);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -243,7 +216,7 @@ namespace HFM.Client.Tests
 
       [Test]
       [ExpectedException(typeof(InvalidOperationException))]
-      public void ConnectTest3()
+      public void Connection_Connect_Test3()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -257,7 +230,7 @@ namespace HFM.Client.Tests
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
-      public void ConnectTest4()
+      public void Connection_Connect_Test4()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -267,7 +240,7 @@ namespace HFM.Client.Tests
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
-      public void ConnectTest5()
+      public void Connection_Connect_Test5()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -276,7 +249,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void CloseTest()
+      public void Connection_Close_Test()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -298,7 +271,7 @@ namespace HFM.Client.Tests
 
       [Test]
       [ExpectedException(typeof(InvalidOperationException))]
-      public void SendCommandTest1()
+      public void Connection_SendCommand_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -307,21 +280,21 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandTest2()
+      public void Connection_SendCommand_Test2()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
             Connect(connection);
 
-            bool dataLengthSentFired = false;
+            bool dataSentFired = false;
             bool statusMessageFired = false;
-            connection.DataLengthSent += (sender, args) => dataLengthSentFired = true;
+            connection.DataSent += (sender, args) => dataSentFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
             var buffer = Encoding.ASCII.GetBytes("command\n");
             _stream.Expect(x => x.Write(buffer, 0, buffer.Length));
             connection.SendCommand("command");
 
-            Assert.IsTrue(dataLengthSentFired);
+            Assert.IsTrue(dataSentFired);
             Assert.IsTrue(statusMessageFired);
          }
 
@@ -330,23 +303,23 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandTest3()
+      public void Connection_SendCommand_Test3()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
             Connect(connection);
 
-            bool dataLengthSentFired = false;
+            bool dataSentFired = false;
             bool statusMessageFired = false;
             bool connectedChangedFired = false;
-            connection.DataLengthSent += (sender, args) => dataLengthSentFired = true;
+            connection.DataSent += (sender, args) => dataSentFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
             connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
             var buffer = Encoding.ASCII.GetBytes("command\n");
             _stream.Expect(x => x.Write(buffer, 0, buffer.Length)).Throw(new IOException("Write failed."));
             connection.SendCommand("command");
 
-            Assert.IsFalse(dataLengthSentFired);
+            Assert.IsFalse(dataSentFired);
             Assert.IsTrue(statusMessageFired);
             Assert.IsTrue(connectedChangedFired);
          }
@@ -358,7 +331,7 @@ namespace HFM.Client.Tests
       #region SendCommand - Null, Empty, & Whitespace Tests
 
       [Test]
-      public void SendCommandNullTest()
+      public void Connection_SendCommandNull_Test()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -376,7 +349,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandEmptyTest()
+      public void Connection_SendCommandEmpty_Test()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -394,7 +367,7 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SendCommandWhitespaceTest()
+      public void Connection_SendCommandWhitespace_Test()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
@@ -414,29 +387,30 @@ namespace HFM.Client.Tests
       #endregion
 
       [Test]
-      public void SocketTimerElapsedTest1()
+      public void Connection_Update_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
+            string dataReceived = null;
+            var mre = new ManualResetEvent(false);
+            connection.DataReceived += (sender, args) =>
+            {
+               dataReceived = args.Value;
+               mre.Set();
+            };
+            
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) => 
+                     DoBeginRead(buffer, offset, size, callback, state, TestData))).Repeat.Once();
+
+            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData).Length));
+
             Connect(connection);
+            mre.WaitOne();
 
-            bool dataLengthReceivedFired = false;
-            connection.DataLengthReceived += (sender, args) => dataLengthReceivedFired = true;
-            var buffer = connection.InternalBuffer;
-            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithTestData));
-
-            connection.SocketTimerElapsed(null, null);
-
-            Assert.IsTrue(dataLengthReceivedFired);
-            // check GetBuffer() and DataAvailable
-            Assert.IsTrue(connection.DataAvailable);
-            var connectionBuffer = connection.GetBuffer(false);
-            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
-            Assert.IsTrue(connection.DataAvailable);
-            connectionBuffer = connection.GetBuffer();
-            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
-            Assert.IsFalse(connection.DataAvailable);
+            Assert.AreEqual(TestData, dataReceived);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -444,31 +418,32 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      // ReSharper disable InconsistentNaming
-      public void SocketTimerElapsedTest1_GetBufferChunks()
-      // ReSharper restore InconsistentNaming
+      public void Connection_Update_Test2()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
+            string dataReceived = null;
+            var mre = new ManualResetEvent(false);
+            connection.DataReceived += (sender, args) =>
+            {
+               dataReceived = args.Value;
+               mre.Set();
+            };
+
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) =>
+                     DoBeginRead(buffer, offset, size, callback, state, TestData))).Repeat.Twice();
+
+            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData).Length)).Repeat.Twice();
+
+            _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
+
             Connect(connection);
+            mre.WaitOne();
 
-            bool dataLengthReceivedFired = false;
-            connection.DataLengthReceived += (sender, args) => dataLengthReceivedFired = true;
-            var buffer = connection.InternalBuffer;
-            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithTestData));
-
-            connection.SocketTimerElapsed(null, null);
-
-            Assert.IsTrue(dataLengthReceivedFired);
-            // check GetBuffer() and DataAvailable
-            Assert.IsTrue(connection.DataAvailable);
-            var connectionBuffer = connection.GetBufferChunks(false).MergeChunks().ToString();
-            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
-            Assert.IsTrue(connection.DataAvailable);
-            connectionBuffer = connection.GetBufferChunks().MergeChunks().ToString();
-            Assert.IsFalse(String.IsNullOrEmpty(connectionBuffer));
-            Assert.IsFalse(connection.DataAvailable);
+            Assert.AreEqual(TestData + TestData, dataReceived);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -476,46 +451,33 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SocketTimerElapsedTest2()
+      public void Connection_Update_Test3()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
-            Connect(connection);
+            bool statusMessageFired = false;
+            var mre = new ManualResetEvent(false);
+            connection.StatusMessage += (sender, args) => statusMessageFired = true;
+            connection.ConnectedChanged += (sender, args) =>
+            {
+               if (!args.Connected) mre.Set();
+            };
 
-            var buffer = connection.InternalBuffer;
-            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Do(
-               new Func<byte[], int, int, int>(FillBufferWithTestData));
+            // when an EndRead returns 0 the connection has been lost
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) =>
+                     DoBeginRead(buffer, offset, size, callback, state, String.Empty))).Repeat.Once();
 
-            connection.SocketTimerElapsed(null, null);
+            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
+               new Func<IAsyncResult, int>(result => 0));
 
-            // check ClearBuffer() and DataAvailable
-            Assert.IsTrue(connection.DataAvailable);
-            connection.ClearBuffer();
-            Assert.IsFalse(connection.DataAvailable);
-         }
-
-         _tcpClient.VerifyAllExpectations();
-         _stream.VerifyAllExpectations();
-      }
-
-      [Test]
-      public void SocketTimerElapsedTest3()
-      {
-         using (var connection = new Connection(CreateClientFactory()))
-         {
-            Connect(connection);
-
-            var buffer = connection.InternalBuffer;
-            // when Read returns 0 the connection has been lost and the
-            // implementation throws an IOException
-            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Return(0);
             // as a result the connection is closed, set expectations
             _stream.Expect(x => x.Close());
             _tcpClient.Expect(x => x.Close());
 
-            bool statusMessageFired = false;
-            connection.StatusMessage += (sender, args) => statusMessageFired = true;
-            connection.SocketTimerElapsed(null, null);
+            Connect(connection);
+            mre.WaitOne();
 
             Assert.IsTrue(statusMessageFired);
          }
@@ -525,36 +487,103 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      public void SocketTimerElapsedTest4()
+      public void Connection_Update_Test4()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
+            var mre = new ManualResetEvent(false);
+            connection.ConnectedChanged += (sender, args) =>
+            {
+               if (!args.Connected) mre.Set();
+            };
+
+            // close the connection manually, the callback will see
+            // that _stream is null and exit the update loop
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) =>
+                  {
+                     // ReSharper disable once AccessToDisposedClosure
+                     connection.Close();
+                     return DoBeginRead(buffer, offset, size, callback, state, String.Empty);
+                  })).Repeat.Once();
+
+            // the connection is closed manually, set expectations
+            _stream.Expect(x => x.Close());
+            _tcpClient.Expect(x => x.Close());
+
             Connect(connection);
-
-            var buffer = connection.InternalBuffer;
-            // when we call Close() ourselves then the Read() method called by
-            // Update() will throw a WSACancelBlockingCall error code as the 
-            // inner exception of an IOException.  in this case Close() does 
-            // not need called again since it was called through the API.
-            _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Throw(new IOException(String.Empty, new SocketException(10004)));
-
-            connection.SocketTimerElapsed(null, null);
+            mre.WaitOne();
          }
 
          _tcpClient.VerifyAllExpectations();
          _stream.VerifyAllExpectations();
       }
 
-      internal static int FillBufferWithTestData(byte[] buffer, int offset, int size)
+      [Test]
+      public void Connection_Update_Test5()
       {
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
-         var messageBytes = Encoding.ASCII.GetBytes(message);
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            var mre = new ManualResetEvent(false);
+            connection.ConnectedChanged += (sender, args) =>
+            {
+               if (!args.Connected) mre.Set();
+            };
 
+            // when EndRead throws an exception the connection has been lost
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) =>
+                     DoBeginRead(buffer, offset, size, callback, state, String.Empty)));
+
+            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Throw(new IOException());
+
+            // as a result the connection is closed, set expectations
+            _stream.Expect(x => x.Close());
+            _tcpClient.Expect(x => x.Close());
+
+            Connect(connection);
+            mre.WaitOne();
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
+      //[Test]
+      //public void Connection_Update_Test6()
+      //{
+      //   using (var connection = new Connection(CreateClientFactory()))
+      //   {
+      //      Connect(connection);
+      //
+      //      // when we call Close() ourselves then the Read() method called by
+      //      // Update() will throw a WSACancelBlockingCall error code as the 
+      //      // inner exception of an IOException.  in this case Close() does 
+      //      // not need called again since it was called through the API.
+      //      _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Throw(new IOException(String.Empty, new SocketException(10004)));
+      //
+      //      connection.SocketTimerElapsed(null, null);
+      //   }
+      //
+      //   _tcpClient.VerifyAllExpectations();
+      //   _stream.VerifyAllExpectations();
+      //}
+
+      private static readonly string TestData = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
+
+      internal static IAsyncResult DoBeginRead(byte[] buffer, int offset, int size, AsyncCallback callback, object state, string data)
+      {
+         var messageBytes = Encoding.ASCII.GetBytes(data);
          for (int i = 0; i < messageBytes.Length; i++)
          {
             buffer[i] = messageBytes[i];
          }
-         return messageBytes.Length;
+         var ar = MockRepository.GenerateStub<IAsyncResult>();
+         ar.Stub(x => x.AsyncState).Return(state);
+         callback.BeginInvoke(ar, null, null);
+         return ar;
       }
    }
 }

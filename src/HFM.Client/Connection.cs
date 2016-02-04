@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Sockets;
 using System.Text;
 
 namespace HFM.Client
@@ -78,19 +77,13 @@ namespace HFM.Client
 
       private ITcpClient _tcpClient;
       private INetworkStream _stream;
-      private byte[] _internalBuffer;
+      private readonly byte[] _internalBuffer;
       private readonly ITcpClientFactory _tcpClientFactory;
       private readonly StringBuilder _readBuffer;
 
       #endregion
 
       #region Properties
-
-      internal byte[] InternalBuffer
-      {
-         get { return _internalBuffer; }
-         set { _internalBuffer = value; }
-      }
 
       /// <summary>
       /// Gets a value indicating whether the Connection is connected to a remote host.
@@ -398,20 +391,20 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          return command.Replace("\n", String.Empty);
       }
 
-      private static bool IsCancelBlockingCallSocketError(Exception ex)
-      {
-         var ioEx = ex as System.IO.IOException;
-         if (ioEx != null)
-         {
-            var socketEx = ioEx.InnerException as SocketException;
-            // code 10004 is WSACancelBlockingCall
-            if (socketEx != null && socketEx.ErrorCode == 10004)
-            {
-               return true;
-            }
-         }
-         return false;
-      }
+      //private static bool IsCancelBlockingCallSocketError(Exception ex)
+      //{
+      //   var ioEx = ex as System.IO.IOException;
+      //   if (ioEx != null)
+      //   {
+      //      var socketEx = ioEx.InnerException as SocketException;
+      //      // code 10004 is WSACancelBlockingCall
+      //      if (socketEx != null && socketEx.ErrorCode == 10004)
+      //      {
+      //         return true;
+      //      }
+      //   }
+      //   return false;
+      //}
 
       /// <summary>
       /// Update the local data buffer with data from the remote network stream.
@@ -441,11 +434,11 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             }
             catch (Exception ex)
             {
-               if (!IsCancelBlockingCallSocketError(ex))
-               {
+               //if (!IsCancelBlockingCallSocketError(ex))
+               //{
                   OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
                      "Update failed: {0}", ex.Message), TraceLevel.Error));
-               }
+               //}
                Close();
                return;
             }
@@ -594,7 +587,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// </summary>
       /// <param name="status">The status message text.</param>
       /// <param name="level">The status message trace level.</param>
-      /// <exception cref="ArgumentNullException"><paramref name="status"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="status"/> is null.</exception>
       public StatusMessageEventArgs(string status, TraceLevel level)
       {
          if (status == null) throw new ArgumentNullException("status");
@@ -626,7 +619,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
    public sealed class DataEventArgs : EventArgs
    {
       /// <summary>
-      /// Gets the command text value.
+      /// Gets the data text value.
       /// </summary>
       public string Value { get; private set; }
 

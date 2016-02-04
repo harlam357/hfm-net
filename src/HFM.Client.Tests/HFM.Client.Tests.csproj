@@ -72,6 +72,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ConnectionTests.cs" />
     <Compile Include="DataTypes\HeartbeatTests.cs" />
     <Compile Include="DataTypes\InfoTests.cs" />
     <Compile Include="DataTypes\OptionsTests.cs" />
