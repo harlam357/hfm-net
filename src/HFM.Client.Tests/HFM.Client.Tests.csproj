@@ -80,6 +80,7 @@
     <Compile Include="DataTypes\SlotCollectionTests.cs" />
     <Compile Include="DataTypes\SlotOptionsTests.cs" />
     <Compile Include="DataTypes\UnitCollectionTests.cs" />
+    <Compile Include="JsonMessageConnectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

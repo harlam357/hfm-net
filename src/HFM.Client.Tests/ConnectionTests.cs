@@ -571,7 +571,7 @@ namespace HFM.Client.Tests
       //   _stream.VerifyAllExpectations();
       //}
 
-      private static readonly string TestData = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
+      internal static readonly string TestData = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
 
       internal static IAsyncResult DoBeginRead(byte[] buffer, int offset, int size, AsyncCallback callback, object state, string data)
       {
