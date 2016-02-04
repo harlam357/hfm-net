@@ -128,16 +128,6 @@ namespace HFM.Client
          }
       }
 
-      /// <summary>
-      /// Gets or sets the debug flag on the receive buffer.  When true the receive buffer is written to a log file specified by the value of the DebugBufferFileName property.
-      /// </summary>
-      public bool DebugReceiveBuffer { get; set; }
-
-      /// <summary>
-      /// Gets or sets the debug file name value.  When the DebugReceiveBuffer property is true the receive buffer is written to a log file specified by this file name value.
-      /// </summary>
-      public string DebugBufferFileName { get; set; }
-
       #endregion
 
       #region Constructor
@@ -465,19 +455,6 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       protected virtual void ProcessData(string buffer, int totalBytesRead)
       {
          OnDataReceived(new DataEventArgs(buffer, totalBytesRead));
-         if (DebugReceiveBuffer && !String.IsNullOrEmpty(DebugBufferFileName))
-         {
-            try
-            {
-               System.IO.File.AppendAllText(DebugBufferFileName,
-                  _readBuffer.ToString().Replace("\n", Environment.NewLine).Replace("\\n", Environment.NewLine));
-            }
-            catch (Exception ex)
-            {
-               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Debug buffer write failed: {0}", ex.Message), TraceLevel.Error));
-            }
-         }
       }
 
       /// <summary>

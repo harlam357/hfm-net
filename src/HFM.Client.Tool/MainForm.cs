@@ -28,7 +28,7 @@ namespace HFM.Client.Tool
 {
    public partial class MainForm : Form
    {
-      private readonly TypedMessageConnection _fahClient;
+      private readonly DebugTypedMessageConnection _fahClient;
 
       private int _totalBytesSent;
       private int _totalBytesReceived;
@@ -36,7 +36,7 @@ namespace HFM.Client.Tool
 
       public MainForm()
       {
-         _fahClient = new TypedMessageConnection();
+         _fahClient = new DebugTypedMessageConnection();
          _fahClient.MessageReceived += FahClientMessageReceived;
          _fahClient.ConnectedChanged += FahClientConnectedChanged;
          _fahClient.DataSent += FahClientDataSent;

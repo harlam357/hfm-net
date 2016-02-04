@@ -133,6 +133,7 @@
     <Compile Include="..\HFM.Core\Application.cs">
       <Link>Application.cs</Link>
     </Compile>
+    <Compile Include="DebugTypedMessageConnection.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
