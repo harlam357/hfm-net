@@ -73,6 +73,7 @@
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />
+    <Compile Include="MessageKey.cs" />
     <Compile Include="TypedMessageConnection.cs" />
     <Compile Include="JsonMessageConnection.cs" />
     <Compile Include="NetworkStreamAdapter.cs" />

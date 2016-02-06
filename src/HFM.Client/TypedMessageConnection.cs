@@ -68,15 +68,15 @@ namespace HFM.Client
    {
       private static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type>
                                                                  {
-                                                                    { JsonMessageKey.Heartbeat, typeof(Heartbeat) },
-                                                                    { JsonMessageKey.Info, typeof(Info) },
-                                                                    { JsonMessageKey.Options, typeof(Options) },
-                                                                    { JsonMessageKey.SimulationInfo, typeof(SimulationInfo) },
-                                                                    { JsonMessageKey.SlotInfo, typeof(SlotCollection) },
-                                                                    { JsonMessageKey.SlotOptions, typeof(SlotOptions) },
-                                                                    { JsonMessageKey.QueueInfo, typeof(UnitCollection) },
-                                                                    { JsonMessageKey.LogRestart, typeof(LogRestart) },
-                                                                    { JsonMessageKey.LogUpdate, typeof(LogUpdate) }
+                                                                    { MessageKey.Heartbeat, typeof(Heartbeat) },
+                                                                    { MessageKey.Info, typeof(Info) },
+                                                                    { MessageKey.Options, typeof(Options) },
+                                                                    { MessageKey.SimulationInfo, typeof(SimulationInfo) },
+                                                                    { MessageKey.SlotInfo, typeof(SlotCollection) },
+                                                                    { MessageKey.SlotOptions, typeof(SlotOptions) },
+                                                                    { MessageKey.QueueInfo, typeof(UnitCollection) },
+                                                                    { MessageKey.LogRestart, typeof(LogRestart) },
+                                                                    { MessageKey.LogUpdate, typeof(LogUpdate) }
                                                                  };
 
       /// <summary>
@@ -84,16 +84,6 @@ namespace HFM.Client
       /// </summary>
       [CoverageExclude]
       public TypedMessageConnection()
-         : this(new TcpClientFactory())
-      {
-
-      }
-
-      /// <summary>
-      /// Initializes a new instance of the FahClient class.
-      /// </summary>
-      internal TypedMessageConnection(ITcpClientFactory tcpClientFactory)
-         : base(tcpClientFactory)
       {
 
       }

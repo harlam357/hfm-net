@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Options Data Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -464,7 +464,7 @@ namespace HFM.Client.DataTypes
       /// Fill the Options object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      internal override void Fill(JsonMessage message)
+      public override void Fill(JsonMessage message)
       {
          Debug.Assert(message != null);
 

@@ -90,7 +90,7 @@ namespace HFM.Client
       /// <summary>
       /// Update the local data buffer with data from the remote network stream.
       /// </summary>
-      protected override void ProcessData(string buffer, int totalBytesRead)
+      protected internal override void ProcessData(string buffer, int totalBytesRead)
       {
          base.ProcessData(buffer, totalBytesRead);
 
@@ -266,51 +266,5 @@ namespace HFM.Client
       {
          JsonMessage = jsonMessage;
       }
-   }
-
-   /// <summary>
-   /// Folding@Home client message keys for JSON messages.
-   /// </summary>
-   public static class JsonMessageKey
-   {
-      /// <summary>
-      /// Heartbeat Message Key.
-      /// </summary>
-      public const string Heartbeat = "heartbeat";
-      /// <summary>
-      /// Info Message Key.
-      /// </summary>
-      public const string Info = "info";
-      /// <summary>
-      /// Options Message Key.
-      /// </summary>
-      public const string Options = "options";
-      /// <summary>
-      /// Simulation Info Message Key.
-      /// </summary>
-      /// <remarks>This message is in response to a command that takes a slot id argument.</remarks>
-      public const string SimulationInfo = "simulation-info";
-      /// <summary>
-      /// Slot Info Message Key.
-      /// </summary>
-      public const string SlotInfo = "slots";
-      /// <summary>
-      /// Slot Options Message Key.
-      /// </summary>
-      /// <remarks>This message is in response to a command that takes a slot id argument.</remarks>
-      public const string SlotOptions = "slot-options";
-      /// <summary>
-      /// Queue Info Message Key.
-      /// </summary>
-      public const string QueueInfo = "units";
-
-      /// <summary>
-      /// Log Restart Message Key.
-      /// </summary>
-      public const string LogRestart = "log-restart";
-      /// <summary>
-      /// Log Update Message Key.
-      /// </summary>
-      public const string LogUpdate = "log-update";
    }
 }

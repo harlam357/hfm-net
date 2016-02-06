@@ -452,7 +452,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0);
       }
 
-      protected virtual void ProcessData(string buffer, int totalBytesRead)
+      protected internal virtual void ProcessData(string buffer, int totalBytesRead)
       {
          OnDataReceived(new DataEventArgs(buffer, totalBytesRead));
       }

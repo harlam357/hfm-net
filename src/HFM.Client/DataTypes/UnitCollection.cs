@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Unit Collection Data Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client unit collection message. This class cannot be inherited.
    /// </summary>
-   public sealed class UnitCollection : TypedMessageCollection, IList<Unit>, IEquatable<UnitCollection>
+   public sealed class UnitCollection : TypedMessage, IList<Unit>, IEquatable<UnitCollection>
    {
       private readonly List<Unit> _units;
       /// <summary>
@@ -50,32 +50,14 @@ namespace HFM.Client.DataTypes
       /// Fill the UnitCollection object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      internal override void Fill(JsonMessage message)
+      public override void Fill(JsonMessage message)
       {
-         Fill<Unit>(message);
-      }
-
-      /// <summary>
-      /// Fill the UnitCollection object with data from the given JsonMessage.
-      /// </summary>
-      /// <param name="message">Message object containing JSON value and meta-data.</param>
-      internal override void Fill<T>(JsonMessage message)
-      {
-         Debug.Assert(message != null);
-
          var jsonArray = JArray.Parse(message.Value.ToString());
          foreach (var token in jsonArray)
          {
             if (!token.HasValues)
             {
                continue;
-            }
-
-            var unit = Activator.CreateInstance<T>() as Unit;
-            if (unit == null)
-            {
-               throw new InvalidCastException(String.Format(CultureInfo.CurrentCulture,
-                  "Type {0} cannot be converted to type Unit.", typeof(T)));
             }
 
             JObject jObject;
@@ -85,6 +67,7 @@ namespace HFM.Client.DataTypes
                jObject = JObject.Load(reader);
             }
 
+            var unit = new Unit();
             var propertySetter = new MessagePropertySetter(unit);
             foreach (var prop in jObject.Properties())
             {
@@ -466,9 +449,9 @@ namespace HFM.Client.DataTypes
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Collection of property type conversion errors.
+      /// Gets a collection of property type conversion errors.
       /// </summary>
-      public IEnumerable<MessagePropertyConversionError> Errors
+      public ICollection<MessagePropertyConversionError> Errors
       {
          get { return _errors.AsReadOnly(); }
       }

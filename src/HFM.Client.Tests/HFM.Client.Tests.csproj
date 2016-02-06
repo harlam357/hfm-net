@@ -80,8 +80,11 @@
     <Compile Include="DataTypes\SlotCollectionTests.cs" />
     <Compile Include="DataTypes\SlotOptionsTests.cs" />
     <Compile Include="DataTypes\UnitCollectionTests.cs" />
+    <Compile Include="TypedMessageConnectionTests.cs" />
     <Compile Include="JsonMessageConnectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData.cs" />
+    <Compile Include="TestUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">

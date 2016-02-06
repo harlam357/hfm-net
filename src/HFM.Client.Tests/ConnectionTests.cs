@@ -401,16 +401,16 @@ namespace HFM.Client.Tests
             
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
-                  (buffer, offset, size, callback, state) => 
-                     DoBeginRead(buffer, offset, size, callback, state, TestData))).Repeat.Once();
+                  (buffer, offset, size, callback, state) =>
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, TestData.QueueInfo))).Repeat.Once();
 
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
-               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData).Length));
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData.QueueInfo).Length));
 
             Connect(connection);
             mre.WaitOne();
 
-            Assert.AreEqual(TestData, dataReceived);
+            Assert.AreEqual(TestData.QueueInfo, dataReceived);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -433,17 +433,17 @@ namespace HFM.Client.Tests
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
                   (buffer, offset, size, callback, state) =>
-                     DoBeginRead(buffer, offset, size, callback, state, TestData))).Repeat.Twice();
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, TestData.QueueInfo))).Repeat.Twice();
 
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
-               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData).Length)).Repeat.Twice();
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData.QueueInfo).Length)).Repeat.Twice();
 
             _stream.Expect(x => x.DataAvailable).Return(true).Repeat.Once();
 
             Connect(connection);
             mre.WaitOne();
 
-            Assert.AreEqual(TestData + TestData, dataReceived);
+            Assert.AreEqual(TestData.QueueInfo + TestData.QueueInfo, dataReceived);
          }
 
          _tcpClient.VerifyAllExpectations();
@@ -467,7 +467,7 @@ namespace HFM.Client.Tests
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
                   (buffer, offset, size, callback, state) =>
-                     DoBeginRead(buffer, offset, size, callback, state, String.Empty))).Repeat.Once();
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, String.Empty))).Repeat.Once();
 
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
                new Func<IAsyncResult, int>(result => 0));
@@ -505,7 +505,7 @@ namespace HFM.Client.Tests
                   {
                      // ReSharper disable once AccessToDisposedClosure
                      connection.Close();
-                     return DoBeginRead(buffer, offset, size, callback, state, String.Empty);
+                     return TestUtilities.DoBeginRead(buffer, offset, size, callback, state, String.Empty);
                   })).Repeat.Once();
 
             // the connection is closed manually, set expectations
@@ -535,7 +535,7 @@ namespace HFM.Client.Tests
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
                   (buffer, offset, size, callback, state) =>
-                     DoBeginRead(buffer, offset, size, callback, state, String.Empty)));
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, String.Empty)));
 
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Throw(new IOException());
 
@@ -571,19 +571,5 @@ namespace HFM.Client.Tests
       //   _stream.VerifyAllExpectations();
       //}
 
-      internal static readonly string TestData = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\units.txt");
-
-      internal static IAsyncResult DoBeginRead(byte[] buffer, int offset, int size, AsyncCallback callback, object state, string data)
-      {
-         var messageBytes = Encoding.ASCII.GetBytes(data);
-         for (int i = 0; i < messageBytes.Length; i++)
-         {
-            buffer[i] = messageBytes[i];
-         }
-         var ar = MockRepository.GenerateStub<IAsyncResult>();
-         ar.Stub(x => x.AsyncState).Return(state);
-         callback.BeginInvoke(ar, null, null);
-         return ar;
-      }
    }
 }

@@ -66,15 +66,15 @@ namespace HFM.Client.Tests
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
                   (buffer, offset, size, callback, state) =>
-                     ConnectionTests.DoBeginRead(buffer, offset, size, callback, state, ConnectionTests.TestData))).Repeat.Once();
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, TestData.QueueInfo))).Repeat.Once();
 
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
-               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(ConnectionTests.TestData).Length));
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData.QueueInfo).Length));
 
             Connect(connection);
             mre.WaitOne();
 
-            Assert.AreEqual("units", e.JsonMessage.Key);
+            Assert.AreEqual(MessageKey.QueueInfo, e.JsonMessage.Key);
             Assert.IsTrue(e.JsonMessage.Value.Length > 0);
             Assert.IsNull(e.TypedMessage);
             Assert.IsNull(e.DataType);

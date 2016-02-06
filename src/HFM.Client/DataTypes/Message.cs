@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Message Data Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,21 +31,10 @@ using HFM.Client.Converters;
 namespace HFM.Client.DataTypes
 {
    /// <summary>
-   /// Provides the base functionality for creating a collection of Folding@Home typed client messages.
-   /// </summary>
-   [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-   public abstract class TypedMessageCollection : TypedMessage
-   {
-      internal abstract void Fill<T>(JsonMessage message) where T : ITypedMessageObject;
-   }
-
-   /// <summary>
    /// Provides the base functionality for creating Folding@Home typed client messages.
    /// </summary>
    public abstract class TypedMessage : Message, ITypedMessageObject
    {
-      #region Constructor
-
       /// <summary>
       /// Initializes a new instance of the TypedMessage class.
       /// </summary>
@@ -54,17 +43,15 @@ namespace HFM.Client.DataTypes
          _errors = new List<MessagePropertyConversionError>();
       }
 
-      #endregion
-
-      internal abstract void Fill(JsonMessage message);
+      public abstract void Fill(JsonMessage message);
 
       #region ITypedMessageObject Members
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Collection of property type conversion errors.
+      /// Get a collection of property type conversion errors.
       /// </summary>
-      public IEnumerable<MessagePropertyConversionError> Errors
+      public ICollection<MessagePropertyConversionError> Errors
       {
          get { return _errors.AsReadOnly(); }
       }
@@ -385,9 +372,9 @@ namespace HFM.Client.DataTypes
    public interface ITypedMessageObject
    {
       /// <summary>
-      /// Collection of property type conversion errors.
+      /// Gets a collection of property type conversion errors.
       /// </summary>
-      IEnumerable<MessagePropertyConversionError> Errors { get; }
+      ICollection<MessagePropertyConversionError> Errors { get; }
 
       /// <summary>
       /// Add a message property conversion error.

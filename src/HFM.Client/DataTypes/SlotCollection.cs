@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Collection Data Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,10 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 
 using Newtonsoft.Json.Linq;
 
@@ -31,7 +28,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client slot collection message. This class cannot be inherited.
    /// </summary>
-   public sealed class SlotCollection : TypedMessageCollection, IList<Slot>
+   public sealed class SlotCollection : TypedMessage, IList<Slot>
    {
       private readonly List<Slot> _slots;
       /// <summary>
@@ -46,19 +43,8 @@ namespace HFM.Client.DataTypes
       /// Fill the SlotCollection object with data from the given JsonMessage.
       /// </summary>
       /// <param name="message">Message object containing JSON value and meta-data.</param>
-      internal override void Fill(JsonMessage message)
+      public override void Fill(JsonMessage message)
       {
-         Fill<Slot>(message);
-      }
-
-      /// <summary>
-      /// Fill the SlotCollection object with data from the given JsonMessage.
-      /// </summary>
-      /// <param name="message">Message object containing JSON value and meta-data.</param>
-      internal override void Fill<T>(JsonMessage message)
-      {
-         Debug.Assert(message != null);
-
          var jsonArray = JArray.Parse(message.Value.ToString());
          foreach (var token in jsonArray)
          {
@@ -67,13 +53,7 @@ namespace HFM.Client.DataTypes
                continue;
             }
 
-            var slot = Activator.CreateInstance<T>() as Slot;
-            if (slot == null)
-            {
-               throw new InvalidCastException(String.Format(CultureInfo.CurrentCulture, 
-                  "Type {0} cannot be converted to type Slot.", typeof(T)));
-            }
-
+            var slot = new Slot();
             var propertySetter = new MessagePropertySetter(slot);
             foreach (var prop in JObject.Parse(token.ToString()).Properties())
             {
@@ -297,9 +277,9 @@ namespace HFM.Client.DataTypes
 
       private readonly List<MessagePropertyConversionError> _errors;
       /// <summary>
-      /// Collection of property type conversion errors.
+      /// Gets a collection of property type conversion errors.
       /// </summary>
-      public IEnumerable<MessagePropertyConversionError> Errors
+      public ICollection<MessagePropertyConversionError> Errors
       {
          get { return _errors.AsReadOnly(); }
       }

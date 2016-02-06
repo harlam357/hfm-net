@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Slot Collection Data Class Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,32 +41,6 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
          Assert.AreEqual("smp:4", slotCollection[0].Description);
          Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
-      }
-
-      [Test]
-      public void FillDerivedTest1()
-      {
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slotCollection = new SlotCollection();
-         slotCollection.Fill<SlotDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
-         Assert.AreEqual(1, slotCollection.Count);
-         Assert.AreEqual(0, slotCollection[0].Id);
-         Assert.AreEqual("00", ((SlotDerived)slotCollection[0]).IdString);
-         Assert.AreEqual(null, ((SlotDerived)slotCollection[0]).IdBool);
-         Assert.AreEqual("RUNNING", slotCollection[0].Status);
-         Assert.AreEqual(FahSlotStatus.Running, slotCollection[0].StatusEnum);
-         Assert.AreEqual("smp:4", slotCollection[0].Description);
-         Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
-         Assert.AreEqual("true", ((SlotOptionsDerived)slotCollection[0].SlotOptions).PauseOnStartString);
-      }
-
-      [Test]
-      [ExpectedException(typeof(InvalidCastException))]
-      public void FillNotDerivedTest()
-      {
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\slots.txt");
-         var slotCollection = new SlotCollection();
-         slotCollection.Fill<SlotNotDerived>(JsonMessageConnection.GetNextJsonMessage(ref message));
       }
 
       [Test]
@@ -225,42 +199,5 @@ namespace HFM.Client.Tests.DataTypes
          Assert.AreEqual(true, slotCollection[0].SlotOptions.PauseOnStart);
          Assert.AreEqual("paused", slotCollection[0].Reason);
       }
-   }
-
-   public class SlotDerived : Slot
-   {
-      public SlotDerived()
-      {
-         SlotOptions = new SlotOptionsDerived();
-      }
-
-      [MessageProperty("id")]
-      public string IdString { get; set; }
-
-      [MessageProperty("id")]
-      public bool? IdBool { get; set; }
-   }
-
-   public class SlotOptionsDerived : SlotOptions
-   {
-      [MessageProperty("pause-on-start")]
-      public string PauseOnStartString { get; set; }
-   }
-
-   public class SlotNotDerived : ITypedMessageObject
-   {
-      #region ITypedMessageObject Members
-
-      public System.Collections.Generic.IEnumerable<MessagePropertyConversionError> Errors
-      {
-         get { throw new NotImplementedException(); }
-      }
-
-      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
-      {
-         throw new NotImplementedException();
-      }
-
-      #endregion
    }
 }
