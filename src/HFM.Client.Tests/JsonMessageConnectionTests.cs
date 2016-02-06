@@ -19,60 +19,25 @@
 
 using System;
 using System.IO;
-using System.Text;
-using System.Threading;
 
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace HFM.Client.Tests
 {
    [TestFixture]
    public class JsonMessageConnectionTests
    {
-      private ITcpClient _tcpClient;
-      private INetworkStream _stream;
-
-      private ITcpClientFactory CreateClientFactory()
-      {
-         var tcpClientFactory = MockRepository.GenerateStub<ITcpClientFactory>();
-         _tcpClient = MockRepository.GenerateMock<ITcpClient>();
-         _stream = MockRepository.GenerateMock<INetworkStream>();
-         tcpClientFactory.Stub(x => x.Create()).Return(_tcpClient);
-         return tcpClientFactory;
-      }
-
-      private void Connect(Connection connection)
-      {
-         ConnectionTests.Connect(connection, _tcpClient, _stream);
-      }
-
       [Test]
-      public void JsonMessageConnection_Update_Test1()
+      public void JsonMessageConnection_JsonMessage_Test1()
       {
-         using (var connection = new JsonMessageConnection(CreateClientFactory()))
+         using (var connection = new JsonMessageConnection())
          {
             MessageReceivedEventArgs e = null;
             connection.MessageReceived += (sender, args) => e = args;
-
             bool updateFinishedRaised = false;
-            var mre = new ManualResetEvent(false);
-            connection.UpdateFinished += (sender, args) =>
-            {
-               updateFinishedRaised = true;
-               mre.Set();
-            };
+            connection.UpdateFinished += (sender, args) => updateFinishedRaised = true;
 
-            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
-               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
-                  (buffer, offset, size, callback, state) =>
-                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, TestData.QueueInfo))).Repeat.Once();
-
-            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
-               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData.QueueInfo).Length));
-
-            Connect(connection);
-            mre.WaitOne();
+            connection.ProcessData(TestData.QueueInfo, TestData.QueueInfo.Length);
 
             Assert.AreEqual(MessageKey.QueueInfo, e.JsonMessage.Key);
             Assert.IsTrue(e.JsonMessage.Value.Length > 0);
@@ -80,9 +45,6 @@ namespace HFM.Client.Tests
             Assert.IsNull(e.DataType);
             Assert.IsTrue(updateFinishedRaised);
          }
-
-         _tcpClient.VerifyAllExpectations();
-         _stream.VerifyAllExpectations();
       }
 
       [Test]

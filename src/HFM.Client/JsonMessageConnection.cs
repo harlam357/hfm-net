@@ -56,9 +56,7 @@ namespace HFM.Client
 
       #region Fields
 
-      private readonly StringBuilder _readBuffer;
-
-      private readonly object _bufferLock = new object();
+      private readonly StringBuilder _readBuffer = new StringBuilder();
 
       #endregion
 
@@ -69,18 +67,8 @@ namespace HFM.Client
       /// </summary>
       [CoverageExclude]
       public JsonMessageConnection()
-         : this(new TcpClientFactory())
       {
 
-      }
-
-      /// <summary>
-      /// Initializes a new instance of the MessageCache class.
-      /// </summary>
-      internal JsonMessageConnection(ITcpClientFactory tcpClientFactory)
-         : base(tcpClientFactory)
-      {
-         _readBuffer = new StringBuilder();
       }
 
       #endregion
@@ -94,17 +82,14 @@ namespace HFM.Client
       {
          base.ProcessData(buffer, totalBytesRead);
 
-         lock (_bufferLock)
-         {
-            _readBuffer.Append(buffer);
+         _readBuffer.Append(buffer);
 
-            JsonMessage json;
-            while ((json = GetNextJsonMessage(_readBuffer)) != null)
-            {
-               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Received message: {0} ({1} bytes)", json.Key, json.Value.Length), TraceLevel.Info));
-               OnMessageReceived(new MessageReceivedEventArgs(json));
-            }
+         JsonMessage json;
+         while ((json = GetNextJsonMessage(_readBuffer)) != null)
+         {
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Received message: {0} ({1} bytes)", json.Key, json.Value.Length), TraceLevel.Info));
+            OnMessageReceived(new MessageReceivedEventArgs(json));
          }
          // send update finished event
          OnUpdateFinished(EventArgs.Empty);
