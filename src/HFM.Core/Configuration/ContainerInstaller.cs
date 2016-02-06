@@ -94,7 +94,7 @@ namespace HFM.Core.Configuration
 
          // HFM.Client.TypedMessageConnection - Transient
          container.Register(
-            Component.For<HFM.Client.IFahClient>()
+            Component.For<HFM.Client.IMessageConnection>()
                .ImplementedBy<HFM.Client.TypedMessageConnection>()
                   .LifeStyle.Transient);
 

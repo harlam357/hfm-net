@@ -162,7 +162,7 @@ namespace HFM.Core.Tests
          // Arrange
          var settings = new ClientSettings { Name = "test" };
          _factory.Expect(x => x.Create(settings)).Return(
-            new FahClient(MockRepository.GenerateStub<IFahClient>()));
+            new FahClient(MockRepository.GenerateStub<IMessageConnection>()));
          // Act
          _clientConfiguration.Add(settings);
          // Assert
@@ -266,7 +266,7 @@ namespace HFM.Core.Tests
       public void EditTest2()
       {
          // Arrange
-         _clientConfiguration.Add("test", new FahClient(MockRepository.GenerateStub<IFahClient>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
+         _clientConfiguration.Add("test", new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
          Assert.AreEqual(1, _clientConfiguration.Count);
          ConfigurationChangedEventArgs eventArgs = null;
          _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };

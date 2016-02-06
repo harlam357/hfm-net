@@ -65,7 +65,7 @@ namespace HFM.Core
                   _settings = value;
                   // Close this client and allow retrieval
                   // to open a new connection
-                  _fahClient.Close();
+                  _messageConnection.Close();
                }
                else
                {
@@ -145,30 +145,28 @@ namespace HFM.Core
       //   }
       //}
 
-      private readonly IFahClient _fahClient;
+      private readonly IMessageConnection _messageConnection;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
       private readonly StringBuilder _logText;
       private readonly FahClientMessages _messages;
 
-      public FahClient(IFahClient fahClient)
+      public FahClient(IMessageConnection messageConnection)
       {
-         if (fahClient == null) throw new ArgumentNullException("fahClient");
+         if (messageConnection == null) throw new ArgumentNullException("messageConnection");
 
-         _fahClient = fahClient;
+         _messageConnection = messageConnection;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
          _logText = new StringBuilder();
          _messages = new FahClientMessages();
 
-         //_fahClient.CacheMessage<Info>(true);
-         //_fahClient.CacheMessage<Options>(true);
-         _fahClient.MessageReceived += FahClientMessageReceived;
-         _fahClient.UpdateFinished += FahClientUpdateFinished;
-         _fahClient.ConnectedChanged += FahClientConnectedChanged;
+         _messageConnection.MessageReceived += MessageConnectionMessageReceived;
+         _messageConnection.UpdateFinished += MessageConnectionUpdateFinished;
+         _messageConnection.ConnectedChanged += MessageConnectionConnectedChanged;
       }
 
-      private void FahClientMessageReceived(object sender, MessageReceivedEventArgs e)
+      private void MessageConnectionMessageReceived(object sender, MessageReceivedEventArgs e)
       {
          if (AbortFlag) return;
 
@@ -196,7 +194,7 @@ namespace HFM.Core
             _messages.SlotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _messages.SlotCollection)
             {
-               _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
+               _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
             }
          }
          else if (e.DataType == typeof(SlotOptions))
@@ -265,7 +263,7 @@ namespace HFM.Core
          }
       }
 
-      private void FahClientUpdateFinished(object sender, EventArgs e)
+      private void MessageConnectionUpdateFinished(object sender, EventArgs e)
       {
          if (AbortFlag) return;
 
@@ -284,7 +282,7 @@ namespace HFM.Core
          }
       }
 
-      private void FahClientConnectedChanged(object sender, ConnectedChangedEventArgs e)
+      private void MessageConnectionConnectedChanged(object sender, ConnectedChangedEventArgs e)
       {
          if (!e.Connected)
          {
@@ -333,9 +331,9 @@ namespace HFM.Core
       {
          base.Abort();
 
-         if (_fahClient.Connected)
+         if (_messageConnection.Connected)
          {
-            _fahClient.Close();
+            _messageConnection.Close();
          }
       }
 
@@ -348,11 +346,11 @@ namespace HFM.Core
          }
 
          // connect if not connected
-         if (!_fahClient.Connected)
+         if (!_messageConnection.Connected)
          {
             try
             {
-               _fahClient.Connect(Settings.Server, Settings.Port, Settings.Password);
+               _messageConnection.Connect(Settings.Server, Settings.Port, Settings.Password);
                SetUpdateCommands();
             }
             catch (Exception ex)
@@ -382,13 +380,13 @@ namespace HFM.Core
 
       private void SetUpdateCommands()
       {
-         _fahClient.SendCommand("updates clear");
-         _fahClient.SendCommand("log-updates restart");
-         _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval));
-         _fahClient.SendCommand("updates add 1 1 $info");
-         _fahClient.SendCommand("updates add 2 1 $(options -a)");
-         _fahClient.SendCommand("updates add 3 1 $slot-info");
-         _fahClient.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
+         _messageConnection.SendCommand("updates clear");
+         _messageConnection.SendCommand("log-updates restart");
+         _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval));
+         _messageConnection.SendCommand("updates add 1 1 $info");
+         _messageConnection.SendCommand("updates add 2 1 $(options -a)");
+         _messageConnection.SendCommand("updates add 3 1 $slot-info");
+         _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
       }
 
       private void Process()

@@ -30,7 +30,7 @@ namespace HFM.Client
    /// <summary>
    /// Folding@Home client JSON message connection class.  Provides functionality for parsing raw network data into JSON messages.
    /// </summary>
-   public class JsonMessageConnection : Connection
+   public class JsonMessageConnection : Connection, IMessageConnection
    {
       #region Events
 

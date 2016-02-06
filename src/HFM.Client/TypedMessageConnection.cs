@@ -24,47 +24,10 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client
 {
-   // TODO: Split this interface up and document
-   public interface IFahClient : IDisposable
-   {
-      #region Properties
-
-      bool Connected { get; }
-
-      int ConnectTimeout { get; set; }
-
-      int SendBufferSize { get; set; }
-
-      int ReceiveBufferSize { get; set; }
-
-      #endregion
-
-      #region Events
-
-      event EventHandler<ConnectedChangedEventArgs> ConnectedChanged;
-      event EventHandler<DataEventArgs> DataReceived;
-      event EventHandler<DataEventArgs> DataSent;
-      event EventHandler<MessageReceivedEventArgs> MessageReceived;
-      event EventHandler<StatusMessageEventArgs> StatusMessage;
-      event EventHandler UpdateFinished;
-
-      #endregion
-
-      #region Methods
-
-      void Connect(string host, int port, string password);
-
-      void Close();
-
-      void SendCommand(string command);
-
-      #endregion
-   }
-
    /// <summary>
    /// Folding@Home client typed message connection class.  Provides functionality for parsing JSON messages into strongly typed objects.
    /// </summary>
-   public class TypedMessageConnection : JsonMessageConnection, IFahClient
+   public class TypedMessageConnection : JsonMessageConnection
    {
       private static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type>
                                                                  {

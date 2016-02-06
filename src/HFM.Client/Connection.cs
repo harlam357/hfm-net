@@ -27,7 +27,7 @@ namespace HFM.Client
    /// <summary>
    /// Folding@Home client connection class.  Provides functionality for connecting to a Folding@Home client, sending client commands, and receiving raw network data.
    /// </summary>
-   public class Connection : IDisposable
+   public class Connection : IConnection
    {
       private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
