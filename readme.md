@@ -1,6 +1,8 @@
 # HFM.NET - Client Monitoring Application for the Folding@Home Distributed Computing Project
 
-## HFM.NET v0.9.5.478
+Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
+
+## Version 0.9.5.478
 
 ### Release Date: February 7, 2016
 
