@@ -76,7 +76,7 @@ namespace HFM.Client
       #region Fields
 
       private ITcpClient _tcpClient;
-      private INetworkStream _stream;
+      private LockedResource<INetworkStream> _lockedStream; 
       private readonly byte[] _internalBuffer;
       private readonly ITcpClientFactory _tcpClientFactory;
       private readonly StringBuilder _readBuffer;
@@ -150,6 +150,7 @@ namespace HFM.Client
          ConnectTimeout = DefaultTimeoutLength;
 
          _tcpClientFactory = tcpClientFactory;
+         _lockedStream = new LockedResource<INetworkStream>();
          _tcpClient = CreateClient();
          _internalBuffer = new byte[InternalBufferSize];
          _readBuffer = new StringBuilder();
@@ -205,7 +206,7 @@ namespace HFM.Client
             }
 
             _tcpClient.EndConnect(ar);
-            _stream = _tcpClient.GetStream();
+            _lockedStream.Set(_tcpClient.GetStream());
 
             if (password.Length != 0)
             {
@@ -265,6 +266,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          var tcpClient = _tcpClientFactory.Create();
          tcpClient.SendBufferSize = SendBufferSize;
          tcpClient.ReceiveBufferSize = ReceiveBufferSize;
+         tcpClient.NoDelay = true;
          return tcpClient;
       }
 
@@ -273,19 +275,18 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// </summary>
       public void Close()
       {
+         bool connected = Connected;
          // close the network stream
-         if (_stream != null)
-         {
-            _stream.Close();
-         }
-         // remove reference to the network stream
-         _stream = null;
-         // close the actual connection
+         _lockedStream.Release(x => x.Close());
+         // close the connection
          _tcpClient.Close();
-         // send connected event
-         OnConnectedChanged(new ConnectedChangedEventArgs(false)); // maybe use Connected property?
-         // send status message
-         OnStatusMessage(new StatusMessageEventArgs("Connection closed.", TraceLevel.Info));
+         if (connected != Connected)
+         {
+            // send connected event
+            OnConnectedChanged(new ConnectedChangedEventArgs(false)); // maybe use Connected property?
+            // send status message
+            OnStatusMessage(new StatusMessageEventArgs("Connection closed.", TraceLevel.Info));
+         }
       }
 
       /// <summary>
@@ -316,7 +317,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
 #else
          try
          {
-            _stream.Write(buffer, 0, buffer.Length);
+            _lockedStream.Execute(x => x.Write(buffer, 0, buffer.Length));
             // send data sent event
             OnDataSent(new DataEventArgs(command, buffer.Length));
             // send status message
@@ -404,7 +405,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          AsyncCallback callback = null;
          callback = result =>
          {
-            if (_stream == null)
+            if (!_lockedStream.IsAvailable)
             {
                return;
             }
@@ -413,7 +414,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             int totalBytesRead = (int)result.AsyncState;
             try
             {
-               bytesRead = _stream.EndRead(result);
+               bytesRead = _lockedStream.Execute(x => x.EndRead(result));
                if (bytesRead == 0)
                {
                   OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
@@ -436,9 +437,9 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             _readBuffer.Append(Encoding.ASCII.GetChars(_internalBuffer, 0, bytesRead));
             totalBytesRead += bytesRead;
 
-            if (_stream.DataAvailable)
+            if (_lockedStream.Execute(x => x.DataAvailable))
             {
-               _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, totalBytesRead);
+               _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, totalBytesRead));
                return;
             }
 
@@ -446,10 +447,10 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             _readBuffer.Clear();
             ProcessData(buffer, totalBytesRead);
 
-            _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0);
+            _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0));
          };
 
-         _stream.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0);
+         _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0));
       }
 
       protected internal virtual void ProcessData(string buffer, int totalBytesRead)
@@ -542,6 +543,74 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       }
 
       #endregion
+
+      private class LockedResource<T> where T : class
+      {
+         private readonly object _lockObject = new object();
+
+         private T _value;
+         private bool _isAvailable;
+
+         public bool IsAvailable
+         {
+            get { return _isAvailable; }
+         }
+
+         public void Set(T value)
+         {
+            lock (_lockObject)
+            {
+               _value = value;
+               _isAvailable = value != null;
+            }
+         }
+
+         //public void Release()
+         //{
+         //   Release(null);
+         //}
+
+         public void Release(Action<T> releaseAction)
+         {
+            lock (_lockObject)
+            {
+               if (_value == null)
+               {
+                  return;
+               }
+               if (releaseAction != null)
+               {
+                  releaseAction(_value);
+               }
+               _isAvailable = false;
+               _value = null;
+            }
+         }
+
+         public void Execute(Action<T> action)
+         {
+            lock (_lockObject)
+            {
+               if (_value == null)
+               {
+                  return;
+               }
+               action(_value);
+            }
+         }
+
+         public TResult Execute<TResult>(Func<T, TResult> func)
+         {
+            lock (_lockObject)
+            {
+               if (_value == null)
+               {
+                  return default(TResult);
+               }
+               return func(_value);
+            }
+         }
+      }
    }
 
    /// <summary>
