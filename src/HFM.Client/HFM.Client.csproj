@@ -75,6 +75,7 @@
     <Compile Include="DataTypes\UnitCollection.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="IMessageConnection.cs" />
+    <Compile Include="LockedResource.cs" />
     <Compile Include="MessageKey.cs" />
     <Compile Include="TypedMessageConnection.cs" />
     <Compile Include="JsonMessageConnection.cs" />
