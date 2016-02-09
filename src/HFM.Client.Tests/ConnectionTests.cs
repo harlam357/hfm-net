@@ -154,18 +154,19 @@ namespace HFM.Client.Tests
       private static void SetupSuccessfulConnectionExpectations(ITcpClient tcpClient, INetworkStream stream, bool withPassword = true)
       {
          // client not connected
-         tcpClient.Expect(x => x.Client).Return(null).Repeat.Once();
+         tcpClient.Expect(x => x.Client).PropertyBehavior();
 
          // setup connect expectations
          var asyncResult = MockRepository.GenerateStub<IAsyncResult>();
          tcpClient.Expect(x => x.BeginConnect("server", 10000, null, null)).Return(asyncResult);
          asyncResult.Stub(x => x.AsyncWaitHandle).Return(new EventWaitHandle(true, EventResetMode.ManualReset));
-         tcpClient.Expect(x => x.EndConnect(asyncResult));
+         tcpClient.Expect(x => x.EndConnect(asyncResult)).Do(new Action<IAsyncResult>(ar =>
+         {
+            // setup Connected property expectations
+            tcpClient.Client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
+         }));
          tcpClient.Expect(x => x.GetStream()).Return(stream);
-
-         // setup Connected property expectations
-         tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
-         tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
 
          if (withPassword)
          {
@@ -198,7 +199,7 @@ namespace HFM.Client.Tests
             var asyncResult = MockRepository.GenerateStub<IAsyncResult>();
             _tcpClient.Expect(x => x.BeginConnect("server", 10000, null, null)).Return(asyncResult);
             asyncResult.Stub(x => x.AsyncWaitHandle).Return(new EventWaitHandle(false, EventResetMode.ManualReset));
-            _tcpClient.Expect(x => x.Close());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             // set to 1/100 of a second so the test doesn't take long
             connection.ConnectTimeout = 10;
@@ -255,8 +256,8 @@ namespace HFM.Client.Tests
          {
             Connect(connection);
 
-            _stream.Expect(x => x.Close());
-            _tcpClient.Expect(x => x.Close());
+            _stream.Expect(x => x.Dispose());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             bool statusMessageFired = false;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
@@ -315,8 +316,11 @@ namespace HFM.Client.Tests
             connection.DataSent += (sender, args) => dataSentFired = true;
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
             connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
+
             var buffer = Encoding.ASCII.GetBytes("command\n");
             _stream.Expect(x => x.Write(buffer, 0, buffer.Length)).Throw(new IOException("Write failed."));
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
+
             connection.SendCommand("command");
 
             Assert.IsFalse(dataSentFired);
@@ -473,8 +477,8 @@ namespace HFM.Client.Tests
                new Func<IAsyncResult, int>(result => 0));
 
             // as a result the connection is closed, set expectations
-            _stream.Expect(x => x.Close());
-            _tcpClient.Expect(x => x.Close());
+            _stream.Expect(x => x.Dispose());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             Connect(connection);
             mre.WaitOne();
@@ -509,8 +513,8 @@ namespace HFM.Client.Tests
                   })).Repeat.Once();
 
             // the connection is closed manually, set expectations
-            _stream.Expect(x => x.Close());
-            _tcpClient.Expect(x => x.Close());
+            _stream.Expect(x => x.Dispose());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             Connect(connection);
             mre.WaitOne();
@@ -540,8 +544,8 @@ namespace HFM.Client.Tests
             _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Throw(new IOException());
 
             // as a result the connection is closed, set expectations
-            _stream.Expect(x => x.Close());
-            _tcpClient.Expect(x => x.Close());
+            _stream.Expect(x => x.Dispose());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             Connect(connection);
             mre.WaitOne();
