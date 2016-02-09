@@ -277,7 +277,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       {
          bool connected = Connected;
          // close the network stream
-         _lockedStream.Release(x => x.Close());
+         _lockedStream.Release();
          // close the connection
          _tcpClient.Close();
          if (connected != Connected)
