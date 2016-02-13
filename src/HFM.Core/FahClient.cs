@@ -40,7 +40,28 @@ namespace HFM.Core
       void Release(FahClient fahClient);
    }
 
-   public sealed class FahClient : Client
+   public interface IFahClient : IClient
+   {
+      /// <summary>
+      /// Sends the Fold command to the FAH client. 
+      /// </summary>
+      /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
+      void Fold(int? slotId);
+
+      /// <summary>
+      /// Sends the Pause command to the FAH client. 
+      /// </summary>
+      /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
+      void Pause(int? slotId);
+
+      /// <summary>
+      /// Sends the Finish command to the FAH client. 
+      /// </summary>
+      /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
+      void Finish(int? slotId);
+   }
+
+   public sealed class FahClient : Client, IFahClient
    {
       #region Properties
 
@@ -615,9 +636,13 @@ namespace HFM.Core
 
                result.SlotsUpdated = true;
             }
-            if (LogRetrieved && UnitCollection != null)
+            if (LogRetrieved)
             {
-               if (!_unitCollectionEqualityComparer.Equals(_previousUnitCollection, UnitCollection))
+               if (result.SlotsUpdated)
+               {
+                  result.ExecuteRetrieval = true;
+               }
+               if (UnitCollection != null && !_unitCollectionEqualityComparer.Equals(_previousUnitCollection, UnitCollection))
                {
                   _previousUnitCollection = UnitCollection;
                   result.ExecuteRetrieval = true;
@@ -686,6 +711,42 @@ namespace HFM.Core
                   throw new NotImplementedException();
                }
             }
+         }
+      }
+
+      public void Fold(int? slotId)
+      {
+         if (slotId.HasValue)
+         {
+            _messageConnection.SendCommand("unpause " + slotId.Value);
+         }
+         else
+         {
+            _messageConnection.SendCommand("unpause");
+         }
+      }
+
+      public void Pause(int? slotId)
+      {
+         if (slotId.HasValue)
+         {
+            _messageConnection.SendCommand("pause " + slotId.Value);
+         }
+         else
+         {
+            _messageConnection.SendCommand("pause");
+         }
+      }
+
+      public void Finish(int? slotId)
+      {
+         if (slotId.HasValue)
+         {
+            _messageConnection.SendCommand("finish " + slotId.Value);
+         }
+         else
+         {
+            _messageConnection.SendCommand("finish");
          }
       }
    }

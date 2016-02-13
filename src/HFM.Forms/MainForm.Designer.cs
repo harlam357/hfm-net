@@ -123,6 +123,10 @@ namespace HFM.Forms
          this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsViewClientFiles = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
+         this.mnuContextClientsFoldSlot = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuContextClientsFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
          this.splitContainer1 = new HFM.Forms.Controls.SplitContainerWrapper();
          this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
@@ -140,10 +144,12 @@ namespace HFM.Forms
          this.notifyMenu.SuspendLayout();
          this.AppMenu.SuspendLayout();
          this.gridContextMenuStrip.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
          this.splitContainer2.Panel1.SuspendLayout();
          this.splitContainer2.Panel2.SuspendLayout();
          this.splitContainer2.SuspendLayout();
@@ -858,9 +864,13 @@ namespace HFM.Forms
             this.mnuContextClientsDelete,
             this.mnuContextClientsSep2,
             this.mnuContextClientsViewCachedLog,
-            this.mnuContextClientsViewClientFiles});
+            this.mnuContextClientsViewClientFiles,
+            this.mnuContextClientsSep3,
+            this.mnuContextClientsFoldSlot,
+            this.mnuContextClientsPauseSlot,
+            this.mnuContextClientsFinishSlot});
          this.gridContextMenuStrip.Name = "contextMenuStrip1";
-         this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 148);
+         this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 198);
          // 
          // mnuContextClientsRefreshSelected
          // 
@@ -906,6 +916,32 @@ namespace HFM.Forms
          this.mnuContextClientsViewClientFiles.Size = new System.Drawing.Size(186, 22);
          this.mnuContextClientsViewClientFiles.Text = "View Client Files";
          this.mnuContextClientsViewClientFiles.Click += new System.EventHandler(this.mnuClientsViewClientFiles_Click);
+         // 
+         // mnuContextClientsSep3
+         // 
+         this.mnuContextClientsSep3.Name = "mnuContextClientsSep3";
+         this.mnuContextClientsSep3.Size = new System.Drawing.Size(183, 6);
+         // 
+         // mnuContextClientsFoldSlot
+         // 
+         this.mnuContextClientsFoldSlot.Name = "mnuContextClientsFoldSlot";
+         this.mnuContextClientsFoldSlot.Size = new System.Drawing.Size(186, 22);
+         this.mnuContextClientsFoldSlot.Text = "Fold Slot";
+         this.mnuContextClientsFoldSlot.Click += new System.EventHandler(this.mnuContextClientsFoldSlot_Click);
+         // 
+         // mnuContextClientsPauseSlot
+         // 
+         this.mnuContextClientsPauseSlot.Name = "mnuContextClientsPauseSlot";
+         this.mnuContextClientsPauseSlot.Size = new System.Drawing.Size(186, 22);
+         this.mnuContextClientsPauseSlot.Text = "Pause Slot";
+         this.mnuContextClientsPauseSlot.Click += new System.EventHandler(this.mnuContextClientsPauseSlot_Click);
+         // 
+         // mnuContextClientsFinishSlot
+         // 
+         this.mnuContextClientsFinishSlot.Name = "mnuContextClientsFinishSlot";
+         this.mnuContextClientsFinishSlot.Size = new System.Drawing.Size(186, 22);
+         this.mnuContextClientsFinishSlot.Text = "Finish Slot";
+         this.mnuContextClientsFinishSlot.Click += new System.EventHandler(this.mnuContextClientsFinishSlot_Click);
          // 
          // splitContainer1
          // 
@@ -1090,10 +1126,12 @@ namespace HFM.Forms
          this.gridContextMenuStrip.ResumeLayout(false);
          this.splitContainer1.Panel1.ResumeLayout(false);
          this.splitContainer1.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
          this.splitContainer2.Panel1.ResumeLayout(false);
          this.splitContainer2.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
          this.splitContainer2.ResumeLayout(false);
          this.statsContextMenuStrip.ResumeLayout(false);
          this.ResumeLayout(false);
@@ -1204,5 +1242,9 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuClientsAddLegacy;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
       private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
+      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep3;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsFoldSlot;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsPauseSlot;
+      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsFinishSlot;
    }
 }

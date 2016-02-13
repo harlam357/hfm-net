@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main Grid Data Model
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,13 +88,13 @@ namespace HFM.Forms.Models
          }
       }
 
-      ///// <summary>
-      ///// Gets a value that specifies if the UI menu items 'xxx' are visible.
-      ///// </summary>
-      //public bool FahClientMenuItemsVisible
-      //{
-      //   get { return SelectedSlot != null && SelectedSlot.Settings.ClientType == ClientType.FahClient; }
-      //}
+      /// <summary>
+      /// Gets a value that specifies if the UI menu items 'xxx' are visible.
+      /// </summary>
+      public bool FahClientMenuItemsVisible
+      {
+         get { return SelectedSlot != null && SelectedSlot.Settings.ClientType == ClientType.FahClient; }
+      }
 
       /// <summary>
       /// Holds current Sort Column Name

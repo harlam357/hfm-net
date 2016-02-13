@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Main UI Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -87,7 +87,7 @@ namespace HFM.Forms
 
       void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator);
 
-      void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator);
+      void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator2, bool fahClientMenu);
 
       void ShowGridContextMenuStrip(Point screenLocation);
 
@@ -401,12 +401,16 @@ namespace HFM.Forms
       {
          _presenter.DataGridViewMouseDown(e.X, e.Y, e.Button, e.Clicks);
       }
-      
-      public void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
+
+      public void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator2, bool fahClientMenu)
       {
          mnuContextClientsViewClientFiles.Visible = filesMenu;
          mnuContextClientsViewCachedLog.Visible = cachedLog;
-         mnuContextClientsSep2.Visible = seperator;
+         mnuContextClientsSep2.Visible = seperator2;
+         mnuContextClientsFoldSlot.Visible = fahClientMenu;
+         mnuContextClientsPauseSlot.Visible = fahClientMenu;
+         mnuContextClientsFinishSlot.Visible = fahClientMenu;
+         mnuContextClientsSep3.Visible = fahClientMenu;
       }
       
       public void ShowGridContextMenuStrip(Point screenLocation)
@@ -543,8 +547,27 @@ namespace HFM.Forms
       
       #endregion
 
+      #region Grid Context Menu Handlers
+
+      private void mnuContextClientsFoldSlot_Click(object sender, EventArgs e)
+      {
+         _presenter.ClientsFoldSlotClick();
+      }
+
+      private void mnuContextClientsPauseSlot_Click(object sender, EventArgs e)
+      {
+         _presenter.ClientsPauseSlotClick();
+      }
+
+      private void mnuContextClientsFinishSlot_Click(object sender, EventArgs e)
+      {
+         _presenter.ClientsFinishSlotClick();
+      }
+
+      #endregion
+
       #region View Menu Click Handlers
-      
+
       private void mnuViewAutoSizeGridColumns_Click(object sender, EventArgs e)
       {
          for (var i = 0; i < dataGridView1.Columns.Count; i++)

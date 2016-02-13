@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Main View Presenter
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -71,13 +71,13 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region Fields
 
       private HistoryPresenter _historyPresenter;
       private readonly MainGridModel _gridModel;
       private readonly UserStatsDataModel _userStatsDataModel;
-   
+
       private readonly IMainView _view;
       private readonly IMessagesView _messagesView;
       private readonly IMessageBoxView _messageBoxView;
@@ -95,16 +95,16 @@ namespace HFM.Forms
 
       private readonly IPreferenceSet _prefs;
       private readonly IClientSettingsManager _settingsManager;
-      
+
       #endregion
 
       #region Constructor
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                           IClientConfiguration clientConfiguration, 
-                           IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic, 
-                           RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter, 
+                           IClientConfiguration clientConfiguration,
+                           IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic,
+                           RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter,
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
          _gridModel = mainGridModel;
@@ -117,7 +117,7 @@ namespace HFM.Forms
                                           };
          _gridModel.SelectedSlotChanged += (sender, e) =>
                                            {
-                                              if (e.Index >=0 && e.Index < _view.DataGridView.Rows.Count)
+                                              if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
                                               {
                                                  _view.DataGridView.Rows[e.Index].Selected = true;
                                                  DisplaySelectedSlotData();
@@ -148,7 +148,7 @@ namespace HFM.Forms
 
          _clientConfiguration.DictionaryChanged += delegate { AutoSaveConfig(); };
       }
-      
+
       #endregion
 
       #region Initialize
@@ -248,9 +248,9 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region View Handling Methods
-   
+
       public void ViewShown()
       {
          // Add the Index Changed Handler here after everything is shown
@@ -349,7 +349,7 @@ namespace HFM.Forms
 
          return false;
       }
-      
+
       public void SetViewShowStyle()
       {
          switch (_prefs.Get<FormShowStyleType>(Preference.FormShowStyle))
@@ -388,9 +388,9 @@ namespace HFM.Forms
             }
          }
       }
-      
+
       #endregion
-      
+
       #region Data Grid View Handling Methods
 
       private void DisplaySelectedSlotData()
@@ -583,7 +583,8 @@ namespace HFM.Forms
                _view.SetGridContextMenuItemsVisible(_gridModel.ClientFilesMenuItemVisible,
                                                     _gridModel.CachedLogMenuItemVisible,
                                                     _gridModel.ClientFilesMenuItemVisible ||
-                                                    _gridModel.CachedLogMenuItemVisible);
+                                                    _gridModel.CachedLogMenuItemVisible,
+                                                    _gridModel.FahClientMenuItemsVisible);
 
                _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
             }
@@ -602,9 +603,9 @@ namespace HFM.Forms
             }
          }
       }
-      
+
       #endregion
-      
+
       #region File Handling Methods
 
       public void FileNewClick()
@@ -732,7 +733,7 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName, 
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName,
                                       _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
                _clientConfiguration.IsDirty = false;
             }
@@ -836,7 +837,7 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region Clients Menu Handling Methods
 
       internal void ClientsAddClick()
@@ -998,7 +999,7 @@ namespace HFM.Forms
 
          _retrievalLogic.RetrieveSingleClient(_gridModel.SelectedSlot.Settings.Name);
       }
-      
+
       public void ClientsRefreshAllClick()
       {
          _retrievalLogic.QueueNewRetrieval();
@@ -1033,7 +1034,41 @@ namespace HFM.Forms
             HandleProcessStartResult(_processStarter.ShowFileExplorer(_gridModel.SelectedSlot.Settings.DataPath()));
          }
       }
-      
+
+      #endregion
+
+      #region Grid Context Menu Handling Methods
+
+      internal void ClientsFoldSlotClick()
+      {
+         if (_gridModel.SelectedSlot == null) return;
+
+         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+         {
+            client.Fold(_gridModel.SelectedSlot.SlotId);
+         }
+      }
+
+      internal void ClientsPauseSlotClick()
+      {
+         if (_gridModel.SelectedSlot == null) return;
+
+         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+         {
+            client.Pause(_gridModel.SelectedSlot.SlotId);
+         }
+      }
+
+      internal void ClientsFinishSlotClick()
+      {
+         if (_gridModel.SelectedSlot == null) return;
+
+         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+         {
+            client.Finish(_gridModel.SelectedSlot.SlotId);
+         }
+      }
+
       #endregion
 
       #region View Menu Handling Methods
@@ -1089,7 +1124,7 @@ namespace HFM.Forms
             _view.SplitContainer.Panel2Collapsed = false;
          }
       }
-      
+
       public void ShowHideQueue()
       {
          ShowHideQueue(!_view.QueueControlVisible);
@@ -1115,7 +1150,7 @@ namespace HFM.Forms
       {
          var style = _prefs.Get<TimeStyleType>(Preference.TimeStyle);
          _prefs.Set(Preference.TimeStyle, style == TimeStyleType.Standard
-                                 ? TimeStyleType.Formatted 
+                                 ? TimeStyleType.Formatted
                                  : TimeStyleType.Standard);
          _prefs.Save();
          _view.DataGridView.Invalidate();
@@ -1203,7 +1238,7 @@ namespace HFM.Forms
          projectDownloadView.Shown += (s, args) =>
          {
             var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            refreshTask =_proteinService.RefreshAsync(progress);
+            refreshTask = _proteinService.RefreshAsync(progress);
             refreshTask
                .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
                      CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
@@ -1265,7 +1300,7 @@ namespace HFM.Forms
       public void ToolsHistoryClick()
       {
          Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
-      
+
          if (_historyPresenter == null)
          {
             _historyPresenter = _presenterFactory.GetHistoryPresenter();
@@ -1289,7 +1324,7 @@ namespace HFM.Forms
          calculatorForm.Closed += (s, e) => _viewFactory.Release(calculatorForm);
          calculatorForm.Show(_view);
       }
-      
+
       #endregion
 
       #region Web Menu Handling Methods
@@ -1382,7 +1417,7 @@ namespace HFM.Forms
             _messageBoxView.ShowError(_view, message, _view.Text);
          }
       }
-      
+
       public void SetUserStatsDataViewStyle(bool showTeamStats)
       {
          _userStatsDataModel.SetViewStyle(showTeamStats);
