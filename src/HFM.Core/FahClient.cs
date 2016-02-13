@@ -149,7 +149,7 @@ namespace HFM.Core
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
       private readonly StringBuilder _logText;
-      private readonly FahClientMessages _messages;
+      private MessageReceiver _messages;
 
       public FahClient(IMessageConnection messageConnection)
       {
@@ -159,7 +159,7 @@ namespace HFM.Core
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
          _logText = new StringBuilder();
-         _messages = new FahClientMessages();
+         _messages = new MessageReceiver();
 
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
          _messageConnection.UpdateFinished += MessageConnectionUpdateFinished;
@@ -170,54 +170,34 @@ namespace HFM.Core
       {
          if (AbortFlag) return;
 
-         _messages.Add(e);
          Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, e.JsonMessage.GetHeader());
 
-         if (e.DataType == typeof(Heartbeat))
+         _messages.Add(e);
+         if (e.DataType == typeof(SlotCollection))
          {
-            _messages.SetHeartbeat((Heartbeat)e.TypedMessage);
-         }
-         else if (e.DataType == typeof(Options))
-         {
-            _messages.Options = (Options)e.TypedMessage;
-         }
-         else if (e.DataType == typeof(Info))
-         {
-            _messages.Info = (Info)e.TypedMessage;
-         }
-         else if (e.DataType == typeof(UnitCollection))
-         {
-            _messages.UnitCollection = (UnitCollection)e.TypedMessage;
-         }
-         else if (e.DataType == typeof(SlotCollection))
-         {
-            _messages.SlotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _messages.SlotCollection)
             {
                _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
             }
          }
-         else if (e.DataType == typeof(SlotOptions))
+         else if (e.DataType == typeof(LogRestart) ||
+                  e.DataType == typeof(LogUpdate))
          {
-            _messages.AddSlotOptions((SlotOptions)e.TypedMessage);
-         }
-         else if (e.DataType == typeof(LogRestart))
-         {
-            LogFragment logFragment = (LogRestart)e.TypedMessage;
+            var logFragment = (LogFragment)e.TypedMessage;
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
 
             // clear
-            _logText.Length = 0;
+            if (e.DataType == typeof(LogRestart))
+            {
+               _logText.Length = 0;
+            }
             WriteToLocalFahLogCache(chunks);
             AppendToLogBuffer(chunks, logFragment.Value.Length);
-         }
-         else if (e.DataType == typeof(LogUpdate))
-         {
-            LogFragment logFragment = (LogUpdate)e.TypedMessage;
-            IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
 
-            WriteToLocalFahLogCache(chunks);
-            AppendToLogBuffer(chunks, logFragment.Value.Length);
+            if (_messages.LogRetrieved)
+            {
+               _messageConnection.SendCommand("queue-info");
+            }
          }
       }
 
@@ -267,16 +247,13 @@ namespace HFM.Core
       {
          if (AbortFlag) return;
 
-         if (_messages.PopulateSlotOptions())
+         var result = _messages.Process();
+         if (result.SlotsUpdated)
          {
             RefreshSlots();
-            // new slots, repopulate them
-            Retrieve();
          }
-         if (!DefaultSlotActive && _messages.ContainsUpdates)
+         if (!DefaultSlotActive && result.ExecuteRetrieval)
          {
-            // clear the new messages buffer
-            _messages.Clear();
             // Process the retrieved logs
             Retrieve();
          }
@@ -289,7 +266,7 @@ namespace HFM.Core
             // clear the local log buffer
             _logText.Length = 0;
             // reset messages
-            _messages.Reset();
+            _messages = new MessageReceiver();
             // refresh (clear) the slots
             RefreshSlots();
          }
@@ -376,7 +353,7 @@ namespace HFM.Core
       }
 
       private const int HeartbeatInterval = 60;
-      private const int QueueInfoInterval = 30;
+      //private const int QueueInfoInterval = 30;
 
       private void SetUpdateCommands()
       {
@@ -386,7 +363,7 @@ namespace HFM.Core
          _messageConnection.SendCommand("updates add 1 1 $info");
          _messageConnection.SendCommand("updates add 2 1 $(options -a)");
          _messageConnection.SendCommand("updates add 3 1 $slot-info");
-         _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
+         //_messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
       }
 
       private void Process()
@@ -548,102 +525,80 @@ namespace HFM.Core
          }
       }
 
-      private class FahClientMessages
+      private class MessageReceiver
       {
-         #region Fields
+         private readonly IEqualityComparer<UnitCollection> _unitCollectionEqualityComparer = new UnitCollectionEqualityComparer();
 
-         private Heartbeat _lastHeartbeat;
-
-         private UnitCollection _unitCollection;
-         private bool _unitCollectionUpdated;
-
-         public UnitCollection UnitCollection
-         {
-            get { return _unitCollection; }
-            set
-            {
-               if (value == null) return;
-
-               if (_unitCollection == null)
-               {
-                  _unitCollection = value;
-                  _unitCollectionUpdated = true;
-               }
-               else if (!_unitCollection.Equals(value))
-               {
-                  _unitCollection = value;
-                  _unitCollectionUpdated = true;
-               }
-            }
-         }
-
-         private SlotCollection _slotCollection;
-
-         public SlotCollection SlotCollection
-         {
-            get { return _slotCollection; }
-            set { _slotCollection = value; }
-         }
-
-         private readonly IList<SlotOptions> _slotOptions;
-         private readonly IList<MessageReceivedEventArgs> _receivedMessages;
-
-         #endregion
-
-         #region Constructor
-
-         public FahClientMessages()
-         {
-            _slotOptions = new List<SlotOptions>();        
-            _receivedMessages = new List<MessageReceivedEventArgs>();    
-         }
-
-         #endregion
-
-         #region Methods and Properties
-
-         public void Reset()
-         {
-            _lastHeartbeat = null;
-            _unitCollection = null;
-            _unitCollectionUpdated = false;
-            _slotCollection = null;
-            _slotOptions.Clear();
-            _receivedMessages.Clear();
-         }
-
-         public void SetHeartbeat(Heartbeat heartbeat)
-         {
-            _lastHeartbeat = heartbeat;
-         }
-
-         public Options Options { get; set; }
-
-         public Info Info { get; set; }
+         private Heartbeat _heartbeat;
 
          public bool HeartbeatOverdue
          {
             get
             {
-               if (_lastHeartbeat != null)
+               if (_heartbeat == null)
                {
-                  if (DateTime.UtcNow.Subtract(_lastHeartbeat.Received).TotalMinutes >
-                      TimeSpan.FromSeconds(HeartbeatInterval * 3).TotalMinutes)
-                  {
-                     return true;
-                  }
+                  return false;
                }
-               return false;
+               return DateTime.UtcNow.Subtract(_heartbeat.Received).TotalMinutes >
+                      TimeSpan.FromSeconds(HeartbeatInterval * 3).TotalMinutes;
             }
          }
 
-         public void AddSlotOptions(SlotOptions item)
+         public Info Info { get; private set; }
+
+         public Options Options { get; private set; }
+
+         public SlotCollection SlotCollection { get; private set; }
+
+         private readonly List<SlotOptions> _slotOptions = new List<SlotOptions>();
+
+         private UnitCollection _previousUnitCollection;
+         
+         public UnitCollection UnitCollection { get; private set; }
+         
+         public bool LogRetrieved { get; private set; }
+
+         public void Add(MessageReceivedEventArgs args)
          {
-            _slotOptions.Add(item);
+            if (args.DataType == typeof(Heartbeat))
+            {
+               _heartbeat = (Heartbeat)args.TypedMessage;
+            }
+            else if (args.DataType == typeof(Info))
+            {
+               Info = (Info)args.TypedMessage;
+            }
+            else if (args.DataType == typeof(Options))
+            {
+               Options = (Options)args.TypedMessage;
+            }
+            else if (args.DataType == typeof(SlotCollection))
+            {
+               SlotCollection = (SlotCollection)args.TypedMessage;
+            }
+            else if (args.DataType == typeof(SlotOptions))
+            {
+               _slotOptions.Add((SlotOptions)args.TypedMessage);
+            }
+            else if (args.DataType == typeof(UnitCollection))
+            {
+               UnitCollection = (UnitCollection)args.TypedMessage;
+            }
+            else if (!LogRetrieved &&
+                    (args.DataType == typeof(LogRestart) ||
+                     args.DataType == typeof(LogUpdate)))
+            {
+               var logFragment = (LogFragment)args.TypedMessage;
+               if (logFragment.Value.Length < 65536)
+               {
+                  LogRetrieved = true;
+               }
+            }
          }
 
-         public bool PopulateSlotOptions()
+         public Result Process()
          {
+            var result = new Result();
             if (SlotCollection != null && _slotOptions.Count == SlotCollection.Count)
             {
                foreach (var options in _slotOptions)
@@ -658,41 +613,80 @@ namespace HFM.Core
                }
                _slotOptions.Clear();
 
-               return true;
+               result.SlotsUpdated = true;
             }
-
-            return false;
-         }
-
-         public void Add(MessageReceivedEventArgs item)
-         {
-            _receivedMessages.Add(item);
-         }
-
-         public bool ContainsUpdates
-         {
-            get
+            if (LogRetrieved && UnitCollection != null)
             {
-               // possibly wait for a log message that is less 
-               // than 65000 bytes before triggering an update
-               return (ContainsMessage(typeof(LogRestart)) ||
-                       ContainsMessage(typeof(LogUpdate))) && _unitCollectionUpdated;
+               if (!_unitCollectionEqualityComparer.Equals(_previousUnitCollection, UnitCollection))
+               {
+                  _previousUnitCollection = UnitCollection;
+                  result.ExecuteRetrieval = true;
+               }
+            }
+            return result;
+         }
+
+         public sealed class Result
+         {
+            public bool SlotsUpdated { get; set; }
+
+            public bool ExecuteRetrieval { get; set; }
+         }
+
+         // Compare the work unit collections for equality, ignoring point and frame time properties.
+         // This equality compare is used to determine when a unit's progress changes, state changes,
+         // or when a work units are added/removed from the queue.
+         private class UnitCollectionEqualityComparer : IEqualityComparer<UnitCollection>
+         {
+            public bool Equals(UnitCollection x, UnitCollection y)
+            {
+               return x == null ? y == null : y != null && x.SequenceEqual(y, new UnitEqualityComparer());
+            }
+
+            public int GetHashCode(UnitCollection obj)
+            {
+               throw new NotImplementedException();
+            }
+
+            private class UnitEqualityComparer : IEqualityComparer<Unit>
+            {
+               public bool Equals(Unit x, Unit y)
+               {
+                  return x == null ? y == null : y != null && EqualsInternal(x, y);
+               }
+
+               private static bool EqualsInternal(Unit x, Unit y)
+               {
+                  Debug.Assert(x != null);
+                  Debug.Assert(y != null);
+
+                  return x.Id == y.Id &&
+                         Equals(x.State, y.State) &&
+                         x.Project == y.Project &&
+                         x.Run == y.Run &&
+                         x.Clone == y.Clone &&
+                         x.Gen == y.Gen &&
+                         Equals(x.Core, y.Core) &&
+                         Equals(x.UnitId, y.UnitId) &&
+                         x.TotalFrames == y.TotalFrames && 
+                         x.FramesDone == y.FramesDone &&
+                         Equals(x.Assigned, y.Assigned) &&
+                         Equals(x.Timeout, y.Timeout) &&
+                         Equals(x.Deadline, y.Deadline) &&
+                         Equals(x.WorkServer, y.WorkServer) && 
+                         Equals(x.CollectionServer, y.CollectionServer) && 
+                         Equals(x.WaitingOn, y.WaitingOn) &&
+                         x.Attempts == y.Attempts &&
+                         Equals(x.NextAttempt, y.NextAttempt) &&
+                         x.Slot == y.Slot;
+               }
+
+               public int GetHashCode(Unit obj)
+               {
+                  throw new NotImplementedException();
+               }
             }
          }
-
-         public void Clear()
-         {
-            _unitCollectionUpdated = false;
-            _receivedMessages.Clear();
-         }
-
-         private bool ContainsMessage(Type type)
-         {
-            // use == for equality... DataType property could easily be null
-            return _receivedMessages.FirstOrDefault(x => x.DataType == type) != null;
-         }
-
-         #endregion
       }
    }
 }
