@@ -716,38 +716,32 @@ namespace HFM.Core
 
       public void Fold(int? slotId)
       {
-         if (slotId.HasValue)
+         if (!_messageConnection.Connected)
          {
-            _messageConnection.SendCommand("unpause " + slotId.Value);
+            return;
          }
-         else
-         {
-            _messageConnection.SendCommand("unpause");
-         }
+         string command = slotId.HasValue ? "unpause " + slotId.Value : "unpause";
+         _messageConnection.SendCommand(command);
       }
 
       public void Pause(int? slotId)
       {
-         if (slotId.HasValue)
+         if (!_messageConnection.Connected)
          {
-            _messageConnection.SendCommand("pause " + slotId.Value);
+            return;
          }
-         else
-         {
-            _messageConnection.SendCommand("pause");
-         }
+         string command = slotId.HasValue ? "pause " + slotId.Value : "pause";
+         _messageConnection.SendCommand(command);
       }
 
       public void Finish(int? slotId)
       {
-         if (slotId.HasValue)
+         if (!_messageConnection.Connected)
          {
-            _messageConnection.SendCommand("finish " + slotId.Value);
+            return;
          }
-         else
-         {
-            _messageConnection.SendCommand("finish");
-         }
+         string command = slotId.HasValue ? "finish " + slotId.Value : "finish";
+         _messageConnection.SendCommand(command);
       }
    }
 }

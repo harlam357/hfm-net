@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Slot Model Class
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +52,7 @@ namespace HFM.Core
          get { return Prefs.Get<int>(Preference.DecimalPlaces); }
       }
 
-      public bool ShowETADate
+      internal bool ShowETADate
       {
          get { return Prefs.Get<bool>(Preference.EtaDate); }
       }
@@ -208,7 +208,7 @@ namespace HFM.Core
       /// </summary>
       public int PercentComplete
       {
-         get { return ProductionValuesOk || Status.Equals(SlotStatus.Paused) ? UnitInfoLogic.PercentComplete : 0; }
+         get { return ProductionValuesOk || Status == SlotStatus.Paused ? UnitInfoLogic.PercentComplete : 0; }
       }
 
       public string Name
@@ -369,10 +369,10 @@ namespace HFM.Core
       {
          get
          {
-            return Status.Equals(SlotStatus.Running) ||
-                   Status.Equals(SlotStatus.RunningAsync) ||
-                   Status.Equals(SlotStatus.RunningNoFrameTimes) ||
-                   Status.Equals(SlotStatus.Finishing);
+            return Status == SlotStatus.Running ||
+                   Status == SlotStatus.RunningAsync ||
+                   Status == SlotStatus.RunningNoFrameTimes ||
+                   Status == SlotStatus.Finishing;
          }
       }
 
@@ -434,20 +434,18 @@ namespace HFM.Core
       {
          get
          {
-            // if these are the default assigned values, don't check otherwise and just return true
+            // if these are the default assigned values, don't check the prefs and just return true
             if (UnitInfo.FoldingID == Constants.DefaultFoldingID && UnitInfo.Team == Constants.DefaultTeam)
             {
                return true;
             }
-
-            if ((UnitInfo.FoldingID != Prefs.Get<string>(Preference.StanfordId) ||
-                      UnitInfo.Team != Prefs.Get<int>(Preference.TeamId)) &&
-                (Status.Equals(SlotStatus.Unknown) == false && Status.Equals(SlotStatus.Offline) == false))
+            // if the slot is unknown or offline, don't check the prefs and just return true
+            if (Status == SlotStatus.Unknown || Status == SlotStatus.Offline)
             {
-               return false;
+               return true;
             }
-
-            return true;
+            return UnitInfo.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
+                   UnitInfo.Team == Prefs.Get<int>(Preference.TeamId);
          }
       }
 
