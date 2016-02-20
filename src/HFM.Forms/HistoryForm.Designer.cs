@@ -38,6 +38,7 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryForm));
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+         this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
          this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,23 +102,30 @@ namespace HFM.Forms
          // mnuFile
          // 
          this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileExport,
             this.mnuFileSep1,
             this.mnuFileExit});
          this.mnuFile.Name = "mnuFile";
          this.mnuFile.Size = new System.Drawing.Size(37, 20);
          this.mnuFile.Text = "&File";
          // 
+         // mnuFileExport
+         // 
+         this.mnuFileExport.Name = "mnuFileExport";
+         this.mnuFileExport.Size = new System.Drawing.Size(152, 22);
+         this.mnuFileExport.Text = "&Export";
+         this.mnuFileExport.Click += new System.EventHandler(this.mnuFileExport_Click);
+         // 
          // mnuFileSep1
          // 
          this.mnuFileSep1.Name = "mnuFileSep1";
-         this.mnuFileSep1.Size = new System.Drawing.Size(89, 6);
-         this.mnuFileSep1.Visible = false;
+         this.mnuFileSep1.Size = new System.Drawing.Size(149, 6);
          // 
          // mnuFileExit
          // 
          this.mnuFileExit.Name = "mnuFileExit";
-         this.mnuFileExit.Size = new System.Drawing.Size(92, 22);
-         this.mnuFileExit.Text = "&Exit";
+         this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+         this.mnuFileExit.Text = "E&xit";
          this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
          // 
          // mnuView
@@ -569,5 +577,6 @@ namespace HFM.Forms
       private ButtonWrapper PreviousPageButton;
       private ButtonWrapper FirstPageButton;
       private ButtonWrapper LastPageButton;
+      private System.Windows.Forms.ToolStripMenuItem mnuFileExport;
    }
 }

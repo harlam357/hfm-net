@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Core Container Installer
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -167,13 +167,12 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.Protein>>>()
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
-               //.Named("PluginManager.ProteinFileSerializer"),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
-               //.Named("PluginManager.ProteinBenchmarkFileSerializer"));
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ClientSettings>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ClientSettings>>>());
-               //.Named("PluginManager.ClientSettingsFileSerializer"));
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ClientSettings>>>(),
+            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.HistoryEntry>>>()
+               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.HistoryEntry>>>());
 
          #endregion
 

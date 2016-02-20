@@ -1,4 +1,22 @@
-﻿
+﻿/*
+ * HFM.NET - Plugin Loader Class
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License. See the included file GPLv2.TXT.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,12 +29,12 @@ namespace HFM.Core.Plugins
 {
    public class PluginLoader
    {
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -25,15 +43,18 @@ namespace HFM.Core.Plugins
       private readonly IFileSerializerPluginManager<List<DataTypes.Protein>> _proteinPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> _benchmarkPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.ClientSettings>> _clientSettingsPluginManager;
+      private readonly IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> _historyEntryPluginManager;
 
       public PluginLoader(IPreferenceSet prefs, IFileSerializerPluginManager<List<DataTypes.Protein>> proteinPluginManager,
                                                 IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager,
-                                                IFileSerializerPluginManager<List<DataTypes.ClientSettings>> clientSettingsPluginManager)
+                                                IFileSerializerPluginManager<List<DataTypes.ClientSettings>> clientSettingsPluginManager,
+                                                IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> historyEntryPluginManager)
       {
          _prefs = prefs;
          _proteinPluginManager = proteinPluginManager;
          _benchmarkPluginManager = benchmarkPluginManager;
          _clientSettingsPluginManager = clientSettingsPluginManager;
+         _historyEntryPluginManager = historyEntryPluginManager;
       }
 
       private string PluginsFolder
@@ -75,8 +96,21 @@ namespace HFM.Core.Plugins
          #region ClientSettings Serializer Plugins
 
          // register built in types
-         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmFileSerializer).Name, new HfmFileSerializer { Logger = _logger });
-         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmLegacyFileSerializer).Name, new HfmLegacyFileSerializer { Logger = _logger });
+         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmFileSerializer).Name, new HfmFileSerializer { Logger = Logger });
+         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmLegacyFileSerializer).Name, new HfmLegacyFileSerializer { Logger = Logger });
+         // load from plugin folder
+         path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
+         if (Directory.Exists(path))
+         {
+            LogResults(_clientSettingsPluginManager.LoadAllPlugins(path));
+         }
+
+         #endregion
+
+         #region HistoryEntry Serializer Plugins
+
+         // register built in types
+         _historyEntryPluginManager.RegisterPlugin(typeof(HistoryEntryCsvSerializer).Name, new HistoryEntryCsvSerializer());
          // load from plugin folder
          path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
          if (Directory.Exists(path))
@@ -93,17 +127,17 @@ namespace HFM.Core.Plugins
          {
             if (loadInfo.Result.Equals(PluginLoadResult.Success))
             {
-               _logger.Info("Loaded Plugin: {0}", loadInfo.FilePath);
+               Logger.Info("Loaded Plugin: {0}", loadInfo.FilePath);
             }
             else if (loadInfo.Result.Equals(PluginLoadResult.Failure))
             {
                if (loadInfo.Exception != null)
                {
-                  _logger.WarnFormat(loadInfo.Exception, "Plugin Load Failed: {0}", loadInfo.Message);
+                  Logger.WarnFormat(loadInfo.Exception, "Plugin Load Failed: {0}", loadInfo.Message);
                }
                else
                {
-                  _logger.Warn("Plugin Load Failed: {0}", loadInfo.Message);
+                  Logger.Warn("Plugin Load Failed: {0}", loadInfo.Message);
                }
             }
          }

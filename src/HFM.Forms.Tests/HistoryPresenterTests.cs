@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,17 +18,22 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Mocks.Constraints;
 
+using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Core.Plugins;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Tests
@@ -67,7 +72,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void Show_Test()
+      public void HistoryPresenter_Show_Test()
       {
          // Arrange
          _view.Expect(x => x.Show());
@@ -80,7 +85,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void Show_FromMinimized_Test()
+      public void HistoryPresenter_Show_FromMinimized_Test()
       {
          // Arrange
          _view.Expect(x => x.Show());
@@ -94,7 +99,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void Close_Test()
+      public void HistoryPresenter_Close_Test()
       {
          bool presenterClosedFired = false;
          // Act
@@ -106,7 +111,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void OnClosing_Test()
+      public void HistoryPresenter_OnClosing_Test()
       {
          // Arrange
          var p = new Point();
@@ -127,7 +132,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void OnClosing_WhileNotNormalWindow_Test()
+      public void HistoryPresenter_OnClosing_WhileNotNormalWindow_Test()
       {
          // Arrange
          var r = new Rectangle();
@@ -146,7 +151,7 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void NewQueryClick_Test()
+      public void HistoryPresenter_NewQueryClick_Test()
       {
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
@@ -164,7 +169,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void NewQueryClick_Cancel_Test()
+      public void HistoryPresenter_NewQueryClick_Cancel_Test()
       {
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
@@ -179,7 +184,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void NewQueryClick_Failed_Test()
+      public void HistoryPresenter_NewQueryClick_Failed_Test()
       {
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
@@ -197,7 +202,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClick_Test()
+      public void HistoryPresenter_EditQueryClick_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -222,7 +227,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClick_Cancel_Test()
+      public void HistoryPresenter_EditQueryClick_Cancel_Test()
       {
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
@@ -237,7 +242,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void EditQueryClick_Failed_Test()
+      public void HistoryPresenter_EditQueryClick_Failed_Test()
       {
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
@@ -255,7 +260,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClick_Test()
+      public void HistoryPresenter_DeleteQueryClick_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -273,7 +278,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClick_No_Test()
+      public void HistoryPresenter_DeleteQueryClick_No_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -291,7 +296,7 @@ namespace HFM.Forms.Tests
       }
 
       [Test]
-      public void DeleteQueryClick_Failed_Test()
+      public void HistoryPresenter_DeleteQueryClick_Failed_Test()
       {
          // Arrange
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
@@ -304,7 +309,7 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void DeleteWorkUnitClick_Test()
+      public void HistoryPresenter_DeleteWorkUnitClick_Test()
       {
          // Arrange
          _model.HistoryBindingSource.Add(new HistoryEntry { ID = 1 });
@@ -320,7 +325,7 @@ namespace HFM.Forms.Tests
       }
       
       [Test]
-      public void DeleteWorkUnitClick_NoSelection_Test()
+      public void HistoryPresenter_DeleteWorkUnitClick_NoSelection_Test()
       {
          // Arrange
          _messageBoxView.Expect(x => x.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();
@@ -328,6 +333,74 @@ namespace HFM.Forms.Tests
          _presenter = CreatePresenter();
          _presenter.DeleteWorkUnitClick();
          // Assert
+         _messageBoxView.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void HistoryPresenter_ExportClick_Test()
+      {
+         // Arrange
+         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new HistoryEntry[0]);
+
+         var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
+         saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
+         saveFileDialogView.Expect(x => x.FilterIndex).Return(1);
+         saveFileDialogView.Expect(x => x.ShowDialog()).Return(DialogResult.OK);
+         _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
+         _viewFactory.Expect(x => x.Release(saveFileDialogView));
+         
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)));
+         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
+         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
+         plugins.Expect(x => x[0]).Return(pluginInfo);
+         // Act
+         _presenter = CreatePresenter();
+         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.ExportClick();
+         // Assert
+         _viewFactory.VerifyAllExpectations();
+         saveFileDialogView.VerifyAllExpectations();
+         serializer.VerifyAllExpectations();
+         plugins.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void HistoryPresenter_ExportClick_Exception_Test()
+      {
+         // Arrange
+         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new HistoryEntry[0]);
+
+         var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
+         saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
+         saveFileDialogView.Expect(x => x.FilterIndex).Return(1);
+         saveFileDialogView.Expect(x => x.ShowDialog()).Return(DialogResult.OK);
+         _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
+         _viewFactory.Expect(x => x.Release(saveFileDialogView));
+
+         var exception = new IOException();
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)))
+            .Throw(exception);
+         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
+         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
+         plugins.Expect(x => x[0]).Return(pluginInfo);
+
+         var logger = MockRepository.GenerateMock<ILogger>();
+         logger.Expect(x => x.ErrorFormat(exception, "", new object[0])).IgnoreArguments();
+         _messageBoxView.Expect(x => x.ShowError(null, null, null)).IgnoreArguments();
+
+         // Act
+         _presenter = CreatePresenter();
+         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.Logger = logger;
+         _presenter.ExportClick();
+         // Assert
+         _viewFactory.VerifyAllExpectations();
+         saveFileDialogView.VerifyAllExpectations();
+         serializer.VerifyAllExpectations();
+         plugins.VerifyAllExpectations();
+         logger.VerifyAllExpectations();
          _messageBoxView.VerifyAllExpectations();
       }
    }

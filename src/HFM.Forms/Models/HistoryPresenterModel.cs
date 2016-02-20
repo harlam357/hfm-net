@@ -257,6 +257,11 @@ namespace HFM.Forms.Models
          }
       }
 
+      public IList<HistoryEntry> FetchSelectedQuery()
+      {
+         return _database.Fetch(SelectedQuery, ProductionView);
+      }
+
       #region Properties
 
       public QueryParameters SelectedQuery

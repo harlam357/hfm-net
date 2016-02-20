@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History UI Form
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -164,6 +164,11 @@ namespace HFM.Forms
       private void btnDelete_Click(object sender, EventArgs e)
       {
          _presenter.DeleteQueryClick();
+      }
+
+      private void mnuFileExport_Click(object sender, EventArgs e)
+      {
+         _presenter.ExportClick();
       }
 
       private void mnuFileExit_Click(object sender, EventArgs e)

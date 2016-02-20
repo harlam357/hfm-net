@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Work Unit History Presenter
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,9 @@
  */
  
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,6 +32,7 @@ using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Core.Plugins;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -52,6 +56,8 @@ namespace HFM.Forms
          [CoverageExclude]
          set { _logger = value; }
       }
+
+      public IFileSerializerPluginManager<List<HistoryEntry>> HistoryEntrySerializerPlugins { get; set; }
 
       public event EventHandler PresenterClosed;
       
@@ -118,6 +124,27 @@ namespace HFM.Forms
 
          _model.FormColumns = _view.GetColumnSettings();
          _model.Update(_prefs, _queryCollection);
+      }
+
+      internal void ExportClick()
+      {
+         var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
+         saveFileDialogView.Filter = HistoryEntrySerializerPlugins.FileTypeFilters;
+         if (saveFileDialogView.ShowDialog() == DialogResult.OK)
+         {
+            try
+            {
+               var serializer = HistoryEntrySerializerPlugins[saveFileDialogView.FilterIndex - 1].Interface;
+               serializer.Serialize(saveFileDialogView.FileName, _model.FetchSelectedQuery().ToList());
+            }
+            catch (Exception ex)
+            {
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
+               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                  "The history data export failed.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
+            }
+         }
+         _viewFactory.Release(saveFileDialogView);
       }
 
       public void FirstPageClicked()
@@ -265,7 +292,7 @@ namespace HFM.Forms
                   if (t.IsFaulted)
                   {
                      var ex = t.Exception.Flatten().InnerException;
-                     _logger.Error(ex.Message, ex);
+                     Logger.Error(ex.Message, ex);
                      _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                   }
                   else

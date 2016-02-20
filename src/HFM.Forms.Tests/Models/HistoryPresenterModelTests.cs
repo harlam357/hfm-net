@@ -43,7 +43,7 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      public void AddQuery_Test()
+      public void HistoryPresenterModel_AddQuery_Test()
       {
          // Arrange
          var parameters = new QueryParameters { Name = "Test" };
@@ -57,7 +57,7 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void AddQuery_SelectAll_Test()
+      public void HistoryPresenterModel_AddQuery_SelectAll_Test()
       {
          var parameters = new QueryParameters();
          _model.AddQuery(parameters);
@@ -65,7 +65,7 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void AddQuery_NameAlreadyExists_Test()
+      public void HistoryPresenterModel_AddQuery_NameAlreadyExists_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField { Value = 6606 });
@@ -76,7 +76,7 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void AddQuery_NoQueryFields_Test()
+      public void HistoryPresenterModel_AddQuery_NoQueryFields_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
          _model.AddQuery(parameters);
@@ -84,7 +84,7 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void AddQuery_NoQueryFieldValue_Test()
+      public void HistoryPresenterModel_AddQuery_NoQueryFieldValue_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField());
@@ -92,7 +92,7 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      public void ReplaceQuery_Test()
+      public void HistoryPresenterModel_ReplaceQuery_Test()
       {
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
@@ -113,7 +113,7 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void ReplaceQuery_NameExists_Test()
+      public void HistoryPresenterModel_ReplaceQuery_NameExists_Test()
       {
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
@@ -136,7 +136,7 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      public void RemoveQuery_Test()
+      public void HistoryPresenterModel_RemoveQuery_Test()
       {
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
@@ -156,13 +156,13 @@ namespace HFM.Forms.Tests.Models
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
-      public void RemoveQuery_Failed_Test()
+      public void HistoryPresenterModel_RemoveQuery_Failed_Test()
       {
          _model.RemoveQuery(new QueryParameters());
       }
 
       [Test]
-      public void ResetBindings_Test()
+      public void HistoryPresenterModel_ResetBindings_Test()
       {
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
@@ -179,34 +179,15 @@ namespace HFM.Forms.Tests.Models
          _database.VerifyAllExpectations();
       }
 
-      //[Test]
-      //public void ResetBindingsShowFirstCheckedTest()
-      //{
-      //   // Arrange
-      //   var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
-      //   _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
-      //   // Act
-      //   _model.ShowFirstChecked = true;
-      //   _model.ShowEntriesValue = 1;
-      //   _model.ResetBindings(true);
-      //   // Assert
-      //   Assert.AreEqual(1, _model.HistoryBindingSource.Count);
-      //   _database.VerifyAllExpectations();
-      //}
-
-      //[Test]
-      //public void ResetBindingsShowLastCheckedTest()
-      //{
-      //   // Arrange
-      //   var entries = new List<HistoryEntry> { new HistoryEntry(), new HistoryEntry() };
-      //   _database.Expect(x => x.Fetch(null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(entries);
-      //   // Act
-      //   _model.ShowLastChecked = true;
-      //   _model.ShowEntriesValue = 1;
-      //   _model.ResetBindings(true);
-      //   // Assert
-      //   Assert.AreEqual(1, _model.HistoryBindingSource.Count);
-      //   _database.VerifyAllExpectations();
-      //}
+      [Test]
+      public void HistoryPresenterModel_FetchSelectedQuery_Test()
+      {
+         // Arrange
+         _database.Expect(x => x.Fetch(_model.SelectedQuery, _model.ProductionView));
+         // Act
+         _model.FetchSelectedQuery();
+         // Assert
+         _database.VerifyAllExpectations();
+      }
    }
 }
