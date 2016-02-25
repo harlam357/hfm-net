@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Main View Presenter
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -157,9 +157,9 @@ namespace HFM.Forms
       {
          // Restore View Preferences (must be done AFTER DataGridView columns are setup)
          RestoreViewPreferences();
-         // 
+         //
          _view.SetGridDataSource(_gridModel.BindingSource);
-         // 
+         //
          _prefs.FormShowStyleSettingsChanged += (s, e) => SetViewShowStyle();
          _prefs.ColorLogFileChanged += (s, e) => ApplyColorLogFileSetting();
          _prefs.StatsIdChanged += (s, e) => _userStatsDataModel.Refresh();
@@ -656,7 +656,7 @@ namespace HFM.Forms
 
          // clear the clients and UI
          _settingsManager.ClearFileName();
-         // 
+         //
          if (_clientConfiguration.Count != 0)
          {
             SaveCurrentUnitInfo();
@@ -1084,6 +1084,7 @@ namespace HFM.Forms
             // Restore state data
             var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
             var size = _prefs.Get<Size>(Preference.MessagesFormSize);
+            location = WindowPosition.Normalize(location, size);
 
             if (location.X != 0 && location.Y != 0)
             {

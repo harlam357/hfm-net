@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Core Logger
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -44,10 +44,10 @@ namespace HFM.Core.Logging
          }
          catch (IOException ex)
          {
-            string message = String.Format(CultureInfo.CurrentCulture, 
-               "Logging failed to initialize.  Please check to be sure that the {0} or {1} file is not open or otherwise in use.", 
+            string message = String.Format(CultureInfo.CurrentCulture,
+               "Logging failed to initialize.  Please check to be sure that the {0} or {1} file is not open or otherwise in use.",
                Constants.HfmLogFileName, Constants.HfmPrevLogFileName);
-            throw new IOException(message, ex);
+            throw new InvalidOperationException(message, ex);
          }
          Level = GetLoggerLevel();
       }
@@ -61,9 +61,9 @@ namespace HFM.Core.Logging
 
       protected override void Log(LoggerLevel loggerLevel, string loggerName, string message, Exception exception)
       {
-         lock (LogLock)
+         if (loggerLevel <= Level)
          {
-            if (loggerLevel <= Level)
+            lock (LogLock)
             {
                var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x)).ToList();
                OnTextMessage(new TextMessageEventArgs(lines));
@@ -114,15 +114,16 @@ namespace HFM.Core.Logging
 
       private void OnTextMessage(TextMessageEventArgs e)
       {
-         if (TextMessage != null)
+         var handler = TextMessage;
+         if (handler != null)
          {
-            TextMessage(this, e);
+            handler(this, e);
          }
       }
 
       #endregion
 
-      void Initialize()
+      private void Initialize()
       {
          // Ensure the HFM User Application Data Folder Exists
          var path = _prefs.ApplicationDataFolderPath;
@@ -148,7 +149,7 @@ namespace HFM.Core.Logging
          Trace.Listeners.Add(new TextWriterTraceListener(logFilePath));
          Trace.AutoFlush = true;
 
-         _prefs.MessageLevelChanged += delegate
+         _prefs.MessageLevelChanged += (s, e) =>
          {
             var newLevel = (LoggerLevel)_prefs.Get<int>(Preference.MessageLevel);
             if (newLevel != Level)
@@ -174,14 +175,14 @@ namespace HFM.Core.Logging
    [CoverageExclude]
    public class TextMessageEventArgs : EventArgs
    {
-      private readonly IEnumerable<string> _messages;
+      private readonly ICollection<string> _messages;
 
-      public IEnumerable<string> Messages
+      public ICollection<string> Messages
       {
          get { return _messages; }
       }
 
-      public TextMessageEventArgs(IEnumerable<string> messages)
+      public TextMessageEventArgs(ICollection<string> messages)
       {
          _messages = messages;
       }

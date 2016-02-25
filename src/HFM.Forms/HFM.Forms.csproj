@@ -288,6 +288,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WindowPosition.cs" />
     <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
   <ItemGroup>

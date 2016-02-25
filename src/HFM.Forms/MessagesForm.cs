@@ -1,17 +1,17 @@
 /*
  * HFM.NET - Messages Form Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -49,35 +49,32 @@ namespace HFM.Forms
    [CoverageExclude]
    public partial class MessagesForm : FormWrapper, IMessagesView
    {
-      private readonly IPreferenceSet _prefs;
-      private volatile List<string> _lines = new List<string>(500);
+      private const int MaxLines = 512;
 
-      // concrete HFM.Core.Logger instance
-      private readonly Logger _logger;
+      private readonly IPreferenceSet _prefs;
+      private readonly List<string> _lines = new List<string>(MaxLines);
 
       #region Constructor
 
       public MessagesForm(IPreferenceSet prefs, ILogger logger)
       {
          _prefs = prefs;
-         _logger = (Logger)logger;
-      
+
          InitializeComponent();
 
-         _logger.TextMessage += (sender, e) => AddMessage(e.Messages);
-      } 
+         ((Logger)logger).TextMessage += (sender, e) => AddMessage(e.Messages);
+      }
 
       #endregion
 
       #region Implementation
 
-      private void AddMessage(IEnumerable<string> messages)
+      private void AddMessage(ICollection<string> messages)
       {
-         if (_lines.Count > 500)
+         if ((_lines.Count + messages.Count) > MaxLines)
          {
-            _lines.RemoveRange(0, 100);
+            _lines.RemoveRange(0, MaxLines / 4);
          }
-
          _lines.AddRange(messages);
 
          UpdateMessages(_lines.ToArray());
@@ -88,17 +85,17 @@ namespace HFM.Forms
          txtMessages.SelectionStart = txtMessages.Text.Length;
          txtMessages.ScrollToCaret();
       }
-      
+
       public void SetManualStartPosition()
       {
          StartPosition = FormStartPosition.Manual;
       }
-      
+
       public void SetLocation(int x, int y)
       {
          Location = new Point(x, y);
       }
-      
+
       public void SetSize(int width, int height)
       {
          Size = new Size(width, height);
@@ -110,20 +107,19 @@ namespace HFM.Forms
       {
          if (InvokeRequired)
          {
-            // BIG BUG FIX HERE!!! Using Invoke instead of BeginInvoke was casing 
-            // deadlock when trying to call this delegate from multiple threads
             txtMessages.BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
             return;
          }
-         
+
          txtMessages.Lines = lines;
          ScrollToEnd();
       }
 
       private void txtMessages_KeyDown(object sender, KeyEventArgs e)
       {
-         if (e.KeyCode == Keys.F7) //Close on F7 - Issue 74
+         if (e.KeyCode == Keys.F7)
          {
+            // Close on F7 - Issue 74
             Close();
          }
       }
@@ -137,11 +133,11 @@ namespace HFM.Forms
             _prefs.Set(Preference.MessagesFormSize, Size);
             _prefs.Save();
          }
-      
+
          Hide();
          e.Cancel = true;
          base.OnClosing(e);
-      } 
+      }
 
       #endregion
    }
