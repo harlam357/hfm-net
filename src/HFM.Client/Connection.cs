@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -76,7 +76,7 @@ namespace HFM.Client
       #region Fields
 
       private ITcpClient _tcpClient;
-      private LockedResource<INetworkStream> _lockedStream; 
+      private readonly LockedResource<INetworkStream> _lockedStream;
       private readonly byte[] _internalBuffer;
       private readonly ITcpClientFactory _tcpClientFactory;
       private readonly StringBuilder _readBuffer;
@@ -237,7 +237,7 @@ namespace HFM.Client
 
 Unhandled Exception: System.ObjectDisposedException: The object was used after being disposed.
   at System.Threading.WaitHandle.CheckDisposed ()
-  at System.Threading.EventWaitHandle.Set () 
+  at System.Threading.EventWaitHandle.Set ()
   at (wrapper remoting-invoke-with-check) System.Threading.EventWaitHandle:Set ()
   at System.Net.Sockets.Socket+SocketAsyncResult.set_IsCompleted (Boolean value)
   at System.Net.Sockets.Socket+SocketAsyncResult.Complete ()
@@ -312,69 +312,26 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
          }
          byte[] buffer = Encoding.ASCII.GetBytes(command);
 
-#if SEND_ASYNC
-         _stream.BeginWrite(buffer, 0, buffer.Length, WriteCallback, new AsyncData(command, buffer));
-#else
-         try
+         AsyncCallback callback = result =>
          {
-            _lockedStream.Execute(x => x.Write(buffer, 0, buffer.Length));
-            // send data sent event
-            OnDataSent(new DataEventArgs(command, buffer.Length));
-            // send status message
-            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
-         }
-         catch (Exception ex)
-         {
-            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Write failed: {0}", ex.Message), TraceLevel.Error));
-            Close();
-         }
-#endif
+            try
+            {
+               _lockedStream.Execute(x => x.EndWrite(result));
+               // send data sent event
+               OnDataSent(new DataEventArgs(command, buffer.Length));
+               // send status message
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
+            }
+            catch (Exception ex)
+            {
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Write failed: {0}", ex.Message), TraceLevel.Error));
+               Close();
+            }
+         };
+         _lockedStream.Execute(x => x.BeginWrite(buffer, 0, buffer.Length, callback, null));
       }
-
-#if SEND_ASYNC      
-      private struct AsyncData
-      {
-         private readonly string _command;
-         public string Command
-         {
-            get { return _command; }
-         }
-
-         private readonly byte[] _buffer;
-         public byte[] Buffer
-         {
-            get { return _buffer; }
-         }
-
-         public AsyncData(string command, byte[] buffer)
-         {
-            _command = command;
-            _buffer = buffer;
-         }
-      }
-
-      private void WriteCallback(IAsyncResult result)
-      {
-         var asyncData = (AsyncData)result.AsyncState;
-         try
-         {
-            _stream.EndWrite(result);
-            // send data sent event
-            OnDataLengthSent(new DataLengthEventArgs(asyncData.Buffer.Length));
-            // send status message
-            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Sent command: {0} ({1} bytes)", CleanUpCommandText(asyncData.Command), asyncData.Buffer.Length), TraceLevel.Info));
-         }
-         catch (Exception ex)
-         {
-            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Write failed: {0}", ex.Message), TraceLevel.Error));
-            Close();
-         }
-      }
-#endif
 
       private static string CleanUpCommandText(string command)
       {
