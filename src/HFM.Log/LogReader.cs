@@ -1,17 +1,17 @@
 /*
  * HFM.NET - Log Reader Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
- * 
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -41,14 +41,14 @@ namespace HFM.Log
    public static class LogReader
    {
       #region Fields
-      
+
       private static readonly Regex RegexProjectNumberFromTag =
          new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
       #endregion
 
       #region Methods
-      
+
       /// <summary>
       /// Get FAHlog Unit Data from the given Log Lines
       /// </summary>
@@ -58,11 +58,11 @@ namespace HFM.Log
          var data = new FahLogUnitData();
 
          if (logLines == null) return data;
-         
+
          bool clientWasPaused = false;
          bool lookForProject = true;
          int queueIndex = -1;
-      
+
          foreach (var line in logLines)
          {
             #region Unit Start
@@ -76,7 +76,7 @@ namespace HFM.Log
                data.UnitStartTimeStamp = line.GetTimeStamp() ?? TimeSpan.MinValue;
             }
 
-            if (line.LineType.Equals(LogLineType.WorkUnitPaused) || 
+            if (line.LineType.Equals(LogLineType.WorkUnitPaused) ||
                 line.LineType.Equals(LogLineType.WorkUnitPausedForBattery))
             {
                clientWasPaused = true;
@@ -89,7 +89,7 @@ namespace HFM.Log
                clientWasPaused = false;
 
                // Reset the Frames Observed Count
-               // This will cause the Instance to only use frames beyond this point to 
+               // This will cause the Instance to only use frames beyond this point to
                // set frame times and determine status - Issue 13 (Revised)
                data.FramesObserved = 0;
                // Reset the Unit Start Time
@@ -97,7 +97,7 @@ namespace HFM.Log
             }
 
             #endregion
-            
+
             #region Frame Data
 
             if (line.LineType.Equals(LogLineType.WorkUnitFrame))
@@ -138,7 +138,7 @@ namespace HFM.Log
             }
 
             #endregion
-            
+
             #region Unit Result
 
             if ((line.LineType.Equals(LogLineType.WorkUnitCoreShutdown) && line.LineData != null) ||
@@ -153,7 +153,7 @@ namespace HFM.Log
             }
             if (line.LineType.Equals(LogLineType.WorkUnitCoreReturn) && line.LineData != null)
             {
-               // make sure the result being captured 
+               // make sure the result being captured
                // is for the correct queue index.
                var unitResult = (UnitResult)line.LineData;
                if (unitResult.Index == queueIndex)
@@ -173,7 +173,7 @@ namespace HFM.Log
 
             #endregion
          }
-         
+
          return data;
       }
 
@@ -182,7 +182,7 @@ namespace HFM.Log
          Debug.Assert(line != null);
          Debug.Assert(data != null);
          Debug.Assert(line.LineType.Equals(LogLineType.WorkUnitProject));
-         
+
          var match = (Match)line.LineData;
          var info = new ProjectInfo
                         {
@@ -227,7 +227,7 @@ namespace HFM.Log
             foreach (string s in logLines)
             {
                line = s;
-            
+
                /* Name (Only Read Here) */
                if (line.StartsWith("Name: "))
                {
@@ -362,14 +362,14 @@ namespace HFM.Log
          if (logLines == null) throw new ArgumentNullException("logLines");
 
          // Now that we know the LineType for each LogLine, hand off the List
-         // of LogLine to the ClientRun List so it can determine the Client 
+         // of LogLine to the ClientRun List so it can determine the Client
          // and Unit Start Indexes.
          var clientRunList = logFileType.GetClientRunList();
          clientRunList.Build(logLines);
 
          return clientRunList;
       }
-      
+
       #endregion
    }
 
@@ -394,7 +394,7 @@ namespace HFM.Log
             }
             catch (FormatException)
             {
-               
+
             }
          }
 
@@ -467,29 +467,6 @@ namespace HFM.Log
             return logLines.Where(x => x.LineIndex >= startIndex);
          }
          return logLines.Where(x => x.LineIndex >= startIndex && x.LineIndex <= endIndex);
-      }
-
-      /// <summary>
-      /// Return the first project info found in the log lines or null.
-      /// </summary>
-      public static IProjectInfo FirstProjectInfoOrDefault(this IEnumerable<LogLine> logLines)
-      {
-         if (logLines == null) throw new ArgumentNullException("logLines");
-
-         var projectLine = logLines.FirstOrDefault(x => x.LineType.Equals(LogLineType.WorkUnitProject));
-         if (projectLine == null)
-         {
-            return null;
-         }
-
-         var match = (Match)projectLine.LineData;
-         return new ProjectInfo
-         {
-            ProjectID = Int32.Parse(match.Result("${ProjectNumber}")),
-            ProjectRun = Int32.Parse(match.Result("${Run}")),
-            ProjectClone = Int32.Parse(match.Result("${Clone}")),
-            ProjectGen = Int32.Parse(match.Result("${Gen}"))
-         };
       }
 
       #region LogFileType

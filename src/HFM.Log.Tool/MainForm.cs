@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace HFM.Log.Tool
    {
       private IList<LogLine> _logLines = new List<LogLine>();
       private IList<ClientRun> _clientRuns;
-   
+
       public MainForm()
       {
          InitializeComponent();
@@ -113,8 +114,14 @@ namespace HFM.Log.Tool
          if (File.Exists(txtLogPath.Text))
          {
             LogFileType logFileType = GetLogFileType();
+            var sw = Stopwatch.StartNew();
             _logLines = LogReader.GetLogLines(txtLogPath.Text, logFileType).ToList();
+            sw.Stop();
+            Debug.WriteLine("GetLogLines ET: {0}", sw.Elapsed);
+            sw = Stopwatch.StartNew();
             _clientRuns = LogReader.GetClientRuns(_logLines, logFileType);
+            sw.Stop();
+            Debug.WriteLine("GetClientRuns ET: {0}", sw.Elapsed);
 
             PopulateClientRunsInTree(_clientRuns);
             richTextBox1.SetLogLines(_logLines, String.Empty, true);

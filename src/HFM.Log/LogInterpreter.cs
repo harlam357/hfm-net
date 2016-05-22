@@ -1,24 +1,26 @@
 ﻿/*
  * HFM.NET - Log Interpreter Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
- * 
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using HFM.Core.DataTypes;
 
@@ -31,7 +33,7 @@ namespace HFM.Log
       public LogInterpreter(ICollection<LogLine> logLines, IList<ClientRun> clientRuns)
          : base(logLines, clientRuns)
       {
-         
+
       }
 
       #endregion
@@ -62,18 +64,41 @@ namespace HFM.Log
                   var logLines = LogLineList.WhereLineIndex(start, end);
                   var logLinesIndexOnly = logLines.Filter(LogFilterType.UnitIndex, queueIndex);
 
-                  var info = logLinesIndexOnly.FirstProjectInfoOrDefault();
+                  var info = FirstProjectInfoOrDefault(logLinesIndexOnly);
                   if (info != null && info.EqualsProject(projectInfo))
                   {
                      return logLinesIndexOnly.ToList().AsReadOnly();
                   }
-                  
+
                   continue;
                }
             }
          }
 
          return null;
+      }
+
+      /// <summary>
+      /// Return the first project info found in the log lines or null.
+      /// </summary>
+      private static IProjectInfo FirstProjectInfoOrDefault(IEnumerable<LogLine> logLines)
+      {
+         if (logLines == null) throw new ArgumentNullException("logLines");
+
+         var projectLine = logLines.FirstOrDefault(x => x.LineType.Equals(LogLineType.WorkUnitProject));
+         if (projectLine == null)
+         {
+            return null;
+         }
+
+         var match = (Match)projectLine.LineData;
+         return new ProjectInfo
+         {
+            ProjectID = Int32.Parse(match.Result("${ProjectNumber}")),
+            ProjectRun = Int32.Parse(match.Result("${Run}")),
+            ProjectClone = Int32.Parse(match.Result("${Clone}")),
+            ProjectGen = Int32.Parse(match.Result("${Gen}"))
+         };
       }
 
       #endregion
