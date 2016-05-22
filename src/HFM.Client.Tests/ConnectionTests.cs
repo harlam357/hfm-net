@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -171,8 +171,8 @@ namespace HFM.Client.Tests
          if (withPassword)
          {
             // setup SendCommand() expectation
-            var buffer = Encoding.ASCII.GetBytes("auth password\n");
-            stream.Expect(x => x.Write(buffer, 0, buffer.Length));
+            stream.Expect(x => x.BeginWrite(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(TestUtilities.DoBeginWrite)).Repeat.AtLeastOnce();
          }
       }
 
@@ -287,13 +287,19 @@ namespace HFM.Client.Tests
          {
             Connect(connection);
 
+            var mre = new ManualResetEvent(false);
             bool dataSentFired = false;
             bool statusMessageFired = false;
-            connection.DataSent += (sender, args) => dataSentFired = true;
+
+            connection.DataSent += (sender, args) =>
+            {
+               dataSentFired = true;
+               mre.Set();
+            };
             connection.StatusMessage += (sender, args) => statusMessageFired = true;
-            var buffer = Encoding.ASCII.GetBytes("command\n");
-            _stream.Expect(x => x.Write(buffer, 0, buffer.Length));
+
             connection.SendCommand("command");
+            mre.WaitOne();
 
             Assert.IsTrue(dataSentFired);
             Assert.IsTrue(statusMessageFired);
@@ -310,18 +316,24 @@ namespace HFM.Client.Tests
          {
             Connect(connection);
 
+            var mre = new ManualResetEvent(false);
             bool dataSentFired = false;
             bool statusMessageFired = false;
             bool connectedChangedFired = false;
+
             connection.DataSent += (sender, args) => dataSentFired = true;
-            connection.StatusMessage += (sender, args) => statusMessageFired = true;
+            connection.StatusMessage += (sender, args) =>
+            {
+               statusMessageFired = true;
+               mre.Set();
+            };
             connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
 
-            var buffer = Encoding.ASCII.GetBytes("command\n");
-            _stream.Expect(x => x.Write(buffer, 0, buffer.Length)).Throw(new IOException("Write failed."));
+            _stream.Expect(x => x.EndWrite(null)).IgnoreArguments().Throw(new IOException("Write failed."));
             _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
 
             connection.SendCommand("command");
+            mre.WaitOne();
 
             Assert.IsFalse(dataSentFired);
             Assert.IsTrue(statusMessageFired);
@@ -402,7 +414,7 @@ namespace HFM.Client.Tests
                dataReceived = args.Value;
                mre.Set();
             };
-            
+
             _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
                new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
                   (buffer, offset, size, callback, state) =>
@@ -563,8 +575,8 @@ namespace HFM.Client.Tests
       //      Connect(connection);
       //
       //      // when we call Close() ourselves then the Read() method called by
-      //      // Update() will throw a WSACancelBlockingCall error code as the 
-      //      // inner exception of an IOException.  in this case Close() does 
+      //      // Update() will throw a WSACancelBlockingCall error code as the
+      //      // inner exception of an IOException.  in this case Close() does
       //      // not need called again since it was called through the API.
       //      _stream.Expect(x => x.Read(buffer, 0, buffer.Length)).Throw(new IOException(String.Empty, new SocketException(10004)));
       //

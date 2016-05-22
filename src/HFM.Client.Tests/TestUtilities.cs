@@ -24,5 +24,13 @@ namespace HFM.Client.Tests
          callback.BeginInvoke(ar, null, null);
          return ar;
       }
+
+      internal static IAsyncResult DoBeginWrite(byte[] buffer, int offset, int size, AsyncCallback callback, object state)
+      {
+         var ar = MockRepository.GenerateStub<IAsyncResult>();
+         ar.Stub(x => x.AsyncState).Return(state);
+         callback(ar);
+         return ar;
+      }
    }
 }
