@@ -9,6 +9,9 @@ namespace HFM.Log
 
       internal static class Common
       {
+         internal static readonly Regex TimeStampRegex =
+            new Regex("\\[?(?<Timestamp>\\d{2}:\\d{2}:\\d{2})[\\]|:]", Options);
+
          /// <summary>
          /// Regular Expression to match Work Unit Project string.
          /// </summary>
@@ -133,14 +136,8 @@ namespace HFM.Log
          internal static readonly Regex WorkUnitRunningRegex =
             new Regex("(?<Timestamp>\\d{2}:\\d{2}:\\d{2}):WU(?<UnitIndex>\\d{2}):FS(?<FoldingSlot>\\d{2}):.*", Options);
 
-         internal static readonly Regex WorkUnitWorkingRegex =
-            new Regex("\\d{2}:\\d{2}:\\d{2}:WU\\d{2}:FS\\d{2}:Starting", Options);
-
          internal static readonly Regex WorkUnitCoreReturnRegex =
             new Regex("\\d{2}:\\d{2}:\\d{2}:WU\\d{2}:FS\\d{2}:FahCore returned: (?<UnitResult>.*) \\(.*\\)", Options);
-
-         internal static readonly Regex WorkUnitCleanUpRegex =
-            new Regex("\\d{2}:\\d{2}:\\d{2}:WU\\d{2}:FS\\d{2}:Cleaning up", Options);
       }
    }
 

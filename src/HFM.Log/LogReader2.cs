@@ -167,11 +167,6 @@ namespace HFM.Log
 
       private List<LogLine> _logBuffer;
 
-      //private List<LogLine> LogBuffer
-      //{
-      //   get { return _logBuffer ?? (_logBuffer = new List<LogLine>()); }
-      //}
-
       public LegacyLog()
          : base(LogFileType.Legacy)
       {
@@ -489,6 +484,7 @@ namespace HFM.Log
          {
             logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
             logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);
+            logLine.TimeStamp = LogLineParser2.Common.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
             return true;
          }
          return false;

@@ -59,6 +59,8 @@ namespace HFM.Core.DataTypes
 
       public int QueueIndex { get; set; }
 
+      public TimeSpan? TimeStamp { get; set; }
+
       public override string ToString()
       {
          return LineRaw;

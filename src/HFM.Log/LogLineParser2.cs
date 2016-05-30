@@ -84,13 +84,13 @@ namespace HFM.Log
          {
             Debug.Assert(logLine != null);
 
-            Match mFramesCompleted = LogRegex.Common.FramesCompletedRegex.Match(logLine.LineRaw);
-            if (mFramesCompleted.Success)
+            Match framesCompleted = LogRegex.Common.FramesCompletedRegex.Match(logLine.LineRaw);
+            if (framesCompleted.Success)
             {
                var frame = new UnitFrame();
 
                int result;
-               if (Int32.TryParse(mFramesCompleted.Result("${Completed}"), out result))
+               if (Int32.TryParse(framesCompleted.Result("${Completed}"), out result))
                {
                   frame.RawFramesComplete = result;
                }
@@ -99,7 +99,7 @@ namespace HFM.Log
                   return null;
                }
 
-               if (Int32.TryParse(mFramesCompleted.Result("${Total}"), out result))
+               if (Int32.TryParse(framesCompleted.Result("${Total}"), out result))
                {
                   frame.RawFramesTotal = result;
                }
@@ -108,7 +108,7 @@ namespace HFM.Log
                   return null;
                }
 
-               string percentString = mFramesCompleted.Result("${Percent}");
+               string percentString = framesCompleted.Result("${Percent}");
 
                Match mPercent1 = LogRegex.Common.Percent1Regex.Match(percentString);
                Match mPercent2 = LogRegex.Common.Percent2Regex.Match(percentString);
@@ -135,7 +135,7 @@ namespace HFM.Log
                // 10% frame step tolerance. In the example the completed must be within 250 steps.
                if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
                {
-                  frame.TimeOfFrame = logLine.ParseTimeStamp();
+                  frame.TimeOfFrame = ParseTimeStamp(logLine);
                   frame.FrameID = framePercent;
 
                   return frame;
@@ -144,7 +144,7 @@ namespace HFM.Log
                // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
                if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
                {
-                  frame.TimeOfFrame = logLine.ParseTimeStamp();
+                  frame.TimeOfFrame = ParseTimeStamp(logLine);
                   frame.FrameID = framePercent + 1;
 
                   return frame;
@@ -165,16 +165,16 @@ namespace HFM.Log
          {
             Debug.Assert(logLine != null);
 
-            Match mFramesCompletedGpu = LogRegex.Common.FramesCompletedGpuRegex.Match(logLine.LineRaw);
-            if (mFramesCompletedGpu.Success)
+            Match framesCompletedGpu = LogRegex.Common.FramesCompletedGpuRegex.Match(logLine.LineRaw);
+            if (framesCompletedGpu.Success)
             {
                var frame = new UnitFrame();
 
-               frame.RawFramesComplete = Int32.Parse(mFramesCompletedGpu.Result("${Percent}"));
+               frame.RawFramesComplete = Int32.Parse(framesCompletedGpu.Result("${Percent}"));
                frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
                // I get this from the project data but what's the point. 100% is 100%.
 
-               frame.TimeOfFrame = logLine.ParseTimeStamp();
+               frame.TimeOfFrame = ParseTimeStamp(logLine);
                frame.FrameID = frame.RawFramesComplete;
 
                return frame;
@@ -193,6 +193,79 @@ namespace HFM.Log
                return unitResultValue.ToWorkUnitResult();
             }
             return default(WorkUnitResult);
+         }
+
+         internal static TimeSpan? GetTimeStamp(LogLine logLine)
+         {
+            if (logLine.TimeStamp != null)
+            {
+               return logLine.TimeStamp;
+            }
+            Match timeStampMatch;
+            if ((timeStampMatch = LogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+            {
+               return GetTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
+            }
+            return null;
+         }
+
+         internal static TimeSpan? GetTimeStamp(string value)
+         {
+            DateTime result;
+            if (DateTime.TryParseExact(value, "HH:mm:ss",
+                                       DateTimeFormatInfo.InvariantInfo,
+                                       DateTimeStyle, out result))
+            {
+               return result.TimeOfDay;
+            }
+            return null;
+         }
+
+         internal static TimeSpan ParseTimeStamp(LogLine logLine)
+         {
+            if (logLine.TimeStamp != null)
+            {
+               return logLine.TimeStamp.Value;
+            }
+            Match timeStampMatch;
+            if ((timeStampMatch = LogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+            {
+               return ParseTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
+            }
+
+            throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.LineRaw));
+         }
+
+         internal static TimeSpan ParseTimeStamp(string value)
+         {
+            return DateTime.ParseExact(value, "HH:mm:ss",
+                                       DateTimeFormatInfo.InvariantInfo,
+                                       DateTimeStyle).TimeOfDay;
+         }
+
+         private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
+
+         private static DateTimeStyles DateTimeStyle
+         {
+            get
+            {
+               DateTimeStyles style;
+
+               if (IsRunningOnMono)
+               {
+                  style = DateTimeStyles.AssumeUniversal |
+                          DateTimeStyles.AdjustToUniversal;
+               }
+               else
+               {
+                  // set parse style to parse local
+                  style = DateTimeStyles.NoCurrentDateDefault |
+                          DateTimeStyles.AssumeUniversal |
+                          DateTimeStyles.AdjustToUniversal;
+               }
+
+               return style;
+            }
          }
       }
 
@@ -364,7 +437,6 @@ namespace HFM.Log
       private static readonly Dictionary<LogLineType, Func<LogLine, object>> FahClientParsers = new Dictionary<LogLineType, Func<LogLine, object>>
       {
          { LogLineType.LogOpen, FahClient.ParseLogOpen },
-         { LogLineType.WorkUnitWorking, FahClient.ParseWorkUnitWorking },
          { LogLineType.WorkUnitCoreVersion, FahClient.ParseWorkUnitCoreVersion },
          { LogLineType.WorkUnitCoreReturn, FahClient.ParseWorkUnitCoreReturn },
       };
@@ -392,18 +464,6 @@ namespace HFM.Log
                {
                   return value;
                }
-            }
-            return null;
-         }
-
-         internal static Tuple<int, int> ParseWorkUnitWorking(LogLine logLine)
-         {
-            Match workUnitWorkingMatch;
-            if ((workUnitWorkingMatch = LogRegex.FahClient.WorkUnitWorkingRegex.Match(logLine.LineRaw)).Success)
-            {
-               int unitIndex = Int32.Parse(workUnitWorkingMatch.Groups["UnitIndex"].Value);
-               int foldingSlot = Int32.Parse(workUnitWorkingMatch.Groups["FoldingSlot"].Value);
-               return Tuple.Create(unitIndex, foldingSlot);
             }
             return null;
          }
