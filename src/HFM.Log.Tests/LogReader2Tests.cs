@@ -16,7 +16,7 @@ namespace HFM.Log.Tests
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -80,7 +80,7 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -125,7 +125,7 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -168,7 +168,7 @@ namespace HFM.Log.Tests
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 5 Positions
          var expectedRun = new ClientRun2(null, 401);
@@ -209,7 +209,7 @@ namespace HFM.Log.Tests
       public void SMP_15_FAHlog() // lots of Client-core communications error
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -282,7 +282,7 @@ namespace HFM.Log.Tests
       public void SMP_17_FAHlog() // v6.23 A4 SMP
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -323,7 +323,7 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -402,7 +402,7 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -444,7 +444,7 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -515,7 +515,7 @@ namespace HFM.Log.Tests
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -571,7 +571,7 @@ namespace HFM.Log.Tests
       public void GPU3_2_FAHlog() // verbosity 9 / OPENMMGPU v2.19
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -628,7 +628,7 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -705,7 +705,7 @@ namespace HFM.Log.Tests
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 3 Positions
          var expectedRun = new ClientRun2(null, 788);
@@ -785,7 +785,7 @@ namespace HFM.Log.Tests
       public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
@@ -835,7 +835,7 @@ namespace HFM.Log.Tests
       public void Standard_9_FAHlog() // v6.23 A4 Uniprocessor
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), LogFileType.Legacy);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -876,7 +876,7 @@ namespace HFM.Log.Tests
       public void Client_v7_10()
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -944,7 +944,7 @@ namespace HFM.Log.Tests
       public void Client_v7_13()
       {
          // Scan
-         var fahLog = LogReader2.GetFahLog(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), LogFileType.FahClient);
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 0);
@@ -1056,13 +1056,13 @@ namespace HFM.Log.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void GetLogLines_ArgumentNull1()
       {
-         LogReader2.GetFahLog(null, LogFileType.Legacy);
+         FahLog.Read(null, LogFileType.Legacy);
       }
 
       [Test]
       public void GPU2_5_UnitInfo()
       {
-         var data = LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
+         var data = UnitInfoLog.Read("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
          Assert.AreEqual("p4744_lam5w_300K", data.ProteinName);
          Assert.AreEqual("-", data.ProteinTag);
          Assert.AreEqual(0, data.ProjectID);
@@ -1077,7 +1077,7 @@ namespace HFM.Log.Tests
       [Test]
       public void SMP_10_UnitInfo()
       {
-         var data = LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
+         var data = UnitInfoLog.Read("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
          Assert.AreEqual("Gromacs", data.ProteinName);
          Assert.AreEqual("P2683R6C12G21", data.ProteinTag);
          Assert.AreEqual(2683, data.ProjectID);
@@ -1093,56 +1093,56 @@ namespace HFM.Log.Tests
       [ExpectedException(typeof(ArgumentException))]
       public void GetUnitInfoLogData_ArgumentNull()
       {
-         LogReader2.GetUnitInfoLogData(null);
+         UnitInfoLog.Read(null);
       }
 
       [Test]
       [ExpectedException(typeof(ArgumentException))]
       public void GetUnitInfoLogData_ArgumentEmpty()
       {
-         LogReader2.GetUnitInfoLogData(String.Empty);
+         UnitInfoLog.Read(String.Empty);
       }
 
       [Test]
       [ExpectedException(typeof(IOException))]
       public void GetUnitInfoLogData_FileDoesNotExist()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo1()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo2()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo3()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo4()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
       }
 
       [Test]
       [ExpectedException(typeof(FormatException))]
       public void Malformed_1_UnitInfo5()
       {
-         LogReader2.GetUnitInfoLogData("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
+         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
       }
    }
 }

@@ -1,8 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -10,116 +8,6 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   public static class LogReader2
-   {
-      /// <summary>
-      ///
-      /// </summary>
-      /// <param name="logLines">List of log lines.</param>
-      /// <param name="logFileType">File Type - Legacy or FahClient</param>
-      /// <exception cref="ArgumentNullException">if logLines is null.</exception>
-      public static FahLog GetFahLog(IEnumerable<string> logLines, LogFileType logFileType)
-      {
-         if (logLines == null) throw new ArgumentNullException("logLines");
-
-         var logFile = FahLog.Create(logFileType);
-
-         int index = 0;
-         foreach (var line in logLines)
-         {
-            LogLineType lineType = LogLineIdentifier.GetLogLineType(line, logFileType);
-            var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = index };
-            LogLineParser2.SetLogLineParser(logLine, logFileType);
-            logFile.Add(logLine);
-            index++;
-         }
-         logFile.Finish();
-
-         return logFile;
-      }
-
-      /// <summary>
-      /// Parse the content from the unitinfo.txt file.
-      /// </summary>
-      /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="System.ArgumentException">Throws if logFilePath is null or empty.</exception>
-      /// <exception cref="System.IO.IOException">Throws if file specified by logFilePath cannot be read.</exception>
-      /// <exception cref="System.FormatException">Throws if log data fails parsing.</exception>
-      public static UnitInfoLogData GetUnitInfoLogData(string logFilePath)
-      {
-         if (String.IsNullOrEmpty(logFilePath))
-         {
-            throw new ArgumentException("Argument 'logFilePath' cannot be a null or empty string.");
-         }
-
-         string[] logLines;
-         try
-         {
-            logLines = File.ReadAllLines(logFilePath);
-         }
-         catch (Exception ex)
-         {
-            throw new IOException(String.Format(CultureInfo.CurrentCulture, "Failed to read file '{0}'", logFilePath), ex);
-         }
-
-         var data = new UnitInfoLogData();
-
-         string line = null;
-         try
-         {
-            foreach (string s in logLines)
-            {
-               line = s;
-
-               /* Name (Only Read Here) */
-               if (line.StartsWith("Name: "))
-               {
-                  data.ProteinName = line.Substring(6);
-               }
-               /* Tag (Could be read here or through the queue.dat) */
-               else if (line.StartsWith("Tag: "))
-               {
-                  data.ProteinTag = line.Substring(5);
-
-                  Match mProjectNumberFromTag;
-                  if ((mProjectNumberFromTag = UnitInfoRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
-                  {
-                     data.ProjectID = Int32.Parse(mProjectNumberFromTag.Result("${ProjectNumber}"));
-                     data.ProjectRun = Int32.Parse(mProjectNumberFromTag.Result("${Run}"));
-                     data.ProjectClone = Int32.Parse(mProjectNumberFromTag.Result("${Clone}"));
-                     data.ProjectGen = Int32.Parse(mProjectNumberFromTag.Result("${Gen}"));
-                  }
-               }
-               /* DownloadTime (Could be read here or through the queue.dat) */
-               else if (line.StartsWith("Download time: "))
-               {
-                  data.DownloadTime = DateTime.ParseExact(line.Substring(15), "MMMM d H:mm:ss",
-                                                          DateTimeFormatInfo.InvariantInfo,
-                                                          LogReaderExtensions.DateTimeStyle);
-               }
-               /* DueTime (Could be read here or through the queue.dat) */
-               else if (line.StartsWith("Due time: "))
-               {
-                  data.DueTime = DateTime.ParseExact(line.Substring(10), "MMMM d H:mm:ss",
-                                                     DateTimeFormatInfo.InvariantInfo,
-                                                     LogReaderExtensions.DateTimeStyle);
-               }
-               /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
-               else if (line.StartsWith("Progress: "))
-               {
-                  data.Progress = Int32.Parse(line.Substring(10, line.IndexOf("%") - 10));
-               }
-            }
-         }
-         catch (Exception ex)
-         {
-            throw new FormatException(String.Format(CultureInfo.CurrentCulture, "Failed to parse line '{0}'", line), ex);
-         }
-
-         return data;
-      }
-   }
-
    public abstract class FahLog
    {
       public static FahLog Create(LogFileType logFileType)
@@ -132,6 +20,15 @@ namespace HFM.Log
                return new FahClientLog();
          }
          throw new ArgumentException("LogFileType unknown", "logFileType");
+      }
+
+      public static FahLog Read(IEnumerable<string> lines, LogFileType logFileType)
+      {
+         if (lines == null) throw new ArgumentNullException("lines");
+
+         var fahLog = Create(logFileType);
+         fahLog.AddRange(lines);
+         return fahLog;
       }
 
       private readonly LogFileType _logFileType;
@@ -153,9 +50,35 @@ namespace HFM.Log
          get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun2>()); }
       }
 
-      public abstract void Add(LogLine logLine);
+      private int _lineIndex;
 
-      public abstract void Finish();
+      public void AddRange(IEnumerable<string> lines)
+      {
+         foreach (var line in lines)
+         {
+            AddInternal(line);
+         }
+         Finish();
+      }
+
+      public void Add(string line)
+      {
+         AddInternal(line);
+         Finish();
+      }
+
+      private void AddInternal(string line)
+      {
+         LogLineType lineType = LogLineIdentifier.GetLogLineType(line, LogFileType);
+         var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = _lineIndex };
+         LogLineParser2.SetLogLineParser(logLine, LogFileType);
+         AddLogLine(logLine);
+         _lineIndex++;
+      }
+
+      protected abstract void AddLogLine(LogLine logLine);
+
+      protected abstract void Finish();
    }
 
    public class LegacyLog : FahLog
@@ -173,7 +96,7 @@ namespace HFM.Log
          _unitIndexData.Initialize();
       }
 
-      public override void Add(LogLine logLine)
+      protected override void AddLogLine(LogLine logLine)
       {
          switch (logLine.LineType)
          {
@@ -218,15 +141,15 @@ namespace HFM.Log
          }
       }
 
-      public override void Finish()
+      protected override void Finish()
       {
-         var clientRun = ClientRuns.Count != 0 ? ClientRuns.Peek() : null;
+         var clientRun = ClientRuns.PeekOrDefault();
          if (clientRun == null)
          {
             return;
          }
          var slotRun = clientRun.SlotRuns.Count != 0 ? clientRun.SlotRuns[FoldingSlot] : null;
-         var lastUnitRun = slotRun != null && slotRun.UnitRuns.Count != 0 ? slotRun.UnitRuns.Peek() : null;
+         var lastUnitRun = slotRun != null ? slotRun.UnitRuns.PeekOrDefault() : null;
          if (_logBuffer != null && _logBuffer.Count != 0)
          {
             if (lastUnitRun != null)
@@ -392,7 +315,7 @@ namespace HFM.Log
       {
          var slotRun = EnsureSlotRunExists(lineIndex, FoldingSlot);
          var unitRun = new UnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
-         var previousUnitRun = slotRun.UnitRuns.Count != 0 ? slotRun.UnitRuns.Peek() : null;
+         var previousUnitRun = slotRun.UnitRuns.PeekOrDefault();
          if (previousUnitRun != null)
          {
             previousUnitRun.EndIndex = lineIndex - 1;
@@ -441,7 +364,7 @@ namespace HFM.Log
 
       }
 
-      public override void Add(LogLine logLine)
+      protected override void AddLogLine(LogLine logLine)
       {
          bool isWorkUnitLogLine = SetLogLineProperties(logLine);
          if (!isWorkUnitLogLine)
@@ -460,16 +383,16 @@ namespace HFM.Log
          }
       }
 
-      public override void Finish()
+      protected override void Finish()
       {
-         var clientRun = ClientRuns.Count != 0 ? ClientRuns.Peek() : null;
+         var clientRun = ClientRuns.PeekOrDefault();
          if (clientRun == null)
          {
             return;
          }
          foreach (var slotRun in clientRun.SlotRuns.Values)
          {
-            var lastUnitRun = slotRun.UnitRuns.Count != 0 ? slotRun.UnitRuns.Peek() : null;
+            var lastUnitRun = slotRun.UnitRuns.PeekOrDefault();
             if (lastUnitRun != null)
             {
                lastUnitRun.EndIndex = lastUnitRun.LogLines[lastUnitRun.LogLines.Count - 1].LineIndex;
