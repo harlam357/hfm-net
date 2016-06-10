@@ -1,18 +1,18 @@
 /*
  * HFM.NET - Unit Info Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -52,7 +52,7 @@ namespace HFM.Core.DataTypes
       }
 
       #endregion
-      
+
       #region Properties
 
       #region IOwnedByClient Implementation
@@ -262,11 +262,11 @@ namespace HFM.Core.DataTypes
          if (frame == null) throw new ArgumentNullException("frame");
 
          if (UnitFrames.ContainsKey(frame.FrameID)) return;
-         
-         // Set Raw Frame Values                                       
+
+         // Set Raw Frame Values
          RawFramesComplete = frame.RawFramesComplete;
          RawFramesTotal = frame.RawFramesTotal;
-         
+
          UnitFrames.Add(frame.FrameID, frame);
 
          frame.FrameDuration = TimeSpan.Zero;
@@ -285,7 +285,7 @@ namespace HFM.Core.DataTypes
       {
          return UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
       }
-      
+
       #endregion
 
       #region IEquatable<T> Implementation
@@ -301,30 +301,30 @@ namespace HFM.Core.DataTypes
       {
          if (ReferenceEquals(null, other)) return false;
          if (ReferenceEquals(this, other)) return true;
-         return Equals(other.OwningClientName, OwningClientName) && 
-                Equals(other.OwningClientPath, OwningClientPath) && 
-                other.OwningSlotId == OwningSlotId && 
-                other.UnitRetrievalTime.Equals(UnitRetrievalTime) && 
-                Equals(other.FoldingID, FoldingID) && 
-                other.Team == Team && 
-                Equals(other.SlotType, SlotType) && 
-                other.DownloadTime.Equals(DownloadTime) && 
-                other.DueTime.Equals(DueTime) && 
-                other.UnitStartTimeStamp.Equals(UnitStartTimeStamp) && 
-                other.FinishedTime.Equals(FinishedTime) && 
-                other.CoreVersion.Equals(CoreVersion) && 
-                other.ProjectID == ProjectID && 
-                other.ProjectRun == ProjectRun && 
-                other.ProjectClone == ProjectClone && 
-                other.ProjectGen == ProjectGen && 
-                Equals(other.ProteinName, ProteinName) && 
-                Equals(other.ProteinTag, ProteinTag) && 
-                Equals(other.UnitResult, UnitResult) && 
-                other.RawFramesComplete == RawFramesComplete && 
-                other.RawFramesTotal == RawFramesTotal && 
-                other.FramesObserved == FramesObserved && 
-                other.UnitFrames.SequenceEqual(UnitFrames) && 
-                Equals(other.CoreID, CoreID) && 
+         return Equals(other.OwningClientName, OwningClientName) &&
+                Equals(other.OwningClientPath, OwningClientPath) &&
+                other.OwningSlotId == OwningSlotId &&
+                other.UnitRetrievalTime.Equals(UnitRetrievalTime) &&
+                Equals(other.FoldingID, FoldingID) &&
+                other.Team == Team &&
+                Equals(other.SlotType, SlotType) &&
+                other.DownloadTime.Equals(DownloadTime) &&
+                other.DueTime.Equals(DueTime) &&
+                other.UnitStartTimeStamp.Equals(UnitStartTimeStamp) &&
+                other.FinishedTime.Equals(FinishedTime) &&
+                other.CoreVersion.Equals(CoreVersion) &&
+                other.ProjectID == ProjectID &&
+                other.ProjectRun == ProjectRun &&
+                other.ProjectClone == ProjectClone &&
+                other.ProjectGen == ProjectGen &&
+                Equals(other.ProteinName, ProteinName) &&
+                Equals(other.ProteinTag, ProteinTag) &&
+                Equals(other.UnitResult, UnitResult) &&
+                other.RawFramesComplete == RawFramesComplete &&
+                other.RawFramesTotal == RawFramesTotal &&
+                other.FramesObserved == FramesObserved &&
+                other.UnitFrames.SequenceEqual(UnitFrames) &&
+                Equals(other.CoreID, CoreID) &&
                 other.QueueIndex == QueueIndex;
       }
 
@@ -344,7 +344,7 @@ namespace HFM.Core.DataTypes
       }
 
       /// <summary>
-      /// Serves as a hash function for a particular type. 
+      /// Serves as a hash function for a particular type.
       /// </summary>
       /// <returns>
       /// A hash code for the current <see cref="T:System.Object"/>.

@@ -73,7 +73,6 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ClientRun.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="LogInterpreter2.cs" />
     <Compile Include="LogLineParser2.cs" />
     <Compile Include="FahLogUnitData.cs" />

@@ -1,17 +1,17 @@
 /*
  * HFM.NET - Legacy Client Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -49,7 +49,7 @@ namespace HFM.Core
 
       private ClientSettings _settings;
       private SlotModel _slotModel;
-      
+
       public override ClientSettings Settings
       {
          get { return _settings; }
@@ -126,11 +126,11 @@ namespace HFM.Core
             if (!AbortFlag) OnRetrievalFinished(EventArgs.Empty);
          }
       }
-      
+
       #endregion
 
       #region Queue and Log Processing Functions
-      
+
       /// <summary>
       /// Process the cached log files that exist on this machine
       /// </summary>
@@ -149,16 +149,16 @@ namespace HFM.Core
          dataAggregator.ClientName = Settings.Name;
          dataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
          dataAggregator.FahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         dataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName()); 
-         
+         dataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
+
          #endregion
-         
+
          #region Run the Aggregator
-         
+
          IList<UnitInfo> units = dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(dataAggregator.CurrentClientRun, _slotModel);
+         PopulateRunLevelData(dataAggregator.CurrentClientRun.Data, _slotModel);
          if (dataAggregator.Queue != null)
          {
             PopulateRunLevelData(dataAggregator.Queue.CurrentQueueEntry, _slotModel);
@@ -167,9 +167,9 @@ namespace HFM.Core
          _slotModel.Queue = dataAggregator.Queue;
          _slotModel.CurrentLogLines = dataAggregator.CurrentLogLines;
          _slotModel.UnitLogLines = dataAggregator.UnitLogLines;
-         
+
          #endregion
-         
+
          var parsedUnits = new UnitInfoLogic[units.Count];
          for (int i = 0; i < units.Count; i++)
          {
@@ -183,15 +183,15 @@ namespace HFM.Core
          UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, dataAggregator.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
-         SlotStatus currentWorkUnitStatus = dataAggregator.CurrentClientRun.Status;
-         if (!currentWorkUnitStatus.Equals(SlotStatus.Unknown))
+         SlotStatus currentWorkUnitStatus = dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status;
+         if (currentWorkUnitStatus != SlotStatus.Unknown)
          {
             _slotModel.UnitInfoLogic = parsedUnits[dataAggregator.CurrentUnitIndex];
          }
 
          HandleReturnedStatus(currentWorkUnitStatus, _slotModel);
-         
-         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status, 
+
+         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
 
@@ -230,7 +230,7 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
-      private void PopulateRunLevelData(ClientRun run, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun2Data run, SlotModel slotModel)
       {
          slotModel.Arguments = run.Arguments;
          slotModel.ClientVersion = run.ClientVersion;
@@ -331,11 +331,11 @@ namespace HFM.Core
 
          return nextUnitIndex + 1;
       }
-      
+
       #endregion
 
       #region Status Handling and Determination
-      
+
       /// <summary>
       /// Handles the Client Status Returned by Log Parsing and then determines what values to feed the DetermineStatus routine.
       /// </summary>
@@ -363,7 +363,7 @@ namespace HFM.Core
                           };
 
          SlotStatus computedStatus = StatusLogic.HandleStatusData(statusData);
-         
+
          // If the returned status is EuePause and current status is not
          if (computedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)
          {

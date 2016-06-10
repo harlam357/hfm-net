@@ -632,6 +632,8 @@ namespace HFM.Log.Tests
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun2(null, 2);
+         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedRun.Data = new ClientRun2Data();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 15, 30, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-configonly";
@@ -640,13 +642,14 @@ namespace HFM.Log.Tests
          expectedRun.Data.Team = 32;
          expectedRun.Data.UserID = "4E34332601E26450";
          expectedRun.Data.MachineID = 5;
+         expectedSlotRun.Data = new SlotRunData();
 
          var actualRun = fahLog.ClientRuns.ElementAt(2);
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun2(null, 30);
-         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 179, 592));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 593, 838));

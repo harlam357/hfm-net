@@ -177,7 +177,7 @@ namespace HFM.Log
 
       private void HandleLogOpen(LogLine logLine)
       {
-         EnsureClientRunExists(logLine.LineIndex, true);
+         EnsureSlotRunExists(logLine.LineIndex, FoldingSlot, true);
          _currentLineType = logLine.LineType;
       }
 
@@ -195,7 +195,7 @@ namespace HFM.Log
          // a LogOpen or a LogHeader, then we use this as a signal to create
          // a new ClientRun.  This is a backup option and I don't expect this
          // situtation to happen at all if the log file is not corrupt.
-         EnsureClientRunExists(logLine.LineIndex, true);
+         EnsureSlotRunExists(logLine.LineIndex, FoldingSlot, true);
 
          _currentLineType = logLine.LineType;
       }
@@ -288,7 +288,7 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      private ClientRun2 EnsureClientRunExists(int lineIndex, bool createNew = false)
+      private ClientRun2 EnsureClientRunExists(int lineIndex, bool createNew)
       {
          if (createNew && ClientRuns.Count != 0)
          {
@@ -301,9 +301,9 @@ namespace HFM.Log
          return ClientRuns.Peek();
       }
 
-      private SlotRun EnsureSlotRunExists(int lineIndex, int foldingSlot)
+      private SlotRun EnsureSlotRunExists(int lineIndex, int foldingSlot, bool createNew = false)
       {
-         var clientRun = EnsureClientRunExists(lineIndex);
+         var clientRun = EnsureClientRunExists(lineIndex, createNew);
          if (!clientRun.SlotRuns.ContainsKey(foldingSlot))
          {
             clientRun.SlotRuns[foldingSlot] = new SlotRun(clientRun, foldingSlot);

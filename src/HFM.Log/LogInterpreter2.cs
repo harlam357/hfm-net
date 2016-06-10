@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using HFM.Core.DataTypes;
@@ -100,45 +101,60 @@ namespace HFM.Log
             }
          }
 
-         var lastUnitRun = slotRun.UnitRuns.Peek();
+         // try to get the status from the most recent unit run
+         var lastUnitRun = slotRun.UnitRuns.PeekOrDefault();
          if (lastUnitRun != null)
          {
-            foreach (var line in lastUnitRun.LogLines)
-            {
-               if (line.LineType == LogLineType.WorkUnitProcessing ||
-                   line.LineType == LogLineType.WorkUnitWorking ||
-                   line.LineType == LogLineType.WorkUnitStart ||
-                   line.LineType == LogLineType.WorkUnitFrame ||
-                   line.LineType == LogLineType.WorkUnitResumeFromBattery)
-               {
-                  slotRunData.Status = SlotStatus.RunningNoFrameTimes;
-               }
-               else if (line.LineType == LogLineType.WorkUnitPaused ||
-                        line.LineType == LogLineType.WorkUnitPausedForBattery)
-               {
-                  slotRunData.Status = SlotStatus.Paused;
-               }
-               else if (line.LineType == LogLineType.ClientSendWorkToServer)
-               {
-                  slotRunData.Status = SlotStatus.SendingWorkPacket;
-               }
-               else if (line.LineType == LogLineType.ClientAttemptGetWorkPacket)
-               {
-                  slotRunData.Status = SlotStatus.GettingWorkPacket;
-               }
-               else if (line.LineType == LogLineType.ClientEuePauseState)
-               {
-                  slotRunData.Status = SlotStatus.EuePause;
-               }
-               else if (line.LineType == LogLineType.ClientShutdown ||
-                        line.LineType == LogLineType.ClientCoreCommunicationsErrorShutdown)
-               {
-                  slotRunData.Status = SlotStatus.Stopped;
-               }
-            }
+            slotRunData.Status = GetSlotRunDataStatusLegacy(lastUnitRun.LogLines);
+         }
+         else
+         {
+            // otherwise, get the status from the parent ClientRun
+            slotRunData.Status = GetSlotRunDataStatusLegacy(slotRun.Parent.LogLines);
          }
 
          return slotRunData;
+      }
+
+      private static SlotStatus GetSlotRunDataStatusLegacy(ICollection<LogLine> logLines)
+      {
+         var status = SlotStatus.Unknown;
+
+         foreach (var line in logLines)
+         {
+            if (line.LineType == LogLineType.WorkUnitProcessing ||
+                line.LineType == LogLineType.WorkUnitWorking ||
+                line.LineType == LogLineType.WorkUnitStart ||
+                line.LineType == LogLineType.WorkUnitFrame ||
+                line.LineType == LogLineType.WorkUnitResumeFromBattery)
+            {
+               status = SlotStatus.RunningNoFrameTimes;
+            }
+            else if (line.LineType == LogLineType.WorkUnitPaused ||
+                     line.LineType == LogLineType.WorkUnitPausedForBattery)
+            {
+               status = SlotStatus.Paused;
+            }
+            else if (line.LineType == LogLineType.ClientSendWorkToServer)
+            {
+               status = SlotStatus.SendingWorkPacket;
+            }
+            else if (line.LineType == LogLineType.ClientAttemptGetWorkPacket)
+            {
+               status = SlotStatus.GettingWorkPacket;
+            }
+            else if (line.LineType == LogLineType.ClientEuePauseState)
+            {
+               status = SlotStatus.EuePause;
+            }
+            else if (line.LineType == LogLineType.ClientShutdown ||
+                     line.LineType == LogLineType.ClientCoreCommunicationsErrorShutdown)
+            {
+               status = SlotStatus.Stopped;
+            }
+         }
+
+         return status;
       }
 
       private static SlotRunData GetSlotRunDataFahClient(SlotRun slotRun)
@@ -229,13 +245,16 @@ namespace HFM.Log
             {
                // If we encounter a work unit frame, we should have
                // already seen the Project Information, stop looking
-               if (line.LineType.Equals(LogLineType.WorkUnitFrame))
+               if (line.LineType == LogLineType.WorkUnitFrame)
                {
                   lookForProject = false;
                }
-               if (line.LineType.Equals(LogLineType.WorkUnitProject))
+               if (line.LineType == LogLineType.WorkUnitProject)
                {
-                  unitRunData.ProjectInfoList.Add((IProjectInfo)line.LineData);
+                  if (line.LineData != null)
+                  {
+                     unitRunData.ProjectInfoList.Add((IProjectInfo)line.LineData);
+                  }
                }
             }
 
