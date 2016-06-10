@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -46,7 +46,7 @@ namespace HFM.Core.Tests
 
       // ReSharper disable InconsistentNaming
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_3()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_3";
@@ -105,7 +105,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_7()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_7";
@@ -180,12 +180,12 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_8_1()
       {
          /*** The Test below shows us that because there is no Project information available
-          *   in the FAHlog for the current WU, the UnitLogLines for the Current Queue Index 
-          *   cannot be matched against the Current Queue Entry.  As of 1/31/10 the Queue Entries 
+          *   in the FAHlog for the current WU, the UnitLogLines for the Current Queue Index
+          *   cannot be matched against the Current Queue Entry.  As of 1/31/10 the Queue Entries
           *   are left in tact and the CurrentWorkUnitLogLines are force parsed to match the
           *   Current Queue Index, so now we do know the the Project (R/C/G).
           ***/
@@ -260,10 +260,10 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_8_2()
       {
-         /*** The Test below now gives us access to the unitinfo.txt file 
+         /*** The Test below now gives us access to the unitinfo.txt file
           *   but not the queue.dat.  This will allow us to still parse the
           *   logs but read the Project (R/C/G) from the unitinfo.txt file instead.
           ***/
@@ -322,7 +322,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_9()
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_9";
@@ -397,7 +397,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_11() // mangled Project string on current WU
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_11";
@@ -472,7 +472,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_12() // CoreOutdated on last Queue Index 6
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_12";
@@ -547,7 +547,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_13() // ReadyForUpload queue status now populates the FinishedTime property
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_13";
@@ -622,7 +622,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_14() // GettingWorkPacket - queue entry available before any log data
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_14";
@@ -699,7 +699,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_15() // lots of Client-core communications error
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_15";
@@ -775,7 +775,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("SMP")]
+      [Test]
       public void SMP_17() // v6.23 A4 SMP
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_17";
@@ -835,7 +835,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_3()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_3";
@@ -894,7 +894,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_6_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
@@ -915,7 +915,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(unitInfoList[7]);
          Assert.IsNotNull(unitInfoList[8]);
          Assert.IsNotNull(unitInfoList[9]);
-         
+
          #region Check Data Aggregator
          Assert.IsNotNull(_dataAggregator.Queue);
          Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
@@ -937,7 +937,7 @@ namespace HFM.Core.Tests
          #endregion
 
          var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
-         
+
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
          Assert.AreEqual(null, unitInfoData.OwningClientName);
@@ -969,7 +969,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_6_2_QueueClearTest()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
@@ -986,7 +986,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(_dataAggregator.Queue);
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_7()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_7";
@@ -1045,7 +1045,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_8_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
@@ -1118,7 +1118,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU2_8_2()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
@@ -1175,7 +1175,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("GPU")]
+      [Test]
       public void GPU3_1()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU3_1";
@@ -1278,7 +1278,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("Standard")]
+      [Test]
       public void Standard_5() // multiple Project strings before WU start
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_5";
@@ -1353,7 +1353,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("Standard")]
+      [Test]
       public void Standard_7() // new ProtoMol - progress not on percent boundry
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_7";
@@ -1412,7 +1412,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("Standard")]
+      [Test]
       public void Standard_8() // Battery Pause w/SendingWorkPacket during pause
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_8";
@@ -1425,7 +1425,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, unitInfoList.Count);
          Assert.IsNotNull(unitInfoList[0]);
          Assert.IsNotNull(unitInfoList[1]);
-         
+
          #region Check Data Aggregator
          Assert.IsNull(_dataAggregator.Queue);
          Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
@@ -1471,7 +1471,7 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test, Category("Standard")]
+      [Test]
       public void Standard_9() // v6.23 A4 Uniprocessor
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_9";

@@ -1107,7 +1107,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(IOException))]
+      [ExpectedException(typeof(DirectoryNotFoundException))]
       public void GetUnitInfoLogData_FileDoesNotExist()
       {
          UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");

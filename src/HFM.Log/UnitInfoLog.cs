@@ -9,28 +9,19 @@ namespace HFM.Log
    public static class UnitInfoLog
    {
       /// <summary>
-      /// Parse the content from the unitinfo.txt file.
+      /// Reads the content from a unitinfo.txt file.
       /// </summary>
-      /// <param name="logFilePath">Path to the log file.</param>
-      /// <exception cref="System.ArgumentException">Throws if logFilePath is null or empty.</exception>
-      /// <exception cref="System.IO.IOException">Throws if file specified by logFilePath cannot be read.</exception>
-      /// <exception cref="System.FormatException">Throws if log data fails parsing.</exception>
-      public static UnitInfoLogData Read(string logFilePath)
+      /// <param name="path">Path to the log file.</param>
+      /// <exception cref="System.ArgumentException">if path is null or empty.</exception>
+      /// <exception cref="System.FormatException">if log data fails parsing.</exception>
+      public static UnitInfoLogData Read(string path)
       {
-         if (String.IsNullOrEmpty(logFilePath))
+         if (String.IsNullOrEmpty(path))
          {
-            throw new ArgumentException("Argument 'logFilePath' cannot be a null or empty string.");
+            throw new ArgumentException("Argument 'path' cannot be a null or empty string.");
          }
 
-         string[] logLines;
-         try
-         {
-            logLines = File.ReadAllLines(logFilePath);
-         }
-         catch (Exception ex)
-         {
-            throw new IOException(String.Format(CultureInfo.CurrentCulture, "Failed to read file '{0}'", logFilePath), ex);
-         }
+         string[] logLines = File.ReadAllLines(path);
 
          var data = new UnitInfoLogData();
 
@@ -51,13 +42,13 @@ namespace HFM.Log
                {
                   data.ProteinTag = line.Substring(5);
 
-                  Match mProjectNumberFromTag;
-                  if ((mProjectNumberFromTag = UnitInfoRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
+                  Match projectNumberFromTagMatch;
+                  if ((projectNumberFromTagMatch = UnitInfoRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
                   {
-                     data.ProjectID = Int32.Parse(mProjectNumberFromTag.Result("${ProjectNumber}"));
-                     data.ProjectRun = Int32.Parse(mProjectNumberFromTag.Result("${Run}"));
-                     data.ProjectClone = Int32.Parse(mProjectNumberFromTag.Result("${Clone}"));
-                     data.ProjectGen = Int32.Parse(mProjectNumberFromTag.Result("${Gen}"));
+                     data.ProjectID = Int32.Parse(projectNumberFromTagMatch.Groups["ProjectNumber"].Value);
+                     data.ProjectRun = Int32.Parse(projectNumberFromTagMatch.Groups["Run"].Value);
+                     data.ProjectClone = Int32.Parse(projectNumberFromTagMatch.Groups["Clone"].Value);
+                     data.ProjectGen = Int32.Parse(projectNumberFromTagMatch.Groups["Gen"].Value);
                   }
                }
                /* DownloadTime (Could be read here or through the queue.dat) */
