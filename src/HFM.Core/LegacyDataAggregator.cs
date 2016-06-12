@@ -110,7 +110,7 @@ namespace HFM.Core
                {
                   return new List<LogLine>();
                }
-               return clientRun.LogLines;
+               return clientRun.ToList();
             }
 
             return _unitLogLines[CurrentUnitIndex];
@@ -217,7 +217,7 @@ namespace HFM.Core
          var previousUnitRun = GetPreviousUnitRun(fahLog);
          if (previousUnitRun != null)
          {
-            _unitLogLines[0] = previousUnitRun.LogLines;
+            _unitLogLines[0] = previousUnitRun.ToList();
             parsedUnits[0] = BuildUnitInfo(null, currentClientRun.Data, previousUnitRun, null);
          }
 
@@ -225,12 +225,12 @@ namespace HFM.Core
          var currentUnitRun = GetCurrentUnitRun(fahLog);
          if (currentUnitRun != null)
          {
-            _unitLogLines[1] = currentUnitRun.LogLines;
+            _unitLogLines[1] = currentUnitRun.ToList();
          }
          else
          {
             matchOverride = true;
-            _unitLogLines[1] = currentClientRun.LogLines;
+            _unitLogLines[1] = currentClientRun.ToList();
          }
          parsedUnits[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, GetUnitInfoLogData(), matchOverride);
 
@@ -280,7 +280,7 @@ namespace HFM.Core
          {
             var unitRun = GetUnitRunForQueueIndex(fahLog, queueIndex);
             // Get the Log Lines for this queue position from the reader
-            _unitLogLines[queueIndex] = unitRun != null ? unitRun.LogLines : null;
+            _unitLogLines[queueIndex] = unitRun != null ? unitRun.ToList() : null;
 
             UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
@@ -305,11 +305,11 @@ namespace HFM.Core
                   // was short and never contained any Work Unit Data.
                   if (unitRun != null)
                   {
-                     _unitLogLines[queueIndex] = unitRun.LogLines;
+                     _unitLogLines[queueIndex] = unitRun.ToList();
                   }
                   else
                   {
-                     _unitLogLines[queueIndex] = clientRun.LogLines;
+                     _unitLogLines[queueIndex] = clientRun.ToList();
                   }
 
                   var slotRun = GetCurrentSlotRun(fahLog);
@@ -409,7 +409,7 @@ namespace HFM.Core
                if (unitRun != null)
                {
                   // continue parsing the frame data
-                  ParseFrameData(unitRun.LogLines, unit);
+                  ParseFrameData(unitRun, unit);
                }
             }
             else
@@ -422,7 +422,7 @@ namespace HFM.Core
             PopulateUnitInfoFromLogs(clientRunData, unitRunData, unitInfoLogData, unit);
             if (unitRun != null)
             {
-               ParseFrameData(unitRun.LogLines, unit);
+               ParseFrameData(unitRun, unit);
             }
          }
 

@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -43,19 +43,19 @@ namespace HFM.Core
    public interface IFahClient : IClient
    {
       /// <summary>
-      /// Sends the Fold command to the FAH client. 
+      /// Sends the Fold command to the FAH client.
       /// </summary>
       /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
       void Fold(int? slotId);
 
       /// <summary>
-      /// Sends the Pause command to the FAH client. 
+      /// Sends the Pause command to the FAH client.
       /// </summary>
       /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
       void Pause(int? slotId);
 
       /// <summary>
-      /// Sends the Finish command to the FAH client. 
+      /// Sends the Finish command to the FAH client.
       /// </summary>
       /// <param name="slotId">If not null, sends the command to the specified slot; otherwise, the command will be sent to all client slots.</param>
       void Finish(int? slotId);
@@ -66,7 +66,7 @@ namespace HFM.Core
       #region Properties
 
       private ClientSettings _settings;
-      
+
       public override ClientSettings Settings
       {
          get { return _settings; }
@@ -169,7 +169,7 @@ namespace HFM.Core
       private readonly IMessageConnection _messageConnection;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
-      private readonly StringBuilder _logText;
+      private FahLog _fahLog;
       private MessageReceiver _messages;
 
       public FahClient(IMessageConnection messageConnection)
@@ -179,7 +179,7 @@ namespace HFM.Core
          _messageConnection = messageConnection;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
-         _logText = new StringBuilder();
+         _fahLog = FahLog.Create(LogFileType.FahClient);
          _messages = new MessageReceiver();
 
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
@@ -207,12 +207,13 @@ namespace HFM.Core
             var logFragment = (LogFragment)e.TypedMessage;
             IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
 
+            bool createNew = e.DataType == typeof(LogRestart);
             // clear
-            if (e.DataType == typeof(LogRestart))
+            if (createNew)
             {
-               _logText.Length = 0;
+               _fahLog.Clear();
             }
-            WriteToLocalFahLogCache(chunks);
+            WriteToLocalFahLogCache(chunks, createNew);
             AppendToLogBuffer(chunks, logFragment.Value.Length);
 
             if (_messages.LogRetrieved)
@@ -222,10 +223,10 @@ namespace HFM.Core
          }
       }
 
-      private void WriteToLocalFahLogCache(IEnumerable<char[]> chunks)
+      private void WriteToLocalFahLogCache(IEnumerable<char[]> chunks, bool createNew)
       {
          string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         if (_logText.Length == 0)
+         if (createNew)
          {
             int i = 0;
             foreach (var chunk in chunks)
@@ -254,14 +255,12 @@ namespace HFM.Core
       {
          Debug.Assert(chunks != null);
 
-         if (_logText.Length > (8000 * 2500)) // 20 Million Bytes
-         {
-            _logText.Remove(0, length);
-         }
+         var logText = new StringBuilder();
          foreach (var chunk in chunks)
          {
-            _logText.Append(chunk);
+            logText.Append(chunk);
          }
+         _fahLog.AddRange(logText.Split('\n').Where(x => x.Length != 0));
       }
 
       private void MessageConnectionUpdateFinished(object sender, EventArgs e)
@@ -285,7 +284,7 @@ namespace HFM.Core
          if (!e.Connected)
          {
             // clear the local log buffer
-            _logText.Length = 0;
+            _fahLog.Clear();
             // reset messages
             _messages = new MessageReceiver();
             // refresh (clear) the slots
@@ -409,9 +408,7 @@ namespace HFM.Core
 
                var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                dataAggregator.ClientName = slotModel.Name;
-               var lines = LogReader.GetLogLines(_logText.Split('\n').Where(x => x.Length != 0), LogFileType.FahClient);
-               lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotModel.SlotId).ToList();
-               IDictionary<int, UnitInfo> units = dataAggregator.AggregateData(lines, _messages.UnitCollection, info, options,
+               IDictionary<int, UnitInfo> units = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
                                                                                slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
                PopulateRunLevelData(dataAggregator.CurrentClientRun, info, slotModel);
 
@@ -449,7 +446,7 @@ namespace HFM.Core
                Logger.Info(Constants.ClientNameFormat, slotModel.Name, statusMessage);
             }
          }
-         finally 
+         finally
          {
             _slotsLock.ExitReadLock();
          }
@@ -494,7 +491,7 @@ namespace HFM.Core
          }
       }
 
-      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun2 run, Info info, SlotModel slotModel)
       {
          Debug.Assert(slotModel != null);
 
@@ -509,9 +506,9 @@ namespace HFM.Core
          //}
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.Data.StartTime);
             slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.Data.StartTime);
             slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
          }
       }
@@ -574,9 +571,9 @@ namespace HFM.Core
          private readonly List<SlotOptions> _slotOptions = new List<SlotOptions>();
 
          private UnitCollection _previousUnitCollection;
-         
+
          public UnitCollection UnitCollection { get; private set; }
-         
+
          public bool LogRetrieved { get; private set; }
 
          public void Add(MessageReceivedEventArgs args)
@@ -693,13 +690,13 @@ namespace HFM.Core
                          x.Gen == y.Gen &&
                          Equals(x.Core, y.Core) &&
                          Equals(x.UnitId, y.UnitId) &&
-                         x.TotalFrames == y.TotalFrames && 
+                         x.TotalFrames == y.TotalFrames &&
                          x.FramesDone == y.FramesDone &&
                          Equals(x.Assigned, y.Assigned) &&
                          Equals(x.Timeout, y.Timeout) &&
                          Equals(x.Deadline, y.Deadline) &&
-                         Equals(x.WorkServer, y.WorkServer) && 
-                         Equals(x.CollectionServer, y.CollectionServer) && 
+                         Equals(x.WorkServer, y.WorkServer) &&
+                         Equals(x.CollectionServer, y.CollectionServer) &&
                          Equals(x.WaitingOn, y.WaitingOn) &&
                          x.Attempts == y.Attempts &&
                          Equals(x.NextAttempt, y.NextAttempt) &&

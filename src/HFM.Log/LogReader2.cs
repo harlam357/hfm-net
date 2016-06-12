@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -8,7 +10,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   public abstract class FahLog
+   public abstract class FahLog : IEnumerable<LogLine>
    {
       public static FahLog Create(LogFileType logFileType)
       {
@@ -76,9 +78,28 @@ namespace HFM.Log
          _lineIndex++;
       }
 
+      public void Clear()
+      {
+         if (_clientRuns != null)
+         {
+            _clientRuns.Clear();
+         }
+         _lineIndex = 0;
+      }
+
       protected abstract void AddLogLine(LogLine logLine);
 
       protected abstract void Finish();
+
+      public IEnumerator<LogLine> GetEnumerator()
+      {
+         return ClientRuns.Reverse().SelectMany(x => x).GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
+      }
    }
 
    public class LegacyLog : FahLog
@@ -319,6 +340,7 @@ namespace HFM.Log
          if (previousUnitRun != null)
          {
             previousUnitRun.EndIndex = lineIndex - 1;
+            previousUnitRun.IsComplete = true;
 
             var clientRun = ClientRuns.Peek();
             foreach (var logLine in _logBuffer.Where(x => x.LineIndex < previousUnitRun.StartIndex))
@@ -378,6 +400,7 @@ namespace HFM.Log
             if (logLine.LineType == LogLineType.WorkUnitCleaningUp)
             {
                unitRun.EndIndex = logLine.LineIndex;
+               unitRun.IsComplete = true;
             }
             unitRun.LogLines.Add(logLine);
          }
@@ -390,12 +413,11 @@ namespace HFM.Log
          {
             return;
          }
-         foreach (var slotRun in clientRun.SlotRuns.Values)
+         foreach (var unitRun in clientRun.SlotRuns.Values.SelectMany(x => x.UnitRuns))
          {
-            var lastUnitRun = slotRun.UnitRuns.PeekOrDefault();
-            if (lastUnitRun != null)
+            if (!unitRun.IsComplete)
             {
-               lastUnitRun.EndIndex = lastUnitRun.LogLines[lastUnitRun.LogLines.Count - 1].LineIndex;
+               unitRun.EndIndex = unitRun.LogLines[unitRun.LogLines.Count - 1].LineIndex;
             }
          }
       }
@@ -446,11 +468,11 @@ namespace HFM.Log
 
       private static UnitRun GetMostRecentUnitRun(SlotRun slotRun, int queueIndex)
       {
-         return slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && !x.EndIndex.HasValue);
+         return slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
       }
    }
 
-   public class ClientRun2
+   public class ClientRun2 : IEnumerable<LogLine>
    {
       private readonly FahLog _parent;
 
@@ -477,6 +499,9 @@ namespace HFM.Log
       {
          _parent = parent;
          _clientStartIndex = clientStartIndex;
+
+         _logLines = new ObservableCollection<LogLine>();
+         _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
       private Dictionary<int, SlotRun> _slotRuns;
@@ -486,11 +511,11 @@ namespace HFM.Log
          get { return _slotRuns ?? (_slotRuns = new Dictionary<int, SlotRun>()); }
       }
 
-      private List<LogLine> _logLines;
+      private readonly ObservableCollection<LogLine> _logLines;
 
-      public IList<LogLine> LogLines
+      internal IList<LogLine> LogLines
       {
-         get { return _logLines ?? (_logLines = new List<LogLine>()); }
+         get { return _logLines; }
       }
 
       private ClientRun2Data _data;
@@ -499,18 +524,36 @@ namespace HFM.Log
       {
          get
          {
-            if (_data == null)
+            if (_data == null || IsDirty)
             {
-               Process();
+               IsDirty = false;
+               _data = LogInterpreter2.GetClientRunData(this);
             }
             return _data;
          }
-         internal set { _data = value; }
+         internal set
+         {
+            IsDirty = false;
+            _data = value;
+         }
       }
 
-      public void Process()
+      private bool _isDirty = true;
+
+      internal bool IsDirty
       {
-         _data = LogInterpreter2.GetClientRunData(this);
+         get { return _isDirty; }
+         set { _isDirty = value; }
+      }
+
+      public IEnumerator<LogLine> GetEnumerator()
+      {
+         return _logLines.Concat(_slotRuns.Values.SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines)).OrderBy(x => x.LineIndex).GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
       }
    }
 
@@ -552,7 +595,7 @@ namespace HFM.Log
       public int MachineID { get; set; }
    }
 
-   public class SlotRun
+   public class SlotRun : IEnumerable<LogLine>
    {
       private readonly ClientRun2 _parent;
 
@@ -589,18 +632,46 @@ namespace HFM.Log
       {
          get
          {
-            if (_data == null)
+            if (_data == null || IsDirty)
             {
-               Process();
+               IsDirty = false;
+               _data = LogInterpreter2.GetSlotRunData(this);
             }
             return _data;
          }
-         internal set { _data = value; }
+         internal set
+         {
+            IsDirty = false;
+            _data = value;
+         }
       }
 
-      public void Process()
+      private bool _isDirty = true;
+
+      internal bool IsDirty
       {
-         _data = LogInterpreter2.GetSlotRunData(this);
+         get { return _isDirty; }
+         set
+         {
+            _isDirty = value;
+            // don't push dirty flag up to ClientRun at this time
+            // there is no ClientRunData that depends on SlotRun
+            // or further child LogLine data
+            //if (Parent != null && _isDirty)
+            //{
+            //   Parent.IsDirty = true;
+            //}
+         }
+      }
+
+      public IEnumerator<LogLine> GetEnumerator()
+      {
+         return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.LineIndex).GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
       }
    }
 
@@ -627,7 +698,7 @@ namespace HFM.Log
       public SlotStatus Status { get; set; }
    }
 
-   public class UnitRun
+   public class UnitRun : IEnumerable<LogLine>
    {
       private readonly SlotRun _parent;
 
@@ -636,9 +707,19 @@ namespace HFM.Log
          get { return _parent; }
       }
 
+      private readonly ObservableCollection<LogLine> _logLines;
+
+      internal IList<LogLine> LogLines
+      {
+         get { return _logLines; }
+      }
+
       public UnitRun(SlotRun parent)
       {
          _parent = parent;
+
+         _logLines = new ObservableCollection<LogLine>();
+         _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
       internal UnitRun(SlotRun parent, int? queueIndex, int? startIndex, int? endIndex)
@@ -647,13 +728,9 @@ namespace HFM.Log
          QueueIndex = queueIndex;
          StartIndex = startIndex;
          EndIndex = endIndex;
-      }
 
-      private readonly List<LogLine> _logLines = new List<LogLine>();
-
-      public IList<LogLine> LogLines
-      {
-         get { return _logLines; }
+         _logLines = new ObservableCollection<LogLine>();
+         _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
       public int? FoldingSlot
@@ -673,18 +750,45 @@ namespace HFM.Log
       {
          get
          {
-            if (_data == null)
+            if (_data == null || IsDirty)
             {
-               Process();
+               IsDirty = false;
+               _data = LogInterpreter2.GetUnitRunData(this);
             }
             return _data;
          }
-         internal set { _data = value; }
+         internal set
+         {
+            IsDirty = false;
+            _data = value;
+         }
       }
 
-      public void Process()
+      private bool _isDirty = true;
+
+      internal bool IsDirty
       {
-         _data = LogInterpreter2.GetUnitRunData(this);
+         get { return _isDirty; }
+         set
+         {
+            _isDirty = value;
+            if (Parent != null && _isDirty)
+            {
+               Parent.IsDirty = true;
+            }
+         }
+      }
+
+      internal bool IsComplete { get; set; }
+
+      public IEnumerator<LogLine> GetEnumerator()
+      {
+         return _logLines.GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
       }
    }
 

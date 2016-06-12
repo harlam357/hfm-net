@@ -1,5 +1,5 @@
 ﻿
-#define V1
+//#define V1
 
 using System;
 using System.Collections.Generic;
@@ -159,10 +159,10 @@ namespace HFM.Log.Tool
             PopulateClientRunsInTree(_clientRuns);
 #else
             var sw = Stopwatch.StartNew();
-            _fahLog = LogReader2.GetFahLog(File.ReadLines(txtLogPath.Text), logFileType);
+            _fahLog = FahLog.Read(File.ReadLines(txtLogPath.Text), logFileType);
             sw.Stop();
-            Debug.WriteLine("GetFahLog ET: {0}", sw.Elapsed);
-            _logLines = RestoreOrderedLog(_fahLog);
+            Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
+            _logLines = _fahLog.ToList();
             PopulateClientRunsInTree(_fahLog);
 #endif
             richTextBox1.SetLogLines(_logLines, String.Empty, true);
@@ -172,15 +172,6 @@ namespace HFM.Log.Tool
             MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                "File '{0}' does not exist.", txtLogPath.Text), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
-      }
-
-      private static IList<LogLine> RestoreOrderedLog(FahLog fahLog)
-      {
-         var lines1 = fahLog.ClientRuns.SelectMany(x => x.LogLines);
-         var lines2 = fahLog.ClientRuns.SelectMany(x => x.SlotRuns).Select(x => x.Value).SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines);
-         var logLines = lines1.Concat(lines2).ToList();
-         logLines.Sort((x, y) => x.LineIndex.CompareTo(y.LineIndex));
-         return logLines;
       }
 
       private LogFileType GetLogFileType()

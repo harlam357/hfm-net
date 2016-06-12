@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Fah Client Data Aggregator Class Tests
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -49,8 +49,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
-         lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -68,7 +67,7 @@ namespace HFM.Core.Tests
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var units = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
          Assert.IsFalse(units.Any(x => x.Value == null));
 
@@ -124,8 +123,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), LogFileType.FahClient);
-         lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), LogFileType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -143,7 +141,7 @@ namespace HFM.Core.Tests
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var units = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
          Assert.IsFalse(units.Any(x => x.Value == null));
 
@@ -197,8 +195,7 @@ namespace HFM.Core.Tests
          const int slotId = 1;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
-         lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -216,7 +213,7 @@ namespace HFM.Core.Tests
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var units = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
          Assert.IsFalse(units.Any(x => x.Value == null));
 
@@ -272,8 +269,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_11";
 
-         var lines = LogReader.GetLogLines(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt").Where(x => x.Length != 0), LogFileType.FahClient);
-         lines = lines.Filter(LogFilterType.SlotAndNonIndexed, slotId).ToList();
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"), LogFileType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
          var unitCollection = new UnitCollection();
@@ -291,7 +287,7 @@ namespace HFM.Core.Tests
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var units = _dataAggregator.AggregateData(lines, unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var units = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, units.Count);
          Assert.IsFalse(units.Any(x => x.Value == null));
 

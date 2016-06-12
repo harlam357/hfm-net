@@ -1057,7 +1057,7 @@ namespace HFM.Log.Tests
 
       [Test]
       [ExpectedException(typeof(ArgumentNullException))]
-      public void GetLogLines_ArgumentNull1()
+      public void FahLog_Read_ArgumentNullException_Test()
       {
          FahLog.Read(null, LogFileType.Legacy);
       }
