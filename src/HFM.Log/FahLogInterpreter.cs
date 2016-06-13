@@ -6,9 +6,9 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   public static class FahLogInterpreter
+   internal static class FahLogInterpreter
    {
-      public static ClientRunData GetClientRunData(ClientRun clientRun)
+      internal static ClientRunData GetClientRunData(ClientRun clientRun)
       {
          switch (clientRun.Parent.FahLogType)
          {
@@ -17,7 +17,7 @@ namespace HFM.Log
             case FahLogType.FahClient:
                return GetClientRunDataFahClient(clientRun);
          }
-         throw new ArgumentException("ClientRun LogFileType unknown", "clientRun");
+         throw new ArgumentException("ClientRun FahLogType unknown", "clientRun");
       }
 
       private static ClientRunData GetClientRunDataLegacy(ClientRun clientRun)
@@ -75,7 +75,7 @@ namespace HFM.Log
          return clientRunData;
       }
 
-      public static SlotRunData GetSlotRunData(SlotRun slotRun)
+      internal static SlotRunData GetSlotRunData(SlotRun slotRun)
       {
          switch (slotRun.Parent.Parent.FahLogType)
          {
@@ -84,7 +84,7 @@ namespace HFM.Log
             case FahLogType.FahClient:
                return GetSlotRunDataFahClient(slotRun);
          }
-         throw new ArgumentException("SlotRun LogFileType unknown", "slotRun");
+         throw new ArgumentException("SlotRun FahLogType unknown", "slotRun");
       }
 
       private static SlotRunData GetSlotRunDataLegacy(SlotRun slotRun)
@@ -185,7 +185,7 @@ namespace HFM.Log
          }
       }
 
-      public static UnitRunData GetUnitRunData(UnitRun unitRun)
+      internal static UnitRunData GetUnitRunData(UnitRun unitRun)
       {
          switch (unitRun.Parent.Parent.Parent.FahLogType)
          {
@@ -194,7 +194,7 @@ namespace HFM.Log
             case FahLogType.FahClient:
                return GetUnitRunDataFahClient(unitRun);
          }
-         throw new ArgumentException("UnitRun LogFileType unknown", "unitRun");
+         throw new ArgumentException("UnitRun FahLogType unknown", "unitRun");
       }
 
       private static UnitRunData GetUnitRunDataLegacy(UnitRun unitRun)

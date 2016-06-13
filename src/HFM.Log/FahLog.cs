@@ -25,7 +25,7 @@ namespace HFM.Log
             case FahLogType.FahClient:
                return new FahClientLog();
          }
-         throw new ArgumentException("LogFileType unknown", "fahLogType");
+         throw new ArgumentException("FahLogType unknown", "fahLogType");
       }
 
       public static FahLog Read(IEnumerable<string> lines, FahLogType fahLogType)
