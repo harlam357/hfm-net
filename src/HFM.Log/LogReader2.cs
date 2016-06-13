@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -10,6 +11,12 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
+   public enum LogFileType
+   {
+      Legacy,
+      FahClient
+   }
+
    public abstract class FahLog : IEnumerable<LogLine>
    {
       public static FahLog Create(LogFileType logFileType)
@@ -917,5 +924,36 @@ namespace HFM.Log
       public WorkUnitResult WorkUnitResult { get; set; }
 
       public int? TotalCompletedUnits { get; set; }
+   }
+
+   public static class LogReaderExtensions
+   {
+      private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
+
+      /// <summary>
+      /// Get the Default DateTimeStyle based on the current runtime (.NET or Mono).
+      /// </summary>
+      internal static DateTimeStyles DateTimeStyle
+      {
+         get
+         {
+            DateTimeStyles style;
+
+            if (IsRunningOnMono)
+            {
+               style = DateTimeStyles.AssumeUniversal |
+                       DateTimeStyles.AdjustToUniversal;
+            }
+            else
+            {
+               // set parse style to parse local
+               style = DateTimeStyles.NoCurrentDateDefault |
+                       DateTimeStyles.AssumeUniversal |
+                       DateTimeStyles.AdjustToUniversal;
+            }
+
+            return style;
+         }
+      }
    }
 }
