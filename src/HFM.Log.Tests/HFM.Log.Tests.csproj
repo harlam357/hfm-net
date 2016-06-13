@@ -8,7 +8,7 @@
     <ProjectGuid>{9EA57D40-ECE3-4F75-AD89-72960B847F1F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HFM.Log.Tests</RootNamespace>
+    <RootNamespace>HFM.Log</RootNamespace>
     <AssemblyName>HFM.Log.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -91,7 +91,11 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="LogReader2Tests.cs" />
+    <Compile Include="FahClientLogTests.cs" />
+    <Compile Include="FahLogAssert.cs" />
+    <Compile Include="FahLogTests.cs" />
+    <Compile Include="LegacyLogTests.cs" />
+    <Compile Include="UnitInfoLogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitFrameTests.cs" />
   </ItemGroup>

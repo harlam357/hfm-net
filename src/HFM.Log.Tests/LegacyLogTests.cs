@@ -3,17 +3,19 @@ using System;
 using System.IO;
 using System.Linq;
 
-using HFM.Core.DataTypes;
-
 using NUnit.Framework;
 
-namespace HFM.Log.Tests
+using HFM.Core.DataTypes;
+
+namespace HFM.Log
 {
    [TestFixture]
-   public class LogReader2Tests
+   public class LegacyLogTests
    {
+      // ReSharper disable InconsistentNaming
+
       [Test]
-      public void SMP_1_FAHlog() // verbosity 9
+      public void LegacyLog_Read_SMP_1_Test() // verbosity 9
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), FahLogType.Legacy);
@@ -39,7 +41,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 274);
@@ -62,7 +64,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.GettingWorkPacket;
 
          actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -77,7 +79,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void SMP_2_FAHlog() // verbosity 9
+      public void LegacyLog_Read_SMP_2_Test() // verbosity 9
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), FahLogType.Legacy);
@@ -103,7 +105,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.SendingWorkPacket;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -122,7 +124,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
+      public void LegacyLog_Read_SMP_3_Test() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), FahLogType.Legacy);
@@ -150,7 +152,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -165,7 +167,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
+      public void LegacyLog_Read_SMP_10_Test() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), FahLogType.Legacy);
@@ -190,7 +192,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(4);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          actualRun = fahLog.ClientRuns.Peek();
@@ -206,7 +208,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void SMP_15_FAHlog() // lots of Client-core communications error
+      public void LegacyLog_Read_SMP_15_Test() // lots of Client-core communications error
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), FahLogType.Legacy);
@@ -264,7 +266,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.EuePause;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -279,7 +281,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void SMP_17_FAHlog() // v6.23 A4 SMP
+      public void LegacyLog_Read_SMP_17_Test() // v6.23 A4 SMP
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), FahLogType.Legacy);
@@ -305,7 +307,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -320,7 +322,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void GPU2_1_FAHlog() // verbosity 9
+      public void LegacyLog_Read_GPU2_1_Test() // verbosity 9
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), FahLogType.Legacy);
@@ -350,7 +352,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 618);
@@ -384,7 +386,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -399,7 +401,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void GPU2_2_FAHlog() // verbosity (normal)
+      public void LegacyLog_Read_GPU2_2_Test() // verbosity (normal)
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), FahLogType.Legacy);
@@ -426,7 +428,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -441,7 +443,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
+      public void LegacyLog_Read_GPU2_3_Test() // verbosity (normal) / EUE Pause Test
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), FahLogType.Legacy);
@@ -466,7 +468,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 56);
@@ -493,7 +495,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.EuePause;
 
          actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -512,7 +514,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
+      public void LegacyLog_Read_GPU2_7_Test() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), FahLogType.Legacy);
@@ -537,7 +539,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -568,7 +570,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void GPU3_2_FAHlog() // verbosity 9 / OPENMMGPU v2.19
+      public void LegacyLog_Read_GPU3_2_Test() // verbosity 9 / OPENMMGPU v2.19
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), FahLogType.Legacy);
@@ -594,7 +596,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -625,7 +627,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void Standard_1_FAHlog() // verbosity 9
+      public void LegacyLog_Read_Standard_1_Test() // verbosity 9
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), FahLogType.Legacy);
@@ -645,7 +647,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data = new SlotRunData();
 
          var actualRun = fahLog.ClientRuns.ElementAt(2);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 30);
@@ -668,7 +670,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          actualRun = fahLog.ClientRuns.ElementAt(1);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 2 Positions
          expectedRun = new ClientRun(null, 839);
@@ -690,7 +692,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -705,7 +707,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void Standard_5_FAHlog() // verbosity 9
+      public void LegacyLog_Read_Standard_5_Test() // verbosity 9
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), FahLogType.Legacy);
@@ -730,7 +732,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Check Run 4 Positions
          expectedRun = new ClientRun(null, 927);
@@ -752,7 +754,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
 
          actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -785,7 +787,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
+      public void LegacyLog_Read_Standard_6_Test() // verbosity normal / Gromacs 3.3
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), FahLogType.Legacy);
@@ -818,7 +820,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Paused;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -835,7 +837,7 @@ namespace HFM.Log.Tests
       }
 
       [Test]
-      public void Standard_9_FAHlog() // v6.23 A4 Uniprocessor
+      public void LegacyLog_Read_Standard_9_Test() // v6.23 A4 Uniprocessor
       {
          // Scan
          var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), FahLogType.Legacy);
@@ -860,7 +862,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.Status = SlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
+         FahLogAssert.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -873,292 +875,6 @@ namespace HFM.Log.Tests
          Assert.That(unitRun.LogLines[23].ToString().Contains("Project: 10741 (Run 0, Clone 1996, Gen 3)"));
       }
 
-      #region Version 7 Logs
-
-      [Test]
-      public void Client_v7_10()
-      {
-         // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
-
-         // Check Run 0 Positions
-         var expectedRun = new ClientRun(null, 0);
-         var expectedSlotRun = new SlotRun(expectedRun, 1);
-         expectedRun.SlotRuns.Add(1, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 90, 349));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 276, 413));
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
-
-         expectedSlotRun = new SlotRun(expectedRun, 0);
-         expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 85, 402));
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
-
-         expectedRun.Data = new ClientRunData();
-         expectedRun.Data.StartTime = new DateTime(2012, 1, 11, 3, 24, 22, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
-
-         var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
-
-         //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
-
-         var projectInfo = new ProjectInfo { ProjectID = 7610, ProjectRun = 630, ProjectClone = 0, ProjectGen = 59 };
-         var unitRun = GetUnitRun(actualRun.SlotRuns[0], 1, projectInfo);
-         Assert.AreEqual(39, unitRun.LogLines.Count);
-         Assert.AreEqual(new TimeSpan(3, 25, 32), unitRun.Data.UnitStartTimeStamp);
-         Assert.AreEqual(2.27f, unitRun.Data.CoreVersion);
-         //Assert.AreEqual(10, unitRun.Data.FrameDataList.Count);
-         Assert.AreEqual(10, unitRun.Data.FramesObserved);
-         Assert.AreEqual(7610, unitRun.Data.ProjectID);
-         Assert.AreEqual(630, unitRun.Data.ProjectRun);
-         Assert.AreEqual(0, unitRun.Data.ProjectClone);
-         Assert.AreEqual(59, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
-
-         projectInfo = new ProjectInfo { ProjectID = 5772, ProjectRun = 7, ProjectClone = 364, ProjectGen = 252 };
-         unitRun = GetUnitRun(actualRun.SlotRuns[1], 2, projectInfo);
-         Assert.AreEqual(98, unitRun.LogLines.Count);
-         Assert.AreEqual(new TimeSpan(4, 21, 52), unitRun.Data.UnitStartTimeStamp);
-         Assert.AreEqual(1.31f, unitRun.Data.CoreVersion);
-         //Assert.AreEqual(53, unitRun.Data.FrameDataList.Count);
-         Assert.AreEqual(53, unitRun.Data.FramesObserved);
-         Assert.AreEqual(5772, unitRun.Data.ProjectID);
-         Assert.AreEqual(7, unitRun.Data.ProjectRun);
-         Assert.AreEqual(364, unitRun.Data.ProjectClone);
-         Assert.AreEqual(252, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
-      }
-
-      [Test]
-      public void Client_v7_13()
-      {
-         // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), FahLogType.FahClient);
-
-         // Check Run 0 Positions
-         var expectedRun = new ClientRun(null, 0);
-         var expectedSlotRun = new SlotRun(expectedRun, 1);
-         expectedRun.SlotRuns.Add(1, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 74, 212));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 161, 522));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 471, 831));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 780, 1141));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 1090, 1451));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 1400, 1760));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 1709, 2070));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 2019, 2301));
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 7;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
-
-         expectedSlotRun = new SlotRun(expectedRun, 0);
-         expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 79, 271));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 219, 581));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 529, 890));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 838, 1200));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 1148, 1510));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 1458, 1819));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 1767, 2129));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 2078, 2302));
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 7;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
-
-         expectedRun.Data = new ClientRunData();
-         expectedRun.Data.StartTime = new DateTime(2014, 7, 25, 13, 57, 36, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
-
-         var actualRun = fahLog.ClientRuns.Peek();
-         DoClientRunCheck(expectedRun, actualRun);
-
-         //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
-
-         var projectInfo = new ProjectInfo { ProjectID = 13001, ProjectRun = 430, ProjectClone = 2, ProjectGen = 48 };
-         var unitRun = GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
-         Assert.AreEqual(154, unitRun.LogLines.Count);
-         Assert.AreEqual(new TimeSpan(16, 59, 51), unitRun.Data.UnitStartTimeStamp);
-         Assert.AreEqual(0.0f, unitRun.Data.CoreVersion);
-         //Assert.AreEqual(101, unitRun.Data.FrameDataList.Count);
-         Assert.AreEqual(101, unitRun.Data.FramesObserved);
-         Assert.AreEqual(13001, unitRun.Data.ProjectID);
-         Assert.AreEqual(430, unitRun.Data.ProjectRun);
-         Assert.AreEqual(2, unitRun.Data.ProjectClone);
-         Assert.AreEqual(48, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.Data.WorkUnitResult);
-
-         projectInfo = new ProjectInfo { ProjectID = 13000, ProjectRun = 671, ProjectClone = 1, ProjectGen = 50 };
-         unitRun = GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
-         Assert.AreEqual(111, unitRun.LogLines.Count);
-         Assert.AreEqual(new TimeSpan(4, 41, 56), unitRun.Data.UnitStartTimeStamp);
-         Assert.AreEqual(0.0f, unitRun.Data.CoreVersion);
-         //Assert.AreEqual(86, unitRun.Data.FrameDataList.Count);
-         Assert.AreEqual(86, unitRun.Data.FramesObserved);
-         Assert.AreEqual(13000, unitRun.Data.ProjectID);
-         Assert.AreEqual(671, unitRun.Data.ProjectRun);
-         Assert.AreEqual(1, unitRun.Data.ProjectClone);
-         Assert.AreEqual(50, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
-      }
-
-      #endregion
-
-      private static void DoClientRunCheck(ClientRun expectedRun, ClientRun actualRun)
-      {
-         Assert.AreEqual(expectedRun.ClientStartIndex, actualRun.ClientStartIndex);
-         Assert.AreEqual(expectedRun.Data.StartTime, actualRun.Data.StartTime);
-         Assert.AreEqual(expectedRun.Data.Arguments, actualRun.Data.Arguments);
-         Assert.AreEqual(expectedRun.Data.ClientVersion, actualRun.Data.ClientVersion);
-         Assert.AreEqual(expectedRun.Data.FoldingID, actualRun.Data.FoldingID);
-         Assert.AreEqual(expectedRun.Data.Team, actualRun.Data.Team);
-         Assert.AreEqual(expectedRun.Data.UserID, actualRun.Data.UserID);
-         Assert.AreEqual(expectedRun.Data.MachineID, actualRun.Data.MachineID);
-
-         Assert.AreEqual(expectedRun.SlotRuns.Count, actualRun.SlotRuns.Count);
-         foreach (int key in expectedRun.SlotRuns.Keys)
-         {
-            Assert.AreEqual(expectedRun.SlotRuns[key].Data.CompletedUnits, actualRun.SlotRuns[key].Data.CompletedUnits);
-            Assert.AreEqual(expectedRun.SlotRuns[key].Data.FailedUnits, actualRun.SlotRuns[key].Data.FailedUnits);
-            Assert.AreEqual(expectedRun.SlotRuns[key].Data.TotalCompletedUnits, actualRun.SlotRuns[key].Data.TotalCompletedUnits);
-            Assert.AreEqual(expectedRun.SlotRuns[key].Data.Status, actualRun.SlotRuns[key].Data.Status);
-
-            Assert.AreEqual(expectedRun.SlotRuns[key].UnitRuns.Count, actualRun.SlotRuns[key].UnitRuns.Count);
-            for (int i = 0; i < expectedRun.SlotRuns[key].UnitRuns.Count; i++)
-            {
-               Assert.AreEqual(expectedRun.SlotRuns[key].UnitRuns.ElementAt(i).QueueIndex, actualRun.SlotRuns[key].UnitRuns.ElementAt(i).QueueIndex);
-               Assert.AreEqual(expectedRun.SlotRuns[key].UnitRuns.ElementAt(i).StartIndex, actualRun.SlotRuns[key].UnitRuns.ElementAt(i).StartIndex);
-               Assert.AreEqual(expectedRun.SlotRuns[key].UnitRuns.ElementAt(i).EndIndex, actualRun.SlotRuns[key].UnitRuns.ElementAt(i).EndIndex);
-            }
-         }
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
-      public void FahLog_Read_ArgumentNullException_Test()
-      {
-         FahLog.Read(null, FahLogType.Legacy);
-      }
-
-      [Test]
-      public void GPU2_5_UnitInfo()
-      {
-         var data = UnitInfoLog.Read("..\\..\\..\\TestFiles\\GPU2_5\\unitinfo.txt");
-         Assert.AreEqual("p4744_lam5w_300K", data.ProteinName);
-         Assert.AreEqual("-", data.ProteinTag);
-         Assert.AreEqual(0, data.ProjectID);
-         Assert.AreEqual(0, data.ProjectRun);
-         Assert.AreEqual(0, data.ProjectClone);
-         Assert.AreEqual(0, data.ProjectGen);
-         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 2, 20, 35, 41), data.DownloadTime);
-         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 5, 20, 35, 41), data.DueTime);
-         Assert.AreEqual(73, data.Progress);
-      }
-
-      [Test]
-      public void SMP_10_UnitInfo()
-      {
-         var data = UnitInfoLog.Read("..\\..\\..\\TestFiles\\SMP_10\\unitinfo.txt");
-         Assert.AreEqual("Gromacs", data.ProteinName);
-         Assert.AreEqual("P2683R6C12G21", data.ProteinTag);
-         Assert.AreEqual(2683, data.ProjectID);
-         Assert.AreEqual(6, data.ProjectRun);
-         Assert.AreEqual(12, data.ProjectClone);
-         Assert.AreEqual(21, data.ProjectGen);
-         Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 12, 0, 9, 22), data.DownloadTime);
-         Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 18, 0, 9, 22), data.DueTime);
-         Assert.AreEqual(1724900, data.Progress);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentException))]
-      public void GetUnitInfoLogData_ArgumentNull()
-      {
-         UnitInfoLog.Read(null);
-      }
-
-      [Test]
-      [ExpectedException(typeof(ArgumentException))]
-      public void GetUnitInfoLogData_ArgumentEmpty()
-      {
-         UnitInfoLog.Read(String.Empty);
-      }
-
-      [Test]
-      [ExpectedException(typeof(DirectoryNotFoundException))]
-      public void GetUnitInfoLogData_FileDoesNotExist()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
-      }
-
-      [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void Malformed_1_UnitInfo1()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
-      }
-
-      [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void Malformed_1_UnitInfo2()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
-      }
-
-      [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void Malformed_1_UnitInfo3()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
-      }
-
-      [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void Malformed_1_UnitInfo4()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
-      }
-
-      [Test]
-      [ExpectedException(typeof(FormatException))]
-      public void Malformed_1_UnitInfo5()
-      {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
-      }
-
-      private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
-      {
-         if (slotRun != null)
-         {
-            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data));
-            if (unitRun != null)
-            {
-               return unitRun;
-            }
-         }
-         return null;
-      }
+      // ReSharper restore InconsistentNaming
    }
 }
