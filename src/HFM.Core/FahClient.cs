@@ -169,7 +169,7 @@ namespace HFM.Core
       private readonly IMessageConnection _messageConnection;
       private readonly List<SlotModel> _slots;
       private readonly ReaderWriterLockSlim _slotsLock;
-      private FahLog _fahLog;
+      private readonly FahLog _fahLog;
       private MessageReceiver _messages;
 
       public FahClient(IMessageConnection messageConnection)
