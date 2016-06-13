@@ -56,11 +56,11 @@ namespace HFM.Core
          get { return _currentUnitIndex; }
       }
 
-      private ClientRun2 _currentClientRun;
+      private ClientRun _currentClientRun;
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
-      public ClientRun2 CurrentClientRun
+      public ClientRun CurrentClientRun
       {
          get { return _currentClientRun; }
       }
@@ -111,7 +111,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
-      public IDictionary<int, UnitInfo> AggregateData(ClientRun2 clientRun, UnitCollection unitCollection, Info info, Options options,
+      public IDictionary<int, UnitInfo> AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
                                                       SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          if (clientRun == null) throw new ArgumentNullException("clientRun");
@@ -259,7 +259,7 @@ namespace HFM.Core
             }
 
             // Get the Log Lines for this queue position from the reader
-            var unitRun = GetUnitRunForQueueIndex(slotRun, unit.Id, projectInfo);
+            var unitRun = GetUnitRun(slotRun, unit.Id, projectInfo);
             if (unitRun == null)
             {
                string message = String.Format(CultureInfo.CurrentCulture,
@@ -297,7 +297,7 @@ namespace HFM.Core
          if (!foundCurrentUnitInfo)
          {
             // Get the Log Lines for this queue position from the reader
-            var unitRun = GetUnitRunForQueueIndex(slotRun, currentUnitInfo.QueueIndex, currentUnitInfo);
+            var unitRun = GetUnitRun(slotRun, currentUnitInfo.QueueIndex, currentUnitInfo);
             if (unitRun != null)
             {
                // create a clone of the current UnitInfo object so we're not working with an
@@ -313,7 +313,7 @@ namespace HFM.Core
          return parsedUnits;
       }
 
-      private static UnitRun GetUnitRunForQueueIndex(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
+      private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
       {
          if (slotRun != null)
          {

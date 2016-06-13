@@ -5,17 +5,17 @@ namespace HFM.Log
 {
    public static class LogLineIdentifier
    {
-      public static LogLineType GetLogLineType(string line, LogFileType logFileType)
+      public static LogLineType GetLogLineType(string line, FahLogType fahLogType)
       {
          var logLineType = DetermineLineTypeCommon(line);
          if (logLineType == LogLineType.Unknown)
          {
-            switch (logFileType)
+            switch (fahLogType)
             {
-               case LogFileType.Legacy:
+               case FahLogType.Legacy:
                   logLineType = DetermineLineTypeLegacy(line);
                   break;
-               case LogFileType.FahClient:
+               case FahLogType.FahClient:
                   logLineType = DetermineLineTypeFahClient(line);
                   break;
             }

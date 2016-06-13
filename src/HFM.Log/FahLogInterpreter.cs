@@ -1,29 +1,28 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   public static class LogInterpreter2
+   public static class FahLogInterpreter
    {
-      public static ClientRun2Data GetClientRunData(ClientRun2 clientRun)
+      public static ClientRunData GetClientRunData(ClientRun clientRun)
       {
-         switch (clientRun.Parent.LogFileType)
+         switch (clientRun.Parent.FahLogType)
          {
-            case LogFileType.Legacy:
+            case FahLogType.Legacy:
                return GetClientRunDataLegacy(clientRun);
-            case LogFileType.FahClient:
+            case FahLogType.FahClient:
                return GetClientRunDataFahClient(clientRun);
          }
          throw new ArgumentException("ClientRun LogFileType unknown", "clientRun");
       }
 
-      private static ClientRun2Data GetClientRunDataLegacy(ClientRun2 clientRun)
+      private static ClientRunData GetClientRunDataLegacy(ClientRun clientRun)
       {
-         var clientRunData = new ClientRun2Data();
+         var clientRunData = new ClientRunData();
 
          foreach (var line in clientRun.LogLines)
          {
@@ -59,9 +58,9 @@ namespace HFM.Log
          return clientRunData;
       }
 
-      private static ClientRun2Data GetClientRunDataFahClient(ClientRun2 clientRun)
+      private static ClientRunData GetClientRunDataFahClient(ClientRun clientRun)
       {
-         var clientRunData = new ClientRun2Data();
+         var clientRunData = new ClientRunData();
 
          foreach (var line in clientRun.LogLines)
          {
@@ -78,11 +77,11 @@ namespace HFM.Log
 
       public static SlotRunData GetSlotRunData(SlotRun slotRun)
       {
-         switch (slotRun.Parent.Parent.LogFileType)
+         switch (slotRun.Parent.Parent.FahLogType)
          {
-            case LogFileType.Legacy:
+            case FahLogType.Legacy:
                return GetSlotRunDataLegacy(slotRun);
-            case LogFileType.FahClient:
+            case FahLogType.FahClient:
                return GetSlotRunDataFahClient(slotRun);
          }
          throw new ArgumentException("SlotRun LogFileType unknown", "slotRun");
@@ -116,7 +115,7 @@ namespace HFM.Log
          return slotRunData;
       }
 
-      private static SlotStatus GetSlotRunDataStatusLegacy(ICollection<LogLine> logLines)
+      private static SlotStatus GetSlotRunDataStatusLegacy(IEnumerable<LogLine> logLines)
       {
          var status = SlotStatus.Unknown;
 
@@ -188,11 +187,11 @@ namespace HFM.Log
 
       public static UnitRunData GetUnitRunData(UnitRun unitRun)
       {
-         switch (unitRun.Parent.Parent.Parent.LogFileType)
+         switch (unitRun.Parent.Parent.Parent.FahLogType)
          {
-            case LogFileType.Legacy:
+            case FahLogType.Legacy:
                return GetUnitRunDataLegacy(unitRun);
-            case LogFileType.FahClient:
+            case FahLogType.FahClient:
                return GetUnitRunDataFahClient(unitRun);
          }
          throw new ArgumentException("UnitRun LogFileType unknown", "unitRun");
@@ -214,7 +213,7 @@ namespace HFM.Log
                  line.LineType == LogLineType.WorkUnitFrame) &&
                  unitRunData.UnitStartTimeStamp == null)
             {
-               unitRunData.UnitStartTimeStamp = LogLineParser2.Common.GetTimeStamp(line);
+               unitRunData.UnitStartTimeStamp = LogLineParser.Common.GetTimeStamp(line);
             }
 
             if (line.LineType == LogLineType.WorkUnitPaused ||
@@ -234,7 +233,7 @@ namespace HFM.Log
                // set frame times and determine status - Issue 13 (Revised)
                unitRunData.FramesObserved = 0;
                // Reset the Unit Start Time
-               unitRunData.UnitStartTimeStamp = LogLineParser2.Common.GetTimeStamp(line);
+               unitRunData.UnitStartTimeStamp = LogLineParser.Common.GetTimeStamp(line);
             }
 
             #endregion
@@ -326,25 +325,6 @@ namespace HFM.Log
             }
          }
          return unitRunData;
-      }
-
-      public static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
-      {
-         foreach (var unitRun in slotRun.UnitRuns.Where(x => x.QueueIndex == queueIndex))
-         {
-            var projectLine = unitRun.LogLines.FirstOrDefault(x => x.LineType == LogLineType.WorkUnitProject);
-            if (projectLine == null)
-            {
-               return null;
-            }
-
-            var lineProjectInfo = (IProjectInfo)projectLine.LineData;
-            if (projectInfo.EqualsProject(lineProjectInfo))
-            {
-               return unitRun;
-            }
-         }
-         return null;
       }
    }
 }

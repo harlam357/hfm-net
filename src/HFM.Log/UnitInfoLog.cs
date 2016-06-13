@@ -43,7 +43,7 @@ namespace HFM.Log
                   data.ProteinTag = line.Substring(5);
 
                   Match projectNumberFromTagMatch;
-                  if ((projectNumberFromTagMatch = UnitInfoRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
+                  if ((projectNumberFromTagMatch = UnitInfoLogRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
                   {
                      data.ProjectID = Int32.Parse(projectNumberFromTagMatch.Groups["ProjectNumber"].Value);
                      data.ProjectRun = Int32.Parse(projectNumberFromTagMatch.Groups["Run"].Value);
@@ -56,14 +56,14 @@ namespace HFM.Log
                {
                   data.DownloadTime = DateTime.ParseExact(line.Substring(15), "MMMM d H:mm:ss",
                                                           DateTimeFormatInfo.InvariantInfo,
-                                                          LogReaderExtensions.DateTimeStyle);
+                                                          DateTimeParse.Styles);
                }
                /* DueTime (Could be read here or through the queue.dat) */
                else if (line.StartsWith("Due time: "))
                {
                   data.DueTime = DateTime.ParseExact(line.Substring(10), "MMMM d H:mm:ss",
                                                      DateTimeFormatInfo.InvariantInfo,
-                                                     LogReaderExtensions.DateTimeStyle);
+                                                     DateTimeParse.Styles);
                }
                /* Progress (Supplemental Read - if progress percentage cannot be determined through FAHlog.txt) */
                else if (line.StartsWith("Progress: "))

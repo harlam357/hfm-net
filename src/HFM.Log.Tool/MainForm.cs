@@ -146,7 +146,7 @@ namespace HFM.Log.Tool
 
          if (File.Exists(txtLogPath.Text))
          {
-            LogFileType logFileType = GetLogFileType();
+            FahLogType fahLogType = GetLogFileType();
 #if V1
             var sw = Stopwatch.StartNew();
             _logLines = LogReader.GetLogLines(txtLogPath.Text, logFileType).ToList();
@@ -159,7 +159,7 @@ namespace HFM.Log.Tool
             PopulateClientRunsInTree(_clientRuns);
 #else
             var sw = Stopwatch.StartNew();
-            _fahLog = FahLog.Read(File.ReadLines(txtLogPath.Text), logFileType);
+            _fahLog = FahLog.Read(File.ReadLines(txtLogPath.Text), fahLogType);
             sw.Stop();
             Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
             _logLines = _fahLog.ToList();
@@ -174,9 +174,9 @@ namespace HFM.Log.Tool
          }
       }
 
-      private LogFileType GetLogFileType()
+      private FahLogType GetLogFileType()
       {
-         return LegacyRadioButton.Checked ? LogFileType.Legacy : LogFileType.FahClient;
+         return LegacyRadioButton.Checked ? FahLogType.Legacy : FahLogType.FahClient;
       }
 
 #if V1

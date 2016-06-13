@@ -87,7 +87,7 @@ namespace HFM.Core
       /// <summary>
       /// Client Run Data for the Current Run
       /// </summary>
-      public ClientRun2 CurrentClientRun
+      public ClientRun CurrentClientRun
       {
          get { return _fahLog != null ? _fahLog.ClientRuns.PeekOrDefault() : null; }
       }
@@ -144,7 +144,7 @@ namespace HFM.Core
       /// </summary>
       public IList<UnitInfo> AggregateData()
       {
-         _fahLog = FahLog.Read(File.ReadLines(FahLogFilePath), LogFileType.Legacy);
+         _fahLog = FahLog.Read(File.ReadLines(FahLogFilePath), FahLogType.Legacy);
 
          // TODO: report errors that came back from log parsing
          //foreach (var s in _logInterpreterLegacy.LogLineParsingErrors)
@@ -237,7 +237,7 @@ namespace HFM.Core
          return parsedUnits;
       }
 
-      private static ClientRun2 GetCurrentClientRun(FahLog fahLog)
+      private static ClientRun GetCurrentClientRun(FahLog fahLog)
       {
          Debug.Assert(fahLog != null);
 
@@ -363,12 +363,12 @@ namespace HFM.Core
          }
       }
 
-      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRun2Data clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData)
+      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData)
       {
          return BuildUnitInfo(queueEntry, clientRunData, unitRun, unitInfoLogData, false);
       }
 
-      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRun2Data clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride)
+      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride)
       {
          // queueEntry can be null
          Debug.Assert(clientRunData != null);
@@ -501,7 +501,7 @@ namespace HFM.Core
          }
       }
 
-      private static void PopulateUnitInfoFromLogs(ClientRun2Data clientRunData,
+      private static void PopulateUnitInfoFromLogs(ClientRunData clientRunData,
          UnitRunData unitRunData, UnitInfoLogData unitInfoLogData, UnitInfo unit)
       {
          Debug.Assert(clientRunData != null);

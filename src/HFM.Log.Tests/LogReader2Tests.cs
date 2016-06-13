@@ -16,15 +16,15 @@ namespace HFM.Log.Tests
       public void SMP_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 30, 149));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 150, 273));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 30, 0, 40, 27, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-smp -verbosity 9";
          expectedRun.Data.ClientVersion = "6.24beta";
@@ -42,12 +42,12 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 1 Positions
-         expectedRun = new ClientRun2(null, 274);
+         expectedRun = new ClientRun(null, 274);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 302, 401));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 402, 752));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 31, 0, 7, 43, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-smp -verbosity 9";
          expectedRun.Data.ClientVersion = "6.24beta";
@@ -80,15 +80,15 @@ namespace HFM.Log.Tests
       public void SMP_2_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 30, 220));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 221, 382));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 40, 5, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-smp -verbosity 9";
          expectedRun.Data.ClientVersion = "6.24beta";
@@ -125,15 +125,15 @@ namespace HFM.Log.Tests
       public void SMP_3_FAHlog() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 231, 384));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 385, 408));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-local -forceasm -smp 4";
          expectedRun.Data.ClientVersion = "6.02";
@@ -168,14 +168,14 @@ namespace HFM.Log.Tests
       public void SMP_10_FAHlog() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 5 Positions
-         var expectedRun = new ClientRun2(null, 401);
+         var expectedRun = new ClientRun(null, 401);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, -1, 426, 449));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 12, 11, 13, 20, 57, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-configonly";
          expectedRun.Data.ClientVersion = "6.24R3";
@@ -209,10 +209,10 @@ namespace HFM.Log.Tests
       public void SMP_15_FAHlog() // lots of Client-core communications error
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 36, 233));
@@ -249,7 +249,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 3645, 3709));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 3710, 3759));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 3760, 3792));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-smp -verbosity 9";
          expectedRun.Data.ClientVersion = "6.30";
@@ -282,15 +282,15 @@ namespace HFM.Log.Tests
       public void SMP_17_FAHlog() // v6.23 A4 SMP
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 24, 174));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 175, 207));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-smp -bigadv -betateam -verbosity 9";
          expectedRun.Data.ClientVersion = "6.34";
@@ -323,10 +323,10 @@ namespace HFM.Log.Tests
       public void GPU2_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 130, 325));
@@ -335,7 +335,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 449, 509));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 510, 570));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 571, 617));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 5, 7, 18, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-verbosity 9 -local";
          expectedRun.Data.ClientVersion = "6.23";
@@ -353,7 +353,7 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 1 Positions
-         expectedRun = new ClientRun2(null, 618);
+         expectedRun = new ClientRun(null, 618);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 663, 736));
@@ -369,7 +369,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 2518, 2714));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 2715, 2916));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 2917, 2995));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 6, 18, 28, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-verbosity 9 -local";
          expectedRun.Data.ClientVersion = "6.23";
@@ -402,16 +402,16 @@ namespace HFM.Log.Tests
       public void GPU2_2_FAHlog() // verbosity (normal)
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 34, 207));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 208, 381));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 382, 446));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 14, 4, 40, 2, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = "6.23";
@@ -444,14 +444,14 @@ namespace HFM.Log.Tests
       public void GPU2_3_FAHlog() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 24, 55));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 26, 33, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = "6.23";
@@ -469,7 +469,7 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 1 Positions
-         expectedRun = new ClientRun2(null, 56);
+         expectedRun = new ClientRun(null, 56);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 80, 220));
@@ -478,7 +478,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 320, 372));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 373, 420));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 421, 463));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = "6.23";
@@ -515,14 +515,14 @@ namespace HFM.Log.Tests
       public void GPU2_7_FAHlog() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 24, 82));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = "6.23";
@@ -571,15 +571,15 @@ namespace HFM.Log.Tests
       public void GPU3_2_FAHlog() // verbosity 9 / OPENMMGPU v2.19
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 27, 169));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 170, 218));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 2, 17, 17, 19, 31, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
          expectedRun.Data.ClientVersion = "6.41r2";
@@ -628,13 +628,13 @@ namespace HFM.Log.Tests
       public void Standard_1_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 15, 30, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-configonly";
          expectedRun.Data.ClientVersion = "6.23";
@@ -648,12 +648,12 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 1 Positions
-         expectedRun = new ClientRun2(null, 30);
+         expectedRun = new ClientRun(null, 30);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 179, 592));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 593, 838));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 17, 46, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-verbosity 9 -forceasm";
          expectedRun.Data.ClientVersion = "6.23";
@@ -671,11 +671,11 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 2 Positions
-         expectedRun = new ClientRun2(null, 839);
+         expectedRun = new ClientRun(null, 839);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 874, 951));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 20, 4, 17, 29, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-verbosity 9 -forceasm -oneunit";
          expectedRun.Data.ClientVersion = "6.23";
@@ -708,14 +708,14 @@ namespace HFM.Log.Tests
       public void Standard_5_FAHlog() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 3 Positions
-         var expectedRun = new ClientRun2(null, 788);
+         var expectedRun = new ClientRun(null, 788);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 820, 926));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 28, 52, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-oneunit -forceasm -verbosity 9";
          expectedRun.Data.ClientVersion = "6.23";
@@ -733,11 +733,11 @@ namespace HFM.Log.Tests
          DoClientRunCheck(expectedRun, actualRun);
 
          // Check Run 4 Positions
-         expectedRun = new ClientRun2(null, 927);
+         expectedRun = new ClientRun(null, 927);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 961, 1014));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 07, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-forceasm -verbosity 9 -oneunit";
          expectedRun.Data.ClientVersion = "6.23";
@@ -788,10 +788,10 @@ namespace HFM.Log.Tests
       public void Standard_6_FAHlog() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 2);
+         var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 27, 293));
@@ -803,7 +803,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 1602, 1869));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 1870, 2129));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 2130, 2323));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 10, 15, 48, 32, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = "6.23";
@@ -838,14 +838,14 @@ namespace HFM.Log.Tests
       public void Standard_9_FAHlog() // v6.23 A4 Uniprocessor
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), LogFileType.Legacy);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), FahLogType.Legacy);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 24, 276));
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15, DateTimeKind.Utc);
          expectedRun.Data.Arguments = "-oneunit -verbosity 9";
          expectedRun.Data.ClientVersion = "6.23";
@@ -879,10 +879,10 @@ namespace HFM.Log.Tests
       public void Client_v7_10()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 1);
          expectedRun.SlotRuns.Add(1, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 90, 349));
@@ -902,7 +902,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.TotalCompletedUnits = null;
          expectedSlotRun.Data.Status = SlotStatus.Unknown;
 
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(2012, 1, 11, 3, 24, 22, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = null;
@@ -917,7 +917,7 @@ namespace HFM.Log.Tests
          //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
 
          var projectInfo = new ProjectInfo { ProjectID = 7610, ProjectRun = 630, ProjectClone = 0, ProjectGen = 59 };
-         var unitRun = LogInterpreter2.GetUnitRun(actualRun.SlotRuns[0], 1, projectInfo);
+         var unitRun = GetUnitRun(actualRun.SlotRuns[0], 1, projectInfo);
          Assert.AreEqual(39, unitRun.LogLines.Count);
          Assert.AreEqual(new TimeSpan(3, 25, 32), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(2.27f, unitRun.Data.CoreVersion);
@@ -930,7 +930,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
 
          projectInfo = new ProjectInfo { ProjectID = 5772, ProjectRun = 7, ProjectClone = 364, ProjectGen = 252 };
-         unitRun = LogInterpreter2.GetUnitRun(actualRun.SlotRuns[1], 2, projectInfo);
+         unitRun = GetUnitRun(actualRun.SlotRuns[1], 2, projectInfo);
          Assert.AreEqual(98, unitRun.LogLines.Count);
          Assert.AreEqual(new TimeSpan(4, 21, 52), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(1.31f, unitRun.Data.CoreVersion);
@@ -947,10 +947,10 @@ namespace HFM.Log.Tests
       public void Client_v7_13()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), FahLogType.FahClient);
 
          // Check Run 0 Positions
-         var expectedRun = new ClientRun2(null, 0);
+         var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 1);
          expectedRun.SlotRuns.Add(1, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 74, 212));
@@ -983,7 +983,7 @@ namespace HFM.Log.Tests
          expectedSlotRun.Data.TotalCompletedUnits = null;
          expectedSlotRun.Data.Status = SlotStatus.Unknown;
 
-         expectedRun.Data = new ClientRun2Data();
+         expectedRun.Data = new ClientRunData();
          expectedRun.Data.StartTime = new DateTime(2014, 7, 25, 13, 57, 36, DateTimeKind.Utc);
          expectedRun.Data.Arguments = null;
          expectedRun.Data.ClientVersion = null;
@@ -998,7 +998,7 @@ namespace HFM.Log.Tests
          //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
 
          var projectInfo = new ProjectInfo { ProjectID = 13001, ProjectRun = 430, ProjectClone = 2, ProjectGen = 48 };
-         var unitRun = LogInterpreter2.GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
+         var unitRun = GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
          Assert.AreEqual(154, unitRun.LogLines.Count);
          Assert.AreEqual(new TimeSpan(16, 59, 51), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(0.0f, unitRun.Data.CoreVersion);
@@ -1011,7 +1011,7 @@ namespace HFM.Log.Tests
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.Data.WorkUnitResult);
 
          projectInfo = new ProjectInfo { ProjectID = 13000, ProjectRun = 671, ProjectClone = 1, ProjectGen = 50 };
-         unitRun = LogInterpreter2.GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
+         unitRun = GetUnitRun(actualRun.SlotRuns[0], 2, projectInfo);
          Assert.AreEqual(111, unitRun.LogLines.Count);
          Assert.AreEqual(new TimeSpan(4, 41, 56), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(0.0f, unitRun.Data.CoreVersion);
@@ -1026,7 +1026,7 @@ namespace HFM.Log.Tests
 
       #endregion
 
-      private static void DoClientRunCheck(ClientRun2 expectedRun, ClientRun2 actualRun)
+      private static void DoClientRunCheck(ClientRun expectedRun, ClientRun actualRun)
       {
          Assert.AreEqual(expectedRun.ClientStartIndex, actualRun.ClientStartIndex);
          Assert.AreEqual(expectedRun.Data.StartTime, actualRun.Data.StartTime);
@@ -1059,7 +1059,7 @@ namespace HFM.Log.Tests
       [ExpectedException(typeof(ArgumentNullException))]
       public void FahLog_Read_ArgumentNullException_Test()
       {
-         FahLog.Read(null, LogFileType.Legacy);
+         FahLog.Read(null, FahLogType.Legacy);
       }
 
       [Test]
@@ -1146,6 +1146,19 @@ namespace HFM.Log.Tests
       public void Malformed_1_UnitInfo5()
       {
          UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
+      }
+
+      private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
+      {
+         if (slotRun != null)
+         {
+            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data));
+            if (unitRun != null)
+            {
+               return unitRun;
+            }
+         }
+         return null;
       }
    }
 }

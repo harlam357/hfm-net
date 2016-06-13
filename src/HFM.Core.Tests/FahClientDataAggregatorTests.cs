@@ -49,7 +49,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -123,7 +123,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), FahLogType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -195,7 +195,7 @@ namespace HFM.Core.Tests
          const int slotId = 1;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -269,7 +269,7 @@ namespace HFM.Core.Tests
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_11";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"), LogFileType.FahClient);
+         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"), FahLogType.FahClient);
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
          var unitCollection = new UnitCollection();

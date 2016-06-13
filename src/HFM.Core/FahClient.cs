@@ -179,7 +179,7 @@ namespace HFM.Core
          _messageConnection = messageConnection;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
-         _fahLog = FahLog.Create(LogFileType.FahClient);
+         _fahLog = FahLog.Create(FahLogType.FahClient);
          _messages = new MessageReceiver();
 
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
@@ -491,7 +491,7 @@ namespace HFM.Core
          }
       }
 
-      private void PopulateRunLevelData(ClientRun2 run, Info info, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
       {
          Debug.Assert(slotModel != null);
 

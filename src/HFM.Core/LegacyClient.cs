@@ -230,7 +230,7 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
-      private void PopulateRunLevelData(ClientRun2Data run, SlotModel slotModel)
+      private void PopulateRunLevelData(ClientRunData run, SlotModel slotModel)
       {
          slotModel.Arguments = run.Arguments;
          slotModel.ClientVersion = run.ClientVersion;

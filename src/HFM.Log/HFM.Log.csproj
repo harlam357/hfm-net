@@ -72,14 +72,18 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="LogInterpreter2.cs" />
-    <Compile Include="LogLineParser2.cs" />
+    <Compile Include="Support\DateTimeParse.cs" />
+    <Compile Include="Support\Environment.cs" />
+    <Compile Include="FahLog.cs" />
+    <Compile Include="FahLogInterpreter.cs" />
+    <Compile Include="LogLineParser.cs" />
     <Compile Include="LogLineIdentifier.cs" />
-    <Compile Include="LogReader2.cs" />
-    <Compile Include="LogRegex.cs" />
+    <Compile Include="FahLogDataTypes.cs" />
+    <Compile Include="FahLogRegex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitInfoLog.cs" />
     <Compile Include="UnitInfoLogData.cs" />
+    <Compile Include="UnitInfoLogRegex.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
@@ -114,6 +118,7 @@
       <Link>Properties\harlam357public.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

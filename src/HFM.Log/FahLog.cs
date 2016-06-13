@@ -1,9 +1,6 @@
-﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -11,7 +8,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Log
 {
-   public enum LogFileType
+   public enum FahLogType
    {
       Legacy,
       FahClient
@@ -19,44 +16,44 @@ namespace HFM.Log
 
    public abstract class FahLog : IEnumerable<LogLine>
    {
-      public static FahLog Create(LogFileType logFileType)
+      public static FahLog Create(FahLogType fahLogType)
       {
-         switch (logFileType)
+         switch (fahLogType)
          {
-            case LogFileType.Legacy:
+            case FahLogType.Legacy:
                return new LegacyLog();
-            case LogFileType.FahClient:
+            case FahLogType.FahClient:
                return new FahClientLog();
          }
-         throw new ArgumentException("LogFileType unknown", "logFileType");
+         throw new ArgumentException("LogFileType unknown", "fahLogType");
       }
 
-      public static FahLog Read(IEnumerable<string> lines, LogFileType logFileType)
+      public static FahLog Read(IEnumerable<string> lines, FahLogType fahLogType)
       {
          if (lines == null) throw new ArgumentNullException("lines");
 
-         var fahLog = Create(logFileType);
+         var fahLog = Create(fahLogType);
          fahLog.AddRange(lines);
          return fahLog;
       }
 
-      private readonly LogFileType _logFileType;
+      private readonly FahLogType _fahLogType;
 
-      public LogFileType LogFileType
+      public FahLogType FahLogType
       {
-         get { return _logFileType; }
+         get { return _fahLogType; }
       }
 
-      protected FahLog(LogFileType logFileType)
+      protected FahLog(FahLogType fahLogType)
       {
-         _logFileType = logFileType;
+         _fahLogType = fahLogType;
       }
 
-      private Stack<ClientRun2> _clientRuns;
+      private Stack<ClientRun> _clientRuns;
 
-      public Stack<ClientRun2> ClientRuns
+      public Stack<ClientRun> ClientRuns
       {
-         get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun2>()); }
+         get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun>()); }
       }
 
       private int _lineIndex;
@@ -78,9 +75,9 @@ namespace HFM.Log
 
       private void AddInternal(string line)
       {
-         LogLineType lineType = LogLineIdentifier.GetLogLineType(line, LogFileType);
+         LogLineType lineType = LogLineIdentifier.GetLogLineType(line, FahLogType);
          var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = _lineIndex };
-         LogLineParser2.SetLogLineParser(logLine, LogFileType);
+         LogLineParser.SetLogLineParser(logLine, FahLogType);
          AddLogLine(logLine);
          _lineIndex++;
       }
@@ -119,7 +116,7 @@ namespace HFM.Log
       private List<LogLine> _logBuffer;
 
       public LegacyLog()
-         : base(LogFileType.Legacy)
+         : base(FahLogType.Legacy)
       {
          _unitIndexData.Initialize();
       }
@@ -236,8 +233,8 @@ namespace HFM.Log
          // then update the ProcessingIndex to bypass the CoreDownload section
          // of the log file.
          if (_unitIndexData.ProcessingIndex == -1 ||
-            (_unitIndexData.ProcessingIndex != -1 &&
-             _unitIndexData.CoreDownloadIndex > _unitIndexData.ProcessingIndex))
+             (_unitIndexData.ProcessingIndex != -1 &&
+              _unitIndexData.CoreDownloadIndex > _unitIndexData.ProcessingIndex))
          {
             _unitIndexData.ProcessingIndex = logLine.LineIndex;
          }
@@ -316,7 +313,7 @@ namespace HFM.Log
          _currentLineType = logLine.LineType;
       }
 
-      private ClientRun2 EnsureClientRunExists(int lineIndex, bool createNew)
+      private ClientRun EnsureClientRunExists(int lineIndex, bool createNew)
       {
          if (createNew && ClientRuns.Count != 0)
          {
@@ -324,7 +321,7 @@ namespace HFM.Log
          }
          if (createNew || ClientRuns.Count == 0)
          {
-            ClientRuns.Push(new ClientRun2(this, lineIndex));
+            ClientRuns.Push(new ClientRun(this, lineIndex));
          }
          return ClientRuns.Peek();
       }
@@ -388,7 +385,7 @@ namespace HFM.Log
    public class FahClientLog : FahLog
    {
       public FahClientLog()
-         : base(LogFileType.FahClient)
+         : base(FahLogType.FahClient)
       {
 
       }
@@ -432,21 +429,21 @@ namespace HFM.Log
       private static bool SetLogLineProperties(LogLine logLine)
       {
          Match workUnitRunningMatch;
-         if ((workUnitRunningMatch = LogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
+         if ((workUnitRunningMatch = FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
          {
             logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
             logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);
-            logLine.TimeStamp = LogLineParser2.Common.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
+            logLine.TimeStamp = LogLineParser.Common.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
             return true;
          }
          return false;
       }
 
-      private ClientRun2 EnsureClientRunExists(int lineIndex)
+      private ClientRun EnsureClientRunExists(int lineIndex)
       {
          if (ClientRuns.Count == 0)
          {
-            ClientRuns.Push(new ClientRun2(this, lineIndex));
+            ClientRuns.Push(new ClientRun(this, lineIndex));
          }
          return ClientRuns.Peek();
       }
@@ -476,484 +473,6 @@ namespace HFM.Log
       private static UnitRun GetMostRecentUnitRun(SlotRun slotRun, int queueIndex)
       {
          return slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
-      }
-   }
-
-   public class ClientRun2 : IEnumerable<LogLine>
-   {
-      private readonly FahLog _parent;
-
-      public FahLog Parent
-      {
-         get { return _parent; }
-      }
-
-      private readonly int _clientStartIndex;
-      /// <summary>
-      /// Log line index of the starting line for this Client Run.
-      /// </summary>
-      public int ClientStartIndex
-      {
-         get { return _clientStartIndex; }
-      }
-
-      /// <summary>
-      /// ClientRun Constructor
-      /// </summary>
-      /// <param name="parent"></param>
-      /// <param name="clientStartIndex">Log line index of the starting line for this Client Run.</param>
-      public ClientRun2(FahLog parent, int clientStartIndex)
-      {
-         _parent = parent;
-         _clientStartIndex = clientStartIndex;
-
-         _logLines = new ObservableCollection<LogLine>();
-         _logLines.CollectionChanged += (s, e) => IsDirty = true;
-      }
-
-      private Dictionary<int, SlotRun> _slotRuns;
-
-      public IDictionary<int, SlotRun> SlotRuns
-      {
-         get { return _slotRuns ?? (_slotRuns = new Dictionary<int, SlotRun>()); }
-      }
-
-      private readonly ObservableCollection<LogLine> _logLines;
-
-      internal IList<LogLine> LogLines
-      {
-         get { return _logLines; }
-      }
-
-      private ClientRun2Data _data;
-
-      public ClientRun2Data Data
-      {
-         get
-         {
-            if (_data == null || IsDirty)
-            {
-               IsDirty = false;
-               _data = LogInterpreter2.GetClientRunData(this);
-            }
-            return _data;
-         }
-         internal set
-         {
-            IsDirty = false;
-            _data = value;
-         }
-      }
-
-      private bool _isDirty = true;
-
-      internal bool IsDirty
-      {
-         get { return _isDirty; }
-         set { _isDirty = value; }
-      }
-
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _logLines.Concat(_slotRuns.Values.SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines)).OrderBy(x => x.LineIndex).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
-   }
-
-   public class ClientRun2Data
-   {
-      /// <summary>
-      /// Gets or sets the client start time.
-      /// </summary>
-      public DateTime StartTime { get; set; }
-
-      /// <summary>
-      /// Client Version Number
-      /// </summary>
-      public string ClientVersion { get; set; }
-
-      /// <summary>
-      /// Client Command Line Arguments
-      /// </summary>
-      public string Arguments { get; set; }
-
-      /// <summary>
-      /// Folding ID (User name)
-      /// </summary>
-      public string FoldingID { get; set; }
-
-      /// <summary>
-      /// Team Number
-      /// </summary>
-      public int Team { get; set; }
-
-      /// <summary>
-      /// User ID (unique hexadecimal value)
-      /// </summary>
-      public string UserID { get; set; }
-
-      /// <summary>
-      /// Machine ID
-      /// </summary>
-      public int MachineID { get; set; }
-   }
-
-   public class SlotRun : IEnumerable<LogLine>
-   {
-      private readonly ClientRun2 _parent;
-
-      public ClientRun2 Parent
-      {
-         get { return _parent; }
-      }
-
-      private readonly int _foldingSlot;
-
-      public int FoldingSlot
-      {
-         get { return _foldingSlot; }
-      }
-
-      public SlotRun(ClientRun2 parent, int foldingSlot)
-      {
-         _parent = parent;
-         _foldingSlot = foldingSlot;
-      }
-
-      private Stack<UnitRun> _unitRuns;
-      /// <summary>
-      /// Gets a stack of unit runs.
-      /// </summary>
-      public Stack<UnitRun> UnitRuns
-      {
-         get { return _unitRuns ?? (_unitRuns = new Stack<UnitRun>()); }
-      }
-
-      private SlotRunData _data;
-
-      public SlotRunData Data
-      {
-         get
-         {
-            if (_data == null || IsDirty)
-            {
-               IsDirty = false;
-               _data = LogInterpreter2.GetSlotRunData(this);
-            }
-            return _data;
-         }
-         internal set
-         {
-            IsDirty = false;
-            _data = value;
-         }
-      }
-
-      private bool _isDirty = true;
-
-      internal bool IsDirty
-      {
-         get { return _isDirty; }
-         set
-         {
-            _isDirty = value;
-            // don't push dirty flag up to ClientRun at this time
-            // there is no ClientRunData that depends on SlotRun
-            // or further child LogLine data
-            //if (Parent != null && _isDirty)
-            //{
-            //   Parent.IsDirty = true;
-            //}
-         }
-      }
-
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.LineIndex).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
-   }
-
-   public class SlotRunData
-   {
-      /// <summary>
-      /// Number of Completed Units for this Client Run
-      /// </summary>
-      public int CompletedUnits { get; set; }
-
-      /// <summary>
-      /// Number of Failed Units for this Client Run
-      /// </summary>
-      public int FailedUnits { get; set; }
-
-      /// <summary>
-      /// Total Number of Completed Units (for the life of the client - as reported in the FAHlog.txt file)
-      /// </summary>
-      public int? TotalCompletedUnits { get; set; }
-
-      /// <summary>
-      /// Client Status
-      /// </summary>
-      public SlotStatus Status { get; set; }
-   }
-
-   public class UnitRun : IEnumerable<LogLine>
-   {
-      private readonly SlotRun _parent;
-
-      public SlotRun Parent
-      {
-         get { return _parent; }
-      }
-
-      private readonly ObservableCollection<LogLine> _logLines;
-
-      internal IList<LogLine> LogLines
-      {
-         get { return _logLines; }
-      }
-
-      public UnitRun(SlotRun parent)
-      {
-         _parent = parent;
-
-         _logLines = new ObservableCollection<LogLine>();
-         _logLines.CollectionChanged += (s, e) => IsDirty = true;
-      }
-
-      internal UnitRun(SlotRun parent, int? queueIndex, int? startIndex, int? endIndex)
-      {
-         _parent = parent;
-         QueueIndex = queueIndex;
-         StartIndex = startIndex;
-         EndIndex = endIndex;
-
-         _logLines = new ObservableCollection<LogLine>();
-         _logLines.CollectionChanged += (s, e) => IsDirty = true;
-      }
-
-      public int? FoldingSlot
-      {
-         get { return _parent != null ? (int?)_parent.FoldingSlot : null; }
-      }
-
-      public int? QueueIndex { get; set; }
-
-      public int? StartIndex { get; set; }
-
-      public int? EndIndex { get; set; }
-
-      private UnitRunData _data;
-
-      public UnitRunData Data
-      {
-         get
-         {
-            if (_data == null || IsDirty)
-            {
-               IsDirty = false;
-               _data = LogInterpreter2.GetUnitRunData(this);
-            }
-            return _data;
-         }
-         internal set
-         {
-            IsDirty = false;
-            _data = value;
-         }
-      }
-
-      private bool _isDirty = true;
-
-      internal bool IsDirty
-      {
-         get { return _isDirty; }
-         set
-         {
-            _isDirty = value;
-            if (Parent != null && _isDirty)
-            {
-               Parent.IsDirty = true;
-            }
-         }
-      }
-
-      internal bool IsComplete { get; set; }
-
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _logLines.GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
-   }
-
-   public class UnitRunData : IProjectInfo
-   {
-      public UnitRunData()
-      {
-         ProjectInfoList = new List<IProjectInfo>();
-      }
-
-      /// <summary>
-      /// Unit Start Time Stamp
-      /// </summary>
-      public TimeSpan? UnitStartTimeStamp { get; set; }
-
-      ///// <summary>
-      ///// List of Log Lines containing Frame Data
-      ///// </summary>
-      //public IList<LogLine> FrameDataList { get; set; }
-
-      /// <summary>
-      /// Number of Frames Observed since Last Unit Start or Resume from Pause
-      /// </summary>
-      public int FramesObserved { get; set; }
-
-      /// <summary>
-      /// Core Version
-      /// </summary>
-      public float CoreVersion { get; set; }
-
-      /// <summary>
-      /// Project Info List Current Index
-      /// </summary>
-      public int? ProjectInfoIndex { get; set; }
-
-      /// <summary>
-      /// Project Info List
-      /// </summary>
-      public IList<IProjectInfo> ProjectInfoList { get; private set; }
-
-      /// <summary>
-      /// Project ID Number
-      /// </summary>
-      public int ProjectID
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectID;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectID;
-         }
-      }
-
-      /// <summary>
-      /// Project ID (Run)
-      /// </summary>
-      public int ProjectRun
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectRun;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectRun;
-         }
-      }
-
-      /// <summary>
-      /// Project ID (Clone)
-      /// </summary>
-      public int ProjectClone
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectClone;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectClone;
-         }
-      }
-
-      /// <summary>
-      /// Project ID (Gen)
-      /// </summary>
-      public int ProjectGen
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectGen;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectGen;
-         }
-      }
-
-      /// <summary>
-      /// Number of threads specified in the call to the FahCore process.
-      /// </summary>
-      public int Threads { get; set; }
-
-      public WorkUnitResult WorkUnitResult { get; set; }
-
-      public int? TotalCompletedUnits { get; set; }
-   }
-
-   public static class LogReaderExtensions
-   {
-      private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
-
-      /// <summary>
-      /// Get the Default DateTimeStyle based on the current runtime (.NET or Mono).
-      /// </summary>
-      internal static DateTimeStyles DateTimeStyle
-      {
-         get
-         {
-            DateTimeStyles style;
-
-            if (IsRunningOnMono)
-            {
-               style = DateTimeStyles.AssumeUniversal |
-                       DateTimeStyles.AdjustToUniversal;
-            }
-            else
-            {
-               // set parse style to parse local
-               style = DateTimeStyles.NoCurrentDateDefault |
-                       DateTimeStyles.AssumeUniversal |
-                       DateTimeStyles.AdjustToUniversal;
-            }
-
-            return style;
-         }
       }
    }
 }
