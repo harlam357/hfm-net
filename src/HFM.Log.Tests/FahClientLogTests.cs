@@ -22,21 +22,22 @@ namespace HFM.Log
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);
-         var expectedSlotRun = new SlotRun(expectedRun, 1);
+
+         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedRun.SlotRuns.Add(0, expectedSlotRun);
+         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 85, 402));
+         expectedSlotRun.Data = new SlotRunData();
+         expectedSlotRun.Data.CompletedUnits = 0;
+         expectedSlotRun.Data.FailedUnits = 0;
+         expectedSlotRun.Data.TotalCompletedUnits = null;
+         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+
+         expectedSlotRun = new SlotRun(expectedRun, 1);
          expectedRun.SlotRuns.Add(1, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 90, 349));
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 276, 413));
          expectedSlotRun.Data = new SlotRunData();
          expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
-
-         expectedSlotRun = new SlotRun(expectedRun, 0);
-         expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 85, 402));
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
          expectedSlotRun.Data.Status = SlotStatus.Unknown;
@@ -50,7 +51,7 @@ namespace HFM.Log
          expectedRun.Data.UserID = null;
          expectedRun.Data.MachineID = 0;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun);
 
          //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
@@ -90,6 +91,7 @@ namespace HFM.Log
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);
+
          var expectedSlotRun = new SlotRun(expectedRun, 1);
          expectedRun.SlotRuns.Add(1, expectedSlotRun);
          expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 74, 212));
@@ -131,7 +133,7 @@ namespace HFM.Log
          expectedRun.Data.UserID = null;
          expectedRun.Data.MachineID = 0;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun);
 
          //Assert.AreEqual(1, logInterpreter.LogLineParsingErrors.Count());
