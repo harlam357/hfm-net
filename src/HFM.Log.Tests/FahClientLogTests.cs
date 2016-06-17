@@ -2870,6 +2870,867 @@ namespace HFM.Log
          Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
 
+      [Test]
+      public void FahClientLog_Read_Client_v7_15_Test()
+      {
+         // Scan
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_15\\log.txt"), FahLogType.FahClient);
+
+         // Setup ClientRun 0
+         var expectedRun = new ClientRun(null, 0);
+
+         // Setup SlotRun 0
+         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedRun.SlotRuns.Add(0, expectedSlotRun);
+
+         // Setup SlotRun 0 - UnitRun 0
+         var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 72, 312);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 17, 36);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 99;
+         var expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11633;
+         expectedProjectInfo.ProjectRun = 1;
+         expectedProjectInfo.ProjectClone = 33;
+         expectedProjectInfo.ProjectGen = 25;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 1
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 232, 467);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 35, 19);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9033;
+         expectedProjectInfo.ProjectRun = 867;
+         expectedProjectInfo.ProjectClone = 2;
+         expectedProjectInfo.ProjectGen = 113;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 2
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 411, 647);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 34, 47);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11636;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 69;
+         expectedProjectInfo.ProjectGen = 31;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 3
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 568, 807);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 18, 33);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 10197;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 16;
+         expectedProjectInfo.ProjectGen = 39;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 4
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 746, 971);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 54, 48);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 779;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 981;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 5
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 908, 1150);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 13, 20);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11626;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 168;
+         expectedProjectInfo.ProjectGen = 20;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 6
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1072, 1330);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 26, 28);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11636;
+         expectedProjectInfo.ProjectRun = 1;
+         expectedProjectInfo.ProjectClone = 92;
+         expectedProjectInfo.ProjectGen = 15;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 7
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1251, 1493);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 54, 9);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9762;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 25;
+         expectedProjectInfo.ProjectGen = 166;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 8
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1430, 1650);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 48, 23);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9038;
+         expectedProjectInfo.ProjectRun = 23;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 73;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 9
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1594, 1803);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 38, 21);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6396;
+         expectedProjectInfo.ProjectRun = 18;
+         expectedProjectInfo.ProjectClone = 23;
+         expectedProjectInfo.ProjectGen = 248;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 10
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1750, 1985);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 4, 20);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11626;
+         expectedProjectInfo.ProjectRun = 1;
+         expectedProjectInfo.ProjectClone = 42;
+         expectedProjectInfo.ProjectGen = 25;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 11
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1906, 2137);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 18, 39);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6392;
+         expectedProjectInfo.ProjectRun = 30;
+         expectedProjectInfo.ProjectClone = 31;
+         expectedProjectInfo.ProjectGen = 288;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 12
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2084, 2319);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 8, 45);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11634;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 204;
+         expectedProjectInfo.ProjectGen = 24;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 13
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2240, 2472);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 21, 1);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6393;
+         expectedProjectInfo.ProjectRun = 18;
+         expectedProjectInfo.ProjectClone = 38;
+         expectedProjectInfo.ProjectGen = 194;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 14
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2419, 2630);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 17, 23);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9036;
+         expectedProjectInfo.ProjectRun = 78;
+         expectedProjectInfo.ProjectClone = 2;
+         expectedProjectInfo.ProjectGen = 96;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 15
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2574, 2787);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 3, 36);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9032;
+         expectedProjectInfo.ProjectRun = 592;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 125;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 16
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2731, 2968);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 46, 38);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11641;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 317;
+         expectedProjectInfo.ProjectGen = 8;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 17
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2888, 3120);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 13, 7);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6398;
+         expectedProjectInfo.ProjectRun = 65;
+         expectedProjectInfo.ProjectClone = 27;
+         expectedProjectInfo.ProjectGen = 285;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 18
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3067, 3283);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 39, 45);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 10197;
+         expectedProjectInfo.ProjectRun = 2;
+         expectedProjectInfo.ProjectClone = 32;
+         expectedProjectInfo.ProjectGen = 30;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 19
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3223, 3439);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 16, 40);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 60;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 34;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 20
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3383, 3592);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 5, 18);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6393;
+         expectedProjectInfo.ProjectRun = 25;
+         expectedProjectInfo.ProjectClone = 28;
+         expectedProjectInfo.ProjectGen = 150;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 21
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3539, 3751);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 32, 2);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 26;
+         expectedProjectInfo.ProjectClone = 3;
+         expectedProjectInfo.ProjectGen = 98;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 22
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3695, 3907);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 17, 10);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9031;
+         expectedProjectInfo.ProjectRun = 79;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 55;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 23
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3851, 4070);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 36, 51);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9761;
+         expectedProjectInfo.ProjectRun = 86;
+         expectedProjectInfo.ProjectClone = 26;
+         expectedProjectInfo.ProjectGen = 88;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 24
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4007, 4224);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 6, 16);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6391;
+         expectedProjectInfo.ProjectRun = 111;
+         expectedProjectInfo.ProjectClone = 34;
+         expectedProjectInfo.ProjectGen = 82;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 25
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4171, 4383);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 49, 57);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9038;
+         expectedProjectInfo.ProjectRun = 205;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 79;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 26
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4326, 4538);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 36, 5);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6395;
+         expectedProjectInfo.ProjectRun = 28;
+         expectedProjectInfo.ProjectClone = 10;
+         expectedProjectInfo.ProjectGen = 135;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 27
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4484, 4703);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 1, 36);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 414;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 1025;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 28
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4640, 4860);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 18, 59);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9038;
+         expectedProjectInfo.ProjectRun = 6;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 102;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 29
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4803, 5024);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 3, 51);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 514;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 998;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 30
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4961, 5180);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 20, 9);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 683;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 69;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 31
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5124, 5336);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 7, 38);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9038;
+         expectedProjectInfo.ProjectRun = 538;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 71;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 32
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5280, 5490);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 53, 50);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 8600;
+         expectedProjectInfo.ProjectRun = 121;
+         expectedProjectInfo.ProjectClone = 13;
+         expectedProjectInfo.ProjectGen = 312;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 33
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5437, 5648);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 19, 29);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9038;
+         expectedProjectInfo.ProjectRun = 805;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 91;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 34
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5592, 5829);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 30, 37);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11635;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 664;
+         expectedProjectInfo.ProjectGen = 2;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 35
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5749, 5993);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 23, 22);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 2534;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 701;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 36
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5929, 6156);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 40, 48);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 1080;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 934;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 37
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6093, 6312);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 57, 31);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9032;
+         expectedProjectInfo.ProjectRun = 246;
+         expectedProjectInfo.ProjectClone = 3;
+         expectedProjectInfo.ProjectGen = 2;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 38
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6256, 6493);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 40, 34);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11641;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 588;
+         expectedProjectInfo.ProjectGen = 2;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 39
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6413, 6648);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 6, 38);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 384;
+         expectedProjectInfo.ProjectClone = 3;
+         expectedProjectInfo.ProjectGen = 1;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 40
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6592, 6827);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 54, 44);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11625;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 896;
+         expectedProjectInfo.ProjectGen = 2;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 41
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6749, 7008);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 40, 34);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11641;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 608;
+         expectedProjectInfo.ProjectGen = 5;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 42
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6928, 7171);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 54, 52);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9752;
+         expectedProjectInfo.ProjectRun = 424;
+         expectedProjectInfo.ProjectClone = 0;
+         expectedProjectInfo.ProjectGen = 975;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 43
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7107, 7324);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 10, 54);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6393;
+         expectedProjectInfo.ProjectRun = 124;
+         expectedProjectInfo.ProjectClone = 20;
+         expectedProjectInfo.ProjectGen = 115;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 44
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7271, 7483);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 36, 49);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 184;
+         expectedProjectInfo.ProjectClone = 2;
+         expectedProjectInfo.ProjectGen = 131;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 45
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7427, 7636);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 35, 3);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6392;
+         expectedProjectInfo.ProjectRun = 20;
+         expectedProjectInfo.ProjectClone = 26;
+         expectedProjectInfo.ProjectGen = 172;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 46
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7583, 7795);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 2, 22);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9035;
+         expectedProjectInfo.ProjectRun = 241;
+         expectedProjectInfo.ProjectClone = 1;
+         expectedProjectInfo.ProjectGen = 80;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 47
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7739, 7976);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 49, 25);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11636;
+         expectedProjectInfo.ProjectRun = 1;
+         expectedProjectInfo.ProjectClone = 89;
+         expectedProjectInfo.ProjectGen = 27;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 48
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7896, 8128);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 30, 35);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6394;
+         expectedProjectInfo.ProjectRun = 58;
+         expectedProjectInfo.ProjectClone = 26;
+         expectedProjectInfo.ProjectGen = 222;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 49
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8075, 8283);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 56, 54);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 6398;
+         expectedProjectInfo.ProjectRun = 2;
+         expectedProjectInfo.ProjectClone = 20;
+         expectedProjectInfo.ProjectGen = 319;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 50
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8230, 8444);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 22, 57);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11643;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 9;
+         expectedProjectInfo.ProjectGen = 21;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 51
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8386, 8601);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 12, 36);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 9036;
+         expectedProjectInfo.ProjectRun = 112;
+         expectedProjectInfo.ProjectClone = 3;
+         expectedProjectInfo.ProjectGen = 80;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 52
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8545, 8816);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 25, 11);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 102;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11626;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 886;
+         expectedProjectInfo.ProjectGen = 6;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 53
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8736, 8997);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 57, 0);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 11642;
+         expectedProjectInfo.ProjectRun = 1;
+         expectedProjectInfo.ProjectClone = 95;
+         expectedProjectInfo.ProjectGen = 26;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 54
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8917, 9016);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 30, 45);
+         expectedUnitRun.Data.CoreVersion = 2.27f;
+         expectedUnitRun.Data.FramesObserved = 21;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 10197;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 11;
+         expectedProjectInfo.ProjectGen = 32;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRunData 0
+         expectedSlotRun.Data = new SlotRunData();
+         expectedSlotRun.Data.CompletedUnits = 54;
+         expectedSlotRun.Data.FailedUnits = 0;
+         expectedSlotRun.Data.TotalCompletedUnits = null;
+         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+
+         // Setup ClientRunData 0
+         expectedRun.Data = new ClientRunData();
+         expectedRun.Data.StartTime = new DateTime(2016, 3, 5, 5, 0, 47, DateTimeKind.Utc);
+         expectedRun.Data.Arguments = null;
+         expectedRun.Data.ClientVersion = null;
+         expectedRun.Data.FoldingID = null;
+         expectedRun.Data.Team = 0;
+         expectedRun.Data.UserID = null;
+         expectedRun.Data.MachineID = 0;
+
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
+         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+
+         Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
+      }
+
       // ReSharper restore InconsistentNaming
    }
 }
