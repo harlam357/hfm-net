@@ -135,11 +135,13 @@ namespace HFM.Core
          }
          _currentClientRun = clientRun;
 
-         // TODO: report errors that came back from log parsing
-         //foreach (var s in _logInterpreter.LogLineParsingErrors)
-         //{
-         //   Logger.Debug(Constants.ClientNameFormat, ClientName, s);
-         //}
+         if (Logger.IsDebugEnabled)
+         {
+            foreach (var s in clientRun.Where(x => x.LineType == LogLineType.Error))
+            {
+               Logger.Debug(Constants.ClientNameFormat, ClientName, s);
+            }
+         }
 
          IDictionary<int, UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
          _clientQueue = BuildClientQueue(unitCollection, info, slotOptions, slotId);

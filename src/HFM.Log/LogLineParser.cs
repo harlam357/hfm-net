@@ -440,10 +440,19 @@ namespace HFM.Log
             Match coreVersionMatch;
             if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.LineRaw)).Success)
             {
+               string coreVer = coreVersionMatch.Groups["CoreVer"].Value.Trim();
                float value;
-               if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+               if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
                {
                   return value;
+               }
+               // Try to parse GPU Core Versions in the 0.#.## format
+               if (coreVer.StartsWith("0."))
+               {
+                  if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                  {
+                     return value;
+                  }
                }
             }
             return null;

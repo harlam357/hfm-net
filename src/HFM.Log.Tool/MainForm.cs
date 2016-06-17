@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -164,32 +163,57 @@ namespace HFM.Log.Tool
       {
          var sb = new StringBuilder();
          int i = 0;
+         int j = 0;
+         int k = 0;
          foreach (var clientRun in _fahLog.ClientRuns.Reverse())
          {
-            sb.AppendLine("// Check Run " + i + " Positions");
+            sb.AppendLine("// Setup ClientRun " + i);
             sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRun = new ClientRun(null, " + clientRun.ClientStartIndex + ");");
-            int j = 0;
             foreach (var slotRun in clientRun.SlotRuns.Values)
             {
                sb.AppendLine();
+               sb.AppendLine("// Setup SlotRun " + slotRun.FoldingSlot);
                sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRun = new SlotRun(expectedRun, " + slotRun.FoldingSlot + ");");
                sb.AppendLine("expectedRun.SlotRuns.Add(" + slotRun.FoldingSlot + ", expectedSlotRun);");
+               int unitCount = 0;
                foreach (var unitRun in slotRun.UnitRuns.Reverse())
                {
-                  sb.AppendLine("expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, " + unitRun.QueueIndex + "," + unitRun.StartIndex + "," + unitRun.EndIndex + "));");
+                  sb.AppendLine();
+                  sb.AppendLine("// Setup SlotRun " + slotRun.FoldingSlot + " - UnitRun " + unitCount);
+                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRun = new UnitRun(expectedSlotRun, " + unitRun.QueueIndex + "," + unitRun.StartIndex + "," + unitRun.EndIndex + ");");
+                  sb.AppendLine("expectedUnitRun.Data = new UnitRunData();");
+                  if (unitRun.Data.UnitStartTimeStamp.HasValue)
+                  {
+                     var st1 = unitRun.Data.UnitStartTimeStamp.Value;
+                     sb.AppendLine("expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
+                  }
+                  sb.AppendLine("expectedUnitRun.Data.CoreVersion = " + unitRun.Data.CoreVersion + "f;");
+                  sb.AppendLine("expectedUnitRun.Data.FramesObserved = " + unitRun.Data.FramesObserved + ";");
+                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedProjectInfo = new ProjectInfo();");
+                  sb.AppendLine("expectedProjectInfo.ProjectID = " + unitRun.Data.ProjectID + ";");
+                  sb.AppendLine("expectedProjectInfo.ProjectRun = " + unitRun.Data.ProjectRun + ";");
+                  sb.AppendLine("expectedProjectInfo.ProjectClone = " + unitRun.Data.ProjectClone + ";");
+                  sb.AppendLine("expectedProjectInfo.ProjectGen = " + unitRun.Data.ProjectGen + ";");
+                  sb.AppendLine("expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);");
+                  sb.AppendLine("expectedUnitRun.Data.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
+                  sb.AppendLine("expectedSlotRun.UnitRuns.Push(expectedUnitRun);");
+                  unitCount++;
+                  k++;
                }
+               sb.AppendLine();
+               sb.AppendLine("// Setup SlotRunData " + slotRun.FoldingSlot);
                sb.AppendLine("expectedSlotRun.Data = new SlotRunData();");
                sb.AppendLine("expectedSlotRun.Data.CompletedUnits = " + slotRun.Data.CompletedUnits + ";");
                sb.AppendLine("expectedSlotRun.Data.FailedUnits = " + slotRun.Data.FailedUnits + ";");
                sb.AppendLine("expectedSlotRun.Data.TotalCompletedUnits = " + GetStringOrNull(slotRun.Data.TotalCompletedUnits) + ";");
                sb.AppendLine("expectedSlotRun.Data.Status = SlotStatus." + slotRun.Data.Status + ";");
-
                j++;
             }
             sb.AppendLine();
+            sb.AppendLine("// Setup ClientRunData " + i);
             sb.AppendLine("expectedRun.Data = new ClientRunData();");
-            var st = clientRun.Data.StartTime;
-            sb.AppendLine("expectedRun.Data.StartTime = new DateTime(" + st.Year + ", " + st.Month + ", " + st.Day + ", " + st.Hour + ", " + st.Minute + ", " + st.Second + ", DateTimeKind.Utc);");
+            var st2 = clientRun.Data.StartTime;
+            sb.AppendLine("expectedRun.Data.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
             sb.AppendLine("expectedRun.Data.Arguments = " + GetStringOrNull(clientRun.Data.Arguments) + ";");
             sb.AppendLine("expectedRun.Data.ClientVersion = " + GetStringOrNull(clientRun.Data.ClientVersion) + ";");
             sb.AppendLine("expectedRun.Data.FoldingID = " + GetStringOrNull(clientRun.Data.FoldingID) + ";");
@@ -198,8 +222,9 @@ namespace HFM.Log.Tool
             sb.AppendLine("expectedRun.Data.MachineID = " + clientRun.Data.MachineID + ";");
             sb.AppendLine();
             sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
-            sb.AppendLine("FahLogAssert.AreEqual(expectedRun, actualRun);");
-
+            sb.AppendLine("FahLogAssert.AreEqual(expectedRun, actualRun, true);");
+            sb.AppendLine();
+            sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.LineType == LogLineType.Error));", clientRun.Count(x => x.LineType == LogLineType.Error)));
             i++;
          }
 

@@ -146,11 +146,13 @@ namespace HFM.Core
       {
          _fahLog = FahLog.Read(File.ReadLines(FahLogFilePath), FahLogType.Legacy);
 
-         // TODO: report errors that came back from log parsing
-         //foreach (var s in _logInterpreterLegacy.LogLineParsingErrors)
-         //{
-         //   Logger.Debug(Constants.ClientNameFormat, ClientName, s);
-         //}
+         if (Logger.IsDebugEnabled)
+         {
+            foreach (var s in _fahLog.Where(x => x.LineType == LogLineType.Error))
+            {
+               Logger.Debug(Constants.ClientNameFormat, ClientName, s);
+            }
+         }
 
          IList<UnitInfo> parsedUnits;
          // Decision Time: If Queue Read fails parse from logs only
