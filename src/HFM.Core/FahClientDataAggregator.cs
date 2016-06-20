@@ -48,8 +48,6 @@ namespace HFM.Core
          set { _logger = value; }
       }
 
-      #region Aggregation Logic
-
       /// <summary>
       /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
@@ -64,8 +62,7 @@ namespace HFM.Core
 
          var result = new DataAggregatorResult();
          result.CurrentUnitIndex = -1;
-         // only take up to the last MaxDisplayableLogLines
-         //_currentLogLines = logLines.Skip(Math.Max(0, logLines.Count - Constants.MaxDisplayableLogLines)).ToList();
+
          SlotRun slotRun = null;
          if (clientRun.SlotRuns.ContainsKey(slotId))
          {
@@ -81,7 +78,7 @@ namespace HFM.Core
             }
          }
 
-         result.UnitInfos = GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
+         GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
          result.Queue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
 
          if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
@@ -182,15 +179,15 @@ namespace HFM.Core
          return String.Empty;
       }
 
-      private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
-                                                                       SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
+      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
+                                                 SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          Debug.Assert(unitCollection != null);
          Debug.Assert(options != null);
          Debug.Assert(slotOptions != null);
          Debug.Assert(currentUnitInfo != null);
 
-         var unitInfos = new Dictionary<int, UnitInfo>();
+         result.UnitInfos = new Dictionary<int, UnitInfo>();
          result.UnitLogLines = new Dictionary<int, IList<LogLine>>();
 
          bool foundCurrentUnitInfo = false;
@@ -223,7 +220,7 @@ namespace HFM.Core
             UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, unitRun);
             if (unitInfo != null)
             {
-               unitInfos.Add(unit.Id, unitInfo);
+               result.UnitInfos.Add(unit.Id, unitInfo);
                if (unitRun != null)
                {
                   result.UnitLogLines.Add(unit.Id, unitRun.ToList());
@@ -258,12 +255,10 @@ namespace HFM.Core
                UnitInfo currentClone = currentUnitInfo.DeepClone();
 
                UpdateUnitInfo(currentClone, unitRun);
-               unitInfos.Add(currentClone.QueueIndex, currentClone);
+               result.UnitInfos.Add(currentClone.QueueIndex, currentClone);
                result.UnitLogLines.Add(currentClone.QueueIndex, unitRun.ToList());
             }
          }
-
-         return unitInfos;
       }
 
       private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
@@ -394,8 +389,6 @@ namespace HFM.Core
             unit.SetUnitFrame(frame);
          }
       }
-
-      #endregion
 
       #endregion
    }
