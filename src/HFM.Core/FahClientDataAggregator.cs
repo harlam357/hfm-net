@@ -38,64 +38,6 @@ namespace HFM.Core
       /// </summary>
       public string ClientName { get; set; }
 
-      private ClientQueue _clientQueue;
-      /// <summary>
-      /// Client Queue
-      /// </summary>
-      public ClientQueue Queue
-      {
-         get { return _clientQueue; }
-      }
-
-      private int _currentUnitIndex;
-      /// <summary>
-      /// Current Index in List of returned UnitInfo
-      /// </summary>
-      public int CurrentUnitIndex
-      {
-         get { return _currentUnitIndex; }
-      }
-
-      private ClientRun _currentClientRun;
-      /// <summary>
-      /// Client Run Data for the Current Run
-      /// </summary>
-      public ClientRun CurrentClientRun
-      {
-         get { return _currentClientRun; }
-      }
-
-      private List<LogLine> _currentLogLines;
-      /// <summary>
-      /// Current Log Lines
-      /// </summary>
-      public IList<LogLine> CurrentLogLines
-      {
-         get
-         {
-            if (_unitLogLines.ContainsKey(_currentUnitIndex))
-            {
-               return _unitLogLines[_currentUnitIndex];
-            }
-
-            if (_currentLogLines == null)
-            {
-               return new List<LogLine>();
-            }
-
-            return _currentLogLines;
-         }
-      }
-
-      private IDictionary<int, IList<LogLine>> _unitLogLines;
-      /// <summary>
-      /// Dictionary of LogLine Lists.
-      /// </summary>
-      public IDictionary<int, IList<LogLine>> UnitLogLines
-      {
-         get { return _unitLogLines; }
-      }
-
       private ILogger _logger;
 
       public ILogger Logger
@@ -111,8 +53,8 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo Dictionary.
       /// </summary>
-      public IDictionary<int, UnitInfo> AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
-                                                      SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
+      public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
+                                                SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          if (clientRun == null) throw new ArgumentNullException("clientRun");
          if (unitCollection == null) throw new ArgumentNullException("unitCollection");
@@ -120,20 +62,16 @@ namespace HFM.Core
          if (slotOptions == null) throw new ArgumentNullException("slotOptions");
          if (currentUnitInfo == null) throw new ArgumentNullException("currentUnitInfo");
 
-         _currentUnitIndex = -1;
+         var result = new DataAggregatorResult();
+         result.CurrentUnitIndex = -1;
          // only take up to the last MaxDisplayableLogLines
          //_currentLogLines = logLines.Skip(Math.Max(0, logLines.Count - Constants.MaxDisplayableLogLines)).ToList();
          SlotRun slotRun = null;
          if (clientRun.SlotRuns.ContainsKey(slotId))
          {
             slotRun = clientRun.SlotRuns[slotId];
-            _currentLogLines = slotRun.ToList();
          }
-         else
-         {
-            _currentLogLines = clientRun.ToList();
-         }
-         _currentClientRun = clientRun;
+         result.CurrentClientRun = clientRun;
 
          if (Logger.IsDebugEnabled)
          {
@@ -143,10 +81,23 @@ namespace HFM.Core
             }
          }
 
-         IDictionary<int, UnitInfo> parsedUnits = GenerateUnitInfoDataFromQueue(slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
-         _clientQueue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
+         result.UnitInfos = GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
+         result.Queue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
 
-         return parsedUnits;
+         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         {
+            result.CurrentLogLines = result.UnitLogLines[result.CurrentUnitIndex];
+         }
+         else if (slotRun != null)
+         {
+            result.CurrentLogLines = slotRun.ToList();
+         }
+         else
+         {
+            result.CurrentLogLines = clientRun.ToList();
+         }
+
+         return result;
       }
 
       private static ClientQueue BuildClientQueue(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
@@ -231,7 +182,7 @@ namespace HFM.Core
          return String.Empty;
       }
 
-      private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
+      private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
                                                                        SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
          Debug.Assert(unitCollection != null);
@@ -239,8 +190,8 @@ namespace HFM.Core
          Debug.Assert(slotOptions != null);
          Debug.Assert(currentUnitInfo != null);
 
-         var parsedUnits = new Dictionary<int, UnitInfo>();
-         _unitLogLines = new Dictionary<int, IList<LogLine>>();
+         var unitInfos = new Dictionary<int, UnitInfo>();
+         result.UnitLogLines = new Dictionary<int, IList<LogLine>>();
 
          bool foundCurrentUnitInfo = false;
 
@@ -272,26 +223,26 @@ namespace HFM.Core
             UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, unitRun);
             if (unitInfo != null)
             {
-               parsedUnits.Add(unit.Id, unitInfo);
+               unitInfos.Add(unit.Id, unitInfo);
                if (unitRun != null)
                {
-                  _unitLogLines.Add(unit.Id, unitRun.ToList());
+                  result.UnitLogLines.Add(unit.Id, unitRun.ToList());
                }
                if (unit.StateEnum == FahUnitStatus.Running)
                {
-                  _currentUnitIndex = unit.Id;
+                  result.CurrentUnitIndex = unit.Id;
                }
             }
          }
 
          // if no running WU found
-         if (_currentUnitIndex == -1)
+         if (result.CurrentUnitIndex == -1)
          {
             // look for a WU with Ready state
             var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == FahUnitStatus.Ready);
             if (unit != null)
             {
-               _currentUnitIndex = unit.Id;
+               result.CurrentUnitIndex = unit.Id;
             }
          }
 
@@ -307,12 +258,12 @@ namespace HFM.Core
                UnitInfo currentClone = currentUnitInfo.DeepClone();
 
                UpdateUnitInfo(currentClone, unitRun);
-               parsedUnits.Add(currentClone.QueueIndex, currentClone);
-               _unitLogLines.Add(currentClone.QueueIndex, unitRun.ToList());
+               unitInfos.Add(currentClone.QueueIndex, currentClone);
+               result.UnitLogLines.Add(currentClone.QueueIndex, unitRun.ToList());
             }
          }
 
-         return parsedUnits;
+         return unitInfos;
       }
 
       private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)

@@ -408,32 +408,32 @@ namespace HFM.Core
 
                var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                dataAggregator.ClientName = slotModel.Name;
-               IDictionary<int, UnitInfo> units = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
-                                                                               slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
-               PopulateRunLevelData(dataAggregator.CurrentClientRun, info, slotModel);
+               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
+                                                                          slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
+               PopulateRunLevelData(result.CurrentClientRun, info, slotModel);
 
-               slotModel.Queue = dataAggregator.Queue;
-               slotModel.CurrentLogLines = dataAggregator.CurrentLogLines;
-               //slotModel.UnitLogLines = dataAggregator.UnitLogLines;
+               slotModel.Queue = result.Queue;
+               slotModel.CurrentLogLines = result.CurrentLogLines;
+               //slotModel.UnitLogLines = result.UnitLogLines;
 
                #endregion
 
-               var parsedUnits = new Dictionary<int, UnitInfoLogic>(units.Count);
-               foreach (int key in units.Keys)
+               var parsedUnits = new Dictionary<int, UnitInfoLogic>(result.UnitInfos.Count);
+               foreach (int key in result.UnitInfos.Keys)
                {
-                  if (units[key] != null)
+                  if (result.UnitInfos[key] != null)
                   {
-                     parsedUnits[key] = BuildUnitInfoLogic(slotModel, units[key]);
+                     parsedUnits[key] = BuildUnitInfoLogic(slotModel, result.UnitInfos[key]);
                   }
                }
 
                // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, dataAggregator.CurrentUnitIndex);
+               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, result.CurrentUnitIndex);
 
                // Update the UnitInfoLogic if we have a current unit index
-               if (dataAggregator.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(dataAggregator.CurrentUnitIndex))
+               if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
                {
-                  slotModel.UnitInfoLogic = parsedUnits[dataAggregator.CurrentUnitIndex];
+                  slotModel.UnitInfoLogic = parsedUnits[result.CurrentUnitIndex];
                }
 
                SetSlotStatus(slotModel);

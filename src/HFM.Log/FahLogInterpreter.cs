@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using HFM.Core.DataTypes;
 
@@ -101,7 +102,7 @@ namespace HFM.Log
          }
 
          // try to get the status from the most recent unit run
-         var lastUnitRun = slotRun.UnitRuns.PeekOrDefault();
+         var lastUnitRun = slotRun.UnitRuns.FirstOrDefault();
          if (lastUnitRun != null)
          {
             slotRunData.Status = GetSlotRunDataStatusLegacy(lastUnitRun.LogLines);

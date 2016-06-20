@@ -55,24 +55,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -114,40 +114,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNotNull(unitInfoList[6]);
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNotNull(result.UnitInfos[6]);
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -196,40 +196,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, "wrong_file_name.txt");
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNull(unitInfoList[4]);
-         Assert.IsNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNull(result.UnitInfos[4]);
+         Assert.IsNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(3, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(3, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNull(result.UnitLogLines[4]);
+         Assert.IsNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -274,24 +274,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -331,40 +331,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);
-         Assert.IsNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);
+         Assert.IsNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(5, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(5, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNull(result.UnitLogLines[1]);
+         Assert.IsNull(result.UnitLogLines[2]);
+         Assert.IsNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -406,40 +406,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);     // not current WU, mangled project string
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNotNull(unitInfoList[6]);
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);     // not current WU, mangled project string
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNotNull(result.UnitInfos[6]);
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(5, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(5, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -481,40 +481,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);     // not current WU, CORE_OUTDATED message
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);     // not current WU, CORE_OUTDATED message
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(7, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(7, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -556,40 +556,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);
-         Assert.IsNull(unitInfoList[3]);
-         Assert.IsNull(unitInfoList[4]);
-         Assert.IsNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);
+         Assert.IsNull(result.UnitInfos[3]);
+         Assert.IsNull(result.UnitInfos[4]);
+         Assert.IsNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(0, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.SendingWorkPacket, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(0, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.SendingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNull(result.UnitLogLines[1]);
+         Assert.IsNull(result.UnitLogLines[2]);
+         Assert.IsNull(result.UnitLogLines[3]);
+         Assert.IsNull(result.UnitLogLines[4]);
+         Assert.IsNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -631,40 +631,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);
-         Assert.IsNull(unitInfoList[3]);
-         Assert.IsNull(unitInfoList[4]);
-         Assert.IsNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);
+         Assert.IsNull(result.UnitInfos[3]);
+         Assert.IsNull(result.UnitInfos[4]);
+         Assert.IsNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.GettingWorkPacket, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNull(result.UnitLogLines[2]);
+         Assert.IsNull(result.UnitLogLines[3]);
+         Assert.IsNull(result.UnitLogLines[4]);
+         Assert.IsNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -708,40 +708,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNotNull(unitInfoList[6]);
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNotNull(result.UnitInfos[6]);
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(0, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.EuePause, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(0, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.EuePause, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -784,24 +784,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -844,24 +844,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.EuePause, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.EuePause, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -903,40 +903,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNotNull(unitInfoList[6]);
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNotNull(result.UnitInfos[6]);
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.GettingWorkPacket, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(8, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -969,22 +969,22 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      [Test]
-      public void GPU2_6_2_QueueClearTest()
-      {
-         const string path = "..\\..\\..\\TestFiles\\GPU2_6";
-         _dataAggregator.ClientName = "GPU2_6_2";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
-
-         _dataAggregator.AggregateData();
-         Assert.IsNotNull(_dataAggregator.Queue);
-         _dataAggregator.QueueFilePath = "wrong_file_name.dat";
-
-         _dataAggregator.AggregateData();
-         Assert.IsNull(_dataAggregator.Queue);
-      }
+      //[Test]
+      //public void GPU2_6_2_QueueClearTest()
+      //{
+      //   const string path = "..\\..\\..\\TestFiles\\GPU2_6";
+      //   _dataAggregator.ClientName = "GPU2_6_2";
+      //   _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
+      //   _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
+      //   _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+      //
+      //   var result = _dataAggregator.AggregateData();
+      //   Assert.IsNotNull(result.Queue);
+      //   _dataAggregator.QueueFilePath = "wrong_file_name.dat";
+      //
+      //   _dataAggregator.AggregateData();
+      //   Assert.IsNull(result.Queue);
+      //}
 
       [Test]
       public void GPU2_7()
@@ -995,24 +995,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1054,40 +1054,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);
-         Assert.IsNull(unitInfoList[3]);
-         Assert.IsNull(unitInfoList[4]);
-         Assert.IsNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);
+         Assert.IsNull(result.UnitInfos[3]);
+         Assert.IsNull(result.UnitInfos[4]);
+         Assert.IsNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(8, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNull(result.UnitLogLines[1]);
+         Assert.IsNull(result.UnitLogLines[2]);
+         Assert.IsNull(result.UnitLogLines[3]);
+         Assert.IsNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1127,24 +1127,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1184,40 +1184,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
-         Assert.IsNotNull(unitInfoList[2]);
-         Assert.IsNotNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNotNull(unitInfoList[5]);
-         Assert.IsNotNull(unitInfoList[6]);
-         Assert.IsNotNull(unitInfoList[7]);
-         Assert.IsNotNull(unitInfoList[8]);
-         Assert.IsNotNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
+         Assert.IsNotNull(result.UnitInfos[2]);
+         Assert.IsNotNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNotNull(result.UnitInfos[5]);
+         Assert.IsNotNull(result.UnitInfos[6]);
+         Assert.IsNotNull(result.UnitInfos[7]);
+         Assert.IsNotNull(result.UnitInfos[8]);
+         Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(8, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(8, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.IsNotNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNotNull(result.UnitLogLines[5]);
+         Assert.IsNotNull(result.UnitLogLines[6]);
+         Assert.IsNotNull(result.UnitLogLines[7]);
+         Assert.IsNotNull(result.UnitLogLines[8]);
+         Assert.IsNotNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex - 1];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex - 1];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1247,7 +1247,7 @@ namespace HFM.Core.Tests
          Assert.AreEqual("15", unitInfoData.CoreID);
          #endregion
 
-         unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1287,40 +1287,40 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(10, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNull(unitInfoList[1]);
-         Assert.IsNull(unitInfoList[2]);
-         Assert.IsNull(unitInfoList[3]);
-         Assert.IsNotNull(unitInfoList[4]);
-         Assert.IsNull(unitInfoList[5]);
-         Assert.IsNull(unitInfoList[6]);
-         Assert.IsNull(unitInfoList[7]);
-         Assert.IsNull(unitInfoList[8]);
-         Assert.IsNull(unitInfoList[9]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(10, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNull(result.UnitInfos[1]);
+         Assert.IsNull(result.UnitInfos[2]);
+         Assert.IsNull(result.UnitInfos[3]);
+         Assert.IsNotNull(result.UnitInfos[4]);
+         Assert.IsNull(result.UnitInfos[5]);
+         Assert.IsNull(result.UnitInfos[6]);
+         Assert.IsNull(result.UnitInfos[7]);
+         Assert.IsNull(result.UnitInfos[8]);
+         Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
-         Assert.IsNotNull(_dataAggregator.Queue);
-         Assert.AreEqual(4, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(10, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[1]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[2]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[3]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[4]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[5]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[6]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[7]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[8]);
-         Assert.IsNull(_dataAggregator.UnitLogLines[9]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNotNull(result.Queue);
+         Assert.AreEqual(4, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(10, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNull(result.UnitLogLines[1]);
+         Assert.IsNull(result.UnitLogLines[2]);
+         Assert.IsNotNull(result.UnitLogLines[3]);
+         Assert.IsNotNull(result.UnitLogLines[4]);
+         Assert.IsNull(result.UnitLogLines[5]);
+         Assert.IsNull(result.UnitLogLines[6]);
+         Assert.IsNull(result.UnitLogLines[7]);
+         Assert.IsNull(result.UnitLogLines[8]);
+         Assert.IsNull(result.UnitLogLines[9]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1362,24 +1362,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1421,24 +1421,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNotNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNotNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNotNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -1480,24 +1480,24 @@ namespace HFM.Core.Tests
          _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
          _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
 
-         var unitInfoList = _dataAggregator.AggregateData();
-         Assert.AreEqual(2, unitInfoList.Count);
-         Assert.IsNull(unitInfoList[0]);
-         Assert.IsNotNull(unitInfoList[1]);
+         var result = _dataAggregator.AggregateData();
+         Assert.AreEqual(2, result.UnitInfos.Count);
+         Assert.IsNull(result.UnitInfos[0]);
+         Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
-         Assert.IsNull(_dataAggregator.Queue);
-         Assert.AreEqual(1, _dataAggregator.CurrentUnitIndex);
-         Assert.IsNotNull(_dataAggregator.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, _dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status);
-         Assert.IsNotNull(_dataAggregator.CurrentLogLines);
-         Assert.AreEqual(2, _dataAggregator.UnitLogLines.Length);
-         Assert.IsNull(_dataAggregator.UnitLogLines[0]);
-         Assert.IsNotNull(_dataAggregator.UnitLogLines[1]);
-         Assert.AreEqual(_dataAggregator.CurrentLogLines, _dataAggregator.UnitLogLines[_dataAggregator.CurrentUnitIndex]);
+         Assert.IsNull(result.Queue);
+         Assert.AreEqual(1, result.CurrentUnitIndex);
+         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.IsNotNull(result.CurrentLogLines);
+         Assert.AreEqual(2, result.UnitLogLines.Count);
+         Assert.IsNull(result.UnitLogLines[0]);
+         Assert.IsNotNull(result.UnitLogLines[1]);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          #endregion
 
-         var unitInfoData = unitInfoList[_dataAggregator.CurrentUnitIndex];
+         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);

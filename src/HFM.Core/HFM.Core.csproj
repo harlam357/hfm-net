@@ -83,6 +83,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="DataTypes\DataAggregatorResult.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />

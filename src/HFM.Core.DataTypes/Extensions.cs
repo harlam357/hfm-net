@@ -664,10 +664,5 @@ namespace HFM.Core.DataTypes
       //}
 
       #endregion
-
-      public static T PeekOrDefault<T>(this Stack<T> stack)
-      {
-         return stack.Count == 0 ? default(T) : stack.Peek();
-      }
    }
 }

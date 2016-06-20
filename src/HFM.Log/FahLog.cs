@@ -168,13 +168,13 @@ namespace HFM.Log
 
       protected override void Finish()
       {
-         var clientRun = ClientRuns.PeekOrDefault();
+         var clientRun = ClientRuns.FirstOrDefault();
          if (clientRun == null)
          {
             return;
          }
          var slotRun = clientRun.SlotRuns.Count != 0 ? clientRun.SlotRuns[FoldingSlot] : null;
-         var lastUnitRun = slotRun != null ? slotRun.UnitRuns.PeekOrDefault() : null;
+         var lastUnitRun = slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
          if (_logBuffer != null && _logBuffer.Count != 0)
          {
             if (lastUnitRun != null)
@@ -340,7 +340,7 @@ namespace HFM.Log
       {
          var slotRun = EnsureSlotRunExists(lineIndex, FoldingSlot);
          var unitRun = new UnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
-         var previousUnitRun = slotRun.UnitRuns.PeekOrDefault();
+         var previousUnitRun = slotRun.UnitRuns.FirstOrDefault();
          if (previousUnitRun != null)
          {
             previousUnitRun.EndIndex = lineIndex - 1;
@@ -412,7 +412,7 @@ namespace HFM.Log
 
       protected override void Finish()
       {
-         var clientRun = ClientRuns.PeekOrDefault();
+         var clientRun = ClientRuns.FirstOrDefault();
          if (clientRun == null)
          {
             return;

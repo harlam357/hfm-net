@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 using HFM.Core.DataTypes;
 using HFM.Log;
@@ -155,38 +156,38 @@ namespace HFM.Core
 
          #region Run the Aggregator
 
-         IList<UnitInfo> units = dataAggregator.AggregateData();
+         var result = dataAggregator.AggregateData();
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(dataAggregator.CurrentClientRun.Data, _slotModel);
-         if (dataAggregator.Queue != null)
+         PopulateRunLevelData(result.CurrentClientRun.Data, _slotModel);
+         if (result.Queue != null)
          {
-            PopulateRunLevelData(dataAggregator.Queue.CurrentQueueEntry, _slotModel);
+            PopulateRunLevelData(result.Queue.CurrentQueueEntry, _slotModel);
          }
 
-         _slotModel.Queue = dataAggregator.Queue;
-         _slotModel.CurrentLogLines = dataAggregator.CurrentLogLines;
-         _slotModel.UnitLogLines = dataAggregator.UnitLogLines;
+         _slotModel.Queue = result.Queue;
+         _slotModel.CurrentLogLines = result.CurrentLogLines;
+         _slotModel.UnitLogLines = result.UnitLogLines.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
 
          #endregion
 
-         var parsedUnits = new UnitInfoLogic[units.Count];
-         for (int i = 0; i < units.Count; i++)
+         var parsedUnits = new UnitInfoLogic[result.UnitInfos.Count];
+         for (int i = 0; i < result.UnitInfos.Count; i++)
          {
-            if (units[i] != null)
+            if (result.UnitInfos[i] != null)
             {
-               parsedUnits[i] = BuildUnitInfoLogic(units[i], true);
+               parsedUnits[i] = BuildUnitInfoLogic(result.UnitInfos[i], true);
             }
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, dataAggregator.CurrentUnitIndex);
+         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, result.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
-         SlotStatus currentWorkUnitStatus = dataAggregator.CurrentClientRun.SlotRuns[0].Data.Status;
+         SlotStatus currentWorkUnitStatus = result.CurrentClientRun.SlotRuns[0].Data.Status;
          if (currentWorkUnitStatus != SlotStatus.Unknown)
          {
-            _slotModel.UnitInfoLogic = parsedUnits[dataAggregator.CurrentUnitIndex];
+            _slotModel.UnitInfoLogic = parsedUnits[result.CurrentUnitIndex];
          }
 
          HandleReturnedStatus(currentWorkUnitStatus, _slotModel);

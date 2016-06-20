@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -58,75 +57,6 @@ namespace HFM.Core
       /// </summary>
       public string UnitInfoLogFilePath { get; set; }
 
-      private ClientQueue _clientQueue;
-      /// <summary>
-      /// Client Queue
-      /// </summary>
-      public ClientQueue Queue
-      {
-         get { return _clientQueue; }
-      }
-
-      /// <summary>
-      /// Current Index in List of returned UnitInfo and UnitLogLines
-      /// </summary>
-      public int CurrentUnitIndex
-      {
-         get
-         {
-            if (_clientQueue != null)
-            {
-               return _clientQueue.CurrentIndex;
-            }
-
-            // default Unit Index if only parsing logs
-            return 1;
-         }
-      }
-
-      /// <summary>
-      /// Client Run Data for the Current Run
-      /// </summary>
-      public ClientRun CurrentClientRun
-      {
-         get { return _fahLog != null ? _fahLog.ClientRuns.PeekOrDefault() : null; }
-      }
-
-      /// <summary>
-      /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
-      /// </summary>
-      public IList<LogLine> CurrentLogLines
-      {
-         get
-         {
-            if (_unitLogLines == null || _unitLogLines[CurrentUnitIndex] == null)
-            {
-               if (_fahLog == null)
-               {
-                  return new List<LogLine>();
-               }
-               var clientRun = CurrentClientRun;
-               if (clientRun == null)
-               {
-                  return new List<LogLine>();
-               }
-               return clientRun.ToList();
-            }
-
-            return _unitLogLines[CurrentUnitIndex];
-         }
-      }
-
-      private IList<LogLine>[] _unitLogLines;
-      /// <summary>
-      /// Array of LogLine Lists
-      /// </summary>
-      [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-      public IList<LogLine>[] UnitLogLines
-      {
-         get { return _unitLogLines; }
-      }
-
       private ILogger _logger;
 
       public ILogger Logger
@@ -137,12 +67,10 @@ namespace HFM.Core
          set { _logger = value; }
       }
 
-      #region Aggregation Logic
-
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public IList<UnitInfo> AggregateData()
+      public DataAggregatorResult AggregateData()
       {
          _fahLog = FahLog.Read(File.ReadLines(FahLogFilePath), FahLogType.Legacy);
 
@@ -154,24 +82,37 @@ namespace HFM.Core
             }
          }
 
-         IList<UnitInfo> parsedUnits;
+         var result = new DataAggregatorResult();
+         result.CurrentClientRun = _fahLog.ClientRuns.FirstOrDefault();
+
          // Decision Time: If Queue Read fails parse from logs only
          QueueData queueData = ReadQueueFile();
          if (queueData != null)
          {
-            parsedUnits = GenerateUnitInfoDataFromQueue(_fahLog, queueData);
-            _clientQueue = BuildClientQueue(queueData);
+            result.UnitInfos = GenerateUnitInfoDataFromQueue(result, _fahLog, queueData);
+            result.Queue = BuildClientQueue(queueData);
+            result.CurrentUnitIndex = result.Queue.CurrentIndex;
          }
          else
          {
             Logger.Warn(Constants.ClientNameFormat, ClientName,
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
-            parsedUnits = GenerateUnitInfoDataFromLogs(_fahLog);
-            _clientQueue = null;
+            result.UnitInfos = GenerateUnitInfoDataFromLogs(result, _fahLog);
+            // default Unit Index if only parsing logs
+            result.CurrentUnitIndex = 1;
          }
 
-         return parsedUnits;
+         if (result.UnitLogLines == null || result.UnitLogLines[result.CurrentUnitIndex] == null)
+         {
+            result.CurrentLogLines = result.CurrentClientRun == null ? new List<LogLine>() : result.CurrentClientRun.ToList();
+         }
+         else
+         {
+            result.CurrentLogLines = result.UnitLogLines[result.CurrentUnitIndex];
+         }
+
+         return result;
       }
 
       private static ClientQueue BuildClientQueue(QueueData q)
@@ -210,40 +151,48 @@ namespace HFM.Core
          return null;
       }
 
-      private IList<UnitInfo> GenerateUnitInfoDataFromLogs(FahLog fahLog)
+      private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromLogs(DataAggregatorResult result, FahLog fahLog)
       {
-         var parsedUnits = new UnitInfo[2];
-         _unitLogLines = new IList<LogLine>[2];
+         var unitInfos = new Dictionary<int, UnitInfo>(2);
+         for (int i = 0; i < 2; i++)
+         {
+            unitInfos[i] = null;
+         }
+         result.UnitLogLines = new Dictionary<int, IList<LogLine>>(2);
+         for (int i = 0; i < 2; i++)
+         {
+            result.UnitLogLines[i] = null;
+         }
 
          var currentClientRun = GetCurrentClientRun(fahLog);
          var previousUnitRun = GetPreviousUnitRun(fahLog);
          if (previousUnitRun != null)
          {
-            _unitLogLines[0] = previousUnitRun.ToList();
-            parsedUnits[0] = BuildUnitInfo(null, currentClientRun.Data, previousUnitRun, null);
+            result.UnitLogLines[0] = previousUnitRun.ToList();
+            unitInfos[0] = BuildUnitInfo(null, currentClientRun.Data, previousUnitRun, null);
          }
 
          bool matchOverride = false;
          var currentUnitRun = GetCurrentUnitRun(fahLog);
          if (currentUnitRun != null)
          {
-            _unitLogLines[1] = currentUnitRun.ToList();
+            result.UnitLogLines[1] = currentUnitRun.ToList();
          }
          else
          {
             matchOverride = true;
-            _unitLogLines[1] = currentClientRun.ToList();
+            result.UnitLogLines[1] = currentClientRun.ToList();
          }
-         parsedUnits[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, GetUnitInfoLogData(), matchOverride);
+         unitInfos[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, GetUnitInfoLogData(), matchOverride);
 
-         return parsedUnits;
+         return unitInfos;
       }
 
       private static ClientRun GetCurrentClientRun(FahLog fahLog)
       {
          Debug.Assert(fahLog != null);
 
-         return fahLog.ClientRuns.PeekOrDefault();
+         return fahLog.ClientRuns.FirstOrDefault();
       }
 
       private static SlotRun GetCurrentSlotRun(FahLog fahLog)
@@ -267,22 +216,30 @@ namespace HFM.Core
          Debug.Assert(fahLog != null);
 
          var slotRun = GetCurrentSlotRun(fahLog);
-         return slotRun != null ? slotRun.UnitRuns.PeekOrDefault() : null;
+         return slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
       }
 
-      private UnitInfo[] GenerateUnitInfoDataFromQueue(FahLog fahLog, QueueData q)
+      private IDictionary<int, UnitInfo> GenerateUnitInfoDataFromQueue(DataAggregatorResult result, FahLog fahLog, QueueData q)
       {
          Debug.Assert(q != null);
 
-         var parsedUnits = new UnitInfo[10];
-         _unitLogLines = new IList<LogLine>[10];
+         var unitInfos = new Dictionary<int, UnitInfo>(10);
+         for (int i = 0; i < 10; i++)
+         {
+            unitInfos[i] = null;
+         }
+         result.UnitLogLines = new Dictionary<int, IList<LogLine>>(10);
+         for (int i = 0; i < 10; i++)
+         {
+            result.UnitLogLines[i] = null;
+         }
 
          var clientRun = GetCurrentClientRun(fahLog);
-         for (int queueIndex = 0; queueIndex < parsedUnits.Length; queueIndex++)
+         for (int queueIndex = 0; queueIndex < unitInfos.Count; queueIndex++)
          {
             var unitRun = GetUnitRunForQueueIndex(fahLog, queueIndex);
             // Get the Log Lines for this queue position from the reader
-            _unitLogLines[queueIndex] = unitRun != null ? unitRun.ToList() : null;
+            result.UnitLogLines[queueIndex] = unitRun != null ? unitRun.ToList() : null;
 
             UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
@@ -292,8 +249,8 @@ namespace HFM.Core
                unitInfoLogData = GetUnitInfoLogData();
             }
 
-            parsedUnits[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData);
-            if (parsedUnits[queueIndex] == null)
+            unitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData);
+            if (unitInfos[queueIndex] == null)
             {
                if (queueIndex == q.CurrentIndex)
                {
@@ -307,11 +264,11 @@ namespace HFM.Core
                   // was short and never contained any Work Unit Data.
                   if (unitRun != null)
                   {
-                     _unitLogLines[queueIndex] = unitRun.ToList();
+                     result.UnitLogLines[queueIndex] = unitRun.ToList();
                   }
                   else
                   {
-                     _unitLogLines[queueIndex] = clientRun.ToList();
+                     result.UnitLogLines[queueIndex] = clientRun.ToList();
                   }
 
                   var slotRun = GetCurrentSlotRun(fahLog);
@@ -323,7 +280,7 @@ namespace HFM.Core
                      unitRun = null;
                      unitInfoLogData = new UnitInfoLogData();
                   }
-                  parsedUnits[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData, true);
+                  unitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData, true);
                }
                else
                {
@@ -335,7 +292,7 @@ namespace HFM.Core
             }
          }
 
-         return parsedUnits;
+         return unitInfos;
       }
 
       private static UnitRun GetUnitRunForQueueIndex(FahLog fahLog, int queueIndex)
@@ -603,8 +560,6 @@ namespace HFM.Core
             unit.SetUnitFrame(frame);
          }
       }
-
-      #endregion
 
       #endregion
    }
