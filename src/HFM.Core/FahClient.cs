@@ -204,17 +204,15 @@ namespace HFM.Core
          else if (e.DataType == typeof(LogRestart) ||
                   e.DataType == typeof(LogUpdate))
          {
-            var logFragment = (LogFragment)e.TypedMessage;
-            IEnumerable<char[]> chunks = logFragment.Value.GetChunks();
-
             bool createNew = e.DataType == typeof(LogRestart);
-            // clear
             if (createNew)
             {
                _fahLog.Clear();
             }
-            WriteToLocalFahLogCache(chunks, createNew);
-            AppendToLogBuffer(chunks, logFragment.Value.Length);
+
+            var logFragment = (LogFragment)e.TypedMessage;
+            _fahLog.AddRange(logFragment.Value.Split('\n').Where(x => x.Length != 0));
+            WriteToLocalFahLogCache(logFragment.Value, createNew);
 
             if (_messages.LogRetrieved)
             {
@@ -223,9 +221,11 @@ namespace HFM.Core
          }
       }
 
-      private void WriteToLocalFahLogCache(IEnumerable<char[]> chunks, bool createNew)
+      private void WriteToLocalFahLogCache(StringBuilder logText, bool createNew)
       {
+         IEnumerable<char[]> chunks = logText.GetChunks();
          string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+
          if (createNew)
          {
             int i = 0;
@@ -249,18 +249,6 @@ namespace HFM.Core
                File.AppendAllText(fahLogPath, new string(chunk));
             }
          }
-      }
-
-      private void AppendToLogBuffer(IEnumerable<char[]> chunks, int length)
-      {
-         Debug.Assert(chunks != null);
-
-         var logText = new StringBuilder();
-         foreach (var chunk in chunks)
-         {
-            logText.Append(chunk);
-         }
-         _fahLog.AddRange(logText.Split('\n').Where(x => x.Length != 0));
       }
 
       private void MessageConnectionUpdateFinished(object sender, EventArgs e)
