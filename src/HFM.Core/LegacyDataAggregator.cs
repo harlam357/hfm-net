@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 using AutoMapper;
@@ -40,16 +39,6 @@ namespace HFM.Core
       /// </summary>
       public string ClientName { get; set; }
 
-      /// <summary>
-      /// queue.dat File Path
-      /// </summary>
-      public string QueueFilePath { get; set; }
-
-      /// <summary>
-      /// unitinfo.txt File Path
-      /// </summary>
-      public string UnitInfoLogFilePath { get; set; }
-
       private ILogger _logger;
 
       public ILogger Logger
@@ -63,7 +52,7 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public DataAggregatorResult AggregateData(FahLog fahLog)
+      public DataAggregatorResult AggregateData(FahLog fahLog, QueueData queueData, UnitInfoLogData unitInfo)
       {
          if (Logger.IsDebugEnabled)
          {
@@ -88,10 +77,9 @@ namespace HFM.Core
          result.Status = currentClientRun.SlotRuns[0].Data.Status;
 
          // Decision Time: If Queue Read fails parse from logs only
-         QueueData queueData = ReadQueueFile();
          if (queueData != null)
          {
-            GenerateUnitInfoDataFromQueue(result, fahLog, queueData);
+            GenerateUnitInfoDataFromQueue(result, queueData, fahLog, unitInfo);
             result.Queue = BuildClientQueue(queueData);
             result.CurrentUnitIndex = result.Queue.CurrentIndex;
          }
@@ -100,7 +88,7 @@ namespace HFM.Core
             Logger.Warn(Constants.ClientNameFormat, ClientName,
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
-            GenerateUnitInfoDataFromLogs(result, fahLog);
+            GenerateUnitInfoDataFromLogs(result, fahLog, unitInfo);
             // default Unit Index if only parsing logs
             result.CurrentUnitIndex = 1;
          }
@@ -130,30 +118,7 @@ namespace HFM.Core
          return cq;
       }
 
-      /// <summary>
-      /// Read the queue.dat file
-      /// </summary>
-      private QueueData ReadQueueFile()
-      {
-         // Make sure the queue file exists first.  Would like to avoid the exception overhead.
-         if (File.Exists(QueueFilePath))
-         {
-            // queue.dat is not required to get a reading
-            // if something goes wrong just catch and log
-            try
-            {
-               return QueueReader.ReadQueue(QueueFilePath);
-            }
-            catch (Exception ex)
-            {
-               Logger.ErrorFormat(ex, Constants.ClientNameFormat, ex.Message);
-            }
-         }
-
-         return null;
-      }
-
-      private void GenerateUnitInfoDataFromLogs(DataAggregatorResult result, FahLog fahLog)
+      private void GenerateUnitInfoDataFromLogs(DataAggregatorResult result, FahLog fahLog, UnitInfoLogData unitInfo)
       {
          result.UnitInfos = new Dictionary<int, UnitInfo>(2);
          for (int i = 0; i < 2; i++)
@@ -185,7 +150,7 @@ namespace HFM.Core
             matchOverride = true;
             result.UnitLogLines[1] = currentClientRun.ToList();
          }
-         result.UnitInfos[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, GetUnitInfoLogData(), matchOverride);
+         result.UnitInfos[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, unitInfo, matchOverride);
       }
 
       private static ClientRun GetCurrentClientRun(FahLog fahLog)
@@ -219,7 +184,7 @@ namespace HFM.Core
          return slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
       }
 
-      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, FahLog fahLog, QueueData q)
+      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, QueueData q, FahLog fahLog, UnitInfoLogData unitInfo)
       {
          Debug.Assert(q != null);
 
@@ -246,7 +211,7 @@ namespace HFM.Core
             if (queueIndex == q.CurrentIndex)
             {
                // Get the UnitInfo Log Data
-               unitInfoLogData = GetUnitInfoLogData();
+               unitInfoLogData = unitInfo;
             }
 
             result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData);
@@ -307,25 +272,7 @@ namespace HFM.Core
          return null;
       }
 
-      private UnitInfoLogData GetUnitInfoLogData()
-      {
-         try
-         {
-            return UnitInfoLog.Read(UnitInfoLogFilePath);
-         }
-         catch (Exception ex)
-         {
-            Logger.WarnFormat(ex, Constants.ClientNameFormat, ClientName, ex.Message);
-            return null;
-         }
-      }
-
-      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData)
-      {
-         return BuildUnitInfo(queueEntry, clientRunData, unitRun, unitInfoLogData, false);
-      }
-
-      private UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride)
+      private static UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride = false)
       {
          // queueEntry can be null
          Debug.Assert(clientRunData != null);

@@ -25,6 +25,7 @@ using NUnit.Framework;
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Queue;
 
 namespace HFM.Core.Tests
 {
@@ -54,11 +55,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_3";
          _dataAggregator.ClientName = "SMP_3";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -119,11 +118,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_7";
          _dataAggregator.ClientName = "SMP_7";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -207,11 +206,10 @@ namespace HFM.Core.Tests
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
          _dataAggregator.ClientName = "SMP_8_1";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, "wrong_file_name.txt");
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, null);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -291,11 +289,10 @@ namespace HFM.Core.Tests
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
          _dataAggregator.ClientName = "SMP_8_2";
-         _dataAggregator.QueueFilePath = Path.Combine(path, "wrong_file_name.dat");
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, unitInfo);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -354,11 +351,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_9";
          _dataAggregator.ClientName = "SMP_9";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -435,11 +432,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_11";
          _dataAggregator.ClientName = "SMP_11";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -516,11 +513,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_12";
          _dataAggregator.ClientName = "SMP_12";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -597,11 +594,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_13";
          _dataAggregator.ClientName = "SMP_13";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -678,11 +675,10 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_14";
          _dataAggregator.ClientName = "SMP_14";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, null);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -761,11 +757,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_15";
          _dataAggregator.ClientName = "SMP_15";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -843,11 +839,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_17";
          _dataAggregator.ClientName = "SMP_17";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -909,11 +903,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_3";
          _dataAggregator.ClientName = "GPU2_3";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -974,11 +966,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
          _dataAggregator.ClientName = "GPU2_6_1";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1055,11 +1047,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_7";
          _dataAggregator.ClientName = "GPU2_7";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1120,11 +1110,10 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
          _dataAggregator.ClientName = "GPU2_8_1";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, null);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -1199,11 +1188,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
          _dataAggregator.ClientName = "GPU2_8_2";
-         _dataAggregator.QueueFilePath = Path.Combine(path, "wrong_file_name.dat");
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1262,11 +1249,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU3_1";
          _dataAggregator.ClientName = "GPU3_1";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1371,11 +1358,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_5";
          _dataAggregator.ClientName = "Standard_5";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var queueData = QueueReader.ReadQueue(Path.Combine(path, queue));
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
+         var unitInfo = UnitInfoLog.Read(Path.Combine(path, unitinfo));
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, queueData, unitInfo);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -1452,11 +1439,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_7";
          _dataAggregator.ClientName = "Standard_7";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1517,11 +1502,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_8";
          _dataAggregator.ClientName = "Standard_8";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1582,11 +1565,9 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_9";
          _dataAggregator.ClientName = "Standard_9";
-         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
          var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
-         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData(fahLog);
+         var result = _dataAggregator.AggregateData(fahLog, null, null);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);

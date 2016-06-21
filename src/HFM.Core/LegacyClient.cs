@@ -24,8 +24,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
+using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Queue;
 
 namespace HFM.Core
 {
@@ -148,17 +150,19 @@ namespace HFM.Core
 
          var dataAggregator = new LegacyDataAggregator { Logger = Logger };
          dataAggregator.ClientName = Settings.Name;
-         dataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
+         string queueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
          string fahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         dataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
+         string unitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
 
          #endregion
 
          #region Run the Aggregator
 
+         var queue = ReadQueueFile(queueFilePath);
          var fahLog = FahLog.Read(File.ReadLines(fahLogFilePath), FahLogType.Legacy);
+         var unitInfo = ReadUnitInfoFile(unitInfoLogFilePath);
 
-         var result = dataAggregator.AggregateData(fahLog);
+         var result = dataAggregator.AggregateData(fahLog, queue, unitInfo);
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
          PopulateRunLevelData(result, _slotModel);
@@ -202,6 +206,41 @@ namespace HFM.Core
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
          Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
+      }
+
+      private QueueData ReadQueueFile(string path)
+      {
+         // Make sure the queue file exists first.  Would like to avoid the exception overhead.
+         if (File.Exists(path))
+         {
+            // queue.dat is not required to get a reading
+            // if something goes wrong just catch and log
+            try
+            {
+               return QueueReader.ReadQueue(path);
+            }
+            catch (Exception ex)
+            {
+               Logger.WarnFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
+            }
+         }
+         return null;
+      }
+
+      private UnitInfoLogData ReadUnitInfoFile(string path)
+      {
+         if (File.Exists(path))
+         {
+            try
+            {
+               return UnitInfoLog.Read(path);
+            }
+            catch (Exception ex)
+            {
+               Logger.WarnFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
+            }
+         }
+         return null;
       }
 
       private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo, bool updateUnitInfo)
