@@ -159,32 +159,28 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void AddTest2()
       {
          _dictionary.Add(1, CreateValidProtein(1));
-         _dictionary.Add(1, CreateValidProtein(1));
+         Assert.Throws<ArgumentException>(() => _dictionary.Add(1, CreateValidProtein(1)));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void AddTest3()
       {
-         _dictionary.Add(1, null);
+         Assert.Throws<ArgumentNullException>(() => _dictionary.Add(1, null));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void AddTest4()
       {
-         _dictionary.Add(1, new Protein());
+         Assert.Throws<ArgumentException>(() => _dictionary.Add(1, new Protein()));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void AddTest5()
       {
-         _dictionary.Add(1, CreateValidProtein(2));
+         Assert.Throws<ArgumentException>(() => _dictionary.Add(1, CreateValidProtein(2)));
       }
 
       [Test]
@@ -196,24 +192,21 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void IndexerTest2()
       {
-         _dictionary[1] = null;
+         Assert.Throws<ArgumentNullException>(() => _dictionary[1] = null);
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void IndexerTest3()
       {
-         _dictionary[1] = new Protein();
+         Assert.Throws<ArgumentException>(() => _dictionary[1] = new Protein());
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void IndexerTest4()
       {
-         _dictionary[1] = CreateValidProtein(2);
+         Assert.Throws<ArgumentException>(() => _dictionary[1] = CreateValidProtein(2));
       }
 
       private static Protein CreateValidProtein(int projectNumber)

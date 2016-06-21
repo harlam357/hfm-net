@@ -216,7 +216,6 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(InvalidOperationException))]
       public void Connection_Connect_Test3()
       {
          using (var connection = new Connection(CreateClientFactory()))
@@ -225,27 +224,25 @@ namespace HFM.Client.Tests
 
             Assert.IsTrue(connection.Connected);
             // cannot connect again if a connection is already established
-            connection.Connect("server", 10000, "password");
+            Assert.Throws<InvalidOperationException>(() => connection.Connect("server", 10000, "password"));
          }
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void Connection_Connect_Test4()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
-            connection.Connect(null, 10000, String.Empty);
+            Assert.Throws<ArgumentNullException>(() => connection.Connect(null, 10000, String.Empty));
          }
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void Connection_Connect_Test5()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
-            connection.Connect("server", 10000, null);
+            Assert.Throws<ArgumentNullException>(() => connection.Connect("server", 10000, null));
          }
       }
 
@@ -271,12 +268,11 @@ namespace HFM.Client.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(InvalidOperationException))]
       public void Connection_SendCommand_Test1()
       {
          using (var connection = new Connection(CreateClientFactory()))
          {
-            connection.SendCommand("command");
+            Assert.Throws<InvalidOperationException>(() => connection.SendCommand("command"));
          }
       }
 

@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -44,7 +44,7 @@ namespace HFM.Core.Tests.DataTypes
          Assert.IsTrue(unitInfo.FrameCount == 0);
          Assert.AreEqual(Constants.DefaultCoreID, unitInfo.CoreID);
       }
-      
+
       [Test]
       public void CurrentFrameTest1()
       {
@@ -165,7 +165,7 @@ namespace HFM.Core.Tests.DataTypes
       public void SetCurrentFrameTest3()
       {
          // this tests GetDelta() rollover functionality
-      
+
          var unitInfo = new UnitInfo();
          var unitFrame = new UnitFrame
          {
@@ -193,15 +193,14 @@ namespace HFM.Core.Tests.DataTypes
          // now we get a frame duration
          Assert.AreEqual(new TimeSpan(0, 10, 0), unitInfo.CurrentFrame.FrameDuration);
       }
-      
+
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void SetCurrentFrameTest4()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(null);
+         Assert.Throws(typeof(ArgumentNullException), () => unitInfo.SetUnitFrame(null));
       }
-      
+
       [Test]
       public void GetUnitFrameTest1()
       {

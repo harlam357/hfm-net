@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -30,13 +30,11 @@ namespace HFM.Core.Tests
    [TestFixture]
    public class ClientFactoryTests
    {
-      
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void CreateCollectionArgumentNullTest()
       {
          var builder = new ClientFactory();
-         builder.CreateCollection((null));
+         Assert.Throws<ArgumentNullException>(() => builder.CreateCollection((null)));
       }
 
       [Test]
@@ -66,45 +64,38 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void CreateArgumentNullTest()
       {
          var builder = new ClientFactory();
-         builder.Create(null);
-      }
-      
-      [Test]
-      [ExpectedException(typeof(ArgumentException))]
-      public void CreateNameEmptyTest()
-      {
-         var builder = new ClientFactory();
-         builder.Create(new ClientSettings(ClientType.Legacy));
+         Assert.Throws<ArgumentNullException>(() => builder.Create(null));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
+      public void CreateNameEmptyTest()
+      {
+         var builder = new ClientFactory();
+         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy)));
+      }
+
+      [Test]
       public void CreatePathEmptyTest()
       {
          var builder = new ClientFactory();
-         builder.Create(new ClientSettings(ClientType.Legacy)
-                        {
-                           Name = "Client 1"
-                        });
+         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy) { Name = "Client 1" }));
       }
-      
+
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void CreateNameFailedCleanupTest()
       {
          var builder = new ClientFactory();
          var invalidChars = System.IO.Path.GetInvalidFileNameChars();
-         builder.Create(new ClientSettings(ClientType.Legacy)
-                        {
-                           Name = " " + invalidChars[0] + invalidChars[1] + " ",
-                           Path = @"\\test\path\"
-                        });
+         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy)
+                                                               {
+                                                                  Name = " " + invalidChars[0] + invalidChars[1] + " ",
+                                                                  Path = @"\\test\path\"
+                                                               }));
       }
-      
+
       [Test]
       public void CreateTest()
       {
@@ -118,7 +109,7 @@ namespace HFM.Core.Tests
                         };
          var instance = builder.Create(settings);
          Assert.IsNotNull(instance);
-         Assert.AreEqual("Client 1", instance.Settings.Name);                       
+         Assert.AreEqual("Client 1", instance.Settings.Name);
       }
 
       [Test]

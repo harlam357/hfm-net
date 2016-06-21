@@ -44,59 +44,51 @@ namespace HFM.Log
       // ReSharper restore InconsistentNaming
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void UnitInfoLog_Read_ArgumentException_Test1()
       {
-         UnitInfoLog.Read(null);
+         Assert.Throws<ArgumentException>(() => UnitInfoLog.Read(null));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void UnitInfoLog_Read_ArgumentException_Test2()
       {
-         UnitInfoLog.Read(String.Empty);
+         Assert.Throws<ArgumentException>(() => UnitInfoLog.Read(String.Empty));
       }
 
       [Test]
-      [ExpectedException(typeof(DirectoryNotFoundException))]
       public void UnitInfoLog_Read_DirectoryNotFoundException_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt");
+         Assert.Throws<DirectoryNotFoundException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt"));
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
       public void UnitInfoLog_Read_Malformed_1_UnitInfo1_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt");
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt"));
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
       public void UnitInfoLog_Read_Malformed_1_UnitInfo2_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt");
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt"));
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
       public void UnitInfoLog_Read_Malformed_1_UnitInfo3_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt");
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt"));
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
       public void UnitInfoLog_Read_Malformed_1_UnitInfo4_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt");
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt"));
       }
 
       [Test]
-      [ExpectedException(typeof(FormatException))]
       public void UnitInfoLog_Read_Malformed_1_UnitInfo5_Test()
       {
-         UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt");
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt"));
       }
    }
 }

@@ -9,10 +9,9 @@ namespace HFM.Log
    public class FahLogTests
    {
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void FahLog_Read_ArgumentNullException_Test()
       {
-         FahLog.Read(null, FahLogType.Legacy);
+         Assert.Throws(typeof(ArgumentNullException), () => FahLog.Read(null, FahLogType.Legacy));
       }
    }
 }

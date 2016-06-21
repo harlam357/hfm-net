@@ -55,7 +55,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(179.357f, queue.UploadRateAverage);
          Assert.AreEqual(4, queue.UploadRateUnitWeight);
          Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
-         
+
          QueueEntry entry8 = queue.GetQueueEntry(8);
          Assert.AreEqual(8, entry8.Index);
          Assert.AreEqual(3, entry8.EntryStatus);
@@ -243,7 +243,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("32", entry6.Team);
          Assert.AreEqual(32, entry6.TeamNumber);
          Assert.AreEqual("030686B3436DEE21", entry6.ID);
-         Assert.AreEqual( "30686B3436DEE20", entry6.UserID);
+         Assert.AreEqual("30686B3436DEE20", entry6.UserID);
          Assert.AreEqual(1, entry6.MachineID);
          Assert.AreEqual(4836605, entry6.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry6.WorkUnitType);
@@ -381,7 +381,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual("32", entry7.Team);
          Assert.AreEqual(32, entry7.TeamNumber);
          Assert.AreEqual("0CF185086C102A49", entry7.ID);
-         Assert.AreEqual( "CF185086C102A47", entry7.UserID);
+         Assert.AreEqual("CF185086C102A47", entry7.UserID);
          Assert.AreEqual(2, entry7.MachineID);
          Assert.AreEqual(67869, entry7.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry7.WorkUnitType);
@@ -455,7 +455,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(89249, entry9.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry9.WorkUnitType);
       }
-      
+
       [Test, Category("Standard")]
       public void Standard_2_queue() // Standard PPC v6.xx
       {
@@ -469,7 +469,7 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(3375.984f, queue.UploadRateAverage);
          Assert.AreEqual(1, queue.UploadRateUnitWeight);
          Assert.AreEqual(QueueData.Epoch2000, queue.ResultsSentUtc);
-         
+
          QueueEntry entry0 = queue.GetQueueEntry(0);
          Assert.AreEqual(0, entry0.Index);
          Assert.AreEqual(1, entry0.EntryStatus);
@@ -724,30 +724,26 @@ namespace HFM.Queue.Tests
          Assert.AreEqual(2972889, entry1.WuDataFileSize);
          Assert.AreEqual("Folding@Home", entry1.WorkUnitType);
       }
-      
+
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void QueueReaderArgumentNullTest()
       {
-         QueueReader.ReadQueue(null);
+         Assert.Throws<ArgumentException>(() => QueueReader.ReadQueue(null));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void QueueReaderArgumentEmptyTest()
       {
-         QueueReader.ReadQueue(String.Empty);
+         Assert.Throws<ArgumentException>(() => QueueReader.ReadQueue(String.Empty));
       }
 
       [Test]
-      [ExpectedException(typeof(IOException))]
       public void QueueReaderFileNotExistTest()
       {
-         QueueReader.ReadQueue("does_not_exist.dat");
+         Assert.Throws<IOException>(() => QueueReader.ReadQueue("does_not_exist.dat"));
       }
 
       [Test]
-      [ExpectedException(typeof(IOException))]
       public void QueueReaderFileWrongLengthTest()
       {
          const string filePath = "wrong_length.dat";
@@ -756,12 +752,11 @@ namespace HFM.Queue.Tests
          {
             fileStream.Write(new byte[7000], 0, 7000);
          }
-         QueueReader.ReadQueue(filePath);
+         Assert.Throws<IOException>(() => QueueReader.ReadQueue(filePath));
          File.Delete(filePath);
       }
 
       [Test]
-      [ExpectedException(typeof(NotSupportedException))]
       public void QueueReaderFileWrongVersionTest()
       {
          const string filePath = "wrong_version.dat";
@@ -770,10 +765,10 @@ namespace HFM.Queue.Tests
          {
             fileStream.Write(new byte[7168], 0, 7168);
          }
-         QueueReader.ReadQueue(filePath);
+         Assert.Throws<NotSupportedException>(() => QueueReader.ReadQueue(filePath));
          File.Delete(filePath);
       }
-      
+
       [Test]
       public void UserIDCalculationTest()
       {
@@ -781,7 +776,7 @@ namespace HFM.Queue.Tests
          Array.Reverse(b);
          string userID = QueueEntry.GetUserID(b, 16, false);
          Assert.AreEqual("99D3CF222E1F9F0", userID);
-         
+
          b = QueueEntry.HexToData("00FAE122F23C9D09");
          userID = QueueEntry.GetUserID(b, 16, false);
          Assert.AreEqual("99D3CF222E1F9F0", userID);

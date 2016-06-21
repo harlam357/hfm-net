@@ -29,31 +29,27 @@ namespace HFM.Core.Tests.DataTypes
    public class BenchmarkClientTests
    {
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void ConstructorArgumentException1()
       {
-         new BenchmarkClient(null, "path");
+         Assert.Throws<ArgumentException>(() => new BenchmarkClient(null, "path"));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void ConstructorArgumentException2()
       {
-         new BenchmarkClient(String.Empty, "path");
+         Assert.Throws<ArgumentException>(() => new BenchmarkClient(String.Empty, "path"));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void ConstructorArgumentException3()
       {
-         new BenchmarkClient("name", null);
+         Assert.Throws<ArgumentException>(() => new BenchmarkClient("name", null));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void ConstructorArgumentException4()
       {
-         new BenchmarkClient("name", String.Empty);
+         Assert.Throws<ArgumentException>(() => new BenchmarkClient("name", String.Empty));
       }
 
       [Test]

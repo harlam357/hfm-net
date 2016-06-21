@@ -44,11 +44,11 @@ namespace HFM.Core.Tests
          IPreferenceSet prefs = CreatePreferenceSet();
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(true);
-         
+
          IEnumerable<SlotModel> slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.Generate(slots);
-         
+
          Assert.IsNotNull(markupGenerator.XmlFilePaths);
          Assert.IsNotNull(markupGenerator.HtmlFilePaths);
       }
@@ -82,15 +82,14 @@ namespace HFM.Core.Tests
          Assert.IsNull(markupGenerator.XmlFilePaths);
          Assert.IsNull(markupGenerator.HtmlFilePaths);
       }
-      
+
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void GenerateArgumentNullTest1()
       {
          var prefs = CreatePreferenceSet();
-         
+
          var markupGenerator = new MarkupGenerator(prefs);
-         markupGenerator.Generate(null);
+         Assert.Throws(typeof(ArgumentNullException), () => markupGenerator.Generate(null));
       }
 
       [Test]
@@ -98,7 +97,7 @@ namespace HFM.Core.Tests
       {
          IPreferenceSet prefs = CreatePreferenceSet();
          IEnumerable<SlotModel> slots = CreateSlotModelCollection();
-         
+
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateXml(slots);
 

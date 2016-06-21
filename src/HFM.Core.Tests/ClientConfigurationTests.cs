@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -41,11 +41,9 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void ClientDictionary_ArgumentNullException_Test()
       {
-         // ReSharper disable once ObjectCreationAsStatement
-         new ClientConfiguration(null);
+         Assert.Throws(typeof(ArgumentNullException), () => new ClientConfiguration(null));
       }
 
       [Test]
@@ -129,10 +127,9 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void LoadTestArgumentNullException1()
       {
-         _clientConfiguration.Load(null);
+         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Load(null));
       }
 
       [Test]
@@ -216,26 +213,21 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void AddTestArgumentNullException1()
       {
-         // ReSharper disable AssignNullToNotNullAttribute
-         _clientConfiguration.Add(null, new LegacyClient());
-         // ReSharper restore AssignNullToNotNullAttribute
+         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Add(null, new LegacyClient()));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void AddTestArgumentNullException2()
       {
-         _clientConfiguration.Add("test", null);
+         Assert.Throws(typeof(ArgumentNullException), () =>  _clientConfiguration.Add("test", null));
       }
 
       [Test]
-      [ExpectedException]
       public void AddTestArgumentNullException3()
       {
-         _clientConfiguration.Add(null);
+         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Add(null));
       }
 
       [Test]
@@ -287,7 +279,6 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void EditTestArgumentException1()
       {
          // Arrange
@@ -295,21 +286,19 @@ namespace HFM.Core.Tests
          _clientConfiguration.Add("other", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/other/" } });
          Assert.AreEqual(2, _clientConfiguration.Count);
          // Act
-         _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/harlam357/FAH/" });
+         Assert.Throws(typeof(ArgumentException), () => _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/harlam357/FAH/" }));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void EditTestArgumentNullException1()
       {
-         _clientConfiguration.Edit(null, new ClientSettings());
+         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Edit(null, new ClientSettings()));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void EditTestArgumentNullException2()
       {
-         _clientConfiguration.Edit("test", null);
+         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Edit("test", null));
       }
 
       [Test]
@@ -372,12 +361,9 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentNullException))]
       public void RemoveArgumentNullExceptionTest1()
       {
-         // ReSharper disable AssignNullToNotNullAttribute
-         Assert.IsFalse(_clientConfiguration.Remove(null));
-         // ReSharper restore AssignNullToNotNullAttribute
+         Assert.Throws(typeof(ArgumentNullException), () => Assert.IsFalse(_clientConfiguration.Remove(null)));
       }
 
       [Test]

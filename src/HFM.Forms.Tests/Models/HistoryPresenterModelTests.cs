@@ -56,39 +56,35 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_AddQuery_SelectAll_Test()
       {
          var parameters = new QueryParameters();
-         _model.AddQuery(parameters);
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_AddQuery_NameAlreadyExists_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField { Value = 6606 });
 
          _model.AddQuery(parameters);
-         _model.AddQuery(parameters);
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_AddQuery_NoQueryFields_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
-         _model.AddQuery(parameters);
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_AddQuery_NoQueryFieldValue_Test()
       {
          var parameters = new QueryParameters { Name = "Test" };
          parameters.Fields.Add(new QueryField());
-         _model.AddQuery(parameters);
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
       }
 
       [Test]
@@ -112,7 +108,6 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_ReplaceQuery_NameExists_Test()
       {
          // Arrange
@@ -122,7 +117,7 @@ namespace HFM.Forms.Tests.Models
          parameters.Fields.Add(new QueryField { Value = 6606 });
          _model.AddQuery(parameters);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         
+
          var parameters2 = new QueryParameters { Name = "Test2" };
          parameters2.Fields.Add(new QueryField { Value = 6606 });
          _model.AddQuery(parameters2);
@@ -132,7 +127,7 @@ namespace HFM.Forms.Tests.Models
          parameters3.Fields.Add(new QueryField { Value = 6606 });
          // Act
          _model.QueryBindingSource.Position = 1;
-         _model.ReplaceQuery(parameters3);
+         Assert.Throws<ArgumentException>(() => _model.ReplaceQuery(parameters3));
       }
 
       [Test]
@@ -155,10 +150,9 @@ namespace HFM.Forms.Tests.Models
       }
 
       [Test]
-      [ExpectedException(typeof(ArgumentException))]
       public void HistoryPresenterModel_RemoveQuery_Failed_Test()
       {
-         _model.RemoveQuery(new QueryParameters());
+         Assert.Throws<ArgumentException>(() => _model.RemoveQuery(new QueryParameters()));
       }
 
       [Test]
@@ -171,7 +165,7 @@ namespace HFM.Forms.Tests.Models
          parameters.Fields.Add(new QueryField { Value = 6606 });
          _model.AddQuery(parameters);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         
+
          _database.Expect(x => x.Page(1, 1, null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<HistoryEntry>());
          // Act
          _model.ResetBindings(true);
