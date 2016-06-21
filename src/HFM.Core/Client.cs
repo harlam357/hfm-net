@@ -187,14 +187,14 @@ namespace HFM.Core
 
       protected abstract void RetrieveInternal();
 
-      protected void UpdateUnitInfoDatabase(UnitInfoLogic unitInfoLogic)
+      protected void UpdateUnitInfoDatabase(UnitInfoModel unitInfoModel)
       {
          // Update history database
          if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
          {
             try
             {
-               UnitInfoDatabase.Insert(unitInfoLogic);
+               UnitInfoDatabase.Insert(unitInfoModel);
             }
             catch (Exception ex)
             {

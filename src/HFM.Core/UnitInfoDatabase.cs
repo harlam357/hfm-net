@@ -87,7 +87,7 @@ namespace HFM.Core
 
       event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
 
-      void Insert(UnitInfoLogic unitInfoLogic);
+      void Insert(UnitInfoModel unitInfoModel);
 
       int Delete(HistoryEntry entry);
 
@@ -319,10 +319,10 @@ namespace HFM.Core
 
       #region Insert
    
-      public void Insert(UnitInfoLogic unitInfoLogic)
+      public void Insert(UnitInfoModel unitInfoModel)
       {
          // if the work unit is not valid simply return
-         if (!ValidateUnitInfo(unitInfoLogic.UnitInfoData)) return;
+         if (!ValidateUnitInfo(unitInfoModel.UnitInfoData)) return;
 
          // The Insert operation does not setup a WuHistory table if
          // it does not exist.  This was already handled when the
@@ -330,22 +330,22 @@ namespace HFM.Core
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          // ensure this unit is not written twice
-         if (!UnitInfoExists(unitInfoLogic))
+         if (!UnitInfoExists(unitInfoModel))
          {
-            var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoLogic.UnitInfoData);
+            var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoModel.UnitInfoData);
             // cannot map these two properties from a UnitInfo instance
             // they only live at the UnitInfoLogic level
-            entry.FramesCompleted = unitInfoLogic.FramesComplete;
-            entry.FrameTimeValue = unitInfoLogic.GetRawTime(PpdCalculationType.AllFrames);
+            entry.FramesCompleted = unitInfoModel.FramesComplete;
+            entry.FrameTimeValue = unitInfoModel.GetRawTime(PpdCalculationType.AllFrames);
             // copy protein values for insert
-            entry.WorkUnitName = unitInfoLogic.CurrentProtein.WorkUnitName;
-            entry.KFactor = unitInfoLogic.CurrentProtein.KFactor;
-            entry.Core = unitInfoLogic.CurrentProtein.Core;
-            entry.Frames = unitInfoLogic.CurrentProtein.Frames;
-            entry.Atoms = unitInfoLogic.CurrentProtein.NumberOfAtoms;
-            entry.BaseCredit = unitInfoLogic.CurrentProtein.Credit;
-            entry.PreferredDays = unitInfoLogic.CurrentProtein.PreferredDays;
-            entry.MaximumDays = unitInfoLogic.CurrentProtein.MaximumDays;
+            entry.WorkUnitName = unitInfoModel.CurrentProtein.WorkUnitName;
+            entry.KFactor = unitInfoModel.CurrentProtein.KFactor;
+            entry.Core = unitInfoModel.CurrentProtein.Core;
+            entry.Frames = unitInfoModel.CurrentProtein.Frames;
+            entry.Atoms = unitInfoModel.CurrentProtein.NumberOfAtoms;
+            entry.BaseCredit = unitInfoModel.CurrentProtein.Credit;
+            entry.PreferredDays = unitInfoModel.CurrentProtein.PreferredDays;
+            entry.MaximumDays = unitInfoModel.CurrentProtein.MaximumDays;
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                connection.Open();
@@ -391,20 +391,20 @@ namespace HFM.Core
                 unitInfo.DownloadTime.Equals(DateTime.MinValue) == false;
       }
 
-      private bool UnitInfoExists(UnitInfoLogic unitInfoLogic)
+      private bool UnitInfoExists(UnitInfoModel unitInfoModel)
       {
-         var rows = Fetch(BuildUnitKeyQueryParameters(unitInfoLogic));
+         var rows = Fetch(BuildUnitKeyQueryParameters(unitInfoModel));
          return rows.Count != 0;
       }
 
-      private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoLogic unitInfoLogic)
+      private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoModel unitInfoModel)
       {
          var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectID });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectRun });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectClone });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.ProjectGen });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoLogic.UnitInfoData.DownloadTime });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectID });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectRun });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectClone });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectGen });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.DownloadTime });
          return parameters;
       }
 

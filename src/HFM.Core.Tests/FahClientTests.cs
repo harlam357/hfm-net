@@ -55,7 +55,7 @@ namespace HFM.Core.Tests
          unitInfo1.ProjectGen = 3;
          unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
          unitInfo1.QueueIndex = 0;
-         var currentUnitInfo = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
+         var currentUnitInfo = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
 
          var unitInfo1Clone = unitInfo1.DeepClone();
          unitInfo1Clone.FramesObserved = 4;
@@ -63,7 +63,7 @@ namespace HFM.Core.Tests
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(5), FrameID = 1 });
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(10), FrameID = 2 });
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(15), FrameID = 3 });
-         var unitInfoLogic1 = new UnitInfoLogic { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
+         var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var parsedUnits = new[] { unitInfoLogic1 };
 

@@ -47,7 +47,7 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
          Mapper.CreateMap<SlotData, SlotModel>()
             .ForMember(dest => dest.Prefs, opt => opt.Ignore())
-            .ForMember(dest => dest.UnitInfoLogic, opt => opt.Ignore())
+            .ForMember(dest => dest.UnitInfoModel, opt => opt.Ignore())
             .ForMember(dest => dest.Settings, opt => opt.Ignore())
             .ForMember(dest => dest.SlotOptions, opt => opt.Ignore())
             .ForMember(dest => dest.UserIdIsDuplicate, opt => opt.Ignore())

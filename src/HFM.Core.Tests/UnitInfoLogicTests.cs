@@ -857,9 +857,9 @@ namespace HFM.Core.Tests
 
       #region Helpers
       
-      private UnitInfoLogic CreateUnitInfoLogic(Protein protein, UnitInfo unitInfo)
+      private UnitInfoModel CreateUnitInfoLogic(Protein protein, UnitInfo unitInfo)
       {
-         return new UnitInfoLogic(_benchmarkCollection)
+         return new UnitInfoModel(_benchmarkCollection)
                 {
                    CurrentProtein = protein,
                    UnitInfoData = unitInfo

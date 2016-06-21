@@ -321,7 +321,7 @@ namespace HFM.Core
          slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
          slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
          slotDetail.CurrentLogLines = slot.CurrentLogLines;
-         slotDetail.Protein = slot.UnitInfoLogic.CurrentProtein;
+         slotDetail.Protein = slot.UnitInfoModel.CurrentProtein;
          return slotDetail;
       }
       

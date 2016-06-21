@@ -61,20 +61,20 @@ namespace HFM.Core
 
       #region Root Data Types
 
-      private UnitInfoLogic _unitInfoLogic;
+      private UnitInfoModel _unitInfoModel;
       /// <summary>
       /// Class member containing info specific to the current work unit
       /// </summary>
-      public UnitInfoLogic UnitInfoLogic
+      public UnitInfoModel UnitInfoModel
       {
-         get { return _unitInfoLogic; }
+         get { return _unitInfoModel; }
          set
          {
-            if (_unitInfoLogic != null)
+            if (_unitInfoModel != null)
             {
                UpdateTimeOfLastProgress(value);
             }
-            _unitInfoLogic = value;
+            _unitInfoModel = value;
             _unitInfo = null;
          }
       }
@@ -84,7 +84,7 @@ namespace HFM.Core
       // ReSharper restore UnaccessedField.Local
       public UnitInfo UnitInfo
       {
-         get { return _unitInfo ?? UnitInfoLogic.UnitInfoData; }
+         get { return _unitInfo ?? UnitInfoModel.UnitInfoData; }
          set { _unitInfo = value; }
       }
 
@@ -121,7 +121,7 @@ namespace HFM.Core
 
       public SlotModel()
       {
-         _unitInfoLogic = new UnitInfoLogic();
+         _unitInfoModel = new UnitInfoModel();
 
          Initialize();
          TimeOfLastUnitStart = DateTime.MinValue;
@@ -208,7 +208,7 @@ namespace HFM.Core
       /// </summary>
       public int PercentComplete
       {
-         get { return ProductionValuesOk || Status == SlotStatus.Paused ? UnitInfoLogic.PercentComplete : 0; }
+         get { return ProductionValuesOk || Status == SlotStatus.Paused ? UnitInfoModel.PercentComplete : 0; }
       }
 
       public string Name
@@ -244,7 +244,7 @@ namespace HFM.Core
 
       public bool IsUsingBenchmarkFrameTime
       {
-         get { return ProductionValuesOk && UnitInfoLogic.IsUsingBenchmarkFrameTime(CalculationType); }
+         get { return ProductionValuesOk && UnitInfoModel.IsUsingBenchmarkFrameTime(CalculationType); }
       }
 
       /// <summary>
@@ -252,7 +252,7 @@ namespace HFM.Core
       /// </summary>
       public TimeSpan TPF
       {
-         get { return ProductionValuesOk ? UnitInfoLogic.GetFrameTime(CalculationType) : TimeSpan.Zero; }
+         get { return ProductionValuesOk ? UnitInfoModel.GetFrameTime(CalculationType) : TimeSpan.Zero; }
       }
       
       /// <summary>
@@ -260,7 +260,7 @@ namespace HFM.Core
       /// </summary>
       public double PPD
       {
-         get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetPPD(Status, CalculationType, CalculateBonus), DecimalPlaces) : 0; }
+         get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetPPD(Status, CalculationType, CalculateBonus), DecimalPlaces) : 0; }
       }
       
       /// <summary>
@@ -268,7 +268,7 @@ namespace HFM.Core
       /// </summary>
       public double UPD
       {
-         get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetUPD(CalculationType), 3) : 0; }
+         get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetUPD(CalculationType), 3) : 0; }
       }
 
       /// <summary>
@@ -276,7 +276,7 @@ namespace HFM.Core
       /// </summary>
       public TimeSpan ETA
       {
-         get { return ProductionValuesOk ? UnitInfoLogic.GetEta(CalculationType) : TimeSpan.Zero; }
+         get { return ProductionValuesOk ? UnitInfoModel.GetEta(CalculationType) : TimeSpan.Zero; }
       }
 
       /// <summary>
@@ -284,7 +284,7 @@ namespace HFM.Core
       /// </summary>
       public DateTime ETADate
       {
-         get { return ProductionValuesOk ? UnitInfoLogic.GetEtaDate(CalculationType) : DateTime.MinValue; }
+         get { return ProductionValuesOk ? UnitInfoModel.GetEtaDate(CalculationType) : DateTime.MinValue; }
       }
 
       public string Core
@@ -293,9 +293,9 @@ namespace HFM.Core
          {
             if (ShowVersions && Math.Abs(UnitInfo.CoreVersion) > Single.Epsilon)
             {
-               return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoLogic.CurrentProtein.Core, UnitInfo.CoreVersion);
+               return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoModel.CurrentProtein.Core, UnitInfo.CoreVersion);
             }
-            return UnitInfoLogic.CurrentProtein.Core;
+            return UnitInfoModel.CurrentProtein.Core;
          }
       }
 
@@ -311,7 +311,7 @@ namespace HFM.Core
 
       public double Credit
       {
-         get { return ProductionValuesOk ? Math.Round(UnitInfoLogic.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : UnitInfoLogic.CurrentProtein.Credit; }
+         get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : UnitInfoModel.CurrentProtein.Credit; }
       }
 
       public int Completed
@@ -354,12 +354,12 @@ namespace HFM.Core
 
       public DateTime DownloadTime
       {
-         get { return UnitInfoLogic.DownloadTime; }
+         get { return UnitInfoModel.DownloadTime; }
       }
 
       public DateTime PreferredDeadline
       {
-         get { return UnitInfoLogic.PreferredDeadline; }
+         get { return UnitInfoModel.PreferredDeadline; }
       }
 
       /// <summary>
@@ -466,21 +466,21 @@ namespace HFM.Core
       /// <summary>
       /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
       /// </summary>
-      private void UpdateTimeOfLastProgress(UnitInfoLogic parsedUnitInfo)
+      private void UpdateTimeOfLastProgress(UnitInfoModel parsedUnitInfo)
       {
          // Matches the Current Project and Raw Download Time
-         if (UnitInfoLogic.UnitInfoData.IsSameUnitAs(parsedUnitInfo.UnitInfoData))
+         if (UnitInfoModel.UnitInfoData.IsSameUnitAs(parsedUnitInfo.UnitInfoData))
          {
             // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
             if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                UnitInfoLogic.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(UnitInfoLogic.UnitInfoData.UnitStartTimeStamp) == false)
+                UnitInfoModel.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(UnitInfoModel.UnitInfoData.UnitStartTimeStamp) == false)
             {
                TimeOfLastUnitStart = DateTime.Now;
             }
 
             // If the Frames Complete is greater than the UnitInfoLogic Frames Complete
-            if (parsedUnitInfo.FramesComplete > UnitInfoLogic.FramesComplete)
+            if (parsedUnitInfo.FramesComplete > UnitInfoModel.FramesComplete)
             {
                // Update the Time Of Last Frame Progress
                TimeOfLastFrameProgress = DateTime.Now;

@@ -127,7 +127,7 @@ namespace HFM.Core.Tests
                               {
                                  Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
  
-                                 var unitInfoLogic = new UnitInfoLogic(benchmarkCollection);
+                                 var unitInfoLogic = new UnitInfoModel(benchmarkCollection);
                                  unitInfoLogic.CurrentProtein = BuildProtein1();
                                  unitInfoLogic.UnitInfoData = BuildUnitInfo1(i);
 
@@ -237,7 +237,7 @@ namespace HFM.Core.Tests
       {
          _database.DatabaseFilePath = TestScratchFile;
 
-         var unitInfoLogic = new UnitInfoLogic(MockRepository.GenerateStub<IProteinBenchmarkCollection>());
+         var unitInfoLogic = new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkCollection>());
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
 

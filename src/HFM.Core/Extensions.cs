@@ -268,14 +268,14 @@ namespace HFM.Core
       private static void FindDuplicateProjects(IEnumerable<SlotModel> slots)
       {
          var duplicates = (from x in slots
-                           group x by x.UnitInfoLogic.UnitInfoData.ProjectRunCloneGen() into g
+                           group x by x.UnitInfoModel.UnitInfoData.ProjectRunCloneGen() into g
                            let count = g.Count()
-                           where count > 1 && g.First().UnitInfoLogic.UnitInfoData.ProjectIsUnknown() == false
+                           where count > 1 && g.First().UnitInfoModel.UnitInfoData.ProjectIsUnknown() == false
                            select g.Key);
 
          foreach (SlotModel slot in slots)
          {
-            slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoLogic.UnitInfoData.ProjectRunCloneGen());
+            slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ProjectRunCloneGen());
          }
       }
 

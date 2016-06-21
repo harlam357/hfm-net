@@ -160,7 +160,7 @@
     <Compile Include="ThreadLocalDisposable.cs" />
     <Compile Include="UnitInfoCollection.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
-    <Compile Include="UnitInfoLogic.cs" />
+    <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="WebsiteDeployer.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />

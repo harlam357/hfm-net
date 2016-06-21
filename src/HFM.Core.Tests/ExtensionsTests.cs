@@ -223,12 +223,12 @@ namespace HFM.Core.Tests
          var instance1 = new SlotModel { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
-         instance1.UnitInfoLogic = logic1;
+         instance1.UnitInfoModel = logic1;
 
          var instance2 = new SlotModel { UserId = "1" };
          var unitInfo2 = new UnitInfo { ProjectID = 1 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
-         instance2.UnitInfoLogic = logic2;
+         instance2.UnitInfoModel = logic2;
          
          (new[] { instance1, instance2 }).FindDuplicates();
          
@@ -244,12 +244,12 @@ namespace HFM.Core.Tests
          var instance1 = new SlotModel { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
-         instance1.UnitInfoLogic = logic1;
+         instance1.UnitInfoModel = logic1;
 
          var instance2 = new SlotModel { UserId = "2" };
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
-         instance2.UnitInfoLogic = logic2;
+         instance2.UnitInfoModel = logic2;
 
          (new[] { instance1, instance2 }).FindDuplicates();
 
@@ -265,17 +265,17 @@ namespace HFM.Core.Tests
          var instance1 = new SlotModel { UserId = "1" };
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
-         instance1.UnitInfoLogic = logic1;
+         instance1.UnitInfoModel = logic1;
 
          var instance2 = new SlotModel { UserId = "1" };
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
-         instance2.UnitInfoLogic = logic2;
+         instance2.UnitInfoModel = logic2;
 
          var instance3 = new SlotModel { UserId = "2" };
          var unitInfo3 = new UnitInfo { ProjectID = 1 };
          var logic3 = CreateUnitInfoLogic(unitInfo3);
-         instance3.UnitInfoLogic = logic3;
+         instance3.UnitInfoModel = logic3;
 
          (new[] { instance1, instance2, instance3 }).FindDuplicates();
 
@@ -287,9 +287,9 @@ namespace HFM.Core.Tests
          Assert.IsTrue(instance3.ProjectIsDuplicate);
       }
 
-      private static UnitInfoLogic CreateUnitInfoLogic(UnitInfo unitInfo)
+      private static UnitInfoModel CreateUnitInfoLogic(UnitInfo unitInfo)
       {
-         return new UnitInfoLogic(MockRepository.GenerateStub<IProteinBenchmarkCollection>())
+         return new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkCollection>())
          {
             UnitInfoData = unitInfo
          };

@@ -24,7 +24,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Queue;
@@ -93,7 +92,7 @@ namespace HFM.Core
          {
             if (_slotModel.Owns(unitInfo))
             {
-               _slotModel.UnitInfoLogic = BuildUnitInfoLogic(unitInfo, false);
+               _slotModel.UnitInfoModel = BuildUnitInfoLogic(unitInfo, false);
                string message = String.Format(CultureInfo.CurrentCulture, "Restored unit: {0}", unitInfo.ProjectRunCloneGen());
                Logger.Info(Constants.ClientNameFormat, _settings.Name, message);
                break;
@@ -177,7 +176,7 @@ namespace HFM.Core
 
          #endregion
 
-         var parsedUnits = new UnitInfoLogic[result.UnitInfos.Count];
+         var parsedUnits = new UnitInfoModel[result.UnitInfos.Count];
          for (int i = 0; i < result.UnitInfos.Count; i++)
          {
             if (result.UnitInfos[i] != null)
@@ -187,17 +186,17 @@ namespace HFM.Core
          }
 
          // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-         UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, result.CurrentUnitIndex);
+         UpdateBenchmarkData(_slotModel.UnitInfoModel, parsedUnits, result.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
          if (result.Status != SlotStatus.Unknown)
          {
-            _slotModel.UnitInfoLogic = parsedUnits[result.CurrentUnitIndex];
+            _slotModel.UnitInfoModel = parsedUnits[result.CurrentUnitIndex];
          }
 
          HandleReturnedStatus(result.Status, _slotModel);
 
-         _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
+         _slotModel.UnitInfoModel.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
 
@@ -243,7 +242,7 @@ namespace HFM.Core
          return null;
       }
 
-      private UnitInfoLogic BuildUnitInfoLogic(UnitInfo unitInfo, bool updateUnitInfo)
+      private UnitInfoModel BuildUnitInfoLogic(UnitInfo unitInfo, bool updateUnitInfo)
       {
          Debug.Assert(unitInfo != null);
 
@@ -265,7 +264,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = new UnitInfoLogic(BenchmarkCollection);
+         var unitInfoLogic = new UnitInfoModel(BenchmarkCollection);
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;
@@ -309,7 +308,7 @@ namespace HFM.Core
       /// <param name="currentUnitInfo">Current UnitInfo</param>
       /// <param name="parsedUnits">Parsed UnitInfo Array</param>
       /// <param name="nextUnitIndex">Index of Current UnitInfo</param>
-      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, UnitInfoLogic[] parsedUnits, int nextUnitIndex)
+      internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, UnitInfoModel[] parsedUnits, int nextUnitIndex)
       {
          var foundCurrent = false;
          var processUpdates = false;
@@ -385,8 +384,8 @@ namespace HFM.Core
          var statusData = new StatusData
                           {
                              ClientName = Settings.Name,
-                             SlotType = slot.UnitInfoLogic.UnitInfoData.SlotType,
-                             UnitRetrievalTime = slot.UnitInfoLogic.UnitInfoData.UnitRetrievalTime,
+                             SlotType = slot.UnitInfoModel.UnitInfoData.SlotType,
+                             UnitRetrievalTime = slot.UnitInfoModel.UnitInfoData.UnitRetrievalTime,
                              UtcOffsetIsZero = Settings.UtcOffsetIsZero,
                              UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now),
                              ClientTimeOffset = Settings.ClientTimeOffset,
@@ -394,12 +393,12 @@ namespace HFM.Core
                              TimeOfLastFrameProgress = slot.TimeOfLastFrameProgress,
                              CurrentStatus = slot.Status,
                              ReturnedStatus = returnedStatus,
-                             FrameTime = slot.UnitInfoLogic.GetRawTime(Prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
+                             FrameTime = slot.UnitInfoModel.GetRawTime(Prefs.Get<PpdCalculationType>(Preference.PpdCalculation)),
                              BenchmarkAverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
-                             TimeOfLastFrame = slot.UnitInfoLogic.UnitInfoData.CurrentFrame == null
+                             TimeOfLastFrame = slot.UnitInfoModel.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
-                                                  : slot.UnitInfoLogic.UnitInfoData.CurrentFrame.TimeOfFrame,
-                             UnitStartTimeStamp = slot.UnitInfoLogic.UnitInfoData.UnitStartTimeStamp,
+                                                  : slot.UnitInfoModel.UnitInfoData.CurrentFrame.TimeOfFrame,
+                             UnitStartTimeStamp = slot.UnitInfoModel.UnitInfoData.UnitStartTimeStamp,
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
 

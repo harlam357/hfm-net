@@ -406,7 +406,7 @@ namespace HFM.Core
 
                #endregion
 
-               var parsedUnits = new Dictionary<int, UnitInfoLogic>(result.UnitInfos.Count);
+               var parsedUnits = new Dictionary<int, UnitInfoModel>(result.UnitInfos.Count);
                foreach (int key in result.UnitInfos.Keys)
                {
                   if (result.UnitInfos[key] != null)
@@ -416,17 +416,17 @@ namespace HFM.Core
                }
 
                // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-               UpdateBenchmarkData(slotModel.UnitInfoLogic, parsedUnits.Values, result.CurrentUnitIndex);
+               UpdateBenchmarkData(slotModel.UnitInfoModel, parsedUnits.Values, result.CurrentUnitIndex);
 
                // Update the UnitInfoLogic if we have a current unit index
                if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
                {
-                  slotModel.UnitInfoLogic = parsedUnits[result.CurrentUnitIndex];
+                  slotModel.UnitInfoModel = parsedUnits[result.CurrentUnitIndex];
                }
 
                SetSlotStatus(slotModel);
 
-               slotModel.UnitInfoLogic.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
+               slotModel.UnitInfoModel.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
                   Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                   Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
 
@@ -443,7 +443,7 @@ namespace HFM.Core
          Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
       }
 
-      private UnitInfoLogic BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)
+      private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)
       {
          Debug.Assert(slotModel != null);
          Debug.Assert(unitInfo != null);
@@ -464,7 +464,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = new UnitInfoLogic(BenchmarkCollection);
+         var unitInfoLogic = new UnitInfoModel(BenchmarkCollection);
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;
@@ -501,7 +501,7 @@ namespace HFM.Core
          }
       }
 
-      internal void UpdateBenchmarkData(UnitInfoLogic currentUnitInfo, IEnumerable<UnitInfoLogic> parsedUnits, int currentUnitIndex)
+      internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits, int currentUnitIndex)
       {
          foreach (var unitInfoLogic in parsedUnits)
          {
