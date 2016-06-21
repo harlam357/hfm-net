@@ -18,10 +18,13 @@
  */
 
 using System;
+using System.IO;
 
 using NUnit.Framework;
 
+using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
+using HFM.Log;
 
 namespace HFM.Core.Tests
 {
@@ -41,7 +44,7 @@ namespace HFM.Core.Tests
       {
          _dataAggregator = new LegacyDataAggregator();
          // create maps
-         Core.Configuration.ObjectMapper.CreateMaps();
+         ObjectMapper.CreateMaps();
       }
 
       // ReSharper disable InconsistentNaming
@@ -51,25 +54,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_3";
          _dataAggregator.ClientName = "SMP_3";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.02", result.ClientVersion);
+         Assert.IsNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -110,11 +119,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_7";
          _dataAggregator.ClientName = "SMP_7";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -128,10 +137,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 9, 7, 23, 11, 31), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24beta", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -145,6 +159,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -192,11 +207,11 @@ namespace HFM.Core.Tests
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
          _dataAggregator.ClientName = "SMP_8_1";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, "wrong_file_name.txt");
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, "wrong_file_name.txt");
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -210,10 +225,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(3, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 20, 6, 6, 41), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24R3", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
@@ -227,6 +247,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -270,25 +291,31 @@ namespace HFM.Core.Tests
 
          const string path = "..\\..\\..\\TestFiles\\SMP_8";
          _dataAggregator.ClientName = "SMP_8_2";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, "wrong_file_name.dat");
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, "wrong_file_name.dat");
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 20, 6, 6, 41), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24R3", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -327,11 +354,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_9";
          _dataAggregator.ClientName = "SMP_9";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -345,10 +372,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(5, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 19, 8, 43, 24), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24R3", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
@@ -362,6 +394,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -402,11 +435,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_11";
          _dataAggregator.ClientName = "SMP_11";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -420,10 +453,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(5, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 12, 24, 13, 21, 20), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24R3", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -437,6 +475,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -477,11 +516,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_12";
          _dataAggregator.ClientName = "SMP_12";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -495,10 +534,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(7, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 28, 6, 7, 54), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.29", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -512,6 +556,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -552,11 +597,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_13";
          _dataAggregator.ClientName = "SMP_13";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -570,10 +615,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(0, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.SendingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 5, 28, 17, 19, 4), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.29", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.SendingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -587,6 +637,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -627,11 +678,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_14";
          _dataAggregator.ClientName = "SMP_14";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -645,10 +696,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 7, 9, 21, 55), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.24R3", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -662,6 +718,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -704,11 +761,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_15";
          _dataAggregator.ClientName = "SMP_15";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -722,10 +779,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(0, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.EuePause, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.30", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.EuePause, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -739,6 +801,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -780,25 +843,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\SMP_17";
          _dataAggregator.ClientName = "SMP_17";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.34", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -840,25 +909,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_3";
          _dataAggregator.ClientName = "GPU2_3";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.EuePause, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16), result.StartTime);
+         Assert.IsNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.EuePause, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -899,11 +974,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_6";
          _dataAggregator.ClientName = "GPU2_6_1";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -917,10 +992,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 10, 13, 31, 6), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(3, result.MachineID);
+         Assert.AreEqual(SlotStatus.GettingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -934,6 +1014,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -969,47 +1050,36 @@ namespace HFM.Core.Tests
          #endregion
       }
 
-      //[Test]
-      //public void GPU2_6_2_QueueClearTest()
-      //{
-      //   const string path = "..\\..\\..\\TestFiles\\GPU2_6";
-      //   _dataAggregator.ClientName = "GPU2_6_2";
-      //   _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-      //   _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-      //   _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
-      //
-      //   var result = _dataAggregator.AggregateData();
-      //   Assert.IsNotNull(result.Queue);
-      //   _dataAggregator.QueueFilePath = "wrong_file_name.dat";
-      //
-      //   _dataAggregator.AggregateData();
-      //   Assert.IsNull(result.Queue);
-      //}
-
       [Test]
       public void GPU2_7()
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_7";
          _dataAggregator.ClientName = "GPU2_7";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21), result.StartTime);
+         Assert.IsNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1050,11 +1120,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
          _dataAggregator.ClientName = "GPU2_8_1";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -1068,10 +1138,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 29, 4, 55, 24), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
@@ -1085,6 +1160,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1123,25 +1199,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU2_8";
          _dataAggregator.ClientName = "GPU2_8_2";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, "wrong_file_name.dat");
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, "wrong_file_name.dat");
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 29, 4, 55, 24), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1180,11 +1262,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\GPU3_1";
          _dataAggregator.ClientName = "GPU3_1";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
@@ -1198,10 +1280,15 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 2, 9, 24, 59), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.30r2", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(2, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
@@ -1215,6 +1302,7 @@ namespace HFM.Core.Tests
          Assert.IsNotNull(result.UnitLogLines[8]);
          Assert.IsNotNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex - 1];
@@ -1283,11 +1371,11 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_5";
          _dataAggregator.ClientName = "Standard_5";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(10, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNull(result.UnitInfos[1]);
@@ -1301,10 +1389,15 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitInfos[9]);
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(4, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 7), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(3, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(10, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
@@ -1318,6 +1411,7 @@ namespace HFM.Core.Tests
          Assert.IsNull(result.UnitLogLines[8]);
          Assert.IsNull(result.UnitLogLines[9]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1358,25 +1452,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_7";
          _dataAggregator.ClientName = "Standard_7";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 8, 23, 31, 9), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(4, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1417,25 +1517,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_8";
          _dataAggregator.ClientName = "Standard_8";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNotNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 31, 13, 33, 32), result.StartTime);
+         Assert.IsNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(1, result.MachineID);
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNotNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -1476,25 +1582,31 @@ namespace HFM.Core.Tests
       {
          const string path = "..\\..\\..\\TestFiles\\Standard_9";
          _dataAggregator.ClientName = "Standard_9";
-         _dataAggregator.QueueFilePath = System.IO.Path.Combine(path, queue);
-         _dataAggregator.FahLogFilePath = System.IO.Path.Combine(path, FAHlog);
-         _dataAggregator.UnitInfoLogFilePath = System.IO.Path.Combine(path, unitinfo);
+         _dataAggregator.QueueFilePath = Path.Combine(path, queue);
+         var fahLog = FahLog.Read(File.ReadLines(Path.Combine(path, FAHlog)), FahLogType.Legacy);
+         _dataAggregator.UnitInfoLogFilePath = Path.Combine(path, unitinfo);
 
-         var result = _dataAggregator.AggregateData();
+         var result = _dataAggregator.AggregateData(fahLog);
          Assert.AreEqual(2, result.UnitInfos.Count);
          Assert.IsNull(result.UnitInfos[0]);
          Assert.IsNotNull(result.UnitInfos[1]);
 
          #region Check Data Aggregator
+
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
-         Assert.AreEqual(SlotStatus.Stopped, result.CurrentClientRun.SlotRuns[0].Data.Status);
+         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15), result.StartTime);
+         Assert.IsNotNull(result.Arguments);
+         Assert.AreEqual("6.23", result.ClientVersion);
+         Assert.IsNotNull(result.UserID);
+         Assert.AreEqual(14, result.MachineID);
+         Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(2, result.UnitLogLines.Count);
          Assert.IsNull(result.UnitLogLines[0]);
          Assert.IsNotNull(result.UnitLogLines[1]);
          Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];

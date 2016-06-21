@@ -1,22 +1,43 @@
 
+using System;
 using System.Collections.Generic;
-
-using HFM.Log;
 
 namespace HFM.Core.DataTypes
 {
    internal sealed class DataAggregatorResult
    {
-      public ClientQueue Queue { get; set; }
+      #region ClientRun Values
 
-      public int CurrentUnitIndex { get; set; }
+      public DateTime StartTime { get; set; }
 
-      public ClientRun CurrentClientRun { get; set; }
+      public string Arguments { get; set; }
+
+      public string ClientVersion { get; set; }
+
+      public string UserID { get; set; }
+
+      public int MachineID { get; set; }
+
+      #endregion
+
+      #region SlotRun Values
+
+      public SlotStatus Status { get; set; }
+
+      #endregion
 
       public IList<LogLine> CurrentLogLines { get; set; }
 
-      public IDictionary<int, IList<LogLine>> UnitLogLines { get; set; }
+      #region Queue Values
+
+      public int CurrentUnitIndex { get; set; }
+
+      public ClientQueue Queue { get; set; }
 
       public IDictionary<int, UnitInfo> UnitInfos { get; set; }
+
+      public IDictionary<int, IList<LogLine>> UnitLogLines { get; set; }
+
+      #endregion
    }
 }

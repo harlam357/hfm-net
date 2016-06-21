@@ -398,7 +398,7 @@ namespace HFM.Core
                dataAggregator.ClientName = slotModel.Name;
                DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
                                                                           slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
-               PopulateRunLevelData(result.CurrentClientRun, info, slotModel);
+               PopulateRunLevelData(result, info, slotModel);
 
                slotModel.Queue = result.Queue;
                slotModel.CurrentLogLines = result.CurrentLogLines;
@@ -479,7 +479,7 @@ namespace HFM.Core
          }
       }
 
-      private void PopulateRunLevelData(ClientRun run, Info info, SlotModel slotModel)
+      private void PopulateRunLevelData(DataAggregatorResult result, Info info, SlotModel slotModel)
       {
          Debug.Assert(slotModel != null);
 
@@ -494,9 +494,9 @@ namespace HFM.Core
          //}
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.Data.StartTime);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, result.StartTime);
             slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.Data.StartTime);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, result.StartTime);
             slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
          }
       }

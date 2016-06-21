@@ -68,7 +68,12 @@ namespace HFM.Core
          {
             slotRun = clientRun.SlotRuns[slotId];
          }
-         result.CurrentClientRun = clientRun;
+         result.StartTime = clientRun.Data.StartTime;
+         result.Arguments = clientRun.Data.Arguments;
+         result.ClientVersion = clientRun.Data.ClientVersion;
+         result.UserID = clientRun.Data.UserID;
+         result.MachineID = clientRun.Data.MachineID;
+         result.Status = slotRun != null ? slotRun.Data.Status : SlotStatus.Unknown;
 
          if (Logger.IsDebugEnabled)
          {

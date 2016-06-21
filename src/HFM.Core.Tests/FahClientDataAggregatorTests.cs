@@ -72,9 +72,15 @@ namespace HFM.Core.Tests
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+         Assert.AreEqual(null, result.Arguments);
+         Assert.AreEqual(null, result.ClientVersion);
+         Assert.AreEqual(null, result.UserID);
+         Assert.AreEqual(0, result.MachineID);
+         Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(1, result.UnitLogLines.Count);
          Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
@@ -82,6 +88,7 @@ namespace HFM.Core.Tests
          {
             Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          }
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -146,9 +153,15 @@ namespace HFM.Core.Tests
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+         Assert.AreEqual(null, result.Arguments);
+         Assert.AreEqual(null, result.ClientVersion);
+         Assert.AreEqual(null, result.UserID);
+         Assert.AreEqual(0, result.MachineID);
+         Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(0, result.UnitLogLines.Count);
          Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
@@ -156,6 +169,7 @@ namespace HFM.Core.Tests
          {
             Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          }
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -218,9 +232,15 @@ namespace HFM.Core.Tests
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(2, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+         Assert.AreEqual(null, result.Arguments);
+         Assert.AreEqual(null, result.ClientVersion);
+         Assert.AreEqual(null, result.UserID);
+         Assert.AreEqual(0, result.MachineID);
+         Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(1, result.UnitLogLines.Count);
          Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
@@ -228,6 +248,7 @@ namespace HFM.Core.Tests
          {
             Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          }
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
@@ -292,9 +313,15 @@ namespace HFM.Core.Tests
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
          #region Check Data Aggregator
+
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.IsNotNull(result.CurrentClientRun);
+         Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), result.StartTime);
+         Assert.AreEqual(null, result.Arguments);
+         Assert.AreEqual(null, result.ClientVersion);
+         Assert.AreEqual(null, result.UserID);
+         Assert.AreEqual(0, result.MachineID);
+         Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.AreEqual(1, result.UnitLogLines.Count);
          Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
@@ -302,6 +329,7 @@ namespace HFM.Core.Tests
          {
             Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
          }
+
          #endregion
 
          var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];

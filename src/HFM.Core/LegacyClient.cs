@@ -149,17 +149,19 @@ namespace HFM.Core
          var dataAggregator = new LegacyDataAggregator { Logger = Logger };
          dataAggregator.ClientName = Settings.Name;
          dataAggregator.QueueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
-         dataAggregator.FahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         string fahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
          dataAggregator.UnitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
 
          #endregion
 
          #region Run the Aggregator
 
-         var result = dataAggregator.AggregateData();
+         var fahLog = FahLog.Read(File.ReadLines(fahLogFilePath), FahLogType.Legacy);
+
+         var result = dataAggregator.AggregateData(fahLog);
          // Issue 126 - Use the Folding ID, Team, User ID, and Machine ID from the FAHlog data.
          // Use the Current Queue Entry as a backup data source.
-         PopulateRunLevelData(result.CurrentClientRun.Data, _slotModel);
+         PopulateRunLevelData(result, _slotModel);
          if (result.Queue != null)
          {
             PopulateRunLevelData(result.Queue.CurrentQueueEntry, _slotModel);
@@ -184,13 +186,12 @@ namespace HFM.Core
          UpdateBenchmarkData(_slotModel.UnitInfoLogic, parsedUnits, result.CurrentUnitIndex);
 
          // Update the UnitInfoLogic if we have a Status
-         SlotStatus currentWorkUnitStatus = result.CurrentClientRun.SlotRuns[0].Data.Status;
-         if (currentWorkUnitStatus != SlotStatus.Unknown)
+         if (result.Status != SlotStatus.Unknown)
          {
             _slotModel.UnitInfoLogic = parsedUnits[result.CurrentUnitIndex];
          }
 
-         HandleReturnedStatus(currentWorkUnitStatus, _slotModel);
+         HandleReturnedStatus(result.Status, _slotModel);
 
          _slotModel.UnitInfoLogic.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
@@ -231,22 +232,22 @@ namespace HFM.Core
          return unitInfoLogic;
       }
 
-      private void PopulateRunLevelData(ClientRunData run, SlotModel slotModel)
+      private void PopulateRunLevelData(DataAggregatorResult result, SlotModel slotModel)
       {
-         slotModel.Arguments = run.Arguments;
-         slotModel.ClientVersion = run.ClientVersion;
+         slotModel.Arguments = result.Arguments;
+         slotModel.ClientVersion = result.ClientVersion;
 
-         slotModel.UserId = run.UserID;
-         slotModel.MachineId = run.MachineID;
+         slotModel.UserId = result.UserID;
+         slotModel.MachineId = result.MachineID;
 
          //slotModel.TotalRunCompletedUnits = run.CompletedUnits;
          //slotModel.TotalRunFailedUnits = run.FailedUnits;
          //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, run.StartTime);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, result.StartTime);
             slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, run.StartTime);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, result.StartTime);
             slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
          }
       }

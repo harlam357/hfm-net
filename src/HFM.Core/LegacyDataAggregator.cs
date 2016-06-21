@@ -46,11 +46,6 @@ namespace HFM.Core
       public string QueueFilePath { get; set; }
 
       /// <summary>
-      /// FAHlog.txt File Path
-      /// </summary>
-      public string FahLogFilePath { get; set; }
-
-      /// <summary>
       /// unitinfo.txt File Path
       /// </summary>
       public string UnitInfoLogFilePath { get; set; }
@@ -68,10 +63,8 @@ namespace HFM.Core
       /// <summary>
       /// Aggregate Data and return UnitInfo List
       /// </summary>
-      public DataAggregatorResult AggregateData()
+      public DataAggregatorResult AggregateData(FahLog fahLog)
       {
-         var fahLog = FahLog.Read(File.ReadLines(FahLogFilePath), FahLogType.Legacy);
-
          if (Logger.IsDebugEnabled)
          {
             foreach (var s in fahLog.Where(x => x.LineType == LogLineType.Error))
@@ -80,8 +73,19 @@ namespace HFM.Core
             }
          }
 
+         var currentClientRun = GetCurrentClientRun(fahLog);
+         if (currentClientRun == null)
+         {
+            return null;
+         }
+
          var result = new DataAggregatorResult();
-         result.CurrentClientRun = fahLog.ClientRuns.FirstOrDefault();
+         result.StartTime = currentClientRun.Data.StartTime;
+         result.Arguments = currentClientRun.Data.Arguments;
+         result.ClientVersion = currentClientRun.Data.ClientVersion;
+         result.UserID = currentClientRun.Data.UserID;
+         result.MachineID = currentClientRun.Data.MachineID;
+         result.Status = currentClientRun.SlotRuns[0].Data.Status;
 
          // Decision Time: If Queue Read fails parse from logs only
          QueueData queueData = ReadQueueFile();
@@ -103,7 +107,7 @@ namespace HFM.Core
 
          if (result.UnitLogLines == null || result.UnitLogLines[result.CurrentUnitIndex] == null)
          {
-            result.CurrentLogLines = result.CurrentClientRun == null ? new List<LogLine>() : result.CurrentClientRun.ToList();
+            result.CurrentLogLines = currentClientRun.ToList();
          }
          else
          {
