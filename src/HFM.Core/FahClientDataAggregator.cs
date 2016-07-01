@@ -86,9 +86,9 @@ namespace HFM.Core
          GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
          result.Queue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
 
-         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex) && result.UnitInfos[result.CurrentUnitIndex].LogLines != null)
          {
-            result.CurrentLogLines = result.UnitLogLines[result.CurrentUnitIndex];
+            result.CurrentLogLines = result.UnitInfos[result.CurrentUnitIndex].LogLines;
          }
          else if (slotRun != null)
          {
@@ -193,7 +193,6 @@ namespace HFM.Core
          Debug.Assert(currentUnitInfo != null);
 
          result.UnitInfos = new Dictionary<int, UnitInfo>();
-         result.UnitLogLines = new Dictionary<int, IList<LogLine>>();
 
          bool foundCurrentUnitInfo = false;
 
@@ -226,10 +225,6 @@ namespace HFM.Core
             if (unitInfo != null)
             {
                result.UnitInfos.Add(unit.Id, unitInfo);
-               if (unitRun != null)
-               {
-                  result.UnitLogLines.Add(unit.Id, unitRun.ToList());
-               }
                if (unit.StateEnum == FahUnitStatus.Running)
                {
                   result.CurrentUnitIndex = unit.Id;
@@ -261,7 +256,6 @@ namespace HFM.Core
 
                UpdateUnitInfo(currentClone, unitRun);
                result.UnitInfos.Add(currentClone.QueueIndex, currentClone);
-               result.UnitLogLines.Add(currentClone.QueueIndex, unitRun.ToList());
             }
          }
       }
@@ -289,6 +283,7 @@ namespace HFM.Core
          unit.QueueIndex = queueEntry.Id;
          if (unitRun != null)
          {
+            unit.LogLines = unitRun.ToList();
             unit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
             unit.FramesObserved = unitRun.Data.FramesObserved;
             unit.CoreVersion = unitRun.Data.CoreVersion;
@@ -306,12 +301,6 @@ namespace HFM.Core
          }
 
          PopulateUnitInfoFromQueueEntry(queueEntry, options, slotOptions, unit);
-         if (unitRun != null)
-         {
-            // parse the frame data
-            ParseFrameData(unitRun, unit);
-         }
-
          return unit;
       }
 
@@ -320,10 +309,12 @@ namespace HFM.Core
          Debug.Assert(unit != null);
          Debug.Assert(unitRun != null);
 
+         unit.LogLines = unitRun.ToList();
          unit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRun.Data.FramesObserved;
          unit.CoreVersion = unitRun.Data.CoreVersion;
          unit.UnitResult = unitRun.Data.WorkUnitResult;
+
          // there is no finished time available from the client API
          // since the unit history database won't write the same
          // result twice, the first time this hits use the local UTC
@@ -333,9 +324,6 @@ namespace HFM.Core
          {
             unit.FinishedTime = DateTime.UtcNow;
          }
-
-         // parse the frame data
-         ParseFrameData(unitRun, unit);
       }
 
       #region Unit Population Methods
@@ -373,26 +361,6 @@ namespace HFM.Core
 
          /* Core ID */
          unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
-      }
-
-      private static void ParseFrameData(IEnumerable<LogLine> logLines, UnitInfo unit)
-      {
-         Debug.Assert(logLines != null);
-         Debug.Assert(unit != null);
-
-         foreach (var logLine in logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame))
-         {
-            // Check for FrameData
-            var frame = logLine.LineData as UnitFrame;
-            if (frame == null)
-            {
-               // If not found, clear the LineType and get out
-               logLine.LineType = LogLineType.Unknown;
-               continue;
-            }
-
-            unit.SetUnitFrame(frame);
-         }
       }
 
       #endregion

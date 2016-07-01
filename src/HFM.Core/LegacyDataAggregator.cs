@@ -93,13 +93,13 @@ namespace HFM.Core
             result.CurrentUnitIndex = 1;
          }
 
-         if (result.UnitLogLines == null || result.UnitLogLines[result.CurrentUnitIndex] == null)
+         if (result.UnitInfos == null || result.UnitInfos[result.CurrentUnitIndex] == null || result.UnitInfos[result.CurrentUnitIndex].LogLines == null)
          {
             result.CurrentLogLines = currentClientRun.ToList();
          }
          else
          {
-            result.CurrentLogLines = result.UnitLogLines[result.CurrentUnitIndex];
+            result.CurrentLogLines = result.UnitInfos[result.CurrentUnitIndex].LogLines;
          }
 
          return result;
@@ -125,32 +125,16 @@ namespace HFM.Core
          {
             result.UnitInfos[i] = null;
          }
-         result.UnitLogLines = new Dictionary<int, IList<LogLine>>(2);
-         for (int i = 0; i < 2; i++)
-         {
-            result.UnitLogLines[i] = null;
-         }
 
          var currentClientRun = GetCurrentClientRun(fahLog);
          var previousUnitRun = GetPreviousUnitRun(fahLog);
          if (previousUnitRun != null)
          {
-            result.UnitLogLines[0] = previousUnitRun.ToList();
-            result.UnitInfos[0] = BuildUnitInfo(null, currentClientRun.Data, previousUnitRun, null);
+            result.UnitInfos[0] = BuildUnitInfo(null, currentClientRun, previousUnitRun, null);
          }
 
-         bool matchOverride = false;
          var currentUnitRun = GetCurrentUnitRun(fahLog);
-         if (currentUnitRun != null)
-         {
-            result.UnitLogLines[1] = currentUnitRun.ToList();
-         }
-         else
-         {
-            matchOverride = true;
-            result.UnitLogLines[1] = currentClientRun.ToList();
-         }
-         result.UnitInfos[1] = BuildUnitInfo(null, currentClientRun.Data, currentUnitRun, unitInfo, matchOverride);
+         result.UnitInfos[1] = BuildUnitInfo(null, currentClientRun, currentUnitRun, unitInfo, currentUnitRun == null);
       }
 
       private static ClientRun GetCurrentClientRun(FahLog fahLog)
@@ -193,18 +177,11 @@ namespace HFM.Core
          {
             result.UnitInfos[i] = null;
          }
-         result.UnitLogLines = new Dictionary<int, IList<LogLine>>(10);
-         for (int i = 0; i < 10; i++)
-         {
-            result.UnitLogLines[i] = null;
-         }
 
          var clientRun = GetCurrentClientRun(fahLog);
          for (int queueIndex = 0; queueIndex < result.UnitInfos.Count; queueIndex++)
          {
             var unitRun = GetUnitRunForQueueIndex(fahLog, queueIndex);
-            // Get the Log Lines for this queue position from the reader
-            result.UnitLogLines[queueIndex] = unitRun != null ? unitRun.ToList() : null;
 
             UnitInfoLogData unitInfoLogData = null;
             // On the Current Queue Index
@@ -214,7 +191,7 @@ namespace HFM.Core
                unitInfoLogData = unitInfo;
             }
 
-            result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData);
+            result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun, unitRun, unitInfoLogData);
             if (result.UnitInfos[queueIndex] == null)
             {
                if (queueIndex == q.CurrentIndex)
@@ -224,28 +201,14 @@ namespace HFM.Core
                   Logger.Warn(Constants.ClientNameFormat, ClientName, message);
 
                   unitRun = GetCurrentUnitRun(fahLog);
-                  // If got no Work Unit Log Lines based on Current Work Unit Log Lines
-                  // then take the entire Current Client Run Log Lines - likely the run
-                  // was short and never contained any Work Unit Data.
-                  if (unitRun != null)
-                  {
-                     result.UnitLogLines[queueIndex] = unitRun.ToList();
-                  }
-                  else
-                  {
-                     result.UnitLogLines[queueIndex] = clientRun.ToList();
-                  }
 
                   var slotRun = GetCurrentSlotRun(fahLog);
                   if (slotRun != null && slotRun.Data.Status == SlotStatus.GettingWorkPacket)
                   {
-                     // Use either the current Work Unit log lines or current Client Run log lines
-                     // as decided upon above... don't clear it here and show the user nothing - 10/9/10
-                     //_unitLogLines[queueIndex] = null;
                      unitRun = null;
                      unitInfoLogData = new UnitInfoLogData();
                   }
-                  result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun.Data, unitRun, unitInfoLogData, true);
+                  result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun, unitRun, unitInfoLogData, true);
                }
                else
                {
@@ -272,11 +235,13 @@ namespace HFM.Core
          return null;
       }
 
-      private static UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRunData clientRunData, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride = false)
+      private static UnitInfo BuildUnitInfo(QueueEntry queueEntry, ClientRun clientRun, UnitRun unitRun, UnitInfoLogData unitInfoLogData, bool matchOverride = false)
       {
          // queueEntry can be null
-         Debug.Assert(clientRunData != null);
+         Debug.Assert(clientRun != null);
          // unitInfoLogData can be null
+
+         var unit = new UnitInfo();
 
          UnitRunData unitRunData;
          if (unitRun == null)
@@ -292,9 +257,9 @@ namespace HFM.Core
          }
          else
          {
+            unit.LogLines = unitRun.ToList();
             unitRunData = unitRun.Data;
          }
-         var unit = new UnitInfo();
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRunData.FramesObserved;
          unit.CoreVersion = unitRunData.CoreVersion;
@@ -304,30 +269,16 @@ namespace HFM.Core
          {
             PopulateUnitInfoFromQueueEntry(queueEntry, unit);
             SearchFahLogUnitDataProjects(unit, unitRunData);
-            PopulateUnitInfoFromLogs(clientRunData, unitRunData, unitInfoLogData, unit);
+            PopulateUnitInfoFromLogs(clientRun.Data, unitRunData, unitInfoLogData, unit);
 
-            if (ProjectsMatch(unit, unitRunData) ||
-                ProjectsMatch(unit, unitInfoLogData) ||
-                matchOverride)
-            {
-               if (unitRun != null)
-               {
-                  // continue parsing the frame data
-                  ParseFrameData(unitRun, unit);
-               }
-            }
-            else
+            if (!ProjectsMatch(unit, unitRunData) && !ProjectsMatch(unit, unitInfoLogData) && !matchOverride)
             {
                return null;
             }
          }
          else
          {
-            PopulateUnitInfoFromLogs(clientRunData, unitRunData, unitInfoLogData, unit);
-            if (unitRun != null)
-            {
-               ParseFrameData(unitRun, unit);
-            }
+            PopulateUnitInfoFromLogs(clientRun.Data, unitRunData, unitInfoLogData, unit);
          }
 
          return unit;
@@ -484,26 +435,6 @@ namespace HFM.Core
          //{
          //   unit.Team = currentClientRun.Team;
          //}
-      }
-
-      private static void ParseFrameData(IEnumerable<LogLine> logLines, UnitInfo unit)
-      {
-         Debug.Assert(logLines != null);
-         Debug.Assert(unit != null);
-
-         foreach (var logLine in logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame))
-         {
-            // Check for FrameData
-            var frame = logLine.LineData as UnitFrame;
-            if (frame == null)
-            {
-               // If not found, clear the LineType and get out
-               logLine.LineType = LogLineType.Unknown;
-               continue;
-            }
-
-            unit.SetUnitFrame(frame);
-         }
       }
 
       #endregion

@@ -87,7 +87,6 @@ namespace HFM.Forms
 
       private readonly IClientConfiguration _clientConfiguration;
       private readonly IProteinService _proteinService;
-      private readonly IUnitInfoCollection _unitInfoCollection;
 
       private readonly IUpdateLogic _updateLogic;
       private readonly RetrievalLogic _retrievalLogic;
@@ -102,8 +101,7 @@ namespace HFM.Forms
 
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                           IClientConfiguration clientConfiguration,
-                           IProteinService proteinService, IUnitInfoCollection unitInfoCollection, IUpdateLogic updateLogic,
+                           IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
                            RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter,
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
@@ -135,7 +133,6 @@ namespace HFM.Forms
          // Collections
          _clientConfiguration = clientConfiguration;
          _proteinService = proteinService;
-         _unitInfoCollection = unitInfoCollection;
          // Logic Services
          _updateLogic = updateLogic;
          _updateLogic.Owner = _view;
@@ -327,7 +324,6 @@ namespace HFM.Forms
          }
 
          SaveColumnSettings();
-         SaveCurrentUnitInfo();
 
          // Save location and size data
          // RestoreBounds remembers normal position if minimized or maximized
@@ -431,8 +427,6 @@ namespace HFM.Forms
 
          if (_gridModel.SelectedSlot != null)
          {
-            //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Changed Queue Index ({0} - {1})", Name, e.Index));
-
             // Check the UnitLogLines array against the requested Queue Index - Issue 171
             try
             {
@@ -656,31 +650,7 @@ namespace HFM.Forms
 
          // clear the clients and UI
          _settingsManager.ClearFileName();
-         //
-         if (_clientConfiguration.Count != 0)
-         {
-            SaveCurrentUnitInfo();
-         }
          _clientConfiguration.Clear();
-      }
-
-      private void SaveCurrentUnitInfo()
-      {
-         // If no clients loaded, stub out
-         if (_clientConfiguration.Count == 0) return;
-
-         _unitInfoCollection.Clear();
-
-         foreach (var slotModel in _clientConfiguration.Slots)
-         {
-            // Don't save the UnitInfo object if the contained Project is Unknown
-            if (!slotModel.UnitInfo.ProjectIsUnknown())
-            {
-               _unitInfoCollection.Add(slotModel.UnitInfo);
-            }
-         }
-
-         _unitInfoCollection.Write();
       }
 
       private void LoadConfigFile(string filePath, int filterIndex = 1)

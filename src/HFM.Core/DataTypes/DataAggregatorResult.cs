@@ -36,8 +36,6 @@ namespace HFM.Core.DataTypes
 
       public IDictionary<int, UnitInfo> UnitInfos { get; set; }
 
-      public IDictionary<int, IList<LogLine>> UnitLogLines { get; set; }
-
       #endregion
    }
 }

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ namespace HFM.Core
       /// Fired when the client slot layout has changed.
       /// </summary>
       event EventHandler SlotsChanged;
-      
+
       /// <summary>
       /// Fired when the Retrieve method finishes.
       /// </summary>
@@ -116,12 +116,10 @@ namespace HFM.Core
 
       public IProteinService ProteinService { get; set; }
 
-      public IUnitInfoCollection UnitInfoCollection { get; set; }
-
       public IProteinBenchmarkCollection BenchmarkCollection { get; set; }
 
       public IUnitInfoDatabase UnitInfoDatabase { get; set; }
-      
+
       private ILogger _logger = NullLogger.Instance;
 
       public ILogger Logger
@@ -139,8 +137,8 @@ namespace HFM.Core
       public abstract IEnumerable<SlotModel> Slots { get; }
 
       // should be init to DateTime.MinValue
-      public DateTime LastRetrievalTime { get; protected set; } 
-      
+      public DateTime LastRetrievalTime { get; protected set; }
+
       private volatile bool _retrievalInProgress;
 
       public bool RetrievalInProgress

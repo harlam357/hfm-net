@@ -66,8 +66,6 @@ namespace HFM.Core
                _slotModel = new SlotModel { Prefs = Prefs };
                // set settings
                _slotModel.Settings = _settings;
-               // restore unit info if available
-               RestoreUnitInfo();
             }
             else
             {
@@ -83,22 +81,6 @@ namespace HFM.Core
       }
 
       #endregion
-
-      private void RestoreUnitInfo()
-      {
-         if (UnitInfoCollection == null) return;
-
-         foreach (var unitInfo in UnitInfoCollection)
-         {
-            if (_slotModel.Owns(unitInfo))
-            {
-               _slotModel.UnitInfoModel = BuildUnitInfoLogic(unitInfo, false);
-               string message = String.Format(CultureInfo.CurrentCulture, "Restored unit: {0}", unitInfo.ProjectRunCloneGen());
-               Logger.Info(Constants.ClientNameFormat, _settings.Name, message);
-               break;
-            }
-         }
-      }
 
       #region Retrieval Methods
 
@@ -172,7 +154,7 @@ namespace HFM.Core
 
          _slotModel.Queue = result.Queue;
          _slotModel.CurrentLogLines = result.CurrentLogLines;
-         _slotModel.UnitLogLines = result.UnitLogLines.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
+         _slotModel.UnitLogLines = result.UnitInfos.OrderBy(x => x.Key).Select(x => x.Value.LogLines).ToArray();
 
          #endregion
 

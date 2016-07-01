@@ -45,7 +45,6 @@ namespace HFM.Core.DataTypes
          ProteinName = String.Empty;
          ProteinTag = String.Empty;
          UnitResult = WorkUnitResult.Unknown;
-         UnitFrames = new Dictionary<int, UnitFrame>();
          CoreID = Constants.DefaultCoreID;
          QueueIndex = -1;
          OwningSlotId = -1;
@@ -210,7 +209,10 @@ namespace HFM.Core.DataTypes
       {
          get
          {
-            if (UnitFrames.Count == 0) return null;
+            if (UnitFrames == null || UnitFrames.Count == 0)
+            {
+               return null;
+            }
 
             int max = UnitFrames.Keys.Max();
             if (max >= 0)
@@ -223,19 +225,56 @@ namespace HFM.Core.DataTypes
          }
       }
 
+      private IList<LogLine> _logLines;
+
+      [DataMember(Order = 23)]
+      public IList<LogLine> LogLines
+      {
+         get { return _logLines; }
+         set
+         {
+            if (value == null)
+            {
+               return;
+            }
+            _logLines = value;
+            UnitFrames = BuildUnitFrameDictionary(_logLines);
+            if (UnitFrames.Count > 0)
+            {
+               var lastUnitFrame = UnitFrames[UnitFrames.Keys.Max()];
+               RawFramesComplete = lastUnitFrame.RawFramesComplete;
+               RawFramesTotal = lastUnitFrame.RawFramesTotal;
+            }
+         }
+      }
+
+      private static Dictionary<int, UnitFrame> BuildUnitFrameDictionary(IEnumerable<LogLine> logLines)
+      {
+         var unitFrames = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
+         {
+            var unitFrame = x.LineData as UnitFrame;
+            if (unitFrame != null && unitFrame.FrameID >= 0)
+            {
+               return unitFrame;
+            }
+            return null;
+         }).Where(x => x != null).ToDictionary(x => x.FrameID, true);
+
+         foreach (var frame in unitFrames.Values)
+         {
+            if (unitFrames.ContainsKey(frame.FrameID - 1))
+            {
+               frame.FrameDuration = frame.TimeOfFrame.GetDelta(unitFrames[frame.FrameID - 1].TimeOfFrame);
+            }
+         }
+
+         return unitFrames;
+      }
+
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      [DataMember(Order = 23)]
-      private Dictionary<int, UnitFrame> UnitFrames { get; set; }
-
-      /// <summary>
-      /// Gets the total number of frames added to this unit.
-      /// </summary>
-      internal int FrameCount
-      {
-         get { return UnitFrames.Count; }
-      }
+      internal Dictionary<int, UnitFrame> UnitFrames { get; set; }
 
       /// <summary>
       /// Core ID (Hex) Value
@@ -254,36 +293,11 @@ namespace HFM.Core.DataTypes
       #region Methods
 
       /// <summary>
-      /// Sets the UnitFrame based on its frame ID.
-      /// </summary>
-      /// <exception cref="ArgumentNullException">frame is null.</exception>
-      public void SetUnitFrame(UnitFrame frame)
-      {
-         if (frame == null) throw new ArgumentNullException("frame");
-
-         if (UnitFrames.ContainsKey(frame.FrameID)) return;
-
-         // Set Raw Frame Values
-         RawFramesComplete = frame.RawFramesComplete;
-         RawFramesTotal = frame.RawFramesTotal;
-
-         UnitFrames.Add(frame.FrameID, frame);
-
-         frame.FrameDuration = TimeSpan.Zero;
-         if (frame.FrameID > 0 &&
-             UnitFrames.ContainsKey(frame.FrameID - 1) &&
-             FramesObserved > 1)
-         {
-            frame.FrameDuration = frame.TimeOfFrame.GetDelta(UnitFrames[frame.FrameID - 1].TimeOfFrame);
-         }
-      }
-
-      /// <summary>
       /// Gets the UnitFrame for the frame ID.
       /// </summary>
       public UnitFrame GetUnitFrame(int frameId)
       {
-         return UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
+         return UnitFrames != null && UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
       }
 
       #endregion

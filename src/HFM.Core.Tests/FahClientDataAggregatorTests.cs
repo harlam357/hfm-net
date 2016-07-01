@@ -82,11 +82,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(1, result.UnitLogLines.Count);
-         Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
-         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
+         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion
@@ -163,11 +162,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(0, result.UnitLogLines.Count);
-         Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
-         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsTrue(result.UnitInfos.All(x => x.Value.LogLines == null));
+         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+            Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.FirstOrDefault());
          }
 
          #endregion
@@ -242,11 +240,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(1, result.UnitLogLines.Count);
-         Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
-         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
+         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion
@@ -323,11 +320,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(1, result.UnitLogLines.Count);
-         Assert.IsFalse(result.UnitLogLines.Any(x => x.Value == null));
-         if (result.UnitLogLines.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
+         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion

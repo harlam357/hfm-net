@@ -1,0 +1,17 @@
+﻿
+using System.Collections.Generic;
+
+using HFM.Core.DataTypes;
+
+namespace HFM.Core.Tests
+{
+   public static class UnitInfoExtensions
+   {
+      public static void SetUnitFrame(this UnitInfo unitInfo, UnitFrame unitFrame)
+      {
+         var logLines = unitInfo.LogLines ?? new List<LogLine>();
+         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame });
+         unitInfo.LogLines = logLines;
+      }
+   }
+}

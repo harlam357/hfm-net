@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -73,10 +74,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -146,18 +146,17 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[6].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -233,18 +232,10 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNull(result.UnitLogLines[4]);
-         Assert.IsNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -308,10 +299,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -379,18 +369,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNull(result.UnitLogLines[1]);
-         Assert.IsNull(result.UnitLogLines[2]);
-         Assert.IsNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -460,18 +441,16 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[6].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -541,18 +520,16 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -622,18 +599,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.SendingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNull(result.UnitLogLines[1]);
-         Assert.IsNull(result.UnitLogLines[2]);
-         Assert.IsNull(result.UnitLogLines[3]);
-         Assert.IsNull(result.UnitLogLines[4]);
-         Assert.IsNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -702,18 +669,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.GettingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNull(result.UnitLogLines[2]);
-         Assert.IsNull(result.UnitLogLines[3]);
-         Assert.IsNull(result.UnitLogLines[4]);
-         Assert.IsNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.First());
 
          #endregion
 
@@ -785,18 +743,17 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.EuePause, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[6].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -857,10 +814,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -921,10 +877,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.EuePause, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -994,18 +949,17 @@ namespace HFM.Core.Tests
          Assert.AreEqual(3, result.MachineID);
          Assert.AreEqual(SlotStatus.GettingWorkPacket, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[6].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1065,10 +1019,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1137,18 +1089,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNull(result.UnitLogLines[1]);
-         Assert.IsNull(result.UnitLogLines[2]);
-         Assert.IsNull(result.UnitLogLines[3]);
-         Assert.IsNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNull(result.UnitInfos[8].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.First());
 
          #endregion
 
@@ -1206,10 +1148,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.First());
 
          #endregion
 
@@ -1277,18 +1217,17 @@ namespace HFM.Core.Tests
          Assert.AreEqual(2, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.IsNotNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNotNull(result.UnitLogLines[5]);
-         Assert.IsNotNull(result.UnitLogLines[6]);
-         Assert.IsNotNull(result.UnitLogLines[7]);
-         Assert.IsNotNull(result.UnitLogLines[8]);
-         Assert.IsNotNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.IsNotNull(result.UnitInfos[2].LogLines);
+         Assert.IsNotNull(result.UnitInfos[3].LogLines);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.IsNotNull(result.UnitInfos[5].LogLines);
+         Assert.IsNotNull(result.UnitInfos[6].LogLines);
+         Assert.IsNotNull(result.UnitInfos[7].LogLines);
+         Assert.IsNotNull(result.UnitInfos[8].LogLines);
+         Assert.IsNotNull(result.UnitInfos[9].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1386,18 +1325,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(3, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(10, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNull(result.UnitLogLines[1]);
-         Assert.IsNull(result.UnitLogLines[2]);
-         Assert.IsNotNull(result.UnitLogLines[3]);
-         Assert.IsNotNull(result.UnitLogLines[4]);
-         Assert.IsNull(result.UnitLogLines[5]);
-         Assert.IsNull(result.UnitLogLines[6]);
-         Assert.IsNull(result.UnitLogLines[7]);
-         Assert.IsNull(result.UnitLogLines[8]);
-         Assert.IsNull(result.UnitLogLines[9]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[4].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1457,10 +1386,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(4, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1520,10 +1448,9 @@ namespace HFM.Core.Tests
          Assert.AreEqual(1, result.MachineID);
          Assert.AreEqual(SlotStatus.RunningNoFrameTimes, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNotNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[0].LogLines);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
@@ -1583,10 +1510,8 @@ namespace HFM.Core.Tests
          Assert.AreEqual(14, result.MachineID);
          Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.AreEqual(2, result.UnitLogLines.Count);
-         Assert.IsNull(result.UnitLogLines[0]);
-         Assert.IsNotNull(result.UnitLogLines[1]);
-         Assert.AreEqual(result.CurrentLogLines, result.UnitLogLines[result.CurrentUnitIndex]);
+         Assert.IsNotNull(result.UnitInfos[1].LogLines);
+         Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
 
          #endregion
 
