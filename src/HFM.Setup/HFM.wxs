@@ -11,12 +11,12 @@
       <Package Id="*" Keywords="Installer" Description="HFM.NET $(var.ProductVersion) Installer"
         Manufacturer="$(var.CompanyName)"
         InstallerVersion="200" Languages="1033" Compressed="yes" />
-           
+
       <Property Id="ARPPRODUCTICON" Value="HFM.exe" />
-      <Property Id="ARPHELPLINK" Value="http://code.google.com/p/hfm-net/" />
+      <Property Id="ARPHELPLINK" Value="https://github.com/harlam357/hfm-net" />
 
       <Upgrade Id="FF322DDA-7E89-4552-9455-CE7917FD7D91">
-         <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" 
+         <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND"
                          Minimum="0.3.0" Maximum="$(var.ProductVersion)" IncludeMaximum="no" />
       </Upgrade>
 
@@ -44,8 +44,12 @@
          <ComponentRef Id="ProgramMenuDir" />
       </Feature>
 
+      <Binary Id="HFM.Setup.CustomActions" SourceFile="..\HFM.Setup.CustomActions\bin\$(var.Configuration)\HFM.Setup.CustomActions.CA.dll" />
+      <CustomAction Id="DeleteAppDataFolderFilesAction" BinaryKey="HFM.Setup.CustomActions" DllEntry="DeleteAppDataFolderFilesAction" Execute="immediate" Return="check" />
+
       <InstallExecuteSequence>
          <RemoveExistingProducts After="InstallInitialize" />
+         <Custom Action="DeleteAppDataFolderFilesAction" After="InstallFinalize" />
       </InstallExecuteSequence>
 
       <Icon Id="HFM.exe" SourceFile="$(var.HFM.TargetPath)\HFM.exe" />
