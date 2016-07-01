@@ -27,7 +27,7 @@ using System.Runtime.Serialization;
 namespace HFM.Core.DataTypes
 {
    [DataContract(Namespace = "")]
-   public class UnitInfo : IProjectInfo, IOwnedByClient, IEquatable<UnitInfo>
+   public class UnitInfo : IProjectInfo, IOwnedByClient
    {
       #region Constructor
 
@@ -298,113 +298,6 @@ namespace HFM.Core.DataTypes
       public UnitFrame GetUnitFrame(int frameId)
       {
          return UnitFrames != null && UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
-      }
-
-      #endregion
-
-      #region IEquatable<T> Implementation
-
-      /// <summary>
-      /// Indicates whether the current object is equal to another object of the same type.
-      /// </summary>
-      /// <returns>
-      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-      /// </returns>
-      /// <param name="other">An object to compare with this object.</param>
-      public bool Equals(UnitInfo other)
-      {
-         if (ReferenceEquals(null, other)) return false;
-         if (ReferenceEquals(this, other)) return true;
-         return Equals(other.OwningClientName, OwningClientName) &&
-                Equals(other.OwningClientPath, OwningClientPath) &&
-                other.OwningSlotId == OwningSlotId &&
-                other.UnitRetrievalTime.Equals(UnitRetrievalTime) &&
-                Equals(other.FoldingID, FoldingID) &&
-                other.Team == Team &&
-                Equals(other.SlotType, SlotType) &&
-                other.DownloadTime.Equals(DownloadTime) &&
-                other.DueTime.Equals(DueTime) &&
-                other.UnitStartTimeStamp.Equals(UnitStartTimeStamp) &&
-                other.FinishedTime.Equals(FinishedTime) &&
-                other.CoreVersion.Equals(CoreVersion) &&
-                other.ProjectID == ProjectID &&
-                other.ProjectRun == ProjectRun &&
-                other.ProjectClone == ProjectClone &&
-                other.ProjectGen == ProjectGen &&
-                Equals(other.ProteinName, ProteinName) &&
-                Equals(other.ProteinTag, ProteinTag) &&
-                Equals(other.UnitResult, UnitResult) &&
-                other.RawFramesComplete == RawFramesComplete &&
-                other.RawFramesTotal == RawFramesTotal &&
-                other.FramesObserved == FramesObserved &&
-                other.UnitFrames.SequenceEqual(UnitFrames) &&
-                Equals(other.CoreID, CoreID) &&
-                other.QueueIndex == QueueIndex;
-      }
-
-      /// <summary>
-      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
-      /// </summary>
-      /// <returns>
-      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
-      /// </returns>
-      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
-      public override bool Equals(object obj)
-      {
-         if (ReferenceEquals(null, obj)) return false;
-         if (ReferenceEquals(this, obj)) return true;
-         if (obj.GetType() != typeof(UnitInfo)) return false;
-         return Equals((UnitInfo)obj);
-      }
-
-      /// <summary>
-      /// Serves as a hash function for a particular type.
-      /// </summary>
-      /// <returns>
-      /// A hash code for the current <see cref="T:System.Object"/>.
-      /// </returns>
-      /// <filterpriority>2</filterpriority>
-      public override int GetHashCode()
-      {
-         unchecked
-         {
-            int result = (OwningClientName != null ? OwningClientName.GetHashCode() : 0);
-            result = (result * 397) ^ (OwningClientPath != null ? OwningClientPath.GetHashCode() : 0);
-            result = (result * 397) ^ OwningSlotId;
-            result = (result * 397) ^ UnitRetrievalTime.GetHashCode();
-            result = (result * 397) ^ (FoldingID != null ? FoldingID.GetHashCode() : 0);
-            result = (result * 397) ^ Team;
-            result = (result * 397) ^ SlotType.GetHashCode();
-            result = (result * 397) ^ DownloadTime.GetHashCode();
-            result = (result * 397) ^ DueTime.GetHashCode();
-            result = (result * 397) ^ UnitStartTimeStamp.GetHashCode();
-            result = (result * 397) ^ FinishedTime.GetHashCode();
-            result = (result * 397) ^ CoreVersion.GetHashCode();
-            result = (result * 397) ^ ProjectID;
-            result = (result * 397) ^ ProjectRun;
-            result = (result * 397) ^ ProjectClone;
-            result = (result * 397) ^ ProjectGen;
-            result = (result * 397) ^ (ProteinName != null ? ProteinName.GetHashCode() : 0);
-            result = (result * 397) ^ (ProteinTag != null ? ProteinTag.GetHashCode() : 0);
-            result = (result * 397) ^ UnitResult.GetHashCode();
-            result = (result * 397) ^ RawFramesComplete;
-            result = (result * 397) ^ RawFramesTotal;
-            result = (result * 397) ^ FramesObserved;
-            result = (result * 397) ^ (UnitFrames != null ? UnitFrames.GetHashCode() : 0);
-            result = (result * 397) ^ (CoreID != null ? CoreID.GetHashCode() : 0);
-            result = (result * 397) ^ QueueIndex;
-            return result;
-         }
-      }
-
-      public static bool operator ==(UnitInfo left, UnitInfo right)
-      {
-         return Equals(left, right);
-      }
-
-      public static bool operator !=(UnitInfo left, UnitInfo right)
-      {
-         return !Equals(left, right);
       }
 
       #endregion
