@@ -625,7 +625,7 @@ namespace HFM.Core
          {
             public bool Equals(UnitCollection x, UnitCollection y)
             {
-               return x == null ? y == null : y != null && x.SequenceEqual(y, new UnitEqualityComparer());
+               return x == null ? y == null : y != null && (ReferenceEquals(x, y) || x.SequenceEqual(y, new UnitEqualityComparer()));
             }
 
             public int GetHashCode(UnitCollection obj)
@@ -645,25 +645,43 @@ namespace HFM.Core
                   Debug.Assert(x != null);
                   Debug.Assert(y != null);
 
+                  int xPercentDone = GetPercentDone(x.PercentDone);
+                  int yPercentDone = GetPercentDone(y.PercentDone);
+
                   return x.Id == y.Id &&
-                         Equals(x.State, y.State) &&
+                         x.State == y.State &&
                          x.Project == y.Project &&
                          x.Run == y.Run &&
                          x.Clone == y.Clone &&
                          x.Gen == y.Gen &&
-                         Equals(x.Core, y.Core) &&
-                         Equals(x.UnitId, y.UnitId) &&
+                         x.Core == y.Core &&
+                         x.UnitId == y.UnitId &&
+                         xPercentDone == yPercentDone &&
                          x.TotalFrames == y.TotalFrames &&
                          x.FramesDone == y.FramesDone &&
-                         Equals(x.Assigned, y.Assigned) &&
-                         Equals(x.Timeout, y.Timeout) &&
-                         Equals(x.Deadline, y.Deadline) &&
-                         Equals(x.WorkServer, y.WorkServer) &&
-                         Equals(x.CollectionServer, y.CollectionServer) &&
-                         Equals(x.WaitingOn, y.WaitingOn) &&
+                         x.Assigned == y.Assigned &&
+                         x.Timeout == y.Timeout &&
+                         x.Deadline == y.Deadline &&
+                         x.WorkServer == y.WorkServer &&
+                         x.CollectionServer == y.CollectionServer &&
+                         x.WaitingOn == y.WaitingOn &&
                          x.Attempts == y.Attempts &&
-                         Equals(x.NextAttempt, y.NextAttempt) &&
+                         x.NextAttempt  == y.NextAttempt &&
                          x.Slot == y.Slot;
+               }
+
+               private static int GetPercentDone(string value)
+               {
+                  if (value == null)
+                  {
+                     return 0;
+                  }
+                  double result;
+                  if (Double.TryParse(value.TrimEnd('%'), out result))
+                  {
+                     return (int)Math.Round(result, MidpointRounding.AwayFromZero);
+                  }
+                  return 0;
                }
 
                public int GetHashCode(Unit obj)
