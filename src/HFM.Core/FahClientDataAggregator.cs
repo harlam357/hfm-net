@@ -79,7 +79,7 @@ namespace HFM.Core
          {
             foreach (var s in clientRun.Where(x => x.LineType == LogLineType.Error))
             {
-               Logger.Debug(Constants.ClientNameFormat, ClientName, s);
+               Logger.Debug(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
          }
 
