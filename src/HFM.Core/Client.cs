@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using Castle.Core.Logging;
 
@@ -120,12 +121,12 @@ namespace HFM.Core
 
       public IUnitInfoDatabase UnitInfoDatabase { get; set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -192,6 +193,11 @@ namespace HFM.Core
          {
             try
             {
+               if (Logger.IsDebugEnabled)
+               {
+                  string message = String.Format(CultureInfo.CurrentCulture, "Attempting to insert {0} into database.", unitInfoModel.UnitInfoData.ToProjectInfo());
+                  Logger.Debug(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
+               }
                UnitInfoDatabase.Insert(unitInfoModel);
             }
             catch (Exception ex)

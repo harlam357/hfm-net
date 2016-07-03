@@ -267,9 +267,9 @@ namespace HFM.Core
 
          if (queueEntry != null)
          {
-            PopulateUnitInfoFromQueueEntry(queueEntry, unit);
+            UpdateUnitInfoFromQueueData(unit, queueEntry);
             SearchFahLogUnitDataProjects(unit, unitRunData);
-            PopulateUnitInfoFromLogs(clientRun.Data, unitRunData, unitInfoLogData, unit);
+            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
 
             if (!ProjectsMatch(unit, unitRunData) && !ProjectsMatch(unit, unitInfoLogData) && !matchOverride)
             {
@@ -278,7 +278,7 @@ namespace HFM.Core
          }
          else
          {
-            PopulateUnitInfoFromLogs(clientRun.Data, unitRunData, unitInfoLogData, unit);
+            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
          }
 
          return unit;
@@ -310,133 +310,126 @@ namespace HFM.Core
                  unit.ProjectGen == projectInfo.ProjectGen);
       }
 
-      #region Unit Population Methods
-
-      private static void PopulateUnitInfoFromQueueEntry(QueueEntry entry, UnitInfo unit)
+      private static void UpdateUnitInfoFromQueueData(UnitInfo unitInfo, QueueEntry queueEntry)
       {
-         Debug.Assert(entry != null);
-         Debug.Assert(unit != null);
+         Debug.Assert(unitInfo != null);
+         Debug.Assert(queueEntry != null);
 
          // convert to enum
-         var queueEntryStatus = (QueueEntryStatus)entry.EntryStatus;
+         var queueEntryStatus = (QueueEntryStatus)queueEntry.EntryStatus;
 
-         if ((queueEntryStatus.Equals(QueueEntryStatus.Unknown) ||
-              queueEntryStatus.Equals(QueueEntryStatus.Empty) ||
-              queueEntryStatus.Equals(QueueEntryStatus.Garbage) ||
-              queueEntryStatus.Equals(QueueEntryStatus.Abandonded)) == false)
+         if ((queueEntryStatus == QueueEntryStatus.Unknown ||
+              queueEntryStatus == QueueEntryStatus.Empty ||
+              queueEntryStatus == QueueEntryStatus.Garbage ||
+              queueEntryStatus == QueueEntryStatus.Abandonded) == false)
          {
             /* Tag (Could be read here or through the unitinfo.txt file) */
-            unit.ProteinTag = entry.WorkUnitTag;
+            unitInfo.ProteinTag = queueEntry.WorkUnitTag;
 
             /* DownloadTime (Could be read here or through the unitinfo.txt file) */
-            unit.DownloadTime = entry.BeginTimeUtc;
+            unitInfo.DownloadTime = queueEntry.BeginTimeUtc;
 
             /* DueTime (Could be read here or through the unitinfo.txt file) */
-            unit.DueTime = entry.DueTimeUtc;
+            unitInfo.DueTime = queueEntry.DueTimeUtc;
 
             /* FinishedTime */
-            if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
-                queueEntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
+            if (queueEntryStatus == QueueEntryStatus.Finished ||
+                queueEntryStatus == QueueEntryStatus.ReadyForUpload)
             {
-               unit.FinishedTime = entry.EndTimeUtc;
+               unitInfo.FinishedTime = queueEntry.EndTimeUtc;
             }
 
             /* Project (R/C/G) */
-            unit.ProjectID = entry.ProjectID;
-            unit.ProjectRun = entry.ProjectRun;
-            unit.ProjectClone = entry.ProjectClone;
-            unit.ProjectGen = entry.ProjectGen;
+            unitInfo.ProjectID = queueEntry.ProjectID;
+            unitInfo.ProjectRun = queueEntry.ProjectRun;
+            unitInfo.ProjectClone = queueEntry.ProjectClone;
+            unitInfo.ProjectGen = queueEntry.ProjectGen;
 
             /* FoldingID and Team from Queue Entry */
-            unit.FoldingID = entry.FoldingID;
-            unit.Team = (int) entry.TeamNumber;
+            unitInfo.FoldingID = queueEntry.FoldingID;
+            unitInfo.Team = (int)queueEntry.TeamNumber;
 
             /* Core ID */
-            unit.CoreID = entry.CoreNumberHex.ToUpperInvariant();
+            unitInfo.CoreID = queueEntry.CoreNumberHex.ToUpperInvariant();
          }
       }
 
-      private static void PopulateUnitInfoFromLogs(ClientRunData clientRunData,
-         UnitRunData unitRunData, UnitInfoLogData unitInfoLogData, UnitInfo unit)
+      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, ClientRunData clientRunData, UnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
       {
+         Debug.Assert(unitInfo != null);
          Debug.Assert(clientRunData != null);
          Debug.Assert(unitRunData != null);
          // unitInfoLogData can be null
-         Debug.Assert(unit != null);
 
          /* Project (R/C/G) (Could have already been read through Queue) */
-         if (unit.ProjectIsUnknown())
+         if (unitInfo.ProjectIsUnknown())
          {
-            unit.ProjectID = unitRunData.ProjectID;
-            unit.ProjectRun = unitRunData.ProjectRun;
-            unit.ProjectClone = unitRunData.ProjectClone;
-            unit.ProjectGen = unitRunData.ProjectGen;
+            unitInfo.ProjectID = unitRunData.ProjectID;
+            unitInfo.ProjectRun = unitRunData.ProjectRun;
+            unitInfo.ProjectClone = unitRunData.ProjectClone;
+            unitInfo.ProjectGen = unitRunData.ProjectGen;
          }
 
          if (unitRunData.Threads > 1)
          {
-            unit.SlotType = SlotType.CPU;
+            unitInfo.SlotType = SlotType.CPU;
          }
 
          if (unitInfoLogData != null)
          {
-            unit.ProteinName = unitInfoLogData.ProteinName;
+            unitInfo.ProteinName = unitInfoLogData.ProteinName;
 
             /* Tag (Could have already been read through Queue) */
-            if (unit.ProteinTag.Length == 0)
+            if (unitInfo.ProteinTag.Length == 0)
             {
-               unit.ProteinTag = unitInfoLogData.ProteinTag;
+               unitInfo.ProteinTag = unitInfoLogData.ProteinTag;
             }
 
             /* DownloadTime (Could have already been read through Queue) */
-            if (unit.DownloadTime.IsUnknown())
+            if (unitInfo.DownloadTime.IsUnknown())
             {
-               unit.DownloadTime = unitInfoLogData.DownloadTime;
+               unitInfo.DownloadTime = unitInfoLogData.DownloadTime;
             }
 
             /* DueTime (Could have already been read through Queue) */
-            if (unit.DueTime.IsUnknown())
+            if (unitInfo.DueTime.IsUnknown())
             {
-               unit.DueTime = unitInfoLogData.DueTime;
+               unitInfo.DueTime = unitInfoLogData.DueTime;
             }
 
             /* FinishedTime (Not available in unitinfo log) */
 
             /* Project (R/C/G) (Could have already been read through Queue) */
-            if (unit.ProjectIsUnknown())
+            if (unitInfo.ProjectIsUnknown())
             {
-               unit.ProjectID = unitInfoLogData.ProjectID;
-               unit.ProjectRun = unitInfoLogData.ProjectRun;
-               unit.ProjectClone = unitInfoLogData.ProjectClone;
-               unit.ProjectGen = unitInfoLogData.ProjectGen;
+               unitInfo.ProjectID = unitInfoLogData.ProjectID;
+               unitInfo.ProjectRun = unitInfoLogData.ProjectRun;
+               unitInfo.ProjectClone = unitInfoLogData.ProjectClone;
+               unitInfo.ProjectGen = unitInfoLogData.ProjectGen;
             }
          }
 
-         /* FoldingID and Team from Last Client Run (Could have already been read through Queue) */
-         if (unit.FoldingID.Equals(Constants.DefaultFoldingID) &&
-            !String.IsNullOrEmpty(clientRunData.FoldingID))
+         /* FoldingID and Team from last ClientRun (Could have already been read through Queue) */
+         if (unitInfo.FoldingID == Constants.DefaultFoldingID && unitInfo.Team == Constants.DefaultTeam)
          {
-            unit.FoldingID = clientRunData.FoldingID;
-         }
-         if (unit.Team == Constants.DefaultTeam)
-         {
-            unit.Team = clientRunData.Team;
+            if (!String.IsNullOrEmpty(clientRunData.FoldingID))
+            {
+               unitInfo.FoldingID = clientRunData.FoldingID;
+               unitInfo.Team = clientRunData.Team;
+            }
          }
 
-         // Possibly check the currentClientRun from the log file.
-         // The queue will have the ID and Team that was set when the work unit was received.
-         //if (unit.FoldingID.Equals(Default.FoldingID) ||
-         //   !unit.FoldingID.Equals(currentClientRun.FoldingID))
+         // The queue will have the FoldingID and Team that was set in the client when the work unit was assigned.
+         // If the user subsequently changed their FoldingID and Team before this unit was completed the
+         // FoldingID and Team read from the queue will NOT reflect that change.
+         //if (unitInfo.FoldingID != clientRunData.FoldingID || unitInfo.Team != clientRunData.Team)
          //{
-         //   unit.FoldingID = currentClientRun.FoldingID;
-         //}
-         //if (unit.Team == Default.Team ||
-         //    unit.Team != currentClientRun.Team)
-         //{
-         //   unit.Team = currentClientRun.Team;
+         //   if (!String.IsNullOrEmpty(clientRunData.FoldingID))
+         //   {
+         //      unitInfo.FoldingID = clientRunData.FoldingID;
+         //      unitInfo.Team = clientRunData.Team;
+         //   }
          //}
       }
-
-      #endregion
    }
 }

@@ -416,16 +416,12 @@ namespace HFM.Core
          // if the Projects are known
          if (!unit1.ProjectIsUnknown() && !unit2.ProjectIsUnknown())
          {
-            // ReSharper disable RedundantThisQualifier
-
             // equals the Project and Download Time
             if (unit1.EqualsProject(unit2) &&
                 unit1.DownloadTime.Equals(unit2.DownloadTime))
             {
                return true;
             }
-
-            // ReSharper restore RedundantThisQualifier
          }
 
          return false;
@@ -470,6 +466,28 @@ namespace HFM.Core
             dictionary.Add(key, value);
          }
          return dictionary;
+      }
+
+      internal static ProjectInfo ToProjectInfo(this IProjectInfo projectInfo)
+      {
+         return new ProjectInfo
+         {
+            ProjectID = projectInfo.ProjectID,
+            ProjectRun = projectInfo.ProjectRun,
+            ProjectClone = projectInfo.ProjectClone,
+            ProjectGen = projectInfo.ProjectGen
+         };
+      }
+
+      internal static ProjectInfo ToProjectInfo(this Unit unit)
+      {
+         return new ProjectInfo
+         {
+            ProjectID = unit.Project,
+            ProjectRun = unit.Run,
+            ProjectClone = unit.Clone,
+            ProjectGen = unit.Gen
+         };
       }
    }
 }

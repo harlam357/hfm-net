@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -186,7 +186,7 @@ namespace HFM.Core
             // to the Work Unit History Database - Issue 253
             if (_unitInfo.CurrentFrame != null)
             {
-               // Make sure CurrentFrame.FrameID is 0 or greater 
+               // Make sure CurrentFrame.FrameID is 0 or greater
                if (_unitInfo.CurrentFrame.FrameID >= 0)
                {
                   // but not greater than the CurrentProtein.Frames
@@ -358,13 +358,13 @@ namespace HFM.Core
          }
 
          // Issue 156 - ETA must be a positive TimeSpan
-         // Issue 134 - Since fixing Issue 156 it appears that once most 
-         // bigadv units finish their last frame they would be assigned a 
-         // Zero EFT since their ETA values would have been zero and they 
-         // had not yet written the FinishedTime to the queue.dat file.  
-         // In light of this I've added the AllFramesAreCompleted property.  
-         // Now, if ETA is Zero and AllFramesAreCompleted == false, the EFT 
-         // will be Zero.  Otherwise, it will be given a value of the 
+         // Issue 134 - Since fixing Issue 156 it appears that once most
+         // bigadv units finish their last frame they would be assigned a
+         // Zero EFT since their ETA values would have been zero and they
+         // had not yet written the FinishedTime to the queue.dat file.
+         // In light of this I've added the AllFramesAreCompleted property.
+         // Now, if ETA is Zero and AllFramesAreCompleted == false, the EFT
+         // will be Zero.  Otherwise, it will be given a value of the
          // (UnitRetrievalTime plus ETA) minus the DownloadTime.
          TimeSpan eta = GetEta(frameTime);
          if (eta.IsZero() && AllFramesCompleted == false)
@@ -489,6 +489,7 @@ namespace HFM.Core
 
          TimeSpan frameTime = GetFrameTime(calculationType);
          var values = ProductionCalculator.GetProductionValues(frameTime, CurrentProtein, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime));
+         logger.Debug(" - {0}", UnitInfoData.ToProjectInfo());
          logger.Debug(values.ToMultiLineString());
       }
 

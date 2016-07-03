@@ -133,7 +133,7 @@ namespace HFM.Core
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
 
-            if (unit.StateEnum.Equals(FahUnitStatus.Running))
+            if (unit.StateEnum == FahUnitStatus.Running)
             {
                cq.CurrentIndex = unit.Id;
             }
@@ -204,8 +204,7 @@ namespace HFM.Core
                continue;
             }
 
-            var projectInfo = new ProjectInfo { ProjectID = unit.Project, ProjectRun = unit.Run,
-                                                ProjectClone = unit.Clone, ProjectGen = unit.Gen };
+            var projectInfo = unit.ToProjectInfo();
             if (projectInfo.EqualsProject(currentUnitInfo) &&
                 unit.AssignedDateTime.GetValueOrDefault().Equals(currentUnitInfo.DownloadTime))
             {
@@ -217,7 +216,7 @@ namespace HFM.Core
             if (unitRun == null)
             {
                string message = String.Format(CultureInfo.CurrentCulture,
-                  "Could not find log section for slot {0}. Cannot update frame data for this slot.", slotId);
+                  "Could not find log section for Slot {0} {1}. Cannot update log data for this unit.", slotId, projectInfo);
                Logger.Warn(Constants.ClientNameFormat, ClientName, message);
             }
 
@@ -254,7 +253,7 @@ namespace HFM.Core
                // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
                UnitInfo currentClone = currentUnitInfo.DeepClone();
 
-               UpdateUnitInfo(currentClone, unitRun);
+               UpdateUnitInfoFromLogData(currentClone, unitRun);
                result.UnitInfos.Add(currentClone.QueueIndex, currentClone);
             }
          }
@@ -273,73 +272,62 @@ namespace HFM.Core
          return null;
       }
 
-      private static UnitInfo BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
+      private UnitInfo BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
       {
          Debug.Assert(queueEntry != null);
          Debug.Assert(options != null);
          Debug.Assert(slotOptions != null);
 
          var unit = new UnitInfo();
-         unit.QueueIndex = queueEntry.Id;
+         UpdateUnitInfoFromFahClientData(unit, queueEntry, options, slotOptions);
          if (unitRun != null)
          {
-            unit.LogLines = unitRun.ToList();
-            unit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
-            unit.FramesObserved = unitRun.Data.FramesObserved;
-            unit.CoreVersion = unitRun.Data.CoreVersion;
-            unit.UnitResult = unitRun.Data.WorkUnitResult;
-
-            // there is no finished time available from the client API
-            // since the unit history database won't write the same
-            // result twice, the first time this hits use the local UTC
-            // value for the finished time... not as good as what was
-            // available with v6.
-            if (unit.UnitResult == WorkUnitResult.FinishedUnit)
-            {
-               unit.FinishedTime = DateTime.UtcNow;
-            }
+            UpdateUnitInfoFromLogData(unit, unitRun);
          }
 
-         PopulateUnitInfoFromQueueEntry(queueEntry, options, slotOptions, unit);
          return unit;
       }
 
-      private static void UpdateUnitInfo(UnitInfo unit, UnitRun unitRun)
+      private void UpdateUnitInfoFromLogData(UnitInfo unitInfo, UnitRun unitRun)
       {
-         Debug.Assert(unit != null);
+         Debug.Assert(unitInfo != null);
          Debug.Assert(unitRun != null);
 
-         unit.LogLines = unitRun.ToList();
-         unit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
-         unit.FramesObserved = unitRun.Data.FramesObserved;
-         unit.CoreVersion = unitRun.Data.CoreVersion;
-         unit.UnitResult = unitRun.Data.WorkUnitResult;
+         unitInfo.LogLines = unitRun.ToList();
+         unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
+         unitInfo.FramesObserved = unitRun.Data.FramesObserved;
+         unitInfo.CoreVersion = unitRun.Data.CoreVersion;
+         unitInfo.UnitResult = unitRun.Data.WorkUnitResult;
 
          // there is no finished time available from the client API
          // since the unit history database won't write the same
          // result twice, the first time this hits use the local UTC
          // value for the finished time... not as good as what was
          // available with v6.
-         if (unit.UnitResult == WorkUnitResult.FinishedUnit)
+         if (unitInfo.UnitResult == WorkUnitResult.FinishedUnit)
          {
-            unit.FinishedTime = DateTime.UtcNow;
+            var finishedTime = DateTime.UtcNow;
+            string message = String.Format(CultureInfo.CurrentCulture,
+               "Setting Finished Time {0} for {1}.", finishedTime, unitInfo.ToProjectInfo());
+            Logger.Debug(Constants.ClientNameFormat, ClientName, message);
+            unitInfo.FinishedTime = DateTime.UtcNow;
          }
       }
 
-      #region Unit Population Methods
-
-      private static void PopulateUnitInfoFromQueueEntry(Unit entry, Options options, SlotOptions slotOptions, UnitInfo unit)
+      private static void UpdateUnitInfoFromFahClientData(UnitInfo unitInfo, Unit queueEntry, Options options, SlotOptions slotOptions)
       {
-         Debug.Assert(entry != null);
+         Debug.Assert(unitInfo != null);
+         Debug.Assert(queueEntry != null);
          Debug.Assert(options != null);
          Debug.Assert(slotOptions != null);
-         Debug.Assert(unit != null);
+
+         unitInfo.QueueIndex = queueEntry.Id;
 
          /* DownloadTime (AssignedDateTime from HFM.Client API) */
-         unit.DownloadTime = entry.AssignedDateTime.GetValueOrDefault();
+         unitInfo.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
 
          /* DueTime (TimeoutDateTime from HFM.Client API) */
-         unit.DueTime = entry.TimeoutDateTime.GetValueOrDefault();
+         unitInfo.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
 
          /* FinishedTime */
          //if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
@@ -349,20 +337,18 @@ namespace HFM.Core
          //}
 
          /* Project (R/C/G) */
-         unit.ProjectID = entry.Project;
-         unit.ProjectRun = entry.Run;
-         unit.ProjectClone = entry.Clone;
-         unit.ProjectGen = entry.Gen;
+         unitInfo.ProjectID = queueEntry.Project;
+         unitInfo.ProjectRun = queueEntry.Run;
+         unitInfo.ProjectClone = queueEntry.Clone;
+         unitInfo.ProjectGen = queueEntry.Gen;
 
          /* FoldingID and Team from Queue Entry */
-         unit.FoldingID = options.User ?? Constants.DefaultFoldingID;
-         unit.Team = options.Team ?? Constants.DefaultTeam;
-         unit.SlotType = slotOptions.ToSlotType();
+         unitInfo.FoldingID = options.User ?? Constants.DefaultFoldingID;
+         unitInfo.Team = options.Team ?? Constants.DefaultTeam;
+         unitInfo.SlotType = slotOptions.ToSlotType();
 
          /* Core ID */
-         unit.CoreID = entry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+         unitInfo.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
       }
-
-      #endregion
    }
 }

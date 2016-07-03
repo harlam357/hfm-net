@@ -1,22 +1,22 @@
 ﻿/*
  * HFM.NET - Work Unit History Database
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-   
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -149,7 +149,7 @@ namespace HFM.Core
                                                                                                  {
                                                                                                     { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
                                                                                                     { SqlTable.Version, new VersionSqlTableCommands() }
-                                                                                                 };  
+                                                                                                 };
 
       #endregion
 
@@ -318,11 +318,14 @@ namespace HFM.Core
       #endregion
 
       #region Insert
-   
+
       public void Insert(UnitInfoModel unitInfoModel)
       {
          // if the work unit is not valid simply return
-         if (!ValidateUnitInfo(unitInfoModel.UnitInfoData)) return;
+         if (!ValidateUnitInfo(unitInfoModel.UnitInfoData))
+         {
+            return;
+         }
 
          // The Insert operation does not setup a WuHistory table if
          // it does not exist.  This was already handled when the
@@ -330,29 +333,31 @@ namespace HFM.Core
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          // ensure this unit is not written twice
-         if (!UnitInfoExists(unitInfoModel))
+         if (UnitInfoExists(unitInfoModel))
          {
-            var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoModel.UnitInfoData);
-            // cannot map these two properties from a UnitInfo instance
-            // they only live at the UnitInfoLogic level
-            entry.FramesCompleted = unitInfoModel.FramesComplete;
-            entry.FrameTimeValue = unitInfoModel.GetRawTime(PpdCalculationType.AllFrames);
-            // copy protein values for insert
-            entry.WorkUnitName = unitInfoModel.CurrentProtein.WorkUnitName;
-            entry.KFactor = unitInfoModel.CurrentProtein.KFactor;
-            entry.Core = unitInfoModel.CurrentProtein.Core;
-            entry.Frames = unitInfoModel.CurrentProtein.Frames;
-            entry.Atoms = unitInfoModel.CurrentProtein.NumberOfAtoms;
-            entry.BaseCredit = unitInfoModel.CurrentProtein.Credit;
-            entry.PreferredDays = unitInfoModel.CurrentProtein.PreferredDays;
-            entry.MaximumDays = unitInfoModel.CurrentProtein.MaximumDays;
-            using (var connection = new SQLiteConnection(ConnectionString))
+            return;
+         }
+
+         var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoModel.UnitInfoData);
+         // cannot map these two properties from a UnitInfo instance
+         // they only live at the UnitInfoLogic level
+         entry.FramesCompleted = unitInfoModel.FramesComplete;
+         entry.FrameTimeValue = unitInfoModel.GetRawTime(PpdCalculationType.AllFrames);
+         // copy protein values for insert
+         entry.WorkUnitName = unitInfoModel.CurrentProtein.WorkUnitName;
+         entry.KFactor = unitInfoModel.CurrentProtein.KFactor;
+         entry.Core = unitInfoModel.CurrentProtein.Core;
+         entry.Frames = unitInfoModel.CurrentProtein.Frames;
+         entry.Atoms = unitInfoModel.CurrentProtein.NumberOfAtoms;
+         entry.BaseCredit = unitInfoModel.CurrentProtein.Credit;
+         entry.PreferredDays = unitInfoModel.CurrentProtein.PreferredDays;
+         entry.MaximumDays = unitInfoModel.CurrentProtein.MaximumDays;
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var database = new PetaPoco.Database(connection))
             {
-               connection.Open();
-               using (var database = new PetaPoco.Database(connection))
-               {
-                  database.Insert(entry);
-               }
+               database.Insert(entry);
             }
          }
       }
@@ -379,7 +384,7 @@ namespace HFM.Core
       private static bool ValidateIncompleteUnitInfo(UnitInfo unitInfo)
       {
          // Finished Time will not be populated if any of these error
-         // results are detected.  Only check for valid Project and 
+         // results are detected.  Only check for valid Project and
          // download time - Issue 233
 
          return unitInfo.ProjectIsUnknown() == false &&
@@ -399,7 +404,7 @@ namespace HFM.Core
 
       private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoModel unitInfoModel)
       {
-         var parameters = new QueryParameters();
+         var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", unitInfoModel.UnitInfoData.ToProjectInfo()) };
          parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectID });
          parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectRun });
          parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectClone });
@@ -411,7 +416,7 @@ namespace HFM.Core
       #endregion
 
       #region Delete
-      
+
       public int Delete(HistoryEntry entry)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
@@ -428,12 +433,12 @@ namespace HFM.Core
       #endregion
 
       #region Fetch
-      
+
       public IList<HistoryEntry> Fetch(QueryParameters parameters)
       {
          return Fetch(parameters, HistoryProductionView.BonusDownloadTime);
       }
-      
+
       public IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView)
       {
          DateTime start = Instrumentation.ExecStart;
@@ -553,7 +558,7 @@ namespace HFM.Core
          Debug.Assert(field.Type.Equals(QueryFieldType.NotLike));
          return LikeMatch(query, field, (input, pattern) => !IsSqlLikeMatch(input, pattern));
       }
-      
+
       private static IQueryable<HistoryEntry> LikeMatch(IQueryable<HistoryEntry> query, QueryField field, Func<string, string, bool> func)
       {
          Debug.Assert(field.Type.Equals(QueryFieldType.Like) ||
@@ -626,7 +631,7 @@ namespace HFM.Core
          {
             pattern = pattern + "$";
          }
-         
+
          return input != null && Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
       }
 
@@ -698,15 +703,15 @@ namespace HFM.Core
          parameters.Fields.Add(new QueryField
                                {
                                   Name = QueryFieldName.Result,
-                                  Type = type == CountType.Completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, 
+                                  Type = type == CountType.Completed ? QueryFieldType.Equal : QueryFieldType.NotEqual,
                                   Value = (int)WorkUnitResult.FinishedUnit
                                });
          if (clientStartTime.HasValue)
          {
             parameters.Fields.Add(new QueryField
                                   {
-                                     Name = type == CountType.Completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime, 
-                                     Type = QueryFieldType.GreaterThan, 
+                                     Name = type == CountType.Completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
+                                     Type = QueryFieldType.GreaterThan,
                                      Value = clientStartTime.Value
                                   });
          }
@@ -814,7 +819,7 @@ namespace HFM.Core
       }
 
       #endregion
-      
+
       #endregion
 
       #region Private Helper Classes
@@ -838,7 +843,7 @@ namespace HFM.Core
                sql = BuildWhereCondition(sql, field);
                appendAnd = true;
             }
-            
+
             return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;
          }
 
@@ -858,7 +863,7 @@ namespace HFM.Core
 
          private static readonly Dictionary<QueryFieldName, string> ColumnNameOverides = new Dictionary<QueryFieldName, string>
          {
-            { QueryFieldName.Name, "InstanceName" },   
+            { QueryFieldName.Name, "InstanceName" },
             { QueryFieldName.Path, "InstancePath" },
             { QueryFieldName.Credit, "CalcCredit" },
          };
@@ -1029,7 +1034,7 @@ namespace HFM.Core
          {
             if (name == null) throw new ArgumentNullException("name");
             if (dataType == null) throw new ArgumentNullException("dataType");
-            
+
             if (_rows == null)
             {
                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", _connection))
