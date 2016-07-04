@@ -63,6 +63,7 @@ namespace HFM.Core.Tests
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(5), FrameID = 1 });
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(10), FrameID = 2 });
          unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(15), FrameID = 3 });
+         unitInfo1Clone.UnitResult = WorkUnitResult.FinishedUnit;
          var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var parsedUnits = new[] { unitInfoLogic1 };

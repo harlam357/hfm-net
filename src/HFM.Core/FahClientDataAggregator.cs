@@ -196,14 +196,8 @@ namespace HFM.Core
 
          bool foundCurrentUnitInfo = false;
 
-         foreach (var unit in unitCollection)
+         foreach (var unit in unitCollection.Where(x => x.Slot == slotId))
          {
-            if (unit.Slot != slotId)
-            {
-               // does not match requested slot
-               continue;
-            }
-
             var projectInfo = unit.ToProjectInfo();
             if (projectInfo.EqualsProject(currentUnitInfo) &&
                 unit.AssignedDateTime.GetValueOrDefault().Equals(currentUnitInfo.DownloadTime))
@@ -304,13 +298,13 @@ namespace HFM.Core
          // result twice, the first time this hits use the local UTC
          // value for the finished time... not as good as what was
          // available with v6.
-         if (unitInfo.UnitResult == WorkUnitResult.FinishedUnit)
+         if (unitInfo.UnitResult != WorkUnitResult.Unknown)
          {
             var finishedTime = DateTime.UtcNow;
-            string message = String.Format(CultureInfo.CurrentCulture,
-               "Setting Finished Time {0} for {1}.", finishedTime, unitInfo.ToProjectInfo());
-            Logger.Debug(Constants.ClientNameFormat, ClientName, message);
-            unitInfo.FinishedTime = DateTime.UtcNow;
+            //string message = String.Format(CultureInfo.CurrentCulture,
+            //   "Setting Finished Time {0} for {1}.", finishedTime, unitInfo.ToProjectInfo());
+            //Logger.Debug(Constants.ClientNameFormat, ClientName, message);
+            unitInfo.FinishedTime = finishedTime;
          }
       }
 

@@ -478,25 +478,20 @@ namespace HFM.Core
 
       internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits, int currentUnitIndex)
       {
-         foreach (var unitInfoLogic in parsedUnits)
+         foreach (var unitInfoModel in parsedUnits.Where(x => x != null))
          {
-            if (unitInfoLogic == null)
-            {
-               continue;
-            }
-
-            if (currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoLogic.UnitInfoData))
+            if (currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoModel.UnitInfoData))
             {
                // found the current unit
                // current frame has already been recorded, increment to the next frame
                int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
                // Update benchmarks
-               BenchmarkCollection.UpdateData(unitInfoLogic.UnitInfoData, previousFramesComplete, unitInfoLogic.FramesComplete);
-               // Update history database
-               if (!unitInfoLogic.FinishedTime.Equals(DateTime.MinValue))
-               {
-                  UpdateUnitInfoDatabase(unitInfoLogic);
-               }
+               BenchmarkCollection.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
+            }
+            // Update history database
+            if (unitInfoModel.UnitInfoData.UnitResult != WorkUnitResult.Unknown)
+            {
+               UpdateUnitInfoDatabase(unitInfoModel);
             }
             //// used when there is no currentUnitInfo
             //else if (unitInfoLogic.UnitInfoData.QueueIndex == currentUnitIndex)

@@ -87,7 +87,7 @@ namespace HFM.Core
 
       event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
 
-      void Insert(UnitInfoModel unitInfoModel);
+      bool Insert(UnitInfoModel unitInfoModel);
 
       int Delete(HistoryEntry entry);
 
@@ -319,12 +319,12 @@ namespace HFM.Core
 
       #region Insert
 
-      public void Insert(UnitInfoModel unitInfoModel)
+      public bool Insert(UnitInfoModel unitInfoModel)
       {
          // if the work unit is not valid simply return
          if (!ValidateUnitInfo(unitInfoModel.UnitInfoData))
          {
-            return;
+            return false;
          }
 
          // The Insert operation does not setup a WuHistory table if
@@ -335,7 +335,7 @@ namespace HFM.Core
          // ensure this unit is not written twice
          if (UnitInfoExists(unitInfoModel))
          {
-            return;
+            return false;
          }
 
          var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoModel.UnitInfoData);
@@ -360,6 +360,8 @@ namespace HFM.Core
                database.Insert(entry);
             }
          }
+
+         return true;
       }
 
       private static bool ValidateUnitInfo(UnitInfo unitInfo)

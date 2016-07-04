@@ -193,12 +193,14 @@ namespace HFM.Core
          {
             try
             {
-               if (Logger.IsDebugEnabled)
+               if (UnitInfoDatabase.Insert(unitInfoModel))
                {
-                  string message = String.Format(CultureInfo.CurrentCulture, "Attempting to insert {0} into database.", unitInfoModel.UnitInfoData.ToProjectInfo());
-                  Logger.Debug(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
+                  if (Logger.IsDebugEnabled)
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.UnitInfoData.ToProjectInfo());
+                     Logger.Debug(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
+                  }
                }
-               UnitInfoDatabase.Insert(unitInfoModel);
             }
             catch (Exception ex)
             {
