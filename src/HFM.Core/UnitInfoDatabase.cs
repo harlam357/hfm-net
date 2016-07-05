@@ -366,36 +366,19 @@ namespace HFM.Core
 
       private static bool ValidateUnitInfo(UnitInfo unitInfo)
       {
-         bool result = ValidateFinishedUnitInfo(unitInfo);
-         if (!result)
+         // if Project and Download Time are valid
+         if (!unitInfo.ProjectIsUnknown() && unitInfo.DownloadTime != DateTime.MinValue)
          {
-            // Issue 233
-            result = ValidateIncompleteUnitInfo(unitInfo);
+            // if UnitResult is FinishedUnit
+            if (unitInfo.UnitResult == WorkUnitResult.FinishedUnit)
+            {
+               // the Finished Time must be valid
+               return unitInfo.FinishedTime != DateTime.MinValue;
+            }
+            // otherwise, the UnitResult must be a Terminating error result
+            return unitInfo.UnitResult.IsTerminating();
          }
-         return result;
-      }
-
-      private static bool ValidateFinishedUnitInfo(UnitInfo unitInfo)
-      {
-         return unitInfo.ProjectIsUnknown() == false &&
-                unitInfo.UnitResult == WorkUnitResult.FinishedUnit &&
-                unitInfo.DownloadTime.Equals(DateTime.MinValue) == false &&
-                unitInfo.FinishedTime.Equals(DateTime.MinValue) == false;
-      }
-
-      private static bool ValidateIncompleteUnitInfo(UnitInfo unitInfo)
-      {
-         // Finished Time will not be populated if any of these error
-         // results are detected.  Only check for valid Project and
-         // download time - Issue 233
-
-         return unitInfo.ProjectIsUnknown() == false &&
-               (unitInfo.UnitResult == WorkUnitResult.BadWorkUnit ||
-                unitInfo.UnitResult == WorkUnitResult.CoreOutdated ||
-                unitInfo.UnitResult == WorkUnitResult.EarlyUnitEnd ||
-                unitInfo.UnitResult == WorkUnitResult.Interrupted ||
-                unitInfo.UnitResult == WorkUnitResult.UnstableMachine) &&
-                unitInfo.DownloadTime.Equals(DateTime.MinValue) == false;
+         return false;
       }
 
       private bool UnitInfoExists(UnitInfoModel unitInfoModel)

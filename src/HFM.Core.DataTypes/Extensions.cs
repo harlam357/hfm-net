@@ -107,6 +107,7 @@ namespace HFM.Core.DataTypes
       private const string BadWorkUnit = "BAD_WORK_UNIT";
       private const string CoreOutdated = "CORE_OUTDATED";
       private const string GpuMemtestError = "GPU_MEMTEST_ERROR";
+      private const string UnknownEnum = "UNKNOWN_ENUM";
 
       /// <summary>
       /// Get the WorkUnitResult Enum representation of the given result string.
@@ -129,6 +130,8 @@ namespace HFM.Core.DataTypes
                return WorkUnitResult.CoreOutdated;
             case GpuMemtestError:
                return WorkUnitResult.GpuMemtestError;
+            case UnknownEnum:
+               return WorkUnitResult.UnknownEnum;
             default:
                return WorkUnitResult.Unknown;
          }
@@ -157,8 +160,25 @@ namespace HFM.Core.DataTypes
                return CoreOutdated;
             case WorkUnitResult.GpuMemtestError:
                return GpuMemtestError;
+            case WorkUnitResult.UnknownEnum:
+               return UnknownEnum;
             default:
                return String.Empty;
+         }
+      }
+
+      public static bool IsTerminating(this WorkUnitResult result)
+      {
+         switch (result)
+         {
+            case WorkUnitResult.FinishedUnit:
+            case WorkUnitResult.EarlyUnitEnd:
+            case WorkUnitResult.UnstableMachine:
+            case WorkUnitResult.BadWorkUnit:
+            case WorkUnitResult.ClientCoreError:
+               return true;
+            default:
+               return false;
          }
       }
 

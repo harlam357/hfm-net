@@ -298,7 +298,7 @@ namespace HFM.Core
          // result twice, the first time this hits use the local UTC
          // value for the finished time... not as good as what was
          // available with v6.
-         if (unitInfo.UnitResult != WorkUnitResult.Unknown)
+         if (unitInfo.UnitResult.IsTerminating())
          {
             var finishedTime = DateTime.UtcNow;
             //string message = String.Format(CultureInfo.CurrentCulture,

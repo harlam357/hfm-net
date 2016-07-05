@@ -175,12 +175,7 @@ namespace HFM.Log
          {
             slotRunData.CompletedUnits++;
          }
-         else if (workUnitResult == WorkUnitResult.EarlyUnitEnd ||
-                  workUnitResult == WorkUnitResult.UnstableMachine ||
-                  workUnitResult == WorkUnitResult.Interrupted ||
-                  workUnitResult == WorkUnitResult.BadWorkUnit ||
-                  workUnitResult == WorkUnitResult.CoreOutdated ||
-                  workUnitResult == WorkUnitResult.ClientCoreError)
+         else if (workUnitResult.IsTerminating())
          {
             slotRunData.FailedUnits++;
          }
@@ -266,7 +261,6 @@ namespace HFM.Log
                   if (line.LineData != null)
                   {
                      unitRunData.FramesObserved++;
-                     //unitRunData.FrameDataList.Add(line);
                   }
                   break;
                case LogLineType.WorkUnitCoreVersion:
@@ -308,7 +302,6 @@ namespace HFM.Log
                   if (line.LineData != null)
                   {
                      unitRunData.FramesObserved++;
-                     //unitRunData.FrameDataList.Add(line);
                   }
                   break;
                case LogLineType.WorkUnitCoreVersion:

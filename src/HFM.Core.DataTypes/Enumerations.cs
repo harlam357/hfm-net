@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Core.DataTypes Enumerations
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -101,15 +101,26 @@ namespace HFM.Core.DataTypes
    /// </summary>
    public enum WorkUnitResult
    {
+      // 0: Unknown result
       Unknown,
+      // 1: Finished Unit (Terminating)
       FinishedUnit,
+      // 2: Early Unit End (Terminating)
       EarlyUnitEnd,
+      // 3: Unstable Machine (Terminating)
       UnstableMachine,
+      // 4: Interrupted (Non-Terminating)
       Interrupted,
+      // 5: Bad Work Unit (Terminating)
       BadWorkUnit,
+      // 6: Core outdated (Non-Terminating)
       CoreOutdated,
+      // 7: Client core communications error (Terminating)
       ClientCoreError,
-      GpuMemtestError
+      // 8: GPU memtest error (Non-Terminating) - No unit test coverage
+      GpuMemtestError,
+      // 9: Unknown Enum (Non-Terminating)
+      UnknownEnum
    }
 
    /// <summary>

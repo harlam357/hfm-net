@@ -347,6 +347,8 @@ namespace HFM.Core
          _messageConnection.SendCommand("updates add 2 1 $(options -a)");
          _messageConnection.SendCommand("updates add 3 1 $slot-info");
          //_messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
+         // get an initial queue reading
+         _messageConnection.SendCommand("queue-info");
       }
 
       private void Process()

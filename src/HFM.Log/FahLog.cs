@@ -401,7 +401,18 @@ namespace HFM.Log
          else
          {
             var unitRun = EnsureUnitRunExists(logLine.LineIndex, logLine.FoldingSlot, logLine.QueueIndex);
-            if (logLine.LineType == LogLineType.WorkUnitCleaningUp)
+            if (logLine.LineType == LogLineType.WorkUnitCoreReturn)
+            {
+               var result = logLine.LineData != null ? (WorkUnitResult)logLine.LineData : default(WorkUnitResult);
+               // FinishedUnit and BadWorkUnit results are the only terminating results identified in test logs
+               if (result != WorkUnitResult.FinishedUnit && result != WorkUnitResult.BadWorkUnit)
+               {
+                  // NOT a terminating result...
+                  unitRun.EndIndex = logLine.LineIndex;
+                  unitRun.IsComplete = true;
+               }
+            }
+            else if (logLine.LineType == LogLineType.WorkUnitCleaningUp)
             {
                unitRun.EndIndex = logLine.LineIndex;
                unitRun.IsComplete = true;
