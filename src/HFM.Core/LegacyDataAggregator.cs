@@ -191,13 +191,14 @@ namespace HFM.Core
                unitInfoLogData = unitInfo;
             }
 
-            result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun, unitRun, unitInfoLogData);
+            var queueEntry = q.GetQueueEntry((uint)queueIndex);
+            result.UnitInfos[queueIndex] = BuildUnitInfo(queueEntry, clientRun, unitRun, unitInfoLogData);
             if (result.UnitInfos[queueIndex] == null)
             {
                if (queueIndex == q.CurrentIndex)
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
-                     "Could not verify log section for current queue entry {0}. Trying to parse with most recent log section.", queueIndex);
+                     "Could not verify log section for current queue index {0} {1}.", queueIndex, queueEntry.ToProjectInfo());
                   Logger.Warn(Constants.ClientNameFormat, ClientName, message);
 
                   unitRun = GetCurrentUnitRun(fahLog);
@@ -208,14 +209,18 @@ namespace HFM.Core
                      unitRun = null;
                      unitInfoLogData = new UnitInfoLogData();
                   }
-                  result.UnitInfos[queueIndex] = BuildUnitInfo(q.GetQueueEntry((uint)queueIndex), clientRun, unitRun, unitInfoLogData, true);
+                  result.UnitInfos[queueIndex] = BuildUnitInfo(queueEntry, clientRun, unitRun, unitInfoLogData, true);
                }
-               else
+               else if (Logger.IsDebugEnabled)
                {
-                  // Just skip this unit and continue
-                  string message = String.Format(CultureInfo.CurrentCulture,
-                     "Could not find or verify log section for queue entry {0} (this is not a problem).", queueIndex);
-                  Logger.Debug(Constants.ClientNameFormat, ClientName, message);
+                  // Write debug info and skip this unit
+                  var projectInfo = queueEntry.ToProjectInfo();
+                  if (!projectInfo.ProjectIsUnknown())
+                  {
+                     string message = String.Format(CultureInfo.CurrentCulture,
+                        "Could not find log section for queue index {0} {1}.", queueIndex, queueEntry.ToProjectInfo());
+                     Logger.Debug(Constants.ClientNameFormat, ClientName, message);
+                  }
                }
             }
          }

@@ -489,5 +489,16 @@ namespace HFM.Core
             ProjectGen = unit.Gen
          };
       }
+
+      internal static ProjectInfo ToProjectInfo(this Queue.QueueEntry unit)
+      {
+         return new ProjectInfo
+         {
+            ProjectID = unit.ProjectID,
+            ProjectRun = unit.ProjectRun,
+            ProjectClone = unit.ProjectClone,
+            ProjectGen = unit.ProjectGen
+         };
+      }
    }
 }

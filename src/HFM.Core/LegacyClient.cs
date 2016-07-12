@@ -154,7 +154,7 @@ namespace HFM.Core
 
          _slotModel.Queue = result.Queue;
          _slotModel.CurrentLogLines = result.CurrentLogLines;
-         _slotModel.UnitLogLines = result.UnitInfos.OrderBy(x => x.Key).Select(x => x.Value.LogLines).ToArray();
+         _slotModel.UnitLogLines = result.UnitInfos.OrderBy(x => x.Key).Select(x => x.Value != null ? x.Value.LogLines : null).ToArray();
 
          #endregion
 
@@ -284,23 +284,18 @@ namespace HFM.Core
          }
       }
 
-      /// <summary>
-      /// Update Project Benchmarks
-      /// </summary>
-      /// <param name="currentUnitInfo">Current UnitInfo</param>
-      /// <param name="parsedUnits">Parsed UnitInfo Array</param>
-      /// <param name="nextUnitIndex">Index of Current UnitInfo</param>
-      internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, UnitInfoModel[] parsedUnits, int nextUnitIndex)
+      internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, UnitInfoModel[] parsedUnits, int currentUnitIndex)
       {
          var foundCurrent = false;
          var processUpdates = false;
-         var index = GetStartingIndex(nextUnitIndex, parsedUnits.Length);
 
-         while (index != -1)
+         foreach (int index in UnitIndexIterator(currentUnitIndex, parsedUnits.Length))
          {
+            var unitInfoModel = parsedUnits[index];
+
             // If Current has not been found, check the nextUnitIndex
             // or try to match the Current Project and Raw Download Time
-            if (parsedUnits[index] != null && processUpdates == false && (index == nextUnitIndex || currentUnitInfo.UnitInfoData.IsSameUnitAs(parsedUnits[index].UnitInfoData)))
+            if (unitInfoModel != null && processUpdates == false && (index == currentUnitIndex || currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoModel.UnitInfoData)))
             {
                foundCurrent = true;
                processUpdates = true;
@@ -318,40 +313,30 @@ namespace HFM.Core
 
                // Even though the current UnitInfoLogic has been found in the parsed UnitInfoLogic array doesn't
                // mean that all entries in the array will be present.  See TestFiles\SMP_12\FAHlog.txt.
-               if (parsedUnits[index] != null)
+               if (unitInfoModel != null)
                {
                   // Update benchmarks
-                  BenchmarkCollection.UpdateData(parsedUnits[index].UnitInfoData, previousFramesComplete, parsedUnits[index].FramesComplete);
+                  BenchmarkCollection.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
                   // Update history database
-                  UpdateUnitInfoDatabase(parsedUnits[index]);
+                  UpdateUnitInfoDatabase(unitInfoModel);
                }
             }
-
-            #region Increment to the next unit or set terminal value
-            if (index == nextUnitIndex)
-            {
-               index = -1;
-            }
-            else if (index == parsedUnits.Length - 1)
-            {
-               index = 0;
-            }
-            else
-            {
-               index++;
-            }
-            #endregion
          }
       }
 
-      private static int GetStartingIndex(int nextUnitIndex, int numberOfUnits)
+      private static IEnumerable<int> UnitIndexIterator(int currentUnitIndex, int numberOfUnits)
       {
-         if (nextUnitIndex == numberOfUnits - 1)
+         int i;
+         for (i = GetNextIndex(currentUnitIndex, numberOfUnits); i != currentUnitIndex; i = GetNextIndex(i, numberOfUnits))
          {
-            return 0;
+            yield return i;
          }
+         yield return i;
+      }
 
-         return nextUnitIndex + 1;
+      private static int GetNextIndex(int index, int numberOfUnits)
+      {
+         return index == numberOfUnits - 1 ? 0 : index + 1;
       }
 
       #endregion
