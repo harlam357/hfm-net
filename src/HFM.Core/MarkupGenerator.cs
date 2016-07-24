@@ -299,7 +299,7 @@ namespace HFM.Core
       {
          var slotSummary = new SlotSummary();
          slotSummary.HfmVersion = Application.VersionWithRevision;
-         slotSummary.NumberFormat = _prefs.PpdFormatString;
+         slotSummary.NumberFormat = _prefs.GetPpdFormatString();
          slotSummary.UpdateDateTime = updateDateTime;
          slotSummary.SlotTotals = slots.GetSlotTotals();
          //TODO: sort slots
@@ -311,7 +311,7 @@ namespace HFM.Core
       {
          var slotDetail = new SlotDetail();
          slotDetail.HfmVersion = Application.VersionWithRevision;
-         slotDetail.NumberFormat = _prefs.PpdFormatString;
+         slotDetail.NumberFormat = _prefs.GetPpdFormatString();
          slotDetail.UpdateDateTime = updateDateTime;
          slotDetail.LogFileAvailable = _prefs.Get<bool>(Preference.WebGenCopyFAHlog);
          slotDetail.LogFileName = slot.Settings.CachedFahLogFileName();

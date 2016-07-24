@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Application Boot Strapper
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -48,8 +48,6 @@ namespace HFM
 
       public void Strap(string[] args)
       {
-         #region Parse Arguments
-
          IEnumerable<Argument> arguments = Arguments.Parse(args);
          IEnumerable<Argument> errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error);
          if (errorArguments.Count() != 0)
@@ -58,17 +56,18 @@ namespace HFM
             return;
          }
 
-         #endregion
-
-         #region Process Arguments
-         
-         _prefs.Process(arguments);
-
-         #endregion
+         var argument = arguments.FirstOrDefault(x => x.Type == ArgumentType.ResetPrefs);
 
          try
          {
-            _prefs.Initialize();
+            if (argument != null)
+            {
+               _prefs.Reset();
+            }
+            else
+            {
+               _prefs.Initialize();
+            }
          }
          catch (Exception ex)
          {
@@ -264,7 +263,7 @@ namespace HFM
          ExceptionDialog.ShowErrorDialog(ex, Core.Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
             message, Constants.GoogleGroupUrl, mustTerminate);
       }
-      
+
       private static void ValidateMonoVersion(Version monoVersion)
       {
          Debug.Assert(monoVersion != null);

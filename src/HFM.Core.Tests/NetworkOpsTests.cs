@@ -48,7 +48,7 @@ namespace HFM.Core.Tests
          var webRequest = MockRepository.GenerateStub<IFtpWebRequest>();
          webOperation.Stub(x => x.WebRequest).Return(webRequest);
 
-         _net.FtpUploadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpType.Passive);
+         _net.FtpUploadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpMode.Passive);
 
          Assert.AreSame(webOperation, _net.FtpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
@@ -65,7 +65,7 @@ namespace HFM.Core.Tests
          var webRequest = MockRepository.GenerateStub<IFtpWebRequest>();
          webOperation.Stub(x => x.WebRequest).Return(webRequest);
 
-         _net.FtpDownloadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpType.Active);
+         _net.FtpDownloadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpMode.Active);
 
          Assert.AreSame(webOperation, _net.FtpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
@@ -82,7 +82,7 @@ namespace HFM.Core.Tests
          var webRequest = MockRepository.GenerateStub<IFtpWebRequest>();
          webOperation.Stub(x => x.WebRequest).Return(webRequest);
 
-         long length = _net.GetFtpDownloadLength(webOperation, String.Empty, String.Empty, FtpType.Active);
+         long length = _net.GetFtpDownloadLength(webOperation, String.Empty, String.Empty, FtpMode.Active);
          Assert.AreEqual(100, length);
 
          Assert.AreSame(webOperation, _net.FtpOperation);
@@ -133,7 +133,7 @@ namespace HFM.Core.Tests
          var webRequest = MockRepository.GenerateStub<IFtpWebRequest>();
          webOperation.Stub(x => x.WebRequest).Return(webRequest);
 
-         _net.FtpCheckConnection(webOperation, String.Empty, String.Empty, FtpType.Passive);
+         _net.FtpCheckConnection(webOperation, String.Empty, String.Empty, FtpMode.Passive);
 
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
          Assert.AreEqual(false, webRequest.KeepAlive);

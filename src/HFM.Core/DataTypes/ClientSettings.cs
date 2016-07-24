@@ -124,7 +124,7 @@ namespace HFM.Core.DataTypes
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
       [DataMember(Order = 12)]
-      public FtpType FtpMode { get; set; }
+      public FtpMode FtpMode { get; set; }
 
       #endregion
 
@@ -161,7 +161,7 @@ namespace HFM.Core.DataTypes
          UnitInfoFileName = Constants.UnitInfoFileName;
          QueueFileName = Constants.QueueFileName;
          Path = String.Empty;
-         FtpMode = FtpType.Passive;
+         FtpMode = FtpMode.Passive;
 
          UtcOffsetIsZero = false;
          ClientTimeOffset = 0;

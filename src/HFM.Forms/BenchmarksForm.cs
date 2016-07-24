@@ -172,7 +172,7 @@ namespace HFM.Forms
                valuesOk = slotModel.ProductionValuesOk;
                status = slotModel.Status;
             }
-            UpdateBenchmarkText(ToMultiLineString(benchmark, unit, valuesOk, status, _prefs.PpdFormatString));
+            UpdateBenchmarkText(ToMultiLineString(benchmark, unit, valuesOk, status, _prefs.GetPpdFormatString()));
          }
 
          tabControl1.SuspendLayout();
@@ -256,7 +256,7 @@ namespace HFM.Forms
       {
          _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), lines, benchmarks, _graphColors);
          _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), lines, benchmarks, _graphColors,
-            _prefs.Get<int>(Preference.DecimalPlaces), protein, _prefs.Get<BonusCalculationType>(Preference.CalculateBonus).IsEnabled());
+            _prefs.Get<int>(Preference.DecimalPlaces), protein, _prefs.Get<BonusCalculationType>(Preference.BonusCalculation).IsEnabled());
       }
 
       private ZedGraphControl GetFrameTimeGraph(int index)
@@ -279,7 +279,7 @@ namespace HFM.Forms
          Protein protein = _proteinService.Get(benchmark.ProjectID);
          if (protein != null)
          {
-            var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
+            var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
 
             output.Add(String.Empty);
             output.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));

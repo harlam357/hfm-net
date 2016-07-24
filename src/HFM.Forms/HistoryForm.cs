@@ -1,26 +1,27 @@
 ﻿/*
  * HFM.NET - Work Unit History UI Form
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
@@ -36,7 +37,7 @@ namespace HFM.Forms
 
       void DataBindModel(HistoryPresenterModel model);
 
-      StringCollection GetColumnSettings();
+      ICollection<string> GetColumnSettings();
 
       #region System.Windows.Forms.Form Exposure
 
@@ -45,24 +46,24 @@ namespace HFM.Forms
       void Close();
 
       void BringToFront();
-      
+
       FormWindowState WindowState { get; set; }
-      
+
       Point Location { get; set; }
-      
+
       Size Size { get; set; }
-      
+
       Rectangle RestoreBounds { get; }
 
       bool Visible { get; set; }
-      
+
       #endregion
    }
 
    public partial class HistoryForm : FormWrapper, IHistoryView
    {
       private HistoryPresenter _presenter;
-   
+
       public HistoryForm(IPreferenceSet prefs)
       {
          InitializeComponent();
@@ -76,7 +77,7 @@ namespace HFM.Forms
             var distance = splitContainerWrapper1.SplitterDistance * scaleFactor;
             splitContainerWrapper1.SplitterDistance = (int)distance;
          }
-         
+
          SetupDataGridView(prefs);
       }
 
@@ -86,7 +87,7 @@ namespace HFM.Forms
       {
          _presenter = presenter;
       }
-      
+
       public void DataBindModel(HistoryPresenterModel model)
       {
          DataViewComboBox.DataSource = model.QueryBindingSource;
@@ -94,7 +95,7 @@ namespace HFM.Forms
          DataViewDeleteButton.DataBindings.Add("Enabled", model, "EditAndDeleteButtonsEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
 
          rdoPanelProduction.DataSource = model;
-         rdoPanelProduction.ValueMember = "ProductionView";
+         rdoPanelProduction.ValueMember = "BonusCalculation";
          ResultsTextBox.DataBindings.Add("Text", model, "TotalEntries", false, DataSourceUpdateMode.OnPropertyChanged);
          PageNumberTextBox.DataBindings.Add("Text", model, "CurrentPage", false, DataSourceUpdateMode.OnValidation); //OnPropertyChanged);
          ResultNumberUpDownControl.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -109,11 +110,11 @@ namespace HFM.Forms
       /// <summary>
       /// Save Column Index, Width, and Visibility
       /// </summary>
-      public StringCollection GetColumnSettings()
+      public ICollection<string> GetColumnSettings()
       {
          // Save column state data
          // including order, column width and whether or not the column is visible
-         var formColumns = new StringCollection();
+         var formColumns = new List<string>();
          int i = 0;
 
          foreach (DataGridViewColumn column in dataGridView1.Columns)
@@ -129,28 +130,26 @@ namespace HFM.Forms
          return formColumns;
       }
 
-      private void RestoreColumnSettings(StringCollection formColumns)
+      private void RestoreColumnSettings(IEnumerable<string> formColumns)
       {
          if (formColumns == null) return;
 
          // Restore the columns' state
-         var colsArray = new string[formColumns.Count];
+         var colsList = formColumns.ToList();
+         colsList.Sort();
 
-         formColumns.CopyTo(colsArray, 0);
-         Array.Sort(colsArray);
-
-         for (int i = 0; i < colsArray.Length; i++)
+         foreach (string col in colsList)
          {
-            string[] a = colsArray[i].Split(',');
-            int index = Int32.Parse(a[3]);
-            dataGridView1.Columns[index].DisplayIndex = Int32.Parse(a[0]);
-            dataGridView1.Columns[index].Width = Int32.Parse(a[1]);
-            dataGridView1.Columns[index].Visible = Boolean.Parse(a[2]);
+            string[] tokens = col.Split(',');
+            int index = Int32.Parse(tokens[3]);
+            dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+            dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
+            dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
          }
       }
 
       #endregion
-      
+
       private void btnNew_Click(object sender, EventArgs e)
       {
          _presenter.NewQueryClick();
@@ -179,7 +178,7 @@ namespace HFM.Forms
       private void mnuViewAutoSizeGrid_Click(object sender, EventArgs e)
       {
          // do this manually... with a ton of items in the grid
-         // this can take quite a while... should limit it to 
+         // this can take quite a while... should limit it to
          // the visible entries if posssible... if not then some
          // set number like 100 entires.
          dataGridView1.AutoResizeColumns();
@@ -239,9 +238,9 @@ namespace HFM.Forms
       {
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
-      
+
          string[] names = QueryField.GetColumnNames();
-      
+
          dataGridView1.AutoGenerateColumns = false;
          // ReSharper disable PossibleNullReferenceException
          dataGridView1.Columns.Add(QueryFieldName.ProjectID.ToString(), names[(int)QueryFieldName.ProjectID]);
@@ -268,14 +267,14 @@ namespace HFM.Forms
          dataGridView1.Columns[QueryFieldName.KFactor.ToString()].DataPropertyName = QueryFieldName.KFactor.ToString();
          dataGridView1.Columns.Add(QueryFieldName.PPD.ToString(), names[(int)QueryFieldName.PPD]);
          dataGridView1.Columns[QueryFieldName.PPD.ToString()].DataPropertyName = QueryFieldName.PPD.ToString();
-         dataGridView1.Columns[QueryFieldName.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = prefs.PpdFormatString };
+         dataGridView1.Columns[QueryFieldName.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = prefs.GetPpdFormatString() };
          dataGridView1.Columns.Add(QueryFieldName.DownloadDateTime.ToString(), names[(int)QueryFieldName.DownloadDateTime]);
          dataGridView1.Columns[QueryFieldName.DownloadDateTime.ToString()].DataPropertyName = QueryFieldName.DownloadDateTime.ToString();
          dataGridView1.Columns.Add(QueryFieldName.CompletionDateTime.ToString(), names[(int)QueryFieldName.CompletionDateTime]);
          dataGridView1.Columns[QueryFieldName.CompletionDateTime.ToString()].DataPropertyName = QueryFieldName.CompletionDateTime.ToString();
          dataGridView1.Columns.Add(QueryFieldName.Credit.ToString(), names[(int)QueryFieldName.Credit]);
          dataGridView1.Columns[QueryFieldName.Credit.ToString()].DataPropertyName = QueryFieldName.Credit.ToString();
-         dataGridView1.Columns[QueryFieldName.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = prefs.PpdFormatString };
+         dataGridView1.Columns[QueryFieldName.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = prefs.GetPpdFormatString() };
          dataGridView1.Columns.Add(QueryFieldName.Frames.ToString(), names[(int)QueryFieldName.Frames]);
          dataGridView1.Columns[QueryFieldName.Frames.ToString()].DataPropertyName = QueryFieldName.Frames.ToString();
          dataGridView1.Columns.Add(QueryFieldName.FramesCompleted.ToString(), names[(int)QueryFieldName.FramesCompleted]);
@@ -292,7 +291,7 @@ namespace HFM.Forms
          dataGridView1.Columns[QueryFieldName.ProjectGen.ToString()].DataPropertyName = QueryFieldName.ProjectGen.ToString();
          // ReSharper restore PossibleNullReferenceException
       }
-      
+
       private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
       {
          var sf = new StringFormat { Alignment = StringAlignment.Center };
@@ -318,7 +317,7 @@ namespace HFM.Forms
                   dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected = true;
                }
             }
-         
+
             if (hti.Type == DataGridViewHitTestType.RowHeader)
             {
                dataGridMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));

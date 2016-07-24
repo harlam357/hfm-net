@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Retrieval Logic Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- * 
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -57,7 +57,7 @@ namespace HFM.Forms
             }
             else
             {
-               _logger.Info(String.Format("Total Retrieval Execution Time: {0}", Instrumentation.GetExecTime(_retrieveExecStart)));
+               Logger.Info(String.Format("Total Retrieval Execution Time: {0}", Instrumentation.GetExecTime(_retrieveExecStart)));
                _retrievalInProgress = false;
             }
          }
@@ -68,6 +68,7 @@ namespace HFM.Forms
       public bool GenerationInProgress
       {
          get { return _generationInProgress; }
+         private set { _generationInProgress = value; }
       }
 
       /// <summary>
@@ -82,12 +83,12 @@ namespace HFM.Forms
 
       #region Service Interfaces
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -109,20 +110,44 @@ namespace HFM.Forms
       {
          _prefs = prefs;
          _clientConfiguration = clientConfiguration;
-         _clientConfiguration.DictionaryChanged += (sender, e) =>
+         _clientConfiguration.DictionaryChanged += (s, e) =>
                                                    {
-                                                      SetTimerState();
-                                                      if (e.ChangedType == ConfigurationChangedType.Add ||
-                                                          e.ChangedType == ConfigurationChangedType.Edit)
+                                                      if (e.ChangedType == ConfigurationChangedType.Remove ||
+                                                          e.ChangedType == ConfigurationChangedType.Clear)
+                                                      {
+                                                         // Disable timers if no hosts
+                                                         if (_clientConfiguration.Count == 0)
+                                                         {
+                                                            if (_workTimer.Enabled || _webTimer.Enabled)
+                                                            {
+                                                               Logger.Info("No Hosts - Stopping All Scheduled Tasks");
+                                                               _workTimer.Stop();
+                                                               _webTimer.Stop();
+                                                            }
+                                                         }
+                                                      }
+                                                      else if (e.ChangedType == ConfigurationChangedType.Add)
                                                       {
                                                          if (e.Client == null)
                                                          {
+                                                            // no client specified - retrieve all
+                                                            // this method will start the client retrieval timer when finished
                                                             QueueNewRetrieval();
                                                          }
                                                          else
                                                          {
-                                                            RetrieveSingleClient(e.Client.Settings.Name);
+                                                            // retrieve specified client
+                                                            RetrieveSingleClient(e.Client);
+                                                            // starts the client retrieval timer if necessary
+                                                            SetClientRetrievalTimerState();
                                                          }
+                                                         // starts the web generation timer if necessary
+                                                         SetWebGenerationTimerState();
+                                                      }
+                                                      else if (e.ChangedType == ConfigurationChangedType.Edit)
+                                                      {
+                                                         Debug.Assert(e.Client != null);
+                                                         RetrieveSingleClient(e.Client);
                                                       }
                                                    };
          _mainGridModel = mainGridModel;
@@ -135,14 +160,18 @@ namespace HFM.Forms
          // Hook up Web Generation Timer Event Handler
          _webTimer.Elapsed += WebGenTimerTick;
 
-         _prefs.TimerSettingsChanged += delegate
-                                        {
-                                           // stop
-                                           _workTimer.Stop();
-                                           _webTimer.Stop();
-                                           // then reset
-                                           SetTimerState();
-                                        };
+         _prefs.PreferenceChanged += (s, e) =>
+         {
+            switch (e.Preference)
+            {
+               case Preference.ClientRetrievalTask:
+                  SetClientRetrievalTimerState(true);
+                  break;
+               case Preference.WebGenerationTask:
+                  SetWebGenerationTimerState(true);
+                  break;
+            }
+         };
       }
 
       #region Retrieval Logic
@@ -152,7 +181,7 @@ namespace HFM.Forms
       /// </summary>
       private void WorkTimerTick(object sender, EventArgs e)
       {
-         _logger.Info("Running Retrieval Process...");
+         Logger.Info("Running Client Retrieval Task...");
          QueueNewRetrieval();
       }
 
@@ -161,28 +190,28 @@ namespace HFM.Forms
       /// </summary>
       private void WebGenTimerTick(object sender, EventArgs e)
       {
-         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
-         Debug.Assert(_prefs.Get<bool>(Preference.WebGenAfterRefresh) == false);
-
-         _logger.Info("Stopping web generation timer loop.");
+         Debug.Assert(WebGenerationTaskEnabled);
+         //Logger.Info("Stopping web generation timer loop.");
          _webTimer.Stop();
 
          DoWebGeneration();
-
-         StartWebGenTimer();
+         if (WebGenerationTaskEnabled)
+         {
+            StartWebGenTimer();
+         }
       }
 
       private void DoWebGeneration()
       {
-         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.Get<bool>(Preference.WebGenerationTaskEnabled));
 
-         if (_generationInProgress)
+         if (GenerationInProgress)
          {
-            _logger.Warn("Web Generation already in progress...");
+            Logger.Warn("Web Generation already in progress...");
             return;
          }
 
-         _generationInProgress = true;
+         GenerationInProgress = true;
          try
          {
             DateTime start = Instrumentation.ExecStart;
@@ -191,21 +220,21 @@ namespace HFM.Forms
             if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
             if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
 
-            _logger.Info("Starting Web Generation...");
+            Logger.Info("Running Web Generation Task...");
 
             var slots = _mainGridModel.SlotCollection;
             _markupGenerator.Generate(slots);
             _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
 
-            _logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
+            Logger.Info("Total Web Generation Execution Time: {0}", Instrumentation.GetExecTime(start));
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
          }
          finally
          {
-            _generationInProgress = false;
+            GenerationInProgress = false;
          }
       }
 
@@ -217,20 +246,22 @@ namespace HFM.Forms
          // don't fire this process twice
          if (RetrievalInProgress)
          {
-            _logger.Warn("Retrieval already in progress...");
+            Logger.Warn("Client Retrieval already in progress...");
             return;
          }
 
          // only fire if there are Hosts
-         if (_clientConfiguration.Count != 0)
+         if (_clientConfiguration.Count == 0)
          {
-            _logger.Info("Stopping retrieval timer loop.");
-            _workTimer.Stop();
-
-            // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
-            _doRetrievalThread = new Thread(DoRetrievalWrapper) { IsBackground = true, Name = "DoRetrievalWrapper" };
-            _doRetrievalThread.Start();
+            return;
          }
+
+         //Logger.Info("Stopping retrieval timer loop.");
+         _workTimer.Stop();
+
+         // fire the retrieval wrapper thread (basically a wait thread off the UI thread)
+         _doRetrievalThread = new Thread(DoRetrievalWrapper) { IsBackground = true, Name = "DoRetrievalWrapper" };
+         _doRetrievalThread.Start();
       }
 
       public void Abort()
@@ -258,8 +289,8 @@ namespace HFM.Forms
             doRetrieval.Join();
 
             // run post retrieval processes
-            if (_prefs.Get<bool>(Preference.GenerateWeb) &&
-                _prefs.Get<bool>(Preference.WebGenAfterRefresh))
+            if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
+                _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval))
             {
                // do a web gen (on another thread)
                var webGen = new Thread(DoWebGeneration) { IsBackground = true, Name = "DoWebGeneration" };
@@ -267,7 +298,7 @@ namespace HFM.Forms
             }
 
             // Enable the data retrieval timer
-            if (_prefs.Get<bool>(Preference.SyncOnSchedule))
+            if (_prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled))
             {
                StartBackgroundTimer();
             }
@@ -290,15 +321,17 @@ namespace HFM.Forms
       {
          // get flag synchronous or asynchronous - we don't want this flag to change on us
          // in the middle of a retrieve, so grab it now and use the local copy
-         var synchronous = _prefs.Get<bool>(Preference.SyncOnLoad);
+         var type = _prefs.Get<ProcessingMode>(Preference.ClientRetrievalTaskType);
 
          var clients = _clientConfiguration.GetClients().ToList();
-         if (synchronous) // do the individual retrieves on a single thread
+         if (type == ProcessingMode.Serial)
          {
+            // do the individual retrieves on a single thread
             clients.ForEach(RetrieveInstance);
          }
-         else // fire individual threads to do the their own retrieve simultaneously
+         else
          {
+            // fire individual threads to do the their own retrieve simultaneously
             Parallel.ForEach(clients, RetrieveInstance);
          }
       }
@@ -319,89 +352,88 @@ namespace HFM.Forms
       /// </summary>
       public void RetrieveSingleClient(string name)
       {
-         Task.Factory.StartNew(() => RetrieveInstance(_clientConfiguration.Get(name)));
+         RetrieveSingleClient(_clientConfiguration.Get(name));
       }
 
-      /// <summary>
-      /// Disable and enable the background work timers
-      /// </summary>
-      private void SetTimerState()
+      private static void RetrieveSingleClient(IClient client)
       {
-         // Disable timers if no hosts
-         if (_clientConfiguration.Count == 0)
-         {
-            if (_workTimer.Enabled || _webTimer.Enabled)
-            {
-               _logger.Info("No Hosts - Stopping All Background Timer Loops");
-            }
-            _workTimer.Stop();
-            _webTimer.Stop();
-            return;
-         }
+         Task.Factory.StartNew(() => RetrieveInstance(client));
+      }
 
+      private void SetClientRetrievalTimerState(bool reset = false)
+      {
          // Enable the data retrieval timer
-         if (_prefs.Get<bool>(Preference.SyncOnSchedule))
+         if (_prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled))
          {
             if (!RetrievalInProgress)
             {
-               StartBackgroundTimer();
+               if (reset)
+               {
+                  _workTimer.Stop();
+               }
+               if (!_workTimer.Enabled)
+               {
+                  StartBackgroundTimer();
+               }
             }
          }
-         else
+         else if (_workTimer.Enabled)
          {
-            if (_workTimer.Enabled)
-            {
-               _logger.Info("Stopping Retrieval Timer Loop");
-               _workTimer.Stop();
-            }
-         }
-
-         // Enable the web generation timer
-         if (_prefs.Get<bool>(Preference.GenerateWeb) &&
-             _prefs.Get<bool>(Preference.WebGenAfterRefresh) == false)
-         {
-            StartWebGenTimer();
-         }
-         else
-         {
-            if (_webTimer.Enabled)
-            {
-               _logger.Info("Stopping Web Generation Timer Loop");
-               _webTimer.Stop();
-            }
+            Logger.Info("Stopping Client Retrieval Scheduled Task");
+            _workTimer.Stop();
          }
       }
 
-      /// <summary>
-      /// Starts Retrieval Timer Loop
-      /// </summary>
       private void StartBackgroundTimer()
       {
-         // don't start if already started
-         if (_workTimer.Enabled) return;
+         Debug.Assert(!_workTimer.Enabled);
 
-         var syncTimeMinutes = _prefs.Get<int>(Preference.SyncTimeMinutes);
+         var syncTimeMinutes = _prefs.Get<int>(Preference.ClientRetrievalTaskInterval);
 
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
-         _logger.Info("Starting Retrieval Timer Loop: {0} Minutes", syncTimeMinutes);
+         Logger.Info("Scheduling Client Retrieval Task: {0} Minutes", syncTimeMinutes);
          _workTimer.Start();
       }
 
-      /// <summary>
-      /// Start the Web Generation Timer
-      /// </summary>
+      private bool WebGenerationTaskEnabled
+      {
+         get
+         {
+            return _prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
+                   _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false;
+         }
+      }
+
+      private void SetWebGenerationTimerState(bool reset = false)
+      {
+         // Enable the web generation timer
+         if (WebGenerationTaskEnabled)
+         {
+            if (reset)
+            {
+               _webTimer.Stop();
+            }
+            if (!_webTimer.Enabled)
+            {
+               StartWebGenTimer();
+            }
+         }
+         else if (_webTimer.Enabled)
+         {
+            Logger.Info("Stopping Web Generation Scheduled Task");
+            _webTimer.Stop();
+         }
+      }
+
       private void StartWebGenTimer()
       {
-         // don't start if already started
-         if (_webTimer.Enabled) return;
+         Debug.Assert(!_webTimer.Enabled);
+         Debug.Assert(WebGenerationTaskEnabled);
 
-         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
-         Debug.Assert(_prefs.Get<bool>(Preference.WebGenAfterRefresh) == false);
-
-         var generateInterval = _prefs.Get<int>(Preference.GenerateInterval);
+         var generateInterval = _prefs.Get<int>(Preference.WebGenerationTaskInterval);
 
          _webTimer.Interval = generateInterval * Constants.MinToMillisec;
-         _logger.Info("Starting Web Generation Timer Loop: {0} Minutes", generateInterval);
+         Logger.Info("Scheduling Web Generation Task: {0} Minutes", generateInterval);
          _webTimer.Start();
       }
 

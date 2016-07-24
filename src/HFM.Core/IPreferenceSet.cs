@@ -1,26 +1,24 @@
 /*
  * HFM.NET - User Preferences Interface
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 
 namespace HFM.Core
 {
@@ -31,143 +29,45 @@ namespace HFM.Core
       string ApplicationDataFolderPath { get; }
 
       /// <summary>
-      /// Log File Cache Directory
+      /// Gets the local client log cache directory.
       /// </summary>
       string CacheDirectory { get; }
-
-      /// <summary>
-      /// Url to EOC User Xml File
-      /// </summary>
-      string EocUserXml { get; }
-
-      /// <summary>
-      /// Url to EOC User Page
-      /// </summary>
-      Uri EocUserUrl { get; }
-
-      /// <summary>
-      /// Url to EOC Team Page
-      /// </summary>
-      Uri EocTeamUrl { get; }
-
-      /// <summary>
-      /// Url to Stanford User Page
-      /// </summary>
-      Uri StanfordUserUrl { get; }
-
-      /// <summary>
-      /// Process arguments.
-      /// </summary>
-      /// <param name="arguments">Collection of arguments to process.</param>
-      void Process(IEnumerable<Argument> arguments);
 
       void Reset();
 
       void Initialize();
 
+      void Save();
+
       /// <summary>
-      /// Get a Preference of Type T
+      /// Gets a preference.
       /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
+      /// <typeparam name="T">The type of the preference value.</typeparam>
+      /// <param name="key">The preference key.</param>
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
       T Get<T>(Preference key);
 
       /// <summary>
-      /// Set a Preference of Type T
+      /// Sets a preference.
       /// </summary>
-      /// <typeparam name="T">Preference Data Type</typeparam>
-      /// <param name="key">Preference Key</param>
-      /// <param name="value">Preference Value</param>
+      /// <typeparam name="T">The type of the preference value.</typeparam>
+      /// <param name="key">The preference key.</param>
+      /// <param name="value">The preference value.</param>
       void Set<T>(Preference key, T value);
 
       /// <summary>
-      /// Revert to the previously saved settings
+      /// Raised when a preference value is changed.
       /// </summary>
-      void Discard();
-
-      /// <summary>
-      /// Save the Preferences Set
-      /// </summary>
-      void Save();
-
-      /// <summary>
-      /// Form Show Style Settings Changed
-      /// </summary>
-      event EventHandler FormShowStyleSettingsChanged;
-
-      /// <summary>
-      /// Background Timer (Refresh or Web) Settings Changed
-      /// </summary>
-      event EventHandler TimerSettingsChanged;
-
-      /// <summary>
-      /// Offline Last Setting Changed
-      /// </summary>
-      event EventHandler OfflineLastChanged;
-
-      /// <summary>
-      /// PPD Calculation Type Changed
-      /// </summary>
-      event EventHandler PpdCalculationChanged;
-
-      /// <summary>
-      /// Debug Message Level Changed
-      /// </summary>
-      event EventHandler MessageLevelChanged;
-
-      /// <summary>
-      /// User/Team Statistics ID Changed
-      /// </summary>
-      event EventHandler StatsIdChanged;
-
-      /// <summary>
-      /// PPD Decimal Places Setting Changed
-      /// </summary>
-      event EventHandler DecimalPlacesChanged;
-
-      /// <summary>
-      /// Show User Statistics Setting Changed
-      /// </summary>
-      event EventHandler ShowUserStatsChanged;
-
-      /// <summary>
-      /// Color Log File Setting Changed
-      /// </summary>
-      event EventHandler ColorLogFileChanged;
-
-      /// <summary>
-      /// Calculate Bonus Credit and PPD Setting Changed
-      /// </summary>
-      event EventHandler CalculateBonusChanged;
-
-      /// <summary>
-      /// PPD String Formatter
-      /// </summary>
-      string PpdFormatString { get; }
+      event EventHandler<PreferenceChangedEventArgs> PreferenceChanged;
    }
 
-   public static class PreferenceSetExtensions
+   public sealed class PreferenceChangedEventArgs : EventArgs
    {
-      /// <summary>
-      /// Gets a WebProxy object based on preference settings.
-      /// </summary>
-      public static IWebProxy GetWebProxy(this IPreferenceSet prefs)
+      public Preference Preference { get; private set; }
+
+      public PreferenceChangedEventArgs(Preference preference)
       {
-         if (prefs == null || !prefs.Get<bool>(Preference.UseProxy))
-         {
-            return null;
-         }
-
-         IWebProxy proxy = new WebProxy(prefs.Get<string>(Preference.ProxyServer), 
-                                        prefs.Get<int>(Preference.ProxyPort));
-
-         if (prefs.Get<bool>(Preference.UseProxyAuth))
-         {
-            proxy.Credentials = NetworkCredentialFactory.Create(prefs.Get<string>(Preference.ProxyUser),
-                                                                prefs.Get<string>(Preference.ProxyPass));
-         }
-         return proxy;
+         Preference = preference;
       }
    }
 }

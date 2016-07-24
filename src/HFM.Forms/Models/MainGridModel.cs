@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,7 +25,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
+//using Castle.Core.Logging;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
@@ -44,15 +44,15 @@ namespace HFM.Forms.Models
 
       #region Properties
 
-      private ILogger _logger = NullLogger.Instance;
-
-      public ILogger Logger
-      {
-         [CoverageExclude]
-         get { return _logger; }
-         [CoverageExclude]
-         set { _logger = value; }
-      }
+      //private ILogger _logger;
+      //
+      //public ILogger Logger
+      //{
+      //   [CoverageExclude]
+      //   get { return _logger ?? (_logger = NullLogger.Instance); }
+      //   [CoverageExclude]
+      //   set { _logger = value; }
+      //}
 
       private SlotModel _selectedSlot;
       public SlotModel SelectedSlot
@@ -81,10 +81,10 @@ namespace HFM.Forms.Models
       /// </summary>
       public bool CachedLogMenuItemVisible
       {
-         get 
-         { 
+         get
+         {
             return SelectedSlot != null && (SelectedSlot.Settings.ClientType == ClientType.Legacy ||
-                                            SelectedSlot.Settings.ClientType == ClientType.FahClient); 
+                                            SelectedSlot.Settings.ClientType == ClientType.FahClient);
          }
       }
 
@@ -96,10 +96,15 @@ namespace HFM.Forms.Models
          get { return SelectedSlot != null && SelectedSlot.Settings.ClientType == ClientType.FahClient; }
       }
 
+      private string _sortColumnName;
       /// <summary>
       /// Holds current Sort Column Name
       /// </summary>
-      public string SortColumnName { get; set; }
+      public string SortColumnName
+      {
+         get { return _sortColumnName; }
+         set { _sortColumnName = String.IsNullOrEmpty(value) ? "Name" : value; }
+      }
 
       /// <summary>
       /// Holds current Sort Column Order
@@ -140,7 +145,7 @@ namespace HFM.Forms.Models
          // use SlotCollection, it's provides synchronized access to the slot list
          get { return SlotCollection.GetSlotTotals(); }
       }
-      
+
       public object BindingSource
       {
          get { return _bindingSource; }
@@ -168,14 +173,22 @@ namespace HFM.Forms.Models
          _bindingSource.ListChanged += (s, e) => Debug.WriteLine("BindingSource: " + e.ListChangedType);
 #endif
          // Subscribe to PreferenceSet events
-         _prefs.OfflineLastChanged += (sender, args) =>
-                                      {
-                                         _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
-                                         Sort();
-                                      };
-         _prefs.PpdCalculationChanged += (sender, args) => ResetBindings();
-         _prefs.DecimalPlacesChanged += (sender, args) => ResetBindings();
-         _prefs.CalculateBonusChanged += (sender, args) => ResetBindings();
+         _prefs.PreferenceChanged += (s, e) =>
+                                     {
+                                        switch (e.Preference)
+                                        {
+                                           case Preference.OfflineLast:
+                                              _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
+                                              Sort();
+                                              break;
+                                           case Preference.PpdCalculation:
+                                           case Preference.DecimalPlaces:
+                                           case Preference.BonusCalculation:
+                                              ResetBindings();
+                                              break;
+                                        }
+
+                                     };
 
          // Subscribe to ClientDictionary events
          _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
@@ -187,7 +200,7 @@ namespace HFM.Forms.Models
       {
          // this check appears to fix the duplicate slot issue.
          // every time this condition is met and the return
-         // statement is removed then subsequently in 
+         // statement is removed then subsequently in
          // RefreshSlotList() the _slotList shows duplicate slots
          if (_resetInProgress)
          {
@@ -213,7 +226,7 @@ namespace HFM.Forms.Models
             _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
             return;
          }
-         
+
          OnBeforeResetBindings(EventArgs.Empty);
          lock (SlotsListLock)
          {
@@ -230,7 +243,7 @@ namespace HFM.Forms.Models
             {
                _bindingSource.Add(slot);
             }
-            Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Number of slots: {0}", _bindingSource.Count));
+            Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
             // sort the list
             _bindingSource.Sort = null;
             _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();

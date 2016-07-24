@@ -54,14 +54,14 @@ namespace HFM.Core
    
       public void DeployWebsite(IEnumerable<string> htmlFilePaths, IEnumerable<string> xmlFilePaths, IEnumerable<SlotModel> slots)
       {
-         Debug.Assert(_prefs.Get<bool>(Preference.GenerateWeb));
+         Debug.Assert(_prefs.Get<bool>(Preference.WebGenerationTaskEnabled));
 
-         var webGenType = _prefs.Get<WebGenType>(Preference.WebGenType);
-         var webRoot = _prefs.Get<string>(Preference.WebRoot);
+         var webGenType = _prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
+         var webRoot = _prefs.Get<string>(Preference.DeploymentRoot);
          var copyHtml = _prefs.Get<bool>(Preference.WebGenCopyHtml);
          var copyXml = _prefs.Get<bool>(Preference.WebGenCopyXml);
          
-         if (webGenType.Equals(WebGenType.Ftp))
+         if (webGenType.Equals(WebDeploymentType.Ftp))
          {
             var server = _prefs.Get<string>(Preference.WebGenServer);
             var port = _prefs.Get<int>(Preference.WebGenPort);
@@ -133,7 +133,7 @@ namespace HFM.Core
          try
          {
             // Get the FTP Type
-            var ftpMode = _prefs.Get<FtpType>(Preference.WebGenFtpMode);
+            var ftpMode = _prefs.Get<FtpMode>(Preference.WebGenFtpMode);
 
             // Upload CSS File
             _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName),
@@ -179,7 +179,7 @@ namespace HFM.Core
          try
          {
             // Get the FTP Type
-            var ftpMode = _prefs.Get<FtpType>(Preference.WebGenFtpMode);
+            var ftpMode = _prefs.Get<FtpMode>(Preference.WebGenFtpMode);
 
             // Upload each XML File
             foreach (string filePath in xmlFilePaths)

@@ -93,11 +93,11 @@ namespace HFM.Core
 
       IList<HistoryEntry> Fetch(QueryParameters parameters);
 
-      IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView);
+      IList<HistoryEntry> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation);
 
       PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters);
 
-      PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView);
+      PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation);
 
       DataTable Select(string sql, params object[] args);
 
@@ -421,15 +421,15 @@ namespace HFM.Core
 
       public IList<HistoryEntry> Fetch(QueryParameters parameters)
       {
-         return Fetch(parameters, HistoryProductionView.BonusDownloadTime);
+         return Fetch(parameters, BonusCalculationType.DownloadTime);
       }
 
-      public IList<HistoryEntry> Fetch(QueryParameters parameters, HistoryProductionView productionView)
+      public IList<HistoryEntry> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
          DateTime start = Instrumentation.ExecStart;
          try
          {
-            return FetchInternal(parameters, productionView);
+            return FetchInternal(parameters, bonusCalculation);
          }
          finally
          {
@@ -437,13 +437,13 @@ namespace HFM.Core
          }
       }
 
-      private IList<HistoryEntry> FetchInternal(QueryParameters parameters, HistoryProductionView productionView)
+      private IList<HistoryEntry> FetchInternal(QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
-         GetProduction.ProductionView = productionView;
+         GetProduction.BonusCalculation = bonusCalculation;
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
@@ -457,15 +457,15 @@ namespace HFM.Core
 
       public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters)
       {
-         return Page(page, itemsPerPage, parameters, HistoryProductionView.BonusDownloadTime);
+         return Page(page, itemsPerPage, parameters, BonusCalculationType.DownloadTime);
       }
 
-      public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView)
+      public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
          DateTime start = Instrumentation.ExecStart;
          try
          {
-            return PageInternal(page, itemsPerPage, parameters, productionView);
+            return PageInternal(page, itemsPerPage, parameters, bonusCalculation);
          }
          finally
          {
@@ -473,13 +473,13 @@ namespace HFM.Core
          }
       }
 
-      private PetaPoco.Page<HistoryEntry> PageInternal(long page, long itemsPerPage, QueryParameters parameters, HistoryProductionView productionView)
+      private PetaPoco.Page<HistoryEntry> PageInternal(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
          select.Append(WhereBuilder.Execute(parameters));
-         GetProduction.ProductionView = productionView;
+         GetProduction.BonusCalculation = bonusCalculation;
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
@@ -1163,7 +1163,7 @@ namespace HFM.Core
       private sealed class GetProduction : SQLiteFunction
       {
          [ThreadStatic]
-         public static HistoryProductionView ProductionView;
+         public static BonusCalculationType BonusCalculation;
 
          public override object Invoke(object[] args)
          {
@@ -1185,12 +1185,12 @@ namespace HFM.Core
             var calcOption = (long)args[8];
 
             TimeSpan unitTime = TimeSpan.Zero;
-            switch (ProductionView)
+            switch (BonusCalculation)
             {
-               case HistoryProductionView.BonusFrameTime:
+               case BonusCalculationType.FrameTime:
                   unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * frames);
                   break;
-               case HistoryProductionView.BonusDownloadTime:
+               case BonusCalculationType.DownloadTime:
                   unitTime = completionDateTime.Subtract(downloadDateTime);
                   break;
             }

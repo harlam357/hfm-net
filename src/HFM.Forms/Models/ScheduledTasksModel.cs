@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Preferences - Scheduled Tasks Tab - Binding Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -44,18 +45,22 @@ namespace HFM.Forms.Models
       {
          Load(prefs);
       }
-   
+
       public void Load(IPreferenceSet prefs)
       {
-         SyncTimeMinutes = prefs.Get<int>(Preference.SyncTimeMinutes);
-         SyncOnSchedule = prefs.Get<bool>(Preference.SyncOnSchedule);
-         SyncOnLoad = prefs.Get<bool>(Preference.SyncOnLoad);
+         var clientRetrievalTask = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
+         SyncTimeMinutes = clientRetrievalTask.Interval;
+         SyncOnSchedule = clientRetrievalTask.Enabled;
+         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial;
          AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
 
-         WebGenType = prefs.Get<WebGenType>(Preference.WebGenType);
-         GenerateInterval = prefs.Get<int>(Preference.GenerateInterval);
-         WebGenAfterRefresh = prefs.Get<bool>(Preference.WebGenAfterRefresh);
-         WebRoot = prefs.Get<string>(Preference.WebRoot);
+         var webGenerationTask = prefs.Get<WebGenerationTask>(Preference.WebGenerationTask);
+         GenerateWeb = webGenerationTask.Enabled;
+         GenerateInterval = webGenerationTask.Interval;
+         WebGenAfterRefresh = webGenerationTask.AfterClientRetrieval;
+
+         WebGenType = prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
+         WebRoot = prefs.Get<string>(Preference.DeploymentRoot);
          WebGenServer = prefs.Get<string>(Preference.WebGenServer);
          WebGenPort = prefs.Get<int>(Preference.WebGenPort);
          WebGenUsername = prefs.Get<string>(Preference.WebGenUsername);
@@ -63,29 +68,38 @@ namespace HFM.Forms.Models
          CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
          CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
          CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
-         FtpMode = prefs.Get<FtpType>(Preference.WebGenFtpMode);
+         FtpMode = prefs.Get<FtpMode>(Preference.WebGenFtpMode);
          LimitLogSize = prefs.Get<bool>(Preference.WebGenLimitLogSize);
          LimitLogSizeLength = prefs.Get<int>(Preference.WebGenLimitLogSizeLength);
-         GenerateWeb = prefs.Get<bool>(Preference.GenerateWeb);
       }
 
       public void Update(IPreferenceSet prefs)
       {
-         prefs.Set(Preference.SyncTimeMinutes, SyncTimeMinutes);
-         prefs.Set(Preference.SyncOnSchedule, SyncOnSchedule);
-         prefs.Set(Preference.SyncOnLoad, SyncOnLoad);
+         var clientRetrievalTask = new ClientRetrievalTask
+         {
+            Enabled = SyncOnSchedule,
+            Interval = SyncTimeMinutes,
+            ProcessingMode = SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel
+         };
+         prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
          prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);
 
-         prefs.Set(Preference.WebGenType, WebGenType);
-         prefs.Set(Preference.GenerateInterval, GenerateInterval);
-         prefs.Set(Preference.WebGenAfterRefresh, WebGenAfterRefresh);
-         if (WebGenType.Equals(WebGenType.Ftp))
+         var webGenerationTask = new WebGenerationTask
          {
-            prefs.Set(Preference.WebRoot, Paths.AddUnixTrailingSlash(WebRoot));
+            Enabled = GenerateWeb,
+            Interval = GenerateInterval,
+            AfterClientRetrieval = WebGenAfterRefresh
+         };
+         prefs.Set(Preference.WebGenerationTask, webGenerationTask);
+
+         prefs.Set(Preference.WebDeploymentType, WebGenType);
+         if (WebGenType == WebDeploymentType.Ftp)
+         {
+            prefs.Set(Preference.DeploymentRoot, Paths.AddUnixTrailingSlash(WebRoot));
          }
          else
          {
-            prefs.Set(Preference.WebRoot, Paths.AddTrailingSlash(WebRoot));
+            prefs.Set(Preference.DeploymentRoot, Paths.AddTrailingSlash(WebRoot));
          }
          prefs.Set(Preference.WebGenServer, WebGenServer);
          prefs.Set(Preference.WebGenPort, WebGenPort);
@@ -97,7 +111,6 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebGenFtpMode, FtpMode);
          prefs.Set(Preference.WebGenLimitLogSize, LimitLogSize);
          prefs.Set(Preference.WebGenLimitLogSizeLength, LimitLogSizeLength);
-         prefs.Set(Preference.GenerateWeb, GenerateWeb);
       }
 
       #region Refresh Data
@@ -116,7 +129,7 @@ namespace HFM.Forms.Models
             }
          }
       }
-      
+
       public bool SyncTimeMinutesError
       {
          get
@@ -175,9 +188,9 @@ namespace HFM.Forms.Models
 
       #region Web Generation
 
-      private WebGenType _webGenType;
+      private WebDeploymentType _webGenType;
 
-      public WebGenType WebGenType
+      public WebDeploymentType WebGenType
       {
          get { return _webGenType; }
          set
@@ -193,7 +206,7 @@ namespace HFM.Forms.Models
             }
          }
       }
-      
+
       private int _generateInterval;
 
       public int GenerateInterval
@@ -213,7 +226,7 @@ namespace HFM.Forms.Models
       {
          get { return GenerateWeb && WebGenAfterRefresh == false; }
       }
-      
+
       public bool GenerateIntervalError
       {
          get
@@ -262,13 +275,13 @@ namespace HFM.Forms.Models
 
             switch (WebGenType)
             {
-               case WebGenType.Path:
+               case WebDeploymentType.Path:
                   if (WebRoot.Length < 2)
                   {
                      return true;
                   }
                   return !Validate.Path(WebRoot);
-               case WebGenType.Ftp:
+               case WebDeploymentType.Ftp:
                   return !Validate.FtpPath(WebRoot);
                default:
                   return true;
@@ -297,7 +310,7 @@ namespace HFM.Forms.Models
          {
             switch (WebGenType)
             {
-               case WebGenType.Ftp:
+               case WebDeploymentType.Ftp:
                   return !Validate.ServerName(WebGenServer);
                default:
                   return false;
@@ -326,7 +339,7 @@ namespace HFM.Forms.Models
          {
             switch (WebGenType)
             {
-               case WebGenType.Ftp:
+               case WebDeploymentType.Ftp:
                   return !Validate.ServerPort(WebGenPort);
                default:
                   return false;
@@ -382,7 +395,7 @@ namespace HFM.Forms.Models
          {
             switch (WebGenType)
             {
-               case WebGenType.Ftp:
+               case WebDeploymentType.Ftp:
                   return !ValidateCredentials(true);
                default:
                   return false;
@@ -465,9 +478,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private FtpType _ftpMode;
+      private FtpMode _ftpMode;
 
-      public FtpType FtpMode
+      public FtpMode FtpMode
       {
          get { return _ftpMode; }
          set
@@ -482,12 +495,12 @@ namespace HFM.Forms.Models
 
       public bool FtpModeEnabled
       {
-         get { return GenerateWeb && WebGenType.Equals(WebGenType.Ftp); }
+         get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp; }
       }
 
       public bool BrowseLocalPathEnabled
       {
-         get { return GenerateWeb && WebGenType.Equals(WebGenType.Path); }
+         get { return GenerateWeb && WebGenType == WebDeploymentType.Path; }
       }
 
       private bool _limitLogSize;
@@ -506,10 +519,10 @@ namespace HFM.Forms.Models
             }
          }
       }
-      
+
       public bool LimitLogSizeEnabled
       {
-         get { return GenerateWeb && WebGenType.Equals(WebGenType.Ftp) && CopyFAHlog; }
+         get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp && CopyFAHlog; }
       }
 
       private int _limitLogSizeLength;
@@ -551,7 +564,7 @@ namespace HFM.Forms.Models
             }
          }
       }
-      
+
       #endregion
 
       #region INotifyPropertyChanged Members

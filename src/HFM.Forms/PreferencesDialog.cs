@@ -1,18 +1,18 @@
 /*
  * HFM.NET - User Preferences Form
  * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -57,7 +57,7 @@ namespace HFM.Forms
          WebSettings,
          WebVisualStyles
       }
-   
+
       #region Fields
 
       private const string XsltExt = "xslt";
@@ -66,14 +66,14 @@ namespace HFM.Forms
       private const string HfmFilter = "HFM Configuration Files|*.hfmx";
       private const string ExeExt = "exe";
       private const string ExeFilter = "Program Files|*.exe";
-      
+
       private readonly IPreferenceSet _prefs;
       private readonly IAutoRun _autoRun;
-      
+
       private readonly List<IValidatingControl>[] _validatingControls;
       private readonly PropertyDescriptorCollection[] _propertyCollection;
       private readonly object[] _models;
-      
+
       private readonly WebBrowser _cssSampleBrowser;
 
       private ILogger _logger;
@@ -97,7 +97,7 @@ namespace HFM.Forms
       private readonly ReportingModel _reportingModel;
       private readonly WebSettingsModel _webSettingsModel;
       private readonly WebVisualStylesModel _webVisualStylesModel;
-      
+
       #endregion
 
       #region Constructor And Binding/Load Methods
@@ -109,7 +109,7 @@ namespace HFM.Forms
 
          _prefs = prefs;
          _autoRun = autoRun;
-      
+
          InitializeComponent();
 
          udDecimalPlaces.Minimum = 0;
@@ -152,7 +152,7 @@ namespace HFM.Forms
          LoadReportingTab();
          LoadWebSettingsTab();
          LoadVisualStylesTab();
-      
+
          // Cycle through Tabs to create all controls and Bind data
          for (int i = 0; i < tabControl1.TabPages.Count; i++)
          {
@@ -172,7 +172,7 @@ namespace HFM.Forms
          _webSettingsModel.PropertyChanged += WebSettingsChanged;
          _webVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
       }
-      
+
       private static List<IValidatingControl> FindValidatingControls(Control.ControlCollection controls)
       {
          var validatingControls = new List<IValidatingControl>();
@@ -254,7 +254,7 @@ namespace HFM.Forms
                break;
          }
       }
-      
+
       private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
       {
          if (Core.Application.IsRunningOnMono && this.Enabled)
@@ -409,11 +409,11 @@ namespace HFM.Forms
       {
          _propertyCollection[(int)TabName.ScheduledTasks] = TypeDescriptor.GetProperties(_scheduledTasksModel);
          _models[(int)TabName.ScheduledTasks] = _scheduledTasksModel;
-      
+
          #region Refresh Data
          // Always Add Bindings for CheckBoxes that control input TextBoxes after
          // the data has been bound to the TextBox
-         
+
          // Add the CheckBox.Checked => TextBox.Enabled Binding
          txtCollectMinutes.BindEnabled(_scheduledTasksModel, "SyncOnSchedule");
          // Bind the value to the TextBox
@@ -478,19 +478,19 @@ namespace HFM.Forms
          chkLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeEnabled");
          udLimitSize.DataBindings.Add("Value", _scheduledTasksModel, "LimitLogSizeLength", false, DataSourceUpdateMode.OnPropertyChanged);
          udLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeLengthEnabled");
-         
+
          // Finally, add the CheckBox.Checked Binding
          TestConnectionButton.BindEnabled(_scheduledTasksModel, "GenerateWeb");
          btnBrowseWebFolder.BindEnabled(_scheduledTasksModel, "BrowseLocalPathEnabled");
          chkWebSiteGenerator.BindChecked(_scheduledTasksModel, "GenerateWeb");
          #endregion
       }
-      
+
       private void LoadStartupTab()
       {
          _propertyCollection[(int)TabName.StartupAndExternal] = TypeDescriptor.GetProperties(_startupAndExternalModel);
          _models[(int)TabName.StartupAndExternal] = _startupAndExternalModel;
-      
+
          #region Startup
          /*** Auto-Run Is Not DataBound ***/
          if (!Core.Application.IsRunningOnMono)
@@ -502,7 +502,7 @@ namespace HFM.Forms
             // No AutoRun under Mono
             chkAutoRun.Enabled = false;
          }
-         
+
          chkRunMinimized.BindChecked(_startupAndExternalModel, "RunMinimized");
          chkCheckForUpdate.BindChecked(_startupAndExternalModel, "StartupCheckForUpdate");
          #endregion
@@ -511,7 +511,7 @@ namespace HFM.Forms
          txtDefaultConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
          btnBrowseConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
          txtDefaultConfigFile.BindText(_startupAndExternalModel, "DefaultConfigFile");
-         
+
          chkDefaultConfig.BindChecked(_startupAndExternalModel, "UseDefaultConfigFile");
          #endregion
 
@@ -525,7 +525,7 @@ namespace HFM.Forms
       {
          _propertyCollection[(int)TabName.Options] = TypeDescriptor.GetProperties(_optionsModel);
          _models[(int)TabName.Options] = _optionsModel;
-      
+
          #region Interactive Options
          chkOffline.BindChecked(_optionsModel, "OfflineLast");
          chkColorLog.BindChecked(_optionsModel, "ColorLogFile");
@@ -560,43 +560,43 @@ namespace HFM.Forms
          cboShowStyle.DataBindings.Add("SelectedValue", _optionsModel, "FormShowStyle", false, DataSourceUpdateMode.OnPropertyChanged);
          #endregion
       }
-      
+
       private void LoadReportingTab()
       {
          _propertyCollection[(int)TabName.Reporting] = TypeDescriptor.GetProperties(_reportingModel);
          _models[(int)TabName.Reporting] = _reportingModel;
-      
+
          #region Email Settings
          chkEmailSecure.BindChecked(_reportingModel, "ServerSecure");
          chkEmailSecure.BindEnabled(_reportingModel, "ReportingEnabled");
 
          btnTestEmail.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtToEmailAddress.BindText(_reportingModel, "ToAddress");
          txtToEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtFromEmailAddress.BindText(_reportingModel, "FromAddress");
          txtFromEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtSmtpServer.BindText(_reportingModel, "ServerAddress");
          txtSmtpServer.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSmtpServer.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtSmtpServerPort.BindText(_reportingModel, "ServerPort");
          txtSmtpServerPort.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSmtpServerPort.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtSmtpUsername.BindText(_reportingModel, "ServerUsername");
          txtSmtpUsername.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSmtpUsername.BindEnabled(_reportingModel, "ReportingEnabled");
-         
+
          txtSmtpPassword.BindText(_reportingModel, "ServerPassword");
          txtSmtpPassword.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSmtpPassword.BindEnabled(_reportingModel, "ReportingEnabled");
 
          chkEnableEmail.BindChecked(_reportingModel, "ReportingEnabled");
          #endregion
-         
+
          #region Report Selections
          grpReportSelections.BindEnabled(_reportingModel, "ReportingEnabled");
          chkClientEuePause.BindChecked(_reportingModel, "ReportEuePause");
@@ -608,13 +608,13 @@ namespace HFM.Forms
       {
          _propertyCollection[(int)TabName.WebSettings] = TypeDescriptor.GetProperties(_webSettingsModel);
          _models[(int)TabName.WebSettings] = _webSettingsModel;
-      
+
          #region Web Statistics
          txtEOCUserID.BindText(_webSettingsModel, "EocUserId");
          txtStanfordUserID.BindText(_webSettingsModel, "StanfordId");
          txtStanfordTeamID.BindText(_webSettingsModel, "TeamId");
          #endregion
-         
+
          #region Project Download URL
          txtProjectDownloadUrl.BindText(_webSettingsModel, "ProjectDownloadUrl");
          #endregion
@@ -648,12 +648,12 @@ namespace HFM.Forms
          chkUseProxyAuth.BindChecked(_webSettingsModel, "UseProxyAuth");
          #endregion
       }
-      
+
       private void LoadVisualStylesTab()
       {
          _propertyCollection[(int)TabName.WebVisualStyles] = TypeDescriptor.GetProperties(_webVisualStylesModel);
          _models[(int)TabName.WebVisualStyles] = _webVisualStylesModel;
-      
+
          if (Core.Application.IsRunningOnMono)
          {
             StyleList.Sorted = false;
@@ -662,7 +662,7 @@ namespace HFM.Forms
          StyleList.DisplayMember = "DisplayMember";
          StyleList.ValueMember = "ValueMember";
          StyleList.DataBindings.Add("SelectedValue", _webVisualStylesModel, "CssFile", false, DataSourceUpdateMode.OnPropertyChanged);
-         
+
          txtOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebOverview", false, DataSourceUpdateMode.OnPropertyChanged);
          txtMobileOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileOverview", false, DataSourceUpdateMode.OnPropertyChanged);
          txtSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -673,7 +673,7 @@ namespace HFM.Forms
       private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
       {
          toolTipPrefs.RemoveAll();
-         
+
          if (tabControl1.SelectedIndex == (int)TabName.WebVisualStyles)
          {
             ShowCssPreview();
@@ -697,7 +697,7 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region Reporting Tab
 
       private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
@@ -705,7 +705,7 @@ namespace HFM.Forms
          if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
 
          toolTipPrefs.RemoveAll();
-         toolTipPrefs.Show(String.Format("Depending on your SMTP server, this 'From Address' field may or may not be of consequence.{0}If you are required to enter credentials to send Email through the SMTP server, the server will{0}likely use the Email Address tied to those credentials as the sender or 'From Address'.{0}Regardless of this limitation, a valid Email Address must still be specified here.", Environment.NewLine), 
+         toolTipPrefs.Show(String.Format("Depending on your SMTP server, this 'From Address' field may or may not be of consequence.{0}If you are required to enter credentials to send Email through the SMTP server, the server will{0}likely use the Email Address tied to those credentials as the sender or 'From Address'.{0}Regardless of this limitation, a valid Email Address must still be specified here.", Environment.NewLine),
             txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
       }
 
@@ -726,7 +726,7 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                _logger.WarnFormat(ex, "{0}", ex.Message);
-               MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message), 
+               MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message),
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
          }
@@ -798,7 +798,7 @@ namespace HFM.Forms
       private void ShowCssPreview()
       {
          if (Core.Application.IsRunningOnMono) return;
-         
+
          string sStylesheet = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), _webVisualStylesModel.CssFile);
          var sb = new StringBuilder();
 
@@ -840,7 +840,7 @@ namespace HFM.Forms
 
       #region Button Click Event Handlers
 
-      private delegate void FtpCheckConnectionDelegate(string server, int port, string path, string username, string password, FtpType ftpMode);
+      private delegate void FtpCheckConnectionDelegate(string server, int port, string path, string username, string password, FtpMode ftpMode);
 
       private void TestConnectionButtonClick(object sender, EventArgs e)
       {
@@ -875,7 +875,7 @@ namespace HFM.Forms
             ShowConnectionFailedMessage(ex.Message);
          }
       }
-      
+
       public void CheckFileConnection(string directory)
       {
          if (Directory.Exists(directory) == false)
@@ -947,7 +947,7 @@ namespace HFM.Forms
             Environment.NewLine, message), Core.Application.NameAndVersion, MessageBoxButtons.OK,
                MessageBoxIcon.Error);
       }
-      
+
       private void SetDefaultCursor()
       {
          if (InvokeRequired)
@@ -955,10 +955,10 @@ namespace HFM.Forms
             Invoke(new MethodInvoker(SetDefaultCursor));
             return;
          }
-         
+
          Cursor = Cursors.Default;
       }
-      
+
       private void SetWaitCursor()
       {
          if (InvokeRequired)
@@ -987,7 +987,7 @@ namespace HFM.Forms
             Close();
          }
       }
-      
+
       private bool CheckForErrorConditions()
       {
          SetPropertyErrorState();
@@ -1006,14 +1006,14 @@ namespace HFM.Forms
             tabControl1.SelectedTab = tabWeb;
             return true;
          }
-         
+
          return false;
       }
 
       private void SetAutoRun()
       {
          if (Core.Application.IsRunningOnMono) return;
-         
+
          try
          {
             _autoRun.SetFilePath(chkAutoRun.Checked ? System.Windows.Forms.Application.ExecutablePath : null);
@@ -1028,7 +1028,7 @@ namespace HFM.Forms
 
       private void btnCancel_Click(object sender, EventArgs e)
       {
-         _prefs.Discard();
+
       }
 
       #region Folder Browsing
@@ -1098,7 +1098,7 @@ namespace HFM.Forms
             return openConfigDialog.FileName;
          }
 
-         return null;   
+         return null;
       }
 
       private void btnOverviewBrowse_Click(object sender, EventArgs e)
@@ -1152,7 +1152,7 @@ namespace HFM.Forms
          {
             var fileInfo = new FileInfo(path);
             string xsltPath = Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName);
-            
+
             if (fileInfo.Exists)
             {
                openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
@@ -1192,12 +1192,12 @@ namespace HFM.Forms
 
             return openConfigDialog.FileName;
          }
-         
+
          return null;
       }
 
       #endregion
-      
+
       #endregion
 
       #region TextBox KeyPress Event Handler (to enforce digits only)
@@ -1205,10 +1205,10 @@ namespace HFM.Forms
       private void TextBoxDigitsOnlyKeyPress(object sender, KeyPressEventArgs e)
       {
          Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
-      
+
          // only allow digits special keystrokes - Issue 65
          if (char.IsDigit(e.KeyChar) == false &&
-               e.KeyChar != 8 &&       // backspace 
+               e.KeyChar != 8 &&       // backspace
                e.KeyChar != 26 &&      // Ctrl+Z
                e.KeyChar != 24 &&      // Ctrl+X
                e.KeyChar != 3 &&       // Ctrl+C

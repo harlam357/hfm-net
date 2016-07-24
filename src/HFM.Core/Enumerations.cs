@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Core Enumerations
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -93,19 +93,19 @@ namespace HFM.Core
       None
    }
 
-   public enum TimeStyleType
+   public enum TimeFormatting
    {
-      Standard,
-      Formatted
+      None,
+      Format1
    }
-   
-   public enum CompletedCountDisplayType
+
+   public enum UnitTotalsType
    {
-      ClientTotal,
-      ClientRunTotal
+      All,
+      ClientStart
    }
-   
-   public enum FormShowStyleType
+
+   public enum MinimizeToOption
    {
       SystemTray,
       TaskBar,
@@ -121,30 +121,32 @@ namespace HFM.Core
    /// <summary>
    /// Ftp Transfer Types
    /// </summary>
-   public enum FtpType
+   public enum FtpMode
    {
       Passive,
       Active
    }
 
-   /// <summary>
-   /// Work Unit History Production View Type
-   /// </summary>
-   public enum HistoryProductionView
-   {
-      BonusDownloadTime,
-      BonusFrameTime,
-      Standard
-   }
-
-   public enum WebGenType
+   public enum WebDeploymentType
    {
       Path,
       Ftp
    }
 
+   public enum ProcessingMode
+   {
+      Parallel,
+      Serial
+   }
+
+   public enum StatsType
+   {
+      User,
+      Team
+   }
+
    // ReSharper disable InconsistentNaming
-   
+
    public enum Preference
    {
       FormLocation,
@@ -159,7 +161,7 @@ namespace HFM.Core
       TimeStyle,
       CompletedCountDisplay,
       ShowVersions,
-      FormShowStyle,
+      MinimizeTo,
       BenchmarksFormLocation,
       BenchmarksFormSize,
       GraphColors,
@@ -167,19 +169,21 @@ namespace HFM.Core
       BenchmarksClientsPerGraph,
       MessagesFormLocation,
       MessagesFormSize,
-      SyncOnLoad,
-      SyncOnSchedule,
-      SyncTimeMinutes,
+      ClientRetrievalTaskType,
+      ClientRetrievalTaskEnabled,
+      ClientRetrievalTaskInterval,
+      ClientRetrievalTask,
       DuplicateUserIdCheck,
       DuplicateProjectCheck,
       AllowRunningAsync,
-      ShowXmlStats,
-      ShowTeamStats,
-      GenerateWeb,
-      GenerateInterval,
-      WebGenAfterRefresh,
-      WebGenType,
-      WebRoot,
+      EnableUserStats,
+      UserStatsType,
+      WebGenerationTask,
+      WebGenerationTaskEnabled,
+      WebGenerationTaskInterval,
+      WebGenerationTaskAfterClientRetrieval,
+      WebDeploymentType,
+      DeploymentRoot,
       WebGenServer,
       WebGenPort,
       WebGenUsername,
@@ -205,9 +209,9 @@ namespace HFM.Core
       AutoSaveConfig,
       PpdCalculation,
       DecimalPlaces,
-      CalculateBonus,
-      FollowLogFile,
-      EtaDate,
+      BonusCalculation,
+      FollowLog,
+      DisplayEtaAsDate,
       LogFileViewer,
       FileExplorer,
       MessageLevel,
@@ -231,7 +235,7 @@ namespace HFM.Core
       UseProxyAuth,
       ProxyUser,
       ProxyPass,
-      HistoryProductionType,
+      HistoryBonusCalculation,
       ShowEntriesValue,
       HistorySortColumnName,
       HistorySortOrder,

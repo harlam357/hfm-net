@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="DataTypes\DataAggregatorResult.cs" />
+    <Compile Include="DataTypes\PreferenceData.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="MarkupGenerator.cs" />
     <Compile Include="PetaPoco\PetaPoco.cs" />
+    <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />

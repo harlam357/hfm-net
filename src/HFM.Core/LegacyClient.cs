@@ -180,7 +180,7 @@ namespace HFM.Core
 
          _slotModel.UnitInfoModel.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
-            Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
+            Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
          string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
          Logger.Info(Constants.ClientNameFormat, _slotModel.Name, statusMessage);

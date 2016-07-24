@@ -2,22 +2,22 @@
  * HFM.NET - Main UI Form
  * Copyright (C) 2006-2007 David Rawling
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -72,7 +72,7 @@ namespace HFM.Forms
       bool FollowLogFileChecked { get; set; }
 
       #endregion
-      
+
       #region Methods
 
       void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel);
@@ -102,9 +102,9 @@ namespace HFM.Forms
       void SetQueue(ClientQueue queue);
 
       void SetQueue(ClientQueue queue, SlotType slotType, bool utcOffsetIsZero);
-      
+
       void RefreshControlsWithTotalsData(SlotTotals totals);
-      
+
       #endregion
    }
 
@@ -114,13 +114,13 @@ namespace HFM.Forms
    public partial class MainForm : FormWrapper, IMainView
    {
       #region Properties
-   
+
       public string StatusLabelLeftText
       {
          get { return statusLabelLeft.Text; }
          set { statusLabelLeft.Text = value; }
       }
-      
+
       public bool WorkUnitHistoryMenuEnabled
       {
          get { return mnuToolsHistory.Enabled; }
@@ -130,7 +130,7 @@ namespace HFM.Forms
       public ILogFileViewer LogFileViewer { get { return txtLogFile; } }
 
       public IDataGridView DataGridView { get { return dataGridView1; } }
-      
+
       public SplitContainer SplitContainer { get { return splitContainer1; } }
 
       public SplitContainer SplitContainer2 { get { return splitContainer2; } }
@@ -146,9 +146,9 @@ namespace HFM.Forms
          get { return ViewToggleFollowLogFileMenuItem.Checked; }
          set { ViewToggleFollowLogFileMenuItem.Checked = value; }
       }
-      
+
       #endregion
-      
+
       #region Fields
 
       private MainPresenter _presenter;
@@ -174,9 +174,9 @@ namespace HFM.Forms
          base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
 #endif
       }
-      
+
       #endregion
-      
+
       #region Initialize
 
       public void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel)
@@ -187,7 +187,7 @@ namespace HFM.Forms
          // method depends on _presenter HAVING A VALUE.  Wait to hook
          // up this event until after _presenter has been set (above).
          Resize += MainFormResize;
-      
+
          #region Initialize Controls
 
          // Manually Create the Columns - Issue 41
@@ -206,7 +206,7 @@ namespace HFM.Forms
          BindToUserStatsDataModel(userStatsDataModel);
          // Hook-up Status Label Event Handlers
          SubscribeToStatsLabelEvents();
-         
+
          #region Hook-up DataGridView Event Handlers for Mono
 
          // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
@@ -270,7 +270,7 @@ namespace HFM.Forms
          statusUserTotal.Visible = userStatsDataModel.ControlsVisible;
          statusUserWUs.Visible = userStatsDataModel.ControlsVisible;
       }
-      
+
       private void SubscribeToStatsLabelEvents()
       {
          statusUserTeamRank.MouseDown += StatsLabelMouseDown;
@@ -288,7 +288,7 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region Form Handlers
 
       public void SecondInstanceStarted(string[] args)
@@ -327,7 +327,7 @@ namespace HFM.Forms
          _notifyIcon.Icon = Icon;
          _notifyIcon.Text = Text;
          _notifyIcon.DoubleClick += delegate { _presenter.NotifyIconDoubleClick(); };
-         
+
          _presenter.ViewShown();
       }
 
@@ -340,7 +340,7 @@ namespace HFM.Forms
       {
          e.Cancel = _presenter.ViewClosing();
       }
-      
+
       #endregion
 
       #region Other IMainView Interface Methods
@@ -371,9 +371,9 @@ namespace HFM.Forms
       }
 
       #endregion
-      
+
       #region Data Grid View Handlers
-      
+
       public void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
       {
          if (InvokeRequired)
@@ -412,16 +412,16 @@ namespace HFM.Forms
          mnuContextClientsFinishSlot.Visible = fahClientMenu;
          mnuContextClientsSep3.Visible = fahClientMenu;
       }
-      
+
       public void ShowGridContextMenuStrip(Point screenLocation)
       {
          gridContextMenuStrip.Show(screenLocation);
       }
-      
+
       #endregion
 
       #region File Menu Click Handlers
-      
+
       private void mnuFileNew_Click(object sender, EventArgs e)
       {
          _presenter.FileNewClick();
@@ -474,12 +474,12 @@ namespace HFM.Forms
       {
          _presenter.ShowHfmGoogleGroup();
       }
-      
+
       private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
       {
          _presenter.CheckForUpdateClick();
       }
-      
+
       private void mnuHelpAbout_Click(object sender, EventArgs e)
       {
          var about = new AboutDialog();
@@ -499,7 +499,7 @@ namespace HFM.Forms
       #endregion
 
       #region Clients Menu Click Handlers
-      
+
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
          _presenter.ClientsAddClick();
@@ -544,7 +544,7 @@ namespace HFM.Forms
       {
          _presenter.ClientsViewClientFilesClick();
       }
-      
+
       #endregion
 
       #region Grid Context Menu Handlers
@@ -575,12 +575,12 @@ namespace HFM.Forms
             AutoSizeColumn(i);
          }
       }
-      
+
       private void mnuViewMessages_Click(object sender, EventArgs e)
       {
          _presenter.ViewMessagesClick();
       }
-      
+
       private void mnuViewShowHideLog_Click(object sender, EventArgs e)
       {
          _presenter.ShowHideLogWindow();
@@ -590,7 +590,7 @@ namespace HFM.Forms
       {
          _presenter.ShowHideQueue();
       }
-      
+
       private void mnuViewToggleDateTime_Click(object sender, EventArgs e)
       {
          _presenter.ViewToggleDateTimeClick();
@@ -620,7 +620,7 @@ namespace HFM.Forms
       {
          _presenter.ViewToggleFollowLogFile();
       }
-      
+
       public void ShowNotifyToolTip(string text)
       {
          toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
@@ -647,7 +647,7 @@ namespace HFM.Forms
 
          queueControl.SetQueue(queue, slotType, utcOffsetIsZero);
       }
-      
+
       #endregion
 
       #region Tools Menu Click Handlers
@@ -707,12 +707,12 @@ namespace HFM.Forms
 
       public void RefreshControlsWithTotalsData(SlotTotals totals)
       {
-         SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Non-Working Slots{3}{2:" + _prefs.PpdFormatString + "} PPD",
+         SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Non-Working Slots{3}{2:" + _prefs.GetPpdFormatString() + "} PPD",
                                          totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD, Environment.NewLine));
 
          string clientLabel = totals.WorkingSlots == 1 ? "Slot" : "Slots";
          SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingSlots, clientLabel));
-         SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.PpdFormatString + "} PPD", totals.PPD));
+         SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + _prefs.GetPpdFormatString() + "} PPD", totals.PPD));
       }
 
       private void SetNotifyIconText(string val)
@@ -722,7 +722,7 @@ namespace HFM.Forms
             BeginInvoke(new Action<string>(SetNotifyIconText), val);
             return;
          }
-         
+
          // make sure the object has been created
          if (_notifyIcon != null)
          {
@@ -742,7 +742,7 @@ namespace HFM.Forms
             BeginInvoke(new Action<string>(SetStatusLabelHostsText), val);
             return;
          }
-         
+
          statusLabelHosts.Text = val;
       }
 
@@ -753,7 +753,7 @@ namespace HFM.Forms
             BeginInvoke(new Action<string>(SetStatusLabelPPDText), val);
             return;
          }
-         
+
          statusLabelPPW.Text = val;
       }
 

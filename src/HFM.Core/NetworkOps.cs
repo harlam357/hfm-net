@@ -43,7 +43,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode);
+      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode);
 
       /// <summary>
       /// Upload a File via Ftp.
@@ -57,7 +57,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode);
+      void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpMode ftpMode);
 
       /// <summary>
       /// Check an FTP Connection.
@@ -70,7 +70,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <param name="callback"></param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback);
+      IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpMode ftpMode, AsyncCallback callback);
 
       /// <summary>
       /// Check an FTP Connection.
@@ -82,7 +82,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode);
+      void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpMode ftpMode);
 
       /// <summary>
       /// Check an HTTP Connection.
@@ -144,7 +144,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode)
       {
          FtpUploadHelper(server, port, ftpPath, localFilePath, -1, username, password, ftpMode);
       }
@@ -161,7 +161,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath, or localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(string server, int port, string ftpPath, string localFilePath, int maximumLength, string username, string password, FtpMode ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
@@ -180,7 +180,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public void FtpUploadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpMode ftpMode)
       {
          FtpUploadHelper(resourceUri, localFilePath, -1, username, password, ftpMode);
       }
@@ -195,7 +195,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public void FtpUploadHelper(Uri resourceUri, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(Uri resourceUri, string localFilePath, int maximumLength, string username, string password, FtpMode ftpMode)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
 
@@ -212,7 +212,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpMode ftpMode)
       {
          FtpUploadHelper(ftpWebOperation, localFilePath, -1, username, password, ftpMode);
       }
@@ -228,7 +228,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, int maximumLength, string username, string password, FtpType ftpMode)
+      public void FtpUploadHelper(IWebOperation ftpWebOperation, string localFilePath, int maximumLength, string username, string password, FtpMode ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
@@ -254,7 +254,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if server, ftpPath, or remoteFileName is null or empty.</exception>
       public void FtpDownloadHelper(string server, string ftpPath, string remoteFileName, string localFilePath, 
-                                    string username, string password, FtpType ftpMode)
+                                    string username, string password, FtpMode ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
@@ -277,7 +277,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if server, ftpPath, or remoteFileName is null or empty.</exception>
       public void FtpDownloadHelper(string server, int port, string ftpPath, string remoteFileName, string localFilePath,
-                                    string username, string password, FtpType ftpMode)
+                                    string username, string password, FtpMode ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
@@ -296,7 +296,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public void FtpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpDownloadHelper(Uri resourceUri, string localFilePath, string username, string password, FtpMode ftpMode)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri");
 
@@ -313,7 +313,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
       /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpDownloadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpType ftpMode)
+      public void FtpDownloadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpMode ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
          if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
@@ -337,7 +337,7 @@ namespace HFM.Core
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Url is null or empty.</exception>
-      public long GetFtpDownloadLength(string server, string ftpPath, string remoteFileName, string username, string password, FtpType ftpMode)
+      public long GetFtpDownloadLength(string server, string ftpPath, string remoteFileName, string username, string password, FtpMode ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
@@ -355,7 +355,7 @@ namespace HFM.Core
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public long GetFtpDownloadLength(Uri resourceUri, string username, string password, FtpType ftpMode)
+      public long GetFtpDownloadLength(Uri resourceUri, string username, string password, FtpMode ftpMode)
       {
          if (resourceUri == null) throw new ArgumentNullException("resourceUri", "Argument 'resourceUri' cannot be null.");
 
@@ -370,7 +370,7 @@ namespace HFM.Core
       /// <param name="password">Http Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public long GetFtpDownloadLength(IWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
+      public long GetFtpDownloadLength(IWebOperation ftpWebOperation, string username, string password, FtpMode ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'httpWebOperation' cannot be null.");
 
@@ -515,7 +515,7 @@ namespace HFM.Core
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <param name="callback"></param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      public IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode, AsyncCallback callback)
+      public IAsyncResult BeginFtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpMode ftpMode, AsyncCallback callback)
       {
          var action = new Action(() => FtpCheckConnection(server, port, ftpPath, username, password, ftpMode));
          return action.BeginInvoke(callback, action);
@@ -531,7 +531,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if Server or FtpPath is null or empty.</exception>
-      public void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpType ftpMode)
+      public void FtpCheckConnection(string server, int port, string ftpPath, string username, string password, FtpMode ftpMode)
       {
          if (String.IsNullOrEmpty(server)) throw new ArgumentException("Argument 'server' cannot be a null or empty string.");
          if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
@@ -548,7 +548,7 @@ namespace HFM.Core
       /// <param name="password">Ftp Login Password.</param>
       /// <param name="ftpMode">Ftp Transfer Mode.</param>
       /// <exception cref="ArgumentException">Throws if ftpWebOperation is null.</exception>
-      public void FtpCheckConnection(IWebOperation ftpWebOperation, string username, string password, FtpType ftpMode)
+      public void FtpCheckConnection(IWebOperation ftpWebOperation, string username, string password, FtpMode ftpMode)
       {
          if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
 
@@ -612,16 +612,16 @@ namespace HFM.Core
          httpWebOperation.CheckConnection();
       }
 
-      private static void SetFtpMode(IFtpWebRequest request, FtpType ftpMode)
+      private static void SetFtpMode(IFtpWebRequest request, FtpMode ftpMode)
       {
          Debug.Assert(request != null);
 
          switch (ftpMode)
          {
-            case FtpType.Passive:
+            case FtpMode.Passive:
                request.UsePassive = true;
                break;
-            case FtpType.Active:
+            case FtpMode.Active:
                request.UsePassive = false;
                break;
             default:

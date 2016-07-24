@@ -166,7 +166,7 @@ namespace HFM.Forms.Tests.Models
          _model.AddQuery(parameters);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         _database.Expect(x => x.Page(1, 1, null, HistoryProductionView.BonusDownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<HistoryEntry>());
+         _database.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<HistoryEntry>());
          // Act
          _model.ResetBindings(true);
          // Assert
@@ -177,7 +177,7 @@ namespace HFM.Forms.Tests.Models
       public void HistoryPresenterModel_FetchSelectedQuery_Test()
       {
          // Arrange
-         _database.Expect(x => x.Fetch(_model.SelectedQuery, _model.ProductionView));
+         _database.Expect(x => x.Fetch(_model.SelectedQuery, _model.BonusCalculation));
          // Act
          _model.FetchSelectedQuery();
          // Assert

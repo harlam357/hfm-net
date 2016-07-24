@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - User Stats Data Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -29,12 +29,12 @@ namespace HFM.Forms.Models
 {
    public sealed class UserStatsDataModel : INotifyPropertyChanged
    {
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -50,9 +50,11 @@ namespace HFM.Forms.Models
          _updateTimer.Elapsed += UpdateTimerElapsed;
 
          _prefs = prefs;
-         _prefs.ShowUserStatsChanged += delegate
+         _prefs.PreferenceChanged += (s, e) =>
+                                     {
+                                        if (e.Preference == Preference.EnableUserStats)
                                         {
-                                           ControlsVisible = _prefs.Get<bool>(Preference.ShowXmlStats);
+                                           ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
                                            if (ControlsVisible)
                                            {
                                               _dataContainer.GetEocXmlData(false);
@@ -62,7 +64,8 @@ namespace HFM.Forms.Models
                                            {
                                               StopTimer();
                                            }
-                                        };
+                                        }
+                                     };
          _dataContainer = dataContainer;
          _dataContainer.XmlStatsDataChanged += delegate
                                                {
@@ -71,7 +74,7 @@ namespace HFM.Forms.Models
                                                };
 
          // apply data container to the model
-         ControlsVisible = _prefs.Get<bool>(Preference.ShowXmlStats);
+         ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
          if (ControlsVisible)
          {
             DateTime nextUpdateTime = _dataContainer.GetNextUpdateTime();
@@ -124,7 +127,7 @@ namespace HFM.Forms.Models
             }
          }
 
-         _logger.Info("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
+         Logger.Info("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
          _updateTimer.Start();
       }
 
@@ -136,13 +139,13 @@ namespace HFM.Forms.Models
 
       private void StopTimer()
       {
-         _logger.Info("Stopping EOC Stats Timer Loop");
+         Logger.Info("Stopping EOC Stats Timer Loop");
          _updateTimer.Stop();
       }
 
       public void SetViewStyle(bool showTeamStats)
       {
-         _prefs.Set(Preference.ShowTeamStats, showTeamStats);
+         _prefs.Set(Preference.UserStatsType, showTeamStats ? StatsType.Team : StatsType.User);
          // all properties
          OnPropertyChanged(null);
       }
@@ -161,7 +164,7 @@ namespace HFM.Forms.Models
 
       public string Rank
       {
-         get { return BuildLabel("Team", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamRank : UserTeamRank); }
+         get { return BuildLabel("Team", ShowTeamStats ? TeamRank : UserTeamRank); }
       }
 
       private int _teamRank;
@@ -200,7 +203,7 @@ namespace HFM.Forms.Models
 
       public string OverallRank
       {
-         get { return BuildLabel("Project", _prefs.Get<bool>(Preference.ShowTeamStats) ? 0 : UserOverallRank); }
+         get { return BuildLabel("Project", ShowTeamStats ? 0 : UserOverallRank); }
       }
 
       private int _userOverallRank;
@@ -222,7 +225,7 @@ namespace HFM.Forms.Models
 
       public string TwentyFourHourAvgerage
       {
-         get { return BuildLabel("24hr", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamTwentyFourHourAvgerage : UserTwentyFourHourAvgerage); }
+         get { return BuildLabel("24hr", ShowTeamStats ? TeamTwentyFourHourAvgerage : UserTwentyFourHourAvgerage); }
       }
 
       private long _teamTwentyFourHourAvgerage;
@@ -261,7 +264,7 @@ namespace HFM.Forms.Models
 
       public string PointsToday
       {
-         get { return BuildLabel("Today", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamPointsToday : UserPointsToday); }
+         get { return BuildLabel("Today", ShowTeamStats ? TeamPointsToday : UserPointsToday); }
       }
 
       private long _teamPointsToday;
@@ -300,7 +303,7 @@ namespace HFM.Forms.Models
 
       public string PointsWeek
       {
-         get { return BuildLabel("Week", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamPointsWeek : UserPointsWeek); }
+         get { return BuildLabel("Week", ShowTeamStats ? TeamPointsWeek : UserPointsWeek); }
       }
 
       private long _teamPointsWeek;
@@ -339,7 +342,7 @@ namespace HFM.Forms.Models
 
       public string PointsTotal
       {
-         get { return BuildLabel("Total", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamPointsTotal : UserPointsTotal); }
+         get { return BuildLabel("Total", ShowTeamStats ? TeamPointsTotal : UserPointsTotal); }
       }
 
       private long _teamPointsTotal;
@@ -378,7 +381,7 @@ namespace HFM.Forms.Models
 
       public string WorkUnitsTotal
       {
-         get { return BuildLabel("WUs", _prefs.Get<bool>(Preference.ShowTeamStats) ? TeamWorkUnitsTotal : UserWorkUnitsTotal); }
+         get { return BuildLabel("WUs", ShowTeamStats ? TeamWorkUnitsTotal : UserWorkUnitsTotal); }
       }
 
       private long _teamWorkUnitsTotal;
@@ -435,9 +438,14 @@ namespace HFM.Forms.Models
          }
       }
 
+      private bool ShowTeamStats
+      {
+         get { return _prefs.Get<StatsType>(Preference.UserStatsType) == StatsType.Team; }
+      }
+
       public bool OverallRankVisible
       {
-         get { return !_prefs.Get<bool>(Preference.ShowTeamStats) && ControlsVisible; }
+         get { return !ShowTeamStats && ControlsVisible; }
       }
 
       #endregion

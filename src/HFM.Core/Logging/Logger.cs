@@ -149,13 +149,16 @@ namespace HFM.Core.Logging
          Trace.Listeners.Add(new TextWriterTraceListener(logFilePath));
          Trace.AutoFlush = true;
 
-         _prefs.MessageLevelChanged += (s, e) =>
+         _prefs.PreferenceChanged += (s, e) =>
          {
-            var newLevel = (LoggerLevel)_prefs.Get<int>(Preference.MessageLevel);
-            if (newLevel != Level)
+            if (e.Preference == Preference.MessageLevel)
             {
-               Level = newLevel;
-               Info("Debug Message Level Changed: {0}", newLevel);
+               var newLevel = (LoggerLevel)_prefs.Get<int>(Preference.MessageLevel);
+               if (newLevel != Level)
+               {
+                  Level = newLevel;
+                  Info("Debug Message Level Changed: {0}", newLevel);
+               }
             }
          };
       }

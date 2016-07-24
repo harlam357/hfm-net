@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Main UI DataGrid Handlers
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
- * 
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -50,7 +50,7 @@ namespace HFM.Forms
       /// Holds Current Mouse Over Column Index
       /// </summary>
       private int _currentMouseOverColumn = -1;
-   
+
       private void DataGridViewMouseMove(object sender, MouseEventArgs e)
       {
          DataGridView.HitTestInfo info = dataGridView1.HitTest(e.X, e.Y);
@@ -60,7 +60,7 @@ namespace HFM.Forms
          {
             return;
          }
-         
+
          // Update the current cell indexes
          _currentMouseOverRow = info.RowIndex;
          _currentMouseOverColumn = info.ColumnIndex;
@@ -80,7 +80,7 @@ namespace HFM.Forms
                toolTipGrid.Show(slotModel.Status.ToString(), dataGridView1, e.X + 15, e.Y);
                return;
             }
-            
+
             if (dataGridView1.Columns["Username"].Index == info.ColumnIndex)
             {
                if (slotModel.UsernameOk == false)
@@ -142,7 +142,7 @@ namespace HFM.Forms
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
                #region Duplicate Project Custom Paint
-               
+
                if (_prefs.Get<bool>(Preference.DuplicateProjectCheck))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
@@ -167,14 +167,14 @@ namespace HFM.Forms
                       dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      _prefs.Get<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                      _prefs.Get<TimeFormatting>(Preference.TimeStyle).Equals(TimeFormatting.Format1))
             {
                PaintGridCell(PaintCell.Time, e);
             }
             else if (dataGridView1.Columns["ETA"].Index == e.ColumnIndex)
             {
                #region ETA as Date Custom Paint
-               if (_prefs.Get<bool>(Preference.EtaDate))
+               if (_prefs.Get<bool>(Preference.DisplayEtaAsDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
                   if (slotModel != null)
@@ -204,7 +204,7 @@ namespace HFM.Forms
       {
          PaintGridCell(paint, null, e);
       }
-      
+
       /// <summary>
       /// Custom Paint Grid Cells
       /// </summary>
@@ -217,7 +217,7 @@ namespace HFM.Forms
             using (var gridLinePen = new Pen(gridBrush))
             {
                #region Erase (Set BackColor) the Cell and Choose Text Color
-               
+
                Color textColor = Color.Black;
                if (paint.Equals(PaintCell.Status))
                {
@@ -253,7 +253,7 @@ namespace HFM.Forms
                   throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
-               
+
                #endregion
 
                #region Draw the grid lines
@@ -278,7 +278,7 @@ namespace HFM.Forms
                #endregion
 
                #region Draw Cell Content (Text or Shapes)
-               
+
                if (paint.Equals(PaintCell.Status))
                {
                   //// this is new... sometimes being passed a null
@@ -326,14 +326,14 @@ namespace HFM.Forms
                   throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                      "PaintCell Type '{0}' is not implemented", paint));
                }
-               
+
                #endregion
 
                e.Handled = true;
             }
          }
       }
-      
+
       /// <summary>
       /// Paint the Time based cells with the custom time format
       /// </summary>
@@ -383,7 +383,7 @@ namespace HFM.Forms
          AutoSizeColumn(e.ColumnIndex);
          e.Handled = true;
       }
-      
+
       private void AutoSizeColumn(int columnIndex)
       {
          var font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
@@ -413,7 +413,7 @@ namespace HFM.Forms
                     dataGridView1.Columns["ETA"].Index == columnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                     dataGridView1.Columns["Deadline"].Index == columnIndex) &&
-                    _prefs.Get<TimeStyleType>(Preference.TimeStyle).Equals(TimeStyleType.Formatted))
+                    _prefs.Get<TimeFormatting>(Preference.TimeStyle).Equals(TimeFormatting.Format1))
                {
                   if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {
@@ -432,7 +432,7 @@ namespace HFM.Forms
                      formattedString = GetFormattedDeadlineString((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value);
                   }
                }
-               else if (dataGridView1.Columns["ETA"].Index == columnIndex && _prefs.Get<bool>(Preference.EtaDate))
+               else if (dataGridView1.Columns["ETA"].Index == columnIndex && _prefs.Get<bool>(Preference.DisplayEtaAsDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
                   formattedString = slotModel.ETADate.ToDateString();
@@ -467,7 +467,7 @@ namespace HFM.Forms
       }
 
       #region Custom String Formatting Helpers
-      
+
       private static string GetFormattedTpfString(TimeSpan span)
       {
          string formatString = "{1:00}min {2:00}sec";
@@ -523,7 +523,7 @@ namespace HFM.Forms
 
          return String.Format(formatString, span.Days, span.Hours, span.Minutes);
       }
-      
+
       #endregion
 
       public const int NumberOfDisplayFields = 17;
@@ -546,10 +546,6 @@ namespace HFM.Forms
          dgv.Columns["TPF"].DataPropertyName = "TPF";
          dgv.Columns.Add("PPD", "PPD");
          dgv.Columns["PPD"].DataPropertyName = "PPD";
-         //dgv.Columns.Add("MHz", "MHz");
-         //dgv.Columns["MHz"].DataPropertyName = "MHz";
-         //dgv.Columns.Add("PPDMHz", "PPD/MHz");
-         //dgv.Columns["PPDMHz"].DataPropertyName = "PPDMHz";
          dgv.Columns.Add("ETA", "ETA");
          dgv.Columns["ETA"].DataPropertyName = "ETA";
          dgv.Columns.Add("Core", "Core");

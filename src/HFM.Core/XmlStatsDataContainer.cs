@@ -1,17 +1,17 @@
 /*
  * HFM.NET - XML Stats Data Container
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -62,11 +62,11 @@ namespace HFM.Core
    public sealed class XmlStatsDataContainer : DataContainer<XmlStatsData>, IXmlStatsDataContainer
    {
       #region Constants
-      
+
       private const string EocFoldingStatsNode = "EOC_Folding_Stats";
       private const string EocStatusNode = "status";
       private const string EocUpdateStatusNode = "Update_Status";
-      
+
       #endregion
 
       public event EventHandler XmlStatsDataChanged;
@@ -108,9 +108,9 @@ namespace HFM.Core
       }
 
       #endregion
-      
+
       #region Methods
-      
+
       /// <summary>
       /// Is it Time for a Stats Update?
       /// </summary>
@@ -154,8 +154,8 @@ namespace HFM.Core
       internal static DateTime GetNextUpdateTime(DateTime lastUpdated, bool isDaylightSavingTime)
       {
          // values given here should not be in the future, if a user ran HFM with the system date time
-         // set incorrectly to a time in the future and the user stats data file was subsequently saved 
-         // with a sufficiently future date and time then this would cause an issue setting the stats 
+         // set incorrectly to a time in the future and the user stats data file was subsequently saved
+         // with a sufficiently future date and time then this would cause an issue setting the stats
          // update timer in UserStatsDataModel.StartTimer().
          // Issue 276 - http://www.tech-archive.net/Archive/DotNet/microsoft.public.dotnet.framework/2006-10/msg00228.html
          if (lastUpdated > DateTime.UtcNow)
@@ -189,6 +189,11 @@ namespace HFM.Core
          return nextUpdateTime;
       }
 
+      private string EocUserXml
+      {
+         get { return String.Concat(Constants.EOCUserXmlUrl, _prefs.Get<int>(Preference.EocUserId)); }
+      }
+
       /// <summary>
       /// Get Overall User Data from EOC XML
       /// </summary>
@@ -205,7 +210,7 @@ namespace HFM.Core
                #region Get the XML Document
 
                var xmlData = new XmlDocument();
-               xmlData.Load(_prefs.EocUserXml);
+               xmlData.Load(EocUserXml);
                xmlData.RemoveChild(xmlData.ChildNodes[0]);
 
                XmlNode eocNode = GetXmlNode(xmlData, EocFoldingStatsNode);
@@ -218,7 +223,7 @@ namespace HFM.Core
                var newStatsData = GetUserStatsData(eocNode);
 
                // if Forced, set Last Updated and Serialize or
-               // if the new data is not equal to the previous data, we updated... otherwise, if the update 
+               // if the new data is not equal to the previous data, we updated... otherwise, if the update
                // status is current we should assume the data is current but did not change - Issue 67
                if (forceRefresh || !(Data.Equals(newStatsData)) || updateStatus == "Current")
                {
@@ -248,7 +253,7 @@ namespace HFM.Core
       {
          XmlNode teamNode = eocNode.SelectSingleNode("team");
          XmlNode userNode = eocNode.SelectSingleNode("user");
-         
+
          var statsData = new XmlStatsData(DateTime.UtcNow);
          statsData.UserTwentyFourHourAvgerage = Convert.ToInt64(GetXmlNode(userNode, "Points_24hr_Avg").InnerText);
          statsData.UserPointsToday = Convert.ToInt64(GetXmlNode(userNode, "Points_Today").InnerText);
@@ -284,7 +289,7 @@ namespace HFM.Core
 
          return node;
       }
-      
+
       #endregion
    }
 }

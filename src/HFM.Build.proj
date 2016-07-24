@@ -80,13 +80,13 @@
    <!--PRIMARY TARGET: Test-->
    <Target Name="Test">
       <Message Text="Sequential Test Run" />
-      <CallTarget Targets="TestClient;TestCore;TestForms;TestLog;TestProteins;TestQueue" />
+      <CallTarget Targets="TestClient;TestCore;TestForms;TestLog;TestPreferences;TestProteins;TestQueue" />
       <Message Text="Test Run Complete" />
    </Target>
    <!--PRIMARY TARGET: TestParallel-->
    <Target Name="TestParallel">
       <Message Text="Parallel Test Run" />
-      <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="TestClient;TestCore;TestForms;TestLog;TestProteins;TestQueue" />
+      <MSBuild.ExtensionPack.Framework.Parallel TaskAction="BuildTargetsInParallel" Targets="TestClient;TestCore;TestForms;TestLog;TestPreferences;TestProteins;TestQueue" />
       <Message Text="Test Run Complete" />
    </Target>
    <Target Name="TestClient">
@@ -100,6 +100,9 @@
    </Target>
    <Target Name="TestLog">
       <Exec Command="$(NUnitPath) .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Log.Tests.Results.xml" />
+   </Target>
+   <Target Name="TestPreferences">
+      <Exec Command="$(NUnitPath) .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Preferences.Tests.Results.xml" />
    </Target>
    <Target Name="TestProteins">
       <Exec Command="$(NUnitPath) .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /framework=net-4.0 /xml=$(ArtifactsPath)\HFM.Proteins.Tests.Results.xml" />

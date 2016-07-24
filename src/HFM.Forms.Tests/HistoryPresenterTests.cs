@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -49,9 +48,9 @@ namespace HFM.Forms.Tests
 
       private IUnitInfoDatabase _database;
       private HistoryPresenterModel _model;
-      
+
       private HistoryPresenter _presenter;
-   
+
       [SetUp]
       public void Init()
       {
@@ -65,7 +64,7 @@ namespace HFM.Forms.Tests
          _database.Stub(x => x.Connected).Return(true);
          _model = new HistoryPresenterModel(_database);
       }
-      
+
       private HistoryPresenter CreatePresenter()
       {
          return new HistoryPresenter(_prefs, _queryCollection, _view, _viewFactory, _messageBoxView, _database, _model);
@@ -116,7 +115,7 @@ namespace HFM.Forms.Tests
          // Arrange
          var p = new Point();
          var s = new Size();
-         var columns = new StringCollection();
+         var columns = new List<string>();
          _view.Expect(x => x.Location).Return(p);
          _view.Expect(x => x.Size).Return(s);
          _view.Expect(x => x.GetColumnSettings()).Return(columns);
@@ -136,7 +135,7 @@ namespace HFM.Forms.Tests
       {
          // Arrange
          var r = new Rectangle();
-         var columns = new StringCollection();
+         var columns = new List<string>();
          _view.Expect(x => x.RestoreBounds).Return(r);
          _view.Expect(x => x.GetColumnSettings()).Return(columns);
          _view.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
@@ -149,7 +148,7 @@ namespace HFM.Forms.Tests
          Assert.AreEqual(r.Size, _model.FormSize);
          Assert.AreEqual(columns, _model.FormColumns);
       }
-      
+
       [Test]
       public void HistoryPresenter_NewQueryClick_Test()
       {
@@ -307,7 +306,7 @@ namespace HFM.Forms.Tests
          // Assert
          _messageBoxView.VerifyAllExpectations();
       }
-      
+
       [Test]
       public void HistoryPresenter_DeleteWorkUnitClick_Test()
       {
@@ -323,7 +322,7 @@ namespace HFM.Forms.Tests
          _messageBoxView.VerifyAllExpectations();
          _database.VerifyAllExpectations();
       }
-      
+
       [Test]
       public void HistoryPresenter_DeleteWorkUnitClick_NoSelection_Test()
       {
@@ -348,7 +347,7 @@ namespace HFM.Forms.Tests
          saveFileDialogView.Expect(x => x.ShowDialog()).Return(DialogResult.OK);
          _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
          _viewFactory.Expect(x => x.Release(saveFileDialogView));
-         
+
          var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
          serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)));
          var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();

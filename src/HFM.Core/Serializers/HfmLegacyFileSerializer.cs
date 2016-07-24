@@ -234,12 +234,12 @@ namespace HFM.Core.Serializers
          catch (NullReferenceException)
          {
             _logger.Warn("Cannot load ftp mode, defaulting to passive.");
-            settings.FtpMode = FtpType.Passive;
+            settings.FtpMode = FtpMode.Passive;
          }
          catch (FormatException)
          {
             _logger.Warn("Cannot load ftp mode, defaulting to passive.");
-            settings.FtpMode = FtpType.Passive;
+            settings.FtpMode = FtpMode.Passive;
          }
 
          try
@@ -292,14 +292,14 @@ namespace HFM.Core.Serializers
          }
       }
 
-      private static FtpType GetFtpType(string value)
+      private static FtpMode GetFtpType(string value)
       {
          switch (value.ToUpperInvariant())
          {
             case "PASSIVE":
-               return FtpType.Passive;
+               return FtpMode.Passive;
             case "ACTIVE":
-               return FtpType.Active;
+               return FtpMode.Active;
             default:
                throw new FormatException("Given FtpType value must be either 'Passive' or 'Active'.");
          }

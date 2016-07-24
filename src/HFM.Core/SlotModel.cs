@@ -39,7 +39,7 @@ namespace HFM.Core
 
       private BonusCalculationType CalculateBonus
       {
-         get { return Prefs.Get<BonusCalculationType>(Preference.CalculateBonus); }
+         get { return Prefs.Get<BonusCalculationType>(Preference.BonusCalculation); }
       }
 
       private bool ShowVersions
@@ -54,7 +54,7 @@ namespace HFM.Core
 
       internal bool ShowETADate
       {
-         get { return Prefs.Get<bool>(Preference.EtaDate); }
+         get { return Prefs.Get<bool>(Preference.DisplayEtaAsDate); }
       }
 
       #endregion
@@ -318,7 +318,7 @@ namespace HFM.Core
       {
          get 
          { 
-            return Prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay) == CompletedCountDisplayType.ClientTotal 
+            return Prefs.Get<UnitTotalsType>(Preference.CompletedCountDisplay) == UnitTotalsType.All 
                ? TotalCompletedUnits 
                : TotalRunCompletedUnits; 
          }

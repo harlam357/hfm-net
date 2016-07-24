@@ -405,7 +405,7 @@ namespace HFM.Core
 
                slotModel.UnitInfoModel.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
                   Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
-                  Prefs.Get<BonusCalculationType>(Preference.CalculateBonus));
+                  Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
                string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
                Logger.Info(Constants.ClientNameFormat, slotModel.Name, statusMessage);

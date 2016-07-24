@@ -6,12 +6,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -94,7 +94,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchEqualCases = 
+      private static object[] FetchEqualCases =
       {
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.Equal,  Value = 6600 }) },
          new object[] { 4,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.Equal,  Value = 7 }) },
@@ -128,7 +128,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchNotEqualCases = 
+      private static object[] FetchNotEqualCases =
       {
          new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotEqual,  Value = 6600 }) },
          new object[] { 40,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotEqual,  Value = 7 }) },
@@ -162,7 +162,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchGreaterThanCases = 
+      private static object[] FetchGreaterThanCases =
       {
          new object[] { 12,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.GreaterThan,  Value = 10502 }) },
          new object[] { 3,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.GreaterThan,  Value = 79 }) },
@@ -196,7 +196,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchGreaterThanOrEqualCases = 
+      private static object[] FetchGreaterThanOrEqualCases =
       {
          new object[] { 13,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.GreaterThanOrEqual,  Value = 10502 }) },
          new object[] { 5,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.GreaterThanOrEqual,  Value = 79 }) },
@@ -230,7 +230,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchLessThanCases = 
+      private static object[] FetchLessThanCases =
       {
          new object[] { 31,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.LessThan,  Value = 10502 }) },
          new object[] { 39,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.LessThan,  Value = 79 }) },
@@ -264,7 +264,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchLessThanOrEqualCases = 
+      private static object[] FetchLessThanOrEqualCases =
       {
          new object[] { 32,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.LessThanOrEqual,  Value = 10502 }) },
          new object[] { 41,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.LessThanOrEqual,  Value = 79 }) },
@@ -298,7 +298,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchLikeCases = 
+      private static object[] FetchLikeCases =
       {
          new object[] { 14,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.Like,  Value = "10%" }) },
          new object[] { 8,    BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.Like,  Value = "1%" }) },
@@ -332,7 +332,7 @@ namespace HFM.Core.Tests
          FetchTestData(expected, parameters);
       }
 
-      private static object[] FetchNotLikeCases = 
+      private static object[] FetchNotLikeCases =
       {
          new object[] { 30,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotLike,  Value = "10%" }) },
          new object[] { 36,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotLike,  Value = "1%" }) },
@@ -408,7 +408,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchEqualCases2 = 
+      private static object[] FetchEqualCases2 =
       {
          new object[] { 10,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.Equal,  Value = 8011 }) },
          new object[] { 72,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.Equal,  Value = 0 }) },
@@ -442,7 +442,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchNotEqualCases2 = 
+      private static object[] FetchNotEqualCases2 =
       {
          new object[] { 243,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotEqual,  Value = 8011 }) },
          new object[] { 181,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotEqual,  Value = 0 }) },
@@ -476,7 +476,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchGreaterThanCases2 = 
+      private static object[] FetchGreaterThanCases2 =
       {
          new object[] { 75,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.GreaterThan,  Value = 7137 }) },
          new object[] { 47,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.GreaterThan,  Value = 18 }) },
@@ -510,7 +510,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchGreaterThanOrEqualCases2 = 
+      private static object[] FetchGreaterThanOrEqualCases2 =
       {
          new object[] { 78,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.GreaterThanOrEqual,  Value = 7137 }) },
          new object[] { 51,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.GreaterThanOrEqual,  Value = 18 }) },
@@ -544,7 +544,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchLessThanCases2 = 
+      private static object[] FetchLessThanCases2 =
       {
          new object[] { 175,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.LessThan,  Value = 7137 }) },
          new object[] { 202,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.LessThan,  Value = 18 }) },
@@ -578,7 +578,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchLessThanOrEqualCases2 = 
+      private static object[] FetchLessThanOrEqualCases2 =
       {
          new object[] { 178,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.LessThanOrEqual,  Value = 7137 }) },
          new object[] { 206,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.LessThanOrEqual,  Value = 18 }) },
@@ -612,7 +612,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchLikeCases2 = 
+      private static object[] FetchLikeCases2 =
       {
          new object[] { 33,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.Like,  Value = "8%" }) },
          new object[] { 70,   BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.Like,  Value = "1%" }) },
@@ -646,7 +646,7 @@ namespace HFM.Core.Tests
          FetchTestData2(expected, parameters);
       }
 
-      private static object[] FetchNotLikeCases2 = 
+      private static object[] FetchNotLikeCases2 =
       {
          new object[] { 220,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectID,          Type = QueryFieldType.NotLike,  Value = "8%" }) },
          new object[] { 183,  BuildParameters(new QueryField { Name = QueryFieldName.ProjectRun,         Type = QueryFieldType.NotLike,  Value = "1%" }) },
@@ -717,19 +717,19 @@ namespace HFM.Core.Tests
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         FetchInternal(count, parameters, HistoryProductionView.BonusDownloadTime);
+         FetchInternal(count, parameters, BonusCalculationType.DownloadTime);
       }
 
       private void FetchTestData2(int count, QueryParameters parameters)
       {
          _database.DatabaseFilePath = _testData2FileCopy;
          _database.Upgrade();
-         FetchInternal(count, parameters, HistoryProductionView.BonusFrameTime);
+         FetchInternal(count, parameters, BonusCalculationType.FrameTime);
       }
 
-      private void FetchInternal(int count, QueryParameters parameters, HistoryProductionView productionView)
+      private void FetchInternal(int count, QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
-         var entries = _database.Fetch(parameters, productionView);
+         var entries = _database.Fetch(parameters, bonusCalculation);
 //#if DEBUG
 //         //Debug.WriteLine(parameters.Fields[0].Name);
 //         foreach (var entry in entries)

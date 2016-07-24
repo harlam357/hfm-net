@@ -1,22 +1,22 @@
 ﻿/*
  * HFM.NET - External Process Starter Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
+
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -81,7 +81,7 @@ namespace HFM.Core
    {
       private readonly IPreferenceSet _prefs;
       private readonly ILogger _logger;
-      
+
       public ExternalProcessStarter(IPreferenceSet prefs, ILogger logger)
       {
          _prefs = prefs;
@@ -94,7 +94,7 @@ namespace HFM.Core
       public string ShowHfmLogFile()
       {
          string logFilePath = Path.Combine(_prefs.ApplicationDataFolderPath, Constants.HfmLogFileName);
-         string errorMessage = String.Format(CultureInfo.CurrentCulture, 
+         string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
          return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
@@ -111,7 +111,7 @@ namespace HFM.Core
                Environment.NewLine);
          return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
       }
-      
+
       /// <summary>
       /// Show the given path in the file explorer
       /// </summary>
@@ -143,7 +143,7 @@ namespace HFM.Core
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Code page.";
          return RunProcess(Constants.GoogleCodeUrl, null, errorMessage);
       }
-      
+
       /// <summary>
       /// Show the HFM Google Group
       /// </summary>
@@ -152,14 +152,24 @@ namespace HFM.Core
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Group.";
          return RunProcess(Constants.GoogleGroupUrl, null, errorMessage);
       }
-      
+
+      private Uri EocUserUrl
+      {
+         get { return new Uri(String.Concat(Constants.EOCUserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
+      }
+
       /// <summary>
       /// Show the configured EOC User Stats page
       /// </summary>
       public string ShowEocUserPage()
       {
          const string errorMessage = "An error occured while attempting to show the EOC User Stats page.";
-         return RunProcess(_prefs.EocUserUrl.AbsoluteUri, null, errorMessage);
+         return RunProcess(EocUserUrl.AbsoluteUri, null, errorMessage);
+      }
+
+      private Uri EocTeamUrl
+      {
+         get { return new Uri(String.Concat(Constants.EOCTeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
       }
 
       /// <summary>
@@ -168,18 +178,23 @@ namespace HFM.Core
       public string ShowEocTeamPage()
       {
          const string errorMessage = "An error occured while attempting to show the EOC Team Stats page.";
-         return RunProcess(_prefs.EocTeamUrl.AbsoluteUri, null, errorMessage);
+         return RunProcess(EocTeamUrl.AbsoluteUri, null, errorMessage);
       }
-      
+
+      private Uri StanfordUserUrl
+      {
+         get { return new Uri(String.Concat(Constants.StanfordBaseUrl, _prefs.Get<string>(Preference.StanfordId))); }
+      }
+
       /// <summary>
       /// Show the configured Stanford User Stats page
       /// </summary>
       public string ShowStanfordUserPage()
       {
          const string errorMessage = "An error occured while attempting to show the Stanford User Stats page.";
-         return RunProcess(_prefs.StanfordUserUrl.AbsoluteUri, null, errorMessage);
+         return RunProcess(StanfordUserUrl.AbsoluteUri, null, errorMessage);
       }
-      
+
       private string RunProcess(string fileName, string arguments, string errorMessage)
       {
          try

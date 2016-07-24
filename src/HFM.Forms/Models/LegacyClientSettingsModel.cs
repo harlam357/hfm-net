@@ -407,11 +407,11 @@ namespace HFM.Forms.Models
 
       public string CredentialsErrorMessage { get; private set; }
 
-      private FtpType _ftpMode;
+      private FtpMode _ftpMode;
       /// <summary>
       /// Specifies the FTP Communication Mode for this client
       /// </summary>
-      public FtpType FtpMode
+      public FtpMode FtpMode
       {
          get { return _ftpMode; }
          set
@@ -456,7 +456,7 @@ namespace HFM.Forms.Models
          Username = String.Empty;
          Password = String.Empty;
          CredentialsErrorMessage = String.Empty;
-         FtpMode = FtpType.Passive;
+         FtpMode = FtpMode.Passive;
       }
 
       #region INotifyPropertyChanged Members

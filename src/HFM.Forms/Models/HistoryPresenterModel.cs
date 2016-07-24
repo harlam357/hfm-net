@@ -1,17 +1,17 @@
 ﻿/*
  * HFM.NET - Work Unit History - Binding Model
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -51,7 +51,7 @@ namespace HFM.Forms.Models
       }
 
       private PetaPoco.Page<HistoryEntry> _page;
-      
+
       public HistoryPresenterModel(IUnitInfoDatabase database)
       {
          if (database == null) throw new ArgumentNullException("database");
@@ -85,13 +85,13 @@ namespace HFM.Forms.Models
 
       public void Load(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
       {
-         _productionView = prefs.Get<HistoryProductionView>(Preference.HistoryProductionType);
+         _bonusCalculation = prefs.Get<BonusCalculationType>(Preference.HistoryBonusCalculation);
          _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
          FormLocation = prefs.Get<Point>(Preference.HistoryFormLocation);
          FormSize = prefs.Get<Size>(Preference.HistoryFormSize);
          SortColumnName = prefs.Get<string>(Preference.HistorySortColumnName);
          SortOrder = prefs.Get<ListSortDirection>(Preference.HistorySortOrder);
-         FormColumns = prefs.Get<StringCollection>(Preference.HistoryFormColumns);
+         FormColumns = prefs.Get<ICollection<string>>(Preference.HistoryFormColumns);
 
          _queryList.Clear();
          _queryList.Add(new QueryParameters());
@@ -109,7 +109,7 @@ namespace HFM.Forms.Models
 
       public void Update(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
       {
-         prefs.Set(Preference.HistoryProductionType, _productionView);
+         prefs.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
          prefs.Set(Preference.ShowEntriesValue, _showEntriesValue);
          prefs.Set(Preference.HistoryFormLocation, FormLocation);
          prefs.Set(Preference.HistoryFormSize, FormSize);
@@ -217,7 +217,7 @@ namespace HFM.Forms.Models
 
          if (executeQuery)
          {
-            _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, ProductionView);
+            _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, BonusCalculation);
          }
          if (_page == null)
          {
@@ -259,7 +259,7 @@ namespace HFM.Forms.Models
 
       public IList<HistoryEntry> FetchSelectedQuery()
       {
-         return _database.Fetch(SelectedQuery, ProductionView);
+         return _database.Fetch(SelectedQuery, BonusCalculation);
       }
 
       #region Properties
@@ -293,16 +293,16 @@ namespace HFM.Forms.Models
          get { return SelectedQuery.Name != QueryParameters.SelectAll.Name; }
       }
 
-      private HistoryProductionView _productionView;
+      private BonusCalculationType _bonusCalculation;
 
-      public HistoryProductionView ProductionView
+      public BonusCalculationType BonusCalculation
       {
-         get { return _productionView; }
+         get { return _bonusCalculation; }
          set
          {
-            if (_productionView != value)
+            if (_bonusCalculation != value)
             {
-               _productionView = value;
+               _bonusCalculation = value;
                OnPropertyChanged("ProductionView");
                ResetBindings(true);
             }
@@ -368,11 +368,11 @@ namespace HFM.Forms.Models
       public string SortColumnName { get; set; }
 
       public ListSortDirection SortOrder { get; set; }
-      
-      public StringCollection FormColumns { get; set; }
+
+      public ICollection<string> FormColumns { get; set; }
 
       #endregion
-      
+
       #region INotifyPropertyChanged Members
 
       public event PropertyChangedEventHandler PropertyChanged;

@@ -42,13 +42,13 @@ namespace HFM.Forms.Models
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
          PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
-         CalculateBonus = prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
-         EtaDate = prefs.Get<bool>(Preference.EtaDate);
+         CalculateBonus = prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+         EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
          DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
          DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
-         ShowXmlStats = prefs.Get<bool>(Preference.ShowXmlStats);
+         ShowXmlStats = prefs.Get<bool>(Preference.EnableUserStats);
          MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
-         FormShowStyle = prefs.Get<FormShowStyleType>(Preference.FormShowStyle);
+         FormShowStyle = prefs.Get<MinimizeToOption>(Preference.MinimizeTo);
       }
 
       public void Update(IPreferenceSet prefs)
@@ -58,13 +58,13 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
          prefs.Set(Preference.PpdCalculation, PpdCalculation);
          prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
-         prefs.Set(Preference.CalculateBonus, CalculateBonus);
-         prefs.Set(Preference.EtaDate, EtaDate);
+         prefs.Set(Preference.BonusCalculation, CalculateBonus);
+         prefs.Set(Preference.DisplayEtaAsDate, EtaDate);
          prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
          prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
-         prefs.Set(Preference.ShowXmlStats, ShowXmlStats);
+         prefs.Set(Preference.EnableUserStats, ShowXmlStats);
          prefs.Set(Preference.MessageLevel, (int)MessageLevel);
-         prefs.Set(Preference.FormShowStyle, FormShowStyle);
+         prefs.Set(Preference.MinimizeTo, FormShowStyle);
       }
 
       #region Interactive Options
@@ -242,9 +242,9 @@ namespace HFM.Forms.Models
 
       #region Form Docking Style
 
-      private FormShowStyleType _formShowStyle;
+      private MinimizeToOption _formShowStyle;
 
-      public FormShowStyleType FormShowStyle
+      public MinimizeToOption FormShowStyle
       {
          get { return _formShowStyle; }
          set
@@ -339,11 +339,11 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = "System Tray", ValueMember = FormShowStyleType.SystemTray },
+                          { DisplayMember = "System Tray", ValueMember = MinimizeToOption.SystemTray },
                           new ListItem
-                          { DisplayMember = "Task Bar", ValueMember = FormShowStyleType.TaskBar },
+                          { DisplayMember = "Task Bar", ValueMember = MinimizeToOption.TaskBar },
                           new ListItem
-                          { DisplayMember = "Both", ValueMember = FormShowStyleType.Both }
+                          { DisplayMember = "Both", ValueMember = MinimizeToOption.Both }
                        };
             return list.AsReadOnly();
          }

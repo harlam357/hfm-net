@@ -42,7 +42,7 @@ namespace HFM.Forms.Tests.Models
          Assert.AreEqual(Constants.DefaultFtpPort, model.Port);
          Assert.AreEqual(String.Empty, model.Username);
          Assert.AreEqual(String.Empty, model.Password);
-         Assert.AreEqual(FtpType.Passive, model.FtpMode);
+         Assert.AreEqual(FtpMode.Passive, model.FtpMode);
          Assert.AreEqual(false, model.UtcOffsetIsZero);
          Assert.AreEqual(0, model.ClientTimeOffset);
          Assert.AreEqual(String.Empty, model.Dummy);
@@ -69,7 +69,7 @@ namespace HFM.Forms.Tests.Models
          Assert.AreEqual(45000, model.Port);
          Assert.AreEqual("ftpuser", model.Username);
          Assert.AreEqual("ftppass", model.Password);
-         Assert.AreEqual(FtpType.Active, model.FtpMode);
+         Assert.AreEqual(FtpMode.Active, model.FtpMode);
 
          model.LegacyClientSubType = LegacyClientSubType.Path;
          Assert.AreEqual(LegacyClientSubType.Path, model.LegacyClientSubType);
@@ -78,7 +78,7 @@ namespace HFM.Forms.Tests.Models
          Assert.AreEqual(Constants.DefaultFtpPort, model.Port);
          Assert.AreEqual(String.Empty, model.Username);
          Assert.AreEqual(String.Empty, model.Password);
-         Assert.AreEqual(FtpType.Passive, model.FtpMode);
+         Assert.AreEqual(FtpMode.Passive, model.FtpMode);
       }
 
       [Test]
@@ -742,7 +742,7 @@ namespace HFM.Forms.Tests.Models
                model.Port = 45000;
                model.Username = "ftpuser";
                model.Password = "ftppass";
-               model.FtpMode = FtpType.Active;
+               model.FtpMode = FtpMode.Active;
                break;
          }
 

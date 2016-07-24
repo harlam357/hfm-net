@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -157,9 +156,21 @@ namespace HFM.Forms
          //
          _view.SetGridDataSource(_gridModel.BindingSource);
          //
-         _prefs.FormShowStyleSettingsChanged += (s, e) => SetViewShowStyle();
-         _prefs.ColorLogFileChanged += (s, e) => ApplyColorLogFileSetting();
-         _prefs.StatsIdChanged += (s, e) => _userStatsDataModel.Refresh();
+         _prefs.PreferenceChanged += (s, e) =>
+         {
+            switch (e.Preference)
+            {
+               case Preference.MinimizeTo:
+                  SetViewShowStyle();
+                  break;
+               case Preference.ColorLogFile:
+                  ApplyColorLogFileSetting();
+                  break;
+               case Preference.EocUserId:
+                  _userStatsDataModel.Refresh();
+                  break;
+            }
+         };
       }
 
       private void RestoreViewPreferences()
@@ -208,34 +219,31 @@ namespace HFM.Forms
          {
             ShowHideQueue(false);
          }
-         _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLogFile);
+         _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLog);
 
-         //if (Prefs.FormSortColumn != String.Empty &&
-         //    Prefs.FormSortOrder != SortOrder.None)
-         //{
-            _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
-            _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
-         //}
+         _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
+         _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
 
          try
          {
             // Restore the columns' state
-            var cols = _prefs.Get<StringCollection>(Preference.FormColumns);
-            var colsArray = new string[cols.Count];
-
-            cols.CopyTo(colsArray, 0);
-            Array.Sort(colsArray);
-
-            for (int i = 0; i < colsArray.Length && i < MainForm.NumberOfDisplayFields; i++)
+            var columns = _prefs.Get<ICollection<string>>(Preference.FormColumns);
+            if (columns != null)
             {
-               string[] a = colsArray[i].Split(',');
-               int index = Int32.Parse(a[3]);
-               _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(a[0]);
-               if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
+               var colsList = columns.ToList();
+               colsList.Sort();
+
+               for (int i = 0; i < colsList.Count && i < MainForm.NumberOfDisplayFields; i++)
                {
-                  _view.DataGridView.Columns[index].Width = Int32.Parse(a[1]);
+                  string[] tokens = colsList[i].Split(',');
+                  int index = Int32.Parse(tokens[3]);
+                  _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+                  if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
+                  {
+                     _view.DataGridView.Columns[index].Width = Int32.Parse(tokens[1]);
+                  }
+                  _view.DataGridView.Columns[index].Visible = Boolean.Parse(tokens[2]);
                }
-               _view.DataGridView.Columns[index].Visible = Boolean.Parse(a[2]);
             }
          }
          catch (NullReferenceException)
@@ -348,17 +356,17 @@ namespace HFM.Forms
 
       public void SetViewShowStyle()
       {
-         switch (_prefs.Get<FormShowStyleType>(Preference.FormShowStyle))
+         switch (_prefs.Get<MinimizeToOption>(Preference.MinimizeTo))
          {
-            case FormShowStyleType.SystemTray:
+            case MinimizeToOption.SystemTray:
                _view.SetNotifyIconVisible(true);
                _view.ShowInTaskbar = (_view.WindowState != FormWindowState.Minimized);
                break;
-            case FormShowStyleType.TaskBar:
+            case MinimizeToOption.TaskBar:
                _view.SetNotifyIconVisible(false);
                _view.ShowInTaskbar = true;
                break;
-            case FormShowStyleType.Both:
+            case MinimizeToOption.Both:
                _view.SetNotifyIconVisible(true);
                _view.ShowInTaskbar = true;
                break;
@@ -507,7 +515,7 @@ namespace HFM.Forms
             _view.LogFileViewer.SetNoLogLines();
          }
 
-         if (_prefs.Get<bool>(Preference.FollowLogFile))
+         if (_prefs.Get<bool>(Preference.FollowLog))
          {
             _view.LogFileViewer.ScrollToBottom();
          }
@@ -538,12 +546,12 @@ namespace HFM.Forms
       {
          // Save column state data
          // including order, column width and whether or not the column is visible
-         var stringCollection = new StringCollection();
+         var columns = new List<string>();
          int i = 0;
 
          foreach (DataGridViewColumn column in _view.DataGridView.Columns)
          {
-            stringCollection.Add(String.Format(CultureInfo.InvariantCulture,
+            columns.Add(String.Format(CultureInfo.InvariantCulture,
                                     "{0},{1},{2},{3}",
                                     column.DisplayIndex.ToString("D2"),
                                     column.Width,
@@ -551,7 +559,7 @@ namespace HFM.Forms
                                     i++));
          }
 
-         _prefs.Set(Preference.FormColumns, stringCollection);
+         _prefs.Set(Preference.FormColumns, columns);
       }
 
       public void DataGridViewSorted()
@@ -1119,20 +1127,20 @@ namespace HFM.Forms
 
       public void ViewToggleDateTimeClick()
       {
-         var style = _prefs.Get<TimeStyleType>(Preference.TimeStyle);
-         _prefs.Set(Preference.TimeStyle, style == TimeStyleType.Standard
-                                 ? TimeStyleType.Formatted
-                                 : TimeStyleType.Standard);
+         var style = _prefs.Get<TimeFormatting>(Preference.TimeStyle);
+         _prefs.Set(Preference.TimeStyle, style == TimeFormatting.None
+                                 ? TimeFormatting.Format1
+                                 : TimeFormatting.None);
          _prefs.Save();
          _view.DataGridView.Invalidate();
       }
 
       public void ViewToggleCompletedCountStyleClick()
       {
-         var style = _prefs.Get<CompletedCountDisplayType>(Preference.CompletedCountDisplay);
-         _prefs.Set(Preference.CompletedCountDisplay, style == CompletedCountDisplayType.ClientTotal
-                                 ? CompletedCountDisplayType.ClientRunTotal
-                                 : CompletedCountDisplayType.ClientTotal);
+         var style = _prefs.Get<UnitTotalsType>(Preference.CompletedCountDisplay);
+         _prefs.Set(Preference.CompletedCountDisplay, style == UnitTotalsType.All
+                                 ? UnitTotalsType.ClientStart
+                                 : UnitTotalsType.All);
          _prefs.Save();
          _view.DataGridView.Invalidate();
       }
@@ -1146,7 +1154,7 @@ namespace HFM.Forms
 
       public void ViewCycleBonusCalculationClick()
       {
-         var calculationType = _prefs.Get<BonusCalculationType>(Preference.CalculateBonus);
+         var calculationType = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
          int typeIndex = 0;
          // None is always LAST entry
          if (calculationType != BonusCalculationType.None)
@@ -1156,7 +1164,7 @@ namespace HFM.Forms
          }
 
          calculationType = (BonusCalculationType)typeIndex;
-         _prefs.Set(Preference.CalculateBonus, calculationType);
+         _prefs.Set(Preference.BonusCalculation, calculationType);
          _prefs.Save();
 
          string calculationTypeString = (from item in OptionsModel.BonusCalculationList
@@ -1190,7 +1198,7 @@ namespace HFM.Forms
 
       internal void ViewToggleFollowLogFile()
       {
-         _prefs.Set(Preference.FollowLogFile, !_prefs.Get<bool>(Preference.FollowLogFile));
+         _prefs.Set(Preference.FollowLog, !_prefs.Get<bool>(Preference.FollowLog));
       }
 
       #endregion
