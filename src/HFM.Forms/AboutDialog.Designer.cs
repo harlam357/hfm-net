@@ -129,10 +129,10 @@ namespace HFM.Forms
          this.lnkHfmGoogleCode.LinkColor = System.Drawing.Color.Goldenrod;
          this.lnkHfmGoogleCode.Location = new System.Drawing.Point(313, 121);
          this.lnkHfmGoogleCode.Name = "lnkHfmGoogleCode";
-         this.lnkHfmGoogleCode.Size = new System.Drawing.Size(209, 16);
+         this.lnkHfmGoogleCode.Size = new System.Drawing.Size(225, 16);
          this.lnkHfmGoogleCode.TabIndex = 2;
          this.lnkHfmGoogleCode.TabStop = true;
-         this.lnkHfmGoogleCode.Text = "http://code.google.com/p/hfm-net/";
+         this.lnkHfmGoogleCode.Text = "https://github.com/harlam357/hfm-net";
          this.lnkHfmGoogleCode.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkHfmGoogleCode_LinkClicked);
          // 
          // lnkHfmGoogleGroup

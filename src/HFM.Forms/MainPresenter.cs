@@ -1328,9 +1328,9 @@ namespace HFM.Forms
          _userStatsDataModel.Refresh();
       }
 
-      public void ShowHfmGoogleCode()
+      public void ShowHfmGitHub()
       {
-         HandleProcessStartResult(_processStarter.ShowHfmGoogleCode());
+         HandleProcessStartResult(_processStarter.ShowHfmGitHub());
       }
 
       #endregion

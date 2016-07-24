@@ -698,7 +698,7 @@ namespace HFM.Forms
 
       private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
       {
-         _presenter.ShowHfmGoogleCode();
+         _presenter.ShowHfmGitHub();
       }
 
       #endregion

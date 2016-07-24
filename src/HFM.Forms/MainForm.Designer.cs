@@ -319,13 +319,13 @@ namespace HFM.Forms
             this.mnuNotifySep1,
             this.mnuNotifyQuit});
          this.notifyMenu.Name = "notifyMenu";
-         this.notifyMenu.Size = new System.Drawing.Size(129, 98);
+         this.notifyMenu.Size = new System.Drawing.Size(125, 98);
          // 
          // mnuNotifyRst
          // 
          this.mnuNotifyRst.Image = global::HFM.Forms.Properties.Resources.Restore;
          this.mnuNotifyRst.Name = "mnuNotifyRst";
-         this.mnuNotifyRst.Size = new System.Drawing.Size(128, 22);
+         this.mnuNotifyRst.Size = new System.Drawing.Size(124, 22);
          this.mnuNotifyRst.Text = "&Restore";
          this.mnuNotifyRst.Click += new System.EventHandler(this.mnuNotifyRestore_Click);
          // 
@@ -333,7 +333,7 @@ namespace HFM.Forms
          // 
          this.mnuNotifyMin.Image = global::HFM.Forms.Properties.Resources.Minimize;
          this.mnuNotifyMin.Name = "mnuNotifyMin";
-         this.mnuNotifyMin.Size = new System.Drawing.Size(128, 22);
+         this.mnuNotifyMin.Size = new System.Drawing.Size(124, 22);
          this.mnuNotifyMin.Text = "Mi&nimize";
          this.mnuNotifyMin.Click += new System.EventHandler(this.mnuNotifyMinimize_Click);
          // 
@@ -341,20 +341,20 @@ namespace HFM.Forms
          // 
          this.mnuNotifyMax.Image = global::HFM.Forms.Properties.Resources.Maximize;
          this.mnuNotifyMax.Name = "mnuNotifyMax";
-         this.mnuNotifyMax.Size = new System.Drawing.Size(128, 22);
+         this.mnuNotifyMax.Size = new System.Drawing.Size(124, 22);
          this.mnuNotifyMax.Text = "&Maximize";
          this.mnuNotifyMax.Click += new System.EventHandler(this.mnuNotifyMaximize_Click);
          // 
          // mnuNotifySep1
          // 
          this.mnuNotifySep1.Name = "mnuNotifySep1";
-         this.mnuNotifySep1.Size = new System.Drawing.Size(125, 6);
+         this.mnuNotifySep1.Size = new System.Drawing.Size(121, 6);
          // 
          // mnuNotifyQuit
          // 
          this.mnuNotifyQuit.Image = global::HFM.Forms.Properties.Resources.Quit;
          this.mnuNotifyQuit.Name = "mnuNotifyQuit";
-         this.mnuNotifyQuit.Size = new System.Drawing.Size(128, 22);
+         this.mnuNotifyQuit.Size = new System.Drawing.Size(124, 22);
          this.mnuNotifyQuit.Text = "&Quit";
          this.mnuNotifyQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
          // 
@@ -766,7 +766,7 @@ namespace HFM.Forms
          // 
          this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
          this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(221, 22);
-         this.mnuWebHFMGoogleCode.Text = "HFM.NET on &Google Code";
+         this.mnuWebHFMGoogleCode.Text = "HFM.NET on &GitHub";
          this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
          // 
          // mnuHelp
@@ -1075,31 +1075,31 @@ namespace HFM.Forms
             this.toolStripMenuItem1,
             this.mnuContextForceRefreshEocStats});
          this.statsContextMenuStrip.Name = "statsContextMenuStrip";
-         this.statsContextMenuStrip.Size = new System.Drawing.Size(206, 76);
+         this.statsContextMenuStrip.Size = new System.Drawing.Size(200, 76);
          // 
          // mnuContextShowUserStats
          // 
          this.mnuContextShowUserStats.Name = "mnuContextShowUserStats";
-         this.mnuContextShowUserStats.Size = new System.Drawing.Size(205, 22);
+         this.mnuContextShowUserStats.Size = new System.Drawing.Size(199, 22);
          this.mnuContextShowUserStats.Text = "Show User Stats";
          this.mnuContextShowUserStats.Click += new System.EventHandler(this.mnuContextShowUserStats_Click);
          // 
          // mnuContextShowTeamStats
          // 
          this.mnuContextShowTeamStats.Name = "mnuContextShowTeamStats";
-         this.mnuContextShowTeamStats.Size = new System.Drawing.Size(205, 22);
+         this.mnuContextShowTeamStats.Size = new System.Drawing.Size(199, 22);
          this.mnuContextShowTeamStats.Text = "Show Team Stats";
          this.mnuContextShowTeamStats.Click += new System.EventHandler(this.mnuContextShowTeamStats_Click);
          // 
          // toolStripMenuItem1
          // 
          this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-         this.toolStripMenuItem1.Size = new System.Drawing.Size(202, 6);
+         this.toolStripMenuItem1.Size = new System.Drawing.Size(196, 6);
          // 
          // mnuContextForceRefreshEocStats
          // 
          this.mnuContextForceRefreshEocStats.Name = "mnuContextForceRefreshEocStats";
-         this.mnuContextForceRefreshEocStats.Size = new System.Drawing.Size(205, 22);
+         this.mnuContextForceRefreshEocStats.Size = new System.Drawing.Size(199, 22);
          this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
          this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
          // 

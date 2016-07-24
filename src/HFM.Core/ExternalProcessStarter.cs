@@ -53,7 +53,7 @@ namespace HFM.Core
       /// <summary>
       /// Show the HFM Google Code page
       /// </summary>
-      string ShowHfmGoogleCode();
+      string ShowHfmGitHub();
 
       /// <summary>
       /// Show the HFM Google Group
@@ -138,10 +138,10 @@ namespace HFM.Core
       /// <summary>
       /// Show the HFM Google Code page
       /// </summary>
-      public string ShowHfmGoogleCode()
+      public string ShowHfmGitHub()
       {
-         const string errorMessage = "An error occured while attempting to show the HFM.NET Google Code page.";
-         return RunProcess(Constants.GoogleCodeUrl, null, errorMessage);
+         const string errorMessage = "An error occured while attempting to show the HFM.NET GitHub Project.";
+         return RunProcess(Constants.GitHubUrl, null, errorMessage);
       }
 
       /// <summary>
