@@ -388,6 +388,11 @@ namespace HFM.Forms
       {
          Debug.Assert(!_workTimer.Enabled);
 
+         if (_clientConfiguration.Count == 0)
+         {
+            return;
+         }
+
          var syncTimeMinutes = _prefs.Get<int>(Preference.ClientRetrievalTaskInterval);
 
          _workTimer.Interval = syncTimeMinutes * Constants.MinToMillisec;
@@ -429,6 +434,11 @@ namespace HFM.Forms
       {
          Debug.Assert(!_webTimer.Enabled);
          Debug.Assert(WebGenerationTaskEnabled);
+
+         if (_clientConfiguration.Count == 0)
+         {
+            return;
+         }
 
          var generateInterval = _prefs.Get<int>(Preference.WebGenerationTaskInterval);
 
