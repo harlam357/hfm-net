@@ -1,17 +1,17 @@
 /*
  * HFM.NET - Client Configuration Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License. See the included file GPLv2.TXT.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -149,6 +149,11 @@ namespace HFM.Core
          _syncLock = new ReaderWriterLockSlim();
       }
 
+      private void OnInvalidate(object sender, EventArgs e)
+      {
+         OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
+      }
+
       public void Load(IEnumerable<ClientSettings> settingsCollection)
       {
          if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
@@ -165,9 +170,8 @@ namespace HFM.Core
             {
                if (client != null)
                {
-                  EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
-                  client.SlotsChanged += handler;
-                  client.RetrievalFinished += handler;
+                  client.SlotsChanged += OnInvalidate;
+                  client.RetrievalFinished += OnInvalidate;
                   _clientDictionary.Add(client.Settings.Name, client);
                   added++;
                }
@@ -195,9 +199,9 @@ namespace HFM.Core
             }
             finally
             {
-               _syncLock.ExitReadLock();               
+               _syncLock.ExitReadLock();
             }
-         } 
+         }
       }
 
       public void Add(ClientSettings settings)
@@ -233,26 +237,24 @@ namespace HFM.Core
                // the inner dictionary object.
                throw new ArgumentException("An element with the same key already exists.");
             }
-         
+
             client = _clientDictionary[key];
             string existingName = client.Settings.Name;
             string existingPath = client.Settings.DataPath();
-            
-            client.ClearEventSubscriptions();
+
+            client.SlotsChanged -= OnInvalidate;
+            client.RetrievalFinished -= OnInvalidate;
             // update the settings
             client.Settings = settings;
-            // if the key changed the client object
-            // needs removed and readded with the 
-            // correct key
+            // if the key changed the client object needs removed and readded with the correct key
             if (keyChanged)
             {
                _clientDictionary.Remove(key);
                _clientDictionary.Add(settings.Name, client);
             }
-            EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
-            client.SlotsChanged += handler;
-            client.RetrievalFinished += handler;
-            
+            client.SlotsChanged += OnInvalidate;
+            client.RetrievalFinished += OnInvalidate;
+
             if (settings.IsFahClient() || settings.IsLegacy())
             {
                e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.DataPath());
@@ -289,9 +291,8 @@ namespace HFM.Core
          _syncLock.EnterWriteLock();
          try
          {
-            EventHandler handler = (sender, args) => OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
-            value.SlotsChanged += handler;
-            value.RetrievalFinished += handler;
+            value.SlotsChanged += OnInvalidate;
+            value.RetrievalFinished += OnInvalidate;
             _clientDictionary.Add(key, value);
          }
          finally
@@ -330,7 +331,8 @@ namespace HFM.Core
             if (_clientDictionary.ContainsKey(key))
             {
                client = _clientDictionary[key];
-               client.ClearEventSubscriptions();
+               client.SlotsChanged -= OnInvalidate;
+               client.RetrievalFinished -= OnInvalidate;
                client.Abort();
                // Release from the Factory
                _factory.Release(client);
@@ -389,7 +391,8 @@ namespace HFM.Core
             // clear subscriptions
             foreach (var client in _clientDictionary.Values)
             {
-               client.ClearEventSubscriptions();
+               client.SlotsChanged -= OnInvalidate;
+               client.RetrievalFinished -= OnInvalidate;
                client.Abort();
             }
             _clientDictionary.Clear();

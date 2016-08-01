@@ -76,9 +76,8 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IClientConfiguration>()
                .ImplementedBy<ClientConfiguration>()
-                  .OnCreate((kernel, instance) =>
-                     instance.ClientEdited += (s, e) =>
-                        UpdateBenchmarkData(kernel.Resolve<IProteinBenchmarkCollection>(), e)));
+                  .OnCreate((kernel, instance) => instance.SubscribeToEvents(
+                     kernel.Resolve<IProteinBenchmarkCollection>())));
 
          // IClientFactory - Singleton
          container.Register(
@@ -171,22 +170,6 @@ namespace HFM.Core.Configuration
          #endregion
 
          #endregion
-      }
-
-      private static void UpdateBenchmarkData(IProteinBenchmarkCollection benchmarkCollection, ClientEditedEventArgs e)
-      {
-         // the name changed
-         if (e.PreviousName != e.NewName)
-         {
-            // update the Names in the benchmark collection
-            benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
-         }
-         // the path changed
-         if (!Paths.Equal(e.PreviousPath, e.NewPath))
-         {
-            // update the Paths in the benchmark collection
-            benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
-         }
       }
    }
 }

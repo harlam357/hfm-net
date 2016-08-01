@@ -350,7 +350,6 @@ namespace HFM.Core.Tests
          // Arrange
          var client = MockRepository.GenerateMock<IClient>();
          _clientConfiguration.Add("test", client);
-         client.Expect(x => x.ClearEventSubscriptions());
          client.Expect(x => x.Abort());
          _factory.Expect(x => x.Release(client));
          // Act
@@ -439,11 +438,9 @@ namespace HFM.Core.Tests
          // Arrange
          var client1 = MockRepository.GenerateMock<IClient>();
          _clientConfiguration.Add("test", client1);
-         client1.Expect(x => x.ClearEventSubscriptions());
          client1.Expect(x => x.Abort());
          var client2 = MockRepository.GenerateMock<IClient>();
          _clientConfiguration.Add("test2", client2);
-         client2.Expect(x => x.ClearEventSubscriptions());
          client2.Expect(x => x.Abort());
          // Act
          _clientConfiguration.Clear();

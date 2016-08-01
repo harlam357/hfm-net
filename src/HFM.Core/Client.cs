@@ -41,11 +41,6 @@ namespace HFM.Core
       /// </summary>
       event EventHandler RetrievalFinished;
 
-      /// <summary>
-      /// Clears all event subscriptions from this client.
-      /// </summary>
-      void ClearEventSubscriptions();
-
       #endregion
 
       /// <summary>
@@ -101,12 +96,6 @@ namespace HFM.Core
          {
             RetrievalFinished(this, e);
          }
-      }
-
-      public void ClearEventSubscriptions()
-      {
-         SlotsChanged = null;
-         RetrievalFinished = null;
       }
 
       #endregion

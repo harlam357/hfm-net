@@ -125,9 +125,9 @@ namespace HFM.Forms.Models
 
       #endregion
 
-      public IEnumerable<SlotModel> SlotCollection
+      public ICollection<SlotModel> SlotCollection
       {
-         // ToArray() to make a "copy" of the current list.
+         // ToList() to make a "copy" of the current list.
          // The value returned here is used by web generation
          // and if the collection changes the web generation
          // will not be able to enumerate the collection.
@@ -135,7 +135,7 @@ namespace HFM.Forms.Models
          {
             lock (SlotsListLock)
             {
-               return _slotList.ToArray();
+               return _slotList.ToList().AsReadOnly();
             }
          }
       }

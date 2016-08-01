@@ -83,6 +83,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="ClientConfigurationExtensions.cs" />
     <Compile Include="DataTypes\DataAggregatorResult.cs" />
     <Compile Include="DataTypes\PreferenceData.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="QueryParametersCollection.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="StatusLogic.cs" />
+    <Compile Include="TaskManager.cs" />
     <Compile Include="ThreadLocalDisposable.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />

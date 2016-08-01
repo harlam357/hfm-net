@@ -271,7 +271,7 @@
     <Compile Include="QueryDialog.Designer.cs">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="RetrievalLogic.cs" />
+    <Compile Include="RetrievalModel.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="HistoryPresenter.cs" />

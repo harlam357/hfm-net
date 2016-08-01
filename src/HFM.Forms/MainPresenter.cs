@@ -59,12 +59,12 @@ namespace HFM.Forms
       /// </summary>
       public FormWindowState OriginalWindowState { get; private set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -88,7 +88,7 @@ namespace HFM.Forms
       private readonly IProteinService _proteinService;
 
       private readonly IUpdateLogic _updateLogic;
-      private readonly RetrievalLogic _retrievalLogic;
+      private readonly RetrievalModel _retrievalModel;
       private readonly IExternalProcessStarter _processStarter;
 
       private readonly IPreferenceSet _prefs;
@@ -101,7 +101,7 @@ namespace HFM.Forms
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                            IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                           RetrievalLogic retrievalLogic, IExternalProcessStarter processStarter,
+                           RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
          _gridModel = mainGridModel;
@@ -135,8 +135,7 @@ namespace HFM.Forms
          // Logic Services
          _updateLogic = updateLogic;
          _updateLogic.Owner = _view;
-         _retrievalLogic = retrievalLogic;
-         _retrievalLogic.Initialize();
+         _retrievalModel = retrievalModel;
          _processStarter = processStarter;
          // Data Services
          _prefs = prefs;
@@ -377,14 +376,14 @@ namespace HFM.Forms
       {
          if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
          {
-            _logger.Info("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
+            Logger.Info("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
             try
             {
                Process.Start(_updateLogic.UpdateFilePath);
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                string message = String.Format(CultureInfo.CurrentCulture,
                                               "Update process failed to start with the following error:{0}{0}{1}",
                                               Environment.NewLine, ex.Message);
@@ -449,7 +448,7 @@ namespace HFM.Forms
             }
             catch (ArgumentOutOfRangeException ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _view.LogFileViewer.SetNoLogLines();
             }
          }
@@ -492,7 +491,7 @@ namespace HFM.Forms
                {
                   // even though i've checked the count above, it could have changed in between then
                   // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                  _logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
+                  Logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
                }
 
                // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
@@ -650,12 +649,6 @@ namespace HFM.Forms
 
       private void ClearConfiguration()
       {
-         // abort current retrieval
-         if (_retrievalLogic.RetrievalInProgress)
-         {
-            _retrievalLogic.Abort();
-         }
-
          // clear the clients and UI
          _settingsManager.ClearFileName();
          _clientConfiguration.Clear();
@@ -677,7 +670,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
          }
@@ -717,7 +710,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                   "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
@@ -742,7 +735,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                   "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
@@ -839,7 +832,7 @@ namespace HFM.Forms
             }
             catch (ArgumentException ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
@@ -861,7 +854,7 @@ namespace HFM.Forms
             }
             catch (ArgumentException ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
@@ -908,7 +901,7 @@ namespace HFM.Forms
             }
             catch (ArgumentException ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
@@ -935,7 +928,7 @@ namespace HFM.Forms
             }
             catch (ArgumentException ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.ErrorFormat(ex, "{0}", ex.Message);
                _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
             }
          }
@@ -975,12 +968,13 @@ namespace HFM.Forms
          // Check for SelectedSlot, and get out if not found
          if (_gridModel.SelectedSlot == null) return;
 
-         _retrievalLogic.RetrieveSingleClient(_gridModel.SelectedSlot.Settings.Name);
+         var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
+         Task.Factory.StartNew(client.Retrieve);
       }
 
       public void ClientsRefreshAllClick()
       {
-         _retrievalLogic.QueueNewRetrieval();
+         _retrievalModel.RunClientRetrieval();
       }
 
       public void ClientsViewCachedLogClick()
@@ -1231,7 +1225,7 @@ namespace HFM.Forms
             var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
             if (proteinChanges.Count > 0)
             {
-               _retrievalLogic.QueueNewRetrieval();
+               _retrievalModel.RunClientRetrieval();
                using (var dlg = new ProteinLoadResultsDialog())
                {
                   dlg.DataBind(proteinChanges);
