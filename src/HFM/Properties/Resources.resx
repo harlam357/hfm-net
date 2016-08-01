@@ -146,7 +146,7 @@
     <value>HFM.NET detected an instance of HFM.NET already running on this computer but failed to connect with it.  If you're sure there is not an existing instance of HFM.NET running then you may safely ignore this warning and allow HFM.NET to start.  Note that running more than one instance of HFM.NET on the same computer will cause problems.  Do you want to allow HFM.NET to start?</value>
   </data>
   <data name="UserPreferencesFailed" xml:space="preserve">
-    <value>User preferences failed to initialize.  The user.config file is likely corrupt.  Start with the '/r' switch to reset the user preferences.</value>
+    <value>User preferences failed to initialize.  The preferences configuration file may be corrupt.  Start with the '/r' switch to reset the user preferences.</value>
   </data>
   <data name="WuHistoryUpgradeFailed" xml:space="preserve">
     <value>Work Unit History Database upgrade failed.</value>

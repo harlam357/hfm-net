@@ -79,19 +79,27 @@ namespace HFM.Preferences
 
       public void Reset()
       {
-         var data = new PreferenceData();
-         Upgrade(data);
-         _prefs = CreateDictionary(data);
+         EnsureApplicationDataFolderExists();
+         InitializeInternal(new PreferenceData());
       }
 
       public void Initialize()
+      {
+         EnsureApplicationDataFolderExists();
+         var data = Read() ?? Migrate() ?? new PreferenceData();
+         InitializeInternal(data);
+      }
+
+      private static void EnsureApplicationDataFolderExists()
       {
          if (!Directory.Exists(ApplicationDataFolderPath))
          {
             Directory.CreateDirectory(ApplicationDataFolderPath);
          }
+      }
 
-         var data = Read() ?? Migrate() ?? new PreferenceData();
+      private void InitializeInternal(PreferenceData data)
+      {
          Upgrade(data);
          _prefs = CreateDictionary(data);
       }
