@@ -26,27 +26,26 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Xml;
-//using Castle.Core.Logging;
+
+using Castle.Core.Logging;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
-using HFM.Preferences.Properties;
 
 namespace HFM.Preferences
 {
    public sealed class PreferenceSet : IPreferenceSet
    {
-      //private ILogger _logger;
-      //
-      //public ILogger Logger
-      //{
-      //   [CoverageExclude]
-      //   get { return _logger ?? (_logger = NullLogger.Instance); }
-      //   [CoverageExclude]
-      //   set { _logger = value; }
-      //}
+      private ILogger _logger;
+
+      public ILogger Logger
+      {
+         [CoverageExclude]
+         get { return _logger ?? (_logger = NullLogger.Instance); }
+         [CoverageExclude]
+         set { _logger = value; }
+      }
 
       #region Implementation
 
@@ -87,12 +86,17 @@ namespace HFM.Preferences
 
       public void Initialize()
       {
+         if (!Directory.Exists(ApplicationDataFolderPath))
+         {
+            Directory.CreateDirectory(ApplicationDataFolderPath);
+         }
+
          var data = Read() ?? Migrate() ?? new PreferenceData();
          Upgrade(data);
          _prefs = CreateDictionary(data);
       }
 
-      private static PreferenceData Migrate()
+      private PreferenceData Migrate()
       {
          // attempt to migrate from old user settings
          try
@@ -103,7 +107,7 @@ namespace HFM.Preferences
          }
          catch (Exception ex)
          {
-            // log?
+            Logger.Warn(ex.Message, ex);
          }
          return null;
       }
