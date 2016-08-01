@@ -115,7 +115,7 @@ namespace HFM.Forms
          switch (e.Action)
          {
             case ScheduledTaskChangedAction.Started:
-               Logger.InfoFormat("{0} task scheduled: {1}ms", e.Key, e.Interval);
+               Logger.InfoFormat("{0} task scheduled: {1} minutes", e.Key, (int)(e.Interval / Constants.MinToMillisec));
                break;
             case ScheduledTaskChangedAction.Stopped:
                Logger.InfoFormat("{0} task stopped", e.Key);
