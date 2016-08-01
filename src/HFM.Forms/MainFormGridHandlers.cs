@@ -167,7 +167,7 @@ namespace HFM.Forms
                       dataGridView1.Columns["ETA"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["DownloadTime"].Index == e.ColumnIndex ||
                       dataGridView1.Columns["Deadline"].Index == e.ColumnIndex) &&
-                      _prefs.Get<TimeFormatting>(Preference.TimeStyle).Equals(TimeFormatting.Format1))
+                      _prefs.Get<TimeFormatting>(Preference.TimeFormatting).Equals(TimeFormatting.Format1))
             {
                PaintGridCell(PaintCell.Time, e);
             }
@@ -413,7 +413,7 @@ namespace HFM.Forms
                     dataGridView1.Columns["ETA"].Index == columnIndex ||
                     dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                     dataGridView1.Columns["Deadline"].Index == columnIndex) &&
-                    _prefs.Get<TimeFormatting>(Preference.TimeStyle).Equals(TimeFormatting.Format1))
+                    _prefs.Get<TimeFormatting>(Preference.TimeFormatting).Equals(TimeFormatting.Format1))
                {
                   if (dataGridView1.Columns["TPF"].Index == columnIndex)
                   {

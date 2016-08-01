@@ -60,7 +60,7 @@ namespace HFM.Forms.Models
          WebGenAfterRefresh = webGenerationTask.AfterClientRetrieval;
 
          WebGenType = prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
-         WebRoot = prefs.Get<string>(Preference.DeploymentRoot);
+         WebRoot = prefs.Get<string>(Preference.WebDeploymentRoot);
          WebGenServer = prefs.Get<string>(Preference.WebGenServer);
          WebGenPort = prefs.Get<int>(Preference.WebGenPort);
          WebGenUsername = prefs.Get<string>(Preference.WebGenUsername);
@@ -95,11 +95,11 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebDeploymentType, WebGenType);
          if (WebGenType == WebDeploymentType.Ftp)
          {
-            prefs.Set(Preference.DeploymentRoot, Paths.AddUnixTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, Paths.AddUnixTrailingSlash(WebRoot));
          }
          else
          {
-            prefs.Set(Preference.DeploymentRoot, Paths.AddTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, Paths.AddTrailingSlash(WebRoot));
          }
          prefs.Set(Preference.WebGenServer, WebGenServer);
          prefs.Set(Preference.WebGenPort, WebGenPort);

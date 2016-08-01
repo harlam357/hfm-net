@@ -171,13 +171,13 @@ namespace HFM.Preferences
          prefs.Add(Preference.FormColumns, p => p.MainWindowGrid.Columns);
          prefs.Add(Preference.FormSortColumn, p => p.MainWindowGrid.SortColumn);
          prefs.Add(Preference.FormSortOrder, p => p.MainWindowGrid.SortOrder);
-         prefs.Add(Preference.FormSplitLocation, p => p.MainWindowState.SplitterLocation);
+         prefs.Add(Preference.FormSplitterLocation, p => p.MainWindowState.SplitterLocation);
          prefs.Add(Preference.FormLogWindowHeight, p => p.MainWindowState.LogWindowHeight);
-         prefs.Add(Preference.FormLogVisible, p => p.MainWindowState.LogWindowVisible);
-         prefs.Add(Preference.QueueViewerVisible, p => p.MainWindowState.QueueWindowVisible);
-         prefs.Add(Preference.TimeStyle, p => p.MainWindowGridProperties.TimeFormatting);
-         prefs.Add(Preference.CompletedCountDisplay, p => p.MainWindowGridProperties.UnitTotals);
-         prefs.Add(Preference.ShowVersions, p => p.MainWindowGridProperties.DisplayVersions);
+         prefs.Add(Preference.FormLogWindowVisible, p => p.MainWindowState.LogWindowVisible);
+         prefs.Add(Preference.QueueWindowVisible, p => p.MainWindowState.QueueWindowVisible);
+         prefs.Add(Preference.TimeFormatting, p => p.MainWindowGridProperties.TimeFormatting);
+         prefs.Add(Preference.UnitTotals, p => p.MainWindowGridProperties.UnitTotals);
+         prefs.Add(Preference.DisplayVersions, p => p.MainWindowGridProperties.DisplayVersions);
 
          prefs.Add(Preference.MinimizeTo, p => p.MainWindowProperties.MinimizeTo);
          prefs.Add(Preference.EnableUserStats, p => p.MainWindowProperties.EnableStats);
@@ -206,7 +206,7 @@ namespace HFM.Preferences
          prefs.AddReadOnly(Preference.WebGenerationTaskInterval, p => p.WebGenerationTask.Interval);
          prefs.AddReadOnly(Preference.WebGenerationTaskAfterClientRetrieval, p => p.WebGenerationTask.AfterClientRetrieval);
          prefs.Add(Preference.WebDeploymentType, p => p.WebDeployment.DeploymentType);
-         prefs.Add(Preference.DeploymentRoot, p => p.WebDeployment.DeploymentRoot);
+         prefs.Add(Preference.WebDeploymentRoot, p => p.WebDeployment.DeploymentRoot);
          prefs.Add(Preference.WebGenServer, p => p.WebDeployment.FtpServer.Address);
          prefs.Add(Preference.WebGenPort, p => p.WebDeployment.FtpServer.Port);
          prefs.Add(Preference.WebGenUsername, p => p.WebDeployment.FtpServer.Username);

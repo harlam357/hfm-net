@@ -44,7 +44,7 @@ namespace HFM.Core
 
       private bool ShowVersions
       {
-         get { return Prefs.Get<bool>(Preference.ShowVersions); }
+         get { return Prefs.Get<bool>(Preference.DisplayVersions); }
       }
 
       private int DecimalPlaces
@@ -318,7 +318,7 @@ namespace HFM.Core
       {
          get 
          { 
-            return Prefs.Get<UnitTotalsType>(Preference.CompletedCountDisplay) == UnitTotalsType.All 
+            return Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All 
                ? TotalCompletedUnits 
                : TotalRunCompletedUnits; 
          }

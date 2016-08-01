@@ -19,7 +19,7 @@ namespace HFM.Preferences.Tests
       {
          var prefs = new PreferenceSet();
 
-         Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitLocation));
+         Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitterLocation));
          Assert.AreEqual(String.Empty, prefs.Get<string>(Preference.EmailReportingFromAddress));
          Assert.AreEqual("logcache", prefs.Get<string>(Preference.CacheFolder));
          var task1 = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
@@ -41,7 +41,7 @@ namespace HFM.Preferences.Tests
          for (int i = 0; i < 1000000; i++)
          {
             //Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitLocation));
-            var obj = prefs.Get<int>(Preference.FormSplitLocation);
+            var obj = prefs.Get<int>(Preference.FormSplitterLocation);
          }
          sw.Stop();
          Debug.WriteLine("Get ValueType: {0}ms", sw.ElapsedMilliseconds);
@@ -129,10 +129,10 @@ namespace HFM.Preferences.Tests
       {
          var prefs = new PreferenceSet();
 
-         prefs.Set(Preference.FormSplitLocation, (object)null);
-         prefs.Set(Preference.FormSplitLocation, "60");
-         prefs.Set(Preference.FormSplitLocation, 120);
-         prefs.Set(Preference.FormSplitLocation, 360);
+         prefs.Set(Preference.FormSplitterLocation, (object)null);
+         prefs.Set(Preference.FormSplitterLocation, "60");
+         prefs.Set(Preference.FormSplitterLocation, 120);
+         prefs.Set(Preference.FormSplitterLocation, 360);
       }
 
       [Test]

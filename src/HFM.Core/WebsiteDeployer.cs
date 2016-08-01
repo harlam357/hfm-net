@@ -57,7 +57,7 @@ namespace HFM.Core
          Debug.Assert(_prefs.Get<bool>(Preference.WebGenerationTaskEnabled));
 
          var webGenType = _prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
-         var webRoot = _prefs.Get<string>(Preference.DeploymentRoot);
+         var webRoot = _prefs.Get<string>(Preference.WebDeploymentRoot);
          var copyHtml = _prefs.Get<bool>(Preference.WebGenCopyHtml);
          var copyXml = _prefs.Get<bool>(Preference.WebGenCopyXml);
          

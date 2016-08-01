@@ -199,22 +199,22 @@ namespace HFM.Forms
             if (size.Width < _view.MinimumSize.Width) size.Width = _view.MinimumSize.Width;
             if (size.Height < _view.MinimumSize.Height) size.Height = _view.MinimumSize.Height;
 
-            if (!_prefs.Get<bool>(Preference.FormLogVisible))
+            if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
             {
                size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
             }
             _view.Size = size;
             // make sure split location from the prefs is at least the minimum panel size - Issue 234
-            var formSplitLocation = _prefs.Get<int>(Preference.FormSplitLocation);
+            var formSplitLocation = _prefs.Get<int>(Preference.FormSplitterLocation);
             if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
             _view.SplitContainer.SplitterDistance = formSplitLocation;
          }
 
-         if (!_prefs.Get<bool>(Preference.FormLogVisible))
+         if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
          {
             ShowHideLogWindow(false);
          }
-         if (!_prefs.Get<bool>(Preference.QueueViewerVisible))
+         if (!_prefs.Get<bool>(Preference.QueueWindowVisible))
          {
             ShowHideQueue(false);
          }
@@ -266,7 +266,7 @@ namespace HFM.Forms
          // Update the split location directly from the split panel control. - Issue 8
          _view.SplitContainer.SplitterMoved += delegate
                                                {
-                                                  _prefs.Set(Preference.FormSplitLocation, _view.SplitContainer.SplitterDistance);
+                                                  _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
                                                   _prefs.Save();
                                                };
 
@@ -319,7 +319,7 @@ namespace HFM.Forms
          // changes based on the height of Panel1 - Issue 8
          if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
          {
-            _prefs.Set(Preference.FormSplitLocation, _view.SplitContainer.Panel1.Height);
+            _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
          }
       }
 
@@ -345,8 +345,8 @@ namespace HFM.Forms
             _prefs.Set(Preference.FormSize, _view.RestoreBounds.Size);
          }
 
-         _prefs.Set(Preference.FormLogVisible, _view.LogFileViewer.Visible);
-         _prefs.Set(Preference.QueueViewerVisible, _view.QueueControlVisible);
+         _prefs.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
+         _prefs.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
 
          CheckForAndFireUpdateProcess();
 
@@ -1121,8 +1121,8 @@ namespace HFM.Forms
 
       public void ViewToggleDateTimeClick()
       {
-         var style = _prefs.Get<TimeFormatting>(Preference.TimeStyle);
-         _prefs.Set(Preference.TimeStyle, style == TimeFormatting.None
+         var style = _prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+         _prefs.Set(Preference.TimeFormatting, style == TimeFormatting.None
                                  ? TimeFormatting.Format1
                                  : TimeFormatting.None);
          _prefs.Save();
@@ -1131,8 +1131,8 @@ namespace HFM.Forms
 
       public void ViewToggleCompletedCountStyleClick()
       {
-         var style = _prefs.Get<UnitTotalsType>(Preference.CompletedCountDisplay);
-         _prefs.Set(Preference.CompletedCountDisplay, style == UnitTotalsType.All
+         var style = _prefs.Get<UnitTotalsType>(Preference.UnitTotals);
+         _prefs.Set(Preference.UnitTotals, style == UnitTotalsType.All
                                  ? UnitTotalsType.ClientStart
                                  : UnitTotalsType.All);
          _prefs.Save();
@@ -1141,7 +1141,7 @@ namespace HFM.Forms
 
       public void ViewToggleVersionInformationClick()
       {
-         _prefs.Set(Preference.ShowVersions, !_prefs.Get<bool>(Preference.ShowVersions));
+         _prefs.Set(Preference.DisplayVersions, !_prefs.Get<bool>(Preference.DisplayVersions));
          _prefs.Save();
          _view.DataGridView.Invalidate();
       }
