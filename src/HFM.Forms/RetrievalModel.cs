@@ -124,7 +124,7 @@ namespace HFM.Forms
                Logger.InfoFormat("{0} task running", e.Key);
                break;
             case ScheduledTaskChangedAction.Finished:
-               Logger.InfoFormat("{0} task finished: {1}ms", e.Key, e.Interval);
+               Logger.InfoFormat("{0} task finished: {1:#,##0} ms", e.Key, e.Interval);
                break;
             case ScheduledTaskChangedAction.AlreadyInProgress:
                Logger.WarnFormat("{0} task already in progress", e.Key);

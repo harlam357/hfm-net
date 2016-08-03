@@ -416,7 +416,7 @@ namespace HFM.Core
             _slotsLock.ExitReadLock();
          }
 
-         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
+         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", Instrumentation.GetExecTime(start));
          Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
       }
 

@@ -185,7 +185,7 @@ namespace HFM.Core
          string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
          Logger.Info(Constants.ClientNameFormat, _slotModel.Name, statusMessage);
 
-         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished in {0}", Instrumentation.GetExecTime(start));
+         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", Instrumentation.GetExecTime(start));
          Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
       }
 
