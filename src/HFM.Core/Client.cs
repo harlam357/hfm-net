@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 
 using Castle.Core.Logging;
 
@@ -58,10 +60,10 @@ namespace HFM.Core
       /// </summary>
       DateTime LastRetrievalTime { get; }
 
-      /// <summary>
-      /// Flag set to true when retrieval is in progress.
-      /// </summary>
-      bool RetrievalInProgress { get; }
+      ///// <summary>
+      ///// Flag set to true when retrieval is in progress.
+      ///// </summary>
+      //bool RetrievalInProgress { get; }
 
       /// <summary>
       /// Abort retrieval processes.
@@ -129,13 +131,13 @@ namespace HFM.Core
       // should be init to DateTime.MinValue
       public DateTime LastRetrievalTime { get; protected set; }
 
-      private volatile bool _retrievalInProgress;
-
-      public bool RetrievalInProgress
-      {
-         get { return _retrievalInProgress; }
-         protected set { _retrievalInProgress = value; }
-      }
+      //private volatile bool _retrievalInProgress;
+      //
+      //public bool RetrievalInProgress
+      //{
+      //   get { return _retrievalInProgress; }
+      //   private set { _retrievalInProgress = value; }
+      //}
 
       #region Constructor
 
@@ -146,21 +148,25 @@ namespace HFM.Core
 
       #endregion
 
-      protected bool AbortFlag { get; set; }
+      protected bool AbortFlag { get; private set; }
 
       public virtual void Abort()
       {
          AbortFlag = true;
       }
 
+      private readonly object _retrieveLock = new object();
+
       public void Retrieve()
       {
+         if (!Monitor.TryEnter(_retrieveLock))
+         {
+            Debug.WriteLine(Constants.ClientNameFormat, Settings.Name, "Retrieval already in progress...");
+            return;
+         }
          try
          {
-            // Don't allow this to fire more than once at a time
-            if (RetrievalInProgress) return;
-
-            RetrievalInProgress = true;
+            //RetrievalInProgress = true;
             AbortFlag = false;
 
             // perform the client specific retrieval
@@ -168,8 +174,9 @@ namespace HFM.Core
          }
          finally
          {
-            RetrievalInProgress = false;
+            //RetrievalInProgress = false;
             AbortFlag = false;
+            Monitor.Exit(_retrieveLock);
          }
       }
 

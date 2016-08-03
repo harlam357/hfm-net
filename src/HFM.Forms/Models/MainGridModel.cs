@@ -21,8 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 //using Castle.Core.Logging;
@@ -121,7 +121,7 @@ namespace HFM.Forms.Models
       private readonly SlotModelSortableBindingList _slotList;
       private readonly BindingSource _bindingSource;
 
-      private static readonly object SlotsListLock = new object();
+      private readonly object _slotsListLock = new object();
 
       #endregion
 
@@ -133,7 +133,7 @@ namespace HFM.Forms.Models
          // will not be able to enumerate the collection.
          get
          {
-            lock (SlotsListLock)
+            lock (_slotsListLock)
             {
                return _slotList.ToList().AsReadOnly();
             }
@@ -194,28 +194,25 @@ namespace HFM.Forms.Models
          _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
       }
 
-      private volatile bool _resetInProgress;
+      //private volatile bool _resetInProgress;
+      private readonly object _resetBindingsLock = new object();
 
       private void ResetBindings()
       {
-         // this check appears to fix the duplicate slot issue.
-         // every time this condition is met and the return
-         // statement is removed then subsequently in
-         // RefreshSlotList() the _slotList shows duplicate slots
-         if (_resetInProgress)
+         if (!Monitor.TryEnter(_resetBindingsLock))
          {
             Debug.WriteLine("Reset already in progress...");
             return;
          }
-
-         _resetInProgress = true;
+         //_resetInProgress = true;
          try
          {
             ResetBindingsInternal();
          }
          finally
          {
-            _resetInProgress = false;
+            //_resetInProgress = false;
+            Monitor.Exit(_resetBindingsLock);
          }
       }
 
@@ -228,7 +225,7 @@ namespace HFM.Forms.Models
          }
 
          OnBeforeResetBindings(EventArgs.Empty);
-         lock (SlotsListLock)
+         lock (_slotsListLock)
          {
             // halt binding source updates
             _bindingSource.RaiseListChangedEvents = false;
@@ -267,7 +264,7 @@ namespace HFM.Forms.Models
       /// </summary>
       public void Sort()
       {
-         lock (SlotsListLock)
+         lock (_slotsListLock)
          {
             _bindingSource.RaiseListChangedEvents = false;
             // see Revision 534 commit comments for the reason
