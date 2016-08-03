@@ -449,8 +449,8 @@ namespace HFM.Core
 
       private static void SetSlotStatus(SlotModel slotModel)
       {
-         if (slotModel.Status.Equals(SlotStatus.Running) ||
-             slotModel.Status.Equals(SlotStatus.RunningNoFrameTimes))
+         if (slotModel.Status == SlotStatus.Running ||
+             slotModel.Status == SlotStatus.RunningNoFrameTimes)
          {
             slotModel.Status = slotModel.IsUsingBenchmarkFrameTime ? SlotStatus.RunningNoFrameTimes : SlotStatus.Running;
          }
