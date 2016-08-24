@@ -15,6 +15,15 @@ namespace HFM.Preferences
    {
       internal static PreferenceData Execute()
       {
+         // upgrade first
+         Settings.Default.Upgrade();
+
+         if (String.IsNullOrEmpty(Settings.Default.ApplicationVersion))
+         {
+            // no previous settings
+            return null;
+         }
+
          var data = new PreferenceData();
          data.ApplicationVersion = Settings.Default.ApplicationVersion;
 

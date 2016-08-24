@@ -106,18 +106,31 @@ namespace HFM.Preferences
 
       private PreferenceData Migrate()
       {
-         // attempt to migrate from old user settings
+         Logger.Info("Attempting to migrate from user settings...");
+         
+         PreferenceData data = null;
          try
          {
-            var data = MigrateFromUserSettings.Execute();
-            Write(data);
-            return data;
+            data = MigrateFromUserSettings.Execute();
+            if (data != null)
+            {
+               Write(data);
+            }
          }
          catch (Exception ex)
          {
             Logger.Warn(ex.Message, ex);
          }
-         return null;
+
+         if (data != null)
+         {
+            Logger.Info("Migration from version {0} user settings complete.", data.ApplicationVersion);
+         }
+         else
+         {
+            Logger.Info("Could not migrate from user settings.");
+         }
+         return data;
       }
 
       private static void Upgrade(PreferenceData data)
