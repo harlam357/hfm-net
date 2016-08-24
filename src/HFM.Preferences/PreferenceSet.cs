@@ -128,7 +128,7 @@ namespace HFM.Preferences
          }
          else
          {
-            Logger.Info("Could not migrate from user settings.");
+            Logger.Info("Could not migrate from user settings.  Default settings will be applied.");
          }
          return data;
       }
