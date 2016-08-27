@@ -768,6 +768,12 @@
             </summary>
             <param name="fileName">The name of the local file that is to receive the data.</param>
         </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Download(System.IO.Stream)">
+            <summary>
+            Downloads the resource to a stream.
+            </summary>
+            <param name="stream">The stream used to receive the data.</param>
+        </member>
         <member name="M:harlam357.Core.Net.IWebOperation.GetDownloadLength">
             <summary>
             Gets the length of the data being received.
@@ -786,6 +792,12 @@
             </summary>
             <param name="fileName">The file to send to the resource.</param>
             <param name="maximumLength">The maximum number of bytes to upload.  If the value is 0 or less the entire file will be uploaded.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.IWebOperation.Upload(System.IO.Stream)">
+            <summary>
+            Uploads the specified stream to the resource.
+            </summary>
+            <param name="stream">The stream to send to the resource.</param>
         </member>
         <member name="M:harlam357.Core.Net.IWebOperation.CheckConnection">
             <summary>
@@ -838,6 +850,12 @@
             </summary>
             <param name="fileName">The name of the local file that is to receive the data.</param>
         </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Download(System.IO.Stream)">
+            <summary>
+            Downloads the resource to a stream.
+            </summary>
+            <param name="stream">The stream used to receive the data.</param>
+        </member>
         <member name="M:harlam357.Core.Net.WebOperation.GetDownloadLength">
             <summary>
             Gets the length of the data being received.
@@ -856,6 +874,12 @@
             </summary>
             <param name="fileName">The file to send to the resource.</param>
             <param name="maximumLength">The maximum number of bytes to upload.  If the value is 0 or less the entire file will be uploaded.</param>
+        </member>
+        <member name="M:harlam357.Core.Net.WebOperation.Upload(System.IO.Stream)">
+            <summary>
+            Uploads the specified stream to the resource.
+            </summary>
+            <param name="stream">The stream to send to the resource.</param>
         </member>
         <member name="M:harlam357.Core.Net.WebOperation.CheckConnection">
             <summary>
