@@ -56,18 +56,21 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public MessagesForm(IPreferenceSet prefs, ILogger logger)
+      public MessagesForm(IPreferenceSet prefs)
       {
          _prefs = prefs;
 
          InitializeComponent();
-
-         ((Logger)logger).TextMessage += (sender, e) => AddMessage(e.Messages);
       }
 
       #endregion
 
       #region Implementation
+
+      public void AttachLogger(ILogger logger)
+      {
+         ((Logger)logger).TextMessage += (sender, e) => AddMessage(e.Messages);
+      }
 
       private void AddMessage(ICollection<string> messages)
       {

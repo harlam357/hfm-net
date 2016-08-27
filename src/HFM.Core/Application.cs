@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Application Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 
 namespace HFM.Core
 {
-   public static class Application
+   public static partial class Application
    {
       public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 

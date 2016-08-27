@@ -151,7 +151,6 @@
       <Link>Properties\ExeAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BootStrapper.cs" />
-    <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleInstanceHelper.cs" />

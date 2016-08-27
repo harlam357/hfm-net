@@ -31,16 +31,12 @@ namespace HFM.Core.Logging
    [CoverageExclude]
    public class Logger : LevelFilteredLogger
    {
-      private readonly IPreferenceSet _prefs;
-
-      public Logger(IPreferenceSet prefs)
+      public Logger(string path)
          : base("Default")
       {
-         _prefs = prefs;
-
          try
          {
-            Initialize();
+            Initialize(path);
          }
          catch (IOException ex)
          {
@@ -49,7 +45,8 @@ namespace HFM.Core.Logging
                Constants.HfmLogFileName, Constants.HfmPrevLogFileName);
             throw new InvalidOperationException(message, ex);
          }
-         Level = GetLoggerLevel();
+         // default level
+         Level = LoggerLevel.Info;
       }
 
       public override ILogger CreateChildLogger(string loggerName)
@@ -123,11 +120,10 @@ namespace HFM.Core.Logging
 
       #endregion
 
-      private void Initialize()
+      private static void Initialize(string path)
       {
-         // Ensure the HFM User Application Data Folder Exists
-         var path = _prefs.ApplicationDataFolderPath;
-         if (Directory.Exists(path) == false)
+         // ensure the path exists
+         if (!Directory.Exists(path))
          {
             Directory.CreateDirectory(path);
          }
@@ -148,30 +144,6 @@ namespace HFM.Core.Logging
 
          Trace.Listeners.Add(new TextWriterTraceListener(logFilePath));
          Trace.AutoFlush = true;
-
-         _prefs.PreferenceChanged += (s, e) =>
-         {
-            if (e.Preference == Preference.MessageLevel)
-            {
-               var newLevel = (LoggerLevel)_prefs.Get<int>(Preference.MessageLevel);
-               if (newLevel != Level)
-               {
-                  Level = newLevel;
-                  Info("Debug Message Level Changed: {0}", newLevel);
-               }
-            }
-         };
-      }
-
-      private LoggerLevel GetLoggerLevel()
-      {
-         var messageLevel = _prefs.Get<int>(Preference.MessageLevel);
-         if (messageLevel < 4)
-         {
-            messageLevel = 4;
-            _prefs.Set(Preference.MessageLevel, messageLevel);
-         }
-         return (LoggerLevel)messageLevel;
       }
    }
 

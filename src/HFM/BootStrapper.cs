@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -36,42 +35,15 @@ using HFM.Forms.Models;
 
 namespace HFM
 {
-   internal sealed class BootStrapper
+   internal static class BootStrapper
    {
-      private ILogger _logger;
-      private readonly IPreferenceSet _prefs;
-
-      public BootStrapper(IPreferenceSet prefs)
+      internal static void Strap(string[] args)
       {
-         _prefs = prefs;
-      }
-
-      public void Strap(string[] args)
-      {
-         IEnumerable<Argument> arguments = Arguments.Parse(args);
-         IEnumerable<Argument> errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error);
-         if (errorArguments.Count() != 0)
+         var arguments = Arguments.Parse(args);
+         var errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error).ToList();
+         if (errorArguments.Count != 0)
          {
             MessageBox.Show(Arguments.GetUsageMessage(errorArguments), Core.Application.NameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-         }
-
-         var argument = arguments.FirstOrDefault(x => x.Type == ArgumentType.ResetPrefs);
-
-         try
-         {
-            if (argument != null)
-            {
-               _prefs.Reset();
-            }
-            else
-            {
-               _prefs.Initialize();
-            }
-         }
-         catch (Exception ex)
-         {
-            ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
             return;
          }
 
@@ -106,13 +78,14 @@ namespace HFM
 
             #region Setup Logging
 
+            var logger = ServiceLocator.Resolve<ILogger>();
             // create messages view (hooks into logging messages)
-            ServiceLocator.Resolve<IMessagesView>();
+            var messagesForm = (MessagesForm)ServiceLocator.Resolve<IMessagesView>();
+            messagesForm.AttachLogger(logger);
             // write log header
-            _logger = ServiceLocator.Resolve<ILogger>();
-            _logger.Info(String.Empty);
-            _logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
-            _logger.Info(String.Empty);
+            logger.Info(String.Empty);
+            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
+            logger.Info(String.Empty);
             // check for Mono runtime
             if (Core.Application.IsRunningOnMono)
             {
@@ -123,7 +96,7 @@ namespace HFM
                }
                catch (Exception ex)
                {
-                  _logger.Warn(Properties.Resources.MonoDetectFailed, ex);
+                  logger.Warn(Properties.Resources.MonoDetectFailed, ex);
                }
 
                if (monoVersion != null)
@@ -137,13 +110,39 @@ namespace HFM
                      ShowStartupError(ex, ex.Message);
                      return;
                   }
-                  _logger.Info("Running on Mono v{0}...", monoVersion);
+                  logger.Info("Running on Mono v{0}...", monoVersion);
                }
                else
                {
-                  _logger.Info("Running on Mono...");
+                  logger.Info("Running on Mono...");
                }
             }
+
+            #endregion
+
+            #region Initialize Preferences
+
+            var argument = arguments.FirstOrDefault(x => x.Type == ArgumentType.ResetPrefs);
+            var prefs = ServiceLocator.Resolve<IPreferenceSet>();
+
+            try
+            {
+               if (argument != null)
+               {
+                  prefs.Reset();
+               }
+               else
+               {
+                  prefs.Initialize();
+               }
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
+               return;
+            }
+            // set logging level from prefs
+            ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
 
             #endregion
 
@@ -151,7 +150,7 @@ namespace HFM
 
             try
             {
-               ClearCacheFolder();
+               ClearCacheFolder(prefs.CacheDirectory, logger);
             }
             catch (Exception ex)
             {
@@ -273,19 +272,16 @@ namespace HFM
          }
       }
 
-      /// <summary>
-      /// Clears the log cache folder specified by the CacheFolder setting
-      /// </summary>
-      private void ClearCacheFolder()
+      private static void ClearCacheFolder(string cacheDirectory, ILogger logger)
       {
-         var di = new DirectoryInfo(_prefs.CacheDirectory);
+         var di = new DirectoryInfo(cacheDirectory);
          if (!di.Exists)
          {
             di.Create();
          }
          else
          {
-            foreach (var fi in di.GetFiles())
+            foreach (var fi in di.EnumerateFiles())
             {
                try
                {
@@ -293,7 +289,7 @@ namespace HFM
                }
                catch (Exception ex)
                {
-                  _logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
+                  logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
                }
             }
          }

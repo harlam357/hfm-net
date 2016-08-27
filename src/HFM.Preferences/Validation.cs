@@ -7,21 +7,34 @@ namespace HFM.Preferences
 {
    internal static class Validation
    {
-      private const int MinutesDefault = 15;
+      private const int IntervalDefault = 15;
 
-      internal static int GetValidInternal(string value)
+      internal static int GetValidInterval(string value)
       {
          int result;
          if (!Int32.TryParse(value, out result))
          {
-            return MinutesDefault;
+            return IntervalDefault;
          }
-         return GetValidInternal(result);
+         return GetValidInterval(result);
       }
 
-      internal static int GetValidInternal(int value)
+      internal static int GetValidInterval(int value)
       {
-         return !Validate.Minutes(value) ? MinutesDefault : value;
+         return !Validate.Minutes(value) ? IntervalDefault : value;
+      }
+
+      internal static int GetValidMessageLevel(int level)
+      {
+         if (level < 4)
+         {
+            level = 4;
+         }
+         else if (level > 5)
+         {
+            level = 5;
+         }
+         return level;
       }
    }
 }

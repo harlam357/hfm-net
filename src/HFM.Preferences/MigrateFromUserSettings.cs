@@ -65,7 +65,7 @@ namespace HFM.Preferences
          data.MessagesWindow.Size = size;
 
          data.WebGenerationTask.Enabled = Settings.Default.GenerateWeb;
-         data.WebGenerationTask.Interval = Validation.GetValidInternal(Settings.Default.GenerateInterval);
+         data.WebGenerationTask.Interval = Validation.GetValidInterval(Settings.Default.GenerateInterval);
          data.WebGenerationTask.AfterClientRetrieval = Settings.Default.WebGenAfterRefresh;
          data.WebDeployment.DeploymentType = GetWebGenType();
          data.WebDeployment.DeploymentRoot = Settings.Default.WebRoot;
@@ -97,7 +97,7 @@ namespace HFM.Preferences
          data.ApplicationSettings.CacheFolder = Settings.Default.CacheFolder;
          data.ApplicationSettings.AutoSaveConfig = Settings.Default.AutoSaveConfig;
          data.ApplicationSettings.DecimalPlaces = Settings.Default.DecimalPlaces;
-         data.ApplicationSettings.MessageLevel = Settings.Default.MessageLevel;
+         data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(Settings.Default.MessageLevel);
          data.ApplicationSettings.ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
          data.ApplicationSettings.PpdCalculation = GetPpdCalculation();
          data.ApplicationSettings.BonusCalculation = GetBonusCalculation();
@@ -108,7 +108,7 @@ namespace HFM.Preferences
          data.ApplicationSettings.DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
 
          data.ClientRetrievalTask.Enabled = Settings.Default.SyncOnSchedule;
-         data.ClientRetrievalTask.Interval = Validation.GetValidInternal(Settings.Default.SyncTimeMinutes);
+         data.ClientRetrievalTask.Interval = Validation.GetValidInterval(Settings.Default.SyncTimeMinutes);
          data.ClientRetrievalTask.ProcessingMode = Settings.Default.SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel;
 
          data.Email.Enabled = Settings.Default.EmailReportingEnabled;

@@ -41,7 +41,7 @@ namespace HFM.Core
       /// </summary>
       /// <param name="args">Raw Argument Array</param>
       /// <returns>Argument Collection</returns>
-      public static IEnumerable<Argument> Parse(IList<string> args)
+      public static ICollection<Argument> Parse(IList<string> args)
       {
          var arguments = new List<Argument>();
       

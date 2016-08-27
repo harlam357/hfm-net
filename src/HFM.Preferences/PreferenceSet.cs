@@ -49,9 +49,9 @@ namespace HFM.Preferences
 
       #region Implementation
 
-      public string ApplicationPath
+      string IPreferenceSet.ApplicationPath
       {
-         get { return System.Windows.Forms.Application.StartupPath; }
+         get { return Application.FolderPath; }
       }
 
       string IPreferenceSet.ApplicationDataFolderPath
@@ -61,10 +61,10 @@ namespace HFM.Preferences
 
       private static string ApplicationDataFolderPath
       {
-         get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.ExeName); }
+         get { return Application.DataFolderPath; }
       }
 
-      public string CacheDirectory
+      string IPreferenceSet.CacheDirectory
       {
          get { return Path.Combine(ApplicationDataFolderPath, Get<string>(Preference.CacheFolder)); }
       }
@@ -304,8 +304,9 @@ namespace HFM.Preferences
                var serializer = new DataContractSerializer(typeof(PreferenceData));
                var data = (PreferenceData)serializer.ReadObject(fileStream);
                // validate interval properties
-               data.ClientRetrievalTask.Interval = Validation.GetValidInternal(data.ClientRetrievalTask.Interval);
-               data.WebGenerationTask.Interval = Validation.GetValidInternal(data.WebGenerationTask.Interval);
+               data.ClientRetrievalTask.Interval = Validation.GetValidInterval(data.ClientRetrievalTask.Interval);
+               data.WebGenerationTask.Interval = Validation.GetValidInterval(data.WebGenerationTask.Interval);
+               data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(data.ApplicationSettings.MessageLevel);
                return data;
             }
          }

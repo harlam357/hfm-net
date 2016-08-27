@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Application Entry Point
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,19 +35,18 @@ namespace HFM
       [STAThread]
       static void Main(string[] args)
       {
-         Application.ApplicationExit += ApplicationExit;
-         AppDomain.CurrentDomain.AssemblyResolve += CustomResolve;
-
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
+
+         // Must be set as early as possible
+         Core.Application.FolderPath = Application.StartupPath;
 
          try
          {
             // Configure Container
             IWindsorContainer container = new WindsorContainer();
             container.AddFacility<TypedFactoryFacility>();
-            container.Install(new Configuration.ContainerInstaller(),
-                              new Preferences.Configuration.ContainerInstaller(),
+            container.Install(new Preferences.Configuration.ContainerInstaller(),
                               new Core.Configuration.ContainerInstaller(),
                               new Forms.Configuration.ContainerInstaller());
 
@@ -60,8 +59,9 @@ namespace HFM
             // Setup TypeDescriptor
             Core.Configuration.TypeDescriptionProviderSetup.Execute();
 
-            var bootStrapper = container.Resolve<BootStrapper>();
-            bootStrapper.Strap(args);
+            Application.ApplicationExit += (s, e) => ApplicationExit(container);
+            AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
+            BootStrapper.Strap(args);
          }
          catch (Exception ex)
          {
@@ -69,23 +69,23 @@ namespace HFM
          }
       }
       
-      private static void ApplicationExit(object sender, EventArgs e)
+      private static void ApplicationExit(IWindsorContainer container)
       {
          // Save preferences
-         var prefs = Core.ServiceLocator.Resolve<Core.IPreferenceSet>();
+         var prefs = container.Resolve<Core.IPreferenceSet>();
          prefs.Save();
          // Save the benchmark collection
-         var benchmarkContainer = Core.ServiceLocator.Resolve<Core.IProteinBenchmarkCollection>();
+         var benchmarkContainer = container.Resolve<Core.IProteinBenchmarkCollection>();
          benchmarkContainer.Write();
 
-         var logger = Core.ServiceLocator.Resolve<Castle.Core.Logging.ILogger>();
+         var logger = container.Resolve<Castle.Core.Logging.ILogger>();
          logger.Info("----------");
          logger.Info("Exiting...");
          logger.Info(String.Empty);
       }
 
       [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]
-      private static System.Reflection.Assembly CustomResolve(object sender, ResolveEventArgs args)
+      private static System.Reflection.Assembly CustomResolve(ResolveEventArgs args, IWindsorContainer container)
       {
          const string sqliteDll = "System.Data.SQLite";
          if (args.Name.StartsWith(sqliteDll, StringComparison.Ordinal))
@@ -94,7 +94,7 @@ namespace HFM
             if (platform != null)
             {
                string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
-               var logger = Core.ServiceLocator.Resolve<Castle.Core.Logging.ILogger>();
+               var logger = container.Resolve<Castle.Core.Logging.ILogger>();
                logger.Info("SQLite DLL Path: {0}", filePath);
                if (File.Exists(filePath))
                {
