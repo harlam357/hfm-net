@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Website Deployer Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-
+using System.Linq;
 using Castle.Core.Logging;
 
 namespace HFM.Core
@@ -150,13 +150,21 @@ namespace HFM.Core
                int maximumLength = _prefs.Get<bool>(Preference.WebGenLimitLogSize)
                                     ? _prefs.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                                     : -1;
-               // Upload the FAHlog.txt File for each Client Instance
-               foreach (var slot in slots)
+
+               var logPaths = slots.Select(x => Path.Combine(_prefs.CacheDirectory, x.Settings.CachedFahLogFileName())).Distinct();
+               foreach (var cachedFahlogPath in logPaths)
                {
-                  string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, slot.Settings.CachedFahLogFileName());
                   if (File.Exists(cachedFahlogPath))
                   {
-                     _networkOps.FtpUploadHelper(server, port, ftpPath, cachedFahlogPath, maximumLength, username, password, ftpMode);
+                     using (var stream = FileSystem.TryFileOpen(cachedFahlogPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                     {
+                        if (stream == null)
+                        {
+                           Logger.Warn("Could not open {0} for FTP upload.", cachedFahlogPath);
+                           continue;
+                        }
+                        _networkOps.FtpUploadHelper(server, port, ftpPath, Path.GetFileName(cachedFahlogPath), stream, maximumLength, username, password, ftpMode);
+                     }
                   }
                }
             }

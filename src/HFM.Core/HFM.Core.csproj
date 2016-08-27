@@ -86,6 +86,7 @@
     <Compile Include="ClientConfigurationExtensions.cs" />
     <Compile Include="DataTypes\DataAggregatorResult.cs" />
     <Compile Include="DataTypes\PreferenceData.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientFactory.cs" />

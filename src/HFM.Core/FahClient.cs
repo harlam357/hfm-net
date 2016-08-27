@@ -198,31 +198,24 @@ namespace HFM.Core
 
       private void WriteToLocalFahLogCache(StringBuilder logText, bool createNew)
       {
-         IEnumerable<char[]> chunks = logText.GetChunks();
+         const int sleep = 100;
+         const int timeout = 60 * 1000;
          string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
 
-         if (createNew)
+         try
          {
-            int i = 0;
-            foreach (var chunk in chunks)
+            using (var stream = FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
+            using (var writer = new StreamWriter(stream))
             {
-               if (i == 0)
+               foreach (var chunk in logText.GetChunks())
                {
-                  File.WriteAllText(fahLogPath, new string(chunk));
+                  writer.Write(chunk);
                }
-               else
-               {
-                  File.AppendAllText(fahLogPath, new string(chunk));
-               }
-               i++;
             }
          }
-         else
+         catch (Exception ex)
          {
-            foreach (var chunk in chunks)
-            {
-               File.AppendAllText(fahLogPath, new string(chunk));
-            }
+            Logger.WarnFormat(ex, "Failed to write to {0}", fahLogPath);
          }
       }
 

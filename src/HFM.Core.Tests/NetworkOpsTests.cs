@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Network Operations Helper Class Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 using System.Net.Cache;
 
 using NUnit.Framework;
@@ -41,7 +42,7 @@ namespace HFM.Core.Tests
       }
 
       [Test]
-      public void FtpUploadHelper_Test()
+      public void FtpUploadHelper_Test1()
       {
          var webOperation = MockRepository.GenerateMock<IWebOperation>();
          webOperation.Expect(x => x.Upload("testpath", -1));
@@ -50,11 +51,29 @@ namespace HFM.Core.Tests
 
          _net.FtpUploadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpMode.Passive);
 
-         Assert.AreSame(webOperation, _net.FtpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
          Assert.AreEqual(true, webRequest.UsePassive);
 
          webOperation.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void FtpUploadHelper_Test2()
+      {
+         using (var stream = new MemoryStream())
+         {
+            var webOperation = MockRepository.GenerateMock<IWebOperation>();
+            webOperation.Expect(x => x.Upload(stream));
+            var webRequest = MockRepository.GenerateStub<IFtpWebRequest>();
+            webOperation.Stub(x => x.WebRequest).Return(webRequest);
+
+            _net.FtpUploadHelper(webOperation, stream, String.Empty, String.Empty, FtpMode.Passive);
+
+            Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
+            Assert.AreEqual(true, webRequest.UsePassive);
+
+            webOperation.VerifyAllExpectations();
+         }
       }
 
       [Test]
@@ -67,7 +86,6 @@ namespace HFM.Core.Tests
 
          _net.FtpDownloadHelper(webOperation, "testpath", String.Empty, String.Empty, FtpMode.Active);
 
-         Assert.AreSame(webOperation, _net.FtpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
          Assert.AreEqual(false, webRequest.UsePassive);
 
@@ -85,7 +103,6 @@ namespace HFM.Core.Tests
          long length = _net.GetFtpDownloadLength(webOperation, String.Empty, String.Empty, FtpMode.Active);
          Assert.AreEqual(100, length);
 
-         Assert.AreSame(webOperation, _net.FtpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
          Assert.AreEqual(false, webRequest.UsePassive);
 
@@ -102,7 +119,6 @@ namespace HFM.Core.Tests
 
          _net.HttpDownloadHelper(webOperation, "testpath", String.Empty, String.Empty);
 
-         Assert.AreSame(webOperation, _net.HttpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
 
          webOperation.VerifyAllExpectations();
@@ -119,7 +135,6 @@ namespace HFM.Core.Tests
          long length = _net.GetHttpDownloadLength(webOperation, String.Empty, String.Empty);
          Assert.AreEqual(100, length);
 
-         Assert.AreSame(webOperation, _net.HttpOperation);
          Assert.AreEqual(RequestCacheLevel.NoCacheNoStore, webRequest.CachePolicy.Level);
 
          webOperation.VerifyAllExpectations();
