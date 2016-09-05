@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Application = System.Windows.Forms.Application;
 
 using Castle.Facilities.TypedFactory;
@@ -33,7 +31,7 @@ namespace HFM
       /// The main entry point for the application.
       /// </summary>
       [STAThread]
-      static void Main(string[] args)
+      private static void Main(string[] args)
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
@@ -59,50 +57,12 @@ namespace HFM
             // Setup TypeDescriptor
             Core.Configuration.TypeDescriptionProviderSetup.Execute();
 
-            Application.ApplicationExit += (s, e) => ApplicationExit(container);
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
-            BootStrapper.Strap(args);
+            BootStrapper.Execute(args, container);
          }
          catch (Exception ex)
          {
             BootStrapper.ShowStartupError(ex, null);
          }
-      }
-      
-      private static void ApplicationExit(IWindsorContainer container)
-      {
-         // Save preferences
-         var prefs = container.Resolve<Core.IPreferenceSet>();
-         prefs.Save();
-         // Save the benchmark collection
-         var benchmarkContainer = container.Resolve<Core.IProteinBenchmarkCollection>();
-         benchmarkContainer.Write();
-
-         var logger = container.Resolve<Castle.Core.Logging.ILogger>();
-         logger.Info("----------");
-         logger.Info("Exiting...");
-         logger.Info(String.Empty);
-      }
-
-      [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]
-      private static System.Reflection.Assembly CustomResolve(ResolveEventArgs args, IWindsorContainer container)
-      {
-         const string sqliteDll = "System.Data.SQLite";
-         if (args.Name.StartsWith(sqliteDll, StringComparison.Ordinal))
-         {
-            string platform = Core.Application.IsRunningOnMono ? "Mono" : Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-            if (platform != null)
-            {
-               string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
-               var logger = container.Resolve<Castle.Core.Logging.ILogger>();
-               logger.Info("SQLite DLL Path: {0}", filePath);
-               if (File.Exists(filePath))
-               {
-                  return System.Reflection.Assembly.LoadFile(filePath);
-               }
-            }
-         }
-         return null;
       }
    }
 }

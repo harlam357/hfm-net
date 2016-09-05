@@ -18,7 +18,8 @@
  */
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ using System.Runtime.Remoting;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
+using Castle.Windsor;
 
 using harlam357.Windows.Forms;
 
@@ -37,7 +39,7 @@ namespace HFM
 {
    internal static class BootStrapper
    {
-      internal static void Strap(string[] args)
+      internal static void Execute(string[] args, IWindsorContainer container)
       {
          var arguments = Arguments.Parse(args);
          var errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error).ToList();
@@ -47,252 +49,302 @@ namespace HFM
             return;
          }
 
+         AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
+
          // Issue 180 - Restore the already running instance to the screen.
          using (var singleInstance = new SingleInstanceHelper())
          {
-            #region Check Single Instance
-
-            try
+            if (!CheckSingleInstance(args, singleInstance))
             {
-               if (!singleInstance.Start())
-               {
-                  SingleInstanceHelper.SignalFirstInstance(args);
-                  return;
-               }
-            }
-            catch (RemotingException ex)
-            {
-               if (MessageBox.Show(Properties.Resources.RemotingFailedQuestion, Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning).Equals(DialogResult.No))
-               {
-                  ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
-                  return;
-               }
-            }
-            catch (Exception ex)
-            {
-               ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
                return;
             }
 
-            #endregion
+            var logger = container.Resolve<ILogger>();
+            InitializeLogging(container, logger);
 
-            #region Setup Logging
-
-            var logger = ServiceLocator.Resolve<ILogger>();
-            // create messages view (hooks into logging messages)
-            var messagesForm = (MessagesForm)ServiceLocator.Resolve<IMessagesView>();
-            messagesForm.AttachLogger(logger);
-            // write log header
-            logger.Info(String.Empty);
-            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
-            logger.Info(String.Empty);
-            // check for Mono runtime
-            if (Core.Application.IsRunningOnMono)
+            if (!CheckMonoVersion(logger))
             {
-               Version monoVersion = null;
-               try
-               {
-                  monoVersion = Core.Application.GetMonoVersionNumer();
-               }
-               catch (Exception ex)
-               {
-                  logger.Warn(Properties.Resources.MonoDetectFailed, ex);
-               }
-
-               if (monoVersion != null)
-               {
-                  try
-                  {
-                     ValidateMonoVersion(monoVersion);
-                  }
-                  catch (InvalidOperationException ex)
-                  {
-                     ShowStartupError(ex, ex.Message);
-                     return;
-                  }
-                  logger.Info("Running on Mono v{0}...", monoVersion);
-               }
-               else
-               {
-                  logger.Info("Running on Mono...");
-               }
-            }
-
-            #endregion
-
-            #region Initialize Preferences
-
-            var argument = arguments.FirstOrDefault(x => x.Type == ArgumentType.ResetPrefs);
-            var prefs = ServiceLocator.Resolve<IPreferenceSet>();
-
-            try
-            {
-               if (argument != null)
-               {
-                  prefs.Reset();
-               }
-               else
-               {
-                  prefs.Initialize();
-               }
-            }
-            catch (Exception ex)
-            {
-               ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
-               return;
-            }
-            // set logging level from prefs
-            ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
-
-            #endregion
-
-            #region Setup Cache Folder
-
-            try
-            {
-               ClearCacheFolder(prefs.CacheDirectory, logger);
-            }
-            catch (Exception ex)
-            {
-               ShowStartupError(ex, Properties.Resources.CacheSetupFailed);
                return;
             }
 
-            #endregion
-
-            #region Load Plugins
-
-            var pluginLoader = ServiceLocator.Resolve<Core.Plugins.PluginLoader>();
-            pluginLoader.Load();
-
-            #endregion
-
-            #region Register IPC Channel
-
-            try
+            var prefs = container.Resolve<IPreferenceSet>();
+            if (!InitializePreferences(prefs, logger, arguments.Any(x => x.Type == ArgumentType.ResetPrefs)))
             {
-               SingleInstanceHelper.RegisterIpcChannel(NewInstanceDetected);
-            }
-            catch (Exception ex)
-            {
-               ShowStartupError(ex, Properties.Resources.IpcRegisterFailed);
                return;
             }
 
-            #endregion
-
-            #region Initialize Main View
-
-            var mainView = ServiceLocator.Resolve<IMainView>();
-            var mainPresenter = ServiceLocator.Resolve<MainPresenter>();
-            mainPresenter.Arguments = arguments;
-            try
+            if (!ClearCacheFolder(prefs.CacheDirectory, logger))
             {
-               mainView.Initialize(mainPresenter, ServiceLocator.Resolve<IProteinService>(), ServiceLocator.Resolve<UserStatsDataModel>());
-            }
-            catch (Exception ex)
-            {
-               ShowStartupError(ex, Properties.Resources.FailedToInitUI);
                return;
             }
 
-            mainView.WorkUnitHistoryMenuEnabled = false;
-            var database = ServiceLocator.Resolve<IUnitInfoDatabase>();
-            if (database.Connected)
+            LoadPlugins(container);
+
+            if (!RegisterIpcChannel(container))
             {
-               database.UpgradeExecuting += DatabaseUpgradeExecuting;
-               try
-               {
-                  database.Upgrade();
-                  mainView.WorkUnitHistoryMenuEnabled = true;
-               }
-               catch (Exception ex)
-               {
-                  ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
-               }
-               finally
-               {
-                  database.UpgradeExecuting -= DatabaseUpgradeExecuting;
-               }
+               return;
             }
 
-            #endregion
+            var mainView = container.Resolve<IMainView>();
+            if (!InitializeMainView(container, arguments, mainView))
+            {
+               return;
+            }
 
-            #region Register the Unhandled Exception Dialog
+            ExceptionDialog.RegisterForUnhandledExceptions(
+               Core.Application.NameAndVersionWithRevision, 
+               Environment.OSVersion.VersionString, 
+               ex => logger.Error(ex.Message, ex));
 
-            ExceptionDialog.RegisterForUnhandledExceptions(Core.Application.NameAndVersionWithRevision,
-               Environment.OSVersion.VersionString, ExceptionLogger);
-
-            #endregion
-
+            System.Windows.Forms.Application.ApplicationExit += (s, e) =>
+            {
+               // Save preferences
+               prefs.Save();
+               // Save the benchmark collection
+               var benchmarkContainer = container.Resolve<IProteinBenchmarkCollection>();
+               benchmarkContainer.Write();
+            };
             System.Windows.Forms.Application.Run((Form)mainView);
          }
       }
 
-      private static void DatabaseUpgradeExecuting(object sender, UpgradeExecutingEventArgs e)
+      private static bool CheckSingleInstance(string[] args, SingleInstanceHelper singleInstance)
       {
-         // Execute Asynchronous Operation
-         var view = ServiceLocator.Resolve<IProgressDialogView>("ProgressDialog");
-         view.ProcessRunner = e.Process;
-         view.Icon = Properties.Resources.hfm_48_48;
-         view.Text = "Upgrading Database";
-         view.StartPosition = FormStartPosition.CenterScreen;
-         view.Process();
-      }
-
-      private static void NewInstanceDetected(object sender, NewInstanceDetectedEventArgs e)
-      {
-         var mainView = ServiceLocator.Resolve<IMainView>();
-         mainView.SecondInstanceStarted(e.Args);
-      }
-
-      private static void ExceptionLogger(Exception ex)
-      {
-         var logger = ServiceLocator.Resolve<ILogger>();
-         logger.ErrorFormat(ex, "{0}", ex.Message);
-      }
-
-      internal static void ShowStartupError(Exception ex, string message)
-      {
-         ShowStartupError(ex, message, true);
-      }
-
-      internal static void ShowStartupError(Exception ex, string message, bool mustTerminate)
-      {
-         ExceptionDialog.ShowErrorDialog(ex, Core.Application.NameAndVersionWithRevision, Environment.OSVersion.VersionString,
-            message, Constants.GoogleGroupUrl, mustTerminate);
-      }
-
-      private static void ValidateMonoVersion(Version monoVersion)
-      {
-         Debug.Assert(monoVersion != null);
-         if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
+         try
          {
-            throw new InvalidOperationException(Properties.Resources.MonoTooOld);
+            if (!singleInstance.Start())
+            {
+               SingleInstanceHelper.SignalFirstInstance(args);
+               return false;
+            }
          }
+         catch (RemotingException ex)
+         {
+            DialogResult result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion, 
+               Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.No)
+            {
+               ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
+               return false;
+            }
+         }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
+            return false;
+         }
+         return true;
       }
 
-      private static void ClearCacheFolder(string cacheDirectory, ILogger logger)
+      private static void InitializeLogging(IWindsorContainer container, ILogger logger)
       {
-         var di = new DirectoryInfo(cacheDirectory);
-         if (!di.Exists)
+         // create messages view (hooks into logging messages)
+         var messagesForm = (MessagesForm)container.Resolve<IMessagesView>();
+         messagesForm.AttachLogger(logger);
+         // write log header
+         logger.Info(String.Empty);
+         logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
+         logger.Info(String.Empty);
+
+         System.Windows.Forms.Application.ApplicationExit += (s, e) =>
          {
-            di.Create();
+            logger.Info("----------");
+            logger.Info("Exiting...");
+            logger.Info(String.Empty);
+         };
+      }
+
+      private static bool CheckMonoVersion(ILogger logger)
+      {
+         // check for Mono runtime
+         if (!Core.Application.IsRunningOnMono)
+         {
+            return true;
+         }
+
+         Version monoVersion = null;
+         try
+         {
+            monoVersion = Core.Application.GetMonoVersionNumer();
+         }
+         catch (Exception ex)
+         {
+            logger.Warn(Properties.Resources.MonoDetectFailed, ex);
+         }
+
+         if (monoVersion != null)
+         {
+            if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
+            {
+               var ex = new InvalidOperationException(Properties.Resources.MonoTooOld);
+               ShowStartupError(ex);
+               return false;
+            }
+            logger.Info("Running on Mono v{0}...", monoVersion);
          }
          else
          {
-            foreach (var fi in di.EnumerateFiles())
+            logger.Info("Running on Mono...");
+         }
+         return true;
+      }
+
+      private static bool InitializePreferences(IPreferenceSet prefs, ILogger logger, bool reset)
+      {
+         try
+         {
+            if (reset)
             {
-               try
+               prefs.Reset();
+            }
+            else
+            {
+               prefs.Initialize();
+            }
+         }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
+            return false;
+         }
+         // set logging level from prefs
+         ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
+         return true;
+      }
+
+      private static bool ClearCacheFolder(string cacheDirectory, ILogger logger)
+      {
+         try
+         {
+            var di = new DirectoryInfo(cacheDirectory);
+            if (!di.Exists)
+            {
+               di.Create();
+            }
+            else
+            {
+               foreach (var fi in di.EnumerateFiles())
                {
-                  fi.Delete();
-               }
-               catch (Exception ex)
-               {
-                  logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
+                  try
+                  {
+                     fi.Delete();
+                  }
+                  catch (Exception ex)
+                  {
+                     logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
+                  }
                }
             }
          }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, Properties.Resources.CacheSetupFailed);
+            return false;
+         }
+         return true;
+      }
+
+      private static void LoadPlugins(IWindsorContainer container)
+      {
+         var pluginLoader = container.Resolve<Core.Plugins.PluginLoader>();
+         pluginLoader.Load();
+      }
+
+      private static bool RegisterIpcChannel(IWindsorContainer container)
+      {
+         try
+         {
+            SingleInstanceHelper.RegisterIpcChannel((s, e) =>
+            {
+               var mainView = container.Resolve<IMainView>();
+               mainView.SecondInstanceStarted(e.Args);
+            });
+         }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, Properties.Resources.IpcRegisterFailed);
+            return false;
+         }
+         return true;
+      }
+
+      private static bool InitializeMainView(IWindsorContainer container, ICollection<Argument> arguments, IMainView mainView)
+      {
+         var mainPresenter = container.Resolve<MainPresenter>();
+         mainPresenter.Arguments = arguments;
+         try
+         {
+            mainView.Initialize(mainPresenter, container.Resolve<IProteinService>(), container.Resolve<UserStatsDataModel>());
+         }
+         catch (Exception ex)
+         {
+            ShowStartupError(ex, Properties.Resources.FailedToInitUI);
+            return false;
+         }
+
+         mainView.WorkUnitHistoryMenuEnabled = false;
+         var database = container.Resolve<IUnitInfoDatabase>();
+         if (database.Connected)
+         {
+            EventHandler<UpgradeExecutingEventArgs> upgradeExecuting = (s, e) =>
+            {
+               // Execute Asynchronous Operation
+               var view = container.Resolve<IProgressDialogView>("ProgressDialog");
+               view.ProcessRunner = e.Process;
+               view.Icon = Properties.Resources.hfm_48_48;
+               view.Text = "Upgrading Database";
+               view.StartPosition = FormStartPosition.CenterScreen;
+               view.Process();
+            };
+
+            database.UpgradeExecuting += upgradeExecuting;
+            try
+            {
+               database.Upgrade();
+               mainView.WorkUnitHistoryMenuEnabled = true;
+            }
+            catch (Exception ex)
+            {
+               ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
+            }
+            finally
+            {
+               database.UpgradeExecuting -= upgradeExecuting;
+            }
+         }
+         return true;
+      }
+
+      [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]
+      private static System.Reflection.Assembly CustomResolve(ResolveEventArgs args, IWindsorContainer container)
+      {
+         const string sqliteDll = "System.Data.SQLite";
+         if (args.Name.StartsWith(sqliteDll, StringComparison.Ordinal))
+         {
+            string platform = Core.Application.IsRunningOnMono ? "Mono" : Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
+            if (platform != null)
+            {
+               string filePath = Path.GetFullPath(Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
+               var logger = container.Resolve<ILogger>();
+               logger.Info("SQLite DLL Path: {0}", filePath);
+               if (File.Exists(filePath))
+               {
+                  return System.Reflection.Assembly.LoadFile(filePath);
+               }
+            }
+         }
+         return null;
+      }
+
+      internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)
+      {
+         ExceptionDialog.ShowErrorDialog(
+            ex, 
+            Core.Application.NameAndVersionWithRevision, 
+            Environment.OSVersion.VersionString,
+            message, 
+            Constants.GoogleGroupUrl, 
+            mustTerminate);
       }
    }
 }

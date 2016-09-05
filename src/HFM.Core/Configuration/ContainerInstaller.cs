@@ -44,24 +44,7 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<ILogger>()
                .ImplementedBy<Logging.Logger>()
-               .UsingFactoryMethod(() => new Logging.Logger(Application.DataFolderPath))
-               .OnCreate((kernel, instance) =>
-               {
-                  var logger = (Logging.Logger)instance;
-                  var prefs = kernel.Resolve<IPreferenceSet>();
-                  prefs.PreferenceChanged += (s, e) =>
-                  {
-                     if (e.Preference == Preference.MessageLevel)
-                     {
-                        var newLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
-                        if (newLevel != logger.Level)
-                        {
-                           logger.Level = newLevel;
-                           logger.Info("Debug Message Level Changed: {0}", newLevel);
-                        }
-                     }
-                  };
-               }));
+               .UsingFactoryMethod(() => new Logging.Logger(Application.DataFolderPath)));
 
          // IDataRetriever - Transient
          container.Register(

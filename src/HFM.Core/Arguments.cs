@@ -96,7 +96,7 @@ namespace HFM.Core
          sb.AppendLine();
          sb.AppendLine();
          sb.AppendLine(" /r - Reset the user preferences.");
-         sb.AppendLine(" /f <file name> - Load HFM client configuration file.");
+         sb.AppendLine(" /f <filepath> - Load HFM client configuration file.");
          return sb.ToString();
       }
    }

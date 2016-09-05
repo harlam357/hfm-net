@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Preferences Container Installer
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -32,7 +33,23 @@ namespace HFM.Preferences.Configuration
          // IPreferenceSet - Singleton
          container.Register(
             Component.For<Core.IPreferenceSet>()
-               .ImplementedBy<PreferenceSet>());
+               .ImplementedBy<PreferenceSet>()
+               .OnCreate((kernel, instance) =>
+                         {
+                            var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
+                            instance.PreferenceChanged += (s, e) =>
+                            {
+                               if (e.Preference == Core.Preference.MessageLevel)
+                               {
+                                  var newLevel = (LoggerLevel)instance.Get<int>(Core.Preference.MessageLevel);
+                                  if (newLevel != logger.Level)
+                                  {
+                                     logger.Level = newLevel;
+                                     logger.Info("Debug Message Level Changed: {0}", newLevel);
+                                  }
+                               }
+                            };
+                         }));
       }
 
       #endregion

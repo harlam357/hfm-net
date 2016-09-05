@@ -1,6 +1,6 @@
 /*
  * HFM.NET - Single Instance Helper Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,7 +54,7 @@ namespace HFM
          return onlyInstance;
       }
       
-      public static void RegisterIpcChannel(NewInstanceDetectedHandler handler)
+      public static void RegisterIpcChannel(EventHandler<NewInstanceDetectedEventArgs> handler)
       {
          IChannel ipcChannel = new IpcServerChannel(String.Format(CultureInfo.InvariantCulture, "hfm-{0}-{1}", Environment.UserName, AssemblyGuid));
          ChannelServices.RegisterChannel(ipcChannel, false);
@@ -126,14 +126,13 @@ namespace HFM
       #endregion
    }
 
-   public delegate void NewInstanceDetectedHandler(object sender, NewInstanceDetectedEventArgs e);
-
    public class IpcObject : MarshalByRefObject
    {
-      public event NewInstanceDetectedHandler NewInstanceDetected;
+      public event EventHandler<NewInstanceDetectedEventArgs> NewInstanceDetected;
 
-      public IpcObject(NewInstanceDetectedHandler handler)
+      public IpcObject(EventHandler<NewInstanceDetectedEventArgs> handler)
       {
+         if (handler == null) throw new ArgumentNullException("handler");
          NewInstanceDetected += handler;
       }
 
