@@ -58,9 +58,6 @@
     <Reference Include="harlam357.Core">
       <HintPath>..\..\lib\harlam357-net\harlam357.Core.dll</HintPath>
     </Reference>
-    <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
@@ -74,9 +71,6 @@
       <HintPath>..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\..\lib\System.Linq.Dynamic\System.Linq.Dynamic.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>

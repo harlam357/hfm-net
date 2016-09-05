@@ -20,13 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -490,147 +488,6 @@ namespace HFM.Core
                return query;
             }
          }
-      }
-
-      private IList<HistoryEntry> FilterProteinParameters(QueryParameters parameters, IEnumerable<HistoryEntry> entries)
-      {
-         var query = entries.AsQueryable();
-
-         foreach (var field in parameters.Fields)
-         {
-            if (field.Name.Equals(QueryFieldName.WorkUnitName) ||
-                field.Name.Equals(QueryFieldName.KFactor) ||
-                field.Name.Equals(QueryFieldName.Core) ||
-                field.Name.Equals(QueryFieldName.Frames) ||
-                field.Name.Equals(QueryFieldName.Atoms) ||
-                field.Name.Equals(QueryFieldName.SlotType) ||
-                field.Name.Equals(QueryFieldName.PPD) ||
-                field.Name.Equals(QueryFieldName.Credit))
-            {
-               if (field.Type.Equals(QueryFieldType.Like))
-               {
-                  query = Like(query, field);
-               }
-               else if (field.Type.Equals(QueryFieldType.NotLike))
-               {
-                  query = NotLike(query, field);
-               }
-               else
-               {
-                  try
-                  {
-                     query = query.Where(BuildWhereCondition(field));
-                  }
-                  catch (ParseException ex)
-                  {
-                     _logger.WarnFormat(ex, "{0}", ex.Message);
-                  }
-               }
-            }
-         }
-
-         return query.ToList();
-      }
-
-      private static IQueryable<HistoryEntry> Like(IQueryable<HistoryEntry> query, QueryField field)
-      {
-         Debug.Assert(field.Type.Equals(QueryFieldType.Like));
-         return LikeMatch(query, field, IsSqlLikeMatch);
-      }
-
-      private static IQueryable<HistoryEntry> NotLike(IQueryable<HistoryEntry> query, QueryField field)
-      {
-         Debug.Assert(field.Type.Equals(QueryFieldType.NotLike));
-         return LikeMatch(query, field, (input, pattern) => !IsSqlLikeMatch(input, pattern));
-      }
-
-      private static IQueryable<HistoryEntry> LikeMatch(IQueryable<HistoryEntry> query, QueryField field, Func<string, string, bool> func)
-      {
-         Debug.Assert(field.Type.Equals(QueryFieldType.Like) ||
-                      field.Type.Equals(QueryFieldType.NotLike));
-
-         if (field.Name.Equals(QueryFieldName.WorkUnitName))
-         {
-            return query.Where(x => func(x.WorkUnitName, field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.KFactor))
-         {
-            return query.Where(x => func(x.KFactor.ToString(), field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.Core))
-         {
-            return query.Where(x => func(x.Core, field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.Frames))
-         {
-            return query.Where(x => func(x.Frames.ToString(), field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.Atoms))
-         {
-            return query.Where(x => func(x.Atoms.ToString(), field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.SlotType))
-         {
-            return query.Where(x => func(x.SlotType, field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.PPD))
-         {
-            return query.Where(x => func(x.PPD.ToString(), field.Value.ToString()));
-         }
-         if (field.Name.Equals(QueryFieldName.Credit))
-         {
-            return query.Where(x => func(x.Credit.ToString(), field.Value.ToString()));
-         }
-
-         // ReSharper disable HeuristicUnreachableCode
-         Debug.Assert(false);
-         return query;
-         // ReSharper restore HeuristicUnreachableCode
-      }
-
-      private static bool IsSqlLikeMatch(string input, string pattern)
-      {
-         // Method from here: http://bytes.com/topic/c-sharp/answers/253519-using-regex-create-sqls-like-like-function
-
-         /* Turn "off" all regular expression related syntax in
-         * the pattern string. */
-         pattern = Regex.Escape(pattern);
-
-         /* Replace the SQL LIKE wildcard metacharacters with the
-         * equivalent regular expression metacharacters. */
-         pattern = pattern.Replace("%", ".*?").Replace("_", ".");
-
-         /* The previous call to Regex.Escape actually turned off
-         * too many metacharacters, i.e. those which are recognized by
-         * both the regular expression engine and the SQL LIKE
-         * statement ([...] and [^...]). Those metacharacters have
-         * to be manually unescaped here. */
-         pattern = pattern.Replace(@"\[", "[").Replace(@"\]", "]").Replace(@"\^", "^");
-
-         // anchor the pattern - rwh 12/1/12
-         if (!pattern.StartsWith("^"))
-         {
-            pattern = "^" + pattern;
-         }
-         if (!pattern.EndsWith("$"))
-         {
-            pattern = pattern + "$";
-         }
-
-         return input != null && Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-      }
-
-      private static string BuildWhereCondition(QueryField queryField)
-      {
-         string valueFormat = "{2}";
-         if (queryField.Name.Equals(QueryFieldName.WorkUnitName) ||
-             queryField.Name.Equals(QueryFieldName.Core) ||
-             queryField.Name.Equals(QueryFieldName.SlotType))
-         {
-            valueFormat = "\"{2}\"";
-         }
-
-         return String.Format(CultureInfo.InvariantCulture, "{0} {1} " + valueFormat, queryField.Name, queryField.Operator, queryField.Value);
       }
 
       #endregion
