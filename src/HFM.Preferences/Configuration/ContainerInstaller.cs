@@ -45,7 +45,7 @@ namespace HFM.Preferences.Configuration
                                   if (newLevel != logger.Level)
                                   {
                                      logger.Level = newLevel;
-                                     logger.Info("Debug Message Level Changed: {0}", newLevel);
+                                     logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
                                   }
                                }
                             };

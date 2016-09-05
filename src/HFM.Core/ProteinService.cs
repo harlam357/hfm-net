@@ -169,7 +169,7 @@ namespace HFM.Core
 
          if (_downloader != null)
          {
-            Logger.Info("Project ID {0} triggering project data refresh.", projectId);
+            Logger.InfoFormat("Project ID {0} triggering project data refresh.", projectId);
 
             try
             {

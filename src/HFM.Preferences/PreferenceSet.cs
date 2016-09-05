@@ -124,7 +124,7 @@ namespace HFM.Preferences
 
          if (data != null)
          {
-            Logger.Info("Migration from version {0} user settings complete.", data.ApplicationVersion);
+            Logger.InfoFormat("Migration from version {0} user settings complete.", data.ApplicationVersion);
          }
          else
          {

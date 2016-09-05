@@ -47,11 +47,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Core.dll</HintPath>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net40-client\Castle.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\..\lib\Castle Windsor\dotNet40ClientProfile\Castle.Windsor.dll</HintPath>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net40-client\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="harlam357.Core">
       <HintPath>..\..\lib\harlam357-net\harlam357.Core.dll</HintPath>
@@ -117,7 +119,6 @@
     <Compile Include="Serializers\HistoryEntryCsvSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="Serializers\XmlFileSerializer.cs" />
-    <Compile Include="ServiceLocator.cs" />
     <Compile Include="DataTypes\Markup\SlotData.cs" />
     <Compile Include="DataTypes\Markup\SlotDetail.cs" />
     <Compile Include="SlotModel.cs" />

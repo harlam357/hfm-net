@@ -61,7 +61,7 @@ namespace HFM.Core
             case SlotStatus.RunningNoFrameTimes:
                break;
             case SlotStatus.Unknown:
-               _logger.Error("Unable to Determine Status for Client '{0}'", statusData.ClientName);
+               _logger.ErrorFormat("Unable to Determine Status for Client '{0}'", statusData.ClientName);
                // Update Client Status - don't call Determine Status
                return statusData.ReturnedStatus;
             case SlotStatus.Offline:

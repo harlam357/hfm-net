@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Markup Generator Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,12 +63,12 @@ namespace HFM.Core
 
       public IEnumerable<string> HtmlFilePaths { get; private set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -116,7 +116,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.Error(ex.Message, ex);
          }
       }
       
@@ -265,7 +265,7 @@ namespace HFM.Core
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.Error(ex.Message, ex);
          }
       }
 

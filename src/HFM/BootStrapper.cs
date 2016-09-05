@@ -180,7 +180,7 @@ namespace HFM
                ShowStartupError(ex);
                return false;
             }
-            logger.Info("Running on Mono v{0}...", monoVersion);
+            logger.InfoFormat("Running on Mono v{0}...", monoVersion);
          }
          else
          {
@@ -326,7 +326,7 @@ namespace HFM
             {
                string filePath = Path.GetFullPath(Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
                var logger = container.Resolve<ILogger>();
-               logger.Info("SQLite DLL Path: {0}", filePath);
+               logger.InfoFormat("SQLite DLL Path: {0}", filePath);
                if (File.Exists(filePath))
                {
                   return System.Reflection.Assembly.LoadFile(filePath);

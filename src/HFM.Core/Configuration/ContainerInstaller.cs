@@ -23,6 +23,7 @@ using System.IO;
 using Castle.Core.Logging;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
@@ -33,6 +34,10 @@ namespace HFM.Core.Configuration
    {
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
+         container.Register(
+            Component.For<ILazyComponentLoader>()
+               .ImplementedBy<LazyOfTComponentLoader>());
+
          #region Service Interfaces
 
          // IAutoRun - Singleton

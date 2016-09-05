@@ -33,12 +33,12 @@ namespace HFM.Core
 
    public class WebsiteDeployer : IWebsiteDeployer
    {
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -160,7 +160,7 @@ namespace HFM.Core
                      {
                         if (stream == null)
                         {
-                           Logger.Warn("Could not open {0} for FTP upload.", cachedFahlogPath);
+                           Logger.WarnFormat("Could not open {0} for FTP upload.", cachedFahlogPath);
                            continue;
                         }
                         _networkOps.FtpUploadHelper(server, port, ftpPath, Path.GetFileName(cachedFahlogPath), stream, maximumLength, username, password, ftpMode);
@@ -172,7 +172,7 @@ namespace HFM.Core
          finally
          {
             // Time FTP Upload Conversation - Issue 52
-            Logger.Info("HTML upload finished in {0}", Instrumentation.GetExecTime(start));
+            Logger.InfoFormat("HTML upload finished in {0}", Instrumentation.GetExecTime(start));
          }
       }
 
@@ -198,7 +198,7 @@ namespace HFM.Core
          finally
          {
             // Time FTP Upload Conversation - Issue 52
-            Logger.Info("XML upload finished in {0}", Instrumentation.GetExecTime(start));
+            Logger.InfoFormat("XML upload finished in {0}", Instrumentation.GetExecTime(start));
          }
       }
    }

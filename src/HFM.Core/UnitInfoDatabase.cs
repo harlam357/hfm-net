@@ -232,7 +232,7 @@ namespace HFM.Core
             CreateTable(SqlTable.Version);
          }
          int dbVersion = Application.ParseVersion(dbVersionString);
-         _logger.Info("WU History database v{0}", dbVersionString);
+         _logger.InfoFormat("WU History database v{0}", dbVersionString);
 
          UpgradeTo0920(dbVersion);
       }
@@ -243,7 +243,7 @@ namespace HFM.Core
          if (dbVersion < Application.ParseVersion(upgradeVersion1String))
          {
             // delete duplicates
-            _logger.Info("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
+            _logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
             var duplicateDeleter = new DuplicateDeleter(this, _logger);
             OnUpgradeExecuting(duplicateDeleter);
             // add columns to WuHistory table
@@ -302,7 +302,7 @@ namespace HFM.Core
       {
          Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
-         _logger.Info("Setting database version to: v{0}", version);
+         _logger.InfoFormat("Setting database version to: v{0}", version);
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
@@ -433,7 +433,7 @@ namespace HFM.Core
          }
          finally
          {
-            _logger.Debug("Database Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
+            _logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
          }
       }
 
@@ -469,7 +469,7 @@ namespace HFM.Core
          }
          finally
          {
-            _logger.Debug("Database Page Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
+            _logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
          }
       }
 
@@ -1122,7 +1122,7 @@ namespace HFM.Core
                   int result = _database.Execute(deleteSql.SQL, deleteSql.Arguments);
                   if (result != 0)
                   {
-                     _logger.Debug("Deleted rows: {0}", result);
+                     _logger.DebugFormat("Deleted rows: {0}", result);
                      totalCount += result;
                   }
                   count++;
@@ -1139,7 +1139,7 @@ namespace HFM.Core
 
             if (totalCount != 0)
             {
-               _logger.Info("Total number of duplicate WU History entries deleted: {0}", totalCount);
+               _logger.InfoFormat("Total number of duplicate WU History entries deleted: {0}", totalCount);
             }
          }
 

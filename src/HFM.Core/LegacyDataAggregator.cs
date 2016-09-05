@@ -58,7 +58,7 @@ namespace HFM.Core
          {
             foreach (var s in fahLog.Where(x => x.LineType == LogLineType.Error))
             {
-               Logger.Debug(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
+               Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
          }
 
@@ -85,7 +85,7 @@ namespace HFM.Core
          }
          else
          {
-            Logger.Warn(Constants.ClientNameFormat, ClientName,
+            Logger.WarnFormat(Constants.ClientNameFormat, ClientName,
                "Queue unavailable or failed read.  Parsing logs without queue.");
 
             GenerateUnitInfoDataFromLogs(result, fahLog, unitInfo);
@@ -199,7 +199,7 @@ namespace HFM.Core
                {
                   string message = String.Format(CultureInfo.CurrentCulture,
                      "Could not verify log section for current queue index {0} {1}.", queueIndex, queueEntry.ToProjectInfo());
-                  Logger.Warn(Constants.ClientNameFormat, ClientName, message);
+                  Logger.WarnFormat(Constants.ClientNameFormat, ClientName, message);
 
                   unitRun = GetCurrentUnitRun(fahLog);
 
@@ -219,7 +219,7 @@ namespace HFM.Core
                   {
                      string message = String.Format(CultureInfo.CurrentCulture,
                         "Could not find log section for queue index {0} {1}.", queueIndex, queueEntry.ToProjectInfo());
-                     Logger.Debug(Constants.ClientNameFormat, ClientName, message);
+                     Logger.DebugFormat(Constants.ClientNameFormat, ClientName, message);
                   }
                }
             }

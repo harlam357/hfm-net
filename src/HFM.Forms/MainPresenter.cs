@@ -376,7 +376,7 @@ namespace HFM.Forms
       {
          if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
          {
-            Logger.Info("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
+            Logger.InfoFormat("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
             try
             {
                Process.Start(_updateLogic.UpdateFilePath);

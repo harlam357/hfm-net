@@ -401,7 +401,7 @@ namespace HFM.Core
                   Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
                string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-               Logger.Info(Constants.ClientNameFormat, slotModel.Name, statusMessage);
+               Logger.InfoFormat(Constants.ClientNameFormat, slotModel.Name, statusMessage);
             }
          }
          finally
@@ -410,7 +410,7 @@ namespace HFM.Core
          }
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", Instrumentation.GetExecTime(start));
-         Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
+         Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
       }
 
       private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)

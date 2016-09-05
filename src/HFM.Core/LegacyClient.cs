@@ -183,10 +183,10 @@ namespace HFM.Core
             Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
          string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
-         Logger.Info(Constants.ClientNameFormat, _slotModel.Name, statusMessage);
+         Logger.InfoFormat(Constants.ClientNameFormat, _slotModel.Name, statusMessage);
 
          string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", Instrumentation.GetExecTime(start));
-         Logger.Info(Constants.ClientNameFormat, Settings.Name, message);
+         Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
       }
 
       private QueueData ReadQueueFile(string path)

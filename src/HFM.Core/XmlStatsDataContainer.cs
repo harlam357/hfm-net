@@ -132,8 +132,8 @@ namespace HFM.Core
 
          DateTime nextUpdateTime = GetNextUpdateTime(lastUpdated, isDaylightSavingTime);
 
-         Logger.Debug("Current Time: {0} (UTC)", utcNow);
-         Logger.Debug("Next EOC Stats Update Time: {0} (UTC)", nextUpdateTime);
+         Logger.DebugFormat("Current Time: {0} (UTC)", utcNow);
+         Logger.DebugFormat("Next EOC Stats Update Time: {0} (UTC)", nextUpdateTime);
 
          if (utcNow > nextUpdateTime)
          {
@@ -238,11 +238,11 @@ namespace HFM.Core
             }
             finally
             {
-               Logger.Info("EOC Stats Updated in {0}", Instrumentation.GetExecTime(start));
+               Logger.InfoFormat("EOC Stats Updated in {0}", Instrumentation.GetExecTime(start));
             }
          }
 
-         Logger.Info("Last EOC Stats Update: {0} (UTC)", Data.LastUpdated);
+         Logger.InfoFormat("Last EOC Stats Update: {0} (UTC)", Data.LastUpdated);
       }
 
       /// <summary>

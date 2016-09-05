@@ -127,7 +127,7 @@ namespace HFM.Core.Plugins
          {
             if (loadInfo.Result.Equals(PluginLoadResult.Success))
             {
-               Logger.Info("Loaded Plugin: {0}", loadInfo.FilePath);
+               Logger.InfoFormat("Loaded Plugin: {0}", loadInfo.FilePath);
             }
             else if (loadInfo.Result.Equals(PluginLoadResult.Failure))
             {
@@ -137,7 +137,7 @@ namespace HFM.Core.Plugins
                }
                else
                {
-                  Logger.Warn("Plugin Load Failed: {0}", loadInfo.Message);
+                  Logger.WarnFormat("Plugin Load Failed: {0}", loadInfo.Message);
                }
             }
          }

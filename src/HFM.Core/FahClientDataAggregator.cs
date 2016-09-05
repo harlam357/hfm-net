@@ -79,7 +79,7 @@ namespace HFM.Core
          {
             foreach (var s in clientRun.Where(x => x.LineType == LogLineType.Error))
             {
-               Logger.Debug(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
+               Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
          }
 
@@ -211,7 +211,7 @@ namespace HFM.Core
             {
                string message = String.Format(CultureInfo.CurrentCulture,
                   "Could not find log section for Slot {0} {1}. Cannot update log data for this unit.", slotId, projectInfo);
-               Logger.Warn(Constants.ClientNameFormat, ClientName, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, ClientName, message);
             }
 
             UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, unitRun);

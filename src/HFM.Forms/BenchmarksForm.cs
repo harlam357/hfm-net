@@ -307,7 +307,7 @@ namespace HFM.Forms
          }
          else
          {
-            _logger.Warn("Could not find Project {0}.", benchmark.ProjectID);
+            _logger.WarnFormat("Could not find Project {0}.", benchmark.ProjectID);
          }
 
          return output.ToArray();

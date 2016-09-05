@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,13 +29,18 @@ namespace HFM.Forms
       private readonly IPreferenceSet _prefs;
       private readonly IClientConfiguration _clientConfiguration;
       private readonly MainGridModel _mainGridModel;
+      private readonly Lazy<IMarkupGenerator> _markupGenerator;
+      private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
       private readonly TaskManager _taskManager;
 
-      public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration, MainGridModel mainGridModel)
+      public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration, MainGridModel mainGridModel,
+                            Lazy<IMarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
       {
          _prefs = prefs;
          _clientConfiguration = clientConfiguration;
          _mainGridModel = mainGridModel;
+         _markupGenerator = markupGenerator;
+         _websiteDeployer = websiteDeployer;
          _taskManager = new TaskManager();
          _taskManager.Changed += (s, e) => ReportAction(e);
 
@@ -188,23 +194,14 @@ namespace HFM.Forms
          }
       }
 
-      private IMarkupGenerator _markupGenerator;
-      private IWebsiteDeployer _websiteDeployer;
-
       private void WebGenerationAction(CancellationToken ct)
       {
          ct.ThrowIfCancellationRequested();
-
-         // TODO: Use factory instead of static service locator
-         if (_markupGenerator == null) _markupGenerator = ServiceLocator.Resolve<IMarkupGenerator>();
-         if (_websiteDeployer == null) _websiteDeployer = ServiceLocator.Resolve<IWebsiteDeployer>();
-
-         ct.ThrowIfCancellationRequested();
          var slots = _mainGridModel.SlotCollection;
-         _markupGenerator.Generate(slots);
+         _markupGenerator.Value.Generate(slots);
 
          ct.ThrowIfCancellationRequested();
-         _websiteDeployer.DeployWebsite(_markupGenerator.HtmlFilePaths, _markupGenerator.XmlFilePaths, slots);
+         _websiteDeployer.Value.DeployWebsite(_markupGenerator.Value.HtmlFilePaths, _markupGenerator.Value.XmlFilePaths, slots);
       }
    }
 }

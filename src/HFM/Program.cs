@@ -48,8 +48,6 @@ namespace HFM
                               new Core.Configuration.ContainerInstaller(),
                               new Forms.Configuration.ContainerInstaller());
 
-            Core.ServiceLocator.SetContainer(container);
-
             // Create Object Maps
             Core.Configuration.ObjectMapper.CreateMaps();
             Forms.Configuration.ObjectMapper.CreateMaps();

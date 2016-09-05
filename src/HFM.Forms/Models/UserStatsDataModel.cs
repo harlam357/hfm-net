@@ -127,7 +127,7 @@ namespace HFM.Forms.Models
             }
          }
 
-         Logger.Info("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
+         Logger.InfoFormat("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
          _updateTimer.Start();
       }
 

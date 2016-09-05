@@ -105,7 +105,7 @@ namespace HFM.Core
             _logger.Warn("------------------------");
             _logger.Warn("Client Settings Warnings");
             _logger.Warn("------------------------");
-            _logger.Warn("Client Name: {0}", settings.Name);
+            _logger.WarnFormat("Client Name: {0}", settings.Name);
 
             foreach (var error in cleanupWarnings)
             {

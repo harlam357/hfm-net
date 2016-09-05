@@ -158,7 +158,7 @@ namespace HFM.Core
             return true;
          }
          
-         Logger.Debug("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
+         Logger.DebugFormat("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes);
          return false;
       }
    }
