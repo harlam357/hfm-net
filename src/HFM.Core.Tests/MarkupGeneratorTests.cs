@@ -22,9 +22,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using AutoMapper;
+
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Tests
@@ -35,7 +38,7 @@ namespace HFM.Core.Tests
       [SetUp]
       public void Init()
       {
-         Core.Configuration.ObjectMapper.CreateMaps();
+         Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
       }
 
       [Test]

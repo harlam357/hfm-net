@@ -18,6 +18,9 @@
  */
 
 using System;
+
+using AutoMapper;
+
 using Application = System.Windows.Forms.Application;
 
 using Castle.Facilities.TypedFactory;
@@ -49,8 +52,11 @@ namespace HFM
                               new Forms.Configuration.ContainerInstaller());
 
             // Create Object Maps
-            Core.Configuration.ObjectMapper.CreateMaps();
-            Forms.Configuration.ObjectMapper.CreateMaps();
+            Mapper.Initialize(c =>
+                              {
+                                 c.AddProfile<Core.Configuration.AutoMapperProfile>();
+                                 c.AddProfile<Forms.Configuration.AutoMapperProfile>();
+                              });
 
             // Setup TypeDescriptor
             Core.Configuration.TypeDescriptionProviderSetup.Execute();

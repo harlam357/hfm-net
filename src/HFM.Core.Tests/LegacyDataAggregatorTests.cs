@@ -21,6 +21,8 @@ using System;
 using System.IO;
 using System.Linq;
 
+using AutoMapper;
+
 using NUnit.Framework;
 
 using HFM.Core.Configuration;
@@ -46,7 +48,7 @@ namespace HFM.Core.Tests
       {
          _dataAggregator = new LegacyDataAggregator();
          // create maps
-         ObjectMapper.CreateMaps();
+         Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
       }
 
       // ReSharper disable InconsistentNaming

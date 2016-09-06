@@ -179,6 +179,14 @@
             Gets a byte array containing a number of bytes from the end of the last stream read.
             </summary>
         </member>
+        <member name="M:harlam357.Core.ProgressExtensions.WithEvent``1(System.Progress{``0})">
+            <summary>
+            Creates a wrapper around a Progress instance that implements IProgressWithEvent. 
+            </summary>
+            <typeparam name="T">Specifies the type of the progress report value.</typeparam>
+            <param name="progress">The source Progress instance to wrap.</param>
+            <returns>A wrapper around a Progress instance that implements IProgressWithEvent. </returns>
+        </member>
         <member name="T:harlam357.Core.Net.IFtpWebRequest">
             <summary>
             Represents an object that implements a File Transfer Protocol (FTP) client.
@@ -1629,7 +1637,7 @@
             <exception cref="T:System.ArgumentNullException">data or salt is null.</exception>
             <remarks>A "salt" value is random data prefixed to every hashed value to prevent common dictionary attacks.</remarks>
         </member>
-        <member name="M:harlam357.Core.Security.Hash.Calculate(System.IO.Stream,harlam357.Core.IProgress{System.Int32})">
+        <member name="M:harlam357.Core.Security.Hash.Calculate(System.IO.Stream,System.IProgress{System.Int32})">
             <summary>
             Calculates the hash on a seekable stream while reporting progress.
             </summary>
