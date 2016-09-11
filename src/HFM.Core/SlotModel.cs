@@ -88,28 +88,6 @@ namespace HFM.Core
          set { _unitInfo = value; }
       }
 
-      public bool Owns(IOwnedByClient value)
-      {
-         //if (Settings.IsFahClient())
-         //{
-         //   if (value.OwningSlotName == Name &&
-         //       value.OwningClientPath.Equals(Settings.DataPath()))
-         //   {
-         //      return true;
-         //   }
-         //}
-         //else if (Settings.IsLegacy())
-         //{
-            if (value.OwningSlotName == Name &&
-                Paths.Equal(value.OwningClientPath, Settings.DataPath()))
-            {
-               return true;
-            }   
-         //}
-
-         return false;
-      }
-
       public ClientSettings Settings { get; set; }
 
       // HFM.Client data type

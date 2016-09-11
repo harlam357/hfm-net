@@ -141,7 +141,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ExternalProcessStarter.cs" />
     <Compile Include="Instrumentation.cs" />
-    <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="Services\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
