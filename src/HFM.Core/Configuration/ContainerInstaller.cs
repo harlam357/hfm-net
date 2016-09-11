@@ -40,11 +40,6 @@ namespace HFM.Core.Configuration
 
          #region Service Interfaces
 
-         // IAutoRun - Singleton
-         container.Register(
-            Component.For<IAutoRun>()
-               .ImplementedBy<AutoRun>());
-
          // ILogger - Singleton
          container.Register(
             Component.For<ILogger>()

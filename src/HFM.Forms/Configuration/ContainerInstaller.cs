@@ -151,6 +151,11 @@ namespace HFM.Forms.Configuration
 
          #region Service Interfaces
 
+         // IAutoRun - Singleton
+         container.Register(
+            Component.For<IAutoRun>()
+               .ImplementedBy<AutoRun>());
+
          // IUpdateLogic - Singleton
          container.Register(
             Component.For<IUpdateLogic>()

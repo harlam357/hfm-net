@@ -4,6 +4,7 @@
 
 *.user
 *.suo
+*.DotSettings
 /src/Artifacts
 /src/TestResults
 /src/*/bin

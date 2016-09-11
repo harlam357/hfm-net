@@ -118,6 +118,7 @@
     <Compile Include="Models\HistoryPresenterModelTests.cs" />
     <Compile Include="Models\LegacyClientSettingsModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AutoRunTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
