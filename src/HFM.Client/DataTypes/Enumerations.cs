@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Client Data Type Enumerations
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 namespace HFM.Client.DataTypes
 {
-   #pragma warning disable 1591
+#pragma warning disable 1591
 
    /// <summary>
    /// Folding@Home client type.
@@ -95,5 +95,66 @@ namespace HFM.Client.DataTypes
       Low
    }
 
-   #pragma warning restore 1591
+   /// <summary>
+   /// Operating system types.
+   /// </summary>
+   public enum OperatingSystemType
+   {
+      Unknown,
+      Windows,
+      WindowsXP,
+      WindowsVista,
+      Windows7,
+      Windows8,
+      Windows10,
+      Linux,
+      OSX
+   }
+
+   /// <summary>
+   /// Operating system architecture types.
+   /// </summary>
+   public enum OperatingSystemArchitectureType
+   {
+      Unknown,
+      x86,
+      x64
+   }
+
+   /// <summary>
+   /// CPU manufacturers.
+   /// </summary>
+   public enum CpuManufacturer
+   {
+      Unknown,
+      Intel,
+      AMD
+   }
+
+   /// <summary>
+   /// CPU types.
+   /// </summary>
+   public enum CpuType
+   {
+      Unknown,
+      Core2,
+      Corei7,
+      Corei5,
+      Corei3,
+      PhenomII,
+      Phenom,
+      Athlon
+   }
+
+   /// <summary>
+   /// GPU manufacturers.
+   /// </summary>
+   public enum GpuManufacturer
+   {
+      Unknown,
+      ATI,
+      Nvidia
+   }
+
+#pragma warning restore 1591
 }

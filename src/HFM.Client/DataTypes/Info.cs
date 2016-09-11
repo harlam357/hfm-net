@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Info Data Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 
 using HFM.Client.Converters;
-using HFM.Core.DataTypes;
 
 namespace HFM.Client.DataTypes
 {

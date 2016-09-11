@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Info Data Converters
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-using HFM.Core.DataTypes;
+using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
