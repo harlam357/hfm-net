@@ -90,6 +90,10 @@ namespace HFM.Client.Converters
             {
                os = OperatingSystemType.Windows8;
             }
+            else if (inputString.Contains("Windows 10"))
+            {
+               os = OperatingSystemType.Windows10;
+            }
 
             #endregion
 

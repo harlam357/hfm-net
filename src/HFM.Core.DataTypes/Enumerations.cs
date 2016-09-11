@@ -136,6 +136,7 @@ namespace HFM.Core.DataTypes
       WindowsVista,
       Windows7,
       Windows8,
+      Windows10,
       Linux,
       OSX
    }
