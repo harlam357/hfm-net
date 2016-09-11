@@ -128,7 +128,7 @@ namespace HFM.Core
             cqe.MachineID = slotId;
             cqe.ServerIP = unit.WorkServer;
             cqe.CpuString = GetCpuString(info, slotOptions);
-            cqe.OsString = info.System.OperatingSystemEnum.ToOperatingSystemString(info.System.OperatingSystemArchitectureEnum);
+            cqe.OsString = ToOperatingSystemString(info.System.OperatingSystemEnum, info.System.OperatingSystemArchitectureEnum);
             // Memory Value is in Gigabytes - turn into Megabytes and truncate
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
@@ -150,6 +150,35 @@ namespace HFM.Core
          }
 
          return cq;
+      }
+
+      private static string ToOperatingSystemString(OperatingSystemType type, OperatingSystemArchitectureType arch)
+      {
+         string osName = "Unknown";
+
+         switch (type)
+         {
+            case OperatingSystemType.Windows:
+               osName = "Windows";
+               break;
+            case OperatingSystemType.WindowsXP:
+               osName = "Windows XP";
+               break;
+            case OperatingSystemType.WindowsVista:
+               osName = "Vista";
+               break;
+            case OperatingSystemType.Windows7:
+               osName = "Windows 7";
+               break;
+            case OperatingSystemType.Linux:
+               osName = "Linux";
+               break;
+            case OperatingSystemType.OSX:
+               osName = "OS X";
+               break;
+         }
+
+         return arch.Equals(OperatingSystemArchitectureType.Unknown) ? osName : String.Format(CultureInfo.InvariantCulture, "{0} {1}", osName, arch);
       }
 
       private static string GetCpuString(Info info, SlotOptions slotOptions)
@@ -178,10 +207,33 @@ namespace HFM.Core
          }
          else
          {
-            return info.System.CpuType.ToCpuTypeString();
+            return ToCpuTypeString(info.System.CpuType);
          }
 
          return String.Empty;
+      }
+
+      private static string ToCpuTypeString(CpuType type)
+      {
+         switch (type)
+         {
+            case CpuType.Core2:
+               return "Core 2";
+            case CpuType.Corei7:
+               return "Core i7";
+            case CpuType.Corei5:
+               return "Core i5";
+            case CpuType.Corei3:
+               return "Core i3";
+            case CpuType.PhenomII:
+               return "Phenom II";
+            case CpuType.Phenom:
+               return "Phenom";
+            case CpuType.Athlon:
+               return "Athlon";
+         }
+
+         return "Unknown";
       }
 
       private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
