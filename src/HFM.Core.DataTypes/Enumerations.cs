@@ -123,17 +123,6 @@ namespace HFM.Core.DataTypes
       UnknownEnum
    }
 
-   /// <summary>
-   /// Work unit log filter types.
-   /// </summary>
-   public enum LogFilterType
-   {
-      UnitIndex,
-      UnitAndNonIndexed,
-      SlotIndex,
-      SlotAndNonIndexed
-   }
-
    // ReSharper disable InconsistentNaming
 
    /// <summary>
