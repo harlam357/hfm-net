@@ -389,7 +389,7 @@ namespace HFM.Core.Tests
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
-         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown());
+         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown);
       }
       
       #endregion

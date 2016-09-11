@@ -19,171 +19,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace HFM.Core.DataTypes
 {
    /// <summary>
    /// Shared data type extension methods class.
    /// </summary>
-   public static class Extensions
+   public static partial class Extensions
    {
-      #region IProjectInfo
-
-      /// <summary>
-      /// Is Project Unknown?
-      /// </summary>
-      /// <returns>true if Project (R/C/G) has not been identified.</returns>
-      public static bool ProjectIsUnknown(this IProjectInfo projectInfo)
-      {
-         if (projectInfo == null) return true;
-
-         return projectInfo.ProjectID == 0 &&
-                projectInfo.ProjectRun == 0 &&
-                projectInfo.ProjectClone == 0 &&
-                projectInfo.ProjectGen == 0;
-      }
-
-      /// <summary>
-      /// Formatted Project (R/C/G) information.
-      /// </summary>
-      public static string ProjectRunCloneGen(this IProjectInfo projectInfo)
-      {
-         if (projectInfo == null) return String.Empty;
-
-         return String.Format(CultureInfo.InvariantCulture, "P{0} (R{1}, C{2}, G{3})",
-            projectInfo.ProjectID, projectInfo.ProjectRun, projectInfo.ProjectClone, projectInfo.ProjectGen);
-      }
-
-      /// <summary>
-      /// Equals Project (R/C/G)
-      /// </summary>
-      /// <returns>true if Project (R/C/G) are equal.</returns>
-      public static bool EqualsProject(this IProjectInfo projectInfo1, IProjectInfo projectInfo2)
-      {
-         if (projectInfo1 == null || projectInfo2 == null) return false;
-
-         return (projectInfo1.ProjectID == projectInfo2.ProjectID &&
-                 projectInfo1.ProjectRun == projectInfo2.ProjectRun &&
-                 projectInfo1.ProjectClone == projectInfo2.ProjectClone &&
-                 projectInfo1.ProjectGen == projectInfo2.ProjectGen);
-      }
-
-      #endregion
-
-      #region Protein
-
-      public static bool IsUnknown(this Protein protein)
-      {
-         if (protein == null) return true;
-
-         return protein.ProjectNumber == 0;
-      }
-
-      public static bool IsValid(this Protein protein)
-      {
-         if (protein == null) return false;
-
-         return (protein.ProjectNumber > 0 &&
-                 protein.PreferredDays > 0 &&
-                 protein.MaximumDays > 0 &&
-                 protein.Credit > 0 &&
-                 protein.Frames > 0 &&
-                 protein.KFactor >= 0);
-      }
-
-      #endregion
-
-      #region WorkUnitResult
-
-      private const string FinishedUnit = "FINISHED_UNIT";
-      private const string EarlyUnitEnd = "EARLY_UNIT_END";
-      private const string UnstableMachine = "UNSTABLE_MACHINE";
-      private const string Interrupted = "INTERRUPTED";
-      private const string BadWorkUnit = "BAD_WORK_UNIT";
-      private const string CoreOutdated = "CORE_OUTDATED";
-      private const string GpuMemtestError = "GPU_MEMTEST_ERROR";
-      private const string UnknownEnum = "UNKNOWN_ENUM";
-
-      /// <summary>
-      /// Get the WorkUnitResult Enum representation of the given result string.
-      /// </summary>
-      public static WorkUnitResult ToWorkUnitResult(this string result)
-      {
-         switch (result)
-         {
-            case FinishedUnit:
-               return WorkUnitResult.FinishedUnit;
-            case EarlyUnitEnd:
-               return WorkUnitResult.EarlyUnitEnd;
-            case UnstableMachine:
-               return WorkUnitResult.UnstableMachine;
-            case Interrupted:
-               return WorkUnitResult.Interrupted;
-            case BadWorkUnit:
-               return WorkUnitResult.BadWorkUnit;
-            case CoreOutdated:
-               return WorkUnitResult.CoreOutdated;
-            case GpuMemtestError:
-               return WorkUnitResult.GpuMemtestError;
-            case UnknownEnum:
-               return WorkUnitResult.UnknownEnum;
-            default:
-               return WorkUnitResult.Unknown;
-         }
-      }
-
-      public static string ToWorkUnitResultString(this int result)
-      {
-         return ToWorkUnitResultString((WorkUnitResult)result);
-      }
-
-      public static string ToWorkUnitResultString(this WorkUnitResult result)
-      {
-         switch (result)
-         {
-            case WorkUnitResult.FinishedUnit:
-               return FinishedUnit;
-            case WorkUnitResult.EarlyUnitEnd:
-               return EarlyUnitEnd;
-            case WorkUnitResult.UnstableMachine:
-               return UnstableMachine;
-            case WorkUnitResult.Interrupted:
-               return Interrupted;
-            case WorkUnitResult.BadWorkUnit:
-               return BadWorkUnit;
-            case WorkUnitResult.CoreOutdated:
-               return CoreOutdated;
-            case WorkUnitResult.GpuMemtestError:
-               return GpuMemtestError;
-            case WorkUnitResult.UnknownEnum:
-               return UnknownEnum;
-            default:
-               return String.Empty;
-         }
-      }
-
-      public static bool IsTerminating(this WorkUnitResult result)
-      {
-         switch (result)
-         {
-            case WorkUnitResult.FinishedUnit:
-            case WorkUnitResult.EarlyUnitEnd:
-            case WorkUnitResult.UnstableMachine:
-            case WorkUnitResult.BadWorkUnit:
-            case WorkUnitResult.ClientCoreError:
-               return true;
-            default:
-               return false;
-         }
-      }
-
-      #endregion
-
       #region CpuType
 
       public static string ToCpuTypeString(this CpuType type)

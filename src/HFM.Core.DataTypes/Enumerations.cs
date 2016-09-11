@@ -96,33 +96,6 @@ namespace HFM.Core.DataTypes
       ClientShutdown
    }
 
-   /// <summary>
-   /// Work unit result types.
-   /// </summary>
-   public enum WorkUnitResult
-   {
-      // 0: Unknown result
-      Unknown,
-      // 1: Finished Unit (Terminating)
-      FinishedUnit,
-      // 2: Early Unit End (Terminating)
-      EarlyUnitEnd,
-      // 3: Unstable Machine (Terminating)
-      UnstableMachine,
-      // 4: Interrupted (Non-Terminating)
-      Interrupted,
-      // 5: Bad Work Unit (Terminating)
-      BadWorkUnit,
-      // 6: Core outdated (Non-Terminating)
-      CoreOutdated,
-      // 7: Client core communications error (Terminating)
-      ClientCoreError,
-      // 8: GPU memtest error (Non-Terminating) - No unit test coverage
-      GpuMemtestError,
-      // 9: Unknown Enum (Non-Terminating)
-      UnknownEnum
-   }
-
    // ReSharper disable InconsistentNaming
 
    /// <summary>

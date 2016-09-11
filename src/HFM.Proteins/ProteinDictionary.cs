@@ -70,7 +70,7 @@ namespace HFM.Proteins
          var loaded = new List<ProteinLoadInfo>(values.Count());
          foreach (Protein protein in values)
          {
-            if (!protein.IsValid())
+            if (!protein.IsValid)
             {
                continue;
             }
@@ -211,7 +211,7 @@ namespace HFM.Proteins
       private static void CheckProtein(int key, Protein value)
       {
          if (value == null) throw new ArgumentNullException("value");
-         if (!value.IsValid()) throw new ArgumentException("The value is not valid.");
+         if (!value.IsValid) throw new ArgumentException("The value is not valid.");
          if (key != value.ProjectNumber) throw new ArgumentException("The ProjectNumber does not match the key.");
       }
 

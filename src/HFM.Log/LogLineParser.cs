@@ -182,7 +182,7 @@ namespace HFM.Log
             {
                // remove any carriage returns from fahclient log lines - 12/30/11
                string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
-               return unitResultValue.ToWorkUnitResult();
+               return ToWorkUnitResult(unitResultValue);
             }
             return default(WorkUnitResult);
          }
@@ -463,9 +463,34 @@ namespace HFM.Log
             Match coreReturnMatch;
             if ((coreReturnMatch = FahLogRegex.FahClient.WorkUnitCoreReturnRegex.Match(logLine.LineRaw)).Success)
             {
-               return coreReturnMatch.Groups["UnitResult"].Value.ToWorkUnitResult();
+               return ToWorkUnitResult(coreReturnMatch.Groups["UnitResult"].Value);
             }
             return null;
+         }
+      }
+
+      private static WorkUnitResult ToWorkUnitResult(string result)
+      {
+         switch (result)
+         {
+            case WorkUnitResultString.FinishedUnit:
+               return WorkUnitResult.FinishedUnit;
+            case WorkUnitResultString.EarlyUnitEnd:
+               return WorkUnitResult.EarlyUnitEnd;
+            case WorkUnitResultString.UnstableMachine:
+               return WorkUnitResult.UnstableMachine;
+            case WorkUnitResultString.Interrupted:
+               return WorkUnitResult.Interrupted;
+            case WorkUnitResultString.BadWorkUnit:
+               return WorkUnitResult.BadWorkUnit;
+            case WorkUnitResultString.CoreOutdated:
+               return WorkUnitResult.CoreOutdated;
+            case WorkUnitResultString.GpuMemtestError:
+               return WorkUnitResult.GpuMemtestError;
+            case WorkUnitResultString.UnknownEnum:
+               return WorkUnitResult.UnknownEnum;
+            default:
+               return WorkUnitResult.Unknown;
          }
       }
    }

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Class Tests
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,42 +48,28 @@ namespace HFM.Proteins.Tests
       public void Protein_IsUnknown_Test1()
       {
          var protein = new Protein { ProjectNumber = 1 };
-         Assert.IsFalse(protein.IsUnknown());
+         Assert.IsFalse(protein.IsUnknown);
       }
 
       [Test]
       public void Protein_IsUnknown_Test2()
       {
          var protein = new Protein();
-         Assert.IsTrue(protein.IsUnknown());
-      }
-
-      [Test]
-      public void Protein_IsUnknown_Test3()
-      {
-         Protein protein = null;
-         Assert.IsTrue(protein.IsUnknown());
+         Assert.IsTrue(protein.IsUnknown);
       }
 
       [Test]
       public void Protein_IsValid_Test1()
       {
          var protein = new Protein { ProjectNumber = 1, PreferredDays = 3, MaximumDays = 5, Credit = 500, Frames = 100, KFactor = 26.4 };
-         Assert.IsTrue(protein.IsValid());
+         Assert.IsTrue(protein.IsValid);
       }
 
       [Test]
       public void Protein_IsValid_Test2()
       {
          var protein = new Protein();
-         Assert.IsFalse(protein.IsValid());
-      }
-
-      [Test]
-      public void Protein_IsValid_Test3()
-      {
-         Protein protein = null;
-         Assert.IsFalse(protein.IsValid());
+         Assert.IsFalse(protein.IsValid);
       }
    }
 }

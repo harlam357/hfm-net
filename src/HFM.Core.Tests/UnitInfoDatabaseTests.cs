@@ -322,7 +322,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(2.09f, entry.CoreVersion);
             Assert.AreEqual(100, entry.FramesCompleted);
             Assert.AreEqual(TimeSpan.FromSeconds(600), entry.FrameTime);
-            Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
+            Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.ResultValue);
             Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
             Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
             Assert.AreEqual("TestUnit1", entry.WorkUnitName);
@@ -398,7 +398,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(2.27f, entry.CoreVersion);
             Assert.AreEqual(56, entry.FramesCompleted);
             Assert.AreEqual(TimeSpan.FromSeconds(1000), entry.FrameTime);
-            Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
+            Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.ResultValue);
             Assert.AreEqual(new DateTime(2009, 5, 5), entry.DownloadDateTime);
             Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
             Assert.AreEqual("TestUnit2", entry.WorkUnitName);
@@ -474,7 +474,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(2.09f, entry.CoreVersion);
             Assert.AreEqual(100, entry.FramesCompleted);
             Assert.AreEqual(TimeSpan.Zero, entry.FrameTime);
-            Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.Result.ToWorkUnitResult());
+            Assert.AreEqual(WorkUnitResult.EarlyUnitEnd, entry.ResultValue);
             Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
             Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
             Assert.AreEqual("TestUnit3", entry.WorkUnitName);
@@ -550,7 +550,7 @@ namespace HFM.Core.Tests
             Assert.AreEqual(2.27f, entry.CoreVersion);
             Assert.AreEqual(100, entry.FramesCompleted);
             Assert.AreEqual(TimeSpan.Zero, entry.FrameTime);
-            Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.Result.ToWorkUnitResult());
+            Assert.AreEqual(WorkUnitResult.FinishedUnit, entry.ResultValue);
             Assert.AreEqual(new DateTime(2012, 1, 2), entry.DownloadDateTime);
             Assert.AreEqual(new DateTime(2012, 1, 5), entry.CompletionDateTime);
             Assert.AreEqual("TestUnit4", entry.WorkUnitName);

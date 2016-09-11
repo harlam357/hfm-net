@@ -61,7 +61,32 @@ namespace HFM.Core.DataTypes
       [PetaPoco.Ignore]
       public string Result
       {
-         get { return ResultValue.ToWorkUnitResultString(); }
+         get { return ToWorkUnitResultString(ResultValue); }
+      }
+
+      private static string ToWorkUnitResultString(int result)
+      {
+         switch ((WorkUnitResult)result)
+         {
+            case WorkUnitResult.FinishedUnit:
+               return WorkUnitResultString.FinishedUnit;
+            case WorkUnitResult.EarlyUnitEnd:
+               return WorkUnitResultString.EarlyUnitEnd;
+            case WorkUnitResult.UnstableMachine:
+               return WorkUnitResultString.UnstableMachine;
+            case WorkUnitResult.Interrupted:
+               return WorkUnitResultString.Interrupted;
+            case WorkUnitResult.BadWorkUnit:
+               return WorkUnitResultString.BadWorkUnit;
+            case WorkUnitResult.CoreOutdated:
+               return WorkUnitResultString.CoreOutdated;
+            case WorkUnitResult.GpuMemtestError:
+               return WorkUnitResultString.GpuMemtestError;
+            case WorkUnitResult.UnknownEnum:
+               return WorkUnitResultString.UnknownEnum;
+            default:
+               return String.Empty;
+         }
       }
 
       [PetaPoco.Column("Result")]

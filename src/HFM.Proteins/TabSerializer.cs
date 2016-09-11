@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using HFM.Core.DataTypes;
@@ -30,7 +29,7 @@ namespace HFM.Proteins
       {
          var proteins = new List<Protein>();
 
-         string[] lines = File.ReadAllLines(fileName);
+         var lines = File.ReadLines(fileName);
          foreach (string line in lines)
          {
             try
@@ -51,7 +50,7 @@ namespace HFM.Proteins
                p.Contact = lineData[10];
                p.KFactor = Double.Parse(lineData[11], CultureInfo.InvariantCulture);
 
-               if (p.IsValid())
+               if (p.IsValid)
                {
                   proteins.Add(p);
                }
@@ -67,7 +66,7 @@ namespace HFM.Proteins
 
       public void Serialize(string fileName, List<Protein> value)
       {
-         var lines = new string[value.Count()];
+         var lines = new string[value.Count];
          int i = 0;
 
          foreach (Protein protein in value)

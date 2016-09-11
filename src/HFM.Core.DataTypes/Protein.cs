@@ -1,7 +1,7 @@
 /*
  * HFM.NET - Protein Class
  * Copyright (C) 2006 David Rawling
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,10 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.Globalization;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace HFM.Core.DataTypes
 {
@@ -110,162 +107,22 @@ namespace HFM.Core.DataTypes
       [DataMember(Order = 12)]
       public double KFactor { get; set; }
 
-      private const int MaxDecimalPlaces = 5;
-
-      /// <summary>
-      /// Get Points Per Day based on given Frame Time
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      public double GetPPD(TimeSpan frameTime)
+      public bool IsUnknown
       {
-         return GetPPD(frameTime, TimeSpan.Zero, false);
+         get { return ProjectNumber == 0; }
       }
 
-      /// <summary>
-      /// Get Points Per Day based on given Frame Time
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      /// <param name="calculateBonus">Calculate Bonus Value</param>
-      public double GetPPD(TimeSpan frameTime, bool calculateBonus)
+      public bool IsValid
       {
-         return GetPPD(frameTime, TimeSpan.FromSeconds(frameTime.TotalSeconds * Frames), calculateBonus);
-      }
-
-      /// <summary>
-      /// Get Points Per Day based on given Frame Time
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      /// <param name="calculateBonus">Calculate Bonus Value</param>
-      public double GetPPD(TimeSpan frameTime, TimeSpan estTimeOfUnit, bool calculateBonus)
-      {
-         if (frameTime.Equals(TimeSpan.Zero)) return 0;
-
-         double basePPD = GetUPD(frameTime) * Credit;
-         double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
-         double bonusPPD = Math.Round((basePPD * bonusMulti), MaxDecimalPlaces);
-         
-         return bonusPPD;
-      }
-
-      /// <summary>
-      /// Get Units Per Day based on given Frame Time
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      public double GetUPD(TimeSpan frameTime)
-      {
-         return frameTime.Equals(TimeSpan.Zero) ? 0.0 : 86400 / (frameTime.TotalSeconds * Frames);
-      }
-
-      /// <summary>
-      /// Get the Credit of the Unit (possibly including bonus)
-      /// </summary>
-      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      /// <param name="calculateBonus">Calculate Bonus Value</param>
-      public double GetCredit(TimeSpan estTimeOfUnit, bool calculateBonus)
-      {
-         double bonusMulti = GetMultiplier(estTimeOfUnit, calculateBonus);
-         return Math.Round((Credit * bonusMulti), MaxDecimalPlaces);
-      }
-
-      /// <summary>
-      /// Get the PPD and Credit Multiplier
-      /// </summary>
-      /// <param name="estTimeOfUnit">Estimated Time of the Unit</param>
-      /// <param name="calculateBonus">Calculate Bonus Value</param>
-      public double GetMultiplier(TimeSpan estTimeOfUnit, bool calculateBonus)
-      {
-         // Make sure the given TimeSpan is not negative
-         if (calculateBonus && KFactor > 0 && estTimeOfUnit.CompareTo(TimeSpan.Zero) > 0)
+         get
          {
-            if (estTimeOfUnit <= TimeSpan.FromDays(PreferredDays))
-            {
-               return Math.Round(Math.Sqrt((MaximumDays * KFactor) / estTimeOfUnit.TotalDays), MaxDecimalPlaces);
-            }
+            return ProjectNumber > 0 &&
+                   PreferredDays > 0 &&
+                   MaximumDays > 0 &&
+                   Credit > 0 &&
+                   Frames > 0 &&
+                   KFactor >= 0;
          }
-         
-         return 1;
-      }
-
-      /// <summary>
-      /// Get all Production Values
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      /// <param name="eftByDownloadTime">Estimated Time of the Unit (by Download Time)</param>
-      /// <param name="eftByFrameTime">Estimated Time of the Unit (by Frame Time)</param>
-      /// <param name="calculateBonus">Calculate Bonus Value</param>
-      public ProductionValues GetProductionValues(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, bool calculateBonus)
-      {
-         var value = new ProductionValues
-                     {
-                        TimePerFrame = frameTime,
-                        BaseCredit = Credit,
-                        BasePPD = GetPPD(frameTime),
-                        PreferredTime = TimeSpan.FromDays(PreferredDays),
-                        MaximumTime = TimeSpan.FromDays(MaximumDays),
-                        KFactor = KFactor,
-                        EftByDownloadTime = eftByDownloadTime,
-                        DownloadTimeBonusMulti = GetMultiplier(eftByDownloadTime, calculateBonus),
-                        DownloadTimeBonusCredit = GetCredit(eftByDownloadTime, calculateBonus),
-                        DownloadTimeBonusPPD = GetPPD(frameTime, eftByDownloadTime, calculateBonus),
-                        EftByFrameTime = eftByFrameTime,
-                        FrameTimeBonusMulti = GetMultiplier(eftByFrameTime, calculateBonus),
-                        FrameTimeBonusCredit = GetCredit(eftByFrameTime, calculateBonus),
-                        FrameTimeBonusPPD = GetPPD(frameTime, eftByFrameTime, calculateBonus)
-                     };
-         return value;
-      }
-   }
-   
-   public struct ProductionValues
-   {
-      public TimeSpan TimePerFrame { get; set; }
-
-      public double BaseCredit { get; set; }
-
-      public double BasePPD { get; set; }
-
-      public TimeSpan PreferredTime { get; set; }
-
-      public TimeSpan MaximumTime { get; set; }
-
-      public double KFactor { get; set; }
-
-      public TimeSpan EftByDownloadTime { get; set; }
-
-      public double DownloadTimeBonusMulti { get; set; }
-
-      public double DownloadTimeBonusCredit { get; set; }
-
-      public double DownloadTimeBonusPPD { get; set; }
-      
-      public TimeSpan EftByFrameTime { get; set; }
-
-      public double FrameTimeBonusMulti { get; set; }
-
-      public double FrameTimeBonusCredit { get; set; }
-
-      public double FrameTimeBonusPPD { get; set; }
-      
-      public string ToMultiLineString()
-      {
-         var sb = new StringBuilder();
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}{1}", BaseCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}{1}", BasePPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}{1}", PreferredTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}{1}", MaximumTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}{1}", KFactor, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Download Time - + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", EftByDownloadTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", DownloadTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", DownloadTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", DownloadTimeBonusPPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", EftByFrameTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", FrameTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", FrameTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", FrameTimeBonusPPD, Environment.NewLine);
-         return sb.ToString();
       }
    }
 }

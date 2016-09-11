@@ -169,52 +169,6 @@ namespace HFM.Core.Tests
 
       #endregion
 
-      #region Protein
-
-      [Test]
-      public void ProteinIsUnknown1()
-      {
-         var protein = new Protein { ProjectNumber = 1 };
-         Assert.IsFalse(protein.IsUnknown());
-      }
-
-      [Test]
-      public void ProteinIsUnknown2()
-      {
-         var protein = new Protein();
-         Assert.IsTrue(protein.IsUnknown());
-      }
-
-      [Test]
-      public void ProteinIsUnknown3()
-      {
-         Protein protein = null;
-         Assert.IsTrue(protein.IsUnknown());
-      }
-
-      [Test]
-      public void ProteinIsValid1()
-      {
-         var protein = new Protein { ProjectNumber = 1, PreferredDays = 3, MaximumDays = 5, Credit = 500, Frames = 100, KFactor = 26.4 };
-         Assert.IsTrue(protein.IsValid());
-      }
-
-      [Test]
-      public void ProteinIsValid2()
-      {
-         var protein = new Protein();
-         Assert.IsFalse(protein.IsValid());
-      }
-
-      [Test]
-      public void ProteinIsValid3()
-      {
-         Protein protein = null;
-         Assert.IsFalse(protein.IsValid());
-      }
-
-      #endregion
-
       #region DuplicateFinder
 
       [Test]
