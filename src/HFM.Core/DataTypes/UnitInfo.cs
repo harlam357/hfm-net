@@ -1,6 +1,5 @@
 /*
- * HFM.NET - Unit Info Class
- * Copyright (C) 2006 David Rawling
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -27,7 +26,7 @@ using System.Runtime.Serialization;
 namespace HFM.Core.DataTypes
 {
    [DataContract(Namespace = "")]
-   public class UnitInfo : IProjectInfo, IOwnedByClient
+   public class UnitInfo : IProjectInfo
    {
       #region Constructor
 
@@ -54,8 +53,6 @@ namespace HFM.Core.DataTypes
 
       #region Properties
 
-      #region IOwnedByClient Implementation
-
       /// <summary>
       /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
       /// </summary>
@@ -81,8 +78,6 @@ namespace HFM.Core.DataTypes
       /// </summary>
       [DataMember(Order = 26, IsRequired = true)]
       public int OwningSlotId { get; set; }
-
-      #endregion
 
       /// <summary>
       /// Local time the logs used to generate this UnitInfo were retrieved

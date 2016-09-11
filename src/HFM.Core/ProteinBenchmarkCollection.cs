@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Benchmark Collection Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -261,12 +261,19 @@ namespace HFM.Core
          _cacheLock.EnterReadLock();
          try
          {
-            return Data.Find(benchmark => benchmark.Equals(unitInfo));
+            return Data.Find(benchmark => Equals(benchmark, unitInfo));
          }
          finally
          {
             _cacheLock.ExitReadLock();
          }
+      }
+
+      private static bool Equals(ProteinBenchmark benchmark, UnitInfo unifInfo)
+      {
+         return benchmark.OwningSlotName == unifInfo.OwningSlotName &&
+                Paths.Equal(benchmark.OwningClientPath, unifInfo.OwningClientPath) &&
+                benchmark.ProjectID == unifInfo.ProjectID;
       }
 
       public void RemoveAll(BenchmarkClient benchmarkClient)

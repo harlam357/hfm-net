@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Protein Benchmark Data Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ namespace HFM.Core.DataTypes
 {
    [Serializable]
    [DataContract]
-   public sealed class ProteinBenchmark : IOwnedByClient, IEquatable<IOwnedByClient>
+   public sealed class ProteinBenchmark
    {
       private const int DefaultMaxFrames = 300;
 
@@ -33,8 +33,6 @@ namespace HFM.Core.DataTypes
    
       #region Properties
       
-      #region Owner Data Properties
-
       /// <summary>
       /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
       /// </summary>
@@ -60,8 +58,6 @@ namespace HFM.Core.DataTypes
       /// </summary>
       [DataMember(Order = 6, IsRequired = true)]
       public int OwningSlotId { get; set; }
-
-      #endregion
 
       /// <summary>
       /// Project ID
@@ -184,17 +180,6 @@ namespace HFM.Core.DataTypes
          }
       }
       
-      #endregion
-
-      #region IEquatable<IOwnedByClient> Members
-
-      public bool Equals(IOwnedByClient other)
-      {
-         return OwningSlotName == other.OwningSlotName &&
-                Paths.Equal(OwningClientPath, other.OwningClientPath) &&
-                ProjectID == other.ProjectID;
-      }
-
       #endregion
    }
 }

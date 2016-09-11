@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Work Unit History Database
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -331,7 +331,7 @@ namespace HFM.Core
          Debug.Assert(TableExists(SqlTable.WuHistory));
 
          // ensure this unit is not written twice
-         if (UnitInfoExists(unitInfoModel))
+         if (UnitInfoExists(unitInfoModel.UnitInfoData))
          {
             return false;
          }
@@ -379,20 +379,20 @@ namespace HFM.Core
          return false;
       }
 
-      private bool UnitInfoExists(UnitInfoModel unitInfoModel)
+      private bool UnitInfoExists(UnitInfo unitInfo)
       {
-         var rows = Fetch(BuildUnitKeyQueryParameters(unitInfoModel));
+         var rows = Fetch(BuildUnitKeyQueryParameters(unitInfo));
          return rows.Count != 0;
       }
 
-      private static QueryParameters BuildUnitKeyQueryParameters(UnitInfoModel unitInfoModel)
+      private static QueryParameters BuildUnitKeyQueryParameters(UnitInfo unitInfo)
       {
-         var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", unitInfoModel.UnitInfoData.ToProjectInfo()) };
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectID });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectRun });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectClone });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.ProjectGen });
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfoModel.UnitInfoData.DownloadTime });
+         var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", unitInfo.ToProjectInfo()) };
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfo.ProjectID });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfo.ProjectRun });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfo.ProjectClone });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfo.ProjectGen });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfo.DownloadTime });
          return parameters;
       }
 
