@@ -87,7 +87,7 @@ namespace HFM.Forms
       private readonly IExternalProcessStarter _processStarter;
       private readonly ZedGraphManager _zedGraphManager;
       
-      private BenchmarkClient _currentBenchmarkClient;
+      private ProteinBenchmarkSlotIdentifier _currentSlotIdentifier;
 
       #endregion
 
@@ -139,8 +139,8 @@ namespace HFM.Forms
 
       private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
       {
-         _currentBenchmarkClient = (BenchmarkClient)cboClients.SelectedValue;
-         picDeleteClient.Visible = !_currentBenchmarkClient.AllClients;
+         _currentSlotIdentifier = (ProteinBenchmarkSlotIdentifier)cboClients.SelectedValue;
+         picDeleteClient.Visible = !_currentSlotIdentifier.AllSlots;
          
          UpdateProjectListBoxBinding();
       }
@@ -155,31 +155,31 @@ namespace HFM.Forms
             Logger.WarnFormat("Could not find Project {0}.", projectId);
          }
 
-         var lines = new List<string>();
-         PopulateProteinInformation(protein, lines);
+         var projectInfoLines = new List<string>();
+         PopulateProteinInformation(protein, projectInfoLines);
 
-         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentBenchmarkClient, projectId).ToList();
+         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentSlotIdentifier, projectId).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
 
+         var benchmarkInfoLines = new List<string>(projectInfoLines);
          foreach (ProteinBenchmark benchmark in list)
          {
             UnitInfoModel unitInfoModel = null;
             SlotStatus status = SlotStatus.Unknown;
 
-            ProteinBenchmark benchmark1 = benchmark;
             var slotModel = _clientConfiguration.Slots.FirstOrDefault(x => 
-               x.Name == benchmark1.OwningSlotName && 
-               x.Settings.DataPath() == benchmark1.OwningClientPath && 
-               x.UnitInfoModel.UnitInfoData.ProjectID == benchmark1.ProjectID);
+               x.Name == benchmark.OwningSlotName && 
+               x.Settings.DataPath() == benchmark.OwningClientPath && 
+               x.UnitInfoModel.UnitInfoData.ProjectID == benchmark.ProjectID);
             if (slotModel != null && slotModel.ProductionValuesOk)
             {
                unitInfoModel = slotModel.UnitInfoModel;
                status = slotModel.Status;
             }
-            PopulateBenchmarkInformation(protein, benchmark, unitInfoModel, status, _prefs.GetPpdFormatString(), lines);
+            PopulateBenchmarkInformation(protein, benchmark, unitInfoModel, status, _prefs.GetPpdFormatString(), benchmarkInfoLines);
          }
 
-         UpdateBenchmarkText(lines);
+         UpdateBenchmarkText(benchmarkInfoLines);
 
          tabControl1.SuspendLayout();
 
@@ -196,7 +196,7 @@ namespace HFM.Forms
                {
                   var benchmarks = new ProteinBenchmark[clientsPerGraph];
                   list.CopyTo(lastDisplayed, benchmarks, 0, clientsPerGraph);
-                  DrawGraphs(tabIndex, lines, benchmarks, protein);
+                  DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
                   tabIndex++;
                   lastDisplayed = i;
                }
@@ -206,12 +206,12 @@ namespace HFM.Forms
             {
                var benchmarks = new ProteinBenchmark[list.Count - lastDisplayed];
                list.CopyTo(lastDisplayed, benchmarks, 0, list.Count - lastDisplayed);
-               DrawGraphs(tabIndex, lines, benchmarks, protein);
+               DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
             }
          }
          else
          {
-            DrawGraphs(tabIndex, lines, list, protein);
+            DrawGraphs(tabIndex, projectInfoLines, list, protein);
          }
 
          tabControl1.ResumeLayout(true);
@@ -258,10 +258,10 @@ namespace HFM.Forms
          _currentNumberOfGraphs = graphs;
       }
 
-      private void DrawGraphs(int tabIndex, IList<string> lines, IEnumerable<ProteinBenchmark> benchmarks, Protein protein)
+      private void DrawGraphs(int tabIndex, IList<string> projectInfoLines, ICollection<ProteinBenchmark> benchmarks, Protein protein)
       {
-         _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), lines, benchmarks, _graphColors);
-         _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), lines, benchmarks, _graphColors,
+         _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors);
+         _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), projectInfoLines, benchmarks, _graphColors,
             _prefs.Get<int>(Preference.DecimalPlaces), protein, _prefs.Get<BonusCalculationType>(Preference.BonusCalculation).IsEnabled());
       }
 
@@ -331,10 +331,10 @@ namespace HFM.Forms
       {
          if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
             "Are you sure you want to refresh {0} - Project {1} minimum frame time?", 
-               _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
+               _currentSlotIdentifier.Value, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkCollection.UpdateMinimumFrameTime(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _benchmarkCollection.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
             listBox1_SelectedIndexChanged(sender, e);
          }
       }
@@ -343,12 +343,12 @@ namespace HFM.Forms
       {
          if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, 
             "Are you sure you want to delete {0} - Project {1}?", 
-               _currentBenchmarkClient.NameAndPath, listBox1.SelectedItem),
+               _currentSlotIdentifier.Value, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkCollection.RemoveAll(_currentBenchmarkClient, (int)listBox1.SelectedItem);
+            _benchmarkCollection.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
             UpdateProjectListBoxBinding();
-            if (_benchmarkCollection.BenchmarkClients.Contains(_currentBenchmarkClient) == false)
+            if (_benchmarkCollection.SlotIdentifiers.Contains(_currentSlotIdentifier) == false)
             {
                UpdateClientsComboBinding();
             }
@@ -357,7 +357,11 @@ namespace HFM.Forms
 
       private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
       {
-         string message = _processStarter.ShowWebBrowser(linkDescription.Text);
+         if (linkDescription.Tag == null)
+         {
+            return;
+         }
+         string message = _processStarter.ShowWebBrowser(linkDescription.Tag.ToString());
          if (message != null)
          {
             _messageBoxView.ShowError(this, message, Text);
@@ -366,11 +370,11 @@ namespace HFM.Forms
 
       private void picDeleteClient_Click(object sender, EventArgs e)
       {
-         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentBenchmarkClient.NameAndPath),
+         if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentSlotIdentifier.Value),
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             int currentIndex = cboClients.SelectedIndex;
-            _benchmarkCollection.RemoveAll(_currentBenchmarkClient);
+            _benchmarkCollection.RemoveAll(_currentSlotIdentifier);
             UpdateClientsComboBinding(currentIndex);
          }
       }
@@ -506,7 +510,8 @@ namespace HFM.Forms
             txtFrames.Text = protein.Frames.ToString();
             txtAtoms.Text = protein.NumberOfAtoms.ToString();
             txtCore.Text = protein.Core;
-            linkDescription.Text = protein.Description;
+            linkDescription.Text = "Click to view online";
+            linkDescription.Tag = protein.Description;
             txtPreferredDays.Text = protein.PreferredDays.ToString();
             txtMaximumDays.Text = protein.MaximumDays.ToString();
             txtContact.Text = protein.Contact;
@@ -527,6 +532,7 @@ namespace HFM.Forms
             txtAtoms.Text = String.Empty;
             txtCore.Text = String.Empty;
             linkDescription.Text = String.Empty;
+            linkDescription.Tag = null;
             txtPreferredDays.Text = String.Empty;
             txtMaximumDays.Text = String.Empty;
             txtContact.Text = String.Empty;
@@ -544,8 +550,8 @@ namespace HFM.Forms
       private void UpdateClientsComboBinding(int index)
       {
          cboClients.DataBindings.Clear();
-         cboClients.DataSource = _benchmarkCollection.BenchmarkClients;
-         cboClients.DisplayMember = "NameAndPath";
+         cboClients.DataSource = _benchmarkCollection.SlotIdentifiers;
+         cboClients.DisplayMember = "Value";
          // TODO: Is this required for Mono compatibility?
          //cboClients.ValueMember = "Client";
          
@@ -570,7 +576,7 @@ namespace HFM.Forms
       private void UpdateProjectListBoxBinding(int initialProjectID)
       {
          listBox1.DataBindings.Clear();
-         listBox1.DataSource = _benchmarkCollection.GetBenchmarkProjects(_currentBenchmarkClient);
+         listBox1.DataSource = _benchmarkCollection.GetBenchmarkProjects(_currentSlotIdentifier);
          
          int index = listBox1.Items.IndexOf(initialProjectID);
          if (index > -1)

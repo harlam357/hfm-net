@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 using HFM.Core.DataTypes;
@@ -29,9 +30,9 @@ namespace HFM.Core
    public interface IProteinBenchmarkCollection : ICollection<ProteinBenchmark>
    {
       /// <summary>
-      /// List of BenchmarkClient objects.
+      /// List of slot identifier objects.
       /// </summary>
-      IEnumerable<BenchmarkClient> BenchmarkClients { get; }
+      ICollection<ProteinBenchmarkSlotIdentifier> SlotIdentifiers { get; }
 
       void UpdateData(UnitInfo unit, int startingFrame, int endingFrame);
 
@@ -43,52 +44,52 @@ namespace HFM.Core
       ProteinBenchmark GetBenchmark(UnitInfo unitInfo);
 
       /// <summary>
-      /// Removes all the elements from the ProteinBenchmarkCollection that match the benchmarkClient.
+      /// Removes all the elements from the ProteinBenchmarkCollection that match the slot identifier.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkCollection.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      /// <exception cref="T:System.ArgumentException"><paramref name="benchmarkClient"/> represents all clients.</exception>
-      void RemoveAll(BenchmarkClient benchmarkClient);
+      /// <param name="slotIdentifier">The slot identifier to remove from the ProteinBenchmarkCollection.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      /// <exception cref="T:System.ArgumentException"><paramref name="slotIdentifier"/> represents all clients.</exception>
+      void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier);
 
       /// <summary>
-      /// Removes all the elements from the ProteinBenchmarkCollection that match the benchmarkClient and projectId.
+      /// Removes all the elements from the ProteinBenchmarkCollection that match the slot identifier and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to remove from the ProteinBenchmarkCollection.</param>
+      /// <param name="slotIdentifier">The slot identifier to remove from the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      void RemoveAll(BenchmarkClient benchmarkClient, int projectId);
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
 
       /// <summary>
       /// Determines whether the ProteinBenchmarkCollection contains a specific value.
       /// </summary>
       /// <returns>
-      /// true if <paramref name="benchmarkClient"/> is found in the ProteinBenchmarkCollection; otherwise, false.
+      /// true if <paramref name="slotIdentifier"/> is found in the ProteinBenchmarkCollection; otherwise, false.
       /// </returns>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      bool Contains(BenchmarkClient benchmarkClient);
+      /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      bool Contains(ProteinBenchmarkSlotIdentifier slotIdentifier);
 
       /// <summary>
       /// Gets a list of benchmark project numbers.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      IEnumerable<int> GetBenchmarkProjects(BenchmarkClient benchmarkClient);
+      /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      ICollection<Int32> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier);
 
       /// <summary>
       /// Gets a list of ProteinBenchmark objects.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient);
+      /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier);
 
       /// <summary>
       /// Gets a list of ProteinBenchmark objects.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
+      /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient, int projectId);
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, Int32 projectId);
 
       /// <summary>
       /// Updates the owner name of all the elements in ProteinBenchmarkCollection that match the given client name and path.
@@ -101,12 +102,12 @@ namespace HFM.Core
       void UpdateOwnerPath(string clientName, string clientPath, string newPath);
 
       /// <summary>
-      /// Updates the minimum frame time of all the elements in ProteinBenchmarkCollection that match the benchmarkClient and projectId.
+      /// Updates the minimum frame time of all the elements in ProteinBenchmarkCollection that match the slot identifier and projectId.
       /// </summary>
-      /// <param name="benchmarkClient">The BenchmarkClient to locate in the ProteinBenchmarkCollection.</param>
+      /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
       /// <param name="projectId">The Folding@Home project number.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="benchmarkClient"/> is null.</exception>
-      void UpdateMinimumFrameTime(BenchmarkClient benchmarkClient, int projectId);
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
+      void UpdateMinimumFrameTime(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
 
       #region ICollection<ProteinBenchmark> Members
 
@@ -140,21 +141,14 @@ namespace HFM.Core
          get { return new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>(); }
       }
 
-      public IEnumerable<BenchmarkClient> BenchmarkClients
+      public ICollection<ProteinBenchmarkSlotIdentifier> SlotIdentifiers
       {
          get
          {
-            var benchmarkClients = new List<BenchmarkClient> { new BenchmarkClient() };
-            foreach (var benchmark in Data)
-            {
-               if (!benchmarkClients.Contains(benchmark.Client))
-               {
-                  benchmarkClients.Add(benchmark.Client);
-               }
-            }
-
-            benchmarkClients.Sort();
-            return benchmarkClients.AsReadOnly();
+            var slotIdentifiers = Data.Select(x => x.SlotIdentifier).Distinct().ToList();
+            slotIdentifiers.Add(new ProteinBenchmarkSlotIdentifier());
+            slotIdentifiers.Sort();
+            return slotIdentifiers.AsReadOnly();
          }
       }
 
@@ -276,15 +270,15 @@ namespace HFM.Core
                 benchmark.ProjectID == unifInfo.ProjectID;
       }
 
-      public void RemoveAll(BenchmarkClient benchmarkClient)
+      public void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
-         if (benchmarkClient.AllClients) throw new ArgumentException("Cannot remove all clients.");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
+         if (slotIdentifier.AllSlots) throw new ArgumentException("Cannot remove all client slots.");
 
          _cacheLock.EnterWriteLock();
          try
          {
-            Data.RemoveAll(benchmark => benchmark.Client.Equals(benchmarkClient));
+            Data.RemoveAll(benchmark => benchmark.SlotIdentifier.Equals(slotIdentifier));
             Write();
          }
          finally
@@ -293,20 +287,20 @@ namespace HFM.Core
          }
       }
 
-      public void RemoveAll(BenchmarkClient benchmarkClient, int projectId)
+      public void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          _cacheLock.EnterWriteLock();
          try
          {
             Data.RemoveAll(benchmark =>
                            {
-                              if (benchmarkClient.AllClients)
+                              if (slotIdentifier.AllSlots)
                               {
                                  return benchmark.ProjectID.Equals(projectId);
                               }
-                              if (benchmark.Client.Equals(benchmarkClient))
+                              if (benchmark.SlotIdentifier.Equals(slotIdentifier))
                               {
                                  return benchmark.ProjectID.Equals(projectId);
                               }
@@ -320,20 +314,20 @@ namespace HFM.Core
          }
       }
 
-      public bool Contains(BenchmarkClient benchmarkClient)
+      public bool Contains(ProteinBenchmarkSlotIdentifier slotIdentifier)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          _cacheLock.EnterReadLock();
          try
          {
             return Data.Find(benchmark =>
                              {
-                                if (benchmarkClient.AllClients)
+                                if (slotIdentifier.AllSlots)
                                 {
                                    return true;
                                 }
-                                if (benchmark.Client.Equals(benchmarkClient))
+                                if (benchmark.SlotIdentifier.Equals(slotIdentifier))
                                 {
                                    return true;
                                 }
@@ -346,9 +340,9 @@ namespace HFM.Core
          }
       }
 
-      public IEnumerable<int> GetBenchmarkProjects(BenchmarkClient benchmarkClient)
+      public ICollection<Int32> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          _cacheLock.EnterReadLock();
          try
@@ -361,13 +355,13 @@ namespace HFM.Core
                   continue;
                }
 
-               if (benchmarkClient.AllClients)
+               if (slotIdentifier.AllSlots)
                {
                   projects.Add(benchmark.ProjectID);
                }
                else
                {
-                  if (benchmark.Client.Equals(benchmarkClient))
+                  if (benchmark.SlotIdentifier.Equals(slotIdentifier))
                   {
                      projects.Add(benchmark.ProjectID);
                   }
@@ -383,20 +377,20 @@ namespace HFM.Core
          }
       }
 
-      public IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient)
+      public ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          _cacheLock.EnterReadLock();
          try
          {
             var list = Data.FindAll(benchmark =>
                                     {
-                                       if (benchmarkClient.AllClients)
+                                       if (slotIdentifier.AllSlots)
                                        {
                                           return true;
                                        }
-                                       return benchmark.Client.Equals(benchmarkClient);
+                                       return benchmark.SlotIdentifier.Equals(slotIdentifier);
                                     });
 
             return list.AsReadOnly();
@@ -407,20 +401,20 @@ namespace HFM.Core
          }
       }
 
-      public IEnumerable<ProteinBenchmark> GetBenchmarks(BenchmarkClient benchmarkClient, int projectId)
+      public ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, Int32 projectId)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          _cacheLock.EnterReadLock();
          try
          {
             var list = Data.FindAll(benchmark =>
                                     {
-                                       if (benchmarkClient.AllClients)
+                                       if (slotIdentifier.AllSlots)
                                        {
                                           return benchmark.ProjectID.Equals(projectId);
                                        }
-                                       if (benchmark.Client.Equals(benchmarkClient))
+                                       if (benchmark.SlotIdentifier.Equals(slotIdentifier))
                                        {
                                           return benchmark.ProjectID.Equals(projectId);
                                        }
@@ -505,13 +499,13 @@ namespace HFM.Core
          }
       }
 
-      public void UpdateMinimumFrameTime(BenchmarkClient benchmarkClient, int projectId)
+      public void UpdateMinimumFrameTime(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId)
       {
-         if (benchmarkClient == null) throw new ArgumentNullException("benchmarkClient");
+         if (slotIdentifier == null) throw new ArgumentNullException("slotIdentifier");
 
          // GetBenchmarks() BEFORE entering write lock 
          // because it uses a read lock
-         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(benchmarkClient, projectId);
+         IEnumerable<ProteinBenchmark> benchmarks = GetBenchmarks(slotIdentifier, projectId);
          // write lock
          _cacheLock.EnterWriteLock();
          try

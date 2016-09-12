@@ -36,14 +36,14 @@ namespace HFM.Forms
       /// Build The PPD GraphPane
       /// </summary>
       /// <param name="zg">ZedGraph Control</param>
-      /// <param name="projectInfo">Project Info Array</param>
+      /// <param name="projectInfoLines">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="graphColors">Graph Colors List</param>
       /// <param name="decimalPlaces">PPD Decimal Places</param>
       /// <param name="protein"></param>
       /// <param name="calculateBonus"></param>
       [CLSCompliant(false)]
-      public void CreatePpdGraph(ZedGraphControl zg, IList<string> projectInfo, 
+      public void CreatePpdGraph(ZedGraphControl zg, IList<string> projectInfoLines, 
                                  IEnumerable<ProteinBenchmark> benchmarks,
                                  IList<Color> graphColors, int decimalPlaces,
                                  Protein protein, bool calculateBonus)
@@ -63,7 +63,7 @@ namespace HFM.Forms
             myPane.XAxis.Title.Text = String.Empty;
 
             // If no Project Information, get out
-            if (projectInfo.Count == 0)
+            if (projectInfoLines.Count == 0)
             {
                return;
             }
@@ -102,12 +102,12 @@ namespace HFM.Forms
             // Set the Titles
             myPane.Title.Text = "HFM.NET - Client Benchmarks";
             var sb = new StringBuilder();
-            for (i = 0; i < projectInfo.Count - 2; i++)
+            for (i = 0; i < projectInfoLines.Count - 2; i++)
             {
-               sb.Append(projectInfo[i]);
-               sb.Append(" / ");
+               sb.Append(projectInfoLines[i]);
+               sb.Append("   ");
             }
-            sb.Append(projectInfo[i]);
+            sb.Append(projectInfoLines[i]);
             myPane.XAxis.Title.Text = sb.ToString();
             myPane.YAxis.Title.Text = "PPD";
 
@@ -151,11 +151,11 @@ namespace HFM.Forms
       /// Build The Frame Time GraphPane
       /// </summary>
       /// <param name="zg">ZedGraph Control</param>
-      /// <param name="projectInfo">Project Info Array</param>
+      /// <param name="projectInfoLines">Project Info Array</param>
       /// <param name="benchmarks">Benchmarks Collection to Plot</param>
       /// <param name="graphColors">Graph Colors List</param>
       [CLSCompliant(false)]
-      public void CreateFrameTimeGraph(ZedGraphControl zg, IList<string> projectInfo, 
+      public void CreateFrameTimeGraph(ZedGraphControl zg, IList<string> projectInfoLines, 
                                        IEnumerable<ProteinBenchmark> benchmarks,
                                        IList<Color> graphColors)
       {
@@ -174,7 +174,7 @@ namespace HFM.Forms
             myPane.XAxis.Title.Text = String.Empty;
 
             // If no Project Information, get out
-            if (projectInfo.Count == 0)
+            if (projectInfoLines.Count == 0)
             {
                return;
             }
@@ -197,12 +197,12 @@ namespace HFM.Forms
             // Set the Titles
             myPane.Title.Text = "HFM.NET - Client Benchmarks";
             var sb = new StringBuilder();
-            for (i = 0; i < projectInfo.Count - 2; i++)
+            for (i = 0; i < projectInfoLines.Count - 2; i++)
             {
-               sb.Append(projectInfo[i]);
-               sb.Append(" / ");
+               sb.Append(projectInfoLines[i]);
+               sb.Append("   ");
             }
-            sb.Append(projectInfo[i]);
+            sb.Append(projectInfoLines[i]);
             myPane.XAxis.Title.Text = sb.ToString();
             myPane.YAxis.Title.Text = "Frame Time (Seconds)";
 

@@ -72,7 +72,7 @@ namespace HFM.Core.Tests
          database.Stub(x => x.Connected).Return(true);
          database.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
-         var benchmarkClient = new BenchmarkClient("Owner Slot 00", "Path");
+         var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
 
          // assert before act
          Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));

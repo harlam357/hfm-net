@@ -128,7 +128,7 @@
     </Compile>
     <Compile Include="ClientFactoryTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
-    <Compile Include="DataTypes\BenchmarkClientTests.cs" />
+    <Compile Include="DataTypes\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
     <Compile Include="ExtensionsTests.cs" />

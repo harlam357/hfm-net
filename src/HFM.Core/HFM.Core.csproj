@@ -125,7 +125,7 @@
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="DataContainer.cs" />
-    <Compile Include="DataTypes\BenchmarkClient.cs" />
+    <Compile Include="DataTypes\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="DataTypes\ClientSettings.cs" />
     <Compile Include="DataTypes\ClientQueue.cs" />
     <Compile Include="DataTypes\ClientQueueEntry.cs" />
