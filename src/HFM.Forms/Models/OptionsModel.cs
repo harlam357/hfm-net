@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Preferences - Options Tab - Binding Model
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,11 +24,10 @@ using System.ComponentModel;
 using Castle.Core.Logging;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
-   class OptionsModel : INotifyPropertyChanged
+   internal class OptionsModel : INotifyPropertyChanged
    {
       public OptionsModel(IPreferenceSet prefs)
       {

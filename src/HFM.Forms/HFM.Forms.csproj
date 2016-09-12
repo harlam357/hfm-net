@@ -177,6 +177,7 @@
     <Compile Include="FahClientSetupPresenter.cs" />
     <Compile Include="IPresenterFactory.cs" />
     <Compile Include="IViewFactory.cs" />
+    <Compile Include="ListItem.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
