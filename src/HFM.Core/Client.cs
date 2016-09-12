@@ -108,7 +108,7 @@ namespace HFM.Core
 
       public IProteinService ProteinService { get; set; }
 
-      public IProteinBenchmarkCollection BenchmarkCollection { get; set; }
+      public IProteinBenchmarkService BenchmarkService { get; set; }
 
       public IUnitInfoDatabase UnitInfoDatabase { get; set; }
 

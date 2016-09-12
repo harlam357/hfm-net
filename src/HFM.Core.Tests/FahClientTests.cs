@@ -41,9 +41,9 @@ namespace HFM.Core.Tests
       public void UpdateBenchmarkDataTest()
       {
          // setup
-         var benchmarkCollection = new ProteinBenchmarkCollection();
+         var benchmarkCollection = new ProteinBenchmarkService();
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkCollection = benchmarkCollection, UnitInfoDatabase = database };
+         var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, UnitInfoDatabase = database };
 
          var unitInfo1 = new UnitInfo();
          unitInfo1.OwningClientName = "Owner";

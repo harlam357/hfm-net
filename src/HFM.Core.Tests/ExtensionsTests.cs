@@ -243,7 +243,7 @@ namespace HFM.Core.Tests
 
       private static UnitInfoModel CreateUnitInfoLogic(UnitInfo unitInfo)
       {
-         return new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkCollection>())
+         return new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkService>())
          {
             UnitInfoData = unitInfo
          };

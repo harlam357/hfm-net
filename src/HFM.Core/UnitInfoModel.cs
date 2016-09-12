@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Unit Info Model Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ namespace HFM.Core
       /// <summary>
       /// Protein Collection Interface
       /// </summary>
-      private readonly IProteinBenchmarkCollection _benchmarkCollection;
+      private readonly IProteinBenchmarkService _benchmarkService;
 
       private UnitInfo _unitInfo = new UnitInfo();
       /// <summary>
@@ -68,9 +68,9 @@ namespace HFM.Core
 
       }
 
-      public UnitInfoModel(IProteinBenchmarkCollection benchmarkCollection)
+      public UnitInfoModel(IProteinBenchmarkService benchmarkService)
       {
-         _benchmarkCollection = benchmarkCollection;
+         _benchmarkService = benchmarkService;
       }
 
       #endregion
@@ -275,9 +275,9 @@ namespace HFM.Core
          }
 
          // Issue 79 - no benchmark container is available to merged display instances
-         if (_benchmarkCollection != null)
+         if (_benchmarkService != null)
          {
-            ProteinBenchmark benchmark = _benchmarkCollection.GetBenchmark(UnitInfoData);
+            ProteinBenchmark benchmark = _benchmarkService.GetBenchmark(UnitInfoData);
             if (benchmark != null)
             {
                return benchmark.AverageFrameTime;

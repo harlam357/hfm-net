@@ -246,7 +246,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = new UnitInfoModel(BenchmarkCollection);
+         var unitInfoLogic = new UnitInfoModel(BenchmarkService);
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;
@@ -316,7 +316,7 @@ namespace HFM.Core
                if (unitInfoModel != null)
                {
                   // Update benchmarks
-                  BenchmarkCollection.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
+                  BenchmarkService.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
                   // Update history database
                   UpdateUnitInfoDatabase(unitInfoModel);
                }
@@ -396,7 +396,7 @@ namespace HFM.Core
 
       private TimeSpan GetBenchmarkAverageFrameTimeOrDefault(UnitInfo unitInfo)
       {
-         var benchmark = BenchmarkCollection.GetBenchmark(unitInfo);
+         var benchmark = BenchmarkService.GetBenchmark(unitInfo);
          return benchmark != null ? benchmark.AverageFrameTime : TimeSpan.Zero;
       }
 

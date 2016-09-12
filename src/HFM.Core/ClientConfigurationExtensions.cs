@@ -5,9 +5,9 @@ namespace HFM.Core
 {
    internal static class ClientConfigurationExtensions
    {
-      internal static void SubscribeToEvents(this IClientConfiguration configuration, IProteinBenchmarkCollection benchmarkCollection)
+      internal static void SubscribeToEvents(this IClientConfiguration configuration, IProteinBenchmarkService benchmarkService)
       {
-         configuration.ClientEdited += (s, e) => UpdateBenchmarkData(benchmarkCollection, e);
+         configuration.ClientEdited += (s, e) => UpdateBenchmarkData(benchmarkService, e);
 
          configuration.DictionaryChanged += (s, e) =>
          {
@@ -24,19 +24,19 @@ namespace HFM.Core
          };
       }
 
-      private static void UpdateBenchmarkData(IProteinBenchmarkCollection benchmarkCollection, ClientEditedEventArgs e)
+      private static void UpdateBenchmarkData(IProteinBenchmarkService benchmarkService, ClientEditedEventArgs e)
       {
          // the name changed
          if (e.PreviousName != e.NewName)
          {
             // update the Names in the benchmark collection
-            benchmarkCollection.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
+            benchmarkService.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
          }
          // the path changed
          if (!Paths.Equal(e.PreviousPath, e.NewPath))
          {
             // update the Paths in the benchmark collection
-            benchmarkCollection.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
+            benchmarkService.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
          }
       }
    }

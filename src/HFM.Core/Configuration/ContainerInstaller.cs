@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Core Container Installer
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ namespace HFM.Core.Configuration
             Component.For<IClientConfiguration>()
                .ImplementedBy<ClientConfiguration>()
                   .OnCreate((kernel, instance) => instance.SubscribeToEvents(
-                     kernel.Resolve<IProteinBenchmarkCollection>())));
+                     kernel.Resolve<IProteinBenchmarkService>())));
 
          // IClientFactory - Singleton
          container.Register(
@@ -128,9 +128,10 @@ namespace HFM.Core.Configuration
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(
-            Component.For<IProteinBenchmarkCollection>()
-               .ImplementedBy<ProteinBenchmarkCollection>()
-                  .OnCreate((kernel, instance) => instance.Read()));
+            Component.For<IProteinBenchmarkService>()
+               .ImplementedBy<ProteinBenchmarkService>()
+                  .OnCreate(instance => ((ProteinBenchmarkService)instance).Read())
+                  .OnDestroy(instance => ((ProteinBenchmarkService)instance).Write()));
 
          // IXmlStatsDataContainer - Singleton
          container.Register(

@@ -434,7 +434,7 @@ namespace HFM.Core
             }
          }
          // build unit info logic
-         var unitInfoLogic = new UnitInfoModel(BenchmarkCollection);
+         var unitInfoLogic = new UnitInfoModel(BenchmarkService);
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
          return unitInfoLogic;
@@ -481,7 +481,7 @@ namespace HFM.Core
                // current frame has already been recorded, increment to the next frame
                int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
                // Update benchmarks
-               BenchmarkCollection.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
+               BenchmarkService.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
             }
             // Update history database
             if (unitInfoModel.UnitInfoData.UnitResult != WorkUnitResult.Unknown)

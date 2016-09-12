@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Application Boot Strapper
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -100,9 +100,6 @@ namespace HFM
             {
                // Save preferences
                prefs.Save();
-               // Save the benchmark collection
-               var benchmarkContainer = container.Resolve<IProteinBenchmarkCollection>();
-               benchmarkContainer.Write();
             };
             System.Windows.Forms.Application.Run((Form)mainView);
          }

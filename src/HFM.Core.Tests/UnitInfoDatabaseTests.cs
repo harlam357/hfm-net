@@ -123,13 +123,13 @@ namespace HFM.Core.Tests
       public void MultiThread_Test()
       {
          _database.DatabaseFilePath = TestScratchFile;
-         var benchmarkCollection = MockRepository.GenerateStub<IProteinBenchmarkCollection>();
+         var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
          
          Parallel.For(0, 100, i =>
                               {
                                  Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
  
-                                 var unitInfoLogic = new UnitInfoModel(benchmarkCollection);
+                                 var unitInfoLogic = new UnitInfoModel(benchmarkService);
                                  unitInfoLogic.CurrentProtein = BuildProtein1();
                                  unitInfoLogic.UnitInfoData = BuildUnitInfo1(i);
 
@@ -239,7 +239,7 @@ namespace HFM.Core.Tests
       {
          _database.DatabaseFilePath = TestScratchFile;
 
-         var unitInfoLogic = new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkCollection>());
+         var unitInfoLogic = new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
          unitInfoLogic.CurrentProtein = protein;
          unitInfoLogic.UnitInfoData = unitInfo;
 

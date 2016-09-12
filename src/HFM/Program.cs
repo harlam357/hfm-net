@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Application Entry Point
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -45,23 +45,25 @@ namespace HFM
          try
          {
             // Configure Container
-            IWindsorContainer container = new WindsorContainer();
-            container.AddFacility<TypedFactoryFacility>();
-            container.Install(new Preferences.Configuration.ContainerInstaller(),
-                              new Core.Configuration.ContainerInstaller(),
-                              new Forms.Configuration.ContainerInstaller());
+            using (var container = new WindsorContainer())
+            {
+               container.AddFacility<TypedFactoryFacility>();
+               container.Install(new Preferences.Configuration.ContainerInstaller(),
+                                 new Core.Configuration.ContainerInstaller(),
+                                 new Forms.Configuration.ContainerInstaller());
 
-            // Create Object Maps
-            Mapper.Initialize(c =>
-                              {
-                                 c.AddProfile<Core.Configuration.AutoMapperProfile>();
-                                 c.AddProfile<Forms.Configuration.AutoMapperProfile>();
-                              });
+               // Create Object Maps
+               Mapper.Initialize(c =>
+                                 {
+                                    c.AddProfile<Core.Configuration.AutoMapperProfile>();
+                                    c.AddProfile<Forms.Configuration.AutoMapperProfile>();
+                                 });
 
-            // Setup TypeDescriptor
-            Core.Configuration.TypeDescriptionProviderSetup.Execute();
+               // Setup TypeDescriptor
+               Core.Configuration.TypeDescriptionProviderSetup.Execute();
 
-            BootStrapper.Execute(args, container);
+               BootStrapper.Execute(args, container);
+            }
          }
          catch (Exception ex)
          {

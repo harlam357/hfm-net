@@ -80,7 +80,7 @@ namespace HFM.Forms
 
       private readonly IPreferenceSet _prefs;
       private readonly IProteinService _proteinService;
-      private readonly IProteinBenchmarkCollection _benchmarkCollection;
+      private readonly IProteinBenchmarkService _benchmarkService;
       private readonly IList<Color> _graphColors;
       private readonly IClientConfiguration _clientConfiguration;
       private readonly IMessageBoxView _messageBoxView;
@@ -93,12 +93,12 @@ namespace HFM.Forms
 
       #region Constructor
 
-      public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkCollection benchmarkCollection,
+      public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkService benchmarkService,
                             IClientConfiguration clientConfiguration, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
       {
          _prefs = prefs;
          _proteinService = proteinService;
-         _benchmarkCollection = benchmarkCollection;
+         _benchmarkService = benchmarkService;
          _graphColors = _prefs.Get<List<Color>>(Preference.GraphColors);
          _clientConfiguration = clientConfiguration;
          _messageBoxView = messageBoxView;
@@ -158,7 +158,7 @@ namespace HFM.Forms
          var projectInfoLines = new List<string>();
          PopulateProteinInformation(protein, projectInfoLines);
 
-         List<ProteinBenchmark> list = _benchmarkCollection.GetBenchmarks(_currentSlotIdentifier, projectId).ToList();
+         List<ProteinBenchmark> list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectId).ToList();
          list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
 
          var benchmarkInfoLines = new List<string>(projectInfoLines);
@@ -334,7 +334,7 @@ namespace HFM.Forms
                _currentSlotIdentifier.Value, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkCollection.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
+            _benchmarkService.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
             listBox1_SelectedIndexChanged(sender, e);
          }
       }
@@ -346,9 +346,9 @@ namespace HFM.Forms
                _currentSlotIdentifier.Value, listBox1.SelectedItem),
                   Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
-            _benchmarkCollection.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
+            _benchmarkService.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
             UpdateProjectListBoxBinding();
-            if (_benchmarkCollection.SlotIdentifiers.Contains(_currentSlotIdentifier) == false)
+            if (_benchmarkService.SlotIdentifiers.Contains(_currentSlotIdentifier) == false)
             {
                UpdateClientsComboBinding();
             }
@@ -374,7 +374,7 @@ namespace HFM.Forms
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
          {
             int currentIndex = cboClients.SelectedIndex;
-            _benchmarkCollection.RemoveAll(_currentSlotIdentifier);
+            _benchmarkService.RemoveAll(_currentSlotIdentifier);
             UpdateClientsComboBinding(currentIndex);
          }
       }
@@ -550,7 +550,7 @@ namespace HFM.Forms
       private void UpdateClientsComboBinding(int index)
       {
          cboClients.DataBindings.Clear();
-         cboClients.DataSource = _benchmarkCollection.SlotIdentifiers;
+         cboClients.DataSource = _benchmarkService.SlotIdentifiers;
          cboClients.DisplayMember = "Value";
          // TODO: Is this required for Mono compatibility?
          //cboClients.ValueMember = "Client";
@@ -576,7 +576,7 @@ namespace HFM.Forms
       private void UpdateProjectListBoxBinding(int initialProjectID)
       {
          listBox1.DataBindings.Clear();
-         listBox1.DataSource = _benchmarkCollection.GetBenchmarkProjects(_currentSlotIdentifier);
+         listBox1.DataSource = _benchmarkService.GetBenchmarkProjects(_currentSlotIdentifier);
          
          int index = listBox1.Items.IndexOf(initialProjectID);
          if (index > -1)
