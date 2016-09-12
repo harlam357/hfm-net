@@ -274,6 +274,7 @@
     <Compile Include="ProteinLoadResultsDialog.Designer.cs">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="QueryColumnChoice.cs" />
     <Compile Include="QueryDialog.cs">
       <SubType>Form</SubType>
     </Compile>

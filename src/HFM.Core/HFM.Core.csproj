@@ -101,7 +101,6 @@
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="DataTypes\QueryColumnChoice.cs" />
     <Compile Include="DataTypes\SlotTotals.cs" />
     <Compile Include="FahClient.cs" />
     <Compile Include="FahClientDataAggregator.cs" />
