@@ -245,8 +245,8 @@ namespace HFM.Core.Tests.DataTypes
          var client1 = new ProteinBenchmarkSlotIdentifier();
          Assert.IsFalse(client1 == null);
          Assert.IsTrue(client1 != null);
-         Assert.IsFalse(client1 < null);
-         Assert.IsFalse(client1 > null);
+         //Assert.IsFalse(client1 < null);
+         //Assert.IsFalse(client1 > null);
       }
 
       [Test]
@@ -255,8 +255,8 @@ namespace HFM.Core.Tests.DataTypes
          var client1 = new ProteinBenchmarkSlotIdentifier();
          Assert.IsFalse(null == client1);
          Assert.IsTrue(null != client1);
-         Assert.IsFalse(null < client1);
-         Assert.IsFalse(null > client1);
+         //Assert.IsFalse(null < client1);
+         //Assert.IsFalse(null > client1);
       }
    }
 }

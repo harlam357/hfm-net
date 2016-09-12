@@ -80,7 +80,7 @@ namespace HFM.Core
          if (queueData != null)
          {
             GenerateUnitInfoDataFromQueue(result, queueData, fahLog, unitInfo);
-            result.Queue = BuildClientQueue(queueData);
+            result.Queue = BuildQueueDictionary(queueData);
             result.CurrentUnitIndex = result.Queue.CurrentIndex;
          }
          else
@@ -105,20 +105,20 @@ namespace HFM.Core
          return result;
       }
 
-      private static ClientQueue BuildClientQueue(QueueData q)
+      private static QueueDictionary BuildQueueDictionary(QueueData q)
       {
          Debug.Assert(q != null);
 
-         var cq = Mapper.Map<QueueData, ClientQueue>(q);
+         var cq = Mapper.Map<QueueData, QueueDictionary>(q);
          for (int i = 0; i < 10; i++)
          {
-            cq.Add(i, Mapper.Map<QueueEntry, ClientQueueEntry>(q.GetQueueEntry((uint)i)));
+            cq.Add(i, Mapper.Map<QueueEntry, QueueUnitItem>(q.GetQueueEntry((uint)i)));
          }
 
          return cq;
       }
 
-      private void GenerateUnitInfoDataFromLogs(DataAggregatorResult result, FahLog fahLog, UnitInfoLogData unitInfo)
+      private static void GenerateUnitInfoDataFromLogs(DataAggregatorResult result, FahLog fahLog, UnitInfoLogData unitInfo)
       {
          result.UnitInfos = new Dictionary<int, UnitInfo>(2);
          for (int i = 0; i < 2; i++)

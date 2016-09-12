@@ -30,9 +30,9 @@ namespace HFM.Core.Configuration
    {
       public AutoMapperProfile()
       {
-         CreateMap<QueueData, ClientQueue>()
+         CreateMap<QueueData, QueueDictionary>()
             .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.Legacy));
-         CreateMap<QueueEntry, ClientQueueEntry>()
+         CreateMap<QueueEntry, QueueUnitItem>()
             .ForMember(dest => dest.WaitingOn, opt => opt.Ignore())
             .ForMember(dest => dest.Attempts, opt => opt.Ignore())
             .ForMember(dest => dest.NextAttempt, opt => opt.Ignore());

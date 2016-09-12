@@ -99,9 +99,9 @@ namespace HFM.Forms
 
       void ShowNotifyToolTip(string text);
 
-      void SetQueue(ClientQueue queue);
+      void SetQueue(QueueDictionary queue);
 
-      void SetQueue(ClientQueue queue, SlotType slotType, bool utcOffsetIsZero);
+      void SetQueue(QueueDictionary queue, SlotType slotType, bool utcOffsetIsZero);
 
       void RefreshControlsWithTotalsData(SlotTotals totals);
 
@@ -626,22 +626,22 @@ namespace HFM.Forms
          toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
       }
 
-      public void SetQueue(ClientQueue queue)
+      public void SetQueue(QueueDictionary queue)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<ClientQueue>(SetQueue), queue);
+            Invoke(new Action<QueueDictionary>(SetQueue), queue);
             return;
          }
 
          queueControl.SetQueue(queue);
       }
 
-      public void SetQueue(ClientQueue queue, SlotType slotType, bool utcOffsetIsZero)
+      public void SetQueue(QueueDictionary queue, SlotType slotType, bool utcOffsetIsZero)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<ClientQueue, SlotType, bool>(SetQueue), queue, slotType, utcOffsetIsZero);
+            Invoke(new Action<QueueDictionary, SlotType, bool>(SetQueue), queue, slotType, utcOffsetIsZero);
             return;
          }
 

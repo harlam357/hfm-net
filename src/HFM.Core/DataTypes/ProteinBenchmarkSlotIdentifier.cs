@@ -25,7 +25,7 @@ namespace HFM.Core.DataTypes
    public struct ProteinBenchmarkSlotIdentifier : IComparable<ProteinBenchmarkSlotIdentifier>, IEquatable<ProteinBenchmarkSlotIdentifier>
    {
       /// <summary>
-      /// Gets a value that indicates if this identifier represents 'All Clients'
+      /// Gets a value that indicates if this identifier represents 'All Slots'
       /// </summary>
       public bool AllSlots
       {
@@ -83,8 +83,6 @@ namespace HFM.Core.DataTypes
          return right.CompareTo(left) < 0;
       }
       
-      #region IComparable<BenchmarkClient> Members
-
       /// <summary>
       /// Compares the current object with another object of the same type.
       /// </summary>
@@ -121,7 +119,5 @@ namespace HFM.Core.DataTypes
          // other AllSlots true (this is greater than)
          return 1;
       }
-
-      #endregion
    }
 }

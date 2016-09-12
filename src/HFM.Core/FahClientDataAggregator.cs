@@ -84,7 +84,7 @@ namespace HFM.Core
          }
 
          GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
-         result.Queue = BuildClientQueue(unitCollection, info, slotOptions, slotId);
+         result.Queue = BuildQueueDictionary(unitCollection, info, slotOptions, slotId);
 
          if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex) && result.UnitInfos[result.CurrentUnitIndex].LogLines != null)
          {
@@ -102,18 +102,18 @@ namespace HFM.Core
          return result;
       }
 
-      private static ClientQueue BuildClientQueue(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
+      private static QueueDictionary BuildQueueDictionary(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
       {
-         ClientQueue cq = null;
+         QueueDictionary cq = null;
          foreach (var unit in unitCollection.Where(unit => unit.Slot == slotId))
          {
             // don't create a queue until we find a unit that matches this slot id
             if (cq == null)
             {
-               cq = new ClientQueue { ClientType = ClientType.FahClient, CurrentIndex = -1 };
+               cq = new QueueDictionary { ClientType = ClientType.FahClient, CurrentIndex = -1 };
             }
 
-            var cqe = new ClientQueueEntry();
+            var cqe = new QueueUnitItem();
             cqe.EntryStatusLiteral = unit.StateEnum.ToString();
             cqe.WaitingOn = unit.WaitingOn;
             cqe.Attempts = unit.Attempts;
@@ -169,6 +169,12 @@ namespace HFM.Core
                break;
             case OperatingSystemType.Windows7:
                osName = "Windows 7";
+               break;
+            case OperatingSystemType.Windows8:
+               osName = "Windows 8";
+               break;
+            case OperatingSystemType.Windows10:
+               osName = "Windows 10";
                break;
             case OperatingSystemType.Linux:
                osName = "Linux";

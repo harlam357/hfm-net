@@ -127,8 +127,8 @@
     <Compile Include="DataContainer.cs" />
     <Compile Include="DataTypes\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="DataTypes\ClientSettings.cs" />
-    <Compile Include="DataTypes\ClientQueue.cs" />
-    <Compile Include="DataTypes\ClientQueueEntry.cs" />
+    <Compile Include="DataTypes\QueueDictionary.cs" />
+    <Compile Include="DataTypes\QueueUnitItem.cs" />
     <Compile Include="DataTypes\HistoryEntry.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />

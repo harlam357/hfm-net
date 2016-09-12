@@ -392,7 +392,7 @@ namespace HFM.Core
       /// <summary>
       /// Client Queue
       /// </summary>
-      public ClientQueue Queue { get; set; }
+      public QueueDictionary Queue { get; set; }
       
       #endregion
 

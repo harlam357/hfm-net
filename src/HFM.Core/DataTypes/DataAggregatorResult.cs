@@ -32,7 +32,7 @@ namespace HFM.Core.DataTypes
 
       public int CurrentUnitIndex { get; set; }
 
-      public ClientQueue Queue { get; set; }
+      public QueueDictionary Queue { get; set; }
 
       public IDictionary<int, UnitInfo> UnitInfos { get; set; }
 

@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
@@ -60,7 +62,7 @@ namespace HFM.Forms.Controls
    
       public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
    
-      private ClientQueue _queue;
+      private QueueDictionary _queue;
       private IProteinService _proteinService;
 
       private SlotType _slotType = SlotType.Unknown;
@@ -86,21 +88,21 @@ namespace HFM.Forms.Controls
          }
       }
       
-      public void SetQueue(ClientQueue qBase)
+      public void SetQueue(QueueDictionary queue)
       {
-         SetQueue(qBase, SlotType.Unknown, false);
+         SetQueue(queue, SlotType.Unknown, false);
       }
 
-      public void SetQueue(ClientQueue qBase, SlotType type, bool utcOffsetIsZero)
+      public void SetQueue(QueueDictionary queue, SlotType type, bool utcOffsetIsZero)
       {
-         if (qBase != null)
+         if (queue != null)
          {
-            _queue = qBase;
+            _queue = queue;
             _slotType = type;
             _utcOffsetIsZero = utcOffsetIsZero;
             
             cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
-            cboQueueIndex.DataSource = _queue.EntryNameCollection;
+            cboQueueIndex.DataSource = CreateEntryNameCollection(_queue);
             cboQueueIndex.DisplayMember = "DisplayMember";
             cboQueueIndex.ValueMember = "ValueMember";
             cboQueueIndex.SelectedIndex = -1;
@@ -117,6 +119,15 @@ namespace HFM.Forms.Controls
          }
       }
 
+      private static ICollection<ListItem> CreateEntryNameCollection(QueueDictionary queue)
+      {
+         return queue.Select(kvp => new ListItem
+         {
+            DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0} - {1}", kvp.Key, kvp.Value.ProjectRunCloneGen()),
+            ValueMember = kvp.Key
+         }).ToList().AsReadOnly();
+      }
+
       private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
       {
          if (_queue == null) return;
@@ -125,14 +136,14 @@ namespace HFM.Forms.Controls
          {
             SetControlsVisible(true);
 
-            ClientQueueEntry entry = _queue[(int)cboQueueIndex.SelectedValue];
-            txtStatus.Text = entry.EntryStatusLiteral;
-            WaitingOnTextBox.Text = String.IsNullOrEmpty(entry.WaitingOn) ? "(No Action)" : entry.WaitingOn;
-            AttemptsTextBox.Text = entry.Attempts.ToString();
-            NextAttemptTextBox.Text = entry.NextAttempt.ToString();
-            var protein = _proteinService.Get(entry.ProjectID);
+            QueueUnitItem item = _queue[(int)cboQueueIndex.SelectedValue];
+            txtStatus.Text = item.EntryStatusLiteral;
+            WaitingOnTextBox.Text = String.IsNullOrEmpty(item.WaitingOn) ? "(No Action)" : item.WaitingOn;
+            AttemptsTextBox.Text = item.Attempts.ToString();
+            NextAttemptTextBox.Text = item.NextAttempt.ToString();
+            var protein = _proteinService.Get(item.ProjectID);
             txtCredit.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-            if (entry.BeginTimeUtc.IsUnknown())
+            if (item.BeginTimeUtc.IsUnknown())
             {
                txtBeginDate.Text = "(Unknown)";
             }
@@ -140,14 +151,14 @@ namespace HFM.Forms.Controls
             {
                if (_utcOffsetIsZero)
                {
-                  txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeUtc.ToShortDateString(), entry.BeginTimeUtc.ToShortTimeString());
+                  txtBeginDate.Text = String.Format("{0} {1}", item.BeginTimeUtc.ToShortDateString(), item.BeginTimeUtc.ToShortTimeString());
                }
                else
                {
-                  txtBeginDate.Text = String.Format("{0} {1}", entry.BeginTimeLocal.ToShortDateString(), entry.BeginTimeLocal.ToShortTimeString());
+                  txtBeginDate.Text = String.Format("{0} {1}", item.BeginTimeLocal.ToShortDateString(), item.BeginTimeLocal.ToShortTimeString());
                }
             }
-            if (entry.EndTimeUtc.Equals(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)))
+            if (item.EndTimeUtc.Equals(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)))
             {
                txtEndDate.Text = "(Not Completed)";
             }
@@ -155,28 +166,28 @@ namespace HFM.Forms.Controls
             {
                if (_utcOffsetIsZero)
                {
-                  txtEndDate.Text = String.Format("{0} {1}", entry.EndTimeUtc.ToShortDateString(), entry.EndTimeUtc.ToShortTimeString());
+                  txtEndDate.Text = String.Format("{0} {1}", item.EndTimeUtc.ToShortDateString(), item.EndTimeUtc.ToShortTimeString());
                }
                else
                {
-                  txtEndDate.Text = String.Format("{0} {1}", entry.EndTimeLocal.ToShortDateString(), entry.EndTimeLocal.ToShortTimeString());
+                  txtEndDate.Text = String.Format("{0} {1}", item.EndTimeLocal.ToShortDateString(), item.EndTimeLocal.ToShortTimeString());
                }
                
             }
-            txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", entry.SpeedFactor);
+            txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", item.SpeedFactor);
             txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _queue.PerformanceFraction, _queue.PerformanceFractionUnitWeight);
-            txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", entry.MegaFlops);
-            txtServer.Text = entry.ServerIP;
+            txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", item.MegaFlops);
+            txtServer.Text = item.ServerIP;
             txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.DownloadRateAverage, _queue.DownloadRateUnitWeight);
             txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.UploadRateAverage, _queue.UploadRateUnitWeight);
-            txtCpuType.Text = entry.CpuString;
-            txtOsType.Text = entry.OsString;
-            txtMemory.Text = entry.Memory.ToString(CultureInfo.CurrentCulture);
-            txtBenchmark.Text = entry.Benchmark.ToString(CultureInfo.CurrentCulture);
-            txtSmpCores.Text = entry.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
-            txtCoresToUse.Text = entry.UseCores.ToString(CultureInfo.CurrentCulture);
-            txtUserID.Text = entry.UserID;
-            txtMachineID.Text = entry.MachineID.ToString(CultureInfo.CurrentCulture);
+            txtCpuType.Text = item.CpuString;
+            txtOsType.Text = item.OsString;
+            txtMemory.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
+            txtBenchmark.Text = item.Benchmark.ToString(CultureInfo.CurrentCulture);
+            txtSmpCores.Text = item.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
+            txtCoresToUse.Text = item.UseCores.ToString(CultureInfo.CurrentCulture);
+            txtUserID.Text = item.UserID;
+            txtMachineID.Text = item.MachineID.ToString(CultureInfo.CurrentCulture);
             
             #region Test TextBox Code (commented)
             //txtStatus.Text = "Status";

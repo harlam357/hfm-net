@@ -149,7 +149,7 @@ namespace HFM.Core
          PopulateRunLevelData(result, _slotModel);
          if (result.Queue != null)
          {
-            PopulateRunLevelData(result.Queue.CurrentQueueEntry, _slotModel);
+            PopulateRunLevelData(result.Queue.Current, _slotModel);
          }
 
          _slotModel.Queue = result.Queue;
@@ -272,15 +272,15 @@ namespace HFM.Core
          }
       }
 
-      private static void PopulateRunLevelData(ClientQueueEntry queueEntry, SlotModel slotModel)
+      private static void PopulateRunLevelData(QueueUnitItem queueUnitItem, SlotModel slotModel)
       {
          if (slotModel.UserId == Constants.DefaultUserID)
          {
-            slotModel.UserId = queueEntry.UserID;
+            slotModel.UserId = queueUnitItem.UserID;
          }
          if (slotModel.MachineId == Constants.DefaultMachineID)
          {
-            slotModel.MachineId = queueEntry.MachineID;
+            slotModel.MachineId = queueUnitItem.MachineID;
          }
       }
 
