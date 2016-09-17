@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Core Enumerations
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -57,23 +57,6 @@ namespace HFM.Core
    }
 
    // ReSharper restore InconsistentNaming
-
-   /// <summary>
-   /// Queue Entry Status Types
-   /// </summary>
-   public enum QueueEntryStatus
-   {
-      Unknown,
-      Empty,
-      Deleted,
-      Finished,
-      Garbage,
-      FoldingNow,
-      Queued,
-      ReadyForUpload,
-      Abandonded,
-      FetchingFromServer
-   }
 
    public enum PpdCalculationType
    {
@@ -144,106 +127,4 @@ namespace HFM.Core
       User,
       Team
    }
-
-   // ReSharper disable InconsistentNaming
-
-   public enum Preference
-   {
-      FormLocation,
-      FormSize,
-      FormColumns,
-      FormSortColumn,
-      FormSortOrder,
-      FormSplitterLocation,
-      FormLogWindowHeight,
-      FormLogWindowVisible,
-      QueueWindowVisible,
-      TimeFormatting,
-      UnitTotals,
-      DisplayVersions,
-      MinimizeTo,
-      BenchmarksFormLocation,
-      BenchmarksFormSize,
-      GraphColors,
-      BenchmarksGraphLayoutType,
-      BenchmarksClientsPerGraph,
-      MessagesFormLocation,
-      MessagesFormSize,
-      ClientRetrievalTaskType,
-      ClientRetrievalTaskEnabled,
-      ClientRetrievalTaskInterval,
-      ClientRetrievalTask,
-      DuplicateUserIdCheck,
-      DuplicateProjectCheck,
-      AllowRunningAsync,
-      EnableUserStats,
-      UserStatsType,
-      WebGenerationTask,
-      WebGenerationTaskEnabled,
-      WebGenerationTaskInterval,
-      WebGenerationTaskAfterClientRetrieval,
-      WebDeploymentType,
-      WebDeploymentRoot,
-      WebGenServer,
-      WebGenPort,
-      WebGenUsername,
-      WebGenPassword,
-      WebGenCopyFAHlog,
-      WebGenFtpMode,
-      WebGenCopyHtml,
-      WebGenCopyXml,
-      WebGenLimitLogSize,
-      WebGenLimitLogSizeLength,
-      CssFile,
-      WebOverview,
-      WebMobileOverview,
-      WebSummary,
-      WebMobileSummary,
-      WebSlot,
-      RunMinimized,
-      StartupCheckForUpdate,
-      UseDefaultConfigFile,
-      DefaultConfigFile,
-      OfflineLast,
-      ColorLogFile,
-      AutoSaveConfig,
-      PpdCalculation,
-      DecimalPlaces,
-      BonusCalculation,
-      FollowLog,
-      DisplayEtaAsDate,
-      LogFileViewer,
-      FileExplorer,
-      MessageLevel,
-      EmailReportingEnabled,
-      EmailReportingServerSecure,
-      EmailReportingToAddress,
-      EmailReportingFromAddress,
-      EmailReportingServerAddress,
-      EmailReportingServerPort,
-      EmailReportingServerUsername,
-      EmailReportingServerPassword,
-      ReportEuePause,
-      ReportHung,
-      EocUserId,
-      StanfordId,
-      TeamId,
-      ProjectDownloadUrl,
-      UseProxy,
-      ProxyServer,
-      ProxyPort,
-      UseProxyAuth,
-      ProxyUser,
-      ProxyPass,
-      HistoryBonusCalculation,
-      ShowEntriesValue,
-      HistorySortColumnName,
-      HistorySortOrder,
-      HistoryFormLocation,
-      HistoryFormSize,
-      HistoryFormColumns,
-      CacheFolder
-   }
-
-   // ReSharper restore InconsistentNaming
 }
