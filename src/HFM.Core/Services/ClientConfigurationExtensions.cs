@@ -17,7 +17,7 @@ namespace HFM.Core
                case ConfigurationChangedType.Edit:
                   if (e.Client != null)
                   {
-                     Task.Factory.StartNew(e.Client.Retrieve);
+                     Task.Run(() => e.Client.Retrieve());
                   }
                   break;
             }
