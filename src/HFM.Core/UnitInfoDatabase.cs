@@ -1011,6 +1011,12 @@ namespace HFM.Core
       {
          public override object Invoke(object[] args)
          {
+            Debug.Assert(args.Length == 1);
+            if (args[0] == null || Convert.IsDBNull(args[0]))
+            {
+               return String.Empty;
+            }
+
             var core = (string)args[0];
             return String.IsNullOrEmpty(core) ? String.Empty : core.ToSlotType().ToString();
          }
@@ -1024,6 +1030,12 @@ namespace HFM.Core
 
          public override object Invoke(object[] args)
          {
+            Debug.Assert(args.Length == 9);
+            if (args.Any(x => x == null || Convert.IsDBNull(x)))
+            {
+               return 0.0;
+            }
+
             var frameTime = TimeSpan.FromSeconds((long)args[0]);
             // unbox then cast to int
             var frames = (int)((long)args[1]);
