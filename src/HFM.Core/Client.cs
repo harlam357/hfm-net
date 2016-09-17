@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Client Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -193,7 +193,7 @@ namespace HFM.Core
                {
                   if (Logger.IsDebugEnabled)
                   {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.UnitInfoData.ToProjectInfo());
+                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.UnitInfoData.ToProjectString());
                      Logger.DebugFormat(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
                   }
                }

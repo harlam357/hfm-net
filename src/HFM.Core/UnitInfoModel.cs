@@ -489,7 +489,7 @@ namespace HFM.Core
 
          TimeSpan frameTime = GetFrameTime(calculationType);
          var values = ProductionCalculator.GetProductionValues(frameTime, CurrentProtein, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime));
-         logger.DebugFormat(" - {0}", UnitInfoData.ToProjectInfo());
+         logger.DebugFormat(" - {0}", UnitInfoData.ToProjectString());
          logger.Debug(values.ToMultiLineString());
       }
 

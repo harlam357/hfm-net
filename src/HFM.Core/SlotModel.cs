@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Slot Model Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -284,7 +284,7 @@ namespace HFM.Core
 
       public string ProjectRunCloneGen
       {
-         get { return UnitInfo.ProjectRunCloneGen(); }
+         get { return UnitInfo.ToShortProjectString(); }
       }
 
       public double Credit

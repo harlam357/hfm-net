@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Queue Control
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,7 +123,7 @@ namespace HFM.Forms.Controls
       {
          return queue.Select(kvp => new ListItem
          {
-            DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0} - {1}", kvp.Key, kvp.Value.ProjectRunCloneGen()),
+            DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0} - {1}", kvp.Key, kvp.Value.ToShortProjectString()),
             ValueMember = kvp.Key
          }).ToList().AsReadOnly();
       }

@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Core Extension Methods
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -268,14 +268,14 @@ namespace HFM.Core
       private static void FindDuplicateProjects(IEnumerable<SlotModel> slots)
       {
          var duplicates = (from x in slots
-                           group x by x.UnitInfoModel.UnitInfoData.ProjectRunCloneGen() into g
+                           group x by x.UnitInfoModel.UnitInfoData.ToShortProjectString() into g
                            let count = g.Count()
                            where count > 1 && g.First().UnitInfoModel.UnitInfoData.ProjectIsUnknown() == false
                            select g.Key);
 
          foreach (SlotModel slot in slots)
          {
-            slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ProjectRunCloneGen());
+            slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ToShortProjectString());
          }
       }
 
@@ -468,17 +468,6 @@ namespace HFM.Core
          return dictionary;
       }
 
-      internal static ProjectInfo ToProjectInfo(this IProjectInfo projectInfo)
-      {
-         return new ProjectInfo
-         {
-            ProjectID = projectInfo.ProjectID,
-            ProjectRun = projectInfo.ProjectRun,
-            ProjectClone = projectInfo.ProjectClone,
-            ProjectGen = projectInfo.ProjectGen
-         };
-      }
-
       internal static ProjectInfo ToProjectInfo(this Unit unit)
       {
          return new ProjectInfo
@@ -506,6 +495,42 @@ namespace HFM.Core
       internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)
       {
          return new ProteinBenchmarkSlotIdentifier(proteinBenchmark.OwningSlotName, proteinBenchmark.OwningClientPath);
+      }
+
+      #endregion
+
+      #region IProjectInfo
+
+      /// <summary>
+      /// Is the project information unknown?
+      /// </summary>
+      /// <returns>true if Project (R/C/G) has not been identified; otherwise, false.</returns>
+      internal static bool ProjectIsUnknown(this IProjectInfo projectInfo)
+      {
+         if (projectInfo == null)
+         {
+            return true;
+         }
+         return projectInfo.ProjectID == 0 &&
+                projectInfo.ProjectRun == 0 &&
+                projectInfo.ProjectClone == 0 &&
+                projectInfo.ProjectGen == 0;
+      }
+
+      /// <summary>
+      /// Determines whether the specified project information is equal to this project information.
+      /// </summary>
+      /// <returns>true if the specified Project (R/C/G) is equal to the this Project (R/C/G); otherwise, false.</returns>
+      internal static bool EqualsProject(this IProjectInfo projectInfo1, IProjectInfo projectInfo2)
+      {
+         if (projectInfo1 == null || projectInfo2 == null)
+         {
+            return false;
+         }
+         return projectInfo1.ProjectID == projectInfo2.ProjectID &&
+                projectInfo1.ProjectRun == projectInfo2.ProjectRun &&
+                projectInfo1.ProjectClone == projectInfo2.ProjectClone &&
+                projectInfo1.ProjectGen == projectInfo2.ProjectGen;
       }
 
       #endregion

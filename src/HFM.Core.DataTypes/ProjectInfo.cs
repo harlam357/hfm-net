@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Project Info Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -16,9 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-
-using System;
-using System.Globalization;
 
 namespace HFM.Core.DataTypes
 {
@@ -69,7 +66,7 @@ namespace HFM.Core.DataTypes
 
       public override string ToString()
       {
-         return String.Format(CultureInfo.CurrentCulture, "Project: {0} (Run {1}, Clone {2}, Gen {3})", ProjectID, ProjectRun, ProjectClone, ProjectGen);
+         return this.ToProjectString();
       }
    }
 }
