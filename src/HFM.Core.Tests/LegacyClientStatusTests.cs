@@ -56,7 +56,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 0;
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -85,7 +85,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 750;
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(SlotStatus.Running, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.Running, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -114,7 +114,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 750;
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(SlotStatus.Running, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.Running, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -144,7 +144,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 0;
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 12, 35);
 
-         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -175,7 +175,7 @@ namespace HFM.Core.Tests
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 12, 35);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -205,7 +205,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(SlotStatus.RunningAsync, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.RunningAsync, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -235,7 +235,7 @@ namespace HFM.Core.Tests
          statusData.FrameTime = 633; // 10 Minutes 33 Seconds
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 10, 25);
 
-         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
 
       [Test]
@@ -266,7 +266,7 @@ namespace HFM.Core.Tests
          statusData.BenchmarkAverageFrameTime = new TimeSpan(0, 10, 25);
 
          statusData.AllowRunningAsync = false;
-         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.HandleStatusData(statusData, NullLogger.Instance));
+         Assert.AreEqual(SlotStatus.Hung, LegacyClientStatus.GetSlotStatus(statusData, NullLogger.Instance));
       }
    }
 }

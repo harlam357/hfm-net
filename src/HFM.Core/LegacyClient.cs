@@ -367,7 +367,7 @@ namespace HFM.Core
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
 
-         SlotStatus computedStatus = LegacyClientStatus.HandleStatusData(statusData, Logger);
+         SlotStatus computedStatus = LegacyClientStatus.GetSlotStatus(statusData, Logger);
 
          // If the returned status is EuePause and current status is not
          if (computedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)

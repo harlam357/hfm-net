@@ -29,7 +29,7 @@ namespace HFM.Core
 {
    internal static class LegacyClientStatus
    {
-      internal static SlotStatus HandleStatusData(LegacyClientStatusData statusData, ILogger logger)
+      internal static SlotStatus GetSlotStatus(LegacyClientStatusData statusData, ILogger logger)
       {
          switch (statusData.ReturnedStatus)
          {
