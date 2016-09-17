@@ -17,11 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using System;
+
 namespace HFM.Forms
 {
    public struct ListItem
    {
+      public ListItem(string display, object value)
+      {
+         if (display == null) throw new ArgumentNullException("display");
+         if (value == null) throw new ArgumentNullException("value");
+
+         DisplayMember = display;
+         ValueMember = value;
+      }
+
       public string DisplayMember { get; set; }
+
       public object ValueMember { get; set; }
    }
 }
