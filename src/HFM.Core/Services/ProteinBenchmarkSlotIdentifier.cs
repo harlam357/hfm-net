@@ -20,7 +20,7 @@
 using System;
 using System.Globalization;
 
-namespace HFM.Core.DataTypes
+namespace HFM.Core
 {
    public struct ProteinBenchmarkSlotIdentifier : IComparable<ProteinBenchmarkSlotIdentifier>, IEquatable<ProteinBenchmarkSlotIdentifier>
    {

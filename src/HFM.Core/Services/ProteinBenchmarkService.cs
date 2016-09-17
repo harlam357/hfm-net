@@ -133,7 +133,7 @@ namespace HFM.Core
       {
          get
          {
-            var slotIdentifiers = Data.Select(x => x.SlotIdentifier).Distinct().ToList();
+            var slotIdentifiers = Data.Select(x => x.ToSlotIdentifier()).Distinct().ToList();
             slotIdentifiers.Add(new ProteinBenchmarkSlotIdentifier());
             slotIdentifiers.Sort();
             return slotIdentifiers.AsReadOnly();
@@ -266,7 +266,7 @@ namespace HFM.Core
          _cacheLock.EnterWriteLock();
          try
          {
-            Data.RemoveAll(benchmark => benchmark.SlotIdentifier.Equals(slotIdentifier));
+            Data.RemoveAll(benchmark => benchmark.ToSlotIdentifier().Equals(slotIdentifier));
             Write();
          }
          finally
@@ -288,7 +288,7 @@ namespace HFM.Core
                               {
                                  return benchmark.ProjectID.Equals(projectId);
                               }
-                              if (benchmark.SlotIdentifier.Equals(slotIdentifier))
+                              if (benchmark.ToSlotIdentifier().Equals(slotIdentifier))
                               {
                                  return benchmark.ProjectID.Equals(projectId);
                               }
@@ -315,7 +315,7 @@ namespace HFM.Core
                                 {
                                    return true;
                                 }
-                                if (benchmark.SlotIdentifier.Equals(slotIdentifier))
+                                if (benchmark.ToSlotIdentifier().Equals(slotIdentifier))
                                 {
                                    return true;
                                 }
@@ -349,7 +349,7 @@ namespace HFM.Core
                }
                else
                {
-                  if (benchmark.SlotIdentifier.Equals(slotIdentifier))
+                  if (benchmark.ToSlotIdentifier().Equals(slotIdentifier))
                   {
                      projects.Add(benchmark.ProjectID);
                   }
@@ -378,7 +378,7 @@ namespace HFM.Core
                                        {
                                           return true;
                                        }
-                                       return benchmark.SlotIdentifier.Equals(slotIdentifier);
+                                       return benchmark.ToSlotIdentifier().Equals(slotIdentifier);
                                     });
 
             return list.AsReadOnly();
@@ -402,7 +402,7 @@ namespace HFM.Core
                                        {
                                           return benchmark.ProjectID.Equals(projectId);
                                        }
-                                       if (benchmark.SlotIdentifier.Equals(slotIdentifier))
+                                       if (benchmark.ToSlotIdentifier().Equals(slotIdentifier))
                                        {
                                           return benchmark.ProjectID.Equals(projectId);
                                        }

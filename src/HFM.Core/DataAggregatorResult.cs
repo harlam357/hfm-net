@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace HFM.Core.DataTypes
+using HFM.Core.DataTypes;
+
+namespace HFM.Core
 {
    internal sealed class DataAggregatorResult
    {

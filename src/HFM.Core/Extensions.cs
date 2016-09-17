@@ -500,5 +500,14 @@ namespace HFM.Core
             ProjectGen = unit.ProjectGen
          };
       }
+
+      #region ProteinBenchmark
+
+      internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)
+      {
+         return new ProteinBenchmarkSlotIdentifier(proteinBenchmark.OwningSlotName, proteinBenchmark.OwningClientPath);
+      }
+
+      #endregion
    }
 }

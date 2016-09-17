@@ -102,14 +102,6 @@ namespace HFM.Core.DataTypes
       [DataMember(Order = 5)]
       public List<ProteinFrameTime> FrameTimes { get; set; }
 
-      /// <summary>
-      /// Gets the benchmark slot identifier.
-      /// </summary>
-      public ProteinBenchmarkSlotIdentifier SlotIdentifier
-      {
-         get { return new ProteinBenchmarkSlotIdentifier(OwningSlotName, OwningClientPath); }
-      }
-      
       #endregion
 
       #region Constructor

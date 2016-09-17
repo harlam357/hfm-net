@@ -84,7 +84,7 @@
     <Compile Include="Application.Paths.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="ClientConfigurationExtensions.cs" />
-    <Compile Include="DataTypes\DataAggregatorResult.cs" />
+    <Compile Include="DataAggregatorResult.cs" />
     <Compile Include="DataTypes\PreferenceData.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
@@ -123,7 +123,7 @@
     <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="DataContainer.cs" />
-    <Compile Include="DataTypes\ProteinBenchmarkSlotIdentifier.cs" />
+    <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="DataTypes\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />
