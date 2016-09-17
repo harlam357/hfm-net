@@ -156,6 +156,11 @@ namespace HFM.Forms.Configuration
             Component.For<IAutoRun>()
                .ImplementedBy<AutoRun>());
 
+         // IExternalProcessStarter - Singleton
+         container.Register(
+            Component.For<IExternalProcessStarter>()
+               .ImplementedBy<ExternalProcessStarter>());
+
          // IUpdateLogic - Singleton
          container.Register(
             Component.For<IUpdateLogic>()

@@ -52,11 +52,6 @@ namespace HFM.Core.Configuration
                .ImplementedBy<LegacyDataRetriever>()
                   .LifeStyle.Transient);
 
-         // IExternalProcessStarter - Singleton
-         container.Register(
-            Component.For<IExternalProcessStarter>()
-               .ImplementedBy<ExternalProcessStarter>());
-
          // INetworkOps - Transient
          container.Register(
             Component.For<INetworkOps>()

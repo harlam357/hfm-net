@@ -136,7 +136,6 @@
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="ExternalProcessStarter.cs" />
     <Compile Include="Instrumentation.cs" />
     <Compile Include="Services\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />

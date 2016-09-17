@@ -282,6 +282,7 @@
     </Compile>
     <Compile Include="RetrievalModel.cs" />
     <Compile Include="Services\AutoRun.cs" />
+    <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="HistoryPresenter.cs" />
