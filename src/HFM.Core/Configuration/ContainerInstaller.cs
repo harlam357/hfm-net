@@ -63,11 +63,6 @@ namespace HFM.Core.Configuration
                .ImplementedBy<NetworkOps>()
                   .LifeStyle.Transient);
 
-         // IStatusLogic - Singleton
-         container.Register(
-            Component.For<IStatusLogic>()
-               .ImplementedBy<StatusLogic>());
-
          // IUnitInfoDatabase - Singleton
          container.Register(
             Component.For<IUnitInfoDatabase>()

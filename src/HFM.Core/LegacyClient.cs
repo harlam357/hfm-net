@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Legacy Client Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -40,8 +40,6 @@ namespace HFM.Core
    public sealed class LegacyClient : Client
    {
       #region Injection Properties
-
-      public IStatusLogic StatusLogic { get; set; }
 
       public IDataRetriever DataRetriever { get; set; }
 
@@ -348,7 +346,7 @@ namespace HFM.Core
       /// </summary>
       private void HandleReturnedStatus(SlotStatus returnedStatus, SlotModel slot)
       {
-         var statusData = new StatusData
+         var statusData = new LegacyClientStatusData
                           {
                              ClientName = Settings.Name,
                              SlotType = slot.UnitInfoModel.UnitInfoData.SlotType,
@@ -369,7 +367,7 @@ namespace HFM.Core
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
 
-         SlotStatus computedStatus = StatusLogic.HandleStatusData(statusData);
+         SlotStatus computedStatus = LegacyClientStatus.HandleStatusData(statusData, Logger);
 
          // If the returned status is EuePause and current status is not
          if (computedStatus.Equals(SlotStatus.EuePause) && statusData.CurrentStatus.Equals(SlotStatus.EuePause) == false)
