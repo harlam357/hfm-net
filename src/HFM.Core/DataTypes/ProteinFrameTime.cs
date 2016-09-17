@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Protein Frame Time Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,6 @@
  */
  
 using System;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes
@@ -29,7 +28,6 @@ namespace HFM.Core.DataTypes
       public TimeSpan Duration { get; set; }
 
       [DataMember(Order = 1)]
-      [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
       public long DurationTicks
       {
          get { return Duration.Ticks; }
