@@ -139,7 +139,7 @@
     <Compile Include="Instrumentation.cs" />
     <Compile Include="Services\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
-    <Compile Include="Paths.cs" />
+    <Compile Include="FileSystemPath.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
       <SubType>Code</SubType>
     </Compile>

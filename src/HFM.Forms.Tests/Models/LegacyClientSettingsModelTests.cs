@@ -383,13 +383,13 @@ namespace HFM.Forms.Tests.Models
          string existingPath = model.Path;
 
          model.Path = Path.Combine(existingPath, "FAHlog.txt");
-         Assert.IsTrue(Paths.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
 
          model.Path = Path.Combine(existingPath, "unitinfo.txt");
-         Assert.IsTrue(Paths.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
 
          model.Path = Path.Combine(existingPath, "queue.dat");
-         Assert.IsTrue(Paths.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
       }
 
       [Test]

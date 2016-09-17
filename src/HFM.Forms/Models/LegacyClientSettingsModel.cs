@@ -212,7 +212,7 @@ namespace HFM.Forms.Models
                if (LegacyClientSubType.Equals(LegacyClientSubType.Path) ||
                    LegacyClientSubType.Equals(LegacyClientSubType.Ftp))
                {
-                  path = Paths.AddTrailingSlash(path);
+                  path = FileSystemPath.AddTrailingSlash(path);
                }
                _path = path;
                OnPropertyChanged("Path");

@@ -254,7 +254,7 @@ namespace HFM.Core
       private static bool Equals(ProteinBenchmark benchmark, UnitInfo unifInfo)
       {
          return benchmark.OwningSlotName == unifInfo.OwningSlotName &&
-                Paths.Equal(benchmark.OwningClientPath, unifInfo.OwningClientPath) &&
+                FileSystemPath.Equal(benchmark.OwningClientPath, unifInfo.OwningClientPath) &&
                 benchmark.ProjectID == unifInfo.ProjectID;
       }
 
@@ -479,7 +479,7 @@ namespace HFM.Core
          try
          {
             return Data.FindAll(benchmark => benchmark.OwningClientName.Equals(clientName) &&
-                                             Paths.Equal(benchmark.OwningClientPath, clientPath)).AsReadOnly();
+                                             FileSystemPath.Equal(benchmark.OwningClientPath, clientPath)).AsReadOnly();
          }
          finally
          {

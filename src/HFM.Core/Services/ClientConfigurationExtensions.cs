@@ -33,7 +33,7 @@ namespace HFM.Core
             benchmarkService.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
          }
          // the path changed
-         if (!Paths.Equal(e.PreviousPath, e.NewPath))
+         if (!FileSystemPath.Equal(e.PreviousPath, e.NewPath))
          {
             // update the Paths in the benchmark collection
             benchmarkService.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);

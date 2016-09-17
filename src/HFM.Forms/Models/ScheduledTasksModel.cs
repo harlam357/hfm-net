@@ -95,11 +95,11 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebDeploymentType, WebGenType);
          if (WebGenType == WebDeploymentType.Ftp)
          {
-            prefs.Set(Preference.WebDeploymentRoot, Paths.AddUnixTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, FileSystemPath.AddUnixTrailingSlash(WebRoot));
          }
          else
          {
-            prefs.Set(Preference.WebDeploymentRoot, Paths.AddTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, FileSystemPath.AddTrailingSlash(WebRoot));
          }
          prefs.Set(Preference.WebGenServer, WebGenServer);
          prefs.Set(Preference.WebGenPort, WebGenPort);
@@ -261,7 +261,7 @@ namespace HFM.Forms.Models
          {
             if (WebRoot != value)
             {
-               _webRoot = value == null ? String.Empty : Paths.AddTrailingSlash(value.Trim());
+               _webRoot = value == null ? String.Empty : FileSystemPath.AddTrailingSlash(value.Trim());
                OnPropertyChanged("WebRoot");
             }
          }

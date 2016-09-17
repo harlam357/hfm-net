@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Client Settings Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -109,11 +109,11 @@ namespace HFM.Core.DataTypes
                switch (LegacyClientSubType)
                {
                   case LegacyClientSubType.Path:
-                     _path = Paths.AddTrailingSlash(_path);
+                     _path = FileSystemPath.AddTrailingSlash(_path);
                      break;
                   case LegacyClientSubType.Http:
                   case LegacyClientSubType.Ftp:
-                     _path = Paths.AddUnixTrailingSlash(_path);
+                     _path = FileSystemPath.AddUnixTrailingSlash(_path);
                      break;
                }
             }

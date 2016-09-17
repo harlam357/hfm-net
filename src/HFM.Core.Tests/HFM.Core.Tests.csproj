@@ -141,7 +141,7 @@
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="MarkupGeneratorTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
-    <Compile Include="PathsTests.cs" />
+    <Compile Include="FileSystemPathTests.cs" />
     <Compile Include="ApplicationTests.cs" />
     <Compile Include="Plugins\FileSerializerPluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
