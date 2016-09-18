@@ -97,7 +97,7 @@ namespace HFM.Core.Tests
          cancelTask.Wait();
       }
 
-      private static void ReportAction(ScheduledTaskChangedEventArges e)
+      private static void ReportAction(ScheduledTaskChangedEventArgs e)
       {
          string message = null;
          switch (e.Action)

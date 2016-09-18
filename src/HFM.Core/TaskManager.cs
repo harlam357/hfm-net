@@ -17,9 +17,9 @@ namespace HFM.Core
          _tasks = new Dictionary<string, ScheduledTask>();
       }
 
-      public event EventHandler<ScheduledTaskChangedEventArges> Changed;
+      public event EventHandler<ScheduledTaskChangedEventArgs> Changed;
 
-      private void OnTaskChanged(object s, ScheduledTaskChangedEventArges e)
+      private void OnTaskChanged(object s, ScheduledTaskChangedEventArgs e)
       {
          var handler = Changed;
          if (handler != null)
@@ -201,14 +201,14 @@ namespace HFM.Core
          _timer.Elapsed += (s, e) => Run();
       }
 
-      public event EventHandler<ScheduledTaskChangedEventArges> Changed;
+      public event EventHandler<ScheduledTaskChangedEventArgs> Changed;
 
       private void OnTaskChanged(ScheduledTaskChangedAction action, double? interval = null)
       {
          var handler = Changed;
          if (handler != null)
          {
-            handler(this, new ScheduledTaskChangedEventArges(_key, action, interval));
+            handler(this, new ScheduledTaskChangedEventArgs(_key, action, interval));
          }
       }
 
@@ -338,7 +338,7 @@ namespace HFM.Core
       }
    }
 
-   public sealed class ScheduledTaskChangedEventArges : EventArgs
+   public sealed class ScheduledTaskChangedEventArgs : EventArgs
    {
       private readonly string _key;
       private readonly ScheduledTaskChangedAction _action;
@@ -359,7 +359,7 @@ namespace HFM.Core
          get { return _interval; }
       }
 
-      public ScheduledTaskChangedEventArges(string key, ScheduledTaskChangedAction action, double? interval)
+      public ScheduledTaskChangedEventArgs(string key, ScheduledTaskChangedAction action, double? interval)
       {
          _key = key;
          _action = action;

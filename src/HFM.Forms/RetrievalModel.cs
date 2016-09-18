@@ -116,7 +116,7 @@ namespace HFM.Forms
          _taskManager.Add(WebTaskKey, WebGenerationAction, WebInterval);
       }
 
-      private void ReportAction(ScheduledTaskChangedEventArges e)
+      private void ReportAction(ScheduledTaskChangedEventArgs e)
       {
          switch (e.Action)
          {
