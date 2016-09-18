@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Forms Container Installer
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -24,11 +24,9 @@ using Castle.Windsor;
 
 using harlam357.Windows.Forms;
 
-using HFM.Core;
-
 namespace HFM.Forms.Configuration
 {
-   [CoverageExclude]
+   [Core.CoverageExclude]
    public class ContainerInstaller : IWindsorInstaller
    {
       #region IWindsorInstaller Members
@@ -167,10 +165,6 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<UpdateLogic>());
 
          #endregion
-
-         // RetrievalModel - Singleton
-         container.Register(
-            Component.For<RetrievalModel>());
       }
 
       #endregion

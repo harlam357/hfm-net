@@ -280,7 +280,6 @@
     <Compile Include="QueryDialog.Designer.cs">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="RetrievalModel.cs" />
     <Compile Include="Services\AutoRun.cs" />
     <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />

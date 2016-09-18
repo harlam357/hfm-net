@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Client Configuration Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -195,7 +195,7 @@ namespace HFM.Core
             _syncLock.EnterReadLock();
             try
             {
-               return _clientDictionary.Values.SelectMany(client => client.Slots).ToArray();
+               return _clientDictionary.Values.SelectMany(client => client.Slots).ToList();
             }
             finally
             {
@@ -358,7 +358,7 @@ namespace HFM.Core
          _syncLock.EnterReadLock();
          try
          {
-            return _clientDictionary.Values;
+            return _clientDictionary.Values.ToList();
          }
          finally
          {

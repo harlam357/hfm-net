@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Application.Paths.cs" />
     <Compile Include="Arguments.cs" />
+    <Compile Include="RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="DataTypes\PreferenceData.cs" />

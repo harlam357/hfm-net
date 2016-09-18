@@ -1,15 +1,13 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
-using HFM.Core;
-using HFM.Forms.Models;
-
-namespace HFM.Forms
+namespace HFM.Core
 {
    public class RetrievalModel
    {
@@ -28,17 +26,15 @@ namespace HFM.Forms
 
       private readonly IPreferenceSet _prefs;
       private readonly IClientConfiguration _clientConfiguration;
-      private readonly MainGridModel _mainGridModel;
       private readonly Lazy<IMarkupGenerator> _markupGenerator;
       private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
       private readonly TaskManager _taskManager;
 
-      public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration, MainGridModel mainGridModel,
+      public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration, 
                             Lazy<IMarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
       {
          _prefs = prefs;
          _clientConfiguration = clientConfiguration;
-         _mainGridModel = mainGridModel;
          _markupGenerator = markupGenerator;
          _websiteDeployer = websiteDeployer;
          _taskManager = new TaskManager();
@@ -166,7 +162,8 @@ namespace HFM.Forms
 
          ct.ThrowIfCancellationRequested();
 
-         var clients = _clientConfiguration.GetClients().ToList();
+         var clientsEnumerable = _clientConfiguration.GetClients();
+         var clients = clientsEnumerable as IList<IClient> ?? clientsEnumerable.ToList();
          if (mode == ProcessingMode.Serial)
          {
             // do the individual retrieves on a single thread
@@ -197,7 +194,8 @@ namespace HFM.Forms
       private void WebGenerationAction(CancellationToken ct)
       {
          ct.ThrowIfCancellationRequested();
-         var slots = _mainGridModel.SlotCollection;
+         var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
+         // TODO: Sort SlotModels
          _markupGenerator.Value.Generate(slots);
 
          ct.ThrowIfCancellationRequested();

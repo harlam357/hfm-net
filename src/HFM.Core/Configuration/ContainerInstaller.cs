@@ -100,6 +100,10 @@ namespace HFM.Core.Configuration
             Component.For<IClientSettingsManager>()
                .ImplementedBy<ClientSettingsManager>());
 
+         // RetrievalModel - Singleton
+         container.Register(
+            Component.For<RetrievalModel>());
+
          // IMarkupGenerator - Singleton
          container.Register(
             Component.For<IMarkupGenerator>()
