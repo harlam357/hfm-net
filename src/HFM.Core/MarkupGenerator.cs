@@ -112,7 +112,7 @@ namespace HFM.Core
          {
             string tempPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
             Directory.CreateDirectory(tempPath);
-            HtmlFilePaths = DoHtmlGeneration(tempPath, slots);
+            HtmlFilePaths = GenerateHtmlInternal(tempPath, slots);
          }
          catch (Exception ex)
          {
@@ -120,13 +120,13 @@ namespace HFM.Core
          }
       }
       
-      private IEnumerable<string> DoHtmlGeneration(string folderPath, ICollection<SlotModel> slots)
+      private IEnumerable<string> GenerateHtmlInternal(string folderPath, ICollection<SlotModel> slots)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(slots != null);
 
          // Generate XML Files
-         var xmlFiles = DoXmlGeneration(folderPath, slots);
+         var xmlFiles = GenerateXmlInternal(folderPath, slots);
             
          var fileList = new List<string>(slots.Count + 4);
          var cssFileName = _prefs.Get<string>(Preference.CssFile);
@@ -261,7 +261,7 @@ namespace HFM.Core
          {
             string tempPath = Path.Combine(Path.GetTempPath(), "hfm-" + Environment.UserName);
             Directory.CreateDirectory(tempPath);
-            XmlFilePaths = DoXmlGeneration(tempPath, slots);
+            XmlFilePaths = GenerateXmlInternal(tempPath, slots);
          }
          catch (Exception ex)
          {
@@ -269,7 +269,7 @@ namespace HFM.Core
          }
       }
 
-      private ICollection<string> DoXmlGeneration(string folderPath, ICollection<SlotModel> slots)
+      private ICollection<string> GenerateXmlInternal(string folderPath, ICollection<SlotModel> slots)
       {
          Debug.Assert(!String.IsNullOrEmpty(folderPath));
          Debug.Assert(slots != null);
