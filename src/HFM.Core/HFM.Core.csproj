@@ -155,7 +155,6 @@
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
     <Compile Include="TaskManager.cs" />
-    <Compile Include="ThreadLocalDisposable.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Validate.cs" />
