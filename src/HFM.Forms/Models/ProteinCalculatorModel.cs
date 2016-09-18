@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Protein Calculator Model
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using Castle.Core.Logging;
-
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Proteins;
@@ -31,16 +29,6 @@ namespace HFM.Forms.Models
 {
    public sealed class ProteinCalculatorModel : INotifyPropertyChanged
    {
-      private ILogger _logger = NullLogger.Instance;
-
-      public ILogger Logger
-      {
-         [CoverageExclude]
-         get { return _logger; }
-         [CoverageExclude]
-         set { _logger = value; }
-      }
-
       private readonly IPreferenceSet _prefs;
       private readonly IProteinService _proteinService;
 
@@ -52,7 +40,6 @@ namespace HFM.Forms.Models
 
       public void Calculate()
       {
-         //_logger.Debug("Selected Project: {0}", SelectedProject);
          Protein value = _proteinService.Get(SelectedProject);
          if (value == null)
          {

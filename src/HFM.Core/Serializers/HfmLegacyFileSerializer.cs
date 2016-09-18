@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Legacy Client Settings Serializer
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,12 +61,12 @@ namespace HFM.Core.Serializers
 
       #region Fields
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -134,7 +134,7 @@ namespace HFM.Core.Serializers
             bool external = Convert.ToBoolean(xmlData.SelectSingleNode(xmlNodeExternal).InnerText);
             if (external)
             {
-               _logger.Warn("Cannot migrate legacy external client settings. Skipping these client settings and continuing.");
+               Logger.Warn("Cannot migrate legacy external client settings. Skipping these client settings and continuing.");
                return null;
             }
          }
@@ -144,7 +144,7 @@ namespace HFM.Core.Serializers
          }
          catch (FormatException)
          {
-            _logger.Warn("Cannot load external instance flag. Skipping these client settings and continuing.");
+            Logger.Warn("Cannot load external instance flag. Skipping these client settings and continuing.");
             return null;
          }
 
@@ -154,7 +154,7 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load FAHlog.txt file name.");
+            Logger.Warn("Cannot load FAHlog.txt file name.");
             settings.FahLogFileName = Constants.FahLogFileName;
          }
 
@@ -164,7 +164,7 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load unitinfo.txt file name.");
+            Logger.Warn("Cannot load unitinfo.txt file name.");
             settings.UnitInfoFileName = Constants.UnitInfoFileName;
          }
 
@@ -174,7 +174,7 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load queue.dat file name.");
+            Logger.Warn("Cannot load queue.dat file name.");
             settings.QueueFileName = Constants.QueueFileName;
          }
 
@@ -184,7 +184,7 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load client server.");
+            Logger.Warn("Cannot load client server.");
             settings.Server = String.Empty;
          }
 
@@ -194,7 +194,7 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load server username.");
+            Logger.Warn("Cannot load server username.");
             settings.Username = String.Empty;
          }
 
@@ -212,19 +212,19 @@ namespace HFM.Core.Serializers
                }
                catch (FormatException)
                {
-                  _logger.Warn("Cannot decrypt password... loading clear value.");
+                  Logger.Warn("Cannot decrypt password... loading clear value.");
                   settings.Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
                }
                catch (CryptographicException)
                {
-                  _logger.Warn("Cannot decrypt password... loading clear value.");
+                  Logger.Warn("Cannot decrypt password... loading clear value.");
                   settings.Password = xmlData.SelectSingleNode(xmlPropPass).InnerText;
                }
             }
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load password.");
+            Logger.Warn("Cannot load password.");
          }
 
          try
@@ -233,12 +233,12 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load ftp mode, defaulting to passive.");
+            Logger.Warn("Cannot load ftp mode, defaulting to passive.");
             settings.FtpMode = FtpMode.Passive;
          }
          catch (FormatException)
          {
-            _logger.Warn("Cannot load ftp mode, defaulting to passive.");
+            Logger.Warn("Cannot load ftp mode, defaulting to passive.");
             settings.FtpMode = FtpMode.Passive;
          }
 
@@ -248,12 +248,12 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load client VM flag, defaulting to false.");
+            Logger.Warn("Cannot load client VM flag, defaulting to false.");
             settings.UtcOffsetIsZero = false;
          }
          catch (FormatException)
          {
-            _logger.Warn("Cannot load client VM flag, defaulting to false.");
+            Logger.Warn("Cannot load client VM flag, defaulting to false.");
             settings.UtcOffsetIsZero = false;
          }
 
@@ -263,12 +263,12 @@ namespace HFM.Core.Serializers
          }
          catch (NullReferenceException)
          {
-            _logger.Warn("Cannot load client time offset, defaulting to 0.");
+            Logger.Warn("Cannot load client time offset, defaulting to 0.");
             settings.ClientTimeOffset = 0;
          }
          catch (FormatException)
          {
-            _logger.Warn("Cannot load client time offset, defaulting to 0.");
+            Logger.Warn("Cannot load client time offset, defaulting to 0.");
             settings.ClientTimeOffset = 0;
          }
 

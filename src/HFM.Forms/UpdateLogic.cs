@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Update Logic Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -60,12 +60,12 @@ namespace HFM.Forms
       
       public string UpdateFilePath { get; private set; }
       
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -142,7 +142,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             if (_userInvoked)
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
@@ -166,7 +166,7 @@ namespace HFM.Forms
          }
          catch (FormatException ex)
          {
-            _logger.WarnFormat(ex, "{0}", ex.Message);
+            Logger.WarnFormat(ex, "{0}", ex.Message);
             return false;
          }
       }
@@ -187,7 +187,7 @@ namespace HFM.Forms
 
       private void ExceptionLogger(Exception ex)
       {
-         _logger.ErrorFormat(ex, "{0}", ex.Message);
+         Logger.ErrorFormat(ex, "{0}", ex.Message);
       }
 
       private void HandleUpdatePresenterResults(UpdatePresenter presenter)

@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Legacy Data Retriever Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,12 +42,12 @@ namespace HFM.Core
    {
       public ClientSettings Settings { get; private set; }
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -95,18 +95,18 @@ namespace HFM.Core
             string fahLogPath = Path.Combine(_prefs.CacheDirectory, Settings.CachedFahLogFileName());
             var cachedFahLogFileInfo = new FileInfo(fahLogPath);
 
-            _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (start)");
+            Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (start)");
 
             if (remoteFahLogFileInfo.Exists)
             {
                if (cachedFahLogFileInfo.Exists == false || remoteFahLogFileInfo.Length != cachedFahLogFileInfo.Length)
                {
                   remoteFahLogFileInfo.CopyTo(fahLogPath, true);
-                  _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (success)");
+                  Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (success)");
                }
                else
                {
-                  _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (file has not changed)");
+                  Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "FAHlog copy (file has not changed)");
                }
             }
             else
@@ -119,7 +119,7 @@ namespace HFM.Core
             var unitInfoFileInfo = new FileInfo(Path.Combine(Settings.Path, Settings.UnitInfoFileName));
             string unitInfoPath = Path.Combine(_prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
 
-            _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "unitinfo copy (start)");
+            Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "unitinfo copy (start)");
 
             if (unitInfoFileInfo.Exists)
             {
@@ -127,7 +127,7 @@ namespace HFM.Core
                if (unitInfoFileInfo.Length < Constants.UnitInfoMax)
                {
                   unitInfoFileInfo.CopyTo(unitInfoPath, true);
-                  _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "unitinfo copy (success)");
+                  Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "unitinfo copy (success)");
                }
                else
                {
@@ -136,7 +136,7 @@ namespace HFM.Core
                      File.Delete(unitInfoPath);
                   }
                   string message = String.Format(CultureInfo.CurrentCulture, "unitinfo copy (file is too big: {0} bytes).", unitInfoFileInfo.Length);
-                  _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+                  Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
                }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -147,19 +147,19 @@ namespace HFM.Core
                   File.Delete(unitInfoPath);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "The path {0} is inaccessible.", unitInfoFileInfo.FullName);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
 
             // Retrieve queue.dat (or equivalent)
             var queueFileInfo = new FileInfo(Path.Combine(Settings.Path, Settings.QueueFileName));
             string queuePath = Path.Combine(_prefs.CacheDirectory, Settings.CachedQueueFileName());
 
-            _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "queue copy (start)");
+            Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "queue copy (start)");
 
             if (queueFileInfo.Exists)
             {
                queueFileInfo.CopyTo(queuePath, true);
-               _logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "queue copy (success)");
+               Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, "queue copy (success)");
             }
             /*** Remove Requirement for Queue to be Present ***/
             else
@@ -169,12 +169,12 @@ namespace HFM.Core
                   File.Delete(queuePath);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "The path {0} is inaccessible.", queueFileInfo.FullName);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
          //}
          //finally
          //{
-         //   _logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //   Logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
          //}
       }
 
@@ -208,7 +208,7 @@ namespace HFM.Core
                   }
 
                   string message = String.Format(CultureInfo.CurrentCulture, "unitinfo download (file is too big: {0} bytes).", length);
-                  _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+                  Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
                }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -219,7 +219,7 @@ namespace HFM.Core
                   File.Delete(localFile);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "unitinfo download failed: {0}", ex.Message);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
 
             try
@@ -236,12 +236,12 @@ namespace HFM.Core
                   File.Delete(localFile);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "queue download failed: {0}", ex.Message);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
          //}
          //finally
          //{
-         //   _logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //   Logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
          //}
       }
 
@@ -276,7 +276,7 @@ namespace HFM.Core
                   }
 
                   string message = String.Format(CultureInfo.CurrentCulture, "unitinfo download (file is too big: {0} bytes).", length);
-                  _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+                  Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
                }
             }
             /*** Remove Requirement for UnitInfo to be Present ***/
@@ -287,7 +287,7 @@ namespace HFM.Core
                   File.Delete(localFilePath);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "unitinfo download failed: {0}.", ex.Message);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
 
             try
@@ -304,12 +304,12 @@ namespace HFM.Core
                   File.Delete(localFilePath);
                }
                string message = String.Format(CultureInfo.CurrentCulture, "queue download failed: {0}", ex.Message);
-               _logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
+               Logger.WarnFormat(Constants.ClientNameFormat, Settings.Name, message);
             }
          //}
          //finally
          //{
-         //   _logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
+         //   Logger.Info(Constants.ClientNameFormat, Settings.Name, Instrumentation.GetExecTime(start));
          //}
       }   
    }

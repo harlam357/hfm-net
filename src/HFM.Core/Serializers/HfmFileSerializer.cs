@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Client Settings Serializer
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,12 +38,12 @@ namespace HFM.Core.Serializers
    {
       #region Fields
 
-      private ILogger _logger = NullLogger.Instance;
+      private ILogger _logger;
 
       public ILogger Logger
       {
          [CoverageExclude]
-         get { return _logger; }
+         get { return _logger ?? (_logger = NullLogger.Instance); }
          [CoverageExclude]
          set { _logger = value; }
       }
@@ -106,7 +106,7 @@ namespace HFM.Core.Serializers
             }
             catch (CryptographicException)
             {
-               _logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to encrypt password... saving clear value.");
+               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to encrypt password... saving clear value.");
             }
          }
       }
@@ -124,11 +124,11 @@ namespace HFM.Core.Serializers
             }
             catch (FormatException)
             {
-               _logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
             }
             catch (CryptographicException)
             {
-               _logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
             }
          }
       }
