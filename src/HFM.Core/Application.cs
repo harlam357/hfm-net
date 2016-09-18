@@ -1,5 +1,5 @@
 /*
- * HFM.NET - Application Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -218,22 +218,5 @@ namespace HFM.Core
       }
 
       #endregion
-
-      //public static string AssemblyTitle
-      //{
-      //   get
-      //   {
-      //      object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-      //      if (attributes.Length > 0)
-      //      {
-      //         var titleAttribute = (AssemblyTitleAttribute)attributes[0];
-      //         if (String.IsNullOrEmpty(titleAttribute.Title) == false)
-      //         {
-      //            return titleAttribute.Title;
-      //         }
-      //      }
-      //      return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().CodeBase);
-      //   }
-      //}
    }
 }

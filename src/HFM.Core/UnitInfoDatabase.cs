@@ -424,14 +424,14 @@ namespace HFM.Core
 
       public IList<HistoryEntry> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
-         DateTime start = Instrumentation.ExecStart;
+         var sw = Stopwatch.StartNew();
          try
          {
             return FetchInternal(parameters, bonusCalculation);
          }
          finally
          {
-            _logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
+            _logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
          }
       }
 
@@ -460,14 +460,14 @@ namespace HFM.Core
 
       public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
       {
-         DateTime start = Instrumentation.ExecStart;
+         var sw = Stopwatch.StartNew();
          try
          {
             return PageInternal(page, itemsPerPage, parameters, bonusCalculation);
          }
          finally
          {
-            _logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, Instrumentation.GetExecTime(start));
+            _logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
          }
       }
 

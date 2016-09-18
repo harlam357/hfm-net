@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 
@@ -203,7 +204,7 @@ namespace HFM.Core
          // if Forced or Time For an Update
          if (forceRefresh || TimeForUpdate())
          {
-            DateTime start = Instrumentation.ExecStart;
+            var sw = Stopwatch.StartNew();
 
             try
             {
@@ -238,7 +239,7 @@ namespace HFM.Core
             }
             finally
             {
-               Logger.InfoFormat("EOC Stats Updated in {0}", Instrumentation.GetExecTime(start));
+               Logger.InfoFormat("EOC Stats Updated in {0}", sw.GetExecTime());
             }
          }
 

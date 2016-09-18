@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -534,5 +535,10 @@ namespace HFM.Core
       }
 
       #endregion
+
+      public static string GetExecTime(this Stopwatch sw)
+      {
+         return String.Format("{0:#,##0} ms", sw.ElapsedMilliseconds);
+      }
    }
 }

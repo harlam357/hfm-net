@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Website Deployer Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using Castle.Core.Logging;
 
 namespace HFM.Core
@@ -122,13 +122,9 @@ namespace HFM.Core
          }
       }
 
-      /// <summary>
-      /// Upload Web Site Files.
-      /// </summary>
       private void FtpHtmlUpload(string server, int port, string ftpPath, string username, string password, IEnumerable<string> htmlFilePaths, IEnumerable<SlotModel> slots)
       {
-         // Time FTP Upload Conversation - Issue 52
-         DateTime start = Instrumentation.ExecStart;
+         var sw = Stopwatch.StartNew();
 
          try
          {
@@ -171,18 +167,13 @@ namespace HFM.Core
          }
          finally
          {
-            // Time FTP Upload Conversation - Issue 52
-            Logger.InfoFormat("HTML upload finished in {0}", Instrumentation.GetExecTime(start));
+            Logger.InfoFormat("HTML upload finished in {0}", sw.GetExecTime());
          }
       }
 
-      /// <summary>
-      /// Upload XML Files.
-      /// </summary>
       private void FtpXmlUpload(string server, int port, string ftpPath, string username, string password, IEnumerable<string> xmlFilePaths)
       {
-         // Time FTP Upload Conversation - Issue 52
-         DateTime start = Instrumentation.ExecStart;
+         var sw = Stopwatch.StartNew();
 
          try
          {
@@ -197,8 +188,7 @@ namespace HFM.Core
          }
          finally
          {
-            // Time FTP Upload Conversation - Issue 52
-            Logger.InfoFormat("XML upload finished in {0}", Instrumentation.GetExecTime(start));
+            Logger.InfoFormat("XML upload finished in {0}", sw.GetExecTime());
          }
       }
    }

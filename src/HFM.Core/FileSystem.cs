@@ -7,14 +7,14 @@ using System.Threading;
 
 namespace HFM.Core
 {
-   public static class FileSystem
+   internal static class FileSystem
    {
-      public static FileStream TryFileOpen(string path, FileMode mode, FileAccess access, FileShare share)
+      internal static FileStream TryFileOpen(string path, FileMode mode, FileAccess access, FileShare share)
       {
          return TryFileOpenInternal(path, mode, access, share);
       }
 
-      public static FileStream TryFileOpen(string path, FileMode mode, FileAccess access, FileShare share, int sleep, int timeout)
+      internal static FileStream TryFileOpen(string path, FileMode mode, FileAccess access, FileShare share, int sleep, int timeout)
       {
          return ExecuteFuncWithTimeout(() => TryFileOpenInternal(path, mode, access, share), sleep, timeout);
       }

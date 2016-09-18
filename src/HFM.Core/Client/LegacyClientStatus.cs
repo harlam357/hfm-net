@@ -203,7 +203,7 @@ namespace HFM.Core
          if (logger.IsDebugEnabled)
          {
             var messages = new List<string>(10);
-            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.ClientName));
+            messages.Add(String.Format(Constants.ClientNameFormat, statusData.ClientName, "DetermineStatus"));
             messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.UnitRetrievalTime));
             messages.Add(String.Format(" - Time Of Last Frame (TimeSpan) : {0}", statusData.TimeOfLastFrame));
             messages.Add(String.Format(" - Offset (Minutes) ------------ : {0}", statusData.ClientTimeOffset));
@@ -256,7 +256,7 @@ namespace HFM.Core
          if (logger.IsDebugEnabled)
          {
             var messages = new List<string>(4);
-            messages.Add(String.Format("{0} ({1})", Instrumentation.FunctionName, statusData.ClientName));
+            messages.Add(String.Format(Constants.ClientNameFormat, statusData.ClientName, "DetermineAsyncStatus"));
             messages.Add(String.Format(" - Retrieval Time (Date) ------- : {0}", statusData.UnitRetrievalTime));
             messages.Add(String.Format(" - Time Of Last Unit Start ----- : {0}", statusData.TimeOfLastUnitStart));
             messages.Add(String.Format(" - Time Of Last Frame Progress - : {0}", statusData.TimeOfLastFrameProgress));

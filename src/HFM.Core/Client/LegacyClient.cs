@@ -118,7 +118,7 @@ namespace HFM.Core
       /// </summary>
       private void Process()
       {
-         DateTime start = Instrumentation.ExecStart;
+         var sw = Stopwatch.StartNew();
 
          // Set successful Last Retrieval Time
          LastRetrievalTime = DateTime.Now;
@@ -183,7 +183,7 @@ namespace HFM.Core
          string statusMessage = String.Format(CultureInfo.CurrentCulture, "Client Status: {0}", _slotModel.Status);
          Logger.InfoFormat(Constants.ClientNameFormat, _slotModel.Name, statusMessage);
 
-         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", Instrumentation.GetExecTime(start));
+         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
          Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
       }
 
