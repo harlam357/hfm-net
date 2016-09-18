@@ -611,12 +611,6 @@ namespace HFM.Forms
 
       public void FileNewClick()
       {
-         //if (_retrievalLogic.RetrievalInProgress)
-         //{
-         //   _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to create a new config file.", _view.Text);
-         //   return;
-         //}
-
          if (CheckForConfigurationChanges())
          {
             ClearConfiguration();
@@ -625,12 +619,6 @@ namespace HFM.Forms
 
       public void FileOpenClick()
       {
-         //if (_retrievalLogic.RetrievalInProgress)
-         //{
-         //   _messageBoxView.ShowInformation(_view, "Retrieval in progress... please wait to open another config file.", _view.Text);
-         //   return;
-         //}
-
          if (CheckForConfigurationChanges())
          {
             var openFileDialogView = _viewFactory.GetOpenFileDialogView();
@@ -755,7 +743,7 @@ namespace HFM.Forms
             {
                case DialogResult.Yes:
                   FileSaveClick();
-                  return !(_clientConfiguration.IsDirty);
+                  return !_clientConfiguration.IsDirty;
                case DialogResult.No:
                   return true;
                case DialogResult.Cancel:

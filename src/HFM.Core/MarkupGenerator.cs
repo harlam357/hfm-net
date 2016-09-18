@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Markup Generator Class
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ namespace HFM.Core
       /// <param name="slots">Slot Models</param>
       /// <exception cref="ArgumentNullException">Throws if slots is null.</exception>
       /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void Generate(IEnumerable<SlotModel> slots);
+      void Generate(ICollection<SlotModel> slots);
    }
 
    public sealed class MarkupGenerator : IMarkupGenerator
@@ -82,7 +82,7 @@ namespace HFM.Core
          _prefs = prefs;
       }
 
-      public void Generate(IEnumerable<SlotModel> slots)
+      public void Generate(ICollection<SlotModel> slots)
       {
          if (slots == null) throw new ArgumentNullException("slots");
 
@@ -106,7 +106,7 @@ namespace HFM.Core
       
       #region HTML Generation
 
-      public void GenerateHtml(IEnumerable<SlotModel> slots)
+      internal void GenerateHtml(ICollection<SlotModel> slots)
       {
          try
          {
@@ -120,7 +120,7 @@ namespace HFM.Core
          }
       }
       
-      private IEnumerable<string> DoHtmlGeneration(string folderPath, IEnumerable<SlotModel> slots)
+      private IEnumerable<string> DoHtmlGeneration(string folderPath, ICollection<SlotModel> slots)
       {
          Debug.Assert(String.IsNullOrEmpty(folderPath) == false);
          Debug.Assert(slots != null);
@@ -128,7 +128,7 @@ namespace HFM.Core
          // Generate XML Files
          var xmlFiles = DoXmlGeneration(folderPath, slots);
             
-         var fileList = new List<string>(slots.Count() + 4);
+         var fileList = new List<string>(slots.Count + 4);
          var cssFileName = _prefs.Get<string>(Preference.CssFile);
 
          // Load the Overview XML
@@ -255,7 +255,7 @@ namespace HFM.Core
       
       #region XML Generation
 
-      public void GenerateXml(IEnumerable<SlotModel> slots)
+      internal void GenerateXml(ICollection<SlotModel> slots)
       {
          try
          {
@@ -269,7 +269,7 @@ namespace HFM.Core
          }
       }
 
-      private IEnumerable<string> DoXmlGeneration(string folderPath, IEnumerable<SlotModel> slots)
+      private ICollection<string> DoXmlGeneration(string folderPath, ICollection<SlotModel> slots)
       {
          Debug.Assert(!String.IsNullOrEmpty(folderPath));
          Debug.Assert(slots != null);
@@ -295,7 +295,7 @@ namespace HFM.Core
          return fileList.AsReadOnly();
       }
 
-      private SlotSummary CreateSlotSummary(IEnumerable<SlotModel> slots, DateTime updateDateTime)
+      private SlotSummary CreateSlotSummary(ICollection<SlotModel> slots, DateTime updateDateTime)
       {
          var slotSummary = new SlotSummary();
          slotSummary.HfmVersion = Application.VersionWithRevision;

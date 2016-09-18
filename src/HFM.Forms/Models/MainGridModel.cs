@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Main Grid Data Model
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -194,7 +194,6 @@ namespace HFM.Forms.Models
          _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
       }
 
-      //private volatile bool _resetInProgress;
       private readonly object _resetBindingsLock = new object();
 
       private void ResetBindings()
@@ -233,7 +232,7 @@ namespace HFM.Forms.Models
             // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = false;
             // get slots from the dictionary
-            var slots = _clientConfiguration.Slots;
+            var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
             // refresh the underlying binding list
             _bindingSource.Clear();
             foreach (var slot in slots)

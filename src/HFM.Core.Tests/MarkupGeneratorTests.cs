@@ -48,7 +48,7 @@ namespace HFM.Core.Tests
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(true);
 
-         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
+         var slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.Generate(slots);
 
@@ -63,7 +63,7 @@ namespace HFM.Core.Tests
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(true);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
 
-         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
+         var slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.Generate(slots);
 
@@ -78,7 +78,7 @@ namespace HFM.Core.Tests
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyXml)).Return(false);
          prefs.Stub(x => x.Get<bool>(Preference.WebGenCopyHtml)).Return(false);
 
-         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
+         var slots = CreateSlotModelCollection();
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.Generate(slots);
 
@@ -99,7 +99,7 @@ namespace HFM.Core.Tests
       public void GenerateXmlTest()
       {
          IPreferenceSet prefs = CreatePreferenceSet();
-         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
+         var slots = CreateSlotModelCollection();
 
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateXml(slots);
@@ -115,7 +115,7 @@ namespace HFM.Core.Tests
       public void GenerateHtmlTest()
       {
          IPreferenceSet prefs = CreatePreferenceSet();
-         IEnumerable<SlotModel> slots = CreateSlotModelCollection();
+         var slots = CreateSlotModelCollection();
 
          var markupGenerator = new MarkupGenerator(prefs);
          markupGenerator.GenerateHtml(slots);
@@ -143,7 +143,7 @@ namespace HFM.Core.Tests
          return prefs;
       }
 
-      private static IEnumerable<SlotModel> CreateSlotModelCollection()
+      private static ICollection<SlotModel> CreateSlotModelCollection()
       {
          // setup stubs
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();

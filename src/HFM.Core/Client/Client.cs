@@ -60,11 +60,6 @@ namespace HFM.Core
       /// </summary>
       DateTime LastRetrievalTime { get; }
 
-      ///// <summary>
-      ///// Flag set to true when retrieval is in progress.
-      ///// </summary>
-      //bool RetrievalInProgress { get; }
-
       /// <summary>
       /// Abort retrieval processes.
       /// </summary>
@@ -131,14 +126,6 @@ namespace HFM.Core
       // should be init to DateTime.MinValue
       public DateTime LastRetrievalTime { get; protected set; }
 
-      //private volatile bool _retrievalInProgress;
-      //
-      //public bool RetrievalInProgress
-      //{
-      //   get { return _retrievalInProgress; }
-      //   private set { _retrievalInProgress = value; }
-      //}
-
       #region Constructor
 
       protected Client()
@@ -166,7 +153,6 @@ namespace HFM.Core
          }
          try
          {
-            //RetrievalInProgress = true;
             AbortFlag = false;
 
             // perform the client specific retrieval
@@ -174,7 +160,6 @@ namespace HFM.Core
          }
          finally
          {
-            //RetrievalInProgress = false;
             AbortFlag = false;
             Monitor.Exit(_retrieveLock);
          }
