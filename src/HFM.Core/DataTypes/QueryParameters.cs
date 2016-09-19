@@ -300,6 +300,11 @@ namespace HFM.Core.DataTypes
          }
       }
 
+      public override String ToString()
+      {
+         return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Name, Operator, Value);
+      }
+
       public static string[] GetColumnNames()
       {
          // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
