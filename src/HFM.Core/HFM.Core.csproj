@@ -155,6 +155,7 @@
     <Compile Include="QueryParametersCollection.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
+    <Compile Include="SlotModelSortComparer.cs" />
     <Compile Include="TaskManager.cs" />
     <Compile Include="UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />

@@ -19,6 +19,7 @@
  
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -29,6 +30,7 @@ using System.Xml.Xsl;
 
 using Castle.Core.Logging;
 
+using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
 
@@ -302,9 +304,26 @@ namespace HFM.Core
          slotSummary.NumberFormat = _prefs.GetPpdFormatString();
          slotSummary.UpdateDateTime = updateDateTime;
          slotSummary.SlotTotals = slots.GetSlotTotals();
-         //TODO: sort slots
-         slotSummary.Slots = slots.Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
+         slotSummary.Slots = SortSlots(slots).Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
          return slotSummary;
+      }
+
+      private ICollection<SlotModel> SortSlots(ICollection<SlotModel> slots)
+      {
+         string sortColumn = _prefs.Get<string>(Preference.FormSortColumn);
+         if (String.IsNullOrWhiteSpace(sortColumn))
+         {
+            return slots;
+         }
+         var property = TypeDescriptor.GetProperties(typeof(SlotModel)).OfType<PropertyDescriptor>().FirstOrDefault(x => x.Name == sortColumn);
+         if (property == null)
+         {
+            return slots;
+         }
+         var direction = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
+         var sortComparer = new SlotModelSortComparer { OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast) };
+         sortComparer.SetSortProperties(property, direction);
+         return slots.OrderBy(x => x, sortComparer).ToList();
       }
 
       private SlotDetail CreateSlotDetail(SlotModel slot, DateTime updateDateTime)

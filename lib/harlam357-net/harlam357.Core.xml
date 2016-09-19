@@ -122,6 +122,119 @@
             Gets a value that reports if the runner is currently processing.
             </summary>
         </member>
+        <member name="T:harlam357.Core.ComponentModel.SortMode">
+            <summary>
+            Specifies the sorting mode.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.ComponentModel.SortMode.None">
+            <summary>
+            No sorting.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.ComponentModel.SortMode.Simple">
+            <summary>
+            Simple, single property sorting.
+            </summary>
+        </member>
+        <member name="F:harlam357.Core.ComponentModel.SortMode.Advanced">
+            <summary>
+            Advanced, multi property sorting.
+            </summary>
+        </member>
+        <member name="T:harlam357.Core.ComponentModel.SortComparer`1">
+            <summary>
+            Represents a comparer for the SortableBindingList that supports comparing one or more properties of two objects.
+            </summary>
+            <typeparam name="T">The type of objects to compare.</typeparam>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.SetSortProperties(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            Sets the sorting properties.
+            </summary>
+            <param name="property">Property descriptor for a simple sort.</param>
+            <param name="direction">Sort direction for a simple sort.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.SetSortProperties(System.ComponentModel.ListSortDescriptionCollection)">
+            <summary>
+            Sets the sorting properties.
+            </summary>
+            <param name="sortDescriptions">Sort description collection for an advanced sort.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.Compare(`0,`0)">
+            <summary>
+            Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.CompareInternal(`0,`0)">
+            <summary>
+            Single property compare method.
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.RecursiveCompareInternal(`0,`0,System.Int32)">
+            <summary>
+            Multiple property compare method.
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+            <param name="index">Zero based index of SortDescriptions collection.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.CompareAscending(System.Object,System.Object)">
+            <summary>
+            Compare two property values in ascending order.
+            </summary>
+            <param name="xValue">The first property value to compare.</param>
+            <param name="yValue">The second property value to compare.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.CompareDescending(System.Object,System.Object)">
+            <summary>
+            Compare two property values in descending order.
+            </summary>
+            <param name="xValue">The first property value to compare.</param>
+            <param name="yValue">The second property value to compare.</param>
+        </member>
+        <member name="M:harlam357.Core.ComponentModel.SortComparer`1.GetPropertyValue(`0,System.ComponentModel.PropertyDescriptor)">
+            <summary>
+            Get the property value from the object.
+            </summary>
+            <param name="value">Object instance.</param>
+            <param name="propertyDescriptor">The property descriptor.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.SortMode">
+            <summary>
+            Gets a value indicating the active sorting mode.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.SupportsSorting">
+            <summary>
+            Gets a value indicating whether the comparer supports simple sorting.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.SupportsAdvancedSorting">
+            <summary>
+            Gets a value indicating whether the comparer supports advanced sorting.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.Property">
+            <summary>
+            Gets the property descriptor used in a simple sort.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.Direction">
+            <summary>
+            Gets the sort direction used in a simple sort.
+            </summary>
+        </member>
+        <member name="P:harlam357.Core.ComponentModel.SortComparer`1.SortDescriptions">
+            <summary>
+            Gets the sort description collection used in an advanced sort.
+            </summary>
+        </member>
         <member name="T:harlam357.Core.IO.StreamExtensions">
             <summary>
             Provides a set of static methods for operating on System.IO.Stream objects.

@@ -203,20 +203,23 @@ namespace HFM.Forms.Models
             Debug.WriteLine("Reset already in progress...");
             return;
          }
-         //_resetInProgress = true;
          try
          {
             ResetBindingsInternal();
          }
          finally
          {
-            //_resetInProgress = false;
             Monitor.Exit(_resetBindingsLock);
          }
       }
 
       private void ResetBindingsInternal()
       {
+         var control = _syncObject as Control;
+         if (control != null && control.IsDisposed)
+         {
+            return;
+         }
          if (_syncObject.InvokeRequired)
          {
             _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
