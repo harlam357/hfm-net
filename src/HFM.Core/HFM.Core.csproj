@@ -83,7 +83,7 @@
     </Compile>
     <Compile Include="Application.Paths.cs" />
     <Compile Include="Arguments.cs" />
-    <Compile Include="RetrievalModel.cs" />
+    <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="DataTypes\PreferenceData.cs" />
@@ -95,7 +95,7 @@
     <Compile Include="DataTypes\Markup\GridData.cs" />
     <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
-    <Compile Include="MarkupGenerator.cs" />
+    <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
     <Compile Include="PetaPoco\PetaPoco.cs" />
     <Compile Include="Services\PreferenceSetExtensions.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
@@ -156,11 +156,11 @@
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
     <Compile Include="SlotModelSortComparer.cs" />
-    <Compile Include="TaskManager.cs" />
-    <Compile Include="UnitInfoDatabase.cs" />
+    <Compile Include="ScheduledTasks\TaskManager.cs" />
+    <Compile Include="Services\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Validate.cs" />
-    <Compile Include="WebsiteDeployer.cs" />
+    <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="XmlStatsDataContainer.cs" />
   </ItemGroup>
   <ItemGroup>

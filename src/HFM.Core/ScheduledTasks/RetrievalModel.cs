@@ -195,7 +195,6 @@ namespace HFM.Core
       {
          ct.ThrowIfCancellationRequested();
          var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
-         // TODO: Sort SlotModels
          _markupGenerator.Value.Generate(slots);
 
          ct.ThrowIfCancellationRequested();
