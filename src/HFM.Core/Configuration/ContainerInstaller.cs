@@ -114,11 +114,11 @@ namespace HFM.Core.Configuration
             Component.For<IWebsiteDeployer>()
                .ImplementedBy<WebsiteDeployer>());
 
-         // IQueryParametersCollection - Singleton
+         // IQueryParametersContainer - Singleton
          container.Register(
-            Component.For<IQueryParametersCollection>()
-               .ImplementedBy<QueryParametersCollection>()
-                  .OnCreate((kernel, instance) => instance.Read()));
+            Component.For<IQueryParametersContainer>()
+               .ImplementedBy<QueryParametersContainer>()
+                  .OnCreate(instance => ((QueryParametersContainer)instance).Read()));
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(
@@ -131,13 +131,13 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IXmlStatsDataContainer>()
                .ImplementedBy<XmlStatsDataContainer>()
-                  .OnCreate((kernel, instance) => instance.Read()));
+                  .OnCreate(instance => ((XmlStatsDataContainer)instance).Read()));
 
          // IProteinService - Singleton
          container.Register(
             Component.For<IProteinService>()
                .ImplementedBy<ProteinService>()
-                  .OnCreate((kernel, instance) => ((ProteinService)instance).Read()));
+                  .OnCreate(instance => ((ProteinService)instance).Read()));
 
          // PluginLoader - Transient
          container.Register(
@@ -148,7 +148,7 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<IProjectSummaryDownloader>()
                .ImplementedBy<ProjectSummaryDownloader>()
-                  .OnCreate((kernel, instance) => ((ProjectSummaryDownloader)instance).FilePath = Path.GetTempFileName()));
+                  .OnCreate(instance => ((ProjectSummaryDownloader)instance).FilePath = Path.GetTempFileName()));
 
          #region Plugins
 

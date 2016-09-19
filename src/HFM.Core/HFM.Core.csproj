@@ -152,7 +152,7 @@
     <Compile Include="Plugins\FileSerializerPluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkService.cs" />
-    <Compile Include="QueryParametersCollection.cs" />
+    <Compile Include="QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
     <Compile Include="SlotModelSortComparer.cs" />

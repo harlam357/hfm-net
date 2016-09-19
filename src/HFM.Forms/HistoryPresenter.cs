@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Work Unit History Presenter
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ namespace HFM.Forms
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
-      private readonly IQueryParametersCollection _queryCollection;
+      private readonly IQueryParametersContainer _queryContainer;
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
@@ -62,7 +62,7 @@ namespace HFM.Forms
       public event EventHandler PresenterClosed;
       
       public HistoryPresenter(IPreferenceSet prefs, 
-                              IQueryParametersCollection queryCollection, 
+                              IQueryParametersContainer queryContainer, 
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
@@ -70,7 +70,7 @@ namespace HFM.Forms
                               HistoryPresenterModel model)
       {
          _prefs = prefs;
-         _queryCollection = queryCollection;
+         _queryContainer = queryContainer;
          _view = view;
          _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
@@ -81,7 +81,7 @@ namespace HFM.Forms
       public void Initialize()
       {
          _view.AttachPresenter(this);
-         _model.Load(_prefs, _queryCollection);
+         _model.Load(_prefs, _queryContainer);
          _view.DataBindModel(_model);
       }
 
@@ -123,7 +123,7 @@ namespace HFM.Forms
          }
 
          _model.FormColumns = _view.GetColumnSettings();
-         _model.Update(_prefs, _queryCollection);
+         _model.Update(_prefs, _queryContainer);
       }
 
       internal void ExportClick()

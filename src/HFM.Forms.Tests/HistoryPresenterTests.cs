@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Work Unit History Presenter Tests
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ namespace HFM.Forms.Tests
    public class HistoryPresenterTests
    {
       private IPreferenceSet _prefs;
-      private IQueryParametersCollection _queryCollection;
+      private IQueryParametersContainer _queryContainer;
       private IHistoryView _view;
       private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
@@ -55,7 +55,7 @@ namespace HFM.Forms.Tests
       public void Init()
       {
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         _queryCollection = MockRepository.GenerateStub<IQueryParametersCollection>();
+         _queryContainer = MockRepository.GenerateStub<IQueryParametersContainer>();
          _view = MockRepository.GenerateMock<IHistoryView>();
          _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
@@ -67,7 +67,7 @@ namespace HFM.Forms.Tests
 
       private HistoryPresenter CreatePresenter()
       {
-         return new HistoryPresenter(_prefs, _queryCollection, _view, _viewFactory, _messageBoxView, _database, _model);
+         return new HistoryPresenter(_prefs, _queryContainer, _view, _viewFactory, _messageBoxView, _database, _model);
       }
 
       [Test]

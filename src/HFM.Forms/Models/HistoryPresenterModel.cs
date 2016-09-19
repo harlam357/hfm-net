@@ -1,5 +1,5 @@
 ﻿/*
- * HFM.NET - Work Unit History - Binding Model
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -83,7 +82,7 @@ namespace HFM.Forms.Models
          _page = new PetaPoco.Page<HistoryEntry> { Items = new List<HistoryEntry>() };
       }
 
-      public void Load(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
+      public void Load(IPreferenceSet prefs, IQueryParametersContainer queryContainer)
       {
          _bonusCalculation = prefs.Get<BonusCalculationType>(Preference.HistoryBonusCalculation);
          _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
@@ -95,7 +94,7 @@ namespace HFM.Forms.Models
 
          _queryList.Clear();
          _queryList.Add(new QueryParameters());
-         foreach (var query in queryCollection)
+         foreach (var query in queryContainer.Get())
          {
             // don't load Select All twice
             if (query.Name != QueryParameters.SelectAll.Name)
@@ -107,7 +106,7 @@ namespace HFM.Forms.Models
          ResetBindings(true);
       }
 
-      public void Update(IPreferenceSet prefs, IQueryParametersCollection queryCollection)
+      public void Update(IPreferenceSet prefs, IQueryParametersContainer queryContainer)
       {
          prefs.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
          prefs.Set(Preference.ShowEntriesValue, _showEntriesValue);
@@ -118,16 +117,7 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.HistoryFormColumns, FormColumns);
          prefs.Save();
 
-         queryCollection.Clear();
-         foreach (var query in _queryList)
-         {
-            // don't save Select All to disk
-            if (query.Name != QueryParameters.SelectAll.Name)
-            {
-               queryCollection.Add(query);
-            }
-         }
-         queryCollection.Write();
+         queryContainer.Update(_queryList.Where(x => x.Name != QueryParameters.SelectAll.Name));
       }
 
       public void AddQuery(QueryParameters parameters)

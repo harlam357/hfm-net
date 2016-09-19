@@ -147,7 +147,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="ProteinServiceTests.cs" />
-    <Compile Include="QueryParametersCollectionTests.cs" />
+    <Compile Include="QueryParameterContainerTests.cs" />
     <Compile Include="LegacyClientStatusTests.cs" />
     <Compile Include="TaskManagerTests.cs" />
     <Compile Include="UnitInfoDatabaseReadOnlyTests.cs" />

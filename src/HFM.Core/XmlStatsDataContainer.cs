@@ -1,5 +1,5 @@
 /*
- * HFM.NET - XML Stats Data Container
+ * HFM.NET
  * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
@@ -50,14 +50,6 @@ namespace HFM.Core
       /// </summary>
       /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
       void GetEocXmlData(bool forceRefresh);
-
-      #region DataContainer<T>
-
-      void Read();
-
-      void Write();
-
-      #endregion
    }
 
    public sealed class XmlStatsDataContainer : DataContainer<XmlStatsData>, IXmlStatsDataContainer
