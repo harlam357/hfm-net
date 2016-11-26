@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3D747A-2751-4F7B-BE26-C6AD3FD5E030}"
 	ProjectSection(SolutionItems) = preProject
 		Deploy.bat = Deploy.bat
 		HFM.Build.proj = HFM.Build.proj
+		HFM.Build.ps1 = HFM.Build.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Proteins.Tests", "HFM.Proteins.Tests\HFM.Proteins.Tests.csproj", "{04744056-F956-4E20-B229-28E2FC154509}"

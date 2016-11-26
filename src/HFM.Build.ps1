@@ -27,6 +27,7 @@ Function Build-Solution
     param([string]$Target='Rebuild',
           [string]$Configuration='ScriptedRelease',
           [string]$Platform=$Global:Platform,
+          [string]$DelaySign='true',
           [string]$AssemblyOriginatorKeyFile="$PSScriptRoot\harlam357public.snk",
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
@@ -35,7 +36,7 @@ Function Build-Solution
     Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
 
     . $NuGetPath restore $SolutionFileName
-    . $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;AssemblyOriginatorKeyFile=$AssemblyOriginatorKeyFile`;NoWarn=1591
+    . $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;DelaySign=$DelaySign`;AssemblyOriginatorKeyFile=$AssemblyOriginatorKeyFile`;NoWarn=1591
 }
 
 Function Test-Build
@@ -196,5 +197,5 @@ Function Configure-Platform
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '1.0.0.0'
+Configure-Version -Version '0.9.8.0'
 Configure-Platform -Platform 'Any CPU'
