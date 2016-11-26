@@ -182,7 +182,14 @@ Function Configure-Artifacts
 
 Function Configure-Version
 {
-    param([string]$Version)
+    param([string]$Version = $Global:Version, [switch]$CommitCount)
+
+    if ($CommitCount -and $Version.EndsWith('.0'))
+    {
+        $Commits = $(git rev-list HEAD --count | Out-String).Trim()
+        $Version = $Version.TrimEnd('0')
+        $Version = "$Version$Commits"
+    }
 
     $Global:Version = $Version
     Write-Host "Version: $Version"
