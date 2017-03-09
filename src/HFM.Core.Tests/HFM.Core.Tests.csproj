@@ -134,6 +134,7 @@
     <Compile Include="ApplicationTests.cs" />
     <Compile Include="Plugins\FileSerializerPluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializers\HistoryEntryCsvSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="ProteinServiceTests.cs" />
     <Compile Include="QueryParameterContainerTests.cs" />

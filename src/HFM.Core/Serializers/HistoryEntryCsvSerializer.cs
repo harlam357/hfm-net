@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - History Entry CSV Serializer
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 using HFM.Core.DataTypes;
@@ -47,73 +48,78 @@ namespace HFM.Core.Serializers
       {
          using (var writer = new StreamWriter(fileName, false))
          {
-            string line = String.Join(",", new[]
+            Serialize(writer, value);
+         }
+      }
+
+      internal void Serialize(TextWriter writer, List<HistoryEntry> value)
+      {
+         string line = String.Join(",", new[]
+         {
+            "DatabaseID",
+            "ProjectID",
+            "ProjectRun",
+            "ProjectClone",
+            "ProjectGen",
+            "Name",
+            "Path",
+            "Username",
+            "Team",
+            "CoreVersion",
+            "FramesCompleted",
+            "FrameTime",
+            //"FrameTimeValue",
+            "Result",
+            //"ResultValue",
+            "DownloadDateTime",
+            "CompletionDateTime",
+            "WorkUnitName",
+            "KFactor",
+            "Core",
+            "Frames",
+            "Atoms",
+            //"BaseCredit",
+            "PreferredDays",
+            "MaximumDays",
+            "SlotType",
+            "PPD",
+            "Credit"
+         });
+         writer.WriteLine(line);
+         foreach (var h in value)
+         {
+            line = String.Join(",", new object[]
             {
-               "DatabaseID",
-               "ProjectID",
-               "ProjectRun",
-               "ProjectClone",
-               "ProjectGen",
-               "Name",
-               "Path",
-               "Username",
-               "Team",
-               "CoreVersion",
-               "FramesCompleted",
-               "FrameTime",
-               //"FrameTimeValue",
-               "Result",
-               //"ResultValue",
-               "DownloadDateTime",
-               "CompletionDateTime",
-               "WorkUnitName",
-               "KFactor",
-               "Core",
-               "Frames",
-               "Atoms",
-               //"BaseCredit",
-               "PreferredDays",
-               "MaximumDays",
-               "SlotType",
-               "PPD",
-               "Credit"
+               h.ID,
+               h.ProjectID,
+               h.ProjectRun,
+               h.ProjectClone,
+               h.ProjectGen,
+               h.Name,
+               h.Path,
+               h.Username,
+               h.Team,
+               h.CoreVersion.ToString(CultureInfo.InvariantCulture),
+               h.FramesCompleted,
+               h.FrameTime,
+               //h.FrameTimeValue,
+               h.Result,
+               //h.ResultValue,
+               h.DownloadDateTime.ToString(CultureInfo.InvariantCulture),
+               h.CompletionDateTime.ToString(CultureInfo.InvariantCulture),
+               h.WorkUnitName,
+               h.KFactor.ToString(CultureInfo.InvariantCulture),
+               h.Core,
+               h.Frames,
+               h.Atoms,
+               //h.BaseCredit,
+               h.PreferredDays.ToString(CultureInfo.InvariantCulture),
+               h.MaximumDays.ToString(CultureInfo.InvariantCulture),
+               h.SlotType,
+               h.PPD.ToString(CultureInfo.InvariantCulture),
+               h.Credit.ToString(CultureInfo.InvariantCulture)
             });
             writer.WriteLine(line);
-            foreach (var h in value)
-            {
-               line = String.Join(",", new object[]
-               {
-                  h.ID,
-                  h.ProjectID,
-                  h.ProjectRun,
-                  h.ProjectClone,
-                  h.ProjectGen,
-                  h.Name,
-                  h.Path,
-                  h.Username,
-                  h.Team,
-                  h.CoreVersion,
-                  h.FramesCompleted,
-                  h.FrameTime,
-                  //h.FrameTimeValue,
-                  h.Result,
-                  //h.ResultValue,
-                  h.DownloadDateTime,
-                  h.CompletionDateTime,
-                  h.WorkUnitName,
-                  h.KFactor,
-                  h.Core,
-                  h.Frames,
-                  h.Atoms,
-                  //h.BaseCredit,
-                  h.PreferredDays,
-                  h.MaximumDays,
-                  h.SlotType,
-                  h.PPD,
-                  h.Credit
-               });
-               writer.WriteLine(line);
-            }
          }
       }
    }
