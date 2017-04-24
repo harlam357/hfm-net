@@ -12,6 +12,6 @@
 [assembly: System.Reflection.AssemblyProduct("HFM.NET")]
 [assembly: System.Reflection.AssemblyCopyright("Copyright © Ryan Harlamert 2009-2016.")]
 [assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
-[assembly: System.Reflection.AssemblyFileVersion("0.9.7.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.9.8.0")]
 
 
