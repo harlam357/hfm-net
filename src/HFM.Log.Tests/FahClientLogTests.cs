@@ -7877,6 +7877,87 @@ namespace HFM.Log
          Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
 
+      [Test]
+      public void FahClientLog_Read_Client_v7_17_Test()
+      {
+         // Scan
+         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_17\\log.txt"), FahLogType.FahClient);
+
+         // Setup ClientRun 0
+         var expectedRun = new ClientRun(null, 0);
+
+         // Setup SlotRun 0
+         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedRun.SlotRuns.Add(0, expectedSlotRun);
+
+         // Setup SlotRun 0 - UnitRun 0
+         var expectedUnitRun = new UnitRun(expectedSlotRun, 0, 89, 366);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 47, 36);
+         expectedUnitRun.Data.CoreVersion = 0.11f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         var expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 13127;
+         expectedProjectInfo.ProjectRun = 53;
+         expectedProjectInfo.ProjectClone = 4;
+         expectedProjectInfo.ProjectGen = 59;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 1
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 292, 540);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 45, 15);
+         expectedUnitRun.Data.CoreVersion = 0.11f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 8673;
+         expectedProjectInfo.ProjectRun = 21;
+         expectedProjectInfo.ProjectClone = 2;
+         expectedProjectInfo.ProjectGen = 61;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 2
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 472, 662);
+         expectedUnitRun.Data = new UnitRunData();
+         expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 26, 21);
+         expectedUnitRun.Data.CoreVersion = 0.11f;
+         expectedUnitRun.Data.FramesObserved = 101;
+         expectedProjectInfo = new ProjectInfo();
+         expectedProjectInfo.ProjectID = 13801;
+         expectedProjectInfo.ProjectRun = 0;
+         expectedProjectInfo.ProjectClone = 2696;
+         expectedProjectInfo.ProjectGen = 19;
+         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedSlotRun.UnitRuns.Push(expectedUnitRun);
+
+         // Setup SlotRunData 0
+         expectedSlotRun.Data = new SlotRunData();
+         expectedSlotRun.Data.CompletedUnits = 3;
+         expectedSlotRun.Data.FailedUnits = 0;
+         expectedSlotRun.Data.TotalCompletedUnits = null;
+         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+
+         // Setup ClientRunData 0
+         expectedRun.Data = new ClientRunData();
+         expectedRun.Data.StartTime = new DateTime(2017, 3, 13, 5, 47, 4, DateTimeKind.Utc);
+         expectedRun.Data.Arguments = null;
+         expectedRun.Data.ClientVersion = null;
+         expectedRun.Data.FoldingID = null;
+         expectedRun.Data.Team = 0;
+         expectedRun.Data.UserID = null;
+         expectedRun.Data.MachineID = 0;
+
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
+         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+
+         Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
+      }
+
       // ReSharper restore InconsistentNaming
    }
 }

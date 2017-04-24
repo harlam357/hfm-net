@@ -292,6 +292,10 @@ namespace HFM.Log
             {
                return LogLineType.WorkUnitCoreVersion;
             }
+            if (logLine.Contains(":    Version"))
+            {
+               return LogLineType.WorkUnitCoreVersion;
+            }
             if (logLine.Contains(":Project:"))
             {
                return LogLineType.WorkUnitProject;

@@ -1,0 +1,709 @@
+*********************** Log Started 2017-03-13T05:47:04Z ***********************
+05:47:04:************************* Folding@home Client *************************
+05:47:04:        Website: http://folding.stanford.edu/
+05:47:04:      Copyright: (c) 2009-2016 Stanford University
+05:47:04:         Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+05:47:04:           Args: 
+05:47:04:         Config: C:\FAH-V7\config.xml
+05:47:04:******************************** Build ********************************
+05:47:04:        Version: 7.4.15
+05:47:04:           Date: Aug 17 2016
+05:47:04:           Time: 04:33:41
+05:47:04:     Repository: Git
+05:47:04:       Revision: 4f3e0e25571a9f691719f0c273739294bde517dd
+05:47:04:         Branch: master
+05:47:04:       Compiler: GNU 5.3.1 20160205
+05:47:04:        Options: -std=gnu++98 -I/mingw64/include -O3 -funroll-loops -ffast-math
+05:47:04:                 -mfpmath=sse -fno-unsafe-math-optimizations -msse2
+05:47:04:       Platform: linux2 4.6.0-1-amd64
+05:47:04:           Bits: 64
+05:47:04:           Mode: Release
+05:47:04:******************************* System ********************************
+05:47:04:            CPU: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+05:47:04:         CPU ID: GenuineIntel Family 6 Model 94 Stepping 3
+05:47:04:           CPUs: 8
+05:47:04:         Memory: 15.83GiB
+05:47:04:    Free Memory: 14.12GiB
+05:47:04:        Threads: WINDOWS_THREADS
+05:47:04:     OS Version: 6.2
+05:47:04:    Has Battery: true
+05:47:04:     On Battery: false
+05:47:04:     UTC Offset: -5
+05:47:04:            PID: 6072
+05:47:04:            CWD: C:\FAH-V7
+05:47:04:             OS: Windows 10 Home
+05:47:04:        OS Arch: AMD64
+05:47:04:           GPUs: 1
+05:47:04:          GPU 0: Bus:1 Slot:0 NVIDIA:4 GM107 [GeForce GTX 960M]
+05:47:04:  CUDA Device 0: Platform:0 Device:0 Bus:1 Slot:0 Compute:5.0 Driver:8.0
+05:47:04:OpenCL Device 0: Platform:0 Device:0 Bus:NA Slot:NA Compute:2.0 Driver:20.19
+05:47:04:OpenCL Device 1: Platform:0 Device:1 Bus:NA Slot:NA Compute:2.0 Driver:5.2
+05:47:04:OpenCL Device 2: Platform:1 Device:0 Bus:1 Slot:0 Compute:1.2 Driver:373.6
+05:47:04:  Win32 Service: false
+05:47:04:***********************************************************************
+05:47:04:<config>
+05:47:04:  <!-- Configuration -->
+05:47:04:  <config-rotate-max v='99'/>
+05:47:04:
+05:47:04:  <!-- HTTP Server -->
+05:47:04:  <allow v='127.0.0.1 192.168.0.0-192.168.0.255'/>
+05:47:04:
+05:47:04:  <!-- Network -->
+05:47:04:  <proxy v=':8080'/>
+05:47:04:
+05:47:04:  <!-- Remote Command Server -->
+05:47:04:  <password v='*******'/>
+05:47:04:
+05:47:04:  <!-- Slot Control -->
+05:47:04:  <pause-on-start v='true'/>
+05:47:04:  <power v='full'/>
+05:47:04:
+05:47:04:  <!-- User Information -->
+05:47:04:  <passkey v='********************************'/>
+05:47:04:  <team v='32'/>
+05:47:04:  <user v='HayesK'/>
+05:47:04:
+05:47:04:  <!-- Work Unit Control -->
+05:47:04:  <next-unit-percentage v='100'/>
+05:47:04:
+05:47:04:  <!-- Folding Slots -->
+05:47:04:  <slot id='1' type='GPU'>
+05:47:04:    <client-type v='beta'/>
+05:47:04:    <extra-core-args v='-gpu-vendor=nvidia -noclean'/>
+05:47:04:    <max-packet-size v='big'/>
+05:47:04:    <paused v='true'/>
+05:47:04:    <project-key v=''/>
+05:47:04:  </slot>
+05:47:04:  <slot id='0' type='CPU'>
+05:47:04:    <client-type v='beta'/>
+05:47:04:    <cpus v='6'/>
+05:47:04:    <max-packet-size v='big'/>
+05:47:04:    <paused v='true'/>
+05:47:04:    <project-key v=''/>
+05:47:04:  </slot>
+05:47:04:</config>
+05:47:04:Trying to access database...
+05:47:04:Successfully acquired database lock
+05:47:04:Enabled folding slot 01: PAUSED gpu:0:GM107 [GeForce GTX 960M] (by user)
+05:47:04:Enabled folding slot 00: PAUSED cpu:6 (by user)
+05:47:34:FS00:Unpaused
+05:47:34:WU00:FS00:Connecting to 171.67.108.45:8080
+05:47:34:WU00:FS00:Assigned to work server 171.67.108.101
+05:47:34:WU00:FS00:Requesting new work unit for slot 00: READY cpu:6 from 171.67.108.101
+05:47:34:WU00:FS00:Connecting to 171.67.108.101:8080
+05:47:36:WU00:FS00:Downloading 2.94MiB
+05:47:36:WU00:FS00:Download complete
+05:47:36:WU00:FS00:Received Unit: id:00 state:DOWNLOAD error:NO_ERROR project:13127 run:53 clone:4 gen:59 core:0xa7 unit:0x00000046ab436c655898c9477684f445
+05:47:36:WU00:FS00:Starting
+05:47:36:WU00:FS00:Running FahCore: C:\FAH-V7\FAHClient/FAHCoreWrapper.exe C:\FAH-V7\cores/fahwebx.stanford.edu/cores/Win32/AMD64/AVX/beta/Core_a7.fah/FahCore_a7.exe -dir 00 -suffix 01 -version 704 -lifeline 6072 -checkpoint 15 -np 6
+05:47:36:WU00:FS00:Started FahCore on PID 788
+05:47:37:WU00:FS00:Core PID:2312
+05:47:37:WU00:FS00:FahCore 0xa7 started
+05:47:37:WU00:FS00:0xa7:*********************** Log Started 2017-03-13T05:47:37Z ***********************
+05:47:37:WU00:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+05:47:37:WU00:FS00:0xa7:       Type: 0xa7
+05:47:37:WU00:FS00:0xa7:       Core: Gromacs
+05:47:37:WU00:FS00:0xa7:    Website: http://folding.stanford.edu/
+05:47:37:WU00:FS00:0xa7:  Copyright: (c) 2009-2016 Stanford University
+05:47:37:WU00:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+05:47:37:WU00:FS00:0xa7:       Args: -dir 00 -suffix 01 -version 704 -lifeline 788 -checkpoint 15 -np 6
+05:47:37:WU00:FS00:0xa7:     Config: <none>
+05:47:37:WU00:FS00:0xa7:************************************ Build *************************************
+05:47:37:WU00:FS00:0xa7:    Version: 0.0.11
+05:47:37:WU00:FS00:0xa7:       Date: Sep 21 2016
+05:47:37:WU00:FS00:0xa7:       Time: 01:43:48
+05:47:37:WU00:FS00:0xa7: Repository: Git
+05:47:37:WU00:FS00:0xa7:   Revision: 957bd90e68d95ddcf1594dc15ff6c64cc4555146
+05:47:37:WU00:FS00:0xa7:     Branch: master
+05:47:37:WU00:FS00:0xa7:   Compiler: GNU 4.2.1 Compatible Clang 3.9.0 (trunk 274080)
+05:47:37:WU00:FS00:0xa7:    Options: -std=gnu++98 -O3 -funroll-loops -ffast-math -mfpmath=sse
+05:47:37:WU00:FS00:0xa7:             -fno-unsafe-math-optimizations -msse2 -I/mingw64/include
+05:47:37:WU00:FS00:0xa7:             -Wno-inconsistent-dllimport -Wno-parentheses-equality
+05:47:37:WU00:FS00:0xa7:             -Wno-deprecated-register -Wno-unused-local-typedef
+05:47:37:WU00:FS00:0xa7:   Platform: linux2 4.6.0-1-amd64
+05:47:37:WU00:FS00:0xa7:       Bits: 64
+05:47:37:WU00:FS00:0xa7:       Mode: Release
+05:47:37:WU00:FS00:0xa7:       SIMD: avx_256
+05:47:37:WU00:FS00:0xa7:************************************ System ************************************
+05:47:37:WU00:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+05:47:37:WU00:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 94 Stepping 3
+05:47:37:WU00:FS00:0xa7:       CPUs: 8
+05:47:37:WU00:FS00:0xa7:     Memory: 15.83GiB
+05:47:37:WU00:FS00:0xa7:Free Memory: 13.97GiB
+05:47:37:WU00:FS00:0xa7:    Threads: WINDOWS_THREADS
+05:47:37:WU00:FS00:0xa7: OS Version: 6.2
+05:47:37:WU00:FS00:0xa7:Has Battery: true
+05:47:37:WU00:FS00:0xa7: On Battery: false
+05:47:37:WU00:FS00:0xa7: UTC Offset: -5
+05:47:37:WU00:FS00:0xa7:        PID: 2312
+05:47:37:WU00:FS00:0xa7:        CWD: C:\FAH-V7\work
+05:47:37:WU00:FS00:0xa7:         OS: Windows 10 Home
+05:47:37:WU00:FS00:0xa7:    OS Arch: AMD64
+05:47:37:WU00:FS00:0xa7:********************************************************************************
+05:47:37:WU00:FS00:0xa7:Project: 13127 (Run 53, Clone 4, Gen 59)
+05:47:37:WU00:FS00:0xa7:Unit: 0x00000046ab436c655898c9477684f445
+05:47:37:WU00:FS00:0xa7:Reading tar file core.xml
+05:47:37:WU00:FS00:0xa7:Reading tar file frame59.tpr
+05:47:37:WU00:FS00:0xa7:Digital signatures verified
+05:47:37:WU00:FS00:0xa7:Calling: mdrun -s frame59.tpr -o frame59.trr -cpt 15 -nt 6
+05:47:38:WU00:FS00:0xa7:Steps: first=11800000 total=200000
+05:47:40:WU00:FS00:0xa7:Completed 1 out of 200000 steps (0%)
+05:48:05:Removing old file 'configs/config-20170108-182508.xml'
+05:48:05:Saving configuration to config.xml
+05:48:05:<config>
+05:48:05:  <!-- Configuration -->
+05:48:05:  <config-rotate-max v='99'/>
+05:48:05:
+05:48:05:  <!-- HTTP Server -->
+05:48:05:  <allow v='127.0.0.1 192.168.0.0-192.168.0.255'/>
+05:48:05:
+05:48:05:  <!-- Network -->
+05:48:05:  <proxy v=':8080'/>
+05:48:05:
+05:48:05:  <!-- Remote Command Server -->
+05:48:05:  <password v='*******'/>
+05:48:05:
+05:48:05:  <!-- Slot Control -->
+05:48:05:  <pause-on-start v='true'/>
+05:48:05:  <power v='full'/>
+05:48:05:
+05:48:05:  <!-- User Information -->
+05:48:05:  <passkey v='********************************'/>
+05:48:05:  <team v='32'/>
+05:48:05:  <user v='HayesK'/>
+05:48:05:
+05:48:05:  <!-- Work Unit Control -->
+05:48:05:  <next-unit-percentage v='100'/>
+05:48:05:
+05:48:05:  <!-- Folding Slots -->
+05:48:05:  <slot id='1' type='GPU'>
+05:48:05:    <client-type v='beta'/>
+05:48:05:    <extra-core-args v='-gpu-vendor=nvidia -noclean'/>
+05:48:05:    <max-packet-size v='big'/>
+05:48:05:    <paused v='true'/>
+05:48:05:    <project-key v=''/>
+05:48:05:  </slot>
+05:48:05:  <slot id='0' type='CPU'>
+05:48:05:    <client-type v='beta'/>
+05:48:05:    <cpus v='6'/>
+05:48:05:    <max-packet-size v='big'/>
+05:48:05:    <project-key v=''/>
+05:48:05:  </slot>
+05:48:05:</config>
+05:49:25:WU00:FS00:0xa7:Completed 2000 out of 200000 steps (1%)
+05:51:09:WU00:FS00:0xa7:Completed 4000 out of 200000 steps (2%)
+05:52:54:WU00:FS00:0xa7:Completed 6000 out of 200000 steps (3%)
+05:54:37:WU00:FS00:0xa7:Completed 8000 out of 200000 steps (4%)
+05:56:20:WU00:FS00:0xa7:Completed 10000 out of 200000 steps (5%)
+05:58:04:WU00:FS00:0xa7:Completed 12000 out of 200000 steps (6%)
+05:59:47:WU00:FS00:0xa7:Completed 14000 out of 200000 steps (7%)
+06:01:31:WU00:FS00:0xa7:Completed 16000 out of 200000 steps (8%)
+06:03:16:WU00:FS00:0xa7:Completed 18000 out of 200000 steps (9%)
+06:05:02:WU00:FS00:0xa7:Completed 20000 out of 200000 steps (10%)
+06:06:47:WU00:FS00:0xa7:Completed 22000 out of 200000 steps (11%)
+06:08:30:WU00:FS00:0xa7:Completed 24000 out of 200000 steps (12%)
+06:10:14:WU00:FS00:0xa7:Completed 26000 out of 200000 steps (13%)
+06:11:58:WU00:FS00:0xa7:Completed 28000 out of 200000 steps (14%)
+06:13:44:WU00:FS00:0xa7:Completed 30000 out of 200000 steps (15%)
+06:15:29:WU00:FS00:0xa7:Completed 32000 out of 200000 steps (16%)
+06:17:16:WU00:FS00:0xa7:Completed 34000 out of 200000 steps (17%)
+06:19:03:WU00:FS00:0xa7:Completed 36000 out of 200000 steps (18%)
+06:20:49:WU00:FS00:0xa7:Completed 38000 out of 200000 steps (19%)
+06:22:33:WU00:FS00:0xa7:Completed 40000 out of 200000 steps (20%)
+06:24:22:WU00:FS00:0xa7:Completed 42000 out of 200000 steps (21%)
+06:26:11:WU00:FS00:0xa7:Completed 44000 out of 200000 steps (22%)
+06:28:00:WU00:FS00:0xa7:Completed 46000 out of 200000 steps (23%)
+06:29:51:WU00:FS00:0xa7:Completed 48000 out of 200000 steps (24%)
+06:31:36:WU00:FS00:0xa7:Completed 50000 out of 200000 steps (25%)
+06:33:29:WU00:FS00:0xa7:Completed 52000 out of 200000 steps (26%)
+06:35:16:WU00:FS00:0xa7:Completed 54000 out of 200000 steps (27%)
+06:37:02:WU00:FS00:0xa7:Completed 56000 out of 200000 steps (28%)
+06:38:49:WU00:FS00:0xa7:Completed 58000 out of 200000 steps (29%)
+06:40:35:WU00:FS00:0xa7:Completed 60000 out of 200000 steps (30%)
+06:42:21:WU00:FS00:0xa7:Completed 62000 out of 200000 steps (31%)
+06:44:13:WU00:FS00:0xa7:Completed 64000 out of 200000 steps (32%)
+06:46:07:WU00:FS00:0xa7:Completed 66000 out of 200000 steps (33%)
+06:47:53:WU00:FS00:0xa7:Completed 68000 out of 200000 steps (34%)
+06:49:40:WU00:FS00:0xa7:Completed 70000 out of 200000 steps (35%)
+06:51:28:WU00:FS00:0xa7:Completed 72000 out of 200000 steps (36%)
+06:53:15:WU00:FS00:0xa7:Completed 74000 out of 200000 steps (37%)
+06:55:06:WU00:FS00:0xa7:Completed 76000 out of 200000 steps (38%)
+06:57:00:WU00:FS00:0xa7:Completed 78000 out of 200000 steps (39%)
+06:58:46:WU00:FS00:0xa7:Completed 80000 out of 200000 steps (40%)
+07:00:34:WU00:FS00:0xa7:Completed 82000 out of 200000 steps (41%)
+07:02:21:WU00:FS00:0xa7:Completed 84000 out of 200000 steps (42%)
+07:04:08:WU00:FS00:0xa7:Completed 86000 out of 200000 steps (43%)
+07:05:55:WU00:FS00:0xa7:Completed 88000 out of 200000 steps (44%)
+07:07:42:WU00:FS00:0xa7:Completed 90000 out of 200000 steps (45%)
+07:09:29:WU00:FS00:0xa7:Completed 92000 out of 200000 steps (46%)
+07:11:15:WU00:FS00:0xa7:Completed 94000 out of 200000 steps (47%)
+07:13:02:WU00:FS00:0xa7:Completed 96000 out of 200000 steps (48%)
+07:14:49:WU00:FS00:0xa7:Completed 98000 out of 200000 steps (49%)
+07:16:36:WU00:FS00:0xa7:Completed 100000 out of 200000 steps (50%)
+07:18:23:WU00:FS00:0xa7:Completed 102000 out of 200000 steps (51%)
+07:20:10:WU00:FS00:0xa7:Completed 104000 out of 200000 steps (52%)
+07:21:57:WU00:FS00:0xa7:Completed 106000 out of 200000 steps (53%)
+07:23:43:WU00:FS00:0xa7:Completed 108000 out of 200000 steps (54%)
+07:25:31:WU00:FS00:0xa7:Completed 110000 out of 200000 steps (55%)
+07:27:17:WU00:FS00:0xa7:Completed 112000 out of 200000 steps (56%)
+07:29:04:WU00:FS00:0xa7:Completed 114000 out of 200000 steps (57%)
+07:30:50:WU00:FS00:0xa7:Completed 116000 out of 200000 steps (58%)
+07:32:36:WU00:FS00:0xa7:Completed 118000 out of 200000 steps (59%)
+07:34:23:WU00:FS00:0xa7:Completed 120000 out of 200000 steps (60%)
+07:36:09:WU00:FS00:0xa7:Completed 122000 out of 200000 steps (61%)
+07:37:55:WU00:FS00:0xa7:Completed 124000 out of 200000 steps (62%)
+07:39:41:WU00:FS00:0xa7:Completed 126000 out of 200000 steps (63%)
+07:41:27:WU00:FS00:0xa7:Completed 128000 out of 200000 steps (64%)
+07:43:13:WU00:FS00:0xa7:Completed 130000 out of 200000 steps (65%)
+07:45:00:WU00:FS00:0xa7:Completed 132000 out of 200000 steps (66%)
+07:46:46:WU00:FS00:0xa7:Completed 134000 out of 200000 steps (67%)
+07:48:32:WU00:FS00:0xa7:Completed 136000 out of 200000 steps (68%)
+07:50:18:WU00:FS00:0xa7:Completed 138000 out of 200000 steps (69%)
+07:52:04:WU00:FS00:0xa7:Completed 140000 out of 200000 steps (70%)
+07:53:50:WU00:FS00:0xa7:Completed 142000 out of 200000 steps (71%)
+07:55:36:WU00:FS00:0xa7:Completed 144000 out of 200000 steps (72%)
+07:57:22:WU00:FS00:0xa7:Completed 146000 out of 200000 steps (73%)
+07:59:08:WU00:FS00:0xa7:Completed 148000 out of 200000 steps (74%)
+08:00:54:WU00:FS00:0xa7:Completed 150000 out of 200000 steps (75%)
+08:02:40:WU00:FS00:0xa7:Completed 152000 out of 200000 steps (76%)
+08:04:27:WU00:FS00:0xa7:Completed 154000 out of 200000 steps (77%)
+08:06:13:WU00:FS00:0xa7:Completed 156000 out of 200000 steps (78%)
+08:07:59:WU00:FS00:0xa7:Completed 158000 out of 200000 steps (79%)
+08:09:46:WU00:FS00:0xa7:Completed 160000 out of 200000 steps (80%)
+08:11:32:WU00:FS00:0xa7:Completed 162000 out of 200000 steps (81%)
+08:13:18:WU00:FS00:0xa7:Completed 164000 out of 200000 steps (82%)
+08:15:04:WU00:FS00:0xa7:Completed 166000 out of 200000 steps (83%)
+08:16:50:WU00:FS00:0xa7:Completed 168000 out of 200000 steps (84%)
+08:18:36:WU00:FS00:0xa7:Completed 170000 out of 200000 steps (85%)
+08:20:22:WU00:FS00:0xa7:Completed 172000 out of 200000 steps (86%)
+08:22:09:WU00:FS00:0xa7:Completed 174000 out of 200000 steps (87%)
+08:23:55:WU00:FS00:0xa7:Completed 176000 out of 200000 steps (88%)
+08:25:41:WU00:FS00:0xa7:Completed 178000 out of 200000 steps (89%)
+08:27:27:WU00:FS00:0xa7:Completed 180000 out of 200000 steps (90%)
+08:29:13:WU00:FS00:0xa7:Completed 182000 out of 200000 steps (91%)
+08:31:00:WU00:FS00:0xa7:Completed 184000 out of 200000 steps (92%)
+08:32:46:WU00:FS00:0xa7:Completed 186000 out of 200000 steps (93%)
+08:34:32:WU00:FS00:0xa7:Completed 188000 out of 200000 steps (94%)
+08:36:18:WU00:FS00:0xa7:Completed 190000 out of 200000 steps (95%)
+08:38:04:WU00:FS00:0xa7:Completed 192000 out of 200000 steps (96%)
+08:39:51:WU00:FS00:0xa7:Completed 194000 out of 200000 steps (97%)
+08:41:37:WU00:FS00:0xa7:Completed 196000 out of 200000 steps (98%)
+08:43:23:WU00:FS00:0xa7:Completed 198000 out of 200000 steps (99%)
+08:45:09:WU00:FS00:0xa7:Completed 200000 out of 200000 steps (100%)
+08:45:10:WU01:FS00:Connecting to 171.67.108.45:8080
+08:45:10:WU01:FS00:Assigned to work server 155.247.166.219
+08:45:10:WU01:FS00:Requesting new work unit for slot 00: RUNNING cpu:6 from 155.247.166.219
+08:45:10:WU01:FS00:Connecting to 155.247.166.219:8080
+08:45:11:WU01:FS00:Downloading 375.27KiB
+08:45:11:WU01:FS00:Download complete
+08:45:11:WU01:FS00:Received Unit: id:01 state:DOWNLOAD error:NO_ERROR project:8673 run:21 clone:2 gen:61 core:0xa7 unit:0x000000420002894b58249da4175e9430
+08:45:12:WU00:FS00:0xa7:Saving result file ..\logfile_01.txt
+08:45:12:WU00:FS00:0xa7:Saving result file frame59.trr
+08:45:14:WU00:FS00:0xa7:Saving result file md.log
+08:45:14:WU00:FS00:0xa7:Saving result file science.log
+08:45:14:WU00:FS00:0xa7:Folding@home Core Shutdown: FINISHED_UNIT
+08:45:14:WU00:FS00:FahCore returned: FINISHED_UNIT (100 = 0x64)
+08:45:15:WU00:FS00:Sending unit results: id:00 state:SEND error:NO_ERROR project:13127 run:53 clone:4 gen:59 core:0xa7 unit:0x00000046ab436c655898c9477684f445
+08:45:15:WU00:FS00:Uploading 15.51MiB to 171.67.108.101
+08:45:15:WU00:FS00:Connecting to 171.67.108.101:8080
+08:45:15:WU01:FS00:Starting
+08:45:15:WU01:FS00:Running FahCore: C:\FAH-V7\FAHClient/FAHCoreWrapper.exe C:\FAH-V7\cores/fahwebx.stanford.edu/cores/Win32/AMD64/AVX/beta/Core_a7.fah/FahCore_a7.exe -dir 01 -suffix 01 -version 704 -lifeline 6072 -checkpoint 15 -np 6
+08:45:15:WU01:FS00:Started FahCore on PID 8308
+08:45:15:WU01:FS00:Core PID:8380
+08:45:15:WU01:FS00:FahCore 0xa7 started
+08:45:15:WU01:FS00:0xa7:*********************** Log Started 2017-03-13T08:45:15Z ***********************
+08:45:15:WU01:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+08:45:15:WU01:FS00:0xa7:       Type: 0xa7
+08:45:15:WU01:FS00:0xa7:       Core: Gromacs
+08:45:15:WU01:FS00:0xa7:    Website: http://folding.stanford.edu/
+08:45:15:WU01:FS00:0xa7:  Copyright: (c) 2009-2016 Stanford University
+08:45:15:WU01:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+08:45:15:WU01:FS00:0xa7:       Args: -dir 01 -suffix 01 -version 704 -lifeline 8308 -checkpoint 15 -np 6
+08:45:15:WU01:FS00:0xa7:     Config: <none>
+08:45:15:WU01:FS00:0xa7:************************************ Build *************************************
+08:45:15:WU01:FS00:0xa7:    Version: 0.0.11
+08:45:15:WU01:FS00:0xa7:       Date: Sep 21 2016
+08:45:15:WU01:FS00:0xa7:       Time: 01:43:48
+08:45:15:WU01:FS00:0xa7: Repository: Git
+08:45:15:WU01:FS00:0xa7:   Revision: 957bd90e68d95ddcf1594dc15ff6c64cc4555146
+08:45:15:WU01:FS00:0xa7:     Branch: master
+08:45:15:WU01:FS00:0xa7:   Compiler: GNU 4.2.1 Compatible Clang 3.9.0 (trunk 274080)
+08:45:15:WU01:FS00:0xa7:    Options: -std=gnu++98 -O3 -funroll-loops -ffast-math -mfpmath=sse
+08:45:15:WU01:FS00:0xa7:             -fno-unsafe-math-optimizations -msse2 -I/mingw64/include
+08:45:15:WU01:FS00:0xa7:             -Wno-inconsistent-dllimport -Wno-parentheses-equality
+08:45:15:WU01:FS00:0xa7:             -Wno-deprecated-register -Wno-unused-local-typedef
+08:45:15:WU01:FS00:0xa7:   Platform: linux2 4.6.0-1-amd64
+08:45:15:WU01:FS00:0xa7:       Bits: 64
+08:45:15:WU01:FS00:0xa7:       Mode: Release
+08:45:15:WU01:FS00:0xa7:       SIMD: avx_256
+08:45:15:WU01:FS00:0xa7:************************************ System ************************************
+08:45:15:WU01:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+08:45:15:WU01:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 94 Stepping 3
+08:45:15:WU01:FS00:0xa7:       CPUs: 8
+08:45:15:WU01:FS00:0xa7:     Memory: 15.83GiB
+08:45:15:WU01:FS00:0xa7:Free Memory: 13.06GiB
+08:45:15:WU01:FS00:0xa7:    Threads: WINDOWS_THREADS
+08:45:15:WU01:FS00:0xa7: OS Version: 6.2
+08:45:15:WU01:FS00:0xa7:Has Battery: true
+08:45:15:WU01:FS00:0xa7: On Battery: false
+08:45:15:WU01:FS00:0xa7: UTC Offset: -5
+08:45:15:WU01:FS00:0xa7:        PID: 8380
+08:45:15:WU01:FS00:0xa7:        CWD: C:\FAH-V7\work
+08:45:15:WU01:FS00:0xa7:         OS: Windows 10 Home
+08:45:15:WU01:FS00:0xa7:    OS Arch: AMD64
+08:45:15:WU01:FS00:0xa7:********************************************************************************
+08:45:15:WU01:FS00:0xa7:Project: 8673 (Run 21, Clone 2, Gen 61)
+08:45:15:WU01:FS00:0xa7:Unit: 0x000000420002894b58249da4175e9430
+08:45:15:WU01:FS00:0xa7:Reading tar file core.xml
+08:45:15:WU01:FS00:0xa7:Reading tar file frame61.tpr
+08:45:15:WU01:FS00:0xa7:Digital signatures verified
+08:45:15:WU01:FS00:0xa7:Calling: mdrun -s frame61.tpr -o frame61.trr -cpt 15 -nt 6
+08:45:15:WU01:FS00:0xa7:Steps: first=152500000 total=2500000
+08:45:16:WU01:FS00:0xa7:Completed 1 out of 2500000 steps (0%)
+08:45:21:WU00:FS00:Upload 56.41%
+08:45:28:WU00:FS00:Upload complete
+08:45:28:WU00:FS00:Server responded WORK_ACK (400)
+08:45:28:WU00:FS00:Final credit estimate, 5215.00 points
+08:45:28:WU00:FS00:Cleaning up
+08:46:53:WU01:FS00:0xa7:Completed 25000 out of 2500000 steps (1%)
+08:48:28:WU01:FS00:0xa7:Completed 50000 out of 2500000 steps (2%)
+08:50:06:WU01:FS00:0xa7:Completed 75000 out of 2500000 steps (3%)
+08:51:42:WU01:FS00:0xa7:Completed 100000 out of 2500000 steps (4%)
+08:53:19:WU01:FS00:0xa7:Completed 125000 out of 2500000 steps (5%)
+08:54:56:WU01:FS00:0xa7:Completed 150000 out of 2500000 steps (6%)
+08:56:33:WU01:FS00:0xa7:Completed 175000 out of 2500000 steps (7%)
+08:58:09:WU01:FS00:0xa7:Completed 200000 out of 2500000 steps (8%)
+08:59:45:WU01:FS00:0xa7:Completed 225000 out of 2500000 steps (9%)
+09:01:21:WU01:FS00:0xa7:Completed 250000 out of 2500000 steps (10%)
+09:02:57:WU01:FS00:0xa7:Completed 275000 out of 2500000 steps (11%)
+09:04:33:WU01:FS00:0xa7:Completed 300000 out of 2500000 steps (12%)
+09:06:08:WU01:FS00:0xa7:Completed 325000 out of 2500000 steps (13%)
+09:07:45:WU01:FS00:0xa7:Completed 350000 out of 2500000 steps (14%)
+09:09:21:WU01:FS00:0xa7:Completed 375000 out of 2500000 steps (15%)
+09:10:58:WU01:FS00:0xa7:Completed 400000 out of 2500000 steps (16%)
+09:12:36:WU01:FS00:0xa7:Completed 425000 out of 2500000 steps (17%)
+09:14:13:WU01:FS00:0xa7:Completed 450000 out of 2500000 steps (18%)
+09:15:49:WU01:FS00:0xa7:Completed 475000 out of 2500000 steps (19%)
+09:17:26:WU01:FS00:0xa7:Completed 500000 out of 2500000 steps (20%)
+09:19:03:WU01:FS00:0xa7:Completed 525000 out of 2500000 steps (21%)
+09:20:39:WU01:FS00:0xa7:Completed 550000 out of 2500000 steps (22%)
+09:22:15:WU01:FS00:0xa7:Completed 575000 out of 2500000 steps (23%)
+09:23:52:WU01:FS00:0xa7:Completed 600000 out of 2500000 steps (24%)
+09:25:29:WU01:FS00:0xa7:Completed 625000 out of 2500000 steps (25%)
+09:27:05:WU01:FS00:0xa7:Completed 650000 out of 2500000 steps (26%)
+09:28:41:WU01:FS00:0xa7:Completed 675000 out of 2500000 steps (27%)
+09:30:17:WU01:FS00:0xa7:Completed 700000 out of 2500000 steps (28%)
+09:31:53:WU01:FS00:0xa7:Completed 725000 out of 2500000 steps (29%)
+09:33:29:WU01:FS00:0xa7:Completed 750000 out of 2500000 steps (30%)
+09:35:05:WU01:FS00:0xa7:Completed 775000 out of 2500000 steps (31%)
+09:36:41:WU01:FS00:0xa7:Completed 800000 out of 2500000 steps (32%)
+09:38:18:WU01:FS00:0xa7:Completed 825000 out of 2500000 steps (33%)
+09:39:55:WU01:FS00:0xa7:Completed 850000 out of 2500000 steps (34%)
+09:41:31:WU01:FS00:0xa7:Completed 875000 out of 2500000 steps (35%)
+09:43:08:WU01:FS00:0xa7:Completed 900000 out of 2500000 steps (36%)
+09:44:45:WU01:FS00:0xa7:Completed 925000 out of 2500000 steps (37%)
+09:46:22:WU01:FS00:0xa7:Completed 950000 out of 2500000 steps (38%)
+09:47:59:WU01:FS00:0xa7:Completed 975000 out of 2500000 steps (39%)
+09:49:37:WU01:FS00:0xa7:Completed 1000000 out of 2500000 steps (40%)
+09:51:14:WU01:FS00:0xa7:Completed 1025000 out of 2500000 steps (41%)
+09:52:51:WU01:FS00:0xa7:Completed 1050000 out of 2500000 steps (42%)
+09:54:28:WU01:FS00:0xa7:Completed 1075000 out of 2500000 steps (43%)
+09:56:04:WU01:FS00:0xa7:Completed 1100000 out of 2500000 steps (44%)
+09:57:43:WU01:FS00:0xa7:Completed 1125000 out of 2500000 steps (45%)
+09:59:21:WU01:FS00:0xa7:Completed 1150000 out of 2500000 steps (46%)
+10:00:57:WU01:FS00:0xa7:Completed 1175000 out of 2500000 steps (47%)
+10:02:34:WU01:FS00:0xa7:Completed 1200000 out of 2500000 steps (48%)
+10:04:12:WU01:FS00:0xa7:Completed 1225000 out of 2500000 steps (49%)
+10:05:48:WU01:FS00:0xa7:Completed 1250000 out of 2500000 steps (50%)
+10:07:25:WU01:FS00:0xa7:Completed 1275000 out of 2500000 steps (51%)
+10:09:02:WU01:FS00:0xa7:Completed 1300000 out of 2500000 steps (52%)
+10:10:38:WU01:FS00:0xa7:Completed 1325000 out of 2500000 steps (53%)
+10:12:15:WU01:FS00:0xa7:Completed 1350000 out of 2500000 steps (54%)
+10:13:51:WU01:FS00:0xa7:Completed 1375000 out of 2500000 steps (55%)
+10:15:27:WU01:FS00:0xa7:Completed 1400000 out of 2500000 steps (56%)
+10:17:05:WU01:FS00:0xa7:Completed 1425000 out of 2500000 steps (57%)
+10:18:42:WU01:FS00:0xa7:Completed 1450000 out of 2500000 steps (58%)
+10:20:19:WU01:FS00:0xa7:Completed 1475000 out of 2500000 steps (59%)
+10:21:55:WU01:FS00:0xa7:Completed 1500000 out of 2500000 steps (60%)
+10:23:32:WU01:FS00:0xa7:Completed 1525000 out of 2500000 steps (61%)
+10:25:09:WU01:FS00:0xa7:Completed 1550000 out of 2500000 steps (62%)
+10:26:45:WU01:FS00:0xa7:Completed 1575000 out of 2500000 steps (63%)
+10:28:22:WU01:FS00:0xa7:Completed 1600000 out of 2500000 steps (64%)
+10:29:59:WU01:FS00:0xa7:Completed 1625000 out of 2500000 steps (65%)
+10:31:35:WU01:FS00:0xa7:Completed 1650000 out of 2500000 steps (66%)
+10:33:14:WU01:FS00:0xa7:Completed 1675000 out of 2500000 steps (67%)
+10:34:50:WU01:FS00:0xa7:Completed 1700000 out of 2500000 steps (68%)
+10:36:27:WU01:FS00:0xa7:Completed 1725000 out of 2500000 steps (69%)
+10:38:03:WU01:FS00:0xa7:Completed 1750000 out of 2500000 steps (70%)
+10:39:40:WU01:FS00:0xa7:Completed 1775000 out of 2500000 steps (71%)
+10:41:16:WU01:FS00:0xa7:Completed 1800000 out of 2500000 steps (72%)
+10:42:52:WU01:FS00:0xa7:Completed 1825000 out of 2500000 steps (73%)
+10:44:29:WU01:FS00:0xa7:Completed 1850000 out of 2500000 steps (74%)
+10:46:05:WU01:FS00:0xa7:Completed 1875000 out of 2500000 steps (75%)
+10:47:41:WU01:FS00:0xa7:Completed 1900000 out of 2500000 steps (76%)
+10:49:17:WU01:FS00:0xa7:Completed 1925000 out of 2500000 steps (77%)
+10:50:55:WU01:FS00:0xa7:Completed 1950000 out of 2500000 steps (78%)
+10:52:32:WU01:FS00:0xa7:Completed 1975000 out of 2500000 steps (79%)
+10:54:10:WU01:FS00:0xa7:Completed 2000000 out of 2500000 steps (80%)
+10:55:47:WU01:FS00:0xa7:Completed 2025000 out of 2500000 steps (81%)
+10:57:23:WU01:FS00:0xa7:Completed 2050000 out of 2500000 steps (82%)
+10:59:00:WU01:FS00:0xa7:Completed 2075000 out of 2500000 steps (83%)
+11:00:37:WU01:FS00:0xa7:Completed 2100000 out of 2500000 steps (84%)
+11:02:15:WU01:FS00:0xa7:Completed 2125000 out of 2500000 steps (85%)
+11:03:50:WU01:FS00:0xa7:Completed 2150000 out of 2500000 steps (86%)
+11:05:27:WU01:FS00:0xa7:Completed 2175000 out of 2500000 steps (87%)
+11:07:05:WU01:FS00:0xa7:Completed 2200000 out of 2500000 steps (88%)
+11:08:42:WU01:FS00:0xa7:Completed 2225000 out of 2500000 steps (89%)
+11:10:17:WU01:FS00:0xa7:Completed 2250000 out of 2500000 steps (90%)
+11:11:54:WU01:FS00:0xa7:Completed 2275000 out of 2500000 steps (91%)
+11:13:30:WU01:FS00:0xa7:Completed 2300000 out of 2500000 steps (92%)
+11:15:06:WU01:FS00:0xa7:Completed 2325000 out of 2500000 steps (93%)
+11:16:42:WU01:FS00:0xa7:Completed 2350000 out of 2500000 steps (94%)
+11:18:17:WU01:FS00:0xa7:Completed 2375000 out of 2500000 steps (95%)
+11:19:53:WU01:FS00:0xa7:Completed 2400000 out of 2500000 steps (96%)
+11:21:29:WU01:FS00:0xa7:Completed 2425000 out of 2500000 steps (97%)
+11:23:05:WU01:FS00:0xa7:Completed 2450000 out of 2500000 steps (98%)
+11:24:41:WU01:FS00:0xa7:Completed 2475000 out of 2500000 steps (99%)
+11:26:17:WU01:FS00:0xa7:Completed 2500000 out of 2500000 steps (100%)
+11:26:18:WU01:FS00:0xa7:Saving result file ..\logfile_01.txt
+11:26:18:WU01:FS00:0xa7:Saving result file frame61.trr
+11:26:18:WU01:FS00:0xa7:Saving result file md.log
+11:26:18:WU01:FS00:0xa7:Saving result file science.log
+11:26:18:WU01:FS00:0xa7:Saving result file traj_comp.xtc
+11:26:18:WU00:FS00:Connecting to 171.67.108.45:8080
+11:26:18:WU00:FS00:Assigned to work server 128.252.203.4
+11:26:18:WU00:FS00:Requesting new work unit for slot 00: RUNNING cpu:6 from 128.252.203.4
+11:26:18:WU00:FS00:Connecting to 128.252.203.4:8080
+11:26:18:WU01:FS00:0xa7:Folding@home Core Shutdown: FINISHED_UNIT
+11:26:19:WU00:FS00:Downloading 7.48MiB
+11:26:19:WU01:FS00:FahCore returned: FINISHED_UNIT (100 = 0x64)
+11:26:19:WU01:FS00:Sending unit results: id:01 state:SEND error:NO_ERROR project:8673 run:21 clone:2 gen:61 core:0xa7 unit:0x000000420002894b58249da4175e9430
+11:26:19:WU01:FS00:Uploading 4.26MiB to 155.247.166.219
+11:26:19:WU01:FS00:Connecting to 155.247.166.219:8080
+11:26:20:WU00:FS00:Download complete
+11:26:21:WU00:FS00:Received Unit: id:00 state:DOWNLOAD error:NO_ERROR project:13801 run:0 clone:2696 gen:19 core:0xa7 unit:0x0000001380fccb0458ab431f00f66b04
+11:26:21:WU00:FS00:Starting
+11:26:21:WU00:FS00:Running FahCore: C:\FAH-V7\FAHClient/FAHCoreWrapper.exe C:\FAH-V7\cores/fahwebx.stanford.edu/cores/Win32/AMD64/AVX/beta/Core_a7.fah/FahCore_a7.exe -dir 00 -suffix 01 -version 704 -lifeline 6072 -checkpoint 15 -np 6
+11:26:21:WU00:FS00:Started FahCore on PID 6116
+11:26:21:WU00:FS00:Core PID:8788
+11:26:21:WU00:FS00:FahCore 0xa7 started
+11:26:21:WU00:FS00:0xa7:*********************** Log Started 2017-03-13T11:26:21Z ***********************
+11:26:21:WU00:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+11:26:21:WU00:FS00:0xa7:       Type: 0xa7
+11:26:21:WU00:FS00:0xa7:       Core: Gromacs
+11:26:21:WU00:FS00:0xa7:    Website: http://folding.stanford.edu/
+11:26:21:WU00:FS00:0xa7:  Copyright: (c) 2009-2016 Stanford University
+11:26:21:WU00:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+11:26:21:WU00:FS00:0xa7:       Args: -dir 00 -suffix 01 -version 704 -lifeline 6116 -checkpoint 15 -np 6
+11:26:21:WU00:FS00:0xa7:     Config: <none>
+11:26:21:WU00:FS00:0xa7:************************************ Build *************************************
+11:26:21:WU00:FS00:0xa7:    Version: 0.0.11
+11:26:21:WU00:FS00:0xa7:       Date: Sep 21 2016
+11:26:21:WU00:FS00:0xa7:       Time: 01:43:48
+11:26:21:WU00:FS00:0xa7: Repository: Git
+11:26:21:WU00:FS00:0xa7:   Revision: 957bd90e68d95ddcf1594dc15ff6c64cc4555146
+11:26:21:WU00:FS00:0xa7:     Branch: master
+11:26:21:WU00:FS00:0xa7:   Compiler: GNU 4.2.1 Compatible Clang 3.9.0 (trunk 274080)
+11:26:21:WU00:FS00:0xa7:    Options: -std=gnu++98 -O3 -funroll-loops -ffast-math -mfpmath=sse
+11:26:21:WU00:FS00:0xa7:             -fno-unsafe-math-optimizations -msse2 -I/mingw64/include
+11:26:21:WU00:FS00:0xa7:             -Wno-inconsistent-dllimport -Wno-parentheses-equality
+11:26:21:WU00:FS00:0xa7:             -Wno-deprecated-register -Wno-unused-local-typedef
+11:26:21:WU00:FS00:0xa7:   Platform: linux2 4.6.0-1-amd64
+11:26:21:WU00:FS00:0xa7:       Bits: 64
+11:26:21:WU00:FS00:0xa7:       Mode: Release
+11:26:21:WU00:FS00:0xa7:       SIMD: avx_256
+11:26:21:WU00:FS00:0xa7:************************************ System ************************************
+11:26:21:WU00:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+11:26:21:WU00:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 94 Stepping 3
+11:26:21:WU00:FS00:0xa7:       CPUs: 8
+11:26:21:WU00:FS00:0xa7:     Memory: 15.83GiB
+11:26:21:WU00:FS00:0xa7:Free Memory: 13.02GiB
+11:26:21:WU00:FS00:0xa7:    Threads: WINDOWS_THREADS
+11:26:21:WU00:FS00:0xa7: OS Version: 6.2
+11:26:21:WU00:FS00:0xa7:Has Battery: true
+11:26:21:WU00:FS00:0xa7: On Battery: false
+11:26:21:WU00:FS00:0xa7: UTC Offset: -5
+11:26:21:WU00:FS00:0xa7:        PID: 8788
+11:26:21:WU00:FS00:0xa7:        CWD: C:\FAH-V7\work
+11:26:21:WU00:FS00:0xa7:         OS: Windows 10 Home
+11:26:21:WU00:FS00:0xa7:    OS Arch: AMD64
+11:26:21:WU00:FS00:0xa7:********************************************************************************
+11:26:21:WU00:FS00:0xa7:Project: 13801 (Run 0, Clone 2696, Gen 19)
+11:26:21:WU00:FS00:0xa7:Unit: 0x0000001380fccb0458ab431f00f66b04
+11:26:21:WU00:FS00:0xa7:Reading tar file core.xml
+11:26:21:WU00:FS00:0xa7:Reading tar file frame19.tpr
+11:26:21:WU00:FS00:0xa7:Digital signatures verified
+11:26:21:WU00:FS00:0xa7:Calling: mdrun -s frame19.tpr -o frame19.trr -x frame19.xtc -cpt 15 -nt 6
+11:26:21:WU00:FS00:0xa7:Steps: first=4750000 total=250000
+11:26:23:WU01:FS00:Upload complete
+11:26:23:WU01:FS00:Server responded WORK_ACK (400)
+11:26:23:WU01:FS00:Final credit estimate, 4111.00 points
+11:26:23:WU01:FS00:Cleaning up
+11:26:24:WU00:FS00:0xa7:Completed 1 out of 250000 steps (0%)
+11:31:10:WU00:FS00:0xa7:Completed 2500 out of 250000 steps (1%)
+11:35:54:WU00:FS00:0xa7:Completed 5000 out of 250000 steps (2%)
+11:40:38:WU00:FS00:0xa7:Completed 7500 out of 250000 steps (3%)
+11:45:23:WU00:FS00:0xa7:Completed 10000 out of 250000 steps (4%)
+******************************* Date: 2017-03-13 *******************************
+11:50:07:WU00:FS00:0xa7:Completed 12500 out of 250000 steps (5%)
+11:54:52:WU00:FS00:0xa7:Completed 15000 out of 250000 steps (6%)
+11:59:37:WU00:FS00:0xa7:Completed 17500 out of 250000 steps (7%)
+12:04:22:WU00:FS00:0xa7:Completed 20000 out of 250000 steps (8%)
+12:09:07:WU00:FS00:0xa7:Completed 22500 out of 250000 steps (9%)
+12:13:52:WU00:FS00:0xa7:Completed 25000 out of 250000 steps (10%)
+12:18:36:WU00:FS00:0xa7:Completed 27500 out of 250000 steps (11%)
+12:23:20:WU00:FS00:0xa7:Completed 30000 out of 250000 steps (12%)
+12:28:04:WU00:FS00:0xa7:Completed 32500 out of 250000 steps (13%)
+12:32:47:WU00:FS00:0xa7:Completed 35000 out of 250000 steps (14%)
+12:37:31:WU00:FS00:0xa7:Completed 37500 out of 250000 steps (15%)
+12:42:15:WU00:FS00:0xa7:Completed 40000 out of 250000 steps (16%)
+12:46:58:WU00:FS00:0xa7:Completed 42500 out of 250000 steps (17%)
+12:51:42:WU00:FS00:0xa7:Completed 45000 out of 250000 steps (18%)
+12:56:28:WU00:FS00:0xa7:Completed 47500 out of 250000 steps (19%)
+13:01:12:WU00:FS00:0xa7:Completed 50000 out of 250000 steps (20%)
+13:05:57:WU00:FS00:0xa7:Completed 52500 out of 250000 steps (21%)
+13:10:41:WU00:FS00:0xa7:Completed 55000 out of 250000 steps (22%)
+13:15:26:WU00:FS00:0xa7:Completed 57500 out of 250000 steps (23%)
+13:20:10:WU00:FS00:0xa7:Completed 60000 out of 250000 steps (24%)
+13:24:54:WU00:FS00:0xa7:Completed 62500 out of 250000 steps (25%)
+13:29:40:WU00:FS00:0xa7:Completed 65000 out of 250000 steps (26%)
+13:34:25:WU00:FS00:0xa7:Completed 67500 out of 250000 steps (27%)
+13:39:09:WU00:FS00:0xa7:Completed 70000 out of 250000 steps (28%)
+13:43:54:WU00:FS00:0xa7:Completed 72500 out of 250000 steps (29%)
+13:48:38:WU00:FS00:0xa7:Completed 75000 out of 250000 steps (30%)
+13:53:21:WU00:FS00:0xa7:Completed 77500 out of 250000 steps (31%)
+13:58:06:WU00:FS00:0xa7:Completed 80000 out of 250000 steps (32%)
+14:02:50:WU00:FS00:0xa7:Completed 82500 out of 250000 steps (33%)
+14:07:34:WU00:FS00:0xa7:Completed 85000 out of 250000 steps (34%)
+14:12:19:WU00:FS00:0xa7:Completed 87500 out of 250000 steps (35%)
+14:17:02:WU00:FS00:0xa7:Completed 90000 out of 250000 steps (36%)
+14:21:45:WU00:FS00:0xa7:Completed 92500 out of 250000 steps (37%)
+14:26:30:WU00:FS00:0xa7:Completed 95000 out of 250000 steps (38%)
+14:31:14:WU00:FS00:0xa7:Completed 97500 out of 250000 steps (39%)
+14:35:58:WU00:FS00:0xa7:Completed 100000 out of 250000 steps (40%)
+14:40:42:WU00:FS00:0xa7:Completed 102500 out of 250000 steps (41%)
+14:45:27:WU00:FS00:0xa7:Completed 105000 out of 250000 steps (42%)
+14:50:12:WU00:FS00:0xa7:Completed 107500 out of 250000 steps (43%)
+14:54:57:WU00:FS00:0xa7:Completed 110000 out of 250000 steps (44%)
+14:59:42:WU00:FS00:0xa7:Completed 112500 out of 250000 steps (45%)
+15:04:27:WU00:FS00:0xa7:Completed 115000 out of 250000 steps (46%)
+15:09:11:WU00:FS00:0xa7:Completed 117500 out of 250000 steps (47%)
+15:13:57:WU00:FS00:0xa7:Completed 120000 out of 250000 steps (48%)
+15:18:42:WU00:FS00:0xa7:Completed 122500 out of 250000 steps (49%)
+15:23:25:WU00:FS00:0xa7:Completed 125000 out of 250000 steps (50%)
+15:28:09:WU00:FS00:0xa7:Completed 127500 out of 250000 steps (51%)
+15:32:53:WU00:FS00:0xa7:Completed 130000 out of 250000 steps (52%)
+15:37:37:WU00:FS00:0xa7:Completed 132500 out of 250000 steps (53%)
+15:42:21:WU00:FS00:0xa7:Completed 135000 out of 250000 steps (54%)
+15:47:06:WU00:FS00:0xa7:Completed 137500 out of 250000 steps (55%)
+15:51:49:WU00:FS00:0xa7:Completed 140000 out of 250000 steps (56%)
+15:56:34:WU00:FS00:0xa7:Completed 142500 out of 250000 steps (57%)
+16:01:18:WU00:FS00:0xa7:Completed 145000 out of 250000 steps (58%)
+16:06:02:WU00:FS00:0xa7:Completed 147500 out of 250000 steps (59%)
+16:10:47:WU00:FS00:0xa7:Completed 150000 out of 250000 steps (60%)
+16:15:19:FS00:Finishing
+16:15:29:WU00:FS00:0xa7:Completed 152500 out of 250000 steps (61%)
+16:20:11:WU00:FS00:0xa7:Completed 155000 out of 250000 steps (62%)
+16:24:54:WU00:FS00:0xa7:Completed 157500 out of 250000 steps (63%)
+16:29:36:WU00:FS00:0xa7:Completed 160000 out of 250000 steps (64%)
+16:34:17:WU00:FS00:0xa7:Completed 162500 out of 250000 steps (65%)
+16:38:56:WU00:FS00:0xa7:Completed 165000 out of 250000 steps (66%)
+16:43:36:WU00:FS00:0xa7:Completed 167500 out of 250000 steps (67%)
+16:48:16:WU00:FS00:0xa7:Completed 170000 out of 250000 steps (68%)
+16:52:56:WU00:FS00:0xa7:Completed 172500 out of 250000 steps (69%)
+16:57:38:WU00:FS00:0xa7:Completed 175000 out of 250000 steps (70%)
+17:02:17:WU00:FS00:0xa7:Completed 177500 out of 250000 steps (71%)
+17:06:57:WU00:FS00:0xa7:Completed 180000 out of 250000 steps (72%)
+17:11:36:WU00:FS00:0xa7:Completed 182500 out of 250000 steps (73%)
+17:16:13:WU00:FS00:0xa7:Completed 185000 out of 250000 steps (74%)
+17:20:50:WU00:FS00:0xa7:Completed 187500 out of 250000 steps (75%)
+17:25:30:WU00:FS00:0xa7:Completed 190000 out of 250000 steps (76%)
+17:30:11:WU00:FS00:0xa7:Completed 192500 out of 250000 steps (77%)
+17:34:51:WU00:FS00:0xa7:Completed 195000 out of 250000 steps (78%)
+17:39:31:WU00:FS00:0xa7:Completed 197500 out of 250000 steps (79%)
+17:44:12:WU00:FS00:0xa7:Completed 200000 out of 250000 steps (80%)
+17:48:52:WU00:FS00:0xa7:Completed 202500 out of 250000 steps (81%)
+******************************* Date: 2017-03-13 *******************************
+17:53:32:WU00:FS00:0xa7:Completed 205000 out of 250000 steps (82%)
+17:58:13:WU00:FS00:0xa7:Completed 207500 out of 250000 steps (83%)
+18:02:53:WU00:FS00:0xa7:Completed 210000 out of 250000 steps (84%)
+18:07:32:WU00:FS00:0xa7:Completed 212500 out of 250000 steps (85%)
+18:12:13:WU00:FS00:0xa7:Completed 215000 out of 250000 steps (86%)
+18:16:52:WU00:FS00:0xa7:Completed 217500 out of 250000 steps (87%)
+18:21:29:WU00:FS00:0xa7:Completed 220000 out of 250000 steps (88%)
+18:26:06:WU00:FS00:0xa7:Completed 222500 out of 250000 steps (89%)
+18:30:44:WU00:FS00:0xa7:Completed 225000 out of 250000 steps (90%)
+18:35:20:WU00:FS00:0xa7:Completed 227500 out of 250000 steps (91%)
+18:39:55:WU00:FS00:0xa7:Completed 230000 out of 250000 steps (92%)
+18:44:31:WU00:FS00:0xa7:Completed 232500 out of 250000 steps (93%)
+18:49:07:WU00:FS00:0xa7:Completed 235000 out of 250000 steps (94%)
+18:53:43:WU00:FS00:0xa7:Completed 237500 out of 250000 steps (95%)
+18:58:19:WU00:FS00:0xa7:Completed 240000 out of 250000 steps (96%)
+19:02:56:WU00:FS00:0xa7:Completed 242500 out of 250000 steps (97%)
+19:07:32:WU00:FS00:0xa7:Completed 245000 out of 250000 steps (98%)
+19:12:10:WU00:FS00:0xa7:Completed 247500 out of 250000 steps (99%)
+19:16:47:WU00:FS00:0xa7:Completed 250000 out of 250000 steps (100%)
+19:16:50:WU00:FS00:0xa7:Saving result file ..\logfile_01.txt
+19:16:50:WU00:FS00:0xa7:Saving result file frame19.trr
+19:16:50:WU00:FS00:0xa7:Saving result file frame19.xtc
+19:16:51:WU00:FS00:0xa7:Saving result file md.log
+19:16:51:WU00:FS00:0xa7:Saving result file science.log
+19:16:51:WU00:FS00:0xa7:Folding@home Core Shutdown: FINISHED_UNIT
+19:16:51:WU00:FS00:FahCore returned: FINISHED_UNIT (100 = 0x64)
+19:16:51:WU00:FS00:Sending unit results: id:00 state:SEND error:NO_ERROR project:13801 run:0 clone:2696 gen:19 core:0xa7 unit:0x0000001380fccb0458ab431f00f66b04
+19:16:51:WU00:FS00:Uploading 12.44MiB to 128.252.203.4
+19:16:51:WU00:FS00:Connecting to 128.252.203.4:8080
+19:16:58:WU00:FS00:Upload 33.67%
+19:17:04:WU00:FS00:Upload 41.21%
+19:17:10:WU00:FS00:Upload 62.82%
+19:17:16:WU00:FS00:Upload 92.48%
+19:17:17:WU00:FS00:Upload complete
+19:17:17:WU00:FS00:Server responded WORK_ACK (400)
+19:17:17:WU00:FS00:Final credit estimate, 15132.00 points
+19:17:17:WU00:FS00:Cleaning up
+21:31:03:FS00:Paused
+21:31:33:Removing old file 'configs/config-20170109-060948.xml'
+21:31:33:Saving configuration to config.xml
+21:31:33:<config>
+21:31:33:  <!-- Configuration -->
+21:31:33:  <config-rotate-max v='99'/>
+21:31:33:
+21:31:33:  <!-- HTTP Server -->
+21:31:33:  <allow v='127.0.0.1 192.168.0.0-192.168.0.255'/>
+21:31:33:
+21:31:33:  <!-- Network -->
+21:31:33:  <proxy v=':8080'/>
+21:31:33:
+21:31:33:  <!-- Remote Command Server -->
+21:31:33:  <password v='*******'/>
+21:31:33:
+21:31:33:  <!-- Slot Control -->
+21:31:33:  <pause-on-start v='true'/>
+21:31:33:  <power v='full'/>
+21:31:33:
+21:31:33:  <!-- User Information -->
+21:31:33:  <passkey v='********************************'/>
+21:31:33:  <team v='32'/>
+21:31:33:  <user v='HayesK'/>
+21:31:33:
+21:31:33:  <!-- Work Unit Control -->
+21:31:33:  <next-unit-percentage v='100'/>
+21:31:33:
+21:31:33:  <!-- Folding Slots -->
+21:31:33:  <slot id='1' type='GPU'>
+21:31:33:    <client-type v='beta'/>
+21:31:33:    <extra-core-args v='-gpu-vendor=nvidia -noclean'/>
+21:31:33:    <max-packet-size v='big'/>
+21:31:33:    <paused v='true'/>
+21:31:33:    <project-key v=''/>
+21:31:33:  </slot>
+21:31:33:  <slot id='0' type='CPU'>
+21:31:33:    <client-type v='beta'/>
+21:31:33:    <cpus v='6'/>
+21:31:33:    <max-packet-size v='big'/>
+21:31:33:    <paused v='true'/>
+21:31:33:    <project-key v=''/>
+21:31:33:  </slot>
+21:31:33:</config>
+******************************* Date: 2017-03-14 *******************************
+03:45:58:ERROR:Receive error: 10054: An existing connection was forcibly closed by the remote host.

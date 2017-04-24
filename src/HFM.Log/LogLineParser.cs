@@ -446,7 +446,7 @@ namespace HFM.Log
                {
                   return value;
                }
-               // Try to parse GPU Core Versions in the 0.#.## format
+               // Try to parse Core Versions in the 0.#.## format
                if (coreVer.StartsWith("0."))
                {
                   if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
