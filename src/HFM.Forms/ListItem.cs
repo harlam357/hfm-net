@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,12 +28,24 @@ namespace HFM.Forms
          if (display == null) throw new ArgumentNullException("display");
          if (value == null) throw new ArgumentNullException("value");
 
-         DisplayMember = display;
-         ValueMember = value;
+         _displayMember = display;
+         _valueMember = value;
       }
 
-      public string DisplayMember { get; set; }
+      private string _displayMember;
 
-      public object ValueMember { get; set; }
+      public string DisplayMember
+      {
+         get { return _displayMember; }
+         set { _displayMember = value; }
+      }
+
+      private object _valueMember;
+      
+      public object ValueMember
+      {
+         get { return _valueMember; }
+         set { _valueMember = value; }
+      }
    }
 }
