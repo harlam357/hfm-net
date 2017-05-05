@@ -57,9 +57,9 @@ namespace HFM.Forms
          this.ResultsTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.PpdCalculationLabel = new System.Windows.Forms.Label();
          this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
-         this.PpdCalculationStandardRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.PpdCalculationBonusFrameTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.PpdCalculationBonusDownloadTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.PpdCalculationStandardRadioButton = new System.Windows.Forms.RadioButton();
+         this.PpdCalculationBonusFrameTimeRadioButton = new System.Windows.Forms.RadioButton();
+         this.PpdCalculationBonusDownloadTimeRadioButton = new System.Windows.Forms.RadioButton();
          this.DataViewGroupBox = new System.Windows.Forms.GroupBox();
          this.DataViewNewButton = new System.Windows.Forms.Button();
          this.DataViewComboBox = new System.Windows.Forms.ComboBox();
@@ -552,9 +552,9 @@ namespace HFM.Forms
       private TextBoxWrapper ResultsTextBox;
       private System.Windows.Forms.Label PpdCalculationLabel;
       private harlam357.Windows.Forms.RadioPanel rdoPanelProduction;
-      private RadioButtonWrapper PpdCalculationStandardRadioButton;
-      private RadioButtonWrapper PpdCalculationBonusFrameTimeRadioButton;
-      private RadioButtonWrapper PpdCalculationBonusDownloadTimeRadioButton;
+      private System.Windows.Forms.RadioButton PpdCalculationStandardRadioButton;
+      private System.Windows.Forms.RadioButton PpdCalculationBonusFrameTimeRadioButton;
+      private System.Windows.Forms.RadioButton PpdCalculationBonusDownloadTimeRadioButton;
       private System.Windows.Forms.GroupBox DataViewGroupBox;
       private System.Windows.Forms.Button DataViewNewButton;
       private System.Windows.Forms.ComboBox DataViewComboBox;

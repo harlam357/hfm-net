@@ -65,8 +65,8 @@ namespace HFM.Forms
          this.grpClientLayout = new System.Windows.Forms.GroupBox();
          this.pnlClientLayout = new harlam357.Windows.Forms.RadioPanel();
          this.udClientsPerGraph = new System.Windows.Forms.NumericUpDown();
-         this.rdoClientsPerGraph = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.rdoSingleGraph = new HFM.Forms.Controls.RadioButtonWrapper();
+         this.rdoClientsPerGraph = new System.Windows.Forms.RadioButton();
+         this.rdoSingleGraph = new System.Windows.Forms.RadioButton();
          this.grpColors = new System.Windows.Forms.GroupBox();
          this.lstColors = new System.Windows.Forms.ListBox();
          this.picColorPreview = new System.Windows.Forms.PictureBox();
@@ -813,8 +813,8 @@ namespace HFM.Forms
       private System.Windows.Forms.GroupBox grpColors;
       private System.Windows.Forms.GroupBox grpClientLayout;
       private harlam357.Windows.Forms.RadioPanel pnlClientLayout;
-      private RadioButtonWrapper rdoClientsPerGraph;
-      private RadioButtonWrapper rdoSingleGraph;
+      private System.Windows.Forms.RadioButton rdoClientsPerGraph;
+      private System.Windows.Forms.RadioButton rdoSingleGraph;
       private System.Windows.Forms.NumericUpDown udClientsPerGraph;
 
 
