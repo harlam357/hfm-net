@@ -202,12 +202,6 @@
     <Compile Include="Controls\QueueControl.Designer.cs">
       <DependentUpon>QueueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TextBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\TextBoxWrapper.Designer.cs">
-      <DependentUpon>TextBoxWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="PreferencesDialog.cs">
       <SubType>Form</SubType>
     </Compile>

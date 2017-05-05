@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using Castle.Core.Logging;
@@ -78,7 +79,7 @@ namespace HFM.Forms
       string ShowStanfordUserPage();
    }
 
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public sealed class ExternalProcessStarter : IExternalProcessStarter
    {
       private readonly IPreferenceSet _prefs;

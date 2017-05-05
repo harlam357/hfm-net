@@ -54,7 +54,7 @@ namespace HFM.Forms
          this.dataGridView1 = new HFM.Forms.Controls.HistoryGridViewWrapper();
          this.ResultsLabel = new System.Windows.Forms.Label();
          this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
-         this.ResultsTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.ResultsTextBox = new System.Windows.Forms.TextBox();
          this.PpdCalculationLabel = new System.Windows.Forms.Label();
          this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
          this.PpdCalculationStandardRadioButton = new System.Windows.Forms.RadioButton();
@@ -69,7 +69,7 @@ namespace HFM.Forms
          this.LastPageButton = new System.Windows.Forms.Button();
          this.FirstPageButton = new System.Windows.Forms.Button();
          this.PageNumberLabel = new System.Windows.Forms.Label();
-         this.PageNumberTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.PageNumberTextBox = new System.Windows.Forms.TextBox();
          this.NextPageButton = new System.Windows.Forms.Button();
          this.PreviousPageButton = new System.Windows.Forms.Button();
          this.PageSizeLabel = new System.Windows.Forms.Label();
@@ -549,7 +549,7 @@ namespace HFM.Forms
       private HistoryGridViewWrapper dataGridView1;
       private System.Windows.Forms.Label ResultsLabel;
       private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
-      private TextBoxWrapper ResultsTextBox;
+      private System.Windows.Forms.TextBox ResultsTextBox;
       private System.Windows.Forms.Label PpdCalculationLabel;
       private harlam357.Windows.Forms.RadioPanel rdoPanelProduction;
       private System.Windows.Forms.RadioButton PpdCalculationStandardRadioButton;
@@ -572,7 +572,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem RefreshEntryMenuItem;
       private System.Windows.Forms.Label PageSizeLabel;
       private System.Windows.Forms.Label PageNumberLabel;
-      private TextBoxWrapper PageNumberTextBox;
+      private System.Windows.Forms.TextBox PageNumberTextBox;
       private System.Windows.Forms.Button NextPageButton;
       private System.Windows.Forms.Button PreviousPageButton;
       private System.Windows.Forms.Button FirstPageButton;

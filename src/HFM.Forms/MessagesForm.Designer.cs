@@ -31,7 +31,7 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
-         this.txtMessages = new TextBoxWrapper();
+         this.txtMessages = new System.Windows.Forms.TextBox();
          this.SuspendLayout();
          // 
          // txtMessages
@@ -65,6 +65,6 @@ namespace HFM.Forms
 
       #endregion
 
-      private TextBoxWrapper txtMessages;
+      private System.Windows.Forms.TextBox txtMessages;
    }
 }

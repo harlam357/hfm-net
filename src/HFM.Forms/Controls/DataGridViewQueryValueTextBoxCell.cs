@@ -18,14 +18,14 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    internal class DataGridViewQueryValueTextBoxCell : DataGridViewTextBoxCell
    {
       private bool CalendarEdit

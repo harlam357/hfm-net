@@ -121,7 +121,6 @@
     <Compile Include="Client\LegacyDataRetriever.cs" />
     <Compile Include="Client\LegacyClient.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />

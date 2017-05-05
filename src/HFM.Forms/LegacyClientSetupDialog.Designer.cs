@@ -100,7 +100,7 @@ namespace HFM.Forms
          this.QueueFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.TestConnectionButton = new System.Windows.Forms.Button();
          this.LegacyClientSubTypePanel = new harlam357.Windows.Forms.RadioPanel();
-         this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.DummyTextBox = new System.Windows.Forms.TextBox();
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
          this.LocalPathGroupBox.SuspendLayout();
          this.FtpGroupBox.SuspendLayout();
@@ -770,7 +770,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Button TestConnectionButton;
       private RadioPanel LegacyClientSubTypePanel;
       private RadioPanel FtpModePanel;
-      private TextBoxWrapper DummyTextBox;
+      private System.Windows.Forms.TextBox DummyTextBox;
       private ValidatingTextBox FtpServerPortTextBox;
       private System.Windows.Forms.Label FtpServerPortLabel;
 

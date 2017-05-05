@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -26,7 +28,7 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms.Configuration
 {
-   [Core.CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class ContainerInstaller : IWindsorInstaller
    {
       #region IWindsorInstaller Members

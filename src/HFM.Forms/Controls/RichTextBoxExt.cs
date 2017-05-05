@@ -21,6 +21,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Windows.Forms;
 
@@ -46,7 +47,7 @@ namespace HFM.Forms.Controls
       void ScrollToBottom();
    }
 
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public partial class RichTextBoxExt : RichTextBox, ILogFileViewer
    {
       private IList<LogLine> _logLines;

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoMapper;
 
 using HFM.Core.DataTypes;
@@ -25,7 +27,7 @@ using HFM.Queue;
 
 namespace HFM.Core.Configuration
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class AutoMapperProfile : Profile
    {
       public AutoMapperProfile()

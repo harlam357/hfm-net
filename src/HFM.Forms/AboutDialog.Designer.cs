@@ -54,7 +54,7 @@ namespace HFM.Forms
          this.lblVersion = new System.Windows.Forms.Label();
          this.btnClose = new System.Windows.Forms.Button();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
-         this.textBoxWrapper1 = new HFM.Forms.Controls.TextBoxWrapper();
+         this.textBoxWrapper1 = new System.Windows.Forms.TextBox();
          this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
          this.lnkHfmGoogleGroup = new System.Windows.Forms.LinkLabel();
          this.lblDate = new System.Windows.Forms.Label();
@@ -194,7 +194,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Label lblVersion;
       private System.Windows.Forms.PictureBox pictureBox1;
       private System.Windows.Forms.Button btnClose;
-      private TextBoxWrapper textBoxWrapper1;
+      private System.Windows.Forms.TextBox textBoxWrapper1;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleCode;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleGroup;
       private System.Windows.Forms.Label lblDate;

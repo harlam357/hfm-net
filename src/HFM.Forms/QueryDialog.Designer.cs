@@ -33,7 +33,7 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QueryDialog));
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.panel1 = new System.Windows.Forms.Panel();
-         this.txtName = new TextBoxWrapper();
+         this.txtName = new System.Windows.Forms.TextBox();
          this.lblName = new System.Windows.Forms.Label();
          this.btnRemove = new System.Windows.Forms.Button();
          this.btnAdd = new System.Windows.Forms.Button();
@@ -194,7 +194,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Button btnRemove;
       private System.Windows.Forms.Button btnCancel;
       private System.Windows.Forms.DataGridView dataGridView1;
-      private TextBoxWrapper txtName;
+      private System.Windows.Forms.TextBox txtName;
       private System.Windows.Forms.Label lblName;
       private System.Windows.Forms.Panel panel2;
    }

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using Castle.Core.Logging;
@@ -29,7 +30,7 @@ using Castle.Windsor;
 
 namespace HFM.Core.Configuration
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class ContainerInstaller : IWindsorInstaller
    {
       public void Install(IWindsorContainer container, IConfigurationStore store)

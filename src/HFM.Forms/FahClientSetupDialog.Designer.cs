@@ -30,7 +30,7 @@
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FahClientSetupDialog));
-         this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
+         this.DummyTextBox = new System.Windows.Forms.TextBox();
          this.ClientTimeOffsetLabel = new System.Windows.Forms.Label();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
          this.ClientNoUtcOffsetCheckBox = new System.Windows.Forms.CheckBox();
@@ -308,7 +308,7 @@
 
       #endregion
 
-      private Controls.TextBoxWrapper DummyTextBox;
+      private System.Windows.Forms.TextBox DummyTextBox;
       private System.Windows.Forms.Label ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private System.Windows.Forms.CheckBox ClientNoUtcOffsetCheckBox;
