@@ -202,12 +202,6 @@
     <Compile Include="Controls\QueueControl.Designer.cs">
       <DependentUpon>QueueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SplitContainerWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SplitContainerWrapper.Designer.cs">
-      <DependentUpon>SplitContainerWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TextBoxWrapper.cs">
       <SubType>Component</SubType>
     </Compile>

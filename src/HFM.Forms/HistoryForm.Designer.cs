@@ -73,7 +73,7 @@ namespace HFM.Forms
          this.NextPageButton = new System.Windows.Forms.Button();
          this.PreviousPageButton = new System.Windows.Forms.Button();
          this.PageSizeLabel = new System.Windows.Forms.Label();
-         this.splitContainerWrapper1 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.splitContainerWrapper1 = new System.Windows.Forms.SplitContainer();
          this.menuStrip1.SuspendLayout();
          this.dataGridMenuStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -561,7 +561,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Button DataViewDeleteButton;
       private System.Windows.Forms.Button DataViewEditButton;
       private System.Windows.Forms.GroupBox ResultsGroupBox;
-      private SplitContainerWrapper splitContainerWrapper1;
+      private System.Windows.Forms.SplitContainer splitContainerWrapper1;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
       private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;

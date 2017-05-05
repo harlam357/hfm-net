@@ -56,7 +56,7 @@ namespace HFM.Forms
          this.lblDescription = new System.Windows.Forms.Label();
          this.lblProjectID = new System.Windows.Forms.Label();
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-         this.splitContainerBench = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.splitContainerBench = new System.Windows.Forms.SplitContainer();
          this.listBox1 = new System.Windows.Forms.ListBox();
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabTextBenchmark = new System.Windows.Forms.TabPage();
@@ -784,7 +784,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Label lblCredit;
       private System.Windows.Forms.Label lblDescription;
       private System.Windows.Forms.Label lblProjectID;
-      private SplitContainerWrapper splitContainerBench;
+      private System.Windows.Forms.SplitContainer splitContainerBench;
       private System.Windows.Forms.ListBox listBox1;
       private TextBoxWrapper txtBenchmarks;
       private System.Windows.Forms.Button btnExit;

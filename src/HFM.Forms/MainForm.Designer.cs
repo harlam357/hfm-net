@@ -128,9 +128,9 @@ namespace HFM.Forms
          this.mnuContextClientsPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextClientsFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
          this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
-         this.splitContainer1 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
-         this.splitContainer2 = new HFM.Forms.Controls.SplitContainerWrapper();
+         this.splitContainer2 = new System.Windows.Forms.SplitContainer();
          this.queueControl = new HFM.Forms.Controls.QueueControl();
          this.btnQueue = new System.Windows.Forms.Button();
          this.txtLogFile = new HFM.Forms.Controls.RichTextBoxExt();
@@ -1193,7 +1193,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
       private System.Windows.Forms.ToolStripMenuItem mnuClientsViewClientFiles;
       private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewClientFiles;
-      private SplitContainerWrapper splitContainer1;
+      private System.Windows.Forms.SplitContainer splitContainer1;
       private DataGridViewExt dataGridView1;
       private System.Windows.Forms.ToolStripMenuItem mnuWeb;
       private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
@@ -1211,7 +1211,7 @@ namespace HFM.Forms
       private harlam357.Windows.Forms.BindableToolStripStatusLabel statusLabelMiddle;
       private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
-      private SplitContainerWrapper splitContainer2;
+      private System.Windows.Forms.SplitContainer splitContainer2;
       private System.Windows.Forms.Button btnQueue;
       private QueueControl queueControl;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
