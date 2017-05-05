@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 
-namespace HFM.Core.DataTypes
+using HFM.Core;
+
+namespace HFM.Preferences
 {
    [DataContract(Namespace = "")]
    public class ApplicationSettings

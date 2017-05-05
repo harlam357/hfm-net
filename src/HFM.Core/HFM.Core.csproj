@@ -86,7 +86,7 @@
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
-    <Compile Include="DataTypes\PreferenceData.cs" />
+    <Compile Include="Preferences\PreferenceData.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
     <Compile Include="PetaPoco\PetaPoco.cs" />
-    <Compile Include="Services\PreferenceSetExtensions.cs" />
+    <Compile Include="Preferences\PreferenceSetExtensions.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
@@ -137,7 +137,7 @@
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Services\IPreferenceSet.cs" />
+    <Compile Include="Preferences\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="FileSystemPath.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
