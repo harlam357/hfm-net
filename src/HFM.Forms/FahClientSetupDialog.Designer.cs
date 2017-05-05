@@ -33,7 +33,7 @@
          this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
-         this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.ClientNoUtcOffsetCheckBox = new System.Windows.Forms.CheckBox();
          this.DialogCancelButton = new System.Windows.Forms.Button();
          this.DialogOkButton = new System.Windows.Forms.Button();
          this.SetupTabControl = new System.Windows.Forms.TabControl();
@@ -311,7 +311,7 @@
       private Controls.TextBoxWrapper DummyTextBox;
       private Controls.LabelWrapper ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
-      private Controls.CheckBoxWrapper ClientNoUtcOffsetCheckBox;
+      private System.Windows.Forms.CheckBox ClientNoUtcOffsetCheckBox;
       private System.Windows.Forms.Button DialogCancelButton;
       private System.Windows.Forms.Button DialogOkButton;
       private System.Windows.Forms.TabControl SetupTabControl;

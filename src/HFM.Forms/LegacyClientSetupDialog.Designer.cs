@@ -58,7 +58,7 @@ namespace HFM.Forms
          this.DialogCancelButton = new System.Windows.Forms.Button();
          this.LogFolderTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipHost = new System.Windows.Forms.ToolTip(this.components);
-         this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.ClientNoUtcOffsetCheckBox = new System.Windows.Forms.CheckBox();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
          this.LogFolderBrowseButton = new System.Windows.Forms.Button();
          this.LegacyClientSubTypeLocalPathRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
@@ -755,7 +755,7 @@ namespace HFM.Forms
       private LabelWrapper LogFileNameLabel;
       private ValidatingTextBox UnitInfoFileNameTextBox;
       private LabelWrapper UnitInfoFileNameLabel;
-      private CheckBoxWrapper ClientNoUtcOffsetCheckBox;
+      private System.Windows.Forms.CheckBox ClientNoUtcOffsetCheckBox;
       private LabelWrapper ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private RadioButtonWrapper LegacyClientSubTypeLocalPathRadioButton;

@@ -33,7 +33,7 @@
          this.ProjectLabel = new HFM.Forms.Controls.LabelWrapper();
          this.ProjectComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
          this.TimePerFrameLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.TotalTimeCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.TotalTimeCheckBox = new System.Windows.Forms.CheckBox();
          this.TotalTimeMinuteTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.CoreNameTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.CoreNameLabel = new HFM.Forms.Controls.LabelWrapper();
@@ -67,9 +67,9 @@
          this.TotalPpdLabel = new HFM.Forms.Controls.LabelWrapper();
          this.TotalPpdTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.CalculateButton = new System.Windows.Forms.Button();
-         this.PreferredDeadlineCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.FinalDeadlineCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.KFactorCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
+         this.PreferredDeadlineCheckBox = new System.Windows.Forms.CheckBox();
+         this.FinalDeadlineCheckBox = new System.Windows.Forms.CheckBox();
+         this.KFactorCheckBox = new System.Windows.Forms.CheckBox();
          this.PreferredDeadlineDaysLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FinalDeadlineDaysLabel = new HFM.Forms.Controls.LabelWrapper();
          this.CompletionTimeDaysLabel = new HFM.Forms.Controls.LabelWrapper();
@@ -534,7 +534,7 @@
       private Controls.LabelWrapper ProjectLabel;
       private Controls.ComboBoxWrapper ProjectComboBox;
       private Controls.LabelWrapper TimePerFrameLabel;
-      private Controls.CheckBoxWrapper TotalTimeCheckBox;
+      private System.Windows.Forms.CheckBox TotalTimeCheckBox;
       private Controls.TextBoxWrapper TotalTimeMinuteTextBox;
       private Controls.TextBoxWrapper CoreNameTextBox;
       private Controls.LabelWrapper CoreNameLabel;
@@ -568,9 +568,9 @@
       private Controls.LabelWrapper TotalPpdLabel;
       private Controls.TextBoxWrapper TotalPpdTextBox;
       private System.Windows.Forms.Button CalculateButton;
-      private Controls.CheckBoxWrapper PreferredDeadlineCheckBox;
-      private Controls.CheckBoxWrapper FinalDeadlineCheckBox;
-      private Controls.CheckBoxWrapper KFactorCheckBox;
+      private System.Windows.Forms.CheckBox PreferredDeadlineCheckBox;
+      private System.Windows.Forms.CheckBox FinalDeadlineCheckBox;
+      private System.Windows.Forms.CheckBox KFactorCheckBox;
       private Controls.LabelWrapper PreferredDeadlineDaysLabel;
       private Controls.LabelWrapper FinalDeadlineDaysLabel;
       private Controls.LabelWrapper CompletionTimeDaysLabel;

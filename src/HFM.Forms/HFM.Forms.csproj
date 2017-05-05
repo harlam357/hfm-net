@@ -118,12 +118,6 @@
     </Compile>
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="Controls\CheckBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\CheckBoxWrapper.Designer.cs">
-      <DependentUpon>CheckBoxWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ComboBoxWrapper.cs">
       <SubType>Component</SubType>
     </Compile>
