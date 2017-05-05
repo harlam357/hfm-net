@@ -65,6 +65,12 @@ namespace HFM.Preferences
       public bool DuplicateProjectCheck { get; set; }
    }
 
+   public enum ProcessingMode
+   {
+      Parallel,
+      Serial
+   }
+
    [DataContract(Namespace = "")]
    public class ClientRetrievalTask : IEquatable<ClientRetrievalTask>
    {
@@ -199,6 +205,12 @@ namespace HFM.Preferences
             return hashCode;
          }
       }
+   }
+
+   public enum WebDeploymentType
+   {
+      Path,
+      Ftp
    }
 
    [DataContract(Namespace = "")]
@@ -428,6 +440,13 @@ namespace HFM.Preferences
       public int SplitterLocation { get; set; }
    }
 
+   public enum MinimizeToOption
+   {
+      SystemTray,
+      TaskBar,
+      Both
+   }
+
    [DataContract(Namespace = "")]
    public class MainWindowProperties
    {
@@ -446,6 +465,12 @@ namespace HFM.Preferences
 
       [DataMember]
       public StatsType StatsType { get; set; }
+   }
+
+   public enum TimeFormatting
+   {
+      None,
+      Format1
    }
 
    [DataContract(Namespace = "")]
@@ -474,6 +499,12 @@ namespace HFM.Preferences
 
       [DataMember]
       public bool DisplayEtaAsDate { get; set; }
+   }
+
+   public enum GraphLayoutType
+   {
+      Single,
+      ClientsPerGraph
    }
 
    [DataContract(Namespace = "")]

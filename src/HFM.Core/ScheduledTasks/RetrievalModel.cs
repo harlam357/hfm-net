@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
+using HFM.Preferences;
+
 namespace HFM.Core.ScheduledTasks
 {
    public class RetrievalModel

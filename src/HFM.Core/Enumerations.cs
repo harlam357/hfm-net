@@ -76,29 +76,10 @@ namespace HFM.Core
       None
    }
 
-   public enum TimeFormatting
-   {
-      None,
-      Format1
-   }
-
    public enum UnitTotalsType
    {
       All,
       ClientStart
-   }
-
-   public enum MinimizeToOption
-   {
-      SystemTray,
-      TaskBar,
-      Both
-   }
-
-   public enum GraphLayoutType
-   {
-      Single,
-      ClientsPerGraph
    }
 
    /// <summary>
@@ -108,18 +89,6 @@ namespace HFM.Core
    {
       Passive,
       Active
-   }
-
-   public enum WebDeploymentType
-   {
-      Path,
-      Ftp
-   }
-
-   public enum ProcessingMode
-   {
-      Parallel,
-      Serial
    }
 
    public enum StatsType

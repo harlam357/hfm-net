@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Main UI DataGrid Handlers
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,17 +26,10 @@ using System.Windows.Forms;
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {
-   enum PaintCell
-   {
-      Status,
-      Time,
-      Warning,
-      EtaDate
-   }
-
    // ReSharper disable InconsistentNaming
    public partial class MainForm
    // ReSharper restore InconsistentNaming
@@ -110,6 +103,14 @@ namespace HFM.Forms
 
          toolTipGrid.Hide(dataGridView1);
          #endregion
+      }
+
+      private enum PaintCell
+      {
+         Status,
+         Time,
+         Warning,
+         EtaDate
       }
 
       /// <summary>
