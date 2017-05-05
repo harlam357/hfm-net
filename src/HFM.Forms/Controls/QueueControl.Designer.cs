@@ -48,7 +48,7 @@ namespace HFM.Forms.Controls
       private void InitializeComponent()
       {
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-         this.cboQueueIndex = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.cboQueueIndex = new System.Windows.Forms.ComboBox();
          this.txtMachineID = new HFM.Forms.Controls.TextBoxWrapper();
          this.labelWrapper1 = new HFM.Forms.Controls.LabelWrapper();
          this.lblMachineID = new HFM.Forms.Controls.LabelWrapper();
@@ -627,7 +627,7 @@ namespace HFM.Forms.Controls
       #endregion
 
       private LabelWrapper lblServer;
-      private ComboBoxWrapper cboQueueIndex;
+      private System.Windows.Forms.ComboBox cboQueueIndex;
       private LabelWrapper lblUserID;
       private LabelWrapper lblBenchmark;
       private LabelWrapper lblBeginDate;

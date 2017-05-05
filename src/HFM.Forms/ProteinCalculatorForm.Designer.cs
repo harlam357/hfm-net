@@ -31,7 +31,7 @@
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProteinCalculatorForm));
          this.TimePerFrameMinuteTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          this.ProjectLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.ProjectComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.ProjectComboBox = new System.Windows.Forms.ComboBox();
          this.TimePerFrameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.TotalTimeCheckBox = new System.Windows.Forms.CheckBox();
          this.TotalTimeMinuteTextBox = new HFM.Forms.Controls.TextBoxWrapper();
@@ -532,7 +532,7 @@
 
       private Controls.TextBoxWrapper TimePerFrameMinuteTextBox;
       private Controls.LabelWrapper ProjectLabel;
-      private Controls.ComboBoxWrapper ProjectComboBox;
+      private System.Windows.Forms.ComboBox ProjectComboBox;
       private Controls.LabelWrapper TimePerFrameLabel;
       private System.Windows.Forms.CheckBox TotalTimeCheckBox;
       private Controls.TextBoxWrapper TotalTimeMinuteTextBox;

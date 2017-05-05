@@ -118,12 +118,6 @@
     </Compile>
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="Controls\ComboBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ComboBoxWrapper.Designer.cs">
-      <DependentUpon>ComboBoxWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>

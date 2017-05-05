@@ -62,7 +62,7 @@ namespace HFM.Forms
          this.PpdCalculationBonusDownloadTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.DataViewGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
          this.DataViewNewButton = new System.Windows.Forms.Button();
-         this.DataViewComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.DataViewComboBox = new System.Windows.Forms.ComboBox();
          this.DataViewDeleteButton = new System.Windows.Forms.Button();
          this.DataViewEditButton = new System.Windows.Forms.Button();
          this.ResultsGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
@@ -557,7 +557,7 @@ namespace HFM.Forms
       private RadioButtonWrapper PpdCalculationBonusDownloadTimeRadioButton;
       private GroupBoxWrapper DataViewGroupBox;
       private System.Windows.Forms.Button DataViewNewButton;
-      private ComboBoxWrapper DataViewComboBox;
+      private System.Windows.Forms.ComboBox DataViewComboBox;
       private System.Windows.Forms.Button DataViewDeleteButton;
       private System.Windows.Forms.Button DataViewEditButton;
       private GroupBoxWrapper ResultsGroupBox;

@@ -119,7 +119,7 @@ namespace HFM.Forms
          this.chkRunMinimized = new System.Windows.Forms.CheckBox();
          this.tabOptions = new System.Windows.Forms.TabPage();
          this.grpShowStyle = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.cboShowStyle = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.cboShowStyle = new System.Windows.Forms.ComboBox();
          this.labelWrapper2 = new HFM.Forms.Controls.LabelWrapper();
          this.grpInteractiveOptions = new HFM.Forms.Controls.GroupBoxWrapper();
          this.ShowUserStatsCheckBox = new System.Windows.Forms.CheckBox();
@@ -127,14 +127,14 @@ namespace HFM.Forms
          this.DuplicateProjectCheckBox = new System.Windows.Forms.CheckBox();
          this.chkEtaAsDate = new System.Windows.Forms.CheckBox();
          this.label2 = new HFM.Forms.Controls.LabelWrapper();
-         this.PpdCalculationComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.PpdCalculationComboBox = new System.Windows.Forms.ComboBox();
          this.chkOffline = new System.Windows.Forms.CheckBox();
          this.chkColorLog = new System.Windows.Forms.CheckBox();
          this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
          this.chkAutoSave = new System.Windows.Forms.CheckBox();
          this.labelWrapper1 = new HFM.Forms.Controls.LabelWrapper();
          this.grpDebugMessageLevel = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.cboMessageLevel = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.cboMessageLevel = new System.Windows.Forms.ComboBox();
          this.label6 = new HFM.Forms.Controls.LabelWrapper();
          this.tabReporting = new System.Windows.Forms.TabPage();
          this.grpReportSelections = new HFM.Forms.Controls.GroupBoxWrapper();
@@ -203,7 +203,7 @@ namespace HFM.Forms
          this.btnOK = new System.Windows.Forms.Button();
          this.btnCancel = new System.Windows.Forms.Button();
          this.labelWrapper6 = new HFM.Forms.Controls.LabelWrapper();
-         this.BonusCalculationComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
          this.tabControl1.SuspendLayout();
          this.tabSchdTasks.SuspendLayout();
          this.grpUpdateData.SuspendLayout();
@@ -2174,7 +2174,7 @@ namespace HFM.Forms
       private RadioButtonWrapper radioSchedule;
       private RadioButtonWrapper radioFullRefresh;
       private GroupBoxWrapper grpDebugMessageLevel;
-      private ComboBoxWrapper cboMessageLevel;
+      private System.Windows.Forms.ComboBox cboMessageLevel;
       private LabelWrapper label6;
       private System.Windows.Forms.ToolTip toolTipPrefs;
       private LabelWrapper labelWrapper1;
@@ -2210,7 +2210,7 @@ namespace HFM.Forms
       private System.Windows.Forms.CheckBox chkColorLog;
       private System.Windows.Forms.CheckBox chkOffline;
       private LabelWrapper label2;
-      private ComboBoxWrapper PpdCalculationComboBox;
+      private System.Windows.Forms.ComboBox PpdCalculationComboBox;
       private System.Windows.Forms.CheckBox chkAllowRunningAsync;
       private RadioButtonWrapper radioActive;
       private RadioButtonWrapper radioPassive;
@@ -2232,7 +2232,7 @@ namespace HFM.Forms
       private ValidatingTextBox txtMobileSummary;
       private LabelWrapper lblMobileSummary;
       private GroupBoxWrapper grpShowStyle;
-      private ComboBoxWrapper cboShowStyle;
+      private System.Windows.Forms.ComboBox cboShowStyle;
       private LabelWrapper labelWrapper2;
       private System.Windows.Forms.CheckBox chkEmailSecure;
       private ValidatingTextBox txtSmtpServerPort;
@@ -2269,6 +2269,6 @@ namespace HFM.Forms
       private ValidatingTextBox WebSitePortTextBox;
       private LabelWrapper WebSitePortLabel;
       private LabelWrapper labelWrapper6;
-      private ComboBoxWrapper BonusCalculationComboBox;
+      private System.Windows.Forms.ComboBox BonusCalculationComboBox;
    }
 }

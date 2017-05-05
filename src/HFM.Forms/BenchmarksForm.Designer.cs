@@ -81,7 +81,7 @@ namespace HFM.Forms
          this.btnExit = new System.Windows.Forms.Button();
          this.grpClients = new HFM.Forms.Controls.GroupBoxWrapper();
          this.picDeleteClient = new System.Windows.Forms.PictureBox();
-         this.cboClients = new HFM.Forms.Controls.ComboBoxWrapper();
+         this.cboClients = new System.Windows.Forms.ComboBox();
          this.listBox1ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextRefreshMinimum = new System.Windows.Forms.ToolStripMenuItem();
          this.mnuContextDeleteProject = new System.Windows.Forms.ToolStripMenuItem();
@@ -789,7 +789,7 @@ namespace HFM.Forms
       private TextBoxWrapper txtBenchmarks;
       private System.Windows.Forms.Button btnExit;
       private GroupBoxWrapper grpClients;
-      private ComboBoxWrapper cboClients;
+      private System.Windows.Forms.ComboBox cboClients;
       private System.Windows.Forms.PictureBox picDeleteClient;
       private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
       private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
