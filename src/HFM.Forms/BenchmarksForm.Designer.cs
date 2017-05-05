@@ -32,7 +32,7 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BenchmarksForm));
-         this.grpProjectInfo = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.grpProjectInfo = new System.Windows.Forms.GroupBox();
          this.txtKFactor = new HFM.Forms.Controls.TextBoxWrapper();
          this.lblKFactor = new HFM.Forms.Controls.LabelWrapper();
          this.txtServerIP = new HFM.Forms.Controls.TextBoxWrapper();
@@ -62,12 +62,12 @@ namespace HFM.Forms
          this.tabTextBenchmark = new System.Windows.Forms.TabPage();
          this.txtBenchmarks = new HFM.Forms.Controls.TextBoxWrapper();
          this.tabGraphConfig = new System.Windows.Forms.TabPage();
-         this.grpClientLayout = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.grpClientLayout = new System.Windows.Forms.GroupBox();
          this.pnlClientLayout = new harlam357.Windows.Forms.RadioPanel();
          this.udClientsPerGraph = new System.Windows.Forms.NumericUpDown();
          this.rdoClientsPerGraph = new HFM.Forms.Controls.RadioButtonWrapper();
          this.rdoSingleGraph = new HFM.Forms.Controls.RadioButtonWrapper();
-         this.grpColors = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.grpColors = new System.Windows.Forms.GroupBox();
          this.lstColors = new System.Windows.Forms.ListBox();
          this.picColorPreview = new System.Windows.Forms.PictureBox();
          this.btnMoveColorDown = new System.Windows.Forms.Button();
@@ -79,7 +79,7 @@ namespace HFM.Forms
          this.tabGraphPPD1 = new System.Windows.Forms.TabPage();
          this.zgPpd1 = new ZedGraph.ZedGraphControl();
          this.btnExit = new System.Windows.Forms.Button();
-         this.grpClients = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.grpClients = new System.Windows.Forms.GroupBox();
          this.picDeleteClient = new System.Windows.Forms.PictureBox();
          this.cboClients = new System.Windows.Forms.ComboBox();
          this.listBox1ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -762,7 +762,7 @@ namespace HFM.Forms
 
       #endregion
 
-      private GroupBoxWrapper grpProjectInfo;
+      private System.Windows.Forms.GroupBox grpProjectInfo;
       private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private TextBoxWrapper txtServerIP;
       private TextBoxWrapper txtContact;
@@ -788,7 +788,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ListBox listBox1;
       private TextBoxWrapper txtBenchmarks;
       private System.Windows.Forms.Button btnExit;
-      private GroupBoxWrapper grpClients;
+      private System.Windows.Forms.GroupBox grpClients;
       private System.Windows.Forms.ComboBox cboClients;
       private System.Windows.Forms.PictureBox picDeleteClient;
       private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
@@ -810,8 +810,8 @@ namespace HFM.Forms
       private System.Windows.Forms.PictureBox picColorPreview;
       private TextBoxWrapper txtKFactor;
       private LabelWrapper lblKFactor;
-      private GroupBoxWrapper grpColors;
-      private GroupBoxWrapper grpClientLayout;
+      private System.Windows.Forms.GroupBox grpColors;
+      private System.Windows.Forms.GroupBox grpClientLayout;
       private harlam357.Windows.Forms.RadioPanel pnlClientLayout;
       private RadioButtonWrapper rdoClientsPerGraph;
       private RadioButtonWrapper rdoSingleGraph;

@@ -143,12 +143,6 @@
     <Compile Include="Controls\FormWrapper.Designer.cs">
       <DependentUpon>FormWrapper.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GroupBoxWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\GroupBoxWrapper.Designer.cs">
-      <DependentUpon>GroupBoxWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="FahClientSetupDialog.cs">
       <SubType>Form</SubType>

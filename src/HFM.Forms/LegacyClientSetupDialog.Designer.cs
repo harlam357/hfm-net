@@ -80,16 +80,16 @@ namespace HFM.Forms
          this.WebPasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.WebUsernameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.WebPasswordLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.LocalPathGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.LocalPathGroupBox = new System.Windows.Forms.GroupBox();
          this.LogFolderLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.FtpGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.FtpGroupBox = new System.Windows.Forms.GroupBox();
          this.FtpServerPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.FtpServerPortLabel = new HFM.Forms.Controls.LabelWrapper();
          this.FtpModePanel = new harlam357.Windows.Forms.RadioPanel();
          this.FtpModeActiveRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.FtpModePassiveRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.FtpModeLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.HttpGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
+         this.HttpGroupBox = new System.Windows.Forms.GroupBox();
          this.LogFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
          this.LogFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.LogFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
@@ -744,10 +744,10 @@ namespace HFM.Forms
       private ValidatingTextBox FtpPasswordTextBox;
       private ValidatingTextBox WebUsernameTextBox;
       private ValidatingTextBox WebPasswordTextBox;
-      private GroupBoxWrapper LocalPathGroupBox;
+      private System.Windows.Forms.GroupBox LocalPathGroupBox;
       private LabelWrapper LogFolderLabel;
-      private GroupBoxWrapper FtpGroupBox;
-      private GroupBoxWrapper HttpGroupBox;
+      private System.Windows.Forms.GroupBox FtpGroupBox;
+      private System.Windows.Forms.GroupBox HttpGroupBox;
 
       #endregion
       private System.Windows.Forms.FolderBrowserDialog LogFolderBrowserDialog;
