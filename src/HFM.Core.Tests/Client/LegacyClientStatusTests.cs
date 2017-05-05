@@ -25,7 +25,7 @@ using NUnit.Framework;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class LegacyClientStatusTests

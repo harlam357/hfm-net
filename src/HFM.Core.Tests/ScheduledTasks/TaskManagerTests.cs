@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class TaskManagerTests

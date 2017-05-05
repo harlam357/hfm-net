@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    public static class UnitInfoExtensions
    {

@@ -30,7 +30,7 @@ using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Queue;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class LegacyDataAggregatorTests

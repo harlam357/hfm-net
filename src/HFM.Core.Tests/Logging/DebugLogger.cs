@@ -3,7 +3,7 @@ using System;
 
 using Castle.Core.Logging;
 
-namespace HFM.Core.Tests.Logging
+namespace HFM.Core.Logging
 {
    public class DebugLogger : LevelFilteredLogger
    {

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,7 @@ using System;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
-namespace HFM.Core.Tests.DataTypes
+namespace HFM.Core
 {
    [TestFixture]
    public class ProteinBenchmarkSlotIdentifierTests

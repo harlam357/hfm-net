@@ -7,9 +7,8 @@ using System.Linq;
 using NUnit.Framework;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 
-namespace HFM.Core.Tests.Plugins
+namespace HFM.Core.Plugins
 {
    [TestFixture]
    public class FileSerializerPluginManagerTests

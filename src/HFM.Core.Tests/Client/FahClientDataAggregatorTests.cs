@@ -28,7 +28,7 @@ using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class FahClientDataAggregatorTests

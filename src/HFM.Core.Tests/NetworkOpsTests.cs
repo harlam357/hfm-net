@@ -26,7 +26,7 @@ using Rhino.Mocks;
 
 using harlam357.Core.Net;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class NetworkOpsTests

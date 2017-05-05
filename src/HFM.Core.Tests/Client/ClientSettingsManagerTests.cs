@@ -27,7 +27,7 @@ using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
 using HFM.Core.Serializers;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class ClientSettingsManagerTests
