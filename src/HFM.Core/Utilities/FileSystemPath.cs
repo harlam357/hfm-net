@@ -28,7 +28,7 @@ namespace HFM.Core
       /// <summary>
       /// Are two paths equal?
       /// </summary>
-      public static bool Equal(string path1, string path2)
+      public static bool Equals(string path1, string path2)
       {
          IEnumerable<string> path1Variations = GetPathVariations(path1);
          IEnumerable<string> path2Variations = GetPathVariations(path2);

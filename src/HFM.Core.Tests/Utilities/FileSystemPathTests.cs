@@ -7,15 +7,15 @@ namespace HFM.Core
    public class FileSystemPathTests
    {
       [Test]
-      public void FileSystemPath_Equal_Test()
+      public void FileSystemPath_Equals_Test()
       {
-         Assert.IsTrue(FileSystemPath.Equal(@"c:\folder\path", @"C:\FOLDER\PATH\"));
-         Assert.IsFalse(FileSystemPath.Equal(@"c:\folder\path", @"D:\FOLDER\PATH\"));
-         Assert.IsFalse(FileSystemPath.Equal(@"c:\folder\path/", @"C:\FOLDER\PATH\"));
-         Assert.IsTrue(FileSystemPath.Equal(@"folder\path", @"FOLDER\PATH\"));
-         Assert.IsTrue(FileSystemPath.Equal(@"folder/path", @"FOLDER/PATH/"));
-         Assert.IsFalse(FileSystemPath.Equal(@"/folder/path", @"FOLDER/PATH/"));
-         Assert.IsTrue(FileSystemPath.Equal(@"/folder/path", @"/FOLDER/PATH/"));
+         Assert.IsTrue(FileSystemPath.Equals(@"c:\folder\path", @"C:\FOLDER\PATH\"));
+         Assert.IsFalse(FileSystemPath.Equals(@"c:\folder\path", @"D:\FOLDER\PATH\"));
+         Assert.IsFalse(FileSystemPath.Equals(@"c:\folder\path/", @"C:\FOLDER\PATH\"));
+         Assert.IsTrue(FileSystemPath.Equals(@"folder\path", @"FOLDER\PATH\"));
+         Assert.IsTrue(FileSystemPath.Equals(@"folder/path", @"FOLDER/PATH/"));
+         Assert.IsFalse(FileSystemPath.Equals(@"/folder/path", @"FOLDER/PATH/"));
+         Assert.IsTrue(FileSystemPath.Equals(@"/folder/path", @"/FOLDER/PATH/"));
       }
    }
 }
