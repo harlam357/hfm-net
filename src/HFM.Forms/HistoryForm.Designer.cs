@@ -61,17 +61,17 @@ namespace HFM.Forms
          this.PpdCalculationBonusFrameTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.PpdCalculationBonusDownloadTimeRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.DataViewGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.DataViewNewButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DataViewNewButton = new System.Windows.Forms.Button();
          this.DataViewComboBox = new HFM.Forms.Controls.ComboBoxWrapper();
-         this.DataViewDeleteButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.DataViewEditButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DataViewDeleteButton = new System.Windows.Forms.Button();
+         this.DataViewEditButton = new System.Windows.Forms.Button();
          this.ResultsGroupBox = new HFM.Forms.Controls.GroupBoxWrapper();
-         this.LastPageButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.FirstPageButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.LastPageButton = new System.Windows.Forms.Button();
+         this.FirstPageButton = new System.Windows.Forms.Button();
          this.PageNumberLabel = new HFM.Forms.Controls.LabelWrapper();
          this.PageNumberTextBox = new HFM.Forms.Controls.TextBoxWrapper();
-         this.NextPageButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.PreviousPageButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.NextPageButton = new System.Windows.Forms.Button();
+         this.PreviousPageButton = new System.Windows.Forms.Button();
          this.PageSizeLabel = new HFM.Forms.Controls.LabelWrapper();
          this.splitContainerWrapper1 = new HFM.Forms.Controls.SplitContainerWrapper();
          this.menuStrip1.SuspendLayout();
@@ -556,10 +556,10 @@ namespace HFM.Forms
       private RadioButtonWrapper PpdCalculationBonusFrameTimeRadioButton;
       private RadioButtonWrapper PpdCalculationBonusDownloadTimeRadioButton;
       private GroupBoxWrapper DataViewGroupBox;
-      private ButtonWrapper DataViewNewButton;
+      private System.Windows.Forms.Button DataViewNewButton;
       private ComboBoxWrapper DataViewComboBox;
-      private ButtonWrapper DataViewDeleteButton;
-      private ButtonWrapper DataViewEditButton;
+      private System.Windows.Forms.Button DataViewDeleteButton;
+      private System.Windows.Forms.Button DataViewEditButton;
       private GroupBoxWrapper ResultsGroupBox;
       private SplitContainerWrapper splitContainerWrapper1;
       private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
@@ -573,10 +573,10 @@ namespace HFM.Forms
       private LabelWrapper PageSizeLabel;
       private LabelWrapper PageNumberLabel;
       private TextBoxWrapper PageNumberTextBox;
-      private ButtonWrapper NextPageButton;
-      private ButtonWrapper PreviousPageButton;
-      private ButtonWrapper FirstPageButton;
-      private ButtonWrapper LastPageButton;
+      private System.Windows.Forms.Button NextPageButton;
+      private System.Windows.Forms.Button PreviousPageButton;
+      private System.Windows.Forms.Button FirstPageButton;
+      private System.Windows.Forms.Button LastPageButton;
       private System.Windows.Forms.ToolStripMenuItem mnuFileExport;
    }
 }

@@ -66,7 +66,7 @@
          this.BonusPpdLabel = new HFM.Forms.Controls.LabelWrapper();
          this.TotalPpdLabel = new HFM.Forms.Controls.LabelWrapper();
          this.TotalPpdTextBox = new HFM.Forms.Controls.TextBoxWrapper();
-         this.CalculateButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.CalculateButton = new System.Windows.Forms.Button();
          this.PreferredDeadlineCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.FinalDeadlineCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.KFactorCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
@@ -567,7 +567,7 @@
       private Controls.LabelWrapper BonusPpdLabel;
       private Controls.LabelWrapper TotalPpdLabel;
       private Controls.TextBoxWrapper TotalPpdTextBox;
-      private Controls.ButtonWrapper CalculateButton;
+      private System.Windows.Forms.Button CalculateButton;
       private Controls.CheckBoxWrapper PreferredDeadlineCheckBox;
       private Controls.CheckBoxWrapper FinalDeadlineCheckBox;
       private Controls.CheckBoxWrapper KFactorCheckBox;

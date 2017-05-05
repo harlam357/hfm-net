@@ -54,13 +54,13 @@ namespace HFM.Forms
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LegacyClientSetupDialog));
-         this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.DialogCancelButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DialogOkButton = new System.Windows.Forms.Button();
+         this.DialogCancelButton = new System.Windows.Forms.Button();
          this.LogFolderTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTipHost = new System.Windows.Forms.ToolTip(this.components);
          this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
-         this.LogFolderBrowseButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.LogFolderBrowseButton = new System.Windows.Forms.Button();
          this.LegacyClientSubTypeLocalPathRadioButton = new HFM.Forms.Controls.RadioButtonWrapper();
          this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.ClientNameLabel = new HFM.Forms.Controls.LabelWrapper();
@@ -98,7 +98,7 @@ namespace HFM.Forms
          this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
          this.QueueFileNameLabel = new HFM.Forms.Controls.LabelWrapper();
          this.QueueFileNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.TestConnectionButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.TestConnectionButton = new System.Windows.Forms.Button();
          this.LegacyClientSubTypePanel = new harlam357.Windows.Forms.RadioPanel();
          this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
@@ -724,9 +724,9 @@ namespace HFM.Forms
 
       }
 
-      private ButtonWrapper DialogOkButton;
-      private ButtonWrapper DialogCancelButton;
-      private ButtonWrapper LogFolderBrowseButton;
+      private System.Windows.Forms.Button DialogOkButton;
+      private System.Windows.Forms.Button DialogCancelButton;
+      private System.Windows.Forms.Button LogFolderBrowseButton;
       private LabelWrapper ClientNameLabel;
       private LabelWrapper FtpServerNameLabel;
       private LabelWrapper FtpServerPathLabel;
@@ -767,7 +767,7 @@ namespace HFM.Forms
       private RadioButtonWrapper FtpModeActiveRadioButton;
       private LabelWrapper FtpModeLabel;
       private System.Windows.Forms.ToolTip toolTipHost;
-      private ButtonWrapper TestConnectionButton;
+      private System.Windows.Forms.Button TestConnectionButton;
       private RadioPanel LegacyClientSubTypePanel;
       private RadioPanel FtpModePanel;
       private TextBoxWrapper DummyTextBox;

@@ -52,7 +52,7 @@ namespace HFM.Forms
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
          this.lblProduct = new HFM.Forms.Controls.LabelWrapper();
          this.lblVersion = new HFM.Forms.Controls.LabelWrapper();
-         this.btnClose = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnClose = new System.Windows.Forms.Button();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
          this.textBoxWrapper1 = new HFM.Forms.Controls.TextBoxWrapper();
          this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
@@ -193,7 +193,7 @@ namespace HFM.Forms
       private LabelWrapper lblProduct;
       private LabelWrapper lblVersion;
       private System.Windows.Forms.PictureBox pictureBox1;
-      private ButtonWrapper btnClose;
+      private System.Windows.Forms.Button btnClose;
       private TextBoxWrapper textBoxWrapper1;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleCode;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleGroup;

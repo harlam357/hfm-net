@@ -34,12 +34,12 @@
          this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
          this.ClientNoUtcOffsetCheckBox = new HFM.Forms.Controls.CheckBoxWrapper();
-         this.DialogCancelButton = new HFM.Forms.Controls.ButtonWrapper();
-         this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DialogCancelButton = new System.Windows.Forms.Button();
+         this.DialogOkButton = new System.Windows.Forms.Button();
          this.SetupTabControl = new System.Windows.Forms.TabControl();
          this.ConnectionTabPage = new System.Windows.Forms.TabPage();
          this.SlotsDataGridView = new System.Windows.Forms.DataGridView();
-         this.ConnectButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.ConnectButton = new System.Windows.Forms.Button();
          this.AddressPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.PasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.PasswordLabel = new HFM.Forms.Controls.LabelWrapper();
@@ -312,8 +312,8 @@
       private Controls.LabelWrapper ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private Controls.CheckBoxWrapper ClientNoUtcOffsetCheckBox;
-      private Controls.ButtonWrapper DialogCancelButton;
-      private Controls.ButtonWrapper DialogOkButton;
+      private System.Windows.Forms.Button DialogCancelButton;
+      private System.Windows.Forms.Button DialogOkButton;
       private System.Windows.Forms.TabControl SetupTabControl;
       private System.Windows.Forms.TabPage ConnectionTabPage;
       private Controls.LabelWrapper ClientNameLabel;
@@ -325,7 +325,7 @@
       private Controls.LabelWrapper PasswordLabel;
       private harlam357.Windows.Forms.ValidatingTextBox AddressPortTextBox;
       private System.Windows.Forms.ToolTip toolTip1;
-      private Controls.ButtonWrapper ConnectButton;
+      private System.Windows.Forms.Button ConnectButton;
       private System.Windows.Forms.DataGridView SlotsDataGridView;
 
    }

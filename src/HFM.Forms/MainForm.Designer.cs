@@ -132,7 +132,7 @@ namespace HFM.Forms
          this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
          this.splitContainer2 = new HFM.Forms.Controls.SplitContainerWrapper();
          this.queueControl = new HFM.Forms.Controls.QueueControl();
-         this.btnQueue = new HFM.Forms.Controls.ButtonWrapper();
+         this.btnQueue = new System.Windows.Forms.Button();
          this.txtLogFile = new HFM.Forms.Controls.RichTextBoxExt();
          this.statsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.mnuContextShowUserStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -1212,7 +1212,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
       private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
       private SplitContainerWrapper splitContainer2;
-      private ButtonWrapper btnQueue;
+      private System.Windows.Forms.Button btnQueue;
       private QueueControl queueControl;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep2;

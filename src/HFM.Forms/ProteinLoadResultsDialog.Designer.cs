@@ -30,7 +30,7 @@
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProteinLoadResultsDialog));
          this.ProteinListBox = new System.Windows.Forms.ListBox();
-         this.DialogOkButton = new HFM.Forms.Controls.ButtonWrapper();
+         this.DialogOkButton = new System.Windows.Forms.Button();
          this.SuspendLayout();
          // 
          // ProteinListBox
@@ -76,7 +76,7 @@
 
       #endregion
 
-      private Controls.ButtonWrapper DialogOkButton;
+      private System.Windows.Forms.Button DialogOkButton;
       private System.Windows.Forms.ListBox ProteinListBox;
    }
 }

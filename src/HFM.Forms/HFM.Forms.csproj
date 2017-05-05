@@ -118,12 +118,6 @@
     </Compile>
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="Controls\ButtonWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ButtonWrapper.Designer.cs">
-      <DependentUpon>ButtonWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\CheckBoxWrapper.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -35,12 +35,12 @@ namespace HFM.Forms
          this.panel1 = new System.Windows.Forms.Panel();
          this.txtName = new TextBoxWrapper();
          this.lblName = new LabelWrapper();
-         this.btnRemove = new ButtonWrapper();
-         this.btnAdd = new ButtonWrapper();
+         this.btnRemove = new System.Windows.Forms.Button();
+         this.btnAdd = new System.Windows.Forms.Button();
          this.dataGridView1 = new System.Windows.Forms.DataGridView();
          this.panel2 = new System.Windows.Forms.Panel();
-         this.btnOK = new ButtonWrapper();
-         this.btnCancel = new ButtonWrapper();
+         this.btnOK = new System.Windows.Forms.Button();
+         this.btnCancel = new System.Windows.Forms.Button();
          this.tableLayoutPanel1.SuspendLayout();
          this.panel1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -189,10 +189,10 @@ namespace HFM.Forms
 
       private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private System.Windows.Forms.Panel panel1;
-      private ButtonWrapper btnAdd;
-      private ButtonWrapper btnOK;
-      private ButtonWrapper btnRemove;
-      private ButtonWrapper btnCancel;
+      private System.Windows.Forms.Button btnAdd;
+      private System.Windows.Forms.Button btnOK;
+      private System.Windows.Forms.Button btnRemove;
+      private System.Windows.Forms.Button btnCancel;
       private System.Windows.Forms.DataGridView dataGridView1;
       private TextBoxWrapper txtName;
       private LabelWrapper lblName;
