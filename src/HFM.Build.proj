@@ -6,7 +6,7 @@
    <PropertyGroup>
       <Major>0</Major>
       <Minor>9</Minor>
-      <Build>7</Build>
+      <Build>8</Build>
       <Revision>0</Revision>
       <ProductName>HFM.NET</ProductName>
       <SolutionFileName>HFM.All.sln</SolutionFileName>
@@ -28,7 +28,7 @@
         OutputFile="ExeAssemblyVersion.cs"
         AssemblyCompany="harlam357"
         AssemblyProduct="$(ProductName)"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2016."
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2017."
         AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' " />
@@ -36,7 +36,7 @@
         OutputFile="AssemblyVersion.cs"
         AssemblyCompany="harlam357"
         AssemblyProduct="$(ProductName)"
-        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2016."
+        AssemblyCopyright="Copyright © Ryan Harlamert 2009-2017."
         AssemblyVersion="1.0.0.0"
         AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
         Condition="$(Revision) != '0' " />
