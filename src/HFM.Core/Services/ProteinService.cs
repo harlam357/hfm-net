@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,7 +69,6 @@ namespace HFM.Core
       Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress);
    }
 
-   [CoverageExclude]
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
       private readonly Dictionary<Int32, DateTime> _projectsNotFound;

@@ -304,7 +304,6 @@ namespace HFM.Core
          OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Add, value));
       }
 
-      [CoverageExclude]
       public bool ContainsKey(string key)
       {
          _syncLock.EnterReadLock();
@@ -352,7 +351,6 @@ namespace HFM.Core
          return result;
       }
 
-      [CoverageExclude]
       public IEnumerable<IClient> GetClients()
       {
          _syncLock.EnterReadLock();
@@ -366,7 +364,6 @@ namespace HFM.Core
          }
       }
 
-      [CoverageExclude]
       public IClient Get(string key)
       {
          _syncLock.EnterReadLock();
@@ -411,7 +408,6 @@ namespace HFM.Core
 
       public int Count
       {
-         [CoverageExclude]
          get
          {
             _syncLock.EnterReadLock();
