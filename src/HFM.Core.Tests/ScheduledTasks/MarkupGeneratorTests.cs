@@ -30,7 +30,7 @@ using Rhino.Mocks;
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
 
-namespace HFM.Core
+namespace HFM.Core.ScheduledTasks
 {
    [TestFixture]
    public class MarkupGeneratorTests

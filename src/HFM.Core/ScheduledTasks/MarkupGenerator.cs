@@ -30,11 +30,10 @@ using System.Xml.Xsl;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
 
-namespace HFM.Core
+namespace HFM.Core.ScheduledTasks
 {
    public interface IMarkupGenerator
    {

@@ -103,17 +103,17 @@ namespace HFM.Core.Configuration
 
          // RetrievalModel - Singleton
          container.Register(
-            Component.For<RetrievalModel>());
+            Component.For<ScheduledTasks.RetrievalModel>());
 
          // IMarkupGenerator - Singleton
          container.Register(
-            Component.For<IMarkupGenerator>()
-               .ImplementedBy<MarkupGenerator>());
+            Component.For<ScheduledTasks.IMarkupGenerator>()
+               .ImplementedBy<ScheduledTasks.MarkupGenerator>());
 
          // IWebsiteDeployer - Singleton
          container.Register(
-            Component.For<IWebsiteDeployer>()
-               .ImplementedBy<WebsiteDeployer>());
+            Component.For<ScheduledTasks.IWebsiteDeployer>()
+               .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
 
          // IQueryParametersContainer - Singleton
          container.Register(

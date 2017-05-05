@@ -86,7 +86,7 @@ namespace HFM.Forms
       private readonly IProteinService _proteinService;
 
       private readonly IUpdateLogic _updateLogic;
-      private readonly RetrievalModel _retrievalModel;
+      private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
       private readonly IExternalProcessStarter _processStarter;
 
       private readonly IPreferenceSet _prefs;
@@ -99,7 +99,7 @@ namespace HFM.Forms
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                            IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                           RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
+                           Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
          _gridModel = mainGridModel;

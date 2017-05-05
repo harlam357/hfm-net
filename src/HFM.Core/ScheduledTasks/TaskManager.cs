@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HFM.Core
+namespace HFM.Core.ScheduledTasks
 {
    public class TaskManager
    {

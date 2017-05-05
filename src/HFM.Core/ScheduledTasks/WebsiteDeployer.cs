@@ -24,7 +24,7 @@ using System.Linq;
 
 using Castle.Core.Logging;
 
-namespace HFM.Core
+namespace HFM.Core.ScheduledTasks
 {
    public interface IWebsiteDeployer
    {
