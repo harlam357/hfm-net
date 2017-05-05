@@ -87,7 +87,7 @@
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Preferences\PreferenceData.cs" />
-    <Compile Include="FileSystem.cs" />
+    <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
@@ -139,7 +139,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Preferences\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
-    <Compile Include="FileSystemPath.cs" />
+    <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
       <SubType>Code</SubType>
     </Compile>
