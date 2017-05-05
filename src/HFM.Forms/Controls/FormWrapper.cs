@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Form Wrapper Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,18 @@ namespace HFM.Forms.Controls
       public FormWrapper()
       {
          InitializeComponent();
+      }
+
+      // https://stackoverflow.com/questions/76993/how-to-double-buffer-net-controls-on-a-form
+
+      protected override CreateParams CreateParams
+      {
+         get
+         {
+            var cp = base.CreateParams;
+            cp.ExStyle |= 0x02000000;    // Turn on WS_EX_COMPOSITED
+            return cp;
+         }
       }
    }
 }
