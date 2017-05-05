@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - TCP Client Factory Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace HFM.Client
 {
    internal interface ITcpClientFactory
@@ -24,7 +26,7 @@ namespace HFM.Client
       ITcpClient Create();
    }
 
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    internal class TcpClientFactory : ITcpClientFactory
    {
       public ITcpClient Create()

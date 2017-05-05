@@ -65,7 +65,6 @@
     <Compile Include="Converters\OptionsConverters.cs" />
     <Compile Include="Converters\SimulationInfoConverters.cs" />
     <Compile Include="Converters\UnitCollectionConverters.cs" />
-    <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
     <Compile Include="DataTypes\LogFragment.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />

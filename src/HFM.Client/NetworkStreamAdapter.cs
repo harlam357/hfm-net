@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Network Stream Adapter Class
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
@@ -87,7 +88,7 @@ namespace HFM.Client
       #endregion
    }
 
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    internal sealed class NetworkStreamAdapter : INetworkStream
    {
       private readonly NetworkStream _networkStream;
