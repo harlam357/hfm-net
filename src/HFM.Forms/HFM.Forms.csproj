@@ -170,12 +170,6 @@
     <Compile Include="Controls\HistoryGridViewWrapper.Designer.cs">
       <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LabelWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\LabelWrapper.Designer.cs">
-      <DependentUpon>LabelWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>

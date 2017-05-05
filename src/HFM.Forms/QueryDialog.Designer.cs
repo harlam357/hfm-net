@@ -34,7 +34,7 @@ namespace HFM.Forms
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.panel1 = new System.Windows.Forms.Panel();
          this.txtName = new TextBoxWrapper();
-         this.lblName = new LabelWrapper();
+         this.lblName = new System.Windows.Forms.Label();
          this.btnRemove = new System.Windows.Forms.Button();
          this.btnAdd = new System.Windows.Forms.Button();
          this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -195,7 +195,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Button btnCancel;
       private System.Windows.Forms.DataGridView dataGridView1;
       private TextBoxWrapper txtName;
-      private LabelWrapper lblName;
+      private System.Windows.Forms.Label lblName;
       private System.Windows.Forms.Panel panel2;
    }
 }

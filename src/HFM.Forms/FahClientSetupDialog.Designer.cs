@@ -31,7 +31,7 @@
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FahClientSetupDialog));
          this.DummyTextBox = new HFM.Forms.Controls.TextBoxWrapper();
-         this.ClientTimeOffsetLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ClientTimeOffsetLabel = new System.Windows.Forms.Label();
          this.ClientTimeOffsetUpDown = new System.Windows.Forms.NumericUpDown();
          this.ClientNoUtcOffsetCheckBox = new System.Windows.Forms.CheckBox();
          this.DialogCancelButton = new System.Windows.Forms.Button();
@@ -42,11 +42,11 @@
          this.ConnectButton = new System.Windows.Forms.Button();
          this.AddressPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.PasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.PasswordLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.AddressPortLabel = new HFM.Forms.Controls.LabelWrapper();
-         this.AddressLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.PasswordLabel = new System.Windows.Forms.Label();
+         this.AddressPortLabel = new System.Windows.Forms.Label();
+         this.AddressLabel = new System.Windows.Forms.Label();
          this.AddressTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-         this.ClientNameLabel = new HFM.Forms.Controls.LabelWrapper();
+         this.ClientNameLabel = new System.Windows.Forms.Label();
          this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
          ((System.ComponentModel.ISupportInitialize)(this.ClientTimeOffsetUpDown)).BeginInit();
@@ -309,20 +309,20 @@
       #endregion
 
       private Controls.TextBoxWrapper DummyTextBox;
-      private Controls.LabelWrapper ClientTimeOffsetLabel;
+      private System.Windows.Forms.Label ClientTimeOffsetLabel;
       private System.Windows.Forms.NumericUpDown ClientTimeOffsetUpDown;
       private System.Windows.Forms.CheckBox ClientNoUtcOffsetCheckBox;
       private System.Windows.Forms.Button DialogCancelButton;
       private System.Windows.Forms.Button DialogOkButton;
       private System.Windows.Forms.TabControl SetupTabControl;
       private System.Windows.Forms.TabPage ConnectionTabPage;
-      private Controls.LabelWrapper ClientNameLabel;
+      private System.Windows.Forms.Label ClientNameLabel;
       private harlam357.Windows.Forms.ValidatingTextBox ClientNameTextBox;
-      private Controls.LabelWrapper AddressLabel;
+      private System.Windows.Forms.Label AddressLabel;
       private harlam357.Windows.Forms.ValidatingTextBox AddressTextBox;
-      private Controls.LabelWrapper AddressPortLabel;
+      private System.Windows.Forms.Label AddressPortLabel;
       private harlam357.Windows.Forms.ValidatingTextBox PasswordTextBox;
-      private Controls.LabelWrapper PasswordLabel;
+      private System.Windows.Forms.Label PasswordLabel;
       private harlam357.Windows.Forms.ValidatingTextBox AddressPortTextBox;
       private System.Windows.Forms.ToolTip toolTip1;
       private System.Windows.Forms.Button ConnectButton;

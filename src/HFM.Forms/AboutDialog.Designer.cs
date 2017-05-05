@@ -50,14 +50,14 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
-         this.lblProduct = new HFM.Forms.Controls.LabelWrapper();
-         this.lblVersion = new HFM.Forms.Controls.LabelWrapper();
+         this.lblProduct = new System.Windows.Forms.Label();
+         this.lblVersion = new System.Windows.Forms.Label();
          this.btnClose = new System.Windows.Forms.Button();
          this.pictureBox1 = new System.Windows.Forms.PictureBox();
          this.textBoxWrapper1 = new HFM.Forms.Controls.TextBoxWrapper();
          this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
          this.lnkHfmGoogleGroup = new System.Windows.Forms.LinkLabel();
-         this.lblDate = new HFM.Forms.Controls.LabelWrapper();
+         this.lblDate = new System.Windows.Forms.Label();
          ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
          this.SuspendLayout();
          // 
@@ -190,14 +190,14 @@ namespace HFM.Forms
 
       #endregion
 
-      private LabelWrapper lblProduct;
-      private LabelWrapper lblVersion;
+      private System.Windows.Forms.Label lblProduct;
+      private System.Windows.Forms.Label lblVersion;
       private System.Windows.Forms.PictureBox pictureBox1;
       private System.Windows.Forms.Button btnClose;
       private TextBoxWrapper textBoxWrapper1;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleCode;
       private System.Windows.Forms.LinkLabel lnkHfmGoogleGroup;
-      private LabelWrapper lblDate;
+      private System.Windows.Forms.Label lblDate;
 
    }
 }
