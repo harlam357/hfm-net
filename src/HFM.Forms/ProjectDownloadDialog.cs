@@ -17,15 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 using harlam357.Windows.Forms;
-
-using HFM.Core;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    public partial class ProjectDownloadDialog : ProgressDialogAsync
    {
       private readonly System.Timers.Timer _timer;

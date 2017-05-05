@@ -20,12 +20,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    public partial class ProteinLoadResultsDialog : Form
    {
       public ProteinLoadResultsDialog()

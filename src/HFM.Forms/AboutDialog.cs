@@ -29,7 +29,6 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    public partial class AboutDialog : FormWrapper
    {
       #region Constructor

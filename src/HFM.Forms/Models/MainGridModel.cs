@@ -48,9 +48,7 @@ namespace HFM.Forms.Models
       //
       //public ILogger Logger
       //{
-      //   [CoverageExclude]
       //   get { return _logger ?? (_logger = NullLogger.Instance); }
-      //   [CoverageExclude]
       //   set { _logger = value; }
       //}
 
@@ -319,7 +317,6 @@ namespace HFM.Forms.Models
       }
    }
 
-   [CoverageExclude]
    public sealed class IndexChangedEventArgs : EventArgs
    {
       private readonly int _index;

@@ -46,7 +46,6 @@ namespace HFM.Forms
       bool Visible { get; set; }
    }
 
-   [CoverageExclude]
    public partial class MessagesForm : FormWrapper, IMessagesView
    {
       private const int MaxLines = 512;

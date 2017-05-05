@@ -110,7 +110,6 @@ namespace HFM.Forms
 
    // ReSharper disable InconsistentNaming
 
-   [CoverageExclude]
    public partial class MainForm : FormWrapper, IMainView
    {
       #region Properties
