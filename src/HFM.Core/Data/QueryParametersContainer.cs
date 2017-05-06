@@ -23,7 +23,7 @@ using System.Linq;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core
+namespace HFM.Core.Data
 {
    public interface IQueryParametersContainer
    {

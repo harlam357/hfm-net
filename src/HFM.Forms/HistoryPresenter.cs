@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,8 @@ using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
 using HFM.Forms.Models;
@@ -255,8 +257,28 @@ namespace HFM.Forms
             }
          }
       }
-      
-      public void RefreshProjectDataClick(ProteinUpdateType type)
+
+      public void RefreshAllProjectDataClick()
+      {
+         RefreshProjectData(ProteinUpdateType.All);
+      }
+
+      public void RefreshUnknownProjectDataClick()
+      {
+         RefreshProjectData(ProteinUpdateType.Unknown);
+      }
+
+      public void RefreshDataByProjectClick()
+      {
+         RefreshProjectData(ProteinUpdateType.Project);
+      }
+
+      public void RefreshDataByIdClick()
+      {
+         RefreshProjectData(ProteinUpdateType.Id);
+      }
+
+      private void RefreshProjectData(ProteinUpdateType type)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
          if (result == DialogResult.No)

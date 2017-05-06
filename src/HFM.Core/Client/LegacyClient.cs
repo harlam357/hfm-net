@@ -263,10 +263,10 @@ namespace HFM.Core
          //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, result.StartTime);
-            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, result.StartTime);
-            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
+            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, null);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, result.StartTime);
+            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, null);
          }
       }
 

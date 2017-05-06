@@ -31,6 +31,8 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
 using HFM.Forms.Models;

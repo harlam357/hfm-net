@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using HFM.Core.Data;
 using HFM.Core.DataTypes;
 using HFM.Proteins;
 

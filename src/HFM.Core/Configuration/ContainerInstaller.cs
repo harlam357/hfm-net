@@ -61,8 +61,8 @@ namespace HFM.Core.Configuration
 
          // IUnitInfoDatabase - Singleton
          container.Register(
-            Component.For<IUnitInfoDatabase>()
-               .ImplementedBy<UnitInfoDatabase>());
+            Component.For<Data.SQLite.IUnitInfoDatabase>()
+               .ImplementedBy<Data.SQLite.UnitInfoDatabase>());
 
          // IClientConfiguration - Singleton
          container.Register(
@@ -112,9 +112,9 @@ namespace HFM.Core.Configuration
 
          // IQueryParametersContainer - Singleton
          container.Register(
-            Component.For<IQueryParametersContainer>()
-               .ImplementedBy<QueryParametersContainer>()
-                  .OnCreate(instance => ((QueryParametersContainer)instance).Read()));
+            Component.For<Data.IQueryParametersContainer>()
+               .ImplementedBy<Data.QueryParametersContainer>()
+                  .OnCreate(instance => ((Data.QueryParametersContainer)instance).Read()));
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(
@@ -125,9 +125,9 @@ namespace HFM.Core.Configuration
 
          // IXmlStatsDataContainer - Singleton
          container.Register(
-            Component.For<IXmlStatsDataContainer>()
-               .ImplementedBy<XmlStatsDataContainer>()
-                  .OnCreate(instance => ((XmlStatsDataContainer)instance).Read()));
+            Component.For<Data.IXmlStatsDataContainer>()
+               .ImplementedBy<Data.XmlStatsDataContainer>()
+                  .OnCreate(instance => ((Data.XmlStatsDataContainer)instance).Read()));
 
          // IProteinService - Singleton
          container.Register(

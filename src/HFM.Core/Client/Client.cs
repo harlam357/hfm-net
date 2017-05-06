@@ -25,6 +25,7 @@ using System.Threading;
 
 using Castle.Core.Logging;
 
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core

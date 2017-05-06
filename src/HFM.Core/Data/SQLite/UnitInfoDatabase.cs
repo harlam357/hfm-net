@@ -35,7 +35,7 @@ using harlam357.Core.ComponentModel;
 using HFM.Core.DataTypes;
 using HFM.Proteins;
 
-namespace HFM.Core
+namespace HFM.Core.Data.SQLite
 {
    public enum SqlTable
    {
@@ -49,12 +49,6 @@ namespace HFM.Core
       Unknown,
       Project,
       Id
-   }
-
-   public enum CountType
-   {
-      Completed,
-      Failed
    }
 
    public sealed class UpgradeExecutingEventArgs : EventArgs
@@ -100,9 +94,9 @@ namespace HFM.Core
 
       int Execute(string sql, params object[] args);
 
-      long Count(string clientName, CountType type);
+      long CountCompleted(string clientName, DateTime? clientStartTime);
 
-      long Count(string clientName, CountType type, DateTime? clientStartTime);
+      long CountFailed(string clientName, DateTime? clientStartTime);
 
       Task UpdateProteinDataAsync(ProteinUpdateType type, long updateArg, CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress);
    }
@@ -532,26 +526,31 @@ namespace HFM.Core
 
       #region Count
 
-      public long Count(string clientName, CountType type)
+      public long CountCompleted(string clientName, DateTime? clientStartTime)
       {
-         return Count(clientName, type, null);
+         return Count(clientName, true, clientStartTime);
       }
 
-      public long Count(string clientName, CountType type, DateTime? clientStartTime)
+      public long CountFailed(string clientName, DateTime? clientStartTime)
+      {
+         return Count(clientName, false, clientStartTime);
+      }
+
+      private long Count(string clientName, bool completed, DateTime? clientStartTime)
       {
          var parameters = new QueryParameters();
-         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Name,   Type = QueryFieldType.Equal, Value = clientName });
+         parameters.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = clientName });
          parameters.Fields.Add(new QueryField
                                {
                                   Name = QueryFieldName.Result,
-                                  Type = type == CountType.Completed ? QueryFieldType.Equal : QueryFieldType.NotEqual,
+                                  Type = completed ? QueryFieldType.Equal : QueryFieldType.NotEqual,
                                   Value = (int)WorkUnitResult.FinishedUnit
                                });
          if (clientStartTime.HasValue)
          {
             parameters.Fields.Add(new QueryField
                                   {
-                                     Name = type == CountType.Completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
+                                     Name = completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
                                      Type = QueryFieldType.GreaterThan,
                                      Value = clientStartTime.Value
                                   });

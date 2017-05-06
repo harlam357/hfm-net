@@ -25,7 +25,7 @@ using NUnit.Framework;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core
+namespace HFM.Core.Data.SQLite
 {
    [TestFixture]
    public class UnitInfoDatabaseReadOnlyTests
@@ -833,38 +833,38 @@ namespace HFM.Core
       #region Count
 
       [Test]
-      public void Count_Completed_Test1()
+      public void CountCompleted_Test1()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         long count = _database.Count("nVidia GPU - GTX285 - 1", CountType.Completed);
+         long count = _database.CountCompleted("nVidia GPU - GTX285 - 1", null);
          Assert.AreEqual(11, count);
       }
 
       [Test]
-      public void Count_Completed_Test2()
+      public void CountCompleted_Test2()
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         long count = _database.Count("nVidia GPU - GTX285 - 1", CountType.Completed, new DateTime(2010, 8, 21));
+         long count = _database.CountCompleted("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
          Assert.AreEqual(6, count);
       }
 
       [Test]
-      public void Count_Failed_Test1()
+      public void CountFailed_Test1()
       {
          _database.DatabaseFilePath = _testData2FileCopy;
          _database.Upgrade();
-         long count = _database.Count("nVidia GPU - GTX470", CountType.Failed);
+         long count = _database.CountFailed("nVidia GPU - GTX470", null);
          Assert.AreEqual(1, count);
       }
 
       [Test]
-      public void Count_Failed_Test2()
+      public void CountFailed_Test2()
       {
          _database.DatabaseFilePath = _testData2FileCopy;
          _database.Upgrade();
-         long count = _database.Count("nVidia GPU - GTX470", CountType.Failed, new DateTime(2012, 2, 1));
+         long count = _database.CountFailed("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
          Assert.AreEqual(0, count);
       }
 

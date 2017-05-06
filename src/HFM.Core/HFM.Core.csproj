@@ -120,7 +120,7 @@
     <Compile Include="Client\LegacyClient.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="DataContainer.cs" />
+    <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="DataTypes\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
@@ -149,16 +149,16 @@
     <Compile Include="Plugins\FileSerializerPluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkService.cs" />
-    <Compile Include="QueryParametersContainer.cs" />
+    <Compile Include="Data\QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
     <Compile Include="SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\TaskManager.cs" />
-    <Compile Include="Services\UnitInfoDatabase.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
-    <Compile Include="XmlStatsDataContainer.cs" />
+    <Compile Include="Data\XmlStatsDataContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">

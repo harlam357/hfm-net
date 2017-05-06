@@ -206,22 +206,22 @@ namespace HFM.Forms
 
       private void RefreshAllMenuItem_Click(object sender, EventArgs e)
       {
-         _presenter.RefreshProjectDataClick(ProteinUpdateType.All);
+         _presenter.RefreshAllProjectDataClick();
       }
 
       private void RefreshUnknownMenuItem_Click(object sender, EventArgs e)
       {
-         _presenter.RefreshProjectDataClick(ProteinUpdateType.Unknown);
+         _presenter.RefreshUnknownProjectDataClick();
       }
 
       private void RefreshProjectMenuItem_Click(object sender, EventArgs e)
       {
-         _presenter.RefreshProjectDataClick(ProteinUpdateType.Project);
+         _presenter.RefreshDataByProjectClick();
       }
 
       private void RefreshEntryMenuItem_Click(object sender, EventArgs e)
       {
-         _presenter.RefreshProjectDataClick(ProteinUpdateType.Id);
+         _presenter.RefreshDataByIdClick();
       }
 
       private void frmHistory_FormClosing(object sender, FormClosingEventArgs e)

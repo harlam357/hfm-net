@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +100,7 @@ namespace HFM.Core.Serializers
 
             try
             {
-               settings.Password = symetricProvider.Encrypt(new Data(settings.Password), _symmetricKey).Bytes.ToBase64();
+               settings.Password = symetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {
@@ -118,7 +118,7 @@ namespace HFM.Core.Serializers
 
             try
             {
-               settings.Password = symetricProvider.Decrypt(new Data(settings.Password.FromBase64()), _symmetricKey).ToString();
+               settings.Password = symetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {

@@ -32,6 +32,7 @@ using Castle.Windsor;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data.SQLite;
 using HFM.Forms;
 using HFM.Forms.Models;
 

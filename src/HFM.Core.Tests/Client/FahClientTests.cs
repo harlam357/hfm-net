@@ -24,6 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Client;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core

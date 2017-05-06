@@ -23,6 +23,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Core;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models

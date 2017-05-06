@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
