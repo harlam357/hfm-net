@@ -112,6 +112,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
     <Compile Include="LegacyClientSetupPresenterTests.cs" />
@@ -160,6 +161,7 @@
       <Link>Properties\harlam357public.snk</Link>
     </None>
     <None Include="packages.config" />
+    <None Include="TestFiles\TestClientSettings.hfmx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

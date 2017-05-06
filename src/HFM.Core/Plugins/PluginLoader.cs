@@ -40,18 +40,15 @@ namespace HFM.Core.Plugins
       private readonly IPreferenceSet _prefs;
       private readonly IFileSerializerPluginManager<List<DataTypes.Protein>> _proteinPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> _benchmarkPluginManager;
-      private readonly IFileSerializerPluginManager<List<DataTypes.ClientSettings>> _clientSettingsPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> _historyEntryPluginManager;
 
       public PluginLoader(IPreferenceSet prefs, IFileSerializerPluginManager<List<DataTypes.Protein>> proteinPluginManager,
                                                 IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager,
-                                                IFileSerializerPluginManager<List<DataTypes.ClientSettings>> clientSettingsPluginManager,
                                                 IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> historyEntryPluginManager)
       {
          _prefs = prefs;
          _proteinPluginManager = proteinPluginManager;
          _benchmarkPluginManager = benchmarkPluginManager;
-         _clientSettingsPluginManager = clientSettingsPluginManager;
          _historyEntryPluginManager = historyEntryPluginManager;
       }
 
@@ -91,20 +88,6 @@ namespace HFM.Core.Plugins
 
          #endregion
 
-         #region ClientSettings Serializer Plugins
-
-         // register built in types
-         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmFileSerializer).Name, new HfmFileSerializer { Logger = Logger });
-         _clientSettingsPluginManager.RegisterPlugin(typeof(HfmLegacyFileSerializer).Name, new HfmLegacyFileSerializer { Logger = Logger });
-         // load from plugin folder
-         path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
-         if (Directory.Exists(path))
-         {
-            LogResults(_clientSettingsPluginManager.LoadAllPlugins(path));
-         }
-
-         #endregion
-
          #region HistoryEntry Serializer Plugins
 
          // register built in types
@@ -113,7 +96,7 @@ namespace HFM.Core.Plugins
          path = Path.Combine(PluginsFolder, Constants.PluginsClientSettingsFolderName);
          if (Directory.Exists(path))
          {
-            LogResults(_clientSettingsPluginManager.LoadAllPlugins(path));
+            LogResults(_historyEntryPluginManager.LoadAllPlugins(path));
          }
 
          #endregion

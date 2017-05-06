@@ -116,6 +116,7 @@
     <Compile Include="BenchmarksForm.Designer.cs">
       <DependentUpon>BenchmarksForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClientSettingsManager.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">

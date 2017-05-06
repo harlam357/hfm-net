@@ -167,6 +167,11 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<UpdateLogic>());
 
          #endregion
+
+         // IClientSettingsManager - Singleton
+         container.Register(
+            Component.For<IClientSettingsManager>()
+               .ImplementedBy<ClientSettingsManager>());
       }
 
       #endregion

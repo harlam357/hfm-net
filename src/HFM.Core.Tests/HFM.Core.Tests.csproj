@@ -122,7 +122,6 @@
     <Compile Include="DataTypes\UnitInfoTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Services\ClientConfigurationTests.cs" />
-    <Compile Include="Client\ClientSettingsManagerTests.cs" />
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Client\LegacyClientTests.cs" />
@@ -179,7 +178,6 @@
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\BenchmarkCache.dat" />
-    <None Include="TestFiles\LegacyTest.hfm" />
     <None Include="TestFiles\TestData.db3" />
     <None Include="TestFiles\TestData2.db3" />
     <None Include="TestFiles\TestData_1.db3" />

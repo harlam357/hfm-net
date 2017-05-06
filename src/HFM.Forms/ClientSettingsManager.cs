@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Client Settings Manager Class
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,14 +19,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
+using HFM.Core.Serializers;
 
-namespace HFM.Core
+namespace HFM.Forms
 {
    public interface IClientSettingsManager
    {
@@ -39,11 +39,6 @@ namespace HFM.Core
       /// Current Plugin Index
       /// </summary>
       int FilterIndex { get; }
-
-      /// <summary>
-      /// Number of Settings Plugins
-      /// </summary>
-      int PluginCount { get; }
 
       /// <summary>
       /// Current Config File Extension or the Default File Extension
@@ -69,43 +64,28 @@ namespace HFM.Core
       /// </summary>
       /// <param name="settingsCollection">Settings collection.</param>
       /// <param name="filePath">Path to config file.</param>
+      void Write(IEnumerable<ClientSettings> settingsCollection, string filePath);
+
+      /// <summary>
+      /// Writes a collection of client settings to a file.
+      /// </summary>
+      /// <param name="settingsCollection">Settings collection.</param>
+      /// <param name="filePath">Path to config file.</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
       void Write(IEnumerable<ClientSettings> settingsCollection, string filePath, int filterIndex);
    }
 
    public sealed class ClientSettingsManager : IClientSettingsManager
    {
-      private readonly IFileSerializerPluginManager<List<ClientSettings>> _settingsPlugins;
-      
       /// <summary>
       /// Current File Name
       /// </summary>
       public string FileName { get; private set; }
 
-      private int _filterIndex;
       /// <summary>
       /// Current Filter Index
       /// </summary>
-      public int FilterIndex
-      {
-         get
-         {
-            if (_filterIndex < 1 || _filterIndex > PluginCount)
-            {
-               return 1;
-            }
-            return _filterIndex;
-         }
-         private set { _filterIndex = value; }
-      }
-
-      /// <summary>
-      /// Number of Plugins
-      /// </summary>
-      public int PluginCount
-      {
-         get { return _settingsPlugins.Count(); }
-      }
+      public int FilterIndex { get; private set; }
 
       /// <summary>
       /// Current Config File Extension or the Default File Extension
@@ -119,19 +99,35 @@ namespace HFM.Core
                return Path.GetExtension(FileName);
             }
 
-            Debug.Assert(_settingsPlugins.Keys.Count() != 0);
-            return _settingsPlugins.GetPlugin(_settingsPlugins.Keys.First()).Interface.FileExtension;
+            return _serializers[FilterIndex - 1].FileExtension;
          }
       }
 
       public string FileTypeFilters
       {
-         get { return _settingsPlugins.FileTypeFilters; }
+         get 
+         { 
+            var sb = new System.Text.StringBuilder();
+            foreach (var serializer in _serializers)
+            {
+               if (sb.Length > 0)
+               {
+                  sb.Append("|");
+               }
+               sb.Append(serializer.FileTypeFilter);
+            }
+            return sb.ToString();
+         }
       }
 
-      public ClientSettingsManager(IFileSerializerPluginManager<List<ClientSettings>> settingsPlugins)
+      private readonly List<IFileSerializer<List<ClientSettings>>> _serializers;
+
+      public ClientSettingsManager()
       {
-         _settingsPlugins = settingsPlugins;
+         _serializers = new List<IFileSerializer<List<ClientSettings>>>
+         {
+            new HfmFileSerializer()
+         };
 
          ClearFileName();
       }
@@ -141,6 +137,7 @@ namespace HFM.Core
       /// </summary>
       public void ClearFileName()
       {
+         FilterIndex = 1;
          FileName = String.Empty;
       }
    
@@ -152,15 +149,14 @@ namespace HFM.Core
       public IEnumerable<ClientSettings> Read(string filePath, int filterIndex)
       {
          if (filePath == null) throw new ArgumentNullException("filePath");
+         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException("filterIndex");
 
-         Debug.Assert(filterIndex <= _settingsPlugins.Count());
-
-         var serializer = _settingsPlugins[filterIndex - 1].Interface;
+         var serializer = _serializers[filterIndex - 1];
          List<ClientSettings> settings = serializer.Deserialize(filePath);
 
          if (settings.Count != 0)
          {
-            // update the settings plugin index only if something was loaded
+            // update the serializer index only if something was loaded
             FilterIndex = filterIndex;
             FileName = filePath;
          }
@@ -173,14 +169,24 @@ namespace HFM.Core
       /// </summary>
       /// <param name="settingsCollection">Settings collection.</param>
       /// <param name="filePath">Path to config file.</param>
+      public void Write(IEnumerable<ClientSettings> settingsCollection, string filePath)
+      {
+         Write(settingsCollection, filePath, FilterIndex);
+      }
+
+      /// <summary>
+      /// Writes a collection of client settings to a file.
+      /// </summary>
+      /// <param name="settingsCollection">Settings collection.</param>
+      /// <param name="filePath">Path to config file.</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
       public void Write(IEnumerable<ClientSettings> settingsCollection, string filePath, int filterIndex)
       {
          if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
          if (filePath == null) throw new ArgumentNullException("filePath");
-         if (filterIndex < 1 || filterIndex > _settingsPlugins.Count()) throw new ArgumentOutOfRangeException("filterIndex");
+         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException("filterIndex");
 
-         var serializer = _settingsPlugins[filterIndex - 1].Interface;
+         var serializer = _serializers[filterIndex - 1];
          serializer.Serialize(filePath, settingsCollection.ToList());
 
          FilterIndex = filterIndex;

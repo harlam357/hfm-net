@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Client Settings Manager Tests
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,64 +18,53 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 using NUnit.Framework;
 
+using HFM.Core;
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
-using HFM.Core.Serializers;
 
-namespace HFM.Core
+namespace HFM.Forms
 {
    [TestFixture]
    public class ClientSettingsManagerTests
    {
       [Test]
-      public void DefaultsTest()
+      public void ClientSettingsManager_Defaults_Test()
       {
-         var configurationManager = new ClientSettingsManager(GetPluginManager());
+         var configurationManager = new ClientSettingsManager();
          Assert.AreEqual(String.Empty, configurationManager.FileName);
          Assert.AreEqual(1, configurationManager.FilterIndex);
-         Assert.AreEqual(2, configurationManager.PluginCount);
          Assert.AreEqual("hfmx", configurationManager.FileExtension);
-         Assert.AreEqual("HFM Configuration Files|*.hfmx|HFM Legacy Configuration Files|*.hfm", configurationManager.FileTypeFilters);
+         Assert.AreEqual("HFM Configuration Files|*.hfmx", configurationManager.FileTypeFilters);
       }
       
       [Test]
-      public void ReadTest()
+      public void ClientSettingsManager_Read_Test()
       {
-         var configurationManager = new ClientSettingsManager(GetPluginManager());
-         configurationManager.Read("..\\..\\TestFiles\\LegacyTest.hfm", 2);
-         Assert.AreEqual("..\\..\\TestFiles\\LegacyTest.hfm", configurationManager.FileName);
-         Assert.AreEqual(2, configurationManager.FilterIndex);
-         Assert.AreEqual(".hfm", configurationManager.FileExtension);
+         var configurationManager = new ClientSettingsManager();
+         configurationManager.Read("..\\..\\TestFiles\\TestClientSettings.hfmx", 1);
+         Assert.AreEqual("..\\..\\TestFiles\\TestClientSettings.hfmx", configurationManager.FileName);
+         Assert.AreEqual(1, configurationManager.FilterIndex);
+         Assert.AreEqual(".hfmx", configurationManager.FileExtension);
       }
       
       [Test]
-      public void WriteTest()
+      public void ClientSettingsManager_Write_Test()
       {
          var instance1 = new LegacyClient();
          instance1.Settings = new ClientSettings(ClientType.Legacy) { Name = "test" };
 
          const string testFile = "..\\..\\TestFiles\\new.ext";
 
-         var configurationManager = new ClientSettingsManager(GetPluginManager());
-         configurationManager.Write(new[] { instance1.Settings }, testFile, 1);
+         var configurationManager = new ClientSettingsManager();
+         configurationManager.Write(new[] { instance1.Settings }, testFile);
          Assert.AreEqual("..\\..\\TestFiles\\new.ext", configurationManager.FileName);
          Assert.AreEqual(1, configurationManager.FilterIndex);
          Assert.AreEqual(".ext", configurationManager.FileExtension);
 
          File.Delete(testFile);
-      }
-
-      private static IFileSerializerPluginManager<List<ClientSettings>> GetPluginManager()
-      {
-         var pluginManager = new FileSerializerPluginManager<List<ClientSettings>>();
-         pluginManager.RegisterPlugin(typeof(HfmFileSerializer).Name, new HfmFileSerializer());
-         pluginManager.RegisterPlugin(typeof(HfmLegacyFileSerializer).Name, new HfmLegacyFileSerializer());
-         return pluginManager;
       }
    }
 }

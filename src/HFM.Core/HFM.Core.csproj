@@ -99,14 +99,12 @@
     <Compile Include="PetaPoco\PetaPoco.cs" />
     <Compile Include="Preferences\PreferenceSetExtensions.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
-    <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="DataTypes\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />
     <Compile Include="Services\ClientConfiguration.cs" />
-    <Compile Include="Client\ClientSettingsManager.cs" />
     <Compile Include="Client\LegacyDataAggregator.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />

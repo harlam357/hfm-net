@@ -674,16 +674,12 @@ namespace HFM.Forms
 
       public void FileSaveClick()
       {
-         // no clients, stub out
-         if (_clientConfiguration.Count == 0) return;
-
-         // index 2 is hard coded to legacy serializer
-         if (_settingsManager.FilterIndex == 2)
+         if (_clientConfiguration.Count == 0)
          {
-            _settingsManager.ClearFileName();
+            return;
          }
 
-         if (_settingsManager.FileName.Length == 0)
+         if (String.IsNullOrEmpty(_settingsManager.FileName))
          {
             FileSaveAsClick();
          }
@@ -691,8 +687,7 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName,
-                                      _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName);
                _clientConfiguration.IsDirty = false;
             }
             catch (Exception ex)
@@ -706,8 +701,10 @@ namespace HFM.Forms
 
       public void FileSaveAsClick()
       {
-         // no clients, stub out
-         if (_clientConfiguration.Count == 0) return;
+         if (_clientConfiguration.Count == 0)
+         {
+            return;
+         }
 
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
          saveFileDialogView.DefaultExt = _settingsManager.FileExtension;

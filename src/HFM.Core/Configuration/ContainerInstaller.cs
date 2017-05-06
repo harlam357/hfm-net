@@ -96,11 +96,6 @@ namespace HFM.Core.Configuration
             Component.For<ILegacyClientFactory>()
                .AsFactory());
 
-         // IClientSettingsManager - Singleton
-         container.Register(
-            Component.For<IClientSettingsManager>()
-               .ImplementedBy<ClientSettingsManager>());
-
          // RetrievalModel - Singleton
          container.Register(
             Component.For<ScheduledTasks.RetrievalModel>());
@@ -159,8 +154,6 @@ namespace HFM.Core.Configuration
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ClientSettings>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ClientSettings>>>(),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.HistoryEntry>>>()
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.HistoryEntry>>>());
 
