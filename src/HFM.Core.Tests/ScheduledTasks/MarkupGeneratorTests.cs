@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Markup Generator Class Tests
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,7 @@ using Rhino.Mocks;
 
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core.ScheduledTasks
 {

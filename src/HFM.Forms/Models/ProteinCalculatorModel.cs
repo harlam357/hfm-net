@@ -23,6 +23,7 @@ using System.ComponentModel;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Forms.Models

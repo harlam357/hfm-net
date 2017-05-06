@@ -1,7 +1,6 @@
 /*
- * HFM.NET - User Preferences Form
- * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+  * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,8 +32,10 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {
@@ -131,8 +132,8 @@ namespace HFM.Forms
             _cssSampleBrowser.TabStop = false;
          }
 
-         txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
-         txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Constants.MinMinutes, Constants.MaxMinutes);
+         txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.Validate.MinMinutes, Core.Validate.MaxMinutes);
+         txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.Validate.MinMinutes, Core.Validate.MaxMinutes);
 
          _scheduledTasksModel = new ScheduledTasksModel(prefs);
          _startupAndExternalModel = new StartupAndExternalModel(prefs);

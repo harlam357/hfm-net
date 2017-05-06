@@ -27,6 +27,7 @@ using Rhino.Mocks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 
 namespace HFM.Forms

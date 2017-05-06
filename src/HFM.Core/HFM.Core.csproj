@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;HFMCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\HFM.ruleset</CodeAnalysisRuleSet>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;HFMCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\HFM.ruleset</CodeAnalysisRuleSet>
@@ -81,12 +81,10 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Application.Paths.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
-    <Compile Include="Preferences\PreferenceData.cs" />
     <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
@@ -97,7 +95,6 @@
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
     <Compile Include="PetaPoco\PetaPoco.cs" />
-    <Compile Include="Preferences\PreferenceSetExtensions.cs" />
     <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
@@ -134,7 +131,6 @@
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Preferences\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Plugins\PluginInfo.cs">
@@ -156,6 +152,8 @@
     <Compile Include="ScheduledTasks\TaskManager.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
+    <Compile Include="Utilities\PreferenceSetExtensions.cs" />
+    <Compile Include="Utilities\Validate.Minutes.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\XmlStatsDataContainer.cs" />
@@ -176,6 +174,10 @@
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
+      <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
+      <Name>HFM.Preferences</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
       <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>

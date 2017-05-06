@@ -28,6 +28,7 @@ using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {

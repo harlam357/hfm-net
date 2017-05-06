@@ -25,6 +25,7 @@ using Castle.Core.Logging;
 
 using HFM.Core;
 using HFM.Core.Data;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {

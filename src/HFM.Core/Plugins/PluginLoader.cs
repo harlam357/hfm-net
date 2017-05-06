@@ -23,6 +23,7 @@ using System.IO;
 using Castle.Core.Logging;
 
 using HFM.Core.Serializers;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core.Plugins

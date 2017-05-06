@@ -33,6 +33,7 @@ using Castle.Core.Logging;
 using harlam357.Core.ComponentModel;
 
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core.Data.SQLite

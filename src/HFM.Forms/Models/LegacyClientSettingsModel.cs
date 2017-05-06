@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {

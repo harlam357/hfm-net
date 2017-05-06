@@ -27,6 +27,7 @@ using Castle.Core.Logging;
 
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core
 {

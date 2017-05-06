@@ -36,6 +36,7 @@ using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
 using HFM.Forms.Models;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {

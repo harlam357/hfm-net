@@ -25,6 +25,7 @@ using System.Threading;
 
 using HFM.Core.Data;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core
 {

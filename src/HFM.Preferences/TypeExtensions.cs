@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HFM.Preferences
 {
-   public static class TypeExtensions
+   internal static class TypeExtensions
    {
       private static bool IsGenericList(this Type type)
       {

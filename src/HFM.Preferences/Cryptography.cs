@@ -27,7 +27,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = IV;
-               result = symmetricProvider.Decrypt(new Data(value.FromBase64()), SymmetricKey).ToString();
+               result = symmetricProvider.Decrypt(new harlam357.Core.Security.Data(value.FromBase64()), SymmetricKey).ToString();
             }
             catch (FormatException)
             {
@@ -58,7 +58,7 @@ namespace HFM.Preferences
             try
             {
                symmetricProvider.IntializationVector = IV;
-               result = symmetricProvider.Encrypt(new Data(value), SymmetricKey).Bytes.ToBase64();
+               result = symmetricProvider.Encrypt(new harlam357.Core.Security.Data(value), SymmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {

@@ -27,48 +27,41 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Xml;
 
-using Castle.Core.Logging;
-
-using HFM.Core;
+using HFM.Preferences.Data;
 
 namespace HFM.Preferences
 {
    public sealed class PreferenceSet : IPreferenceSet
    {
-      private ILogger _logger;
-
-      public ILogger Logger
-      {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
-      }
-
       #region Implementation
 
-      string IPreferenceSet.ApplicationPath
-      {
-         get { return Application.FolderPath; }
-      }
+      public string ApplicationPath { get; private set; }
 
-      string IPreferenceSet.ApplicationDataFolderPath
-      {
-         get { return ApplicationDataFolderPath; }
-      }
+      public string ApplicationDataFolderPath { get; private set; }
 
-      private static string ApplicationDataFolderPath
-      {
-         get { return Application.DataFolderPath; }
-      }
-
-      string IPreferenceSet.CacheDirectory
+      public string CacheDirectory
       {
          get { return Path.Combine(ApplicationDataFolderPath, Get<string>(Preference.CacheFolder)); }
       }
 
       private PreferenceDictionary _prefs;
+      private readonly string _versionString;
 
-      public PreferenceSet()
+      internal PreferenceSet()
       {
+         var data = new PreferenceData();
+         _prefs = CreateDictionary(data);
+      }
+
+      public PreferenceSet(string applicationPath, string applicationDataFolderPath, string versionString)
+      {
+         if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationPath");
+         if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationDataFolderPath");
+         if (String.IsNullOrWhiteSpace(versionString)) throw new ArgumentException("Value cannot be null or whitespace.", "versionString");
+         ApplicationPath = applicationPath;
+         ApplicationDataFolderPath = applicationDataFolderPath;
+         _versionString = versionString;
+
          var data = new PreferenceData();
          _prefs = CreateDictionary(data);
       }
@@ -86,7 +79,7 @@ namespace HFM.Preferences
          InitializeInternal(data);
       }
 
-      private static void EnsureApplicationDataFolderExists()
+      private void EnsureApplicationDataFolderExists()
       {
          if (!Directory.Exists(ApplicationDataFolderPath))
          {
@@ -102,44 +95,31 @@ namespace HFM.Preferences
 
       private PreferenceData Migrate()
       {
-         Logger.Info("Attempting to migrate from user settings...");
-         
-         PreferenceData data = null;
          try
          {
-            data = MigrateFromUserSettings.Execute();
+            var data = MigrateFromUserSettings.Execute();
             if (data != null)
             {
                Write(data);
             }
+            return data;
          }
-         catch (Exception ex)
+         catch (Exception)
          {
-            Logger.Warn(ex.Message, ex);
+            return null;
          }
-
-         if (data != null)
-         {
-            Logger.InfoFormat("Migration from version {0} user settings complete.", data.ApplicationVersion);
-         }
-         else
-         {
-            Logger.Info("Could not migrate from user settings.  Default settings will be applied.");
-         }
-         return data;
       }
 
-      private static void Upgrade(PreferenceData data)
+      private void Upgrade(PreferenceData data)
       {
-         string appVersionString = Application.VersionWithRevision;
-         if (data.ApplicationVersion != appVersionString)
+         if (data.ApplicationVersion != _versionString)
          {
             Version settingsVersion;
             if (Version.TryParse(data.ApplicationVersion, out settingsVersion))
             {
                ExecuteVersionUpgrades(settingsVersion, data);
             }
-            data.ApplicationVersion = appVersionString;
+            data.ApplicationVersion = _versionString;
             Write(data);
          }
       }
@@ -290,7 +270,7 @@ namespace HFM.Preferences
          Write(_prefs.Data);
       }
 
-      private static PreferenceData Read()
+      private PreferenceData Read()
       {
          string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
          if (File.Exists(path))
@@ -309,7 +289,7 @@ namespace HFM.Preferences
          return null;
       }
 
-      private static void Write(PreferenceData data)
+      private void Write(PreferenceData data)
       {
          string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
          using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))

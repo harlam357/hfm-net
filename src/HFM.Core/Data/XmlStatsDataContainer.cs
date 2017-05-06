@@ -23,6 +23,7 @@ using System.Globalization;
 using System.Xml;
 
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core.Data
 {

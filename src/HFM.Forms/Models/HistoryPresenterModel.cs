@@ -26,10 +26,10 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Data;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {

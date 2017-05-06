@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Preferences - Reporting Tab - Binding Model
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,10 +21,11 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   class ReportingModel : INotifyPropertyChanged
+   internal class ReportingModel : INotifyPropertyChanged
    {
       public bool Error
       {
@@ -192,7 +193,6 @@ namespace HFM.Forms.Models
          
             try
             {
-               // This will violate FxCop rule (rule ID)
                Validate.ServerPortPair(ServerAddress, ServerPort.ToString());
                ServerPortPairErrorMessage = String.Empty;
                return false;

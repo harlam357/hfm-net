@@ -25,6 +25,7 @@ using System.Net;
 using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core
 {

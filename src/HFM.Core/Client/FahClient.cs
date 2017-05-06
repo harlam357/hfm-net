@@ -30,6 +30,7 @@ using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Preferences;
 
 namespace HFM.Core
 {

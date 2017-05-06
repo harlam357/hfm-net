@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
-using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Preferences.Data;
 using HFM.Preferences.Properties;
 
 namespace HFM.Preferences

@@ -6,9 +6,6 @@ using System.Drawing;
 
 using NUnit.Framework;
 
-using HFM.Core;
-using HFM.Core.DataTypes;
-
 namespace HFM.Preferences.Tests
 {
    [TestFixture]
@@ -40,7 +37,7 @@ namespace HFM.Preferences.Tests
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
-            //Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitLocation));
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<int>(Preference.FormSplitterLocation);
          }
          sw.Stop();
@@ -55,7 +52,7 @@ namespace HFM.Preferences.Tests
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
-            //Assert.AreEqual(String.Empty, prefs.Get<string>(Preference.EmailReportingFromAddress));
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<string>(Preference.EmailReportingFromAddress);
          }
          sw.Stop();
@@ -70,7 +67,7 @@ namespace HFM.Preferences.Tests
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
-            //Assert.AreEqual("logcache", prefs.Get<string>(Preference.CacheFolder));
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<string>(Preference.CacheFolder);
          }
          sw.Stop();
@@ -82,13 +79,11 @@ namespace HFM.Preferences.Tests
       {
          var prefs = new PreferenceSet();
 
-         //object prev = null;
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-            //Assert.AreNotSame(prev, obj);
-            //prev = obj;
          }
          sw.Stop();
          Debug.WriteLine("Get Class: {0}ms", sw.ElapsedMilliseconds);
@@ -102,7 +97,7 @@ namespace HFM.Preferences.Tests
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
-            //Assert.IsNull(prefs.Get<ICollection<string>>(Preference.FormColumns));
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<ICollection<string>>(Preference.FormColumns);
          }
          sw.Stop();
@@ -117,7 +112,7 @@ namespace HFM.Preferences.Tests
          var sw = Stopwatch.StartNew();
          for (int i = 0; i < 1000000; i++)
          {
-            //Assert.IsNotNull(prefs.Get<IEnumerable<Color>>(Preference.GraphColors));
+            // ReSharper disable once UnusedVariable
             var obj = prefs.Get<IEnumerable<Color>>(Preference.GraphColors);
          }
          sw.Stop();

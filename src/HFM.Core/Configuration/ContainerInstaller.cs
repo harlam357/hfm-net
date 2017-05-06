@@ -33,6 +33,10 @@ namespace HFM.Core.Configuration
    [ExcludeFromCodeCoverage]
    public class ContainerInstaller : IWindsorInstaller
    {
+      public string ApplicationPath { get; set; }
+
+      public string ApplicationDataFolderPath { get; set; }
+
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
          container.Register(
@@ -45,7 +49,29 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<ILogger>()
                .ImplementedBy<Logging.Logger>()
-               .UsingFactoryMethod(() => new Logging.Logger(Application.DataFolderPath)));
+               .UsingFactoryMethod(() => new Logging.Logger(ApplicationDataFolderPath)));
+
+         // IPreferenceSet - Singleton
+         container.Register(
+            Component.For<Preferences.IPreferenceSet>()
+               .ImplementedBy<Preferences.PreferenceSet>()
+               .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
+               .OnCreate((kernel, instance) =>
+               {
+                  var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
+                  instance.PreferenceChanged += (s, e) =>
+                  {
+                     if (e.Preference == Preferences.Preference.MessageLevel)
+                     {
+                        var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
+                        if (newLevel != logger.Level)
+                        {
+                           logger.Level = newLevel;
+                           logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
+                        }
+                     }
+                  };
+               }));
 
          // IDataRetriever - Transient
          container.Register(

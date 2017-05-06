@@ -25,9 +25,10 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
-using harlam357.Core;
 using harlam357.Core.ComponentModel;
 using harlam357.Core.Net;
+
+using HFM.Preferences;
 
 namespace HFM.Core
 {

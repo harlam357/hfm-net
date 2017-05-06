@@ -138,6 +138,10 @@
       <Project>{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}</Project>
       <Name>HFM.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
+      <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
+      <Name>HFM.Preferences</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

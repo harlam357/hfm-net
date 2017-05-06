@@ -1,13 +1,12 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 
-using HFM.Core;
+using HFM.Core.DataTypes;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Data
 {
    [DataContract(Namespace = "")]
    public class ApplicationSettings
@@ -63,154 +62,6 @@ namespace HFM.Preferences
 
       [DataMember]
       public bool DuplicateProjectCheck { get; set; }
-   }
-
-   public enum ProcessingMode
-   {
-      Parallel,
-      Serial
-   }
-
-   [DataContract(Namespace = "")]
-   public class ClientRetrievalTask : IEquatable<ClientRetrievalTask>
-   {
-      public ClientRetrievalTask()
-      {
-         Enabled = true;
-         Interval = 15;
-         //ProcessingMode = default(ProcessingMode);
-      }
-
-      public ClientRetrievalTask(ClientRetrievalTask other)
-      {
-         Enabled = other.Enabled;
-         Interval = other.Interval;
-         ProcessingMode = other.ProcessingMode;
-      }
-
-      [DataMember]
-      public bool Enabled { get; set; }
-
-      [DataMember]
-      public int Interval { get; set; }
-
-      [DataMember]
-      public ProcessingMode ProcessingMode { get; set; }
-
-      public bool Equals(ClientRetrievalTask other)
-      {
-         if (ReferenceEquals(null, other))
-         {
-            return false;
-         }
-         if (ReferenceEquals(this, other))
-         {
-            return true;
-         }
-         return Enabled.Equals(other.Enabled) && Interval == other.Interval && ProcessingMode == other.ProcessingMode;
-      }
-
-      public override bool Equals(object obj)
-      {
-         if (ReferenceEquals(null, obj))
-         {
-            return false;
-         }
-         if (ReferenceEquals(this, obj))
-         {
-            return true;
-         }
-         if (obj.GetType() != GetType())
-         {
-            return false;
-         }
-         return Equals((ClientRetrievalTask)obj);
-      }
-
-      public override int GetHashCode()
-      {
-         unchecked
-         {
-            int hashCode = Enabled.GetHashCode();
-            hashCode = (hashCode * 397) ^ Interval;
-            hashCode = (hashCode * 397) ^ (int)ProcessingMode;
-            return hashCode;
-         }
-      }
-   }
-
-   [DataContract(Namespace = "")]
-   public class WebGenerationTask : IEquatable<WebGenerationTask>
-   {
-      public WebGenerationTask()
-      {
-         //Enabled = false;
-         Interval = 15;
-         //AfterClientRetrieval = false;
-      }
-
-      public WebGenerationTask(WebGenerationTask other)
-      {
-         Enabled = other.Enabled;
-         Interval = other.Interval;
-         AfterClientRetrieval = other.AfterClientRetrieval;
-      }
-
-      [DataMember]
-      public bool Enabled { get; set; }
-
-      [DataMember]
-      public int Interval { get; set; }
-
-      [DataMember]
-      public bool AfterClientRetrieval { get; set; }
-
-      public bool Equals(WebGenerationTask other)
-      {
-         if (ReferenceEquals(null, other))
-         {
-            return false;
-         }
-         if (ReferenceEquals(this, other))
-         {
-            return true;
-         }
-         return Enabled.Equals(other.Enabled) && Interval == other.Interval && AfterClientRetrieval.Equals(other.AfterClientRetrieval);
-      }
-
-      public override bool Equals(object obj)
-      {
-         if (ReferenceEquals(null, obj))
-         {
-            return false;
-         }
-         if (ReferenceEquals(this, obj))
-         {
-            return true;
-         }
-         if (obj.GetType() != GetType())
-         {
-            return false;
-         }
-         return Equals((WebGenerationTask)obj);
-      }
-
-      public override int GetHashCode()
-      {
-         unchecked
-         {
-            int hashCode = Enabled.GetHashCode();
-            hashCode = (hashCode * 397) ^ Interval;
-            hashCode = (hashCode * 397) ^ AfterClientRetrieval.GetHashCode();
-            return hashCode;
-         }
-      }
-   }
-
-   public enum WebDeploymentType
-   {
-      Path,
-      Ftp
    }
 
    [DataContract(Namespace = "")]
@@ -440,13 +291,6 @@ namespace HFM.Preferences
       public int SplitterLocation { get; set; }
    }
 
-   public enum MinimizeToOption
-   {
-      SystemTray,
-      TaskBar,
-      Both
-   }
-
    [DataContract(Namespace = "")]
    public class MainWindowProperties
    {
@@ -465,12 +309,6 @@ namespace HFM.Preferences
 
       [DataMember]
       public StatsType StatsType { get; set; }
-   }
-
-   public enum TimeFormatting
-   {
-      None,
-      Format1
    }
 
    [DataContract(Namespace = "")]
@@ -499,12 +337,6 @@ namespace HFM.Preferences
 
       [DataMember]
       public bool DisplayEtaAsDate { get; set; }
-   }
-
-   public enum GraphLayoutType
-   {
-      Single,
-      ClientsPerGraph
    }
 
    [DataContract(Namespace = "")]

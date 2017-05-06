@@ -2,6 +2,8 @@
 using System.Net;
 using System.Text;
 
+using HFM.Preferences;
+
 namespace HFM.Core
 {
    public static class PreferenceSetExtensions

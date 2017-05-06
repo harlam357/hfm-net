@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.IO;
 
 using HFM.Core;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {

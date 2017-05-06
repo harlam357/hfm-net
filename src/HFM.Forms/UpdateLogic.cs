@@ -26,6 +26,7 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {

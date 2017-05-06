@@ -26,6 +26,7 @@ using System.Linq;
 
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Preferences;
 using HFM.Queue;
 
 namespace HFM.Core

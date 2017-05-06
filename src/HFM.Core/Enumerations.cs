@@ -58,42 +58,5 @@ namespace HFM.Core
 
    // ReSharper restore InconsistentNaming
 
-   public enum PpdCalculationType
-   {
-      LastFrame,
-      LastThreeFrames,
-      AllFrames,
-      EffectiveRate
-   }
-
-   /// <summary>
-   /// Bonus Calculation Types
-   /// </summary>
-   public enum BonusCalculationType
-   {
-      DownloadTime,
-      FrameTime,
-      None
-   }
-
-   public enum UnitTotalsType
-   {
-      All,
-      ClientStart
-   }
-
-   /// <summary>
-   /// Ftp Transfer Types
-   /// </summary>
-   public enum FtpMode
-   {
-      Passive,
-      Active
-   }
-
-   public enum StatsType
-   {
-      User,
-      Team
-   }
+   
 }

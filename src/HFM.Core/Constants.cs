@@ -21,8 +21,6 @@ namespace HFM.Core
 {
    public static class Constants
    {
-      public const string ExeName = "HFM";
-
       public const string HfmLogFileName = "HFM.log";
       public const string HfmPrevLogFileName = "HFM-prev.log";
 
@@ -74,9 +72,6 @@ namespace HFM.Core
       public const int UnitInfoMax = 1048576; // 1 Megabyte
 
       public const int MaxDecimalPlaces = 5;
-
-      public const int MinMinutes = 1;
-      public const int MaxMinutes = 180;
 
       public const int MinOffsetMinutes = -720;
       public const int MaxOffsetMinutes = 720;

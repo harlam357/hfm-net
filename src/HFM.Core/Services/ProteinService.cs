@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 
 using HFM.Core.Data;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core

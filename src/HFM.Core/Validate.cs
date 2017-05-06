@@ -24,7 +24,7 @@ using System.Text.RegularExpressions;
 
 namespace HFM.Core
 {
-   public static class Validate
+   public static partial class Validate
    {
       #region Constants
 
@@ -297,16 +297,6 @@ namespace HFM.Core
          if (String.IsNullOrEmpty(value1) && String.IsNullOrEmpty(value2) == false)
          {
             throw new ArgumentException(value2Message);
-         }
-
-         return true;
-      }
-
-      public static bool Minutes(int minutes)
-      {
-         if ((minutes > Constants.MaxMinutes) || (minutes < Constants.MinMinutes))
-         {
-            return false;
          }
 
          return true;
