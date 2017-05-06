@@ -8,7 +8,7 @@
     <ProjectGuid>{F4A40781-C6FD-46F9-B594-5EB4F9867BA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HFM.Forms.Tests</RootNamespace>
+    <RootNamespace>HFM.Forms</RootNamespace>
     <AssemblyName>HFM.Forms.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
