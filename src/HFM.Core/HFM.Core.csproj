@@ -82,6 +82,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
