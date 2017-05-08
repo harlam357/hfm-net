@@ -259,27 +259,27 @@ namespace HFM.Forms
          }
       }
 
-      public void RefreshAllProjectDataClick()
+      public async void RefreshAllProjectDataClick()
       {
-         RefreshProjectData(ProteinUpdateType.All);
+         await RefreshProjectData(ProteinUpdateType.All);
       }
 
-      public void RefreshUnknownProjectDataClick()
+      public async void RefreshUnknownProjectDataClick()
       {
-         RefreshProjectData(ProteinUpdateType.Unknown);
+         await RefreshProjectData(ProteinUpdateType.Unknown);
       }
 
-      public void RefreshDataByProjectClick()
+      public async void RefreshDataByProjectClick()
       {
-         RefreshProjectData(ProteinUpdateType.Project);
+         await RefreshProjectData(ProteinUpdateType.Project);
       }
 
-      public void RefreshDataByIdClick()
+      public async void RefreshDataByIdClick()
       {
-         RefreshProjectData(ProteinUpdateType.Id);
+         await RefreshProjectData(ProteinUpdateType.Id);
       }
 
-      private void RefreshProjectData(ProteinUpdateType type)
+      private async Task RefreshProjectData(ProteinUpdateType type)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
          if (result == DialogResult.No)
@@ -287,44 +287,29 @@ namespace HFM.Forms
             return;
          }
 
-         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         var cancellationTokenSource = new CancellationTokenSource();
-         var projectDownloadView = _viewFactory.GetProgressDialogAsync();
-         projectDownloadView.Icon = Properties.Resources.hfm_48_48;
-         projectDownloadView.Text = "Updating Project Data";
-         projectDownloadView.CancellationTokenSource = cancellationTokenSource;
-         projectDownloadView.Progress = progress;
-
-         projectDownloadView.Shown += (s, args) =>
+         long updateArg = 0;
+         if (type == ProteinUpdateType.Project)
          {
-            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            long updateArg = 0;
-            if (type == ProteinUpdateType.Project)
+            updateArg = _model.SelectedHistoryEntry.ProjectID;
+         }
+         else if (type == ProteinUpdateType.Id)
+         {
+            updateArg = _model.SelectedHistoryEntry.ID;
+         }
+
+         try
+         {
+            bool updated = await _database.UpdateProteinDataAsync(type, updateArg).ConfigureAwait(false);
+            if (updated)
             {
-               updateArg = _model.SelectedHistoryEntry.ProjectID;
+               _model.ResetBindings(true);
             }
-            else if (type == ProteinUpdateType.Id)
-            {
-               updateArg = _model.SelectedHistoryEntry.ID;
-            }
-            _database.UpdateProteinDataAsync(type, updateArg, cancellationTokenSource.Token, progress)
-               .ContinueWith(t =>
-               {
-                  if (t.IsFaulted)
-                  {
-                     var ex = t.Exception.Flatten().InnerException;
-                     Logger.Error(ex.Message, ex);
-                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-                  }
-                  else
-                  {
-                     _model.ResetBindings(true);
-                  }
-                  projectDownloadView.Close();
-               }, uiTaskScheduler);
-         };
-         projectDownloadView.ShowDialog(_view);
-         _viewFactory.Release(projectDownloadView);
+         }
+         catch (Exception ex)
+         {
+            Logger.Error(ex.Message, ex);
+            _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+         }
       }
    }
 }

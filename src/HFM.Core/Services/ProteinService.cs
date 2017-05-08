@@ -68,7 +68,7 @@ namespace HFM.Core
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress);
+      Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ProgressInfo> progress);
    }
 
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
@@ -208,7 +208,7 @@ namespace HFM.Core
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      public Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress)
+      public Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ProgressInfo> progress)
       {
          return Task.Factory.StartNew(() =>
          {

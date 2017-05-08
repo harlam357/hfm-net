@@ -30,11 +30,11 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
+using harlam357.Core;
 using harlam357.Core.ComponentModel;
 
 using HFM.Core.DataTypes;
 using HFM.Preferences;
-using HFM.Proteins;
 
 namespace HFM.Core.Data.SQLite
 {
@@ -52,22 +52,6 @@ namespace HFM.Core.Data.SQLite
       Id
    }
 
-   public sealed class UpgradeExecutingEventArgs : EventArgs
-   {
-      private readonly IProgressProcessRunner _process;
-
-      public IProgressProcessRunner Process
-      {
-         get { return _process; }
-      }
-
-      public UpgradeExecutingEventArgs(IProgressProcessRunner process)
-      {
-         if (process == null) throw new ArgumentNullException("process");
-         _process = process;
-      }
-   }
-
    public interface IUnitInfoDatabase : IDisposable
    {
       /// <summary>
@@ -76,8 +60,6 @@ namespace HFM.Core.Data.SQLite
       bool Connected { get; }
 
       void Upgrade();
-
-      event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
 
       bool Insert(UnitInfoModel unitInfoModel);
 
@@ -99,10 +81,10 @@ namespace HFM.Core.Data.SQLite
 
       long CountFailed(string clientName, DateTime? clientStartTime);
 
-      Task UpdateProteinDataAsync(ProteinUpdateType type, long updateArg, CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress);
+      Task<bool> UpdateProteinDataAsync(ProteinUpdateType type, long updateArg);
    }
 
-   public sealed class UnitInfoDatabase : IUnitInfoDatabase
+   public sealed partial class UnitInfoDatabase : IUnitInfoDatabase
    {
       #region Fields
 
@@ -226,84 +208,80 @@ namespace HFM.Core.Data.SQLite
          int dbVersion = Application.ParseVersion(dbVersionString);
          _logger.InfoFormat("WU History database v{0}", dbVersionString);
 
-         UpgradeTo0920(dbVersion);
+         UpgradeToVersion092(dbVersion);
       }
 
-      private void UpgradeTo0920(int dbVersion)
+      private void UpgradeToVersion092(int dbVersion)
       {
-         const string upgradeVersion1String = "0.9.2";
-         if (dbVersion < Application.ParseVersion(upgradeVersion1String))
+         const string upgradeVersionString = "0.9.2";
+         if (dbVersion < Application.ParseVersion(upgradeVersionString))
          {
-            // delete duplicates
-            _logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersion1String);
-            var duplicateDeleter = new DuplicateDeleter(this, _logger);
-            OnUpgradeExecuting(duplicateDeleter);
-            // add columns to WuHistory table
-            AddProteinColumns();
-            // update the WuHistory table with protein info
-            var proteinDataUpdater = new ProteinDataUpdater(this, _proteinService);
-            OnUpgradeExecuting(proteinDataUpdater);
-            // set database version
-            SetDatabaseVersion(upgradeVersion1String);
-         }
-      }
-
-      public event EventHandler<UpgradeExecutingEventArgs> UpgradeExecuting;
-
-      private void OnUpgradeExecuting(IProgressProcessRunner process)
-      {
-         if (process == null) return;
-
-         var handler = UpgradeExecuting;
-         if (handler != null)
-         {
-            handler(this, new UpgradeExecutingEventArgs(process));
-         }
-         else
-         {
-            process.Process();
-         }
-
-         if (process.Exception != null)
-         {
-            throw new DataException("Database upgrade failed.", process.Exception);
-         }
-      }
-
-      private void AddProteinColumns()
-      {
-         using (var connection = new SQLiteConnection(ConnectionString))
-         {
-            connection.Open();
-            using (var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
-               adder.AddColumn("WorkUnitName", "VARCHAR(30)");
-               adder.AddColumn("KFactor", "FLOAT");
-               adder.AddColumn("Core", "VARCHAR(20)");
-               adder.AddColumn("Frames", "INT");
-               adder.AddColumn("Atoms", "INT");
-               adder.AddColumn("Credit", "FLOAT");
-               adder.AddColumn("PreferredDays", "FLOAT");
-               adder.AddColumn("MaximumDays", "FLOAT");
-               adder.Execute();
+               connection.Open();
+               using (var transaction = connection.BeginTransaction())
+               {
+                  try
+                  {
+                     _logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersionString);
+                     // delete duplicates
+                     var duplicateDeleter = new DuplicateDeleter(connection, _logger);
+                     duplicateDeleter.ExecuteAsyncWithProgress(true).Wait();
+                     // add columns to WuHistory table
+                     AddProteinColumns(connection);
+                     // update the WuHistory table with protein info
+                     var proteinDataUpdater = new ProteinDataUpdater(connection, _proteinService);
+                     proteinDataUpdater.ExecuteAsyncWithProgress(true).Wait();
+                     // set database version
+                     SetDatabaseVersion(connection, upgradeVersionString);
+
+                     transaction.Commit();
+                  }
+                  catch (Exception ex)
+                  {
+                     transaction.Rollback();
+                     throw new DataException("Database upgrade failed.", ex);
+                  }
+               }
             }
+         }
+      }
+
+      private static void AddProteinColumns(SQLiteConnection connection)
+      {
+         using (var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
+         {
+            adder.AddColumn("WorkUnitName", "VARCHAR(30)");
+            adder.AddColumn("KFactor", "FLOAT");
+            adder.AddColumn("Core", "VARCHAR(20)");
+            adder.AddColumn("Frames", "INT");
+            adder.AddColumn("Atoms", "INT");
+            adder.AddColumn("Credit", "FLOAT");
+            adder.AddColumn("PreferredDays", "FLOAT");
+            adder.AddColumn("MaximumDays", "FLOAT");
+            adder.Execute(false);
          }
       }
 
       private void SetDatabaseVersion(string version)
       {
-         Debug.Assert(!String.IsNullOrWhiteSpace(version));
-
-         _logger.InfoFormat("Setting database version to: v{0}", version);
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
-            using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
-            {
-               var param = new SQLiteParameter("Version", DbType.String) { Value = version };
-               cmd.Parameters.Add(param);
-               cmd.ExecuteNonQuery();
-            }
+            SetDatabaseVersion(connection, version);
+         }
+      }
+
+      private void SetDatabaseVersion(SQLiteConnection connection, string version)
+      {
+         Debug.Assert(!String.IsNullOrWhiteSpace(version));
+
+         _logger.InfoFormat("Setting database version to: v{0}", version);
+         using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
+         {
+            var param = new SQLiteParameter("Version", DbType.String) { Value = version };
+            cmd.Parameters.Add(param);
+            cmd.ExecuteNonQuery();
          }
       }
 
@@ -494,15 +472,20 @@ namespace HFM.Core.Data.SQLite
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
-            using (var database = new PetaPoco.Database(connection))
-            using (var cmd = database.CreateCommand(database.Connection, sql, args))
+            return Select(connection, sql, args);
+         }
+      }
+
+      private static DataTable Select(SQLiteConnection connection, string sql, params object[] args)
+      {
+         using (var database = new PetaPoco.Database(connection))
+         using (var cmd = database.CreateCommand(database.Connection, sql, args))
+         {
+            using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
             {
-               using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
-               {
-                  var table = new DataTable();
-                  adapter.Fill(table);
-                  return table;
-               }
+               var table = new DataTable();
+               adapter.Fill(table);
+               return table;
             }
          }
       }
@@ -516,10 +499,15 @@ namespace HFM.Core.Data.SQLite
          using (var connection = new SQLiteConnection(ConnectionString))
          {
             connection.Open();
-            using (var database = new PetaPoco.Database(connection))
-            {
-               return database.Execute(sql, args);
-            }
+            return Execute(connection, sql, args);
+         }
+      }
+
+      private static int Execute(SQLiteConnection connection, string sql, params object[] args)
+      {
+         using (var database = new PetaPoco.Database(connection))
+         {
+            return database.Execute(sql, args);
          }
       }
 
@@ -570,13 +558,35 @@ namespace HFM.Core.Data.SQLite
 
       #endregion
 
-      public Task UpdateProteinDataAsync(ProteinUpdateType type, long updateArg, CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress)
+      public async Task<bool> UpdateProteinDataAsync(ProteinUpdateType type, long updateArg)
       {
-         // update the WuHistory table with protein info
-         var proteinDataUpdater = new ProteinDataUpdater(this, _proteinService);
-         proteinDataUpdater.UpdateType = type;
-         proteinDataUpdater.UpdateArg = updateArg;
-         return proteinDataUpdater.ExecuteAsync(cancellationToken, progress);
+         using (var connection = new SQLiteConnection(ConnectionString))
+         {
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+               try
+               {
+                  // update the WuHistory table with protein info
+                  var proteinDataUpdater = new ProteinDataUpdaterWithCancellation(connection, _proteinService);
+                  proteinDataUpdater.UpdateType = type;
+                  proteinDataUpdater.UpdateArg = updateArg;
+                  await proteinDataUpdater.ExecuteAsyncWithProgress(true, this).ConfigureAwait(false);
+                  if (proteinDataUpdater.IsCanceled)
+                  {
+                     transaction.Rollback();
+                     return false;
+                  }
+                  transaction.Commit();
+                  return true;
+               }
+               catch (Exception)
+               {
+                  transaction.Rollback();
+                  throw;
+               }
+            }
+         }
       }
 
       #region IDisposable Members
@@ -889,11 +899,9 @@ namespace HFM.Core.Data.SQLite
             bool columnExists = _rows.Any(row => row.Field<string>(1) == name);
             if (!columnExists)
             {
-               _commands.Add(new SQLiteCommand(_connection)
-                             {
-                                CommandText = String.Format(CultureInfo.InvariantCulture,
-                                                 "ALTER TABLE [{0}] ADD COLUMN [{1}] {2} DEFAULT {3} NOT NULL", _tableName, name, dataType, GetDefaultValue(dataType))
-                             });
+               string commandText = String.Format(CultureInfo.InvariantCulture,
+                  "ALTER TABLE [{0}] ADD COLUMN [{1}] {2} DEFAULT {3} NOT NULL", _tableName, name, dataType, GetDefaultValue(dataType));
+               _commands.Add(new SQLiteCommand(_connection) { CommandText = commandText });
             }
          }
 
@@ -916,15 +924,32 @@ namespace HFM.Core.Data.SQLite
             throw new ArgumentException(message, "dataType");
          }
 
-         public void Execute()
+         //public void Execute()
+         //{
+         //   Execute(true);
+         //}
+
+         public void Execute(bool useTransaction)
          {
-            using (var trans = _connection.BeginTransaction())
+            if (useTransaction)
             {
-               foreach (var command in _commands)
+               using (var transaction = _connection.BeginTransaction())
                {
-                  command.ExecuteNonQuery();
+                  ExecuteInternal();
+                  transaction.Commit();
                }
-               trans.Commit();
+            }
+            else
+            {
+               ExecuteInternal();
+            }
+         }
+
+         private void ExecuteInternal()
+         {
+            foreach (var command in _commands)
+            {
+               command.ExecuteNonQuery();
             }
          }
 
@@ -937,26 +962,27 @@ namespace HFM.Core.Data.SQLite
          }
       }
 
-      private sealed class DuplicateDeleter : ProgressProcessRunnerBase
+      private sealed class DuplicateDeleter : AsyncProcessorBase
       {
-         private readonly UnitInfoDatabase _database;
+         private readonly SQLiteConnection _connection;
          private readonly ILogger _logger;
 
-         public DuplicateDeleter(UnitInfoDatabase database, ILogger logger)
+         public DuplicateDeleter(SQLiteConnection connection, ILogger logger)
          {
-            if (database == null) throw new ArgumentNullException("database");
+            if (connection == null) throw new ArgumentNullException("connection");
             if (logger == null) throw new ArgumentNullException("logger");
 
-            _database = database;
+            _connection = connection;
             _logger = logger;
-
-            Debug.Assert(_database.Connected);
          }
 
-         protected override void ProcessInternal()
+         protected override async Task OnExecuteAsync(IProgress<ProgressInfo> progress)
          {
-            Debug.Assert(_database.TableExists(SqlTable.WuHistory));
+            await Task.Run(() => ExecuteInternal(progress)).ConfigureAwait(false);
+         }
 
+         private void ExecuteInternal(IProgress<ProgressInfo> progress)
+         {
             var selectSql = PetaPoco.Sql.Builder.Select("ID", "ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime", "COUNT(*)")
                .From("WuHistory")
                .GroupBy("ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime")
@@ -966,7 +992,7 @@ namespace HFM.Core.Data.SQLite
             int totalCount = 0;
             _logger.Info("Checking for duplicate WU History entries...");
 
-            using (var table = _database.Select(selectSql.SQL))
+            using (var table = Select(_connection, selectSql.SQL))
             {
                int lastProgress = 0;
                foreach (DataRow row in table.Rows)
@@ -975,7 +1001,7 @@ namespace HFM.Core.Data.SQLite
                      .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
                         row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-                  int result = _database.Execute(deleteSql.SQL, deleteSql.Arguments);
+                  int result = Execute(_connection, deleteSql.SQL, deleteSql.Arguments);
                   if (result != 0)
                   {
                      _logger.DebugFormat("Deleted rows: {0}", result);
@@ -983,12 +1009,15 @@ namespace HFM.Core.Data.SQLite
                   }
                   count++;
 
-                  int progress = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-                  if (progress != lastProgress)
+                  int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                  if (progressPercentage != lastProgress)
                   {
                      string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                     OnProgressChanged(new ProgressChangedEventArgs(progress, message));
-                     lastProgress = progress;
+                     if (progress != null)
+                     {
+                        progress.Report(new ProgressInfo(progressPercentage, message));
+                     }
+                     lastProgress = progressPercentage;
                   }
                }
             }
@@ -998,115 +1027,97 @@ namespace HFM.Core.Data.SQLite
                _logger.InfoFormat("Total number of duplicate WU History entries deleted: {0}", totalCount);
             }
          }
+      }
 
-         protected override bool SupportsCancellationInternal
+      private sealed class ProteinDataUpdater : ProteinDataUpdaterBase, IAsyncProcessor
+      {
+         public ProteinDataUpdater(SQLiteConnection connection, IProteinService proteinService)
+            : base(connection, proteinService)
          {
-            get { return false; }
+
+         }
+
+         public Exception Exception { get; private set; }
+
+         public bool IsCompleted { get; private set; }
+
+         public bool IsFaulted { get; private set; }
+
+         public async Task ExecuteAsync(IProgress<ProgressInfo> progress)
+         {
+            try
+            {
+               var ct = CancellationToken.None;
+               await Task.Run(() => ExecuteInternal(ct, progress), ct).ConfigureAwait(false);
+               IsCompleted = true;
+            }
+            catch (Exception ex)
+            {
+               Exception = ex;
+               IsFaulted = true;
+            }
          }
       }
 
-      [SQLiteFunction(Name = "ToSlotType", Arguments = 1, FuncType = FunctionType.Scalar)]
-      private sealed class ToSlotType : SQLiteFunction
+      private sealed class ProteinDataUpdaterWithCancellation : ProteinDataUpdaterBase, IAsyncProcessorWithCancellation
       {
-         public override object Invoke(object[] args)
+         public ProteinDataUpdaterWithCancellation(SQLiteConnection connection, IProteinService proteinService)
+            : base(connection, proteinService)
          {
-            Debug.Assert(args.Length == 1);
-            if (args[0] == null || Convert.IsDBNull(args[0]))
-            {
-               return String.Empty;
-            }
+            
+         }
 
-            var core = (string)args[0];
-            return String.IsNullOrEmpty(core) ? String.Empty : core.ToSlotType().ToString();
+         public Exception Exception { get; private set; }
+
+         public bool IsCanceled { get; private set; }
+
+         public bool IsCompleted { get; private set; }
+
+         public bool IsFaulted { get; private set; }
+
+         public async Task ExecuteAsync(IProgress<ProgressInfo> progress)
+         {
+            await ExecuteAsync(CancellationToken.None, progress).ConfigureAwait(false);
+         }
+
+         public async Task ExecuteAsync(CancellationToken cancellationToken, IProgress<ProgressInfo> progress)
+         {
+            try
+            {
+               await Task.Run(() => ExecuteInternal(cancellationToken, progress), cancellationToken).ConfigureAwait(false);
+               IsCompleted = true;
+            }
+            catch (OperationCanceledException)
+            {
+               IsCanceled = true;
+            }
+            catch (Exception ex)
+            {
+               Exception = ex;
+               IsFaulted = true;
+            }
          }
       }
 
-      [SQLiteFunction(Name = "GetProduction", Arguments = 9, FuncType = FunctionType.Scalar)]
-      private sealed class GetProduction : SQLiteFunction
+      private abstract class ProteinDataUpdaterBase
       {
-         [ThreadStatic]
-         public static BonusCalculationType BonusCalculation;
-
-         public override object Invoke(object[] args)
-         {
-            Debug.Assert(args.Length == 9);
-            if (args.Any(x => x == null || Convert.IsDBNull(x)))
-            {
-               return 0.0;
-            }
-
-            var frameTime = TimeSpan.FromSeconds((long)args[0]);
-            // unbox then cast to int
-            var frames = (int)((long)args[1]);
-            var baseCredit = (double)args[2];
-            var kFactor = (double)args[3];
-            var preferredDays = (double)args[4];
-            var maximumDays = (double)args[5];
-            DateTime downloadDateTime;
-            DateTime.TryParseExact((string)args[6], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
-                                   DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                                   out downloadDateTime);
-            DateTime completionDateTime;
-            DateTime.TryParseExact((string)args[7], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
-                                   DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                                   out completionDateTime);
-            var calcOption = (long)args[8];
-
-            TimeSpan unitTime = TimeSpan.Zero;
-            switch (BonusCalculation)
-            {
-               case BonusCalculationType.FrameTime:
-                  unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * frames);
-                  break;
-               case BonusCalculationType.DownloadTime:
-                  unitTime = completionDateTime.Subtract(downloadDateTime);
-                  break;
-            }
-
-            if (calcOption != 0)
-            {
-               return ProductionCalculator.GetCredit(baseCredit, kFactor, preferredDays, maximumDays, unitTime);
-            }
-            return ProductionCalculator.GetPPD(frameTime, frames, baseCredit, kFactor, preferredDays, maximumDays, unitTime);
-         }
-      }
-
-      private sealed class ProteinDataUpdater : ProgressProcessRunnerBase
-      {
-         private readonly IUnitInfoDatabase _database;
+         private readonly SQLiteConnection _connection;
          private readonly IProteinService _proteinService;
 
-         public ProteinDataUpdater(IUnitInfoDatabase database, IProteinService proteinService)
+         protected ProteinDataUpdaterBase(SQLiteConnection connection, IProteinService proteinService)
          {
-            if (database == null) throw new ArgumentNullException("database");
+            if (connection == null) throw new ArgumentNullException("connection");
             if (proteinService == null) throw new ArgumentNullException("proteinService");
 
-            _database = database;
+            _connection = connection;
             _proteinService = proteinService;
-
-            Debug.Assert(_database.Connected);
          }
 
          public ProteinUpdateType UpdateType { get; set; }
 
          public long UpdateArg { get; set; }
 
-         //public void Execute()
-         //{
-         //   ExecuteInternal(CancellationToken.None, null);
-         //}
-
-         public Task ExecuteAsync(CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress)
-         {
-            return Task.Factory.StartNew(() => ExecuteInternal(cancellationToken, progress), cancellationToken);
-         }
-
-         protected override void ProcessInternal()
-         {
-            ExecuteInternal(CancellationToken.None, null);
-         }
-
-         private void ExecuteInternal(CancellationToken cancellationToken, IProgress<ProgressChangedEventArgs> progress)
+         protected void ExecuteInternal(CancellationToken cancellationToken, IProgress<ProgressInfo> progress)
          {
             const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
 
@@ -1120,20 +1131,13 @@ namespace HFM.Core.Data.SQLite
                }
                selectSql = selectSql.GroupBy("ProjectID");
 
-               using (var table = _database.Select(selectSql.SQL))
+               using (var table = Select(_connection, selectSql.SQL))
                {
                   int count = 0;
                   int lastProgress = 0;
                   foreach (DataRow row in table.Rows)
                   {
-                     if (CancelToken)
-                     {
-                        break;
-                     }
-                     if (cancellationToken.IsCancellationRequested)
-                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-                     }
+                     cancellationToken.ThrowIfCancellationRequested();
 
                      var projectId = row.Field<int>("ProjectID");
                      var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
@@ -1143,7 +1147,7 @@ namespace HFM.Core.Data.SQLite
                         {
                            updateSql = updateSql.Where(workUnitNameUnknown);
                         }
-                        _database.Execute(updateSql.SQL, updateSql.Arguments);
+                        Execute(_connection, updateSql.SQL, updateSql.Arguments);
                      }
                      count++;
 
@@ -1151,8 +1155,10 @@ namespace HFM.Core.Data.SQLite
                      if (progressPercentage != lastProgress)
                      {
                         string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                        OnProgressChanged(new ProgressChangedEventArgs(progressPercentage, message));
-                        if (progress != null) progress.Report(new ProgressChangedEventArgs(progressPercentage, message));
+                        if (progress != null)
+                        {
+                           progress.Report(new ProgressInfo(progressPercentage, message));
+                        }
                         lastProgress = progressPercentage;
                      }
                   }
@@ -1164,7 +1170,7 @@ namespace HFM.Core.Data.SQLite
                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                if (updateSql != null)
                {
-                  _database.Execute(updateSql.SQL, updateSql.Arguments);
+                  Execute(_connection, updateSql.SQL, updateSql.Arguments);
                }
             }
             else if (UpdateType == ProteinUpdateType.Id)
@@ -1172,7 +1178,7 @@ namespace HFM.Core.Data.SQLite
                long id = UpdateArg;
                var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
 
-               using (var table = _database.Select(selectSql.SQL, selectSql.Arguments))
+               using (var table = Select(_connection, selectSql.SQL, selectSql.Arguments))
                {
                   if (table.Rows.Count != 0)
                   {
@@ -1180,7 +1186,7 @@ namespace HFM.Core.Data.SQLite
                      var updateSql = GetUpdateSql(projectId, "ID", id);
                      if (updateSql != null)
                      {
-                        _database.Execute(updateSql.SQL, updateSql.Arguments);
+                        Execute(_connection, updateSql.SQL, updateSql.Arguments);
                      }
                   }
                }
@@ -1207,14 +1213,6 @@ namespace HFM.Core.Data.SQLite
             }
 
             return null;
-         }
-
-         /// <summary>
-         /// Gets a value that defines if this runner supports being cancelled.
-         /// </summary>
-         protected override bool SupportsCancellationInternal
-         {
-            get { return true; }
          }
       }
 

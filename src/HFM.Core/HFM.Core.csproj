@@ -82,9 +82,11 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
+    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />

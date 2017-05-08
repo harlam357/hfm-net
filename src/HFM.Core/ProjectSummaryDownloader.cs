@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
-using harlam357.Core.ComponentModel;
+using harlam357.Core;
 using harlam357.Core.Net;
 
 using HFM.Preferences;
@@ -52,7 +52,7 @@ namespace HFM.Core
       /// <summary>
       /// Downloads the project information asynchronously.
       /// </summary>
-      Task DownloadAsync(IProgress<ProgressChangedEventArgs> progress);
+      Task DownloadAsync(IProgress<ProgressInfo> progress);
    }
 
    public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
@@ -112,12 +112,12 @@ namespace HFM.Core
       /// Downloads the project information.
       /// </summary>
       /// <remarks>Access to the Download and DownloadAsync methods is synchronized.</remarks>
-      public Task DownloadAsync(IProgress<ProgressChangedEventArgs> progress)
+      public Task DownloadAsync(IProgress<ProgressInfo> progress)
       {
          return Task.Factory.StartNew(() => DownloadInternal(progress));
       }
 
-      private void DownloadInternal(IProgress<ProgressChangedEventArgs> progress)
+      private void DownloadInternal(IProgress<ProgressInfo> progress)
       {
          Debug.Assert(Prefs != null);
 
@@ -137,7 +137,7 @@ namespace HFM.Core
                {
                   int progressPercentage = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
                   string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
-                  progress.Report(new ProgressChangedEventArgs(progressPercentage, message));
+                  progress.Report(new ProgressInfo(progressPercentage, message));
                };
             }
             httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);

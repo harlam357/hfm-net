@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using Castle.Core.Logging;
 using Castle.Windsor;
 
+using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
@@ -52,6 +53,7 @@ namespace HFM
          }
 
          AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
+         AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = ExecuteAsyncWithProgress;
 
          // Issue 180 - Restore the already running instance to the screen.
          using (var singleInstance = new SingleInstanceHelper())
@@ -285,18 +287,6 @@ namespace HFM
          var database = container.Resolve<IUnitInfoDatabase>();
          if (database.Connected)
          {
-            EventHandler<UpgradeExecutingEventArgs> upgradeExecuting = (s, e) =>
-            {
-               // Execute Asynchronous Operation
-               var view = container.Resolve<IProgressDialogView>("ProgressDialog");
-               view.ProcessRunner = e.Process;
-               view.Icon = Properties.Resources.hfm_48_48;
-               view.Text = "Upgrading Database";
-               view.StartPosition = FormStartPosition.CenterScreen;
-               view.Process();
-            };
-
-            database.UpgradeExecuting += upgradeExecuting;
             try
             {
                database.Upgrade();
@@ -305,10 +295,6 @@ namespace HFM
             catch (Exception ex)
             {
                ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
-            }
-            finally
-            {
-               database.UpgradeExecuting -= upgradeExecuting;
             }
          }
          return true;
@@ -333,6 +319,44 @@ namespace HFM
             }
          }
          return null;
+      }
+
+      private static IWin32Window GetOwnerFromState(object state)
+      {
+         var openForms = System.Windows.Forms.Application.OpenForms.OfType<Form>().ToList();
+
+         if (state is UnitInfoDatabase)
+         {
+            var historyView = openForms.Find(x => x is IHistoryView);
+            if (historyView != null)
+            {
+               return historyView;
+            }
+         }
+
+         var win32Window = state as IWin32Window;
+         if (win32Window != null)
+         {
+            return win32Window;
+         }
+
+         return openForms.Find(x => x is IMainView);
+      }
+
+      private static void ExecuteAsyncWithProgress(IAsyncProcessor processor, object state)
+      {
+         using (IProgressDialogAsyncView dialog = new ProgressDialogAsync())
+         {
+            dialog.AsyncProcessor = processor;
+            dialog.Icon = Properties.Resources.hfm_48_48;
+            dialog.Text = Core.Application.NameAndVersion;
+            var owner = GetOwnerFromState(state);
+            if (owner == null)
+            {
+               dialog.StartPosition = FormStartPosition.CenterScreen;   
+            }
+            dialog.ShowDialog(owner);
+         }
       }
 
       internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)

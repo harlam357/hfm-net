@@ -1187,36 +1187,38 @@ namespace HFM.Forms
       {
          _proteinService.ResetRefreshParameters();
 
-         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
-         projectDownloadView.Progress = progress;
+         // TODO: Fix Project Download
 
-         Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
-         projectDownloadView.Shown += (s, args) =>
-         {
-            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            refreshTask = _proteinService.RefreshAsync(progress);
-            refreshTask
-               .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
-                     CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
-               .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
-         };
-         projectDownloadView.ShowDialog(_view);
-         _viewFactory.Release(projectDownloadView);
+         //var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
+         //var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
+         //projectDownloadView.Progress = progress;
 
-         if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
-         {
-            var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
-            if (proteinChanges.Count > 0)
-            {
-               _retrievalModel.RunClientRetrieval();
-               using (var dlg = new ProteinLoadResultsDialog())
-               {
-                  dlg.DataBind(proteinChanges);
-                  dlg.ShowDialog(_view);
-               }
-            }
-         }
+         //Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
+         //projectDownloadView.Shown += (s, args) =>
+         //{
+         //   var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+         //   refreshTask = _proteinService.RefreshAsync(progress);
+         //   refreshTask
+         //      .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
+         //            CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
+         //      .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
+         //};
+         //projectDownloadView.ShowDialog(_view);
+         //_viewFactory.Release(projectDownloadView);
+
+         //if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
+         //{
+         //   var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
+         //   if (proteinChanges.Count > 0)
+         //   {
+         //      _retrievalModel.RunClientRetrieval();
+         //      using (var dlg = new ProteinLoadResultsDialog())
+         //      {
+         //         dlg.DataBind(proteinChanges);
+         //         dlg.ShowDialog(_view);
+         //      }
+         //   }
+         //}
       }
 
       public void ToolsBenchmarksClick()
