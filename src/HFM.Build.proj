@@ -6,7 +6,7 @@
    <PropertyGroup>
       <Major>0</Major>
       <Minor>9</Minor>
-      <Build>8</Build>
+      <Build>9</Build>
       <Revision>0</Revision>
       <ProductName>HFM.NET</ProductName>
       <SolutionFileName>HFM.All.sln</SolutionFileName>
