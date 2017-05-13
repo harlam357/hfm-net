@@ -176,8 +176,6 @@ namespace HFM.Core.Configuration
 
          // IPluginManager<Plugins.IFileSerializer<T>> - Singleton
          container.Register(
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.Protein>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
                .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
             Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.HistoryEntry>>>()

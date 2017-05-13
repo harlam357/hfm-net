@@ -84,7 +84,6 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="HtmlSerializer.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="TabSerializer.cs" />

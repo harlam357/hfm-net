@@ -39,16 +39,13 @@ namespace HFM.Core.Plugins
       }
 
       private readonly IPreferenceSet _prefs;
-      private readonly IFileSerializerPluginManager<List<DataTypes.Protein>> _proteinPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> _benchmarkPluginManager;
       private readonly IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> _historyEntryPluginManager;
 
-      public PluginLoader(IPreferenceSet prefs, IFileSerializerPluginManager<List<DataTypes.Protein>> proteinPluginManager,
-                                                IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager,
+      public PluginLoader(IPreferenceSet prefs, IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>> benchmarkPluginManager,
                                                 IFileSerializerPluginManager<List<DataTypes.HistoryEntry>> historyEntryPluginManager)
       {
          _prefs = prefs;
-         _proteinPluginManager = proteinPluginManager;
          _benchmarkPluginManager = benchmarkPluginManager;
          _historyEntryPluginManager = historyEntryPluginManager;
       }
@@ -60,28 +57,13 @@ namespace HFM.Core.Plugins
 
       public void Load()
       {
-         #region Protein Serializer Plugins
-
-         // register built in types
-         _proteinPluginManager.RegisterPlugin(typeof(TabSerializer).Name, new TabSerializer());
-         _proteinPluginManager.RegisterPlugin(typeof(HtmlSerializer).Name, new HtmlSerializer());
-         _proteinPluginManager.RegisterPlugin(typeof(JsonSerializer).Name, new JsonSerializer());
-         // load from plugin folder
-         string path = Path.Combine(PluginsFolder, Constants.PluginsProteinsFolderName);
-         if (Directory.Exists(path))
-         {
-            LogResults(_proteinPluginManager.LoadAllPlugins(path));
-         }
-
-         #endregion
-
          #region Benchmark Serializer Plugins
          
          // register built in types
          _benchmarkPluginManager.RegisterPlugin(typeof(ProtoBufFileSerializer<>).Name, new ProtoBufFileSerializer<List<DataTypes.ProteinBenchmark>>());
          _benchmarkPluginManager.RegisterPlugin(typeof(XmlFileSerializer<>).Name, new XmlFileSerializer<List<DataTypes.ProteinBenchmark>>());
          // load from plugin folder
-         path = Path.Combine(PluginsFolder, Constants.PluginsBenchmarksFolderName);
+         string path = Path.Combine(PluginsFolder, Constants.PluginsBenchmarksFolderName);
          if (Directory.Exists(path))
          {
             LogResults(_benchmarkPluginManager.LoadAllPlugins(path));

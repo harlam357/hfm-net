@@ -35,7 +35,7 @@ namespace HFM.Forms
          {
             throw processor.Exception;
          }
-         return Task.FromResult(new object());
+         return Task.FromResult<object>(null);
       }
 
       private static IWin32Window GetOwnerFromState(object state)
