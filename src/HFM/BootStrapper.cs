@@ -53,7 +53,7 @@ namespace HFM
          }
 
          AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
-         AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = ExecuteAsyncWithProgress;
+         Core.AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = Forms.AsyncProcessorExtensions.ExecuteAsyncWithProgress;
 
          // Issue 180 - Restore the already running instance to the screen.
          using (var singleInstance = new SingleInstanceHelper())
@@ -319,44 +319,6 @@ namespace HFM
             }
          }
          return null;
-      }
-
-      private static IWin32Window GetOwnerFromState(object state)
-      {
-         var openForms = System.Windows.Forms.Application.OpenForms.OfType<Form>().ToList();
-
-         if (state is UnitInfoDatabase)
-         {
-            var historyView = openForms.Find(x => x is IHistoryView);
-            if (historyView != null)
-            {
-               return historyView;
-            }
-         }
-
-         var win32Window = state as IWin32Window;
-         if (win32Window != null)
-         {
-            return win32Window;
-         }
-
-         return openForms.Find(x => x is IMainView);
-      }
-
-      private static void ExecuteAsyncWithProgress(IAsyncProcessor processor, object state)
-      {
-         using (IProgressDialogAsyncView dialog = new ProgressDialogAsync())
-         {
-            dialog.AsyncProcessor = processor;
-            dialog.Icon = Properties.Resources.hfm_48_48;
-            dialog.Text = Core.Application.NameAndVersion;
-            var owner = GetOwnerFromState(state);
-            if (owner == null)
-            {
-               dialog.StartPosition = FormStartPosition.CenterScreen;   
-            }
-            dialog.ShowDialog(owner);
-         }
       }
 
       internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)

@@ -36,6 +36,8 @@ using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
+using harlam357.Core;
+using harlam357.Core.ComponentModel;
 using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
@@ -1183,42 +1185,47 @@ namespace HFM.Forms
 
       #region Tools Menu Handling Methods
 
-      public void ToolsDownloadProjectsClick()
+      public async void ToolsDownloadProjectsClick()
       {
-         _proteinService.ResetRefreshParameters();
+         try
+         {
+            var downloader = new ProjectDownloader(_proteinService);
+            await downloader.ExecuteAsyncWithProgress(true);
+            if (downloader.Result != null)
+            {
+               var proteinChanges = downloader.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
+               if (proteinChanges.Count > 0)
+               {
+                  _retrievalModel.RunClientRetrieval();
+                  using (var dlg = new ProteinLoadResultsDialog())
+                  {
+                     dlg.DataBind(proteinChanges);
+                     dlg.ShowDialog(_view);
+                  }
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
+         }
+      }
 
-         // TODO: Fix Project Download
+      private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinLoadInfo>>
+      {
+         private readonly IProteinService _proteinService;
 
-         //var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         //var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
-         //projectDownloadView.Progress = progress;
+         public ProjectDownloader(IProteinService proteinService)
+         {
+            if (proteinService == null) throw new ArgumentNullException("proteinService");
+            _proteinService = proteinService;
+         }
 
-         //Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
-         //projectDownloadView.Shown += (s, args) =>
-         //{
-         //   var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-         //   refreshTask = _proteinService.RefreshAsync(progress);
-         //   refreshTask
-         //      .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
-         //            CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
-         //      .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
-         //};
-         //projectDownloadView.ShowDialog(_view);
-         //_viewFactory.Release(projectDownloadView);
-
-         //if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
-         //{
-         //   var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
-         //   if (proteinChanges.Count > 0)
-         //   {
-         //      _retrievalModel.RunClientRetrieval();
-         //      using (var dlg = new ProteinLoadResultsDialog())
-         //      {
-         //         dlg.DataBind(proteinChanges);
-         //         dlg.ShowDialog(_view);
-         //      }
-         //   }
-         //}
+         protected override async Task<IEnumerable<ProteinLoadInfo>> OnExecuteAsync(IProgress<ProgressInfo> progress)
+         {
+            _proteinService.ResetRefreshParameters();
+            return await _proteinService.RefreshAsync(progress).ConfigureAwait(false);
+         }
       }
 
       public void ToolsBenchmarksClick()

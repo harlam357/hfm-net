@@ -245,6 +245,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="WindowPosition.cs" />
     <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>

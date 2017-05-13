@@ -6,9 +6,9 @@ using harlam357.Core.ComponentModel;
 
 namespace HFM.Core
 {
-   public static class AsyncProcessorExtensions
+   internal static class AsyncProcessorExtensions
    {
-      public static Action<IAsyncProcessor, object> ExecuteAsyncWithProgressAction { get; set; }
+      internal static Func<IAsyncProcessor, bool, object, Task> ExecuteAsyncWithProgressAction { get; set; }
 
       internal static async Task ExecuteAsyncWithProgress(this IAsyncProcessor processor, bool throwOnError)
       {
@@ -19,7 +19,7 @@ namespace HFM.Core
       {
          if (ExecuteAsyncWithProgressAction != null)
          {
-            ExecuteAsyncWithProgressAction(processor, state);
+            await ExecuteAsyncWithProgressAction(processor, throwOnError, state).ConfigureAwait(false);
          }
          else
          {
