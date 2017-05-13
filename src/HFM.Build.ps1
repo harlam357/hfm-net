@@ -151,33 +151,23 @@ Function Deploy-Build
         "HFM.exe", 
         "HFM.exe.config",
         "HFM.Client.dll",
-        "HFM.Client.xml",
         "HFM.Core.dll",
         "HFM.Core.DataTypes.dll",
-        "HFM.Core.DataTypes.xml",
         "HFM.Core.Plugins.dll",
-        "HFM.Core.Plugins.xml",
         "HFM.Forms.dll",
         "HFM.Log.dll",
-        "HFM.Log.xml",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        "HFM.Proteins.xml",
         "HFM.Queue.dll",
-        "HFM.Queue.xml",
-        "HTMLparser.dll",
         "harlam357.Core.dll",
         "harlam357.Windows.Forms.dll",
         "ZedGraph.dll",
-        "ZedGraph.xml",
         "Castle.Core.dll",
         "Castle.Windsor.dll",
         "protobuf-net.dll",
-        "protobuf-net.xml",
         "System.Linq.Dynamic.dll",
         "AutoMapper.dll",
-        "Newtonsoft.Json.dll",
-        "Newtonsoft.Json.xml"
+        "Newtonsoft.Json.dll"
         )
     $AssemblyFiles = Get-ChildItem -Path 'HFM\bin\Release\*' -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
@@ -191,8 +181,7 @@ Function Deploy-Build
     Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\lib\HTMLparser2\HTMLparser License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
+    DeplCopy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\src\packages\Castle.Windsor.3.3.0\ASL - Apache Software Foundation License.txt' -Destination "$ArtifactsBin\Documentation\License\Windsor License.txt" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protobuf-net Licence.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protoc-license.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
