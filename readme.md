@@ -2,6 +2,19 @@
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
+## Version 0.9.8.615
+
+### Release Date: May 12, 2017
+
+* Change: Upgrade to .NET v4.5.2
+
+* Enhancement: Add detection of Windows 10 OS via FAHClient v7 interface.
+* Enhancement: Add detection for core 0xA7.
+
+* Fix: On Work Unit History CSV export, format date/time and floating point values using invariant culture.  
+       Provides consistent data regardless of the host machine's locale settings.
+
+
 ## Version 0.9.7.558
 
 ### Release Date: September 6, 2016
