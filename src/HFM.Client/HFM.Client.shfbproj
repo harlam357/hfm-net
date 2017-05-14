@@ -21,8 +21,8 @@
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
     <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\Artifacts\HFM.NET\HFM.Client.dll" />
-      <DocumentationSource sourceFile="..\Artifacts\HFM.NET\HFM.Client.xml" />
+      <DocumentationSource sourceFile="bin\$(Configuration)\HFM.Client.dll" />
+      <DocumentationSource sourceFile="bin\$(Configuration)\HFM.Client.xml" />
     </DocumentationSources>
     <MissingTags>Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <HelpTitle>HFM.NET Client API Documentation</HelpTitle>
