@@ -116,9 +116,9 @@
    </Target>
    <ItemGroup>
       <ZipFiles Include="$(ArtifactsBin)\**\*.*" Exclude="$(ArtifactsBin)\Documentation\API Docs\*.*" />
-      <ClientZipFiles Include="$(ArtifactsBin)\HFM.Client.dll;$(ArtifactsBin)\HFM.Client.xml;$(ArtifactsBin)\Documentation\API Docs\HFM.Client.chm;$(ArtifactsBin)\HFM.Core.DataTypes.dll;$(ArtifactsBin)\HFM.Core.DataTypes.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt;$(ArtifactsBin)\Newtonsoft.Json.dll;$(ArtifactsBin)\Newtonsoft.Json.xml;$(ArtifactsBin)\Documentation\License\Json.NET License.txt" />
-      <LogZipFiles Include="$(ArtifactsBin)\HFM.Log.dll;$(ArtifactsBin)\HFM.Log.xml;$(ArtifactsBin)\HFM.Core.DataTypes.dll;$(ArtifactsBin)\HFM.Core.DataTypes.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />
-      <QueueZipFiles Include="$(ArtifactsBin)\HFM.Queue.dll;$(ArtifactsBin)\HFM.Queue.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />
+      <!--<ClientZipFiles Include="$(ArtifactsBin)\HFM.Client.dll;$(ArtifactsBin)\HFM.Client.xml;$(ArtifactsBin)\Documentation\API Docs\HFM.Client.chm;$(ArtifactsBin)\HFM.Core.DataTypes.dll;$(ArtifactsBin)\HFM.Core.DataTypes.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt;$(ArtifactsBin)\Newtonsoft.Json.dll;$(ArtifactsBin)\Newtonsoft.Json.xml;$(ArtifactsBin)\Documentation\License\Json.NET License.txt" />-->
+      <!--<LogZipFiles Include="$(ArtifactsBin)\HFM.Log.dll;$(ArtifactsBin)\HFM.Log.xml;$(ArtifactsBin)\HFM.Core.DataTypes.dll;$(ArtifactsBin)\HFM.Core.DataTypes.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />-->
+      <!--<QueueZipFiles Include="$(ArtifactsBin)\HFM.Queue.dll;$(ArtifactsBin)\HFM.Queue.xml;$(ArtifactsBin)\Documentation\License\GPLv2.txt" />-->
    </ItemGroup>
    <!--PRIMARY TARGET: Pack-->
    <Target Name="Pack">
@@ -132,7 +132,7 @@
       <MSBuild Projects="$(SetupSolutionFileName)" Targets="Rebuild" Properties="Configuration=Release" />
       <Copy SourceFiles=".\HFM.Setup\bin\Release\HFM.Setup.msi" DestinationFiles="$(ArtifactsPackages)\HFM $(Platform) $(Major).$(Minor).$(Build).$(Revision).msi" />
    </Target>
-   <Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="GetVersion;BuildApiDocs">
+   <!--<Target Name="BuildApiZips" Condition="'$(Platform)' == 'Any CPU'" DependsOnTargets="GetVersion;BuildApiDocs">
       <Zip Files="@(ClientZipFiles)"
            WorkingDirectory="$(ArtifactsBin)"
            ZipFileName="$(ArtifactsPackages)\HFM.Client $(Major).$(Minor).$(Build).$(Revision).zip" />
@@ -142,7 +142,7 @@
       <Zip Files="@(QueueZipFiles)"
            WorkingDirectory="$(ArtifactsBin)"
            ZipFileName="$(ArtifactsPackages)\HFM.Queue $(Major).$(Minor).$(Build).$(Revision).zip" />
-   </Target>
+   </Target>-->
    <Target Name="BuildApiDocs">
       <MSBuild Projects="HFM.Client\HFM.Client.shfbproj" Properties="Configuration=Release;Platform=Any CPU;CleanIntermediates=True" />
       <Copy SourceFiles="HFM.Client\Help\HFM.Client.chm" DestinationFiles="$(ArtifactsBin)\Documentation\API Docs\HFM.Client.chm" />
