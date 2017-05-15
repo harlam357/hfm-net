@@ -122,7 +122,8 @@
    </ItemGroup>
    <!--PRIMARY TARGET: Pack-->
    <Target Name="Pack">
-      <CallTarget Targets="BuildZip;BuildMsi;BuildApiZips" />
+      <!--<CallTarget Targets="BuildZip;BuildMsi;BuildApiZips" />-->
+      <CallTarget Targets="BuildZip;BuildMsi" />
       <Message Text="Pack Complete" />
    </Target>
    <Target Name="BuildZip" DependsOnTargets="GetVersion">
