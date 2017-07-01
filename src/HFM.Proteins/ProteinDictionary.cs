@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
@@ -63,11 +62,11 @@ namespace HFM.Proteins
       /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(IEnumerable<Protein> values)
+      public IEnumerable<ProteinLoadInfo> Load(ICollection<Protein> values)
       {
          if (values == null) throw new ArgumentNullException("values");
 
-         var loaded = new List<ProteinLoadInfo>(values.Count());
+         var loaded = new List<ProteinLoadInfo>(values.Count);
          foreach (Protein protein in values)
          {
             if (!protein.IsValid)

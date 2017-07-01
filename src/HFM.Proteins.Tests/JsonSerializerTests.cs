@@ -9,7 +9,7 @@ namespace HFM.Proteins.Tests
    public class JsonSerializerTests
    {
       [Test]
-      public void Deserialize_Test1()
+      public void JsonSerializer_DeserializeFromJsonFile_Test()
       {
          var serializer = new JsonSerializer();
          var proteins = serializer.Deserialize("..\\..\\TestFiles\\summary.json").ToList();

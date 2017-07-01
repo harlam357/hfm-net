@@ -13,7 +13,7 @@ namespace HFM.Proteins.Tests
    public class TabSerializerTests
    {
       [Test]
-      public void DeserializeTest1()
+      public void TabSerializer_DeserializeFromTabFile_Test()
       {
          var serializer = new TabSerializer();
          var proteins = serializer.Deserialize("..\\..\\TestFiles\\ProjectInfo.tab").ToList();
@@ -21,24 +21,24 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      public void SerializeTest1()
+      public void TabSerializer_SerializeToTabFile_Test()
       {
          var proteins = new List<Protein>();
          proteins.Add(new Protein
-                      {
-                         ProjectNumber = 6900,
-                         ServerIP = "1.2.3.4",
-                         WorkUnitName = "Name of Work Unit",
-                         NumberOfAtoms = 10000,
-                         PreferredDays = 3,
-                         MaximumDays = 5,
-                         Credit = 500,
-                         Frames = 100,
-                         Core = "GRO-A5",
-                         Description = "http://something.com",
-                         Contact = "me",
-                         KFactor = 26.4
-                      });
+         {
+            ProjectNumber = 6900,
+            ServerIP = "1.2.3.4",
+            WorkUnitName = "Name of Work Unit",
+            NumberOfAtoms = 10000,
+            PreferredDays = 3,
+            MaximumDays = 5,
+            Credit = 500,
+            Frames = 100,
+            Core = "GRO-A5",
+            Description = "http://something.com",
+            Contact = "me",
+            KFactor = 26.4
+         });
          proteins.Add(new Protein
          {
             ProjectNumber = 6901,
@@ -61,7 +61,7 @@ namespace HFM.Proteins.Tests
          serializer.Serialize(fileName, proteins);
          Assert.IsTrue(File.Exists(fileName));
 
-         proteins = serializer.Deserialize(fileName).ToList();
+         proteins = serializer.Deserialize(fileName);
          Assert.AreEqual(2, proteins.Count);
       }
    }

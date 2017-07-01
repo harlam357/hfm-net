@@ -160,19 +160,17 @@ namespace HFM.Core
       }
 
       [Test]
-      public void ProteinService_RefreshAsync_Test()
+      public void ProteinService_RefreshWithProgress_Test()
       {
          // Arrange
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         var taskSource = new TaskCompletionSource<object>();
-         taskSource.SetResult(null);
-         downloader.Expect(x => x.DownloadAsync(null)).Return(taskSource.Task).Repeat.Once();
+         downloader.Expect(x => x.Download(null)).Repeat.Once();
          downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
 
          var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          Assert.AreEqual(0, service.GetProjects().Count());
          // Act
-         service.RefreshAsync(null).Wait();
+         service.Refresh(null);
          // Assert
          Assert.AreNotEqual(0, service.GetProjects().Count());
       }

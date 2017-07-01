@@ -50,9 +50,9 @@ namespace HFM.Core
       void Download();
 
       /// <summary>
-      /// Downloads the project information asynchronously.
+      /// Downloads the project information.
       /// </summary>
-      Task DownloadAsync(IProgress<ProgressInfo> progress);
+      void Download(IProgress<ProgressInfo> progress);
    }
 
    public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
@@ -102,22 +102,17 @@ namespace HFM.Core
       /// <summary>
       /// Downloads the project information.
       /// </summary>
-      /// <remarks>Access to the Download and DownloadAsync methods is synchronized.</remarks>
+      /// <remarks>Access to the Download method is synchronized.</remarks>
       public void Download()
       {
-         DownloadInternal(null);
+         Download(null);
       }
 
       /// <summary>
       /// Downloads the project information.
       /// </summary>
-      /// <remarks>Access to the Download and DownloadAsync methods is synchronized.</remarks>
-      public Task DownloadAsync(IProgress<ProgressInfo> progress)
-      {
-         return Task.Factory.StartNew(() => DownloadInternal(progress));
-      }
-
-      private void DownloadInternal(IProgress<ProgressInfo> progress)
+      /// <remarks>Access to the Download method is synchronized.</remarks>
+      public void Download(IProgress<ProgressInfo> progress)
       {
          Debug.Assert(Prefs != null);
 
@@ -135,7 +130,7 @@ namespace HFM.Core
             {
                httpWebOperation.ProgressChanged += (sender, e) =>
                {
-                  int progressPercentage = Convert.ToInt32((e.Length / (double)e.TotalLength) * 100);
+                  int progressPercentage = Convert.ToInt32(e.Length / (double)e.TotalLength * 100);
                   string message = String.Format(CultureInfo.InvariantCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
                   progress.Report(new ProgressInfo(progressPercentage, message));
                };
