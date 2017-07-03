@@ -56,6 +56,7 @@
     <Compile Include="BonusCalculationType.cs" />
     <Compile Include="Extensions.IProjectInfo.cs" />
     <Compile Include="FtpMode.cs" />
+    <Compile Include="ISerializer.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="Extensions.StringBuilder.cs" />
     <Compile Include="Extensions.WorkUnitResult.cs" />

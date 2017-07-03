@@ -1,7 +1,6 @@
 ﻿
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 
@@ -16,7 +15,7 @@ namespace HFM.Proteins.Tests
       public void TabSerializer_DeserializeFromTabFile_Test()
       {
          var serializer = new TabSerializer();
-         var proteins = serializer.Deserialize("..\\..\\TestFiles\\ProjectInfo.tab").ToList();
+         var proteins = serializer.Deserialize("..\\..\\TestFiles\\ProjectInfo.tab");
          Assert.AreEqual(1409, proteins.Count);
       }
 

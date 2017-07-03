@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 using Castle.Core.Logging;
 using Castle.Facilities.TypedFactory;
@@ -169,8 +168,7 @@ namespace HFM.Core.Configuration
          // IProjectSummaryDownloader - Singleton
          container.Register(
             Component.For<IProjectSummaryDownloader>()
-               .ImplementedBy<ProjectSummaryDownloader>()
-                  .OnCreate(instance => ((ProjectSummaryDownloader)instance).FilePath = Path.GetTempFileName()));
+               .ImplementedBy<ProjectSummaryDownloader>());
 
          #region Plugins
 

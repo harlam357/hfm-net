@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Protein Dictionary
- * Copyright (C) 2009-2011 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 
 namespace HFM.Proteins
 {
@@ -40,7 +40,7 @@ namespace HFM.Proteins
       /// </summary>
       /// <param name="fileName">File name to load into the dictionary.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(string fileName)
+      public ICollection<ProteinLoadInfo> Load(string fileName)
       {
          return Load(fileName, new JsonSerializer());
       }
@@ -51,9 +51,33 @@ namespace HFM.Proteins
       /// <param name="fileName">File name to load into the dictionary.</param>
       /// <param name="serializer">Serializer used to load the file.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(string fileName, IFileSerializer<List<Protein>> serializer)
+      public ICollection<ProteinLoadInfo> Load(string fileName, ISerializer<List<Protein>> serializer)
       {
-         return Load(serializer.Deserialize(fileName));
+         using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+         {
+            return Load(stream, serializer);
+         }
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="stream">The stream containing data to load into the dictionary.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public ICollection<ProteinLoadInfo> Load(Stream stream)
+      {
+         return Load(stream, new JsonSerializer());
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="stream">The stream containing data to load into the dictionary.</param>
+      /// <param name="serializer">Serializer used to load the file.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public ICollection<ProteinLoadInfo> Load(Stream stream, ISerializer<List<Protein>> serializer)
+      {
+         return Load(serializer.Deserialize(stream));
       }
 
       /// <summary>
@@ -62,7 +86,7 @@ namespace HFM.Proteins
       /// <param name="values">The <paramref name="values"/> to load into the ProteinDictionary. <paramref name="values"/> cannot be null.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="values"/> is null.</exception>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public IEnumerable<ProteinLoadInfo> Load(ICollection<Protein> values)
+      public ICollection<ProteinLoadInfo> Load(ICollection<Protein> values)
       {
          if (values == null) throw new ArgumentNullException("values");
 

@@ -18,11 +18,13 @@
  */
 
 using System;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
+
+using harlam357.Core;
 
 using HFM.Core.DataTypes;
 using HFM.Preferences;
@@ -41,51 +43,38 @@ namespace HFM.Core
          // Act
          var service = new ProteinService(prefs, null);
          // Assert
-         Assert.AreEqual(System.IO.Path.Combine(Environment.CurrentDirectory, Constants.ProjectInfoFileName), service.FileName);
+         Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, Constants.ProjectInfoFileName), service.FileName);
       }
 
       [Test]
-      public void ProteinService_Get_Test1()
+      public void ProteinService_GetAvailableProtein_Test()
       {
          // Arrange
          var service = new ProteinService();
          var protein = CreateValidProtein(2483);
          service.Add(protein);
-         // Act & Assert
-         Protein p = service.Get(2483);
-         Assert.IsNotNull(p);
-         p = service.Get(2482);
-         Assert.IsNull(p);
-      }
-
-      [Test]
-      public void ProteinService_Get_Test2()
-      {
-         // Arrange
-         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.Download()).Repeat.Once();
-         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
-         
-         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
-         var protein = CreateValidProtein(2483);
-         service.Add(protein);
          // Act
-         Protein p = service.Get(2483, true);
-         Assert.IsNotNull(p);
-         p = service.Get(2482, true);
-         Assert.IsNull(p);
-         // Call twice to internally exercise the projects not found list
-         p = service.Get(2482, true);
-         Assert.IsNull(p);
+         var p = service.Get(2483);
          // Assert
-         downloader.VerifyAllExpectations();
+         Assert.AreSame(protein, p);
       }
 
       [Test]
-      public void ProteinService_Get_Test3()
+      public void ProteinService_GetUnavailableProtein_Test()
       {
          // Arrange
-         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         var service = new ProteinService();
+         // Act
+         var p = service.Get(2482);
+         // Assert
+         Assert.IsNull(p);
+      }
+
+      [Test]
+      public void ProteinService_GetUnavailableProtein_AddsTheProteinIdToProjectsNotFound_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
          var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          // Act
          service.Get(2482, true);
@@ -94,26 +83,98 @@ namespace HFM.Core
       }
 
       [Test]
-      public void ProteinService_Get_Test4()
+      public void ProteinService_GetWithRefreshCalledMultipleTimesOnlyTriggersOneRefresh_ByLastRefreshTime_Test()
       {
          // Arrange
          var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.Download()).Repeat.Once();
-         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
+         downloader.Expect(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            })).Repeat.Once();
+         
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
+         // Act
+         var p = service.Get(2482, true);
+         Assert.IsNull(p);
+         // Call twice to internally exercise the last refresh time
+         p = service.Get(2482, true);
+         Assert.IsNull(p);
+         // Assert
+         downloader.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void ProteinService_GetWithRefreshCalledMultipleTimesOnlyTriggersOneRefresh_ByProjectsNotFound_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         downloader.Expect(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            })).Repeat.Once();
+
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
+         // Act
+         var p = service.Get(2482, true);
+         Assert.IsNull(p);
+         // Call twice to internally exercise the projects not found list
+         service.LastRefreshTime = null;
+         p = service.Get(2482, true);
+         Assert.IsNull(p);
+         // Assert
+         downloader.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void ProteinService_GetWithRefreshAllowsRefreshWhenLastRefreshTimeElapsed_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
+         downloader.Expect(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            })).Repeat.Once();
+
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
+         // set to over the elapsed time (1 hour)
+         service.LastRefreshTime = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(61));
+         // Act
+         var p = service.Get(6940, true);
+         Assert.IsNotNull(p);
+         // Assert
+         downloader.VerifyAllExpectations();
+      }
+
+      [Test]
+      public void ProteinService_GetWithRefreshRemovesFromProjectsNotFound_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
+         downloader.Stub(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            }));
 
          var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
          // Set project not found to excercise removal code
          service.ProjectsNotFound.Add(6940, DateTime.MinValue);
          // Act
          Protein p = service.Get(6940, true);
-         Assert.IsNotNull(p);
          // Assert
-         downloader.VerifyAllExpectations();
+         Assert.IsNotNull(p);
          Assert.IsFalse(service.ProjectsNotFound.ContainsKey(6940));
       }
 
       [Test]
-      public void ProteinService_GetProjects_Test1()
+      public void ProteinService_GetProjects_Test()
       {
          // Arrange
          var service = new ProteinService();
@@ -129,50 +190,65 @@ namespace HFM.Core
       }
 
       [Test]
-      public void ProteinService_ResetRefreshParameters_Test()
+      public void ProteinService_RefreshRemovesFromProjectsNotFound_Test()
       {
          // Arrange
-         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.ResetDownloadParameters()).Repeat.Once();
-         var service = new ProteinService(null, downloader);
-         service.ProjectsNotFound.Add(2968, DateTime.MinValue);
-         // Act
-         service.ResetRefreshParameters();
-         // Assert
-         Assert.IsFalse(service.ProjectsNotFound.ContainsKey(2968));
-         downloader.VerifyAllExpectations();
-      }
-
-      [Test]
-      public void ProteinService_Refresh_Test()
-      {
-         // Arrange
-         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.Download()).Repeat.Once();
-         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
+         var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
+         downloader.Stub(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            }));
 
          var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
-         Assert.AreEqual(0, service.GetProjects().Count());
-         // Act
-         service.Refresh();
-         // Assert
-         Assert.AreNotEqual(0, service.GetProjects().Count());
-      }
-
-      [Test]
-      public void ProteinService_RefreshWithProgress_Test()
-      {
-         // Arrange
-         var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-         downloader.Expect(x => x.Download(null)).Repeat.Once();
-         downloader.Stub(x => x.FilePath).Return("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json");
-
-         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
-         Assert.AreEqual(0, service.GetProjects().Count());
+         service.ProjectsNotFound.Add(6940, DateTime.MinValue);
          // Act
          service.Refresh(null);
          // Assert
-         Assert.AreNotEqual(0, service.GetProjects().Count());
+         Assert.IsFalse(service.ProjectsNotFound.ContainsKey(6940));
+      }
+
+      [Test]
+      public void ProteinService_RefreshUpdatesRefreshParameters_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
+         downloader.Stub(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            }));
+
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
+         service.ProjectsNotFound.Add(2968, DateTime.MinValue);
+         service.LastRefreshTime = DateTime.MinValue;
+         // Act
+         service.Refresh(null);
+         // Assert
+         Assert.AreNotEqual(DateTime.MinValue, service.ProjectsNotFound[2968]);
+         Assert.AreNotEqual(DateTime.MinValue, service.LastRefreshTime);
+      }
+
+      [Test]
+      public void ProteinService_RefreshLoadsData_Test()
+      {
+         // Arrange
+         var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
+         downloader.Stub(x => x.Download(null, null)).IgnoreArguments()
+            .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
+            {
+               File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+               return true;
+            }));
+
+         var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
+         Assert.AreEqual(0, service.GetProjects().Count);
+         // Act
+         service.Refresh(null);
+         // Assert
+         Assert.AreNotEqual(0, service.GetProjects().Count);
       }
 
       private static Protein CreateValidProtein(int projectNumber)

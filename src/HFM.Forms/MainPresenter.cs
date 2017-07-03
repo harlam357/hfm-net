@@ -1223,7 +1223,6 @@ namespace HFM.Forms
 
          protected override async Task<IEnumerable<ProteinLoadInfo>> OnExecuteAsync(IProgress<ProgressInfo> progress)
          {
-            _proteinService.ResetRefreshParameters();
             return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
          }
       }

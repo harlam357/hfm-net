@@ -99,7 +99,6 @@
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
     <Compile Include="PetaPoco\PetaPoco.cs" />
-    <Compile Include="ProjectSummaryDownloader.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="DataTypes\SlotTotals.cs" />
