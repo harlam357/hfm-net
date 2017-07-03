@@ -4,7 +4,7 @@
 
 *.user
 *.suo
-*.DotSettings
+*.csproj.DotSettings
 /src/Artifacts
 /src/TestResults
 /src/*/bin
