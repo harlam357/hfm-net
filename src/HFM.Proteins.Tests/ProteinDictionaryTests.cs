@@ -37,10 +37,24 @@ namespace HFM.Proteins.Tests
          // Arrange
          var dictionary = new ProteinDictionary();
          // Act
-         var results = dictionary.Load("..\\..\\TestFiles\\summary.json").ToList();
+         var results = dictionary.Load("..\\..\\TestFiles\\summary.json");
          // Assert
          Assert.AreEqual(624, results.Count);
          Assert.AreEqual(623, dictionary.Count);
+      }
+
+      // loads data from external resource
+      [Ignore]
+      [Test]
+      public void ProteinDictionary_LoadEmptyDictionaryFromJsonUri_Test()
+      {
+         // Arrange
+         var dictionary = new ProteinDictionary();
+         // Act
+         var results = dictionary.Load(new Uri(StanfordWebAddresses.JsonProjectSummary));
+         // Assert
+         Assert.AreNotEqual(0, results.Count);
+         Assert.AreNotEqual(0, dictionary.Count);
       }
 
       [Test]
@@ -51,7 +65,7 @@ namespace HFM.Proteins.Tests
          // Act
          using (var stream = File.OpenRead("..\\..\\TestFiles\\summary.json"))
          {
-            var results = dictionary.Load(stream).ToList();
+            var results = dictionary.Load(stream);
             // Assert
             Assert.AreEqual(624, results.Count);
             Assert.AreEqual(623, dictionary.Count);

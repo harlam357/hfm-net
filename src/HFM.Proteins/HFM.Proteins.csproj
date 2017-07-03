@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
+    <Compile Include="StanfordWebAddresses.cs" />
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinDictionary.cs" />

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 
 using HFM.Core.DataTypes;
 
@@ -49,13 +50,41 @@ namespace HFM.Proteins
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
       /// </summary>
       /// <param name="fileName">File name to load into the dictionary.</param>
-      /// <param name="serializer">Serializer used to load the file.</param>
+      /// <param name="serializer">Serializer used to read the data.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
       public ICollection<ProteinLoadInfo> Load(string fileName, ISerializer<List<Protein>> serializer)
       {
          using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
          {
             return Load(stream, serializer);
+         }
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="address">The URI representing the data to load into the dictionary.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public ICollection<ProteinLoadInfo> Load(Uri address)
+      {
+         return Load(address, new JsonSerializer());
+      }
+
+      /// <summary>
+      /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
+      /// </summary>
+      /// <param name="address">The URI representing the data to load into the dictionary.</param>
+      /// <param name="serializer">Serializer used to read the data.</param>
+      /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
+      public ICollection<ProteinLoadInfo> Load(Uri address, ISerializer<List<Protein>> serializer)
+      {
+         using (var client = new WebClient())
+         {
+            var data = client.DownloadData(address);
+            using (var stream = new MemoryStream(data))
+            {
+               return Load(stream, serializer);
+            }
          }
       }
 
@@ -73,7 +102,7 @@ namespace HFM.Proteins
       /// Load element values into the ProteinDictionary and return an <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.
       /// </summary>
       /// <param name="stream">The stream containing data to load into the dictionary.</param>
-      /// <param name="serializer">Serializer used to load the file.</param>
+      /// <param name="serializer">Serializer used to read the data.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
       public ICollection<ProteinLoadInfo> Load(Stream stream, ISerializer<List<Protein>> serializer)
       {
