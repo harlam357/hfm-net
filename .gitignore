@@ -5,6 +5,7 @@
 *.user
 *.suo
 *.csproj.DotSettings
+.vs
 /src/Artifacts
 /src/TestResults
 /src/*/bin
