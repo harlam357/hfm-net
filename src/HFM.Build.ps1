@@ -1,4 +1,4 @@
-﻿$MSBuild = "${Env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+﻿$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
 $NuGetPath = '.\.nuget\NuGet.exe'
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
@@ -77,7 +77,7 @@ Function Test-Build
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
-    $NUnitPath = 'packages\NUnit.Runners.2.6.4\tools\nunit-console-x86.exe'
+    $NUnitPath = 'packages\NUnit.Runners.2.7.0\tools\nunit-console-x86.exe'
     Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Client.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Core.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
@@ -98,7 +98,7 @@ Function Analyze-Build
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host "---------------------------------------------------"
 
-    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
+    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
     Exec { & $FxCopPath /f:$ArtifactsBin\HFM.exe /f:$ArtifactsBin\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:$ArtifactsPath\FxCopReport.xml /gac }
 }
 
@@ -181,7 +181,7 @@ Function Deploy-Build
     Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    DeplCopy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\src\packages\Castle.Windsor.3.3.0\ASL - Apache Software Foundation License.txt' -Destination "$ArtifactsBin\Documentation\License\Windsor License.txt" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protobuf-net Licence.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protoc-license.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
