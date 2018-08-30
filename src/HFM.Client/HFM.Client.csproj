@@ -75,6 +75,7 @@
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="IMessageConnection.cs" />
     <Compile Include="LockedResource.cs" />
@@ -96,12 +97,6 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

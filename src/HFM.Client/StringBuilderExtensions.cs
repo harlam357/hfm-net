@@ -18,12 +18,11 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace HFM.Core.DataTypes
+namespace HFM.Client
 {
-   public static partial class Extensions
+   internal static class StringBuilderExtensions
    {
       ///// <summary>
       ///// Reports the index of the first occurrence of the specified string in this instance.
@@ -32,7 +31,7 @@ namespace HFM.Core.DataTypes
       ///// <param name="value">The string to seek.</param>
       ///// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is 0.</returns>
       ///// <exception cref="System.ArgumentNullException">value is null.</exception>
-      //public static int IndexOf(this StringBuilder sb, string value)
+      //internal static int IndexOf(this StringBuilder sb, string value)
       //{
       //   return IndexOf(sb, value, 0);
       //}
@@ -46,7 +45,7 @@ namespace HFM.Core.DataTypes
       ///// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is startIndex.</returns>
       ///// <exception cref="System.ArgumentNullException">value is null.</exception>
       ///// <exception cref="System.ArgumentOutOfRangeException">startIndex is negative. -or- startIndex specifies a position not within this instance.</exception>
-      //public static int IndexOf(this StringBuilder sb, string value, int startIndex)
+      //internal static int IndexOf(this StringBuilder sb, string value, int startIndex)
       //{
       //   return IndexOf(sb, value, startIndex, StringComparison.CurrentCulture);
       //}
@@ -59,7 +58,7 @@ namespace HFM.Core.DataTypes
       /// <param name="ignoreCase">Ignore character case.</param>
       /// <returns>The index position of the value parameter if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is 0.</returns>
       /// <exception cref="System.ArgumentNullException">value is null.</exception>
-      public static int IndexOf(this StringBuilder sb, string value, bool ignoreCase)
+      internal static int IndexOf(this StringBuilder sb, string value, bool ignoreCase)
       {
          return IndexOf(sb, value, 0, ignoreCase);
       }
@@ -74,7 +73,7 @@ namespace HFM.Core.DataTypes
       /// <returns>The zero-based index position of the value parameter if that string is found, or -1 if it is not. If value is System.String.Empty, the return value is startIndex.</returns>
       /// <exception cref="System.ArgumentNullException">value is null.</exception>
       /// <exception cref="System.ArgumentOutOfRangeException">startIndex is negative. -or- startIndex specifies a position not within this instance.</exception>
-      public static int IndexOf(this StringBuilder sb, string value, int startIndex, bool ignoreCase)
+      internal static int IndexOf(this StringBuilder sb, string value, int startIndex, bool ignoreCase)
       {
          if (sb == null) throw new ArgumentNullException("sb");
          if (value == null) throw new ArgumentNullException("value");
@@ -139,7 +138,7 @@ namespace HFM.Core.DataTypes
       /// <param name="length">The number of characters in the substring.</param>
       /// <returns>A string that is equivalent to the substring of length length that begins at startIndex in this instance, or System.String.Empty if startIndex is equal to the length of this instance and length is zero.</returns>
       /// <exception cref="System.ArgumentOutOfRangeException">startIndex plus length indicates a position not within this instance. -or- startIndex or length is less than zero.</exception>
-      public static string Substring(this StringBuilder sb, int startIndex, int length)
+      internal static string Substring(this StringBuilder sb, int startIndex, int length)
       {
          if (sb == null) throw new ArgumentNullException("sb");
          if (startIndex < 0) throw new ArgumentOutOfRangeException("startIndex");
@@ -159,7 +158,7 @@ namespace HFM.Core.DataTypes
       ///// <param name="length">The number of characters in the substring.</param>
       ///// <returns>A System.Text.StringBuilder that is equivalent to the substring of length length that begins at startIndex in this instance.</returns>
       ///// <exception cref="System.ArgumentOutOfRangeException">startIndex plus length indicates a position not within this instance. -or- startIndex or length is less than zero.</exception>
-      //public static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, int length)
+      //internal static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, int length)
       //{
       //   return SubstringBuilder(sb, startIndex, length, null);
       //}
@@ -173,7 +172,7 @@ namespace HFM.Core.DataTypes
       /// <param name="length">The number of characters in the substring.</param>
       /// <returns>A System.Text.StringBuilder that is equivalent to the substring of length length that begins at startIndex in this instance.</returns>
       /// <exception cref="System.ArgumentOutOfRangeException">startIndex plus length indicates a position not within this instance. -or- startIndex or length is less than zero.</exception>
-      public static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, StringBuilder dest, int length)
+      internal static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, StringBuilder dest, int length)
       {
          return SubstringBuilder(sb, startIndex, dest, length, false);
       }
@@ -187,7 +186,7 @@ namespace HFM.Core.DataTypes
       /// <param name="trimOnly">if true trim the existing StringBuilder instance. -or- if false create a new StringBuilder instance and leave the existing instance in tact.</param>
       /// <returns>A System.Text.StringBuilder that is equivalent to the substring of length length that begins at startIndex in this instance.</returns>
       /// <exception cref="System.ArgumentOutOfRangeException">startIndex plus length indicates a position not within this instance. -or- startIndex or length is less than zero.</exception>
-      public static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, int length, bool trimOnly)
+      internal static StringBuilder SubstringBuilder(this StringBuilder sb, int startIndex, int length, bool trimOnly)
       {
          return SubstringBuilder(sb, startIndex, null, length, trimOnly);
       }
@@ -221,7 +220,7 @@ namespace HFM.Core.DataTypes
          return result;
       }
 
-      public static void CopyTo(this StringBuilder sb, StringBuilder dest)
+      internal static void CopyTo(this StringBuilder sb, StringBuilder dest)
       {
          CopyTo(sb, 0, dest, sb.Length);
       }
@@ -242,66 +241,7 @@ namespace HFM.Core.DataTypes
          }
       }
 
-      private const int MaxChunkSize = 8000;
-
-      public static IEnumerable<char[]> GetChunks(this StringBuilder sb)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
-
-         return GetChunks(sb, MaxChunkSize);
-      }
-
-      private static IEnumerable<char[]> GetChunks(this StringBuilder sb, int chunkSize)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
-         if (chunkSize < 1000) throw new ArgumentOutOfRangeException("chunkSize");
-
-         var list = new List<char[]>();
-         for (int i = 0; i < sb.Length; i += chunkSize)
-         {
-            int length = i + chunkSize < sb.Length ? chunkSize : sb.Length - i;
-            var temp = new char[length];
-            sb.CopyTo(i, temp, 0, temp.Length);
-            list.Add(temp);
-         }
-         return list.AsReadOnly();
-      }
-
-      //public static StringBuilder MergeChunks(this IEnumerable<char[]> chunks)
-      //{
-      //   if (chunks == null) throw new ArgumentNullException("chunks");
-      //
-      //   var sb = new StringBuilder(chunks.Count() * MaxChunkSize);
-      //   foreach (var chunk in chunks)
-      //   {
-      //      sb.Append(chunk);
-      //   }
-      //   return sb;
-      //}
-
-      public static IEnumerable<string> Split(this StringBuilder sb, char splitChar)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
-
-         var list = new LinkedList<string>();
-
-         int lastIndex = 0;
-         for (int i = 0; i < sb.Length; i++)
-         {
-            if (sb[i] == splitChar)
-            {
-               var buffer = new char[i - lastIndex];
-               sb.CopyTo(lastIndex, buffer, 0, buffer.Length);
-               lastIndex = i + 1;
-
-               list.AddLast(new string(buffer));
-            }
-         }
-
-         return list;
-      }
-
-      public static bool EndsWith(this StringBuilder sb, char value)
+      internal static bool EndsWith(this StringBuilder sb, char value)
       {
          if (sb == null) throw new ArgumentNullException("sb");
 
@@ -313,7 +253,7 @@ namespace HFM.Core.DataTypes
          return false;
       }
 
-      //public static bool EndsWith(this StringBuilder sb, string value)
+      //internal static bool EndsWith(this StringBuilder sb, string value)
       //{
       //   if (sb == null) throw new ArgumentNullException("sb");
       //   if (value == null) throw new ArgumentNullException("value");

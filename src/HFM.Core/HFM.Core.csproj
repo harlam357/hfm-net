@@ -156,6 +156,7 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Utilities\PreferenceSetExtensions.cs" />
+    <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Utilities\Validate.Minutes.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
