@@ -35,6 +35,7 @@ using HFM.Core.Data;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.Plugins;
+using HFM.Core.Serializers;
 using HFM.Forms.Models;
 using HFM.Preferences;
 
@@ -57,8 +58,6 @@ namespace HFM.Forms
          get { return _logger ?? (_logger = NullLogger.Instance); }
          set { _logger = value; }
       }
-
-      public IFileSerializerPluginManager<List<HistoryEntry>> HistoryEntrySerializerPlugins { get; set; }
 
       public event EventHandler PresenterClosed;
       
@@ -127,15 +126,22 @@ namespace HFM.Forms
          _model.Update(_prefs, _queryContainer);
       }
 
+      internal IList<IFileSerializer<List<HistoryEntry>>> ExportSerializers { get; set; }
+
       internal void ExportClick()
       {
+         var serializers = ExportSerializers ?? new List <IFileSerializer<List<HistoryEntry>>>
+         {
+            new HistoryEntryCsvSerializer()
+         };
+
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
-         saveFileDialogView.Filter = HistoryEntrySerializerPlugins.FileTypeFilters;
+         saveFileDialogView.Filter = serializers.GetFileTypeFilters();
          if (saveFileDialogView.ShowDialog() == DialogResult.OK)
          {
             try
             {
-               var serializer = HistoryEntrySerializerPlugins[saveFileDialogView.FilterIndex - 1].Interface;
+               var serializer = serializers[saveFileDialogView.FilterIndex - 1];
                serializer.Serialize(saveFileDialogView.FileName, _model.FetchSelectedQuery().ToList());
             }
             catch (Exception ex)

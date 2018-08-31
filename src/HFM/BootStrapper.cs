@@ -82,8 +82,6 @@ namespace HFM
                return;
             }
 
-            LoadPlugins(container);
-
             if (!RegisterIpcChannel(container))
             {
                return;
@@ -243,12 +241,6 @@ namespace HFM
             return false;
          }
          return true;
-      }
-
-      private static void LoadPlugins(IWindsorContainer container)
-      {
-         var pluginLoader = container.Resolve<Core.Plugins.PluginLoader>();
-         pluginLoader.Load();
       }
 
       private static bool RegisterIpcChannel(IWindsorContainer container)

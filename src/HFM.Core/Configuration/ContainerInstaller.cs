@@ -160,26 +160,10 @@ namespace HFM.Core.Configuration
                .ImplementedBy<ProteinService>()
                   .OnCreate(instance => ((ProteinService)instance).Read()));
 
-         // PluginLoader - Transient
-         container.Register(
-            Component.For<Plugins.PluginLoader>()
-               .LifeStyle.Transient);
-
          // IProjectSummaryDownloader - Singleton
          container.Register(
             Component.For<IProjectSummaryDownloader>()
                .ImplementedBy<ProjectSummaryDownloader>());
-
-         #region Plugins
-
-         // IPluginManager<Plugins.IFileSerializer<T>> - Singleton
-         container.Register(
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.HistoryEntry>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.HistoryEntry>>>());
-
-         #endregion
 
          #endregion
       }

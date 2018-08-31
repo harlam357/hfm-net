@@ -352,18 +352,14 @@ namespace HFM.Forms
 
          var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
          serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)));
-         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
-         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
-         plugins.Expect(x => x[0]).Return(pluginInfo);
          // Act
          _presenter = CreatePresenter();
-         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.ExportSerializers = new[] { serializer };
          _presenter.ExportClick();
          // Assert
          _viewFactory.VerifyAllExpectations();
          saveFileDialogView.VerifyAllExpectations();
          serializer.VerifyAllExpectations();
-         plugins.VerifyAllExpectations();
       }
 
       [Test]
@@ -383,9 +379,6 @@ namespace HFM.Forms
          var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
          serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)))
             .Throw(exception);
-         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
-         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
-         plugins.Expect(x => x[0]).Return(pluginInfo);
 
          var logger = MockRepository.GenerateMock<ILogger>();
          logger.Expect(x => x.ErrorFormat(exception, "", new object[0])).IgnoreArguments();
@@ -393,14 +386,13 @@ namespace HFM.Forms
 
          // Act
          _presenter = CreatePresenter();
-         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.ExportSerializers = new[] { serializer };
          _presenter.Logger = logger;
          _presenter.ExportClick();
          // Assert
          _viewFactory.VerifyAllExpectations();
          saveFileDialogView.VerifyAllExpectations();
          serializer.VerifyAllExpectations();
-         plugins.VerifyAllExpectations();
          logger.VerifyAllExpectations();
          _messageBoxView.VerifyAllExpectations();
       }

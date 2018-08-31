@@ -88,6 +88,7 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
+    <Compile Include="Serializers\IFileSerializerExtensions.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="Services\ClientConfiguration.cs" />
     <Compile Include="Client\LegacyDataAggregator.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Services\ProteinService.cs" />
     <Compile Include="Serializers\HfmFileSerializer.cs" />
     <Compile Include="Serializers\HistoryEntryCsvSerializer.cs" />
@@ -137,16 +137,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="NetworkOps.cs" />
     <Compile Include="Utilities\FileSystemPath.cs" />
-    <Compile Include="Plugins\PluginInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\PluginLoadInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\PluginManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\FileSerializerPluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkService.cs" />
     <Compile Include="Data\QueryParametersContainer.cs" />
