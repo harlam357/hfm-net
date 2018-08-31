@@ -110,12 +110,12 @@ namespace HFM.Core
          set { _lastRefreshTime = value; }
       }
 
-      public override Plugins.IFileSerializer<List<Protein>> DefaultSerializer
+      public override Serializers.IFileSerializer<List<Protein>> DefaultSerializer
       {
          get { return new TabSerializer(); }
       }
 
-      private sealed class TabSerializer : Plugins.IFileSerializer<List<Protein>>
+      private sealed class TabSerializer : Serializers.IFileSerializer<List<Protein>>
       {
          private readonly Proteins.TabSerializer _serializer = new Proteins.TabSerializer();
 

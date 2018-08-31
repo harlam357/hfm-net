@@ -75,7 +75,7 @@ namespace HFM.Core.Data
 
       #region Properties
 
-      public override Plugins.IFileSerializer<XmlStatsData> DefaultSerializer
+      public override Serializers.IFileSerializer<XmlStatsData> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<XmlStatsData>(); }
       }

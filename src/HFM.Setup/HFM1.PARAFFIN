@@ -28,7 +28,6 @@
       <ComponentRef Id="comp_0CA147C9E6BD465D80BB63E597EF1476" />
       <ComponentRef Id="comp_6BD71BEA2F214500885527E1F34B1F9C" />
       <ComponentRef Id="comp_54DBCE5548D24F17AAC498BDB77BB59E" />
-      <ComponentRef Id="comp_91D537D9E6734360820B55EA3C93258E" />
       <ComponentRef Id="comp_E65543BCFFFD4D7595A9EB28D978F06C" />
       <ComponentRef Id="comp_664F2B64AF15475B8A0808717F9BBEDB" />
       <ComponentRef Id="comp_640DFD1F256D49E6A52168D9D0318F87" />
@@ -92,9 +91,6 @@
       </Component>
       <Component Id="comp_54DBCE5548D24F17AAC498BDB77BB59E" Guid="D70C2A76-6FF4-4109-9EA4-CB40C02F49F9">
         <File Id="file_18D048FE85BC4AA092F357892B2A0334" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.Core.dll" />
-      </Component>
-      <Component Id="comp_91D537D9E6734360820B55EA3C93258E" Guid="9390A64E-A448-4D89-B29A-BB936A987B1D">
-        <File Id="file_763A33C5FBB24D45AB4E2E8B073A3F4D" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.Core.Plugins.dll" />
       </Component>
       <Component Id="comp_E65543BCFFFD4D7595A9EB28D978F06C" DiskId="1" Guid="C1352FBD-F98A-4DEE-BCDA-3395A95F9018">
         <File Id="file_2848944263FA45899C0EBF0019277560" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.exe" />

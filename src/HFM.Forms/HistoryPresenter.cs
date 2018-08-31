@@ -34,7 +34,6 @@ using HFM.Core;
 using HFM.Core.Data;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 using HFM.Core.Serializers;
 using HFM.Forms.Models;
 using HFM.Preferences;

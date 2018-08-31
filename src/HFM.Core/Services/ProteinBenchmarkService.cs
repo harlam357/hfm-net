@@ -126,7 +126,7 @@ namespace HFM.Core
    {
       #region Properties
 
-      public override Plugins.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
+      public override Serializers.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>(); }
       }

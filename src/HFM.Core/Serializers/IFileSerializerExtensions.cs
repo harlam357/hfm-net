@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using HFM.Core.Plugins;
-
 namespace HFM.Core.Serializers
 {
    public static class IFileSerializerExtensions

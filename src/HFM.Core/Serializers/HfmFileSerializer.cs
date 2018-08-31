@@ -30,7 +30,6 @@ using harlam357.Core.Security;
 using harlam357.Core.Security.Cryptography;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 
 namespace HFM.Core.Serializers
 {

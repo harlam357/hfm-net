@@ -51,7 +51,7 @@ namespace HFM.Core.Data
 
       #region Properties
 
-      public override Plugins.IFileSerializer<List<QueryParameters>> DefaultSerializer
+      public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
       }

@@ -6,6 +6,7 @@
 *.suo
 *.csproj.DotSettings
 .vs
+___*.tmp
 /src/Artifacts
 /src/TestResults
 /src/*/bin

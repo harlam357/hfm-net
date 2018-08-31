@@ -43,7 +43,7 @@ namespace HFM.Core.Data
 
       public string FileName { get; set; }
 
-      public abstract Plugins.IFileSerializer<T> DefaultSerializer { get; }
+      public abstract Serializers.IFileSerializer<T> DefaultSerializer { get; }
 
       protected DataContainer()
       {

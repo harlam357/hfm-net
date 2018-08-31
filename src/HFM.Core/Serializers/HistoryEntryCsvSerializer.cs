@@ -23,7 +23,6 @@ using System.Globalization;
 using System.IO;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 
 namespace HFM.Core.Serializers
 {

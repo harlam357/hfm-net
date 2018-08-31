@@ -21,8 +21,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-using HFM.Core.Plugins;
-
 namespace HFM.Core.Serializers
 {
    public class XmlFileSerializer<T> : IFileSerializer<T> where T : class, new()

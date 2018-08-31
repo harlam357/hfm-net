@@ -23,7 +23,6 @@ using System.IO;
 using System.Linq;
 
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
 using HFM.Core.Serializers;
 
 namespace HFM.Forms
