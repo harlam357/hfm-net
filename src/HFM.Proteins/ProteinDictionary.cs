@@ -23,8 +23,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Proteins
 {
    public class ProteinDictionary : IDictionary<int, Protein>

@@ -3,8 +3,6 @@ using System;
 using System.Globalization;
 using System.Text;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Proteins
 {
    public static class ProductionCalculator
