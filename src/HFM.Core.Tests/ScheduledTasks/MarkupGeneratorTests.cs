@@ -29,6 +29,7 @@ using Rhino.Mocks;
 
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
+using HFM.Log;
 using HFM.Preferences;
 
 namespace HFM.Core.ScheduledTasks
@@ -156,7 +157,12 @@ namespace HFM.Core.ScheduledTasks
          slot.Prefs = prefs;
          // set concrete values
          slot.Settings = new ClientSettings { Name = "Test2" };
-         slot.CurrentLogLines = new List<LogLine>();
+         var logLines = new List<LogLine>
+         {
+            new LogLine { LineType = LogLineType.LogHeader, LineIndex = 1, LineRaw = "Header" }
+         };
+         slot.CurrentLogLines = logLines;
+         slot.UnitInfo.LogLines = logLines;
          slots.Add(slot);
 
          // setup slot

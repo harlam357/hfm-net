@@ -359,6 +359,10 @@
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
+      <Project>{2c3ea8a1-d17f-419d-a76a-970550fb5a09}</Project>
+      <Name>HFM.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
       <Name>HFM.Preferences</Name>

@@ -337,28 +337,21 @@ namespace HFM.Core.ScheduledTasks
          slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
          slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
          slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
-         slotDetail.CurrentLogLines = slot.CurrentLogLines;
+         slotDetail.CurrentLogLines = CreateMarkupLogLines(slot.CurrentLogLines);
          slotDetail.Protein = CreateMarkupProtein(slot.UnitInfoModel.CurrentProtein);
          return slotDetail;
       }
 
+      private static IList<LogLine> CreateMarkupLogLines(IEnumerable<Log.LogLine> lines)
+      {
+         if (lines == null) return null;
+         return lines.Select(AutoMapper.Mapper.Map<LogLine>).ToList();
+      }
+
       private static Protein CreateMarkupProtein(Proteins.Protein p)
       {
-         return new Protein
-         {
-            ProjectNumber = p.ProjectNumber,
-            ServerIP = p.ServerIP,
-            WorkUnitName = p.WorkUnitName,
-            NumberOfAtoms = p.NumberOfAtoms,
-            PreferredDays = p.PreferredDays,
-            MaximumDays = p.MaximumDays,
-            Credit = p.Credit,
-            Frames = p.Frames,
-            Core = p.Core,
-            Description = p.Description,
-            Contact = p.Contact,
-            KFactor = p.KFactor
-         };
+         if (p == null) return null;
+         return AutoMapper.Mapper.Map<Protein>(p);
       }
       
       #endregion

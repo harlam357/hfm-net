@@ -82,7 +82,9 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
+    <Compile Include="DataTypes\Markup\UnitInfo.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />
+    <Compile Include="Serializers\ISerializer.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />

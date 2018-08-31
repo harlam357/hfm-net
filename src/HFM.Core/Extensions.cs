@@ -437,11 +437,6 @@ namespace HFM.Core
          return ProtoBuf.Serializer.DeepClone(value);
       }
 
-      internal static UnitInfo DeepClone(this UnitInfo value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
       internal static ClientSettings DeepClone(this ClientSettings value)
       {
          return ProtoBuf.Serializer.DeepClone(value);

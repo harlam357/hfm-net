@@ -22,7 +22,6 @@ using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 
 using HFM.Core.DataTypes;
-using HFM.Core.DataTypes.Markup;
 using HFM.Queue;
 
 namespace HFM.Core.Configuration
@@ -38,27 +37,36 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.WaitingOn, opt => opt.Ignore())
             .ForMember(dest => dest.Attempts, opt => opt.Ignore())
             .ForMember(dest => dest.NextAttempt, opt => opt.Ignore());
-         CreateMap<SlotModel, SlotData>()
-            .ForMember(dest => dest.GridData, opt => opt.MapFrom(src => Mapper.Map<SlotModel, GridData>(src)));
-         CreateMap<SlotModel, GridData>()
+
+         CreateMap<SlotModel, DataTypes.Markup.SlotData>()
+            .ForMember(dest => dest.GridData, opt => opt.MapFrom(src => Mapper.Map<SlotModel, DataTypes.Markup.GridData>(src)));
+
+         CreateMap<SlotModel, DataTypes.Markup.GridData>()
             .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => src.Status.GetHtmlColor()))
             .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => src.Status.GetHtmlFontColor()))
             .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToDateString() : src.ETA.ToString()))
             .ForMember(dest => dest.Failed, opt => opt.MapFrom(src => src.TotalRunFailedUnits))
             .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
             .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
-         CreateMap<SlotData, SlotModel>()
-            .ForMember(dest => dest.Prefs, opt => opt.Ignore())
-            .ForMember(dest => dest.UnitInfoModel, opt => opt.Ignore())
-            .ForMember(dest => dest.Settings, opt => opt.Ignore())
-            .ForMember(dest => dest.SlotOptions, opt => opt.Ignore())
-            .ForMember(dest => dest.UserIdIsDuplicate, opt => opt.Ignore())
-            .ForMember(dest => dest.ProjectIsDuplicate, opt => opt.Ignore())
-            .ForMember(dest => dest.TimeOfLastUnitStart, opt => opt.Ignore())
-            .ForMember(dest => dest.TimeOfLastFrameProgress, opt => opt.Ignore())
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.GridData.Status))
-            .ForMember(dest => dest.Queue, opt => opt.Ignore()) // Ignore for now, may want to include later
-            .ForMember(dest => dest.UnitLogLines, opt => opt.Ignore()); // Ignore for now, may want to include later
+
+         CreateMap<UnitInfo, DataTypes.Markup.UnitInfo>();
+         CreateMap<Log.LogLine, DataTypes.Markup.LogLine>();
+         CreateMap<Proteins.Protein, DataTypes.Markup.Protein>();
+
+         // TODO: Old mapping attempting to read in slot/grid data from xml and display in the UI... look for an alternative
+         //CreateMap<SlotData, SlotModel>()
+         //   .ForMember(dest => dest.Prefs, opt => opt.Ignore())
+         //   .ForMember(dest => dest.UnitInfoModel, opt => opt.Ignore())
+         //   .ForMember(dest => dest.Settings, opt => opt.Ignore())
+         //   .ForMember(dest => dest.SlotOptions, opt => opt.Ignore())
+         //   .ForMember(dest => dest.UserIdIsDuplicate, opt => opt.Ignore())
+         //   .ForMember(dest => dest.ProjectIsDuplicate, opt => opt.Ignore())
+         //   .ForMember(dest => dest.TimeOfLastUnitStart, opt => opt.Ignore())
+         //   .ForMember(dest => dest.TimeOfLastFrameProgress, opt => opt.Ignore())
+         //   .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.GridData.Status))
+         //   .ForMember(dest => dest.Queue, opt => opt.Ignore()) // Ignore for now, may want to include later
+         //   .ForMember(dest => dest.UnitLogLines, opt => opt.Ignore()); // Ignore for now, may want to include later
+
          CreateMap<UnitInfo, HistoryEntry>()
             .ForMember(dest => dest.ID, opt => opt.Ignore())
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.OwningSlotName))

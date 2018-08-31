@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using HFM.Core.DataTypes;
+using HFM.Log;
 
 namespace HFM.Core
 {

@@ -75,6 +75,8 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="LogLine.cs" />
+    <Compile Include="LogLineType.cs" />
     <Compile Include="Support\DateTimeParse.cs" />
     <Compile Include="Support\Environment.cs" />
     <Compile Include="FahLog.cs" />

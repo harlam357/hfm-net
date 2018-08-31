@@ -44,6 +44,7 @@ using harlam357.Windows.Forms;
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Models;
+using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
 

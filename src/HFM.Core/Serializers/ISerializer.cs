@@ -1,7 +1,7 @@
 ﻿
 using System.IO;
 
-namespace HFM.Core.DataTypes
+namespace HFM.Core.Serializers
 {
    public interface ISerializer<T>
    {

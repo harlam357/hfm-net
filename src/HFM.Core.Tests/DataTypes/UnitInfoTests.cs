@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using HFM.Log;
+
 using NUnit.Framework;
 
 namespace HFM.Core.DataTypes
