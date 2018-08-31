@@ -52,7 +52,7 @@ namespace HFM.Proteins
       /// <param name="fileName">File name to load into the dictionary.</param>
       /// <param name="serializer">Serializer used to read the data.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public ICollection<ProteinLoadInfo> Load(string fileName, ISerializer<List<Protein>> serializer)
+      public ICollection<ProteinLoadInfo> Load(string fileName, IProteinSerializer serializer)
       {
          using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
          {
@@ -76,7 +76,7 @@ namespace HFM.Proteins
       /// <param name="address">The URI representing the data to load into the dictionary.</param>
       /// <param name="serializer">Serializer used to read the data.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public ICollection<ProteinLoadInfo> Load(Uri address, ISerializer<List<Protein>> serializer)
+      public ICollection<ProteinLoadInfo> Load(Uri address, IProteinSerializer serializer)
       {
          using (var client = new WebClient())
          {
@@ -104,7 +104,7 @@ namespace HFM.Proteins
       /// <param name="stream">The stream containing data to load into the dictionary.</param>
       /// <param name="serializer">Serializer used to read the data.</param>
       /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing ProteinLoadInfo which details how the ProteinDictionary was changed.</returns>
-      public ICollection<ProteinLoadInfo> Load(Stream stream, ISerializer<List<Protein>> serializer)
+      public ICollection<ProteinLoadInfo> Load(Stream stream, IProteinSerializer serializer)
       {
          return Load(serializer.Deserialize(stream));
       }

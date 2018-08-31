@@ -338,8 +338,27 @@ namespace HFM.Core.ScheduledTasks
          slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
          slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
          slotDetail.CurrentLogLines = slot.CurrentLogLines;
-         slotDetail.Protein = slot.UnitInfoModel.CurrentProtein;
+         slotDetail.Protein = CreateMarkupProtein(slot.UnitInfoModel.CurrentProtein);
          return slotDetail;
+      }
+
+      private static Protein CreateMarkupProtein(Proteins.Protein p)
+      {
+         return new Protein
+         {
+            ProjectNumber = p.ProjectNumber,
+            ServerIP = p.ServerIP,
+            WorkUnitName = p.WorkUnitName,
+            NumberOfAtoms = p.NumberOfAtoms,
+            PreferredDays = p.PreferredDays,
+            MaximumDays = p.MaximumDays,
+            Credit = p.Credit,
+            Frames = p.Frames,
+            Core = p.Core,
+            Description = p.Description,
+            Contact = p.Contact,
+            KFactor = p.KFactor
+         };
       }
       
       #endregion

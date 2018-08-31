@@ -31,6 +31,7 @@ using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Preferences;
+using HFM.Proteins;
 
 namespace HFM.Core
 {

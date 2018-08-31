@@ -118,7 +118,6 @@
     <Compile Include="NetworkOpsTests.cs" />
     <Compile Include="Utilities\FileSystemPathTests.cs" />
     <Compile Include="ApplicationTests.cs" />
-    <Compile Include="Plugins\FileSerializerPluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializers\HistoryEntryCsvSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
@@ -158,6 +157,10 @@
       <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
       <Name>HFM.Preferences</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500a8ca-521d-4397-892b-27c6917847e1}</Project>
+      <Name>HFM.Proteins</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
       <Project>{44ac27f2-833d-4bf2-9e17-c35d38c7bd67}</Project>
       <Name>HFM.Queue</Name>
@@ -180,9 +183,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.dll" />
-    <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.NoFileDescription.dll" />
-    <Content Include="TestFiles\HFM.Proteins.ExampleSerializer.NoFileExtension.dll" />
     <Content Include="TestFiles\SlotSummary1.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

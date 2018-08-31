@@ -33,6 +33,7 @@ using Rhino.Mocks;
 
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Core.Data.SQLite
 {

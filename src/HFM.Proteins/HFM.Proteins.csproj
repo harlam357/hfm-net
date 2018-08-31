@@ -81,8 +81,10 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="IProteinSerializer.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
+    <Compile Include="Protein.cs" />
     <Compile Include="StanfordWebAddresses.cs" />
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,10 +94,6 @@
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
       <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
       <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
-      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
-      <Name>HFM.Core.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

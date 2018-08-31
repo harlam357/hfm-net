@@ -24,6 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Core
 {

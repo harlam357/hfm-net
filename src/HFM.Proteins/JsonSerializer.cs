@@ -23,11 +23,9 @@ using System.IO;
 
 using Newtonsoft.Json.Linq;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Proteins
 {
-   public class JsonSerializer : ISerializer<List<Protein>>
+   public class JsonSerializer : IProteinSerializer
    {
       public List<Protein> Deserialize(Stream stream)
       {
@@ -78,7 +76,7 @@ namespace HFM.Proteins
          return default(T);
       }
 
-      void ISerializer<List<Protein>>.Serialize(Stream stream, List<Protein> value)
+      void IProteinSerializer.Serialize(Stream stream, List<Protein> value)
       {
          throw new NotSupportedException("JSON serialization is not supported.");
       }

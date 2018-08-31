@@ -115,6 +115,31 @@ namespace HFM.Core
          get { return new TabSerializer(); }
       }
 
+      private sealed class TabSerializer : Plugins.IFileSerializer<List<Protein>>
+      {
+         private readonly Proteins.TabSerializer _serializer = new Proteins.TabSerializer();
+
+         public string FileExtension
+         {
+            get { return "tab"; }
+         }
+
+         public string FileTypeFilter
+         {
+            get { return "Project Info Tab Delimited Files|*.tab"; }
+         }
+
+         public List<Protein> Deserialize(string fileName)
+         {
+            return _serializer.Deserialize(fileName);
+         }
+
+         public void Serialize(string fileName, List<Protein> value)
+         {
+            _serializer.Serialize(fileName, value);
+         }
+      }
+
       #endregion
 
       /// <summary>

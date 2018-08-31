@@ -432,11 +432,6 @@ namespace HFM.Core
 
       #region DeepClone
 
-      public static Protein DeepClone(this Protein value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
       public static QueryParameters DeepClone(this QueryParameters value)
       {
          return ProtoBuf.Serializer.DeepClone(value);

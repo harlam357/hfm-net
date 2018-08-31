@@ -6,25 +6,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
-
 namespace HFM.Proteins
 {
-   public sealed class TabSerializer : IFileSerializer<List<Protein>>, ISerializer<List<Protein>>
+   public sealed class TabSerializer : IProteinSerializer
    {
-      #region IFileSerializer<List<Protein>> Members
-
-      public string FileExtension
-      {
-         get { return "tab"; }
-      }
-
-      public string FileTypeFilter
-      {
-         get { return "Project Info Tab Delimited Files|*.tab"; }
-      }
-
       public List<Protein> Deserialize(string fileName)
       {
          using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
@@ -105,7 +90,5 @@ namespace HFM.Proteins
             }
          }
       }
-
-      #endregion
    }
 }

@@ -26,8 +26,8 @@ using Rhino.Mocks;
 
 using harlam357.Core;
 
-using HFM.Core.DataTypes;
 using HFM.Preferences;
+using HFM.Proteins;
 
 namespace HFM.Core
 {
