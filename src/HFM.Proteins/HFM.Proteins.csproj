@@ -85,6 +85,7 @@
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
+    <Compile Include="ProteinLoadInfo.cs" />
     <Compile Include="StanfordWebAddresses.cs" />
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

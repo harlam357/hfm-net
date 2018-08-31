@@ -20,7 +20,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
