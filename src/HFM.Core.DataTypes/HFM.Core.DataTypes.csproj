@@ -61,7 +61,6 @@
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlotStatus.cs" />
-    <Compile Include="UnitFrame.cs" />
     <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>

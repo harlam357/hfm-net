@@ -26,6 +26,7 @@ using Rhino.Mocks;
 using HFM.Client;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Log;
 using HFM.Proteins;
 
 namespace HFM.Core
