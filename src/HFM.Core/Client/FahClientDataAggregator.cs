@@ -71,7 +71,7 @@ namespace HFM.Core
          result.ClientVersion = clientRun.Data.ClientVersion;
          result.UserID = clientRun.Data.UserID;
          result.MachineID = clientRun.Data.MachineID;
-         result.Status = slotRun != null ? slotRun.Data.Status : SlotStatus.Unknown;
+         result.Status = slotRun != null ? (SlotStatus)slotRun.Data.Status : SlotStatus.Unknown;
 
          if (Logger.IsDebugEnabled)
          {

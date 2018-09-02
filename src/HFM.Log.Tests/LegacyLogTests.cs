@@ -38,7 +38,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 261;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -61,7 +61,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 2;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 263;
-         expectedSlotRun.Data.Status = SlotStatus.GettingWorkPacket;
+         expectedSlotRun.Data.Status = LogSlotStatus.GettingWorkPacket;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -102,7 +102,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 2;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 292;
-         expectedSlotRun.Data.Status = SlotStatus.SendingWorkPacket;
+         expectedSlotRun.Data.Status = LogSlotStatus.SendingWorkPacket;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -149,7 +149,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -189,7 +189,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(4);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -263,7 +263,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 33;
          expectedSlotRun.Data.TotalCompletedUnits = 617;
-         expectedSlotRun.Data.Status = SlotStatus.EuePause;
+         expectedSlotRun.Data.Status = LogSlotStatus.EuePause;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -304,7 +304,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 885;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -349,7 +349,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 5;
          expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -383,7 +383,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 11;
          expectedSlotRun.Data.FailedUnits = 1;
          expectedSlotRun.Data.TotalCompletedUnits = 12;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -425,7 +425,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 2;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 4221;
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -465,7 +465,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -492,7 +492,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 5;
          expectedSlotRun.Data.TotalCompletedUnits = 224;
-         expectedSlotRun.Data.Status = SlotStatus.EuePause;
+         expectedSlotRun.Data.Status = LogSlotStatus.EuePause;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -536,7 +536,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 1994;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -593,7 +593,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 847;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -667,7 +667,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -689,7 +689,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 2;
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -729,7 +729,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -751,7 +751,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -817,7 +817,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 8;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 229;
-         expectedSlotRun.Data.Status = SlotStatus.Paused;
+         expectedSlotRun.Data.Status = LogSlotStatus.Paused;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -859,7 +859,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = 173;
-         expectedSlotRun.Data.Status = SlotStatus.Stopped;
+         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);

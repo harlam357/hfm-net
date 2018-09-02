@@ -48,18 +48,20 @@ namespace HFM.Client.DataTypes
 
    // ReSharper restore InconsistentNaming
 
+   // See HFM.Core.SlotStatus for the global enumeration covering Legacy and v7 clients
+
    /// <summary>
    /// Folding@Home slot status.
    /// </summary>
    public enum FahSlotStatus
    {
-      Unknown,
-      Paused,
-      Running,
-      Finishing,
-      Ready,
-      Stopping,
-      Failed
+      Unknown = 0,
+      Paused = 1,
+      Running = 2,
+      Finishing = 3,
+      Ready = 4,
+      Stopping = 5,
+      Failed = 6
    }
 
    /// <summary>

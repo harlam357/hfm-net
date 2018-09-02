@@ -7,21 +7,21 @@ namespace HFM.Core.DataTypes
    public enum SlotStatus
    {
       // Matches HFM.Client.DataTypes.FahSlotStatus
-      Unknown,
-      Paused,
-      Running,
-      Finishing,  // v7 specific
-      Ready,      // v7 specific
-      Stopping,   // v7 specific
-      Failed,     // v7 specific
+      Unknown = 0,
+      Paused = 1,
+      Running = 2,
+      Finishing = 3,  // v7 specific
+      Ready = 4,      // v7 specific
+      Stopping = 5,   // v7 specific
+      Failed = 6,     // v7 specific
       // Extended entries for Legacy clients
-      Stopped,
-      EuePause,
-      Hung,
-      RunningNoFrameTimes,
-      RunningAsync,
-      SendingWorkPacket,
-      GettingWorkPacket,
-      Offline
+      Stopped = 7,
+      EuePause = 8,
+      Hung = 9,
+      RunningNoFrameTimes = 10,
+      RunningAsync = 11,
+      SendingWorkPacket = 12,
+      GettingWorkPacket = 13,
+      Offline = 14
    }
 }

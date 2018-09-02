@@ -116,9 +116,9 @@ namespace HFM.Log
          return slotRunData;
       }
 
-      private static SlotStatus GetSlotRunDataStatusLegacy(IEnumerable<LogLine> logLines)
+      private static LogSlotStatus GetSlotRunDataStatusLegacy(IEnumerable<LogLine> logLines)
       {
-         var status = SlotStatus.Unknown;
+         var status = LogSlotStatus.Unknown;
 
          foreach (var line in logLines)
          {
@@ -128,29 +128,29 @@ namespace HFM.Log
                 line.LineType == LogLineType.WorkUnitFrame ||
                 line.LineType == LogLineType.WorkUnitResumeFromBattery)
             {
-               status = SlotStatus.RunningNoFrameTimes;
+               status = LogSlotStatus.RunningNoFrameTimes;
             }
             else if (line.LineType == LogLineType.WorkUnitPaused ||
                      line.LineType == LogLineType.WorkUnitPausedForBattery)
             {
-               status = SlotStatus.Paused;
+               status = LogSlotStatus.Paused;
             }
             else if (line.LineType == LogLineType.ClientSendWorkToServer)
             {
-               status = SlotStatus.SendingWorkPacket;
+               status = LogSlotStatus.SendingWorkPacket;
             }
             else if (line.LineType == LogLineType.ClientAttemptGetWorkPacket)
             {
-               status = SlotStatus.GettingWorkPacket;
+               status = LogSlotStatus.GettingWorkPacket;
             }
             else if (line.LineType == LogLineType.ClientEuePauseState)
             {
-               status = SlotStatus.EuePause;
+               status = LogSlotStatus.EuePause;
             }
             else if (line.LineType == LogLineType.ClientShutdown ||
                      line.LineType == LogLineType.ClientCoreCommunicationsErrorShutdown)
             {
-               status = SlotStatus.Stopped;
+               status = LogSlotStatus.Stopped;
             }
          }
 

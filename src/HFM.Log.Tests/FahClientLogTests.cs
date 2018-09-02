@@ -47,7 +47,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 0;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup SlotRun 1
          expectedSlotRun = new SlotRun(expectedRun, 1);
@@ -88,7 +88,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 1;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();
@@ -245,7 +245,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 7;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup SlotRun 0
          expectedSlotRun = new SlotRun(expectedRun, 0);
@@ -376,7 +376,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 7;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();
@@ -2241,7 +2241,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 95;
          expectedSlotRun.Data.FailedUnits = 11;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup SlotRun 2
          expectedSlotRun = new SlotRun(expectedRun, 2);
@@ -3602,7 +3602,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 46;
          expectedSlotRun.Data.FailedUnits = 8;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();
@@ -4493,7 +4493,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 54;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();
@@ -7859,7 +7859,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 220;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();
@@ -7940,7 +7940,7 @@ namespace HFM.Log
          expectedSlotRun.Data.CompletedUnits = 3;
          expectedSlotRun.Data.FailedUnits = 0;
          expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = SlotStatus.Unknown;
+         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
          expectedRun.Data = new ClientRunData();

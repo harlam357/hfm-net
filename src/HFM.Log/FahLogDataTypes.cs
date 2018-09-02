@@ -232,7 +232,7 @@ namespace HFM.Log
       /// <summary>
       /// Client Status
       /// </summary>
-      public SlotStatus Status { get; set; }
+      public LogSlotStatus Status { get; set; }
    }
 
    public class UnitRun : IEnumerable<LogLine>
