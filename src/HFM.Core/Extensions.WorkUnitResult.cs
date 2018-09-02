@@ -1,5 +1,7 @@
 ﻿
-namespace HFM.Core.DataTypes
+using HFM.Log;
+
+namespace HFM.Core
 {
    public static partial class Extensions
    {

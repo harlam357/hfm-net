@@ -175,9 +175,23 @@ namespace HFM.Log
          {
             slotRunData.CompletedUnits++;
          }
-         else if (workUnitResult.IsTerminating())
+         else if (IsFailedWorkUnit(workUnitResult))
          {
             slotRunData.FailedUnits++;
+         }
+      }
+
+      private static bool IsFailedWorkUnit(WorkUnitResult result)
+      {
+         switch (result)
+         {
+            case WorkUnitResult.EarlyUnitEnd:
+            case WorkUnitResult.UnstableMachine:
+            case WorkUnitResult.BadWorkUnit:
+            case WorkUnitResult.ClientCoreError:
+               return true;
+            default:
+               return false;
          }
       }
 

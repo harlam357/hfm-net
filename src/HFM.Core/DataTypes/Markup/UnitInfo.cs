@@ -63,7 +63,7 @@ namespace HFM.Core.DataTypes.Markup
       public string ProteinTag { get; set; }
 
       [DataMember(Order = 18)]
-      public WorkUnitResult UnitResult { get; set; }
+      public string UnitResult { get; set; }
 
       [DataMember(Order = 19)]
       public int RawFramesComplete { get; set; }

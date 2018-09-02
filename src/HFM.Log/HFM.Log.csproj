@@ -90,6 +90,7 @@
     <Compile Include="UnitInfoLog.cs" />
     <Compile Include="UnitInfoLogData.cs" />
     <Compile Include="UnitInfoLogRegex.cs" />
+    <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">

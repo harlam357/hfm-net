@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
+using HFM.Log;
 using HFM.Preferences;
 
 namespace HFM.Core.Data.SQLite

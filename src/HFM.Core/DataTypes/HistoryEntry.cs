@@ -19,6 +19,8 @@
 
 using System;
 
+using HFM.Log;
+
 namespace HFM.Core.DataTypes
 {
    [PetaPoco.TableName("WuHistory")]

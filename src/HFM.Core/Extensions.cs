@@ -29,7 +29,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public static class Extensions
+   public static partial class Extensions
    {
       #region DateTime/TimeSpan
 
