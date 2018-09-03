@@ -779,7 +779,7 @@ namespace HFM.Forms
 
       public void ShowHfmDataFiles()
       {
-         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.ApplicationDataFolderPath));
+         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.Get<string>(Preference.ApplicationDataFolderPath)));
       }
 
       public void ShowHfmGoogleGroup()
@@ -970,7 +970,7 @@ namespace HFM.Forms
          // Check for SelectedSlot, and get out if not found
          if (_gridModel.SelectedSlot == null) return;
 
-         string logFilePath = Path.Combine(_prefs.CacheDirectory, _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+         string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
          if (File.Exists(logFilePath))
          {
             HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));

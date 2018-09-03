@@ -146,9 +146,10 @@ namespace HFM.Core.Data.SQLite
          SQLiteFunction.RegisterFunction(typeof(GetProduction));
 
          ForceDateTimesToUtc = true;
-         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+         if (!String.IsNullOrEmpty(path))
          {
-            DatabaseFilePath = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.SqLiteFilename);
+            DatabaseFilePath = System.IO.Path.Combine(path, Constants.SqLiteFilename);
          }
       }
 

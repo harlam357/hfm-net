@@ -38,10 +38,22 @@ namespace HFM.Preferences.Tests
       }
 
       [Test]
+      public void PreferenceSet_Get_ConstructorValues_Test()
+      {
+         // Arrange
+         var prefs = new PreferenceSet("AppPath", "DataPath", "1.0.0");
+         // Assert
+         Assert.AreEqual(prefs.ApplicationPath, prefs.Get<string>(Preference.ApplicationPath));
+         Assert.AreEqual(prefs.ApplicationDataFolderPath, prefs.Get<string>(Preference.ApplicationDataFolderPath));
+         string cacheFolderPath = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, "logcache");
+         Assert.AreEqual(cacheFolderPath, prefs.Get<string>(Preference.CacheDirectory));
+      }
+
+      [Test]
       public void PreferenceSet_Get_StringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
       {
          // Arrange
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          data.ApplicationSettings.BonusCalculation = "Foo";
          var prefs = new PreferenceSet(data);
          // Act
@@ -154,7 +166,7 @@ namespace HFM.Preferences.Tests
       [Test]
       public void PreferenceSet_Set_ValueType_Test()
       {
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          var prefs = new PreferenceSet(data);
 
          prefs.Set(Preference.FormSplitterLocation, (object)null);
@@ -170,7 +182,7 @@ namespace HFM.Preferences.Tests
       [Test]
       public void PreferenceSet_Set_String_Test()
       {
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          var prefs = new PreferenceSet(data);
 
          prefs.Set(Preference.EmailReportingFromAddress, (string)null);
@@ -185,7 +197,7 @@ namespace HFM.Preferences.Tests
       public void PreferenceSet_Set_StringAsEnum_Test()
       {
          // Arrange
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          var prefs = new PreferenceSet(data);
          // Act
          prefs.Set(Preference.BonusCalculation, BonusCalculation.Default);
@@ -196,7 +208,7 @@ namespace HFM.Preferences.Tests
       [Test]
       public void PreferenceSet_Set_Class_Test()
       {
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          var prefs = new PreferenceSet(data);
 
          ClientRetrievalTask task = null;
@@ -213,7 +225,7 @@ namespace HFM.Preferences.Tests
       [Test]
       public void PreferenceSet_Set_Collection_Test()
       {
-         var data = new Data.PreferenceData();
+         var data = new PreferenceData();
          var prefs = new PreferenceSet(data);
 
          prefs.Set(Preference.FormColumns, (List<string>)null);

@@ -240,7 +240,7 @@ namespace HFM.Core.ScheduledTasks
          }
          else
          {
-            string xsltFileName = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName), xslt);
+            string xsltFileName = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.XsltFolderName, xslt);
             if (File.Exists(xsltFileName))
             {
                return xsltFileName;

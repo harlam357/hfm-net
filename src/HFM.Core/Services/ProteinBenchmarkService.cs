@@ -157,9 +157,10 @@ namespace HFM.Core
 
       public ProteinBenchmarkService(IPreferenceSet prefs)
       {
-         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+         if (!String.IsNullOrEmpty(path))
          {
-            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
+            FileName = System.IO.Path.Combine(path, Constants.BenchmarkCacheFileName);
          }
          _cacheLock = new ReaderWriterLockSlim();
       }

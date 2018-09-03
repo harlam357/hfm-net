@@ -40,13 +40,9 @@ namespace HFM.Preferences
 
       public string ApplicationDataFolderPath { get; private set; }
 
-      public string CacheDirectory
-      {
-         get { return Path.Combine(ApplicationDataFolderPath, Get<string>(Preference.CacheFolder)); }
-      }
+      public string ApplicationVersion { get; private set; }
 
       private PreferenceDictionary _prefs;
-      private readonly string _versionString;
 
       internal PreferenceSet()
          : this(new PreferenceData())
@@ -59,30 +55,33 @@ namespace HFM.Preferences
          _prefs = CreateDictionary(data);
       }
 
-      public PreferenceSet(string applicationPath, string applicationDataFolderPath, string versionString)
+      public PreferenceSet(string applicationPath, string applicationDataFolderPath, string applicationVersion)
       {
          if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationPath");
          if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationDataFolderPath");
-         if (String.IsNullOrWhiteSpace(versionString)) throw new ArgumentException("Value cannot be null or whitespace.", "versionString");
+         if (String.IsNullOrWhiteSpace(applicationVersion)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationVersion");
          ApplicationPath = applicationPath;
          ApplicationDataFolderPath = applicationDataFolderPath;
-         _versionString = versionString;
+         ApplicationVersion = applicationVersion;
 
-         var data = new PreferenceData();
+         var data = new PreferenceData { ApplicationVersion = ApplicationVersion };
          _prefs = CreateDictionary(data);
       }
 
       public void Reset()
       {
          EnsureApplicationDataFolderExists();
-         InitializeInternal(new PreferenceData());
+         var data = new PreferenceData { ApplicationVersion = ApplicationVersion };
+         Write(data);
+         _prefs = CreateDictionary(data);
       }
 
-      public void Initialize()
+      public void Load()
       {
          EnsureApplicationDataFolderExists();
          var data = Read() ?? Migrate() ?? new PreferenceData();
-         InitializeInternal(data);
+         Upgrade(data);
+         _prefs = CreateDictionary(data);
       }
 
       private void EnsureApplicationDataFolderExists()
@@ -91,12 +90,6 @@ namespace HFM.Preferences
          {
             Directory.CreateDirectory(ApplicationDataFolderPath);
          }
-      }
-
-      private void InitializeInternal(PreferenceData data)
-      {
-         Upgrade(data);
-         _prefs = CreateDictionary(data);
       }
 
       private PreferenceData Migrate()
@@ -118,14 +111,14 @@ namespace HFM.Preferences
 
       private void Upgrade(PreferenceData data)
       {
-         if (data.ApplicationVersion != _versionString)
+         if (data.ApplicationVersion != ApplicationVersion)
          {
             Version settingsVersion;
             if (Version.TryParse(data.ApplicationVersion, out settingsVersion))
             {
                ExecuteVersionUpgrades(settingsVersion, data);
             }
-            data.ApplicationVersion = _versionString;
+            data.ApplicationVersion = ApplicationVersion;
             Write(data);
          }
       }
@@ -157,9 +150,13 @@ namespace HFM.Preferences
          public Action<PreferenceData> Action { get; set; }
       }
 
-      private static PreferenceDictionary CreateDictionary(PreferenceData data)
+      private PreferenceDictionary CreateDictionary(PreferenceData data)
       {
          var prefs = new PreferenceDictionary(data);
+
+         prefs.AddReadOnly(Preference.ApplicationPath, p => ApplicationPath);
+         prefs.AddReadOnly(Preference.ApplicationDataFolderPath, p => ApplicationDataFolderPath);
+         prefs.AddReadOnly(Preference.CacheDirectory, p => Path.Combine(ApplicationDataFolderPath, p.ApplicationSettings.CacheFolder));
 
          prefs.Add(Preference.FormLocation, p => p.MainWindow.Location);
          prefs.Add(Preference.FormSize, p => p.MainWindow.Size);

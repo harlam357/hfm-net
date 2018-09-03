@@ -90,7 +90,7 @@ namespace HFM.Core.ScheduledTasks
             {
                var cssFile = _prefs.Get<string>(Preference.CssFile);
                // Copy the CSS file to the output directory
-               string cssFilePath = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), cssFile);
+               string cssFilePath = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName, cssFile);
                if (File.Exists(cssFilePath))
                {
                   File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
@@ -105,7 +105,7 @@ namespace HFM.Core.ScheduledTasks
                {
                   foreach (var slot in slots)
                   {
-                     string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, slot.Settings.CachedFahLogFileName());
+                     string cachedFahlogPath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), slot.Settings.CachedFahLogFileName());
                      if (File.Exists(cachedFahlogPath))
                      {
                         File.Copy(cachedFahlogPath, Path.Combine(webRoot, slot.Settings.CachedFahLogFileName()), true);
@@ -133,7 +133,7 @@ namespace HFM.Core.ScheduledTasks
             var ftpMode = _prefs.Get<FtpMode>(Preference.WebGenFtpMode);
 
             // Upload CSS File
-            _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName),
+            _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName,
                _prefs.Get<string>(Preference.CssFile)), username, password, ftpMode);
 
             // Upload each HTML File
@@ -148,7 +148,7 @@ namespace HFM.Core.ScheduledTasks
                                     ? _prefs.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                                     : -1;
 
-               var logPaths = slots.Select(x => Path.Combine(_prefs.CacheDirectory, x.Settings.CachedFahLogFileName())).Distinct();
+               var logPaths = slots.Select(x => Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), x.Settings.CachedFahLogFileName())).Distinct();
                foreach (var cachedFahlogPath in logPaths)
                {
                   if (File.Exists(cachedFahlogPath))

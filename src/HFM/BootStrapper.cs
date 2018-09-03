@@ -77,7 +77,7 @@ namespace HFM
                return;
             }
 
-            if (!ClearCacheFolder(prefs.CacheDirectory, logger))
+            if (!ClearCacheFolder(prefs.Get<string>(Preference.CacheDirectory), logger))
             {
                return;
             }
@@ -198,7 +198,7 @@ namespace HFM
             }
             else
             {
-               prefs.Initialize();
+               prefs.Load();
             }
          }
          catch (Exception ex)

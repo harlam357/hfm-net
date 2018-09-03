@@ -88,9 +88,10 @@ namespace HFM.Core
 
          _projectsNotFound = new Dictionary<int, DateTime>();
 
-         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+         if (!String.IsNullOrEmpty(path))
          {
-            FileName = Path.Combine(prefs.ApplicationDataFolderPath, Constants.ProjectInfoFileName);
+            FileName = Path.Combine(path, Constants.ProjectInfoFileName);
          }
       }
 

@@ -135,7 +135,7 @@ namespace HFM.Core.ScheduledTasks
       private static IPreferenceSet CreatePreferenceSet()
       {
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.ApplicationPath).Return(@"..\..\..\HFM");
+         prefs.Stub(x => x.Get<string>(Preference.ApplicationPath)).Return(@"..\..\..\HFM");
          prefs.Stub(x => x.Get<int>(Preference.DecimalPlaces)).Return(0);
          prefs.Stub(x => x.Get<string>(Preference.WebOverview)).Return("WebOverview.xslt");
          prefs.Stub(x => x.Get<string>(Preference.WebMobileOverview)).Return("WebMobileOverview.xslt");

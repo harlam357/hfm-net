@@ -798,7 +798,7 @@ namespace HFM.Forms
       {
          if (Core.Application.IsRunningOnMono) return;
 
-         string sStylesheet = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), _webVisualStylesModel.CssFile);
+         string sStylesheet = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName, _webVisualStylesModel.CssFile);
          var sb = new StringBuilder();
 
          sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
@@ -1150,7 +1150,7 @@ namespace HFM.Forms
          if (String.IsNullOrEmpty(path) == false)
          {
             var fileInfo = new FileInfo(path);
-            string xsltPath = Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName);
+            string xsltPath = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.XsltFolderName);
 
             if (fileInfo.Exists)
             {
@@ -1183,7 +1183,7 @@ namespace HFM.Forms
          if (openConfigDialog.ShowDialog() == DialogResult.OK)
          {
             // Check to see if the path for the file returned is the \HFM\XSL path
-            if (Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
+            if (Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
             {
                // If so, return the file name only
                return Path.GetFileName(openConfigDialog.FileName);

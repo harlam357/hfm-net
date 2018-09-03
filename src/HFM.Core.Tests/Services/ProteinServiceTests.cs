@@ -39,7 +39,7 @@ namespace HFM.Core
       {
          // Arrange
          var prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         prefs.Stub(x => x.ApplicationDataFolderPath).Return(Environment.CurrentDirectory);
+         prefs.Stub(x => x.Get<string>(Preference.ApplicationDataFolderPath)).Return(Environment.CurrentDirectory);
          // Act
          var service = new ProteinService(prefs, null);
          // Assert

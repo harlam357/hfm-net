@@ -131,9 +131,10 @@ namespace HFM.Core
 
          var dataAggregator = new LegacyDataAggregator { Logger = Logger };
          dataAggregator.ClientName = Settings.Name;
-         string queueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
-         string fahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         string unitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
+         var path = Prefs.Get<string>(Preference.CacheDirectory);
+         string queueFilePath = Path.Combine(path, Settings.CachedQueueFileName());
+         string fahLogFilePath = Path.Combine(path, Settings.CachedFahLogFileName());
+         string unitInfoLogFilePath = Path.Combine(path, Settings.CachedUnitInfoFileName());
 
          #endregion
 

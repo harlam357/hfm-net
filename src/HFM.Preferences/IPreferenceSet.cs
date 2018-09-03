@@ -119,30 +119,33 @@ namespace HFM.Preferences
       HistoryFormLocation,
       HistoryFormSize,
       HistoryFormColumns,
-      CacheFolder
+      CacheFolder,
+      ApplicationPath,
+      ApplicationDataFolderPath,
+      CacheDirectory
    }
 
    // ReSharper restore InconsistentNaming
 
    public interface IPreferenceSet
    {
-      string ApplicationPath { get; }
-
-      string ApplicationDataFolderPath { get; }
-
       /// <summary>
-      /// Gets the local client log cache directory.
+      /// Resets the preferences to default values.
       /// </summary>
-      string CacheDirectory { get; }
-
       void Reset();
 
-      void Initialize();
+      /// <summary>
+      /// Loads the preferences from the last saved values.
+      /// </summary>
+      void Load();
 
+      /// <summary>
+      /// Saves the preferences.
+      /// </summary>
       void Save();
 
       /// <summary>
-      /// Gets a preference.
+      /// Gets a preference value.
       /// </summary>
       /// <typeparam name="T">The type of the preference value.</typeparam>
       /// <param name="key">The preference key.</param>
@@ -150,7 +153,7 @@ namespace HFM.Preferences
       T Get<T>(Preference key);
 
       /// <summary>
-      /// Sets a preference.
+      /// Sets a preference value.
       /// </summary>
       /// <typeparam name="T">The type of the preference value.</typeparam>
       /// <param name="key">The preference key.</param>

@@ -202,7 +202,7 @@ namespace HFM.Core
       {
          const int sleep = 100;
          const int timeout = 60 * 1000;
-         string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.CachedFahLogFileName());
 
          try
          {
