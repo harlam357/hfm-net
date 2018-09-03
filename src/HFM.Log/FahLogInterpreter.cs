@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Log
 {
    internal static class FahLogInterpreter
@@ -262,7 +260,11 @@ namespace HFM.Log
                {
                   if (line.LineData != null)
                   {
-                     unitRunData.ProjectInfoList.Add((IProjectInfo)line.LineData);
+                     var projectInfo = (Tuple<int, int, int, int>)line.LineData;
+                     unitRunData.ProjectID = projectInfo.Item1;
+                     unitRunData.ProjectRun = projectInfo.Item2;
+                     unitRunData.ProjectClone = projectInfo.Item3;
+                     unitRunData.ProjectGen = projectInfo.Item4;
                   }
                }
             }
@@ -325,7 +327,11 @@ namespace HFM.Log
                   }
                   break;
                case LogLineType.WorkUnitProject:
-                  unitRunData.ProjectInfoList.Add((IProjectInfo)line.LineData);
+                  var projectInfo = (Tuple<int, int, int, int>)line.LineData;
+                  unitRunData.ProjectID = projectInfo.Item1;
+                  unitRunData.ProjectRun = projectInfo.Item2;
+                  unitRunData.ProjectClone = projectInfo.Item3;
+                  unitRunData.ProjectGen = projectInfo.Item4;
                   break;
                case LogLineType.WorkUnitCoreReturn:
                   unitRunData.WorkUnitResult = (WorkUnitResult)line.LineData;

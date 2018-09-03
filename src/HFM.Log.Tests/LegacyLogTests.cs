@@ -556,16 +556,10 @@ namespace HFM.Log
          //Assert.AreEqual(5, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual(1.31f, unitRun.Data.CoreVersion);
-         Assert.AreEqual(null, unitRun.Data.ProjectInfoIndex);
-         Assert.AreEqual(2, unitRun.Data.ProjectInfoList.Count);
          Assert.AreEqual(5781, unitRun.Data.ProjectID);
          Assert.AreEqual(2, unitRun.Data.ProjectRun);
          Assert.AreEqual(700, unitRun.Data.ProjectClone);
          Assert.AreEqual(2, unitRun.Data.ProjectGen);
-         Assert.AreEqual(unitRun.Data.ProjectID, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectID);
-         Assert.AreEqual(unitRun.Data.ProjectRun, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectRun);
-         Assert.AreEqual(unitRun.Data.ProjectClone, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectClone);
-         Assert.AreEqual(unitRun.Data.ProjectGen, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectGen);
          Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
       }
 
@@ -613,16 +607,10 @@ namespace HFM.Log
          //Assert.AreEqual(12, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(12, unitRun.Data.FramesObserved);
          Assert.AreEqual(2.19f, unitRun.Data.CoreVersion);
-         Assert.AreEqual(null, unitRun.Data.ProjectInfoIndex);
-         Assert.AreEqual(1, unitRun.Data.ProjectInfoList.Count);
          Assert.AreEqual(10634, unitRun.Data.ProjectID);
          Assert.AreEqual(8, unitRun.Data.ProjectRun);
          Assert.AreEqual(24, unitRun.Data.ProjectClone);
          Assert.AreEqual(24, unitRun.Data.ProjectGen);
-         Assert.AreEqual(unitRun.Data.ProjectID, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectID);
-         Assert.AreEqual(unitRun.Data.ProjectRun, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectRun);
-         Assert.AreEqual(unitRun.Data.ProjectClone, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectClone);
-         Assert.AreEqual(unitRun.Data.ProjectGen, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectGen);
          Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
       }
 
@@ -773,16 +761,10 @@ namespace HFM.Log
          //Assert.AreEqual(5, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual(23f, unitRun.Data.CoreVersion);
-         Assert.AreEqual(null, unitRun.Data.ProjectInfoIndex);
-         Assert.AreEqual(3, unitRun.Data.ProjectInfoList.Count);
          Assert.AreEqual(10002, unitRun.Data.ProjectID);
          Assert.AreEqual(19, unitRun.Data.ProjectRun);
          Assert.AreEqual(0, unitRun.Data.ProjectClone);
          Assert.AreEqual(51, unitRun.Data.ProjectGen);
-         Assert.AreEqual(unitRun.Data.ProjectID, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectID);
-         Assert.AreEqual(unitRun.Data.ProjectRun, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectRun);
-         Assert.AreEqual(unitRun.Data.ProjectClone, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectClone);
-         Assert.AreEqual(unitRun.Data.ProjectGen, unitRun.Data.ProjectInfoList[unitRun.Data.ProjectInfoList.Count - 1].ProjectGen);
          Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
       }
 

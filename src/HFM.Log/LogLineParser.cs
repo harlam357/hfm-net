@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Log
 {
    internal static class LogLineParser
@@ -45,18 +43,17 @@ namespace HFM.Log
 
       internal static class Common
       {
-         internal static ProjectInfo ParseWorkUnitProject(LogLine logLine)
+         internal static Tuple<int, int, int, int> ParseWorkUnitProject(LogLine logLine)
          {
             Match projectIdMatch;
             if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.LineRaw)).Success)
             {
-               return new ProjectInfo
-               {
-                  ProjectID = Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
-                  ProjectRun = Int32.Parse(projectIdMatch.Groups["Run"].Value),
-                  ProjectClone = Int32.Parse(projectIdMatch.Groups["Clone"].Value),
-                  ProjectGen = Int32.Parse(projectIdMatch.Groups["Gen"].Value)
-               };
+               return Tuple.Create(
+                  Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
+                  Int32.Parse(projectIdMatch.Groups["Run"].Value),
+                  Int32.Parse(projectIdMatch.Groups["Clone"].Value),
+                  Int32.Parse(projectIdMatch.Groups["Gen"].Value)
+               );
             }
             return null;
          }

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Log
 {
    public class ClientRun : IEnumerable<LogLine>
@@ -329,13 +327,8 @@ namespace HFM.Log
       }
    }
 
-   public class UnitRunData : IProjectInfo
+   public class UnitRunData
    {
-      public UnitRunData()
-      {
-         ProjectInfoList = new List<IProjectInfo>();
-      }
-
       /// <summary>
       /// Unit Start Time Stamp
       /// </summary>
@@ -357,94 +350,24 @@ namespace HFM.Log
       public float CoreVersion { get; set; }
 
       /// <summary>
-      /// Project Info List Current Index
-      /// </summary>
-      public int? ProjectInfoIndex { get; set; }
-
-      /// <summary>
-      /// Project Info List
-      /// </summary>
-      public IList<IProjectInfo> ProjectInfoList { get; private set; }
-
-      /// <summary>
       /// Project ID Number
       /// </summary>
-      public int ProjectID
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectID;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectID;
-         }
-      }
+      public int ProjectID { get; set; }
 
       /// <summary>
       /// Project ID (Run)
       /// </summary>
-      public int ProjectRun
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectRun;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectRun;
-         }
-      }
+      public int ProjectRun { get; set; }
 
       /// <summary>
       /// Project ID (Clone)
       /// </summary>
-      public int ProjectClone
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectClone;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectClone;
-         }
-      }
+      public int ProjectClone { get; set; }
 
       /// <summary>
       /// Project ID (Gen)
       /// </summary>
-      public int ProjectGen
-      {
-         get
-         {
-            if (ProjectInfoIndex == null)
-            {
-               if (ProjectInfoList.Count > 0)
-               {
-                  return ProjectInfoList[ProjectInfoList.Count - 1].ProjectGen;
-               }
-               return 0;
-            }
-
-            return ProjectInfoList[ProjectInfoIndex.Value].ProjectGen;
-         }
-      }
+      public int ProjectGen { get; set; }
 
       /// <summary>
       /// Number of threads specified in the call to the FahCore process.

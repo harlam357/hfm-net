@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.IO;
 using System.Linq;
@@ -33,12 +33,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 25, 32);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 10;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 7610;
-         expectedProjectInfo.ProjectRun = 630;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 59;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 7610;
+         expectedUnitRun.Data.ProjectRun = 630;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 59;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -59,12 +57,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 25, 36);
          expectedUnitRun.Data.CoreVersion = 1.31f;
          expectedUnitRun.Data.FramesObserved = 100;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 5767;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 138;
-         expectedProjectInfo.ProjectGen = 144;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 5767;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 138;
+         expectedUnitRun.Data.ProjectGen = 144;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -74,12 +70,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 21, 52);
          expectedUnitRun.Data.CoreVersion = 1.31f;
          expectedUnitRun.Data.FramesObserved = 53;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 5772;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 364;
-         expectedProjectInfo.ProjectGen = 252;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 5772;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 364;
+         expectedUnitRun.Data.ProjectGen = 252;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -126,12 +120,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 57, 36);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 28;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 416;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 32;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 416;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 32;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -141,12 +133,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 44, 55);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 274;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 54;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 274;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 54;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -156,12 +146,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 41, 51);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 681;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 51;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 681;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 51;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -171,12 +159,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 38, 53);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 1573;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 38;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 1573;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 38;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -186,12 +172,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 36, 43);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 529;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 41;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 529;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 41;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -201,12 +185,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 33, 23);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 715;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 49;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 715;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 49;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -216,12 +198,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 30, 18);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 248;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 51;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 248;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 51;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -231,12 +211,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 26, 26);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 88;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 1719;
-         expectedProjectInfo.ProjectClone = 9;
-         expectedProjectInfo.ProjectGen = 68;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 1719;
+         expectedUnitRun.Data.ProjectClone = 9;
+         expectedUnitRun.Data.ProjectGen = 68;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -257,12 +235,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 57, 36);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 31;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 340;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 36;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 340;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 36;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -272,12 +248,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 59, 51);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 430;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 48;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 430;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 48;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -287,12 +261,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 57, 4);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 291;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 54;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 291;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 54;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -302,12 +274,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 54, 4);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 1958;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 48;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 1958;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 48;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -317,12 +287,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 51, 12);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 509;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 33;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 509;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 33;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -332,12 +300,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 48, 2);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 507;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 49;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 507;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 49;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -347,12 +313,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 44, 44);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13001;
-         expectedProjectInfo.ProjectRun = 228;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 62;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13001;
+         expectedUnitRun.Data.ProjectRun = 228;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 62;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -362,12 +326,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 41, 56);
          expectedUnitRun.Data.CoreVersion = 0.52f;
          expectedUnitRun.Data.FramesObserved = 86;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13000;
-         expectedProjectInfo.ProjectRun = 671;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 50;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13000;
+         expectedUnitRun.Data.ProjectRun = 671;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 50;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -413,12 +375,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 47, 0);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 91;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 14;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 87;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 14;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 87;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -428,12 +388,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 20, 45);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10496;
-         expectedProjectInfo.ProjectRun = 80;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 3;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10496;
+         expectedUnitRun.Data.ProjectRun = 80;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 3;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -443,12 +401,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 28, 59);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 171;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 171;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -458,12 +414,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 55, 55);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9712;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 167;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9712;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 167;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -473,12 +427,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 47, 52);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 88;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 170;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 88;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 170;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -488,12 +440,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 48, 25);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 504;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 504;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -503,12 +453,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 15, 47);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -518,12 +466,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 14, 35);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 36;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 25;
-         expectedProjectInfo.ProjectClone = 17;
-         expectedProjectInfo.ProjectGen = 67;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 25;
+         expectedUnitRun.Data.ProjectClone = 17;
+         expectedUnitRun.Data.ProjectGen = 67;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -533,12 +479,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 37, 49);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 25;
-         expectedProjectInfo.ProjectClone = 17;
-         expectedProjectInfo.ProjectGen = 67;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 25;
+         expectedUnitRun.Data.ProjectClone = 17;
+         expectedUnitRun.Data.ProjectGen = 67;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -548,12 +492,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 37, 54);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 53;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -563,12 +505,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 23, 26);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -578,12 +518,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 23, 32);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 18;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 86;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 18;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 86;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -593,12 +531,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 21, 22);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 18;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 18;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -608,12 +544,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 20, 13);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 243;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 243;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -623,12 +557,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 21, 31);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 16;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 38;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 88;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 38;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 88;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -638,12 +570,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 57, 19);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 38;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 88;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 38;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 88;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -653,12 +583,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 57, 25);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 57;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 57;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -668,12 +596,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 59, 8);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -683,12 +609,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 1, 6);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 16;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11410;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11410;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -698,12 +622,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 22, 23);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11410;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11410;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -713,12 +635,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 22, 29);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -728,12 +648,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 24, 30);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 15;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 15;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -743,12 +661,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 26, 12);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 9;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 9;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -758,12 +674,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 24, 55);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 36;
-         expectedProjectInfo.ProjectClone = 7;
-         expectedProjectInfo.ProjectGen = 79;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 36;
+         expectedUnitRun.Data.ProjectClone = 7;
+         expectedUnitRun.Data.ProjectGen = 79;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -773,12 +687,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 22, 30);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 41;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 8;
-         expectedProjectInfo.ProjectClone = 10;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 8;
+         expectedUnitRun.Data.ProjectClone = 10;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -788,12 +700,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 51, 20);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 8;
-         expectedProjectInfo.ProjectClone = 10;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 8;
+         expectedUnitRun.Data.ProjectClone = 10;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -803,12 +713,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 51, 33);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 53;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -818,12 +726,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 3, 23);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -833,12 +739,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 3, 29);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 22;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 22;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -848,12 +752,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 5, 11);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11410;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 25;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11410;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 25;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -863,12 +765,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 1, 34);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11411;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 34;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11411;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 34;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -878,12 +778,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 2, 43);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 11;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 22;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 65;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 22;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 65;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -893,12 +791,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 26, 40);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 22;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 65;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 22;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 65;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -908,12 +804,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 26, 45);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 10;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 10;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -923,12 +817,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 28, 31);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 45;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 153;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 45;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 153;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -938,12 +830,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 29, 45);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 256;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 256;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -953,12 +843,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 31, 15);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11410;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11410;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -968,12 +856,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 27, 24);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 12;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 13;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 24;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 13;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 24;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -983,12 +869,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 50, 30);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 12;
-         expectedProjectInfo.ProjectClone = 44;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 12;
+         expectedUnitRun.Data.ProjectClone = 44;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -998,12 +882,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 55, 33);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 31;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 31;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1013,12 +895,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 7, 39);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 9;
-         expectedProjectInfo.ProjectClone = 28;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 9;
+         expectedUnitRun.Data.ProjectClone = 28;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1028,12 +908,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 19, 56);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10494;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 7;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10494;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 7;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1043,12 +921,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 18, 18);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 43;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 43;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1058,12 +934,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 8, 13);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 40;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 40;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1073,12 +947,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 57, 46);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 25;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 77;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 25;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 77;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1088,12 +960,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 55, 17);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 12;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 75;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 12;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 75;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1103,12 +973,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 55, 31);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 12;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 75;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 12;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 75;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1118,12 +986,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 41, 55);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9152;
-         expectedProjectInfo.ProjectRun = 15;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9152;
+         expectedUnitRun.Data.ProjectRun = 15;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1133,12 +999,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 8, 10);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9212;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 50;
-         expectedProjectInfo.ProjectGen = 38;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9212;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 50;
+         expectedUnitRun.Data.ProjectGen = 38;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1148,12 +1012,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 14, 3);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 119;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 114;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 119;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 114;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1163,12 +1025,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 15, 11);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 33;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 79;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 79;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1178,12 +1038,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 9, 36);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 79;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 79;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1193,12 +1051,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 9, 41);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10494;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 31;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10494;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 31;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1208,12 +1064,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 9, 51);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10494;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 31;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10494;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 31;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1223,12 +1077,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 8, 21);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1238,12 +1090,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 7, 0);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 47;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 44;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 44;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1253,12 +1103,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 2, 18);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 8;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 44;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 44;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1268,12 +1116,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 28, 57);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 44;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 44;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1283,12 +1129,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 29, 4);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1298,12 +1142,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 18, 45);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 29;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 29;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1313,12 +1155,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 18, 36);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1328,12 +1168,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 53, 8);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 68;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 68;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1343,12 +1181,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 28, 18);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 30;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 30;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1358,12 +1194,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 28, 21);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 30;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 30;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1373,12 +1207,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 20, 43);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 10;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 10;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1388,12 +1220,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 16, 32);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 74;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 74;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1403,12 +1233,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 8, 36);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 22;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 22;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1418,12 +1246,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 9, 45);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1433,12 +1259,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 10, 50);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1448,12 +1272,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 11, 54);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1463,12 +1285,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 12, 47);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 22;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 22;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1478,12 +1298,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 13, 55);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1493,12 +1311,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 14, 45);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1508,12 +1324,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 15, 58);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1523,12 +1337,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 17, 14);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1538,12 +1350,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 18, 33);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1553,12 +1363,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 19, 28);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 22;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 22;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1568,12 +1376,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 20, 35);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1583,12 +1389,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 21, 42);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1598,12 +1402,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 22, 34);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1613,12 +1415,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 23, 31);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 13;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 13;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1628,12 +1428,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 24, 39);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1643,12 +1441,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 25, 55);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1658,12 +1454,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 27, 7);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1673,12 +1467,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 28, 25);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1688,12 +1480,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 29, 33);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1703,12 +1493,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 30, 25);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1718,12 +1506,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 30, 30);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1733,12 +1519,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 31, 45);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1748,12 +1532,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 32, 58);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 14;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 14;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1763,12 +1545,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 33, 55);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1778,12 +1558,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 34, 47);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1793,12 +1571,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 35, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1808,12 +1584,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 37, 13);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1823,12 +1597,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 38, 23);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1838,12 +1610,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 39, 31);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 15;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 15;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1853,12 +1623,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 40, 25);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1868,12 +1636,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 41, 38);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 15;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 15;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1883,12 +1649,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 42, 47);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 13;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 13;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1898,12 +1662,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 43, 38);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1913,12 +1675,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 44, 32);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1928,12 +1688,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 45, 45);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1943,12 +1701,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 46, 47);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1958,12 +1714,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 48, 0);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 10;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 10;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1973,12 +1727,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 49, 5);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 16;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 16;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1988,12 +1740,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 50, 5);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2003,12 +1753,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 51, 10);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 16;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 16;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2018,12 +1766,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 52, 16);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2033,12 +1779,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 53, 23);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2048,12 +1792,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 54, 15);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 13;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 13;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2063,12 +1805,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 55, 9);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2078,12 +1818,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 56, 21);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 16;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 16;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2093,12 +1831,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 57, 32);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2108,12 +1844,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 58, 24);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2123,12 +1857,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 59, 26);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2138,12 +1870,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 0, 40);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 10;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 10;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2153,12 +1883,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 7, 1);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 9;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 9;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2168,12 +1896,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 8, 6);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 16;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 16;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2183,12 +1909,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 14, 28);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2198,12 +1922,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 20, 54);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 12;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 12;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2213,12 +1935,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 22, 0);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11501;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 10;
-         expectedProjectInfo.ProjectGen = 3;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11501;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 10;
+         expectedUnitRun.Data.ProjectGen = 3;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2227,12 +1947,10 @@ namespace HFM.Log
          expectedUnitRun.Data = new UnitRunData();
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 0;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 0;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2253,12 +1971,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 47, 2);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10496;
-         expectedProjectInfo.ProjectRun = 83;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 7;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10496;
+         expectedUnitRun.Data.ProjectRun = 83;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 7;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2268,12 +1984,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 47, 11);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10496;
-         expectedProjectInfo.ProjectRun = 83;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 7;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10496;
+         expectedUnitRun.Data.ProjectRun = 83;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 7;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2283,12 +1997,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 48, 11);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10496;
-         expectedProjectInfo.ProjectRun = 83;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 7;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10496;
+         expectedUnitRun.Data.ProjectRun = 83;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 7;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2298,12 +2010,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 49, 11);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10496;
-         expectedProjectInfo.ProjectRun = 83;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 7;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10496;
+         expectedUnitRun.Data.ProjectRun = 83;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 7;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2313,12 +2023,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 50, 34);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 0;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 0;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2328,12 +2036,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 50, 39);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 15;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 125;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 15;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 125;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2343,12 +2049,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 15, 50);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9151;
-         expectedProjectInfo.ProjectRun = 10;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9151;
+         expectedUnitRun.Data.ProjectRun = 10;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2358,12 +2062,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 47, 24);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 350;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 350;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2373,12 +2075,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 47, 7);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 8;
-         expectedProjectInfo.ProjectClone = 7;
-         expectedProjectInfo.ProjectGen = 247;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 8;
+         expectedUnitRun.Data.ProjectClone = 7;
+         expectedUnitRun.Data.ProjectGen = 247;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2388,12 +2088,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 47, 26);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 8;
-         expectedProjectInfo.ProjectClone = 7;
-         expectedProjectInfo.ProjectGen = 247;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 8;
+         expectedUnitRun.Data.ProjectClone = 7;
+         expectedUnitRun.Data.ProjectGen = 247;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2403,12 +2101,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 12, 22);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9704;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 12;
-         expectedProjectInfo.ProjectGen = 205;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9704;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 12;
+         expectedUnitRun.Data.ProjectGen = 205;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2418,12 +2114,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 37, 54);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 215;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 3;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 215;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 3;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2433,12 +2127,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 37, 41);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2448,12 +2140,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 36, 45);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 24;
-         expectedProjectInfo.ProjectGen = 18;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 24;
+         expectedUnitRun.Data.ProjectGen = 18;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2463,12 +2153,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 33, 58);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 61;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 61;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2478,12 +2166,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 36, 7);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 27;
-         expectedProjectInfo.ProjectGen = 15;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 27;
+         expectedUnitRun.Data.ProjectGen = 15;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2493,12 +2179,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 45, 57);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2508,12 +2192,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 42, 51);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 26;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 26;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2523,12 +2205,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 44, 39);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 28;
-         expectedProjectInfo.ProjectClone = 18;
-         expectedProjectInfo.ProjectGen = 61;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 28;
+         expectedUnitRun.Data.ProjectClone = 18;
+         expectedUnitRun.Data.ProjectGen = 61;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2538,12 +2218,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 41, 11);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 46;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2553,12 +2231,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 54, 52);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 11;
-         expectedProjectInfo.ProjectClone = 5;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 11;
+         expectedUnitRun.Data.ProjectClone = 5;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2568,12 +2244,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 54, 56);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 14;
-         expectedProjectInfo.ProjectGen = 80;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 14;
+         expectedUnitRun.Data.ProjectGen = 80;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2583,12 +2257,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 51, 53);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 25;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 68;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 25;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 68;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2598,12 +2270,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 52, 2);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 16;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2613,12 +2283,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 12, 29);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2628,12 +2296,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 12, 35);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 5;
-         expectedProjectInfo.ProjectClone = 38;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 5;
+         expectedUnitRun.Data.ProjectClone = 38;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2643,12 +2309,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 21, 56);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 158;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 26;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 158;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 26;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2658,12 +2322,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 21, 54);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 47;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 47;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2673,12 +2335,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 31, 23);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 16;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 67;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 16;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 67;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2688,12 +2348,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 27, 56);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11402;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 45;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11402;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 45;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2703,12 +2361,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 29, 44);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 256;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 9;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 256;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 9;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2718,12 +2374,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 29, 19);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 17;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 18;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 17;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 18;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2733,12 +2387,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 14, 26);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 31;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 16;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 25;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 16;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 25;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2748,12 +2400,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 4, 32);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 16;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 25;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 16;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 25;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2763,12 +2413,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 4, 40);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 350;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 17;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 350;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 17;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2778,12 +2426,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 4, 15);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 49;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 49;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2793,12 +2439,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 50, 30);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 92;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 125;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 92;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 125;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2808,12 +2452,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 50, 15);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 81;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 18;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 18;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2823,12 +2465,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 2, 44);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 9;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 60;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 9;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 60;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2838,12 +2478,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 48, 48);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 43;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 43;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2853,12 +2491,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 58, 24);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10495;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 80;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10495;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 80;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2868,12 +2504,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 54, 32);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 177;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 17;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 177;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 17;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2883,12 +2517,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 53, 52);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10493;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 15;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10493;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 15;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2898,12 +2530,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 48, 23);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 30;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 30;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2913,12 +2543,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 47, 22);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 10;
-         expectedProjectInfo.ProjectClone = 34;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 10;
+         expectedUnitRun.Data.ProjectClone = 34;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2928,12 +2556,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 57, 14);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11400;
-         expectedProjectInfo.ProjectRun = 7;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 13;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11400;
+         expectedUnitRun.Data.ProjectRun = 7;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 13;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2943,12 +2569,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 54, 1);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 29;
-         expectedProjectInfo.ProjectClone = 8;
-         expectedProjectInfo.ProjectGen = 4;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 29;
+         expectedUnitRun.Data.ProjectClone = 8;
+         expectedUnitRun.Data.ProjectGen = 4;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2958,12 +2582,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 52, 57);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2973,12 +2595,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 38, 34);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 13;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 13;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2988,12 +2608,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 37, 27);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 77;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 77;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3003,12 +2621,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 26, 51);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9212;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 77;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9212;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 77;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3018,12 +2634,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 32, 4);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 12;
-         expectedProjectInfo.ProjectClone = 46;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 12;
+         expectedUnitRun.Data.ProjectClone = 46;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3033,12 +2647,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 22, 8);
          expectedUnitRun.Data.CoreVersion = 0.4f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10490;
-         expectedProjectInfo.ProjectRun = 182;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 14;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10490;
+         expectedUnitRun.Data.ProjectRun = 182;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 14;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3048,12 +2660,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 21, 46);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 26;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 30;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 30;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3063,12 +2673,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 7, 3);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 31;
-         expectedProjectInfo.ProjectClone = 19;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 31;
+         expectedUnitRun.Data.ProjectClone = 19;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3078,12 +2686,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 6, 17);
          expectedUnitRun.Data.CoreVersion = 0.14f;
          expectedUnitRun.Data.FramesObserved = 70;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3093,12 +2699,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 2, 35);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 36;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 3;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 11;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 3;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 11;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3108,12 +2712,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 56, 30);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11401;
-         expectedProjectInfo.ProjectRun = 26;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11401;
+         expectedUnitRun.Data.ProjectRun = 26;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3123,12 +2725,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 42, 59);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 16;
-         expectedProjectInfo.ProjectClone = 46;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 16;
+         expectedUnitRun.Data.ProjectClone = 46;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3138,12 +2738,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 33, 19);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11403;
-         expectedProjectInfo.ProjectRun = 15;
-         expectedProjectInfo.ProjectClone = 21;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11403;
+         expectedUnitRun.Data.ProjectRun = 15;
+         expectedUnitRun.Data.ProjectClone = 21;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3153,12 +2751,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 22, 16);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 71;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10494;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 38;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10494;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 38;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3168,12 +2764,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 37, 12);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10494;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 38;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10494;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 38;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.BadWorkUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3183,12 +2777,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 37, 23);
          expectedUnitRun.Data.CoreVersion = 0f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9201;
-         expectedProjectInfo.ProjectRun = 19;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 0;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9201;
+         expectedUnitRun.Data.ProjectRun = 19;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 0;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3198,12 +2790,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 26, 58);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 23;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 23;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3213,12 +2803,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 0, 44);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3228,12 +2816,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 0, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3243,12 +2829,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 1, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3258,12 +2842,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 2, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3273,12 +2855,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 3, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3288,12 +2868,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 4, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3303,12 +2881,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 5, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3318,12 +2894,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 6, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3333,12 +2907,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 7, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3348,12 +2920,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 8, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3363,12 +2933,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 9, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3378,12 +2946,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 10, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3393,12 +2959,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 11, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3408,12 +2972,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 12, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3423,12 +2985,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 13, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3438,12 +2998,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 14, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3453,12 +3011,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 15, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3468,12 +3024,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 16, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3483,12 +3037,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 17, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3498,12 +3050,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 18, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3513,12 +3063,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 19, 59);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3528,12 +3076,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 21, 19);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3543,12 +3089,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 22, 19);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3558,12 +3102,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 23, 19);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3573,12 +3115,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 24, 19);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3588,12 +3128,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 27, 17);
          expectedUnitRun.Data.CoreVersion = 0.16f;
          expectedUnitRun.Data.FramesObserved = 0;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9852;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9852;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3639,12 +3177,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 1, 31);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 30;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11633;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 25;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11633;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 25;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.UnknownEnum;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3654,12 +3190,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 17, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 69;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11633;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 33;
-         expectedProjectInfo.ProjectGen = 25;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11633;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 33;
+         expectedUnitRun.Data.ProjectGen = 25;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3669,12 +3203,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 35, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 867;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 113;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 867;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 113;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3684,12 +3216,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 34, 47);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11636;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 69;
-         expectedProjectInfo.ProjectGen = 31;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11636;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 69;
+         expectedUnitRun.Data.ProjectGen = 31;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3699,12 +3229,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 18, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10197;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 16;
-         expectedProjectInfo.ProjectGen = 39;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10197;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 16;
+         expectedUnitRun.Data.ProjectGen = 39;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3714,12 +3242,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 54, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 779;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 981;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 779;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 981;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3729,12 +3255,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 13, 20);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11626;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 168;
-         expectedProjectInfo.ProjectGen = 20;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11626;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 168;
+         expectedUnitRun.Data.ProjectGen = 20;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3744,12 +3268,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 26, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11636;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 92;
-         expectedProjectInfo.ProjectGen = 15;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11636;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 92;
+         expectedUnitRun.Data.ProjectGen = 15;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3759,12 +3281,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 54, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9762;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 25;
-         expectedProjectInfo.ProjectGen = 166;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9762;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 25;
+         expectedUnitRun.Data.ProjectGen = 166;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3774,12 +3294,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 48, 23);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 23;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 73;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 23;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 73;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3789,12 +3307,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 38, 21);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6396;
-         expectedProjectInfo.ProjectRun = 18;
-         expectedProjectInfo.ProjectClone = 23;
-         expectedProjectInfo.ProjectGen = 248;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6396;
+         expectedUnitRun.Data.ProjectRun = 18;
+         expectedUnitRun.Data.ProjectClone = 23;
+         expectedUnitRun.Data.ProjectGen = 248;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3804,12 +3320,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 4, 20);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11626;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 42;
-         expectedProjectInfo.ProjectGen = 25;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11626;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 42;
+         expectedUnitRun.Data.ProjectGen = 25;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3819,12 +3333,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 18, 39);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6392;
-         expectedProjectInfo.ProjectRun = 30;
-         expectedProjectInfo.ProjectClone = 31;
-         expectedProjectInfo.ProjectGen = 288;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6392;
+         expectedUnitRun.Data.ProjectRun = 30;
+         expectedUnitRun.Data.ProjectClone = 31;
+         expectedUnitRun.Data.ProjectGen = 288;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3834,12 +3346,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 8, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11634;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 204;
-         expectedProjectInfo.ProjectGen = 24;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11634;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 204;
+         expectedUnitRun.Data.ProjectGen = 24;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3849,12 +3359,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 21, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6393;
-         expectedProjectInfo.ProjectRun = 18;
-         expectedProjectInfo.ProjectClone = 38;
-         expectedProjectInfo.ProjectGen = 194;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6393;
+         expectedUnitRun.Data.ProjectRun = 18;
+         expectedUnitRun.Data.ProjectClone = 38;
+         expectedUnitRun.Data.ProjectGen = 194;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3864,12 +3372,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 17, 23);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 78;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 96;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 78;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 96;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3879,12 +3385,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 3, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 592;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 125;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 592;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 125;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3894,12 +3398,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 46, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11641;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 317;
-         expectedProjectInfo.ProjectGen = 8;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11641;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 317;
+         expectedUnitRun.Data.ProjectGen = 8;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3909,12 +3411,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 13, 7);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6398;
-         expectedProjectInfo.ProjectRun = 65;
-         expectedProjectInfo.ProjectClone = 27;
-         expectedProjectInfo.ProjectGen = 285;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6398;
+         expectedUnitRun.Data.ProjectRun = 65;
+         expectedUnitRun.Data.ProjectClone = 27;
+         expectedUnitRun.Data.ProjectGen = 285;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3924,12 +3424,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 39, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10197;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 32;
-         expectedProjectInfo.ProjectGen = 30;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10197;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 32;
+         expectedUnitRun.Data.ProjectGen = 30;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3939,12 +3437,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 16, 40);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 60;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 34;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 60;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 34;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3954,12 +3450,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 5, 18);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6393;
-         expectedProjectInfo.ProjectRun = 25;
-         expectedProjectInfo.ProjectClone = 28;
-         expectedProjectInfo.ProjectGen = 150;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6393;
+         expectedUnitRun.Data.ProjectRun = 25;
+         expectedUnitRun.Data.ProjectClone = 28;
+         expectedUnitRun.Data.ProjectGen = 150;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3969,12 +3463,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 32, 2);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 26;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 98;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 26;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 98;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3984,12 +3476,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 17, 10);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 79;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 55;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 79;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 55;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3999,12 +3489,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 36, 51);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9761;
-         expectedProjectInfo.ProjectRun = 86;
-         expectedProjectInfo.ProjectClone = 26;
-         expectedProjectInfo.ProjectGen = 88;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9761;
+         expectedUnitRun.Data.ProjectRun = 86;
+         expectedUnitRun.Data.ProjectClone = 26;
+         expectedUnitRun.Data.ProjectGen = 88;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4014,12 +3502,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 6, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6391;
-         expectedProjectInfo.ProjectRun = 111;
-         expectedProjectInfo.ProjectClone = 34;
-         expectedProjectInfo.ProjectGen = 82;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6391;
+         expectedUnitRun.Data.ProjectRun = 111;
+         expectedUnitRun.Data.ProjectClone = 34;
+         expectedUnitRun.Data.ProjectGen = 82;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4029,12 +3515,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 49, 57);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 205;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 79;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 205;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 79;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4044,12 +3528,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 36, 5);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6395;
-         expectedProjectInfo.ProjectRun = 28;
-         expectedProjectInfo.ProjectClone = 10;
-         expectedProjectInfo.ProjectGen = 135;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6395;
+         expectedUnitRun.Data.ProjectRun = 28;
+         expectedUnitRun.Data.ProjectClone = 10;
+         expectedUnitRun.Data.ProjectGen = 135;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4059,12 +3541,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 1, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 414;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 1025;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 414;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 1025;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4074,12 +3554,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 18, 59);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 102;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 102;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4089,12 +3567,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 3, 51);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 514;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 998;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 514;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 998;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4104,12 +3580,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 20, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 683;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 69;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 683;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 69;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4119,12 +3593,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 7, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 538;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 71;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 538;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 71;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4134,12 +3606,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 53, 50);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 8600;
-         expectedProjectInfo.ProjectRun = 121;
-         expectedProjectInfo.ProjectClone = 13;
-         expectedProjectInfo.ProjectGen = 312;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 8600;
+         expectedUnitRun.Data.ProjectRun = 121;
+         expectedUnitRun.Data.ProjectClone = 13;
+         expectedUnitRun.Data.ProjectGen = 312;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4149,12 +3619,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 19, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 805;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 91;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 805;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 91;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4164,12 +3632,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 30, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11635;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 664;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11635;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 664;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4179,12 +3645,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 23, 22);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 2534;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 701;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 2534;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 701;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4194,12 +3658,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 40, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 1080;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 934;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 1080;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 934;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4209,12 +3671,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 57, 31);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 246;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 246;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4224,12 +3684,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 40, 34);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11641;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 588;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11641;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 588;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4239,12 +3697,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 6, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 384;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 1;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 384;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 1;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4254,12 +3710,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 54, 44);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11625;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 896;
-         expectedProjectInfo.ProjectGen = 2;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11625;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 896;
+         expectedUnitRun.Data.ProjectGen = 2;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4269,12 +3723,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 40, 34);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11641;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 608;
-         expectedProjectInfo.ProjectGen = 5;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11641;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 608;
+         expectedUnitRun.Data.ProjectGen = 5;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4284,12 +3736,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 54, 52);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9752;
-         expectedProjectInfo.ProjectRun = 424;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 975;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9752;
+         expectedUnitRun.Data.ProjectRun = 424;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 975;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4299,12 +3749,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 10, 54);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6393;
-         expectedProjectInfo.ProjectRun = 124;
-         expectedProjectInfo.ProjectClone = 20;
-         expectedProjectInfo.ProjectGen = 115;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6393;
+         expectedUnitRun.Data.ProjectRun = 124;
+         expectedUnitRun.Data.ProjectClone = 20;
+         expectedUnitRun.Data.ProjectGen = 115;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4314,12 +3762,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 36, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 184;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 131;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 184;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 131;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4329,12 +3775,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 35, 3);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6392;
-         expectedProjectInfo.ProjectRun = 20;
-         expectedProjectInfo.ProjectClone = 26;
-         expectedProjectInfo.ProjectGen = 172;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6392;
+         expectedUnitRun.Data.ProjectRun = 20;
+         expectedUnitRun.Data.ProjectClone = 26;
+         expectedUnitRun.Data.ProjectGen = 172;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4344,12 +3788,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 2, 22);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 241;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 80;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 241;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 80;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4359,12 +3801,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 49, 25);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11636;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 89;
-         expectedProjectInfo.ProjectGen = 27;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11636;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 89;
+         expectedUnitRun.Data.ProjectGen = 27;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4374,12 +3814,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 30, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6394;
-         expectedProjectInfo.ProjectRun = 58;
-         expectedProjectInfo.ProjectClone = 26;
-         expectedProjectInfo.ProjectGen = 222;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6394;
+         expectedUnitRun.Data.ProjectRun = 58;
+         expectedUnitRun.Data.ProjectClone = 26;
+         expectedUnitRun.Data.ProjectGen = 222;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4389,12 +3827,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 56, 54);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 6398;
-         expectedProjectInfo.ProjectRun = 2;
-         expectedProjectInfo.ProjectClone = 20;
-         expectedProjectInfo.ProjectGen = 319;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 6398;
+         expectedUnitRun.Data.ProjectRun = 2;
+         expectedUnitRun.Data.ProjectClone = 20;
+         expectedUnitRun.Data.ProjectGen = 319;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4404,12 +3840,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 22, 57);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11643;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 9;
-         expectedProjectInfo.ProjectGen = 21;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11643;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 9;
+         expectedUnitRun.Data.ProjectGen = 21;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4419,12 +3853,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 12, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 112;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 80;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 112;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 80;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4434,12 +3866,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 59, 10);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 62;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11626;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 886;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11626;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 886;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.UnknownEnum;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4449,12 +3879,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 25, 11);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 40;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11626;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 886;
-         expectedProjectInfo.ProjectGen = 6;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11626;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 886;
+         expectedUnitRun.Data.ProjectGen = 6;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4464,12 +3892,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 57, 0);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 11642;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 95;
-         expectedProjectInfo.ProjectGen = 26;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 11642;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 95;
+         expectedUnitRun.Data.ProjectGen = 26;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4479,12 +3905,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 30, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 21;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 10197;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 11;
-         expectedProjectInfo.ProjectGen = 32;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 10197;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 11;
+         expectedUnitRun.Data.ProjectGen = 32;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4530,12 +3954,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 51, 3);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 39;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 587;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 266;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 587;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 266;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4545,12 +3967,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 35, 32);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 17;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 245;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 17;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 245;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4560,12 +3980,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 14, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 233;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 160;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 233;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 160;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4575,12 +3993,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 52, 41);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 61;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 258;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 61;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 258;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4590,12 +4006,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 35, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 144;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 226;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 144;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 226;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4605,12 +4019,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 11, 44);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 723;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 240;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 723;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 240;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4620,12 +4032,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 55, 6);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 693;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 232;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 693;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 232;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4635,12 +4045,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 34, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 875;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 209;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 875;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 209;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4650,12 +4058,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 13, 4);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 479;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 233;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 479;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 233;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4665,12 +4071,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 54, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 802;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 155;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 802;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 155;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4680,12 +4084,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 33, 13);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 346;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 78;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 346;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 78;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4695,12 +4097,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 12, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 424;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 150;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 424;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 150;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4710,12 +4110,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 49, 25);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 172;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 205;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 172;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 205;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4725,12 +4123,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 28, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 59;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 130;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 59;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 130;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4740,12 +4136,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 8, 17);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 60;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 220;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 60;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 220;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4755,12 +4149,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 50, 44);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 606;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 253;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 606;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 253;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4770,12 +4162,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 31, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 559;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 225;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 559;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 225;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4785,12 +4175,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 13, 7);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 633;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 184;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 633;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 184;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4800,12 +4188,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 51, 23);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 159;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 360;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 159;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 360;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4815,12 +4201,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 34, 5);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 796;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 89;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 796;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 89;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4830,12 +4214,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 16, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 519;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 254;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 519;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 254;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4845,12 +4227,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 59, 13);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 615;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 227;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 615;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 227;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4860,12 +4240,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 39, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 457;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 305;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 457;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 305;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4875,12 +4253,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 18, 26);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 229;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 222;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 229;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 222;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4890,12 +4266,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 58, 2);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 476;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 124;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 476;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 124;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4905,12 +4279,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 38, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 671;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 226;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 671;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 226;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4920,12 +4292,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 19, 20);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 166;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 109;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 166;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 109;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4935,12 +4305,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 59, 52);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 716;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 64;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 716;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 64;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4950,12 +4318,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 45, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 800;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 160;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 800;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 160;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4965,12 +4331,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 24, 41);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 720;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 281;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 720;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 281;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4980,12 +4344,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 6, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 844;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 239;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 844;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 239;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4995,12 +4357,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 47, 55);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 401;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 135;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 401;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 135;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5010,12 +4370,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 31, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 250;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 65;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 250;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 65;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5025,12 +4383,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 12, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 904;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 71;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 904;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 71;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5040,12 +4396,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 54, 5);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 900;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 226;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 900;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 226;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5055,12 +4409,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 37, 31);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 204;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 74;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 204;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 74;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5070,12 +4422,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 20, 8);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 219;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 58;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 219;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 58;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5085,12 +4435,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 4, 21);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 445;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 252;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 445;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 252;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5100,12 +4448,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 48, 12);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 701;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 120;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 701;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 120;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5115,12 +4461,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 31, 15);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 608;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 88;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 608;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 88;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5130,12 +4474,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 10, 51);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 286;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 159;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 286;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 159;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5145,12 +4487,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 53, 57);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 710;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 243;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 710;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 243;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5160,12 +4500,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 35, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 533;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 218;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 533;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 218;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5175,12 +4513,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 15, 41);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 264;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 58;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 264;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 58;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5190,12 +4526,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 58, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 339;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 87;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 339;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 87;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5205,12 +4539,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 38, 25);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 259;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 89;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 259;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 89;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5220,12 +4552,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 22, 12);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 786;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 138;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 786;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 138;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5235,12 +4565,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 0, 59);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 835;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 183;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 835;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 183;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5250,12 +4578,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 43, 11);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 516;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 231;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 516;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 231;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5265,12 +4591,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 24, 53);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 802;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 93;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 802;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 93;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5280,12 +4604,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 7, 0);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 758;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 285;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 758;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 285;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5295,12 +4617,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 48, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 664;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 181;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 664;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 181;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5310,12 +4630,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 31, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 69;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 98;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 69;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 98;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5325,12 +4643,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 13, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 54;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 157;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 54;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 157;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5340,12 +4656,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 56, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 629;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 60;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 629;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 60;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5355,12 +4669,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 35, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 808;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 75;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 808;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 75;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5370,12 +4682,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 15, 53);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 28;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 42;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 28;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 42;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5385,12 +4695,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 58, 5);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 875;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 63;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 875;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 63;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5400,12 +4708,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 40, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 558;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 56;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 558;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 56;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5415,12 +4721,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 23, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 74;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 145;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 74;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 145;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5430,12 +4734,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 6, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 603;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 55;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 603;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 55;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5445,12 +4747,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 48, 59);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 742;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 147;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 742;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 147;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5460,12 +4760,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 28, 4);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 96;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 267;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 96;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 267;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5475,12 +4773,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 9, 27);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 376;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 175;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 376;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 175;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5490,12 +4786,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 48, 44);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 747;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 246;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 747;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 246;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5505,12 +4799,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 29, 15);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 613;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 187;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 613;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 187;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5520,12 +4812,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 12, 27);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 641;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 155;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 641;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 155;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5535,12 +4825,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 56, 55);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 862;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 295;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 862;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 295;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5550,12 +4838,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 39, 22);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 447;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 136;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 447;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 136;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5565,12 +4851,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 18, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 129;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 284;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 129;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 284;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5580,12 +4864,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 58, 50);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 673;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 178;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 673;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 178;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5595,12 +4877,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 37, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 178;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 194;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 178;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 194;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5610,12 +4890,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 19, 39);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 340;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 184;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 340;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 184;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5625,12 +4903,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 1, 20);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 774;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 266;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 774;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 266;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5640,12 +4916,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 43, 8);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 663;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 296;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 663;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 296;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5655,12 +4929,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 23, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 108;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 176;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 108;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 176;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5670,12 +4942,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 7, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 678;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 204;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 678;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 204;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5685,12 +4955,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 48, 52);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 552;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 216;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 552;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 216;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5700,12 +4968,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 30, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 710;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 275;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 710;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 275;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5715,12 +4981,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 9, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 350;
-         expectedProjectInfo.ProjectClone = 6;
-         expectedProjectInfo.ProjectGen = 110;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 350;
+         expectedUnitRun.Data.ProjectClone = 6;
+         expectedUnitRun.Data.ProjectGen = 110;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5730,12 +4994,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 52, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 287;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 200;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 287;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 200;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5745,12 +5007,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 32, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 95;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 239;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 95;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 239;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5760,12 +5020,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 18, 51);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 895;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 148;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 895;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 148;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5775,12 +5033,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 1, 3);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 556;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 196;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 556;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 196;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5790,12 +5046,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 42, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 881;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 171;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 881;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 171;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5805,12 +5059,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 23, 42);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 851;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 119;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 851;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 119;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5820,12 +5072,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 5, 44);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 324;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 173;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 324;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 173;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5835,12 +5085,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 44, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 70;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 75;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 70;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 75;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5850,12 +5098,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 22, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 687;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 88;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 687;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 88;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5865,12 +5111,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 6, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 395;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 227;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 395;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 227;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5880,12 +5124,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 47, 27);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 316;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 141;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 316;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 141;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5895,12 +5137,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 28, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 70;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 178;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 70;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 178;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5910,12 +5150,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 7, 50);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 582;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 275;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 582;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 275;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5925,12 +5163,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 52, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 909;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 113;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 909;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 113;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5940,12 +5176,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 31, 20);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 303;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 91;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 303;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 91;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5955,12 +5189,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 12, 12);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 921;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 274;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 921;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 274;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5970,12 +5202,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 54, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 863;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 317;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 863;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 317;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5985,12 +5215,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 35, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 150;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 238;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 150;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 238;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6000,12 +5228,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 20, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 82;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 256;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 82;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 256;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6015,12 +5241,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 59, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 590;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 204;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 590;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 204;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6030,12 +5254,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 44, 26);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 820;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 251;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 820;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 251;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6045,12 +5267,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 28, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 194;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 306;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 194;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 306;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6060,12 +5280,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 12, 51);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 112;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 199;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 112;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 199;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6075,12 +5293,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 51, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 1;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 211;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 1;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 211;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6090,12 +5306,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 30, 59);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 792;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 149;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 792;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 149;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6105,12 +5319,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 12, 25);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 79;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 295;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 79;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 295;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6120,12 +5332,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 56, 52);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 169;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 172;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 169;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 172;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6135,12 +5345,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 40, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 551;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 244;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 551;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 244;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6150,12 +5358,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 23, 6);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 804;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 327;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 804;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 327;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6165,12 +5371,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 3, 12);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 111;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 178;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 111;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 178;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6180,12 +5384,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 46, 23);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 406;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 221;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 406;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 221;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6195,12 +5397,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 27, 15);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 453;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 207;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 453;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 207;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6210,12 +5410,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 10, 7);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 533;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 208;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 533;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 208;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6225,12 +5423,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 56, 15);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 784;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 279;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 784;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 279;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6240,12 +5436,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 36, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 193;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 273;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 193;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 273;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6255,12 +5449,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 17, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 637;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 296;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 637;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 296;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6270,12 +5462,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 2, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 185;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 312;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 185;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 312;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6285,12 +5475,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 47, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 877;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 262;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 877;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 262;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6300,12 +5488,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 27, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 761;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 173;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 761;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 173;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6315,12 +5501,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 9, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 144;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 239;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 144;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 239;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6330,12 +5514,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 48, 3);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 529;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 167;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 529;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 167;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6345,12 +5527,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 30, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 84;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 331;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 84;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 331;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6360,12 +5540,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 9, 42);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 494;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 188;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 494;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 188;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6375,12 +5553,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 51, 8);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 199;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 364;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 199;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 364;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6390,12 +5566,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 31, 30);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 256;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 292;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 256;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 292;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6405,12 +5579,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 13, 27);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 150;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 279;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 150;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 279;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6420,12 +5592,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 55, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 479;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 291;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 479;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 291;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6435,12 +5605,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 40, 32);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 56;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 306;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 56;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 306;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6450,12 +5618,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 20, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 189;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 233;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 189;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 233;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6465,12 +5631,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 1, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 161;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 161;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6480,12 +5644,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 42, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 869;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 312;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 869;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 312;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6495,12 +5657,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 26, 55);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 154;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 293;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 154;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 293;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6510,12 +5670,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 6, 56);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 231;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 280;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 231;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 280;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6525,12 +5683,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 48, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 413;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 274;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 413;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 274;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6540,12 +5696,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 29, 40);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 181;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 310;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 181;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 310;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6555,12 +5709,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 15, 13);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 528;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 274;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 528;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 274;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6570,12 +5722,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 54, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 595;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 262;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 595;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 262;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6585,12 +5735,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 34, 40);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 86;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 246;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 86;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 246;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6600,12 +5748,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 17, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 81;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 217;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 81;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 217;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6615,12 +5761,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 57, 29);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 430;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 263;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 430;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 263;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6630,12 +5774,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 36, 11);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 869;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 319;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 869;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 319;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6645,12 +5787,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 17, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 159;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 237;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 159;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 237;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6660,12 +5800,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 59, 30);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 883;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 176;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 883;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 176;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6675,12 +5813,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 43, 23);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 481;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 216;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 481;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 216;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6690,12 +5826,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 25, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 31;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 307;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 31;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 307;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6705,12 +5839,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 7, 56);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 158;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 266;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 158;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 266;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6720,12 +5852,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 48, 2);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 563;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 314;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 563;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 314;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6735,12 +5865,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 29, 14);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 333;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 299;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 333;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 299;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6750,12 +5878,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 9, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 189;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 242;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 189;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 242;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6765,12 +5891,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 50, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 86;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 274;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 86;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 274;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6780,12 +5904,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 34, 10);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 49;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 298;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 49;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 298;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6795,12 +5917,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 17, 22);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 38;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 313;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 38;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 313;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6810,12 +5930,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 57, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 733;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 151;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 733;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 151;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6825,12 +5943,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 42, 6);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 179;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 197;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 179;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 197;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6840,12 +5956,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 25, 33);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 66;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 328;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 66;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 328;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6855,12 +5969,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 9, 26);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 45;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 262;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 45;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 262;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6870,12 +5982,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 51, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 793;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 298;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 793;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 298;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6885,12 +5995,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 33, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 72;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 267;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 72;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 267;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6900,12 +6008,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 11, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 497;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 274;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 497;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 274;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6915,12 +6021,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 54, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 234;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 218;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 234;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 218;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6930,12 +6034,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 37, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 512;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 249;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 512;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 249;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6945,12 +6047,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 22, 17);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 865;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 338;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 865;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 338;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6960,12 +6060,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 6, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 321;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 241;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 321;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 241;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6975,12 +6073,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 54, 38);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 738;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 281;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 738;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 281;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6990,12 +6086,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 40, 36);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 803;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 188;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 803;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 188;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7005,12 +6099,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 22, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 553;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 300;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 553;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 300;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7020,12 +6112,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 3, 15);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 135;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 306;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 135;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 306;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7035,12 +6125,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 48, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 149;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 322;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 149;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 322;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7050,12 +6138,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 30, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 605;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 238;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 605;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 238;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7065,12 +6151,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 15, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 38;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 178;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 38;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 178;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7080,12 +6164,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 55, 27);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 521;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 285;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 521;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 285;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7095,12 +6177,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 36, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 86;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 154;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 86;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 154;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7110,12 +6190,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 18, 55);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 274;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 292;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 274;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 292;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7125,12 +6203,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 1, 57);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 36;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 248;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 36;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 248;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7140,12 +6216,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 44, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 867;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 250;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 867;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 250;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7155,12 +6229,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 29, 6);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 698;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 322;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 698;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 322;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7170,12 +6242,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 8, 22);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 665;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 278;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 665;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 278;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7185,12 +6255,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 48, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 875;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 176;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 875;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 176;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7200,12 +6268,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 30, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 514;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 250;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 514;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 250;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7215,12 +6281,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(6, 14, 32);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 329;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 331;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 329;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 331;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7230,12 +6294,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 54, 39);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 382;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 312;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 382;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 312;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7245,12 +6307,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 35, 41);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 4;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 328;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 4;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 328;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7260,12 +6320,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 16, 7);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 321;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 192;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 321;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 192;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7275,12 +6333,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 57, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 601;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 283;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 601;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 283;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7290,12 +6346,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(14, 35, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 19;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 245;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 19;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 245;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7305,12 +6359,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(16, 15, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 790;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 283;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 790;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 283;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7320,12 +6372,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 54, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 296;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 250;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 296;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 250;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7335,12 +6385,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 33, 8);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 342;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 289;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 342;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 289;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7350,12 +6398,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(21, 13, 14);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 65;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 242;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 65;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 242;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7365,12 +6411,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 54, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 910;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 255;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 910;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 255;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7380,12 +6424,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 36, 18);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 514;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 256;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 514;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 256;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7395,12 +6437,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(2, 16, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 105;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 325;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 105;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 325;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7410,12 +6450,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 58, 35);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 109;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 281;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 109;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 281;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7425,12 +6463,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 38, 12);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 115;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 135;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 115;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 135;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7440,12 +6476,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 20, 4);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 86;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 273;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 86;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 273;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7455,12 +6489,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(9, 2, 6);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 296;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 343;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 296;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 343;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7470,12 +6502,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 40, 28);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 632;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 208;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 632;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 208;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7485,12 +6515,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 19, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 759;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 272;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 759;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 272;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7500,12 +6528,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 58, 16);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 79;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 232;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 79;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 232;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7515,12 +6541,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 38, 52);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 599;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 305;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 599;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 305;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7530,12 +6554,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 19, 58);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 189;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 273;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 189;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 273;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7545,12 +6567,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(19, 3, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 116;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 301;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 116;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 301;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7560,12 +6580,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 41, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 656;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 342;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 656;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 342;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7575,12 +6593,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 24, 55);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 381;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 156;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 381;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 156;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7590,12 +6606,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(0, 7, 1);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9036;
-         expectedProjectInfo.ProjectRun = 228;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 275;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9036;
+         expectedUnitRun.Data.ProjectRun = 228;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 275;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7605,12 +6619,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 52, 14);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9033;
-         expectedProjectInfo.ProjectRun = 118;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 310;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9033;
+         expectedUnitRun.Data.ProjectRun = 118;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 310;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7620,12 +6632,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 37, 26);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 129;
-         expectedProjectInfo.ProjectClone = 3;
-         expectedProjectInfo.ProjectGen = 292;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 129;
+         expectedUnitRun.Data.ProjectClone = 3;
+         expectedUnitRun.Data.ProjectGen = 292;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7635,12 +6645,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 18, 42);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 783;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 297;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 783;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 297;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7650,12 +6658,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(7, 2, 9);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 771;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 279;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 771;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 279;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7665,12 +6671,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 41, 46);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 767;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 363;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 767;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 363;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7680,12 +6684,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(10, 24, 57);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9032;
-         expectedProjectInfo.ProjectRun = 555;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 235;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9032;
+         expectedUnitRun.Data.ProjectRun = 555;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 235;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7695,12 +6697,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(12, 3, 43);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9040;
-         expectedProjectInfo.ProjectRun = 13;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 240;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9040;
+         expectedUnitRun.Data.ProjectRun = 13;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 240;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7710,12 +6710,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(13, 44, 45);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 508;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 314;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 508;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 314;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7725,12 +6723,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(15, 27, 37);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 564;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 305;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 564;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 305;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7740,12 +6736,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(17, 8, 19);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 68;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 273;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 68;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 273;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7755,12 +6749,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(18, 49, 21);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9031;
-         expectedProjectInfo.ProjectRun = 459;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 250;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9031;
+         expectedUnitRun.Data.ProjectRun = 459;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 250;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7770,12 +6762,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(20, 29, 48);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9039;
-         expectedProjectInfo.ProjectRun = 864;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 289;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9039;
+         expectedUnitRun.Data.ProjectRun = 864;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 289;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7785,12 +6775,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(22, 8, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9037;
-         expectedProjectInfo.ProjectRun = 28;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 277;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9037;
+         expectedUnitRun.Data.ProjectRun = 28;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 277;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7800,12 +6788,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(23, 49, 26);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9035;
-         expectedProjectInfo.ProjectRun = 6;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 238;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9035;
+         expectedUnitRun.Data.ProjectRun = 6;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 238;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7815,12 +6801,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(1, 31, 3);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9034;
-         expectedProjectInfo.ProjectRun = 739;
-         expectedProjectInfo.ProjectClone = 0;
-         expectedProjectInfo.ProjectGen = 272;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9034;
+         expectedUnitRun.Data.ProjectRun = 739;
+         expectedUnitRun.Data.ProjectClone = 0;
+         expectedUnitRun.Data.ProjectGen = 272;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7830,12 +6814,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(3, 10, 49);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 82;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 353;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 238;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 353;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 238;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Interrupted;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7845,12 +6827,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(4, 41, 24);
          expectedUnitRun.Data.CoreVersion = 2.27f;
          expectedUnitRun.Data.FramesObserved = 5;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 9038;
-         expectedProjectInfo.ProjectRun = 353;
-         expectedProjectInfo.ProjectClone = 1;
-         expectedProjectInfo.ProjectGen = 238;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 9038;
+         expectedUnitRun.Data.ProjectRun = 353;
+         expectedUnitRun.Data.ProjectClone = 1;
+         expectedUnitRun.Data.ProjectGen = 238;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.Unknown;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7896,12 +6876,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(5, 47, 36);
          expectedUnitRun.Data.CoreVersion = 0.11f;
          expectedUnitRun.Data.FramesObserved = 101;
-         var expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13127;
-         expectedProjectInfo.ProjectRun = 53;
-         expectedProjectInfo.ProjectClone = 4;
-         expectedProjectInfo.ProjectGen = 59;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13127;
+         expectedUnitRun.Data.ProjectRun = 53;
+         expectedUnitRun.Data.ProjectClone = 4;
+         expectedUnitRun.Data.ProjectGen = 59;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7911,12 +6889,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(8, 45, 15);
          expectedUnitRun.Data.CoreVersion = 0.11f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 8673;
-         expectedProjectInfo.ProjectRun = 21;
-         expectedProjectInfo.ProjectClone = 2;
-         expectedProjectInfo.ProjectGen = 61;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 8673;
+         expectedUnitRun.Data.ProjectRun = 21;
+         expectedUnitRun.Data.ProjectClone = 2;
+         expectedUnitRun.Data.ProjectGen = 61;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7926,12 +6902,10 @@ namespace HFM.Log
          expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(11, 26, 21);
          expectedUnitRun.Data.CoreVersion = 0.11f;
          expectedUnitRun.Data.FramesObserved = 101;
-         expectedProjectInfo = new ProjectInfo();
-         expectedProjectInfo.ProjectID = 13801;
-         expectedProjectInfo.ProjectRun = 0;
-         expectedProjectInfo.ProjectClone = 2696;
-         expectedProjectInfo.ProjectGen = 19;
-         expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);
+         expectedUnitRun.Data.ProjectID = 13801;
+         expectedUnitRun.Data.ProjectRun = 0;
+         expectedUnitRun.Data.ProjectClone = 2696;
+         expectedUnitRun.Data.ProjectGen = 19;
          expectedUnitRun.Data.WorkUnitResult = WorkUnitResult.FinishedUnit;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 

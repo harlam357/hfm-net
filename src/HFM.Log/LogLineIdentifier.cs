@@ -1,6 +1,4 @@
 ﻿
-using HFM.Core.DataTypes;
-
 namespace HFM.Log
 {
    internal static class LogLineIdentifier

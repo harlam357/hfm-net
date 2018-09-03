@@ -271,10 +271,9 @@ namespace HFM.Core
          if (queueEntry != null)
          {
             UpdateUnitInfoFromQueueData(unit, queueEntry);
-            SearchFahLogUnitDataProjects(unit, unitRunData);
             UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
 
-            if (!ProjectsMatch(unit, unitRunData) && !ProjectsMatch(unit, unitInfoLogData) && !matchOverride)
+            if (!ProjectsMatch(unit, unitRunData.ToProjectInfo()) && !ProjectsMatch(unit, unitInfoLogData.ToProjectInfo()) && !matchOverride)
             {
                return null;
             }
@@ -285,20 +284,6 @@ namespace HFM.Core
          }
 
          return unit;
-      }
-
-      private static void SearchFahLogUnitDataProjects(UnitInfo unit, UnitRunData unitRunData)
-      {
-         Debug.Assert(unit != null);
-         Debug.Assert(unitRunData != null);
-
-         for (int i = 0; i < unitRunData.ProjectInfoList.Count; i++)
-         {
-            if (ProjectsMatch(unit, unitRunData.ProjectInfoList[i]))
-            {
-               unitRunData.ProjectInfoIndex = i;
-            }
-         }
       }
 
       private static bool ProjectsMatch(UnitInfo unit, IProjectInfo projectInfo)

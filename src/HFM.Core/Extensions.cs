@@ -459,28 +459,6 @@ namespace HFM.Core
          return dictionary;
       }
 
-      internal static ProjectInfo ToProjectInfo(this Unit unit)
-      {
-         return new ProjectInfo
-         {
-            ProjectID = unit.Project,
-            ProjectRun = unit.Run,
-            ProjectClone = unit.Clone,
-            ProjectGen = unit.Gen
-         };
-      }
-
-      internal static ProjectInfo ToProjectInfo(this Queue.QueueEntry unit)
-      {
-         return new ProjectInfo
-         {
-            ProjectID = unit.ProjectID,
-            ProjectRun = unit.ProjectRun,
-            ProjectClone = unit.ProjectClone,
-            ProjectGen = unit.ProjectGen
-         };
-      }
-
       #region ProteinBenchmark
 
       internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)

@@ -19,11 +19,9 @@
 
 using System;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Log
 {
-   public class UnitInfoLogData : IProjectInfo
+   public class UnitInfoLogData
    {
       /// <summary>
       /// Protein Name
