@@ -10,7 +10,6 @@ copy /y HFM.exe %1
 copy /y HFM.exe.config %1
 copy /y HFM.Client.dll %1
 copy /y HFM.Core.dll %1
-copy /y HFM.Core.DataTypes.dll %1
 copy /y HFM.Forms.dll %1
 copy /Y HFM.Log.dll %1
 copy /Y HFM.Preferences.dll %1

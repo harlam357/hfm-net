@@ -152,7 +152,6 @@ Function Deploy-Build
         "HFM.exe.config",
         "HFM.Client.dll",
         "HFM.Core.dll",
-        "HFM.Core.DataTypes.dll",
         "HFM.Forms.dll",
         "HFM.Log.dll",
         "HFM.Preferences.dll",
