@@ -99,6 +99,7 @@
     <Compile Include="Serializers\ISerializer.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
+    <Compile Include="SlotStatus.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />

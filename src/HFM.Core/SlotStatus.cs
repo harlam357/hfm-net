@@ -1,5 +1,5 @@
 ﻿
-namespace HFM.Core.DataTypes
+namespace HFM.Core
 {
    /// <summary>
    /// Slot status types.
