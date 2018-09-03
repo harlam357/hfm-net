@@ -468,42 +468,6 @@ namespace HFM.Core
 
       #endregion
 
-      #region IProjectInfo
-
-      /// <summary>
-      /// Is the project information unknown?
-      /// </summary>
-      /// <returns>true if Project (R/C/G) has not been identified; otherwise, false.</returns>
-      internal static bool ProjectIsUnknown(this IProjectInfo projectInfo)
-      {
-         if (projectInfo == null)
-         {
-            return true;
-         }
-         return projectInfo.ProjectID == 0 &&
-                projectInfo.ProjectRun == 0 &&
-                projectInfo.ProjectClone == 0 &&
-                projectInfo.ProjectGen == 0;
-      }
-
-      /// <summary>
-      /// Determines whether the specified project information is equal to this project information.
-      /// </summary>
-      /// <returns>true if the specified Project (R/C/G) is equal to the this Project (R/C/G); otherwise, false.</returns>
-      internal static bool EqualsProject(this IProjectInfo projectInfo1, IProjectInfo projectInfo2)
-      {
-         if (projectInfo1 == null || projectInfo2 == null)
-         {
-            return false;
-         }
-         return projectInfo1.ProjectID == projectInfo2.ProjectID &&
-                projectInfo1.ProjectRun == projectInfo2.ProjectRun &&
-                projectInfo1.ProjectClone == projectInfo2.ProjectClone &&
-                projectInfo1.ProjectGen == projectInfo2.ProjectGen;
-      }
-
-      #endregion
-
       public static string GetExecTime(this Stopwatch sw)
       {
          return String.Format("{0:#,##0} ms", sw.ElapsedMilliseconds);

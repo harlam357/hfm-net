@@ -54,10 +54,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BonusCalculationType.cs" />
-    <Compile Include="Extensions.IProjectInfo.cs" />
     <Compile Include="FtpMode.cs" />
     <Compile Include="PpdCalculationType.cs" />
-    <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlotStatus.cs" />
   </ItemGroup>
