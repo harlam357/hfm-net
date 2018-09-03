@@ -211,10 +211,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>
@@ -228,15 +224,15 @@
     <PostBuildEvent>IF '$(ConfigurationName)'=='ReleaseMerge' (
    IF '$(DelaySign)'=='true' (
       IF '$(BuildingInsideVisualStudio)'=='true' (
-         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
+         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll
       ) ELSE (
-         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
+         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll
       )
    ) ELSE (
       IF '$(BuildingInsideVisualStudio)'=='true' (
-      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
+      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll
       ) ELSE (
-      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll HFM.Core.DataTypes.dll
+      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Log.exe HFM.Log.Tool.exe HFM.Log.dll
       )
    )
 )</PostBuildEvent>

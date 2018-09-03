@@ -26,7 +26,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Log;
 
 namespace HFM.Forms.Controls

@@ -82,6 +82,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="BonusCalculationType.cs" />
     <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
     <Compile Include="DataTypes\Markup\UnitInfo.cs" />
@@ -91,8 +92,10 @@
     <Compile Include="Extensions.IProjectInfo.cs" />
     <Compile Include="Extensions.ToProjectInfo.cs" />
     <Compile Include="Extensions.WorkUnitResult.cs" />
+    <Compile Include="FtpMode.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="DataTypes\ProjectInfo.cs" />
+    <Compile Include="PpdCalculationType.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />

@@ -23,7 +23,7 @@ using System.ComponentModel;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
+using HFM.Core;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models

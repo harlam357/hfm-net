@@ -9,8 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Log.Tool
 {
    public partial class MainForm : Form

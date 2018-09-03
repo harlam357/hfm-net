@@ -4,8 +4,6 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Proteins.Tests
 {
    [TestFixture]

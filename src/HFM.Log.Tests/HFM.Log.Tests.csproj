@@ -85,10 +85,6 @@
     <Compile Include="UnitFrameTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>
