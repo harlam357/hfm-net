@@ -6,6 +6,8 @@ using System.Drawing;
 
 using NUnit.Framework;
 
+using HFM.Preferences.Data;
+
 namespace HFM.Preferences.Tests
 {
    [TestFixture]
