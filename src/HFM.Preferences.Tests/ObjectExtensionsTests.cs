@@ -4,15 +4,13 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Preferences.Tests
 {
    [TestFixture]
    public class ObjectExtensionsTests
    {
       [Test]
-      public void Copy_Extension_Test()
+      public void ObjectExtensions_Copy_Test()
       {
          short a = 1;
          int b = 2;
@@ -56,7 +54,7 @@ namespace HFM.Preferences.Tests
       }
 
       [Test]
-      public void Copy_Extension_Benchmarks_Test()
+      public void ObjectExtensions_Copy_Benchmark()
       {
          object objNum = null;
 

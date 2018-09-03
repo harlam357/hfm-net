@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
-using HFM.Core.DataTypes;
 using HFM.Preferences.Data;
 using HFM.Preferences.Properties;
 
@@ -143,7 +142,7 @@ namespace HFM.Preferences
          data.HistoryWindowGrid.Columns = columns;
          data.HistoryWindowGrid.SortColumn = Settings.Default.HistorySortColumnName;
          data.HistoryWindowGrid.SortOrder = Settings.Default.HistorySortOrder;
-         data.HistoryWindowProperties.BonusCalculation = (BonusCalculationType)Settings.Default.HistoryProductionView;
+         data.HistoryWindowProperties.BonusCalculation = GetHistoryWindowBonusCalculation();
          data.HistoryWindowProperties.MaximumResults = Settings.Default.ShowEntriesValue;
 
          return data;
@@ -278,48 +277,57 @@ namespace HFM.Preferences
          { }
       }
 
-      private static FtpMode GetFtpMode()
+      private static string GetFtpMode()
       {
          switch (Settings.Default.WebGenFtpMode)
          {
             case "Passive":
-               return FtpMode.Passive;
             case "Active":
-               return FtpMode.Active;
+               return Settings.Default.WebGenFtpMode;
             default:
-               return FtpMode.Passive;
+               return "Passive";
          }
       }
 
-      private static PpdCalculationType GetPpdCalculation()
+      private static string GetPpdCalculation()
       {
          switch (Settings.Default.PpdCalculation)
          {
             case "LastFrame":
-               return PpdCalculationType.LastFrame;
             case "LastThreeFrames":
-               return PpdCalculationType.LastThreeFrames;
             case "AllFrames":
-               return PpdCalculationType.AllFrames;
             case "EffectiveRate":
-               return PpdCalculationType.EffectiveRate;
+               return Settings.Default.PpdCalculation;
             default:
-               return PpdCalculationType.LastThreeFrames;
+               return "LastThreeFrames";
          }
       }
 
-      private static BonusCalculationType GetBonusCalculation()
+      private static string GetBonusCalculation()
       {
          switch (Settings.Default.CalculateBonus)
          {
             case "DownloadTime":
-               return BonusCalculationType.DownloadTime;
             case "FrameTime":
-               return BonusCalculationType.FrameTime;
             case "None":
-               return BonusCalculationType.None;
+               return Settings.Default.CalculateBonus;
             default:
-               return BonusCalculationType.DownloadTime;
+               return "DownloadTime";
+         }
+      }
+
+      private static string GetHistoryWindowBonusCalculation()
+      {
+         switch (Settings.Default.HistoryProductionView)
+         {
+            case 0:
+               return "DownloadTime";
+            case 1:
+               return "FrameTime";
+            case 2:
+               return "None";
+            default:
+               return "DownloadTime";
          }
       }
 

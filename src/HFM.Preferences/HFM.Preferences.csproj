@@ -76,7 +76,6 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -119,12 +118,6 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{c198da45-5b5b-4684-914b-97ded3f0bb40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

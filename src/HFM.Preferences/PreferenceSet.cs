@@ -48,8 +48,13 @@ namespace HFM.Preferences
       private readonly string _versionString;
 
       internal PreferenceSet()
+         : this(new PreferenceData())
       {
-         var data = new PreferenceData();
+
+      }
+
+      internal PreferenceSet(PreferenceData data)
+      {
          _prefs = CreateDictionary(data);
       }
 
@@ -320,6 +325,17 @@ namespace HFM.Preferences
          {
             return (T)metadata.Data.Copy();
          }
+         if (typeof(T).IsEnum && metadata.DataType == typeof(string))
+         {
+            try
+            {
+               return (T)Enum.Parse(typeof(T), ((IMetadata<string>)metadata).Data);
+            }
+            catch (Exception)
+            {
+               return default(T);
+            }
+         }
 
          throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
             "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
@@ -355,6 +371,16 @@ namespace HFM.Preferences
             {
                // Issue 189 - Use default value if string is null or empty
                intMetadata.Data = newValue;
+               OnPreferenceChanged(key);
+            }
+         }
+         else if (metadata.DataType == typeof(string) && value.GetType().IsEnum)
+         {
+            string newValue = value.ToString();
+
+            if (metadata.Data == null || !metadata.Data.Equals(value))
+            {
+               metadata.Data = newValue;
                OnPreferenceChanged(key);
             }
          }

@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Preferences.Data
 {
    [DataContract(Namespace = "")]
@@ -17,8 +15,8 @@ namespace HFM.Preferences.Data
          MessageLevel = 4; // Info
          //AutoSaveConfig = false;
          DecimalPlaces = 1;
-         PpdCalculation = PpdCalculationType.LastThreeFrames;
-         BonusCalculation = BonusCalculationType.DownloadTime;
+         PpdCalculation = "LastThreeFrames";
+         BonusCalculation = "DownloadTime";
          LogFileViewer = "notepad.exe";
          FileExplorer = "explorer.exe";
          ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary";
@@ -40,10 +38,10 @@ namespace HFM.Preferences.Data
       public int DecimalPlaces { get; set; }
 
       [DataMember]
-      public PpdCalculationType PpdCalculation { get; set; }
+      public string PpdCalculation { get; set; }
 
       [DataMember]
-      public BonusCalculationType BonusCalculation { get; set; }
+      public string BonusCalculation { get; set; }
 
       [DataMember]
       public string LogFileViewer { get; set; }
@@ -78,7 +76,7 @@ namespace HFM.Preferences.Data
             //Username = null,
             //Password = null
          };
-         //FtpMode = default(FtpType);
+         //FtpMode = default(FtpMode);
          CopyHtml = true;
          //CopyXml = false;
          CopyLog = true;
@@ -96,7 +94,7 @@ namespace HFM.Preferences.Data
       public ConnectionProperties FtpServer { get; set; }
 
       [DataMember]
-      public FtpMode FtpMode { get; set; }
+      public string FtpMode { get; set; }
 
       [DataMember]
       public bool CopyHtml { get; set; }
@@ -380,7 +378,7 @@ namespace HFM.Preferences.Data
       }
 
       [DataMember]
-      public BonusCalculationType BonusCalculation { get; set; }
+      public string BonusCalculation { get; set; }
 
       [DataMember]
       public int MaximumResults { get; set; }
