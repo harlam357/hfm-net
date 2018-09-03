@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Support
 {
    internal static class ObjectExtensions
    {

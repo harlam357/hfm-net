@@ -28,6 +28,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 
 using HFM.Preferences.Data;
+using HFM.Preferences.Support;
 
 namespace HFM.Preferences
 {

@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Data
 {
    [DataContract(Namespace = "")]
    public class ClientRetrievalTask : IEquatable<ClientRetrievalTask>

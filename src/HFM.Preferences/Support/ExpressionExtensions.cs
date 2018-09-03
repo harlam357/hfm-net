@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 #endif
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Support
 {
    // Based on http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
 

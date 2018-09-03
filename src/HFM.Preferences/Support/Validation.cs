@@ -3,7 +3,7 @@ using System;
 
 using HFM.Core;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Support
 {
    internal static class Validation
    {

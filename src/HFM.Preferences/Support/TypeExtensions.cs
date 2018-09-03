@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Support
 {
    internal static class TypeExtensions
    {

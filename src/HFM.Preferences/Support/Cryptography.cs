@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using harlam357.Core.Security;
 using harlam357.Core.Security.Cryptography;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Support
 {
    internal static class Cryptography
    {

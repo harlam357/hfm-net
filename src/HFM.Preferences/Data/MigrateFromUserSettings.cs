@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
-using HFM.Preferences.Data;
 using HFM.Preferences.Properties;
+using HFM.Preferences.Support;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Data
 {
    internal static class MigrateFromUserSettings
    {
