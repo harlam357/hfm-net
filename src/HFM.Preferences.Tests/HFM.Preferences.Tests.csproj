@@ -7,7 +7,7 @@
     <ProjectGuid>{C4F6A423-FEBA-4D24-B726-ECDA91223C93}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HFM.Preferences.Tests</RootNamespace>
+    <RootNamespace>HFM.Preferences</RootNamespace>
     <AssemblyName>HFM.Preferences.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,8 +58,11 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ArtifactFolder.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />
     <Compile Include="PreferenceSetTests.cs" />
+    <Compile Include="PreferenceSetTests.Get.cs" />
+    <Compile Include="PreferenceSetTests.Set.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,10 +72,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
-      <Project>{360034d2-9f6a-4377-b5b9-d82712171223}</Project>
-      <Name>HFM.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
       <Name>HFM.Preferences</Name>

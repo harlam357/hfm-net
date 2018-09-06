@@ -122,6 +122,7 @@ namespace HFM.Preferences
       CacheFolder,
       ApplicationPath,
       ApplicationDataFolderPath,
+      ApplicationVersion,
       CacheDirectory
    }
 

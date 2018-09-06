@@ -8,242 +8,177 @@ using NUnit.Framework;
 
 using HFM.Preferences.Data;
 
-namespace HFM.Preferences.Tests
+namespace HFM.Preferences
 {
    [TestFixture]
-   public class PreferenceSetTests
+   public partial class PreferenceSetTests
    {
       [Test]
-      public void PreferenceSet_Get_Test()
-      {
-         var prefs = new PreferenceSet();
-
-         // value type
-         Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitterLocation));
-         // underlying string is null
-         Assert.AreEqual(String.Empty, prefs.Get<string>(Preference.EmailReportingFromAddress));
-         // string
-         Assert.AreEqual("logcache", prefs.Get<string>(Preference.CacheFolder));
-         // class
-         var task1 = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-         var task2 = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-         Assert.AreNotSame(task1, task2);
-         Assert.AreEqual(new ClientRetrievalTask(), task1);
-         // underlying collection is null
-         Assert.IsNull(prefs.Get<ICollection<string>>(Preference.FormColumns));
-         // collection
-         var graphColors1 = prefs.Get<IEnumerable<Color>>(Preference.GraphColors);
-         var graphColors2 = prefs.Get<IEnumerable<Color>>(Preference.GraphColors);
-         Assert.AreNotSame(graphColors1, graphColors2);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_ConstructorValues_Test()
+      public void PreferenceSet_ConstructorArgumentValues_Test()
       {
          // Arrange
-         var prefs = new PreferenceSet("AppPath", "DataPath", "1.0.0");
-         // Assert
-         Assert.AreEqual(prefs.ApplicationPath, prefs.Get<string>(Preference.ApplicationPath));
-         Assert.AreEqual(prefs.ApplicationDataFolderPath, prefs.Get<string>(Preference.ApplicationDataFolderPath));
-         string cacheFolderPath = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, "logcache");
-         Assert.AreEqual(cacheFolderPath, prefs.Get<string>(Preference.CacheDirectory));
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string applicationPath = Environment.CurrentDirectory;
+            // Act
+            var prefs = new PreferenceSet(applicationPath, artifacts.Path, applicationVersion);
+            // Assert
+            Assert.AreEqual(applicationPath, prefs.ApplicationPath);
+            Assert.AreEqual(applicationPath, prefs.Get<string>(Preference.ApplicationPath));
+            Assert.AreEqual(artifacts.Path, prefs.ApplicationDataFolderPath);
+            Assert.AreEqual(artifacts.Path, prefs.Get<string>(Preference.ApplicationDataFolderPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+            string cacheDirectory = System.IO.Path.Combine(artifacts.Path, "logcache");
+            Assert.AreEqual(cacheDirectory, prefs.Get<string>(Preference.CacheDirectory));
+         }
       }
 
       [Test]
-      public void PreferenceSet_Get_StringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
+      public void PreferenceSet_Reset_Test()
       {
          // Arrange
-         var data = new PreferenceData();
-         data.ApplicationSettings.BonusCalculation = "Foo";
-         var prefs = new PreferenceSet(data);
-         // Act
-         var value = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
-         // Assert
-         Assert.AreEqual(BonusCalculation.Default, value);
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            var prefs = Create(artifacts.Path, applicationVersion);
+            Assert.IsFalse(System.IO.File.Exists(configPath));
+            // Act
+            prefs.Reset();
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+         }
       }
 
       [Test]
-      public void PreferenceSet_Get_StringAsEnum_Test()
+      public void PreferenceSet_Load_LoadsDefaultsWhenNoConfigXmlOrUserSettingsExists_Test()
       {
          // Arrange
-         var prefs = new PreferenceSet();
-         // Act
-         var value = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
-         // Assert
-         Assert.AreEqual(BonusCalculation.DownloadTime, value);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_ValueType_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
+         using (var artifacts = new ArtifactFolder())
          {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<int>(Preference.FormSplitterLocation);
+            const string applicationVersion = "1.0.0.0";
+            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            var prefs = Create(artifacts.Path, applicationVersion);
+            Assert.IsFalse(System.IO.File.Exists(configPath));
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
          }
-         sw.Stop();
-         Debug.WriteLine("Get ValueType: {0}ms", sw.ElapsedMilliseconds);
       }
 
       [Test]
-      public void PreferenceSet_Get_NullString_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
-         {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<string>(Preference.EmailReportingFromAddress);
-         }
-         sw.Stop();
-         Debug.WriteLine("Get Null String: {0}ms", sw.ElapsedMilliseconds);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_String_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
-         {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<string>(Preference.CacheFolder);
-         }
-         sw.Stop();
-         Debug.WriteLine("Get String: {0}ms", sw.ElapsedMilliseconds);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_Class_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
-         {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-         }
-         sw.Stop();
-         Debug.WriteLine("Get Class: {0}ms", sw.ElapsedMilliseconds);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_NullCollection_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
-         {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<ICollection<string>>(Preference.FormColumns);
-         }
-         sw.Stop();
-         Debug.WriteLine("Get Null Collection: {0}ms", sw.ElapsedMilliseconds);
-      }
-
-      [Test]
-      public void PreferenceSet_Get_Collection_Benchmark()
-      {
-         var prefs = new PreferenceSet();
-
-         var sw = Stopwatch.StartNew();
-         for (int i = 0; i < 1000000; i++)
-         {
-            // ReSharper disable once UnusedVariable
-            var obj = prefs.Get<IEnumerable<Color>>(Preference.GraphColors);
-         }
-         sw.Stop();
-         Debug.WriteLine("Get Collection: {0}ms", sw.ElapsedMilliseconds);
-      }
-
-      [Test]
-      public void PreferenceSet_Set_ValueType_Test()
-      {
-         var data = new PreferenceData();
-         var prefs = new PreferenceSet(data);
-
-         prefs.Set(Preference.FormSplitterLocation, (object)null);
-         Assert.AreEqual(0, data.MainWindowState.SplitterLocation);
-         prefs.Set(Preference.FormSplitterLocation, "60");
-         Assert.AreEqual(60, data.MainWindowState.SplitterLocation);
-         prefs.Set(Preference.FormSplitterLocation, 120);
-         Assert.AreEqual(120, data.MainWindowState.SplitterLocation);
-         prefs.Set(Preference.FormSplitterLocation, 360);
-         Assert.AreEqual(360, data.MainWindowState.SplitterLocation);
-      }
-
-      [Test]
-      public void PreferenceSet_Set_String_Test()
-      {
-         var data = new PreferenceData();
-         var prefs = new PreferenceSet(data);
-
-         prefs.Set(Preference.EmailReportingFromAddress, (string)null);
-         Assert.AreEqual(null, data.Email.FromAddress);
-         prefs.Set(Preference.EmailReportingFromAddress, "someone@home.com");
-         Assert.AreEqual("someone@home.com", data.Email.FromAddress);
-         prefs.Set(Preference.EmailReportingFromAddress, "me@gmail.com");
-         Assert.AreEqual("me@gmail.com", data.Email.FromAddress);
-      }
-
-      [Test]
-      public void PreferenceSet_Set_StringAsEnum_Test()
+      public void PreferenceSet_Load_MigratesFromUserSettings_Test()
       {
          // Arrange
-         var data = new PreferenceData();
-         var prefs = new PreferenceSet(data);
-         // Act
-         prefs.Set(Preference.BonusCalculation, BonusCalculation.Default);
-         // Assert
-         Assert.AreEqual("Default", data.ApplicationSettings.BonusCalculation);
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            var prefs = new TestMigrateFromUserSettingsPreferenceSet(artifacts.Path, applicationVersion);
+            Assert.IsFalse(System.IO.File.Exists(configPath));
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+            Assert.AreEqual("Foo", prefs.Get<string>(Preference.StanfordId));
+         }
+      }
+
+      private class TestMigrateFromUserSettingsPreferenceSet : PreferenceSet
+      {
+         public TestMigrateFromUserSettingsPreferenceSet(string applicationDataFolderPath, string applicationVersion)
+            : base(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion)
+         {
+
+         }
+
+         protected override PreferenceData OnMigrateFromUserSettings()
+         {
+            var data = new PreferenceData();
+            data.UserSettings.StanfordId = "Foo";
+            return data;
+         }
       }
 
       [Test]
-      public void PreferenceSet_Set_Class_Test()
+      public void PreferenceSet_Load_ExecutesPreferenceUpgrades_Test()
       {
-         var data = new PreferenceData();
-         var prefs = new PreferenceSet(data);
-
-         ClientRetrievalTask task = null;
-         prefs.Set(Preference.ClientRetrievalTask, task);
-         Assert.AreEqual(null, data.ClientRetrievalTask);
-         task = new ClientRetrievalTask();
-         prefs.Set(Preference.ClientRetrievalTask, task);
-         Assert.AreNotSame(task, data.ClientRetrievalTask);
-         task = new ClientRetrievalTask { Enabled = false };
-         prefs.Set(Preference.ClientRetrievalTask, task);
-         Assert.AreNotSame(task, data.ClientRetrievalTask);
+         // Arrange
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            var prefs = new TestPreferenceUpgradePreferenceSet(artifacts.Path, applicationVersion);
+            Assert.IsFalse(System.IO.File.Exists(configPath));
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+            Assert.AreEqual("foo", prefs.Get<string>(Preference.CacheFolder));
+         }
       }
 
-      [Test]
-      public void PreferenceSet_Set_Collection_Test()
+      private class TestPreferenceUpgradePreferenceSet : PreferenceSet
       {
-         var data = new PreferenceData();
-         var prefs = new PreferenceSet(data);
+         public TestPreferenceUpgradePreferenceSet(string applicationDataFolderPath, string applicationVersion)
+            : base(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion)
+         {
 
-         prefs.Set(Preference.FormColumns, (List<string>)null);
-         Assert.AreEqual(null, data.MainWindowGrid.Columns);
-         var enumerable = (IEnumerable<string>)new[] { "a", "b", "c" };
-         prefs.Set(Preference.FormColumns, enumerable);
-         Assert.AreEqual(3, data.MainWindowGrid.Columns.Count);
-         Assert.AreNotSame(enumerable, data.MainWindowGrid.Columns);
-         var collection = (ICollection<string>)new[] { "a", "b", "c" };
-         prefs.Set(Preference.FormColumns, collection);
-         Assert.AreEqual(3, data.MainWindowGrid.Columns.Count);
-         Assert.AreNotSame(collection, data.MainWindowGrid.Columns);
+         }
+
+         protected override PreferenceData OnRead()
+         {
+            var data = new PreferenceData();
+            data.ApplicationVersion = "0.0.0.0";
+            return data;
+         }
+
+         protected override IEnumerable<PreferenceUpgrade> OnEnumerateUpgrades()
+         {
+            yield return new PreferenceUpgrade
+            {
+               Version = new Version(0, 1, 0),
+               Action = data => { data.ApplicationSettings.CacheFolder = "foo"; }
+            };
+         }
       }
 
       private enum BonusCalculation
       {
          Default,
          DownloadTime
+      }
+
+      private class InMemoryPreferenceSet : PreferenceSetBase
+      {
+         public InMemoryPreferenceSet() 
+            : base(Environment.CurrentDirectory, Environment.CurrentDirectory, "1.0.0.0")
+         {
+
+         }
+
+         public InMemoryPreferenceSet(PreferenceData data)
+            : this()
+         {
+            Load(data);
+         }
+      }
+
+      private static PreferenceSet Create(string applicationDataFolderPath, string applicationVersion)
+      {
+         var path = Environment.CurrentDirectory;
+         return new PreferenceSet(path, applicationDataFolderPath, applicationVersion);
       }
    }
 }

@@ -32,10 +32,8 @@ using HFM.Preferences.Support;
 
 namespace HFM.Preferences
 {
-   public sealed class PreferenceSet : IPreferenceSet
+   public abstract class PreferenceSetBase : IPreferenceSet
    {
-      #region Implementation
-
       public string ApplicationPath { get; private set; }
 
       public string ApplicationDataFolderPath { get; private set; }
@@ -44,18 +42,7 @@ namespace HFM.Preferences
 
       private PreferenceDictionary _prefs;
 
-      internal PreferenceSet()
-         : this(new PreferenceData())
-      {
-
-      }
-
-      internal PreferenceSet(PreferenceData data)
-      {
-         _prefs = CreateDictionary(data);
-      }
-
-      public PreferenceSet(string applicationPath, string applicationDataFolderPath, string applicationVersion)
+      protected PreferenceSetBase(string applicationPath, string applicationDataFolderPath, string applicationVersion)
       {
          if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationPath");
          if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationDataFolderPath");
@@ -70,7 +57,6 @@ namespace HFM.Preferences
 
       public void Reset()
       {
-         EnsureApplicationDataFolderExists();
          var data = new PreferenceData { ApplicationVersion = ApplicationVersion };
          Write(data);
          _prefs = CreateDictionary(data);
@@ -78,72 +64,61 @@ namespace HFM.Preferences
 
       public void Load()
       {
-         EnsureApplicationDataFolderExists();
          var data = Read() ?? Migrate() ?? new PreferenceData();
+         Load(data);
+      }
+
+      public void Load(PreferenceData data)
+      {
          Upgrade(data);
          _prefs = CreateDictionary(data);
       }
 
-      private void EnsureApplicationDataFolderExists()
-      {
-         if (!Directory.Exists(ApplicationDataFolderPath))
-         {
-            Directory.CreateDirectory(ApplicationDataFolderPath);
-         }
-      }
-
       private PreferenceData Migrate()
       {
-         try
-         {
-            var data = MigrateFromUserSettings.Execute();
-            if (data != null)
-            {
-               Write(data);
-            }
-            return data;
-         }
-         catch (Exception)
-         {
-            return null;
-         }
+         return OnMigrateFromUserSettings();
+      }
+
+      protected virtual PreferenceData OnMigrateFromUserSettings()
+      {
+         return null;
       }
 
       private void Upgrade(PreferenceData data)
       {
-         if (data.ApplicationVersion != ApplicationVersion)
+         if (data.ApplicationVersion == ApplicationVersion)
          {
-            Version settingsVersion;
-            if (Version.TryParse(data.ApplicationVersion, out settingsVersion))
-            {
-               ExecuteVersionUpgrades(settingsVersion, data);
-            }
-            data.ApplicationVersion = ApplicationVersion;
-            Write(data);
+            return;
          }
+
+         Version settingsVersion;
+         if (Version.TryParse(data.ApplicationVersion, out settingsVersion))
+         {
+            ExecuteUpgrades(settingsVersion, data);
+         }
+         data.ApplicationVersion = ApplicationVersion;
+         Write(data);
       }
 
-      private static void ExecuteVersionUpgrades(Version settingsVersion, PreferenceData data)
+      private void ExecuteUpgrades(Version settingsVersion, PreferenceData data)
       {
-         foreach (var upgrade in CreateVersionUpgrades().Where(upgrade => settingsVersion < upgrade.Version))
+         foreach (var upgrade in EnumerateUpgrades().Where(upgrade => settingsVersion < upgrade.Version))
          {
             upgrade.Action(data);
          }
       }
 
-      private static IEnumerable<VersionUpgrade> CreateVersionUpgrades()
+      private IEnumerable<PreferenceUpgrade> EnumerateUpgrades()
       {
-         return new[]
-         {
-            new VersionUpgrade
-            {
-               Version = new Version(0, 9, 5),
-               Action = data => data.ApplicationSettings.ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary"
-            }
-         };
+         return OnEnumerateUpgrades();
       }
 
-      private sealed class VersionUpgrade
+      protected virtual IEnumerable<PreferenceUpgrade> OnEnumerateUpgrades()
+      {
+         yield break;
+      }
+
+      protected class PreferenceUpgrade
       {
          public Version Version { get; set; }
 
@@ -156,6 +131,7 @@ namespace HFM.Preferences
 
          prefs.AddReadOnly(Preference.ApplicationPath, p => ApplicationPath);
          prefs.AddReadOnly(Preference.ApplicationDataFolderPath, p => ApplicationDataFolderPath);
+         prefs.AddReadOnly(Preference.ApplicationVersion, p => p.ApplicationVersion);
          prefs.AddReadOnly(Preference.CacheDirectory, p => Path.Combine(ApplicationDataFolderPath, p.ApplicationSettings.CacheFolder));
 
          prefs.Add(Preference.FormLocation, p => p.MainWindow.Location);
@@ -275,32 +251,30 @@ namespace HFM.Preferences
 
       private PreferenceData Read()
       {
-         string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
-         if (File.Exists(path))
+         var data = OnRead();
+         if (data != null)
          {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-               var serializer = new DataContractSerializer(typeof(PreferenceData));
-               var data = (PreferenceData)serializer.ReadObject(fileStream);
-               // validate interval properties
-               data.ClientRetrievalTask.Interval = Validation.GetValidInterval(data.ClientRetrievalTask.Interval);
-               data.WebGenerationTask.Interval = Validation.GetValidInterval(data.WebGenerationTask.Interval);
-               data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(data.ApplicationSettings.MessageLevel);
-               return data;
-            }
+            // validate interval properties
+            data.ClientRetrievalTask.Interval = Validation.GetValidInterval(data.ClientRetrievalTask.Interval);
+            data.WebGenerationTask.Interval = Validation.GetValidInterval(data.WebGenerationTask.Interval);
+            data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(data.ApplicationSettings.MessageLevel);
          }
+         return data;
+      }
+
+      protected virtual PreferenceData OnRead()
+      {
          return null;
       }
 
-      private void Write(PreferenceData data)
+      protected void Write(PreferenceData data)
       {
-         string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
-         using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-         using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
-         {
-            var serializer = new DataContractSerializer(typeof(PreferenceData));
-            serializer.WriteObject(xmlWriter, data);
-         }
+         OnWrite(data);
+      }
+
+      protected virtual void OnWrite(PreferenceData data)
+      {
+         // do nothing
       }
 
       [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -391,7 +365,7 @@ namespace HFM.Preferences
 
       public event EventHandler<PreferenceChangedEventArgs> PreferenceChanged;
 
-      private void OnPreferenceChanged(Preference preference)
+      protected virtual void OnPreferenceChanged(Preference preference)
       {
          var handler = PreferenceChanged;
          if (handler != null)
@@ -399,8 +373,6 @@ namespace HFM.Preferences
             handler(this, new PreferenceChangedEventArgs(preference));
          }
       }
-
-      #endregion
 
       private sealed class PreferenceDictionary
       {
@@ -436,6 +408,76 @@ namespace HFM.Preferences
          public IMetadata this[Preference key]
          {
             get { return _inner[key]; }
+         }
+      }
+   }
+
+   public class PreferenceSet : PreferenceSetBase
+   {
+      public PreferenceSet(string applicationPath, string applicationDataFolderPath, string applicationVersion) 
+         : base(applicationPath, applicationDataFolderPath, applicationVersion)
+      {
+
+      }
+
+      protected override PreferenceData OnMigrateFromUserSettings()
+      {
+         try
+         {
+            var data = MigrateFromUserSettings.Execute();
+            if (data != null)
+            {
+               Write(data);
+            }
+            return data;
+         }
+         catch (Exception)
+         {
+            return null;
+         }
+      }
+
+      protected override IEnumerable<PreferenceUpgrade> OnEnumerateUpgrades()
+      {
+         yield return new PreferenceUpgrade
+         {
+            Version = new Version(0, 9, 5),
+            Action = data => data.ApplicationSettings.ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary"
+         };
+      }
+
+      protected override PreferenceData OnRead()
+      {
+         string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
+         if (File.Exists(path))
+         {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+               var serializer = new DataContractSerializer(typeof(PreferenceData));
+               var data = (PreferenceData)serializer.ReadObject(fileStream);
+               return data;
+            }
+         }
+         return null;
+      }
+
+      private void EnsureApplicationDataFolderExists()
+      {
+         if (!Directory.Exists(ApplicationDataFolderPath))
+         {
+            Directory.CreateDirectory(ApplicationDataFolderPath);
+         }
+      }
+
+      protected override void OnWrite(PreferenceData data)
+      {
+         EnsureApplicationDataFolderExists();
+         string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
+         using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+         using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
+         {
+            var serializer = new DataContractSerializer(typeof(PreferenceData));
+            serializer.WriteObject(xmlWriter, data);
          }
       }
    }
