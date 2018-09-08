@@ -76,7 +76,7 @@ namespace HFM.Preferences.Data
             //Username = null,
             //Password = null
          };
-         //FtpMode = default(FtpMode);
+         FtpMode = "Passive";
          CopyHtml = true;
          //CopyXml = false;
          CopyLog = true;
@@ -316,7 +316,7 @@ namespace HFM.Preferences.Data
       {
          //TimeFormatting = default(TimeFormatting);
          OfflineClientsLast = true;
-         //CompletedCountDisplay = default(CompletedCountDisplayType);
+         //UnitTotals = default(UnitTotalsType);
          //DisplayVersions = false;
          //DisplayEtaAsDate = false;
       }
@@ -373,7 +373,7 @@ namespace HFM.Preferences.Data
    {
       public HistoryWindowProperties()
       {
-         //BonusCalculation = default(BonusCalculationType);
+         BonusCalculation = "DownloadTime";
          MaximumResults = 1000;
       }
 

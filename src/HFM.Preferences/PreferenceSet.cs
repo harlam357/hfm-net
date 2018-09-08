@@ -281,16 +281,12 @@ namespace HFM.Preferences
       public T Get<T>(Preference key)
       {
          var metadata = _prefs[key];
-         if (metadata.Data == null)
+         if (typeof(T) == metadata.DataType)
          {
-            if (metadata.DataType == typeof(string))
+            if (metadata.Data == null && metadata.DataType == typeof(string))
             {
                return (T)(object)String.Empty;
             }
-            return (T)metadata.Data;
-         }
-         if (metadata.DataType == typeof(T))
-         {
             return ((IMetadata<T>)metadata).Data.Copy();
          }
          if (typeof(T).IsAssignableFrom(metadata.DataType))

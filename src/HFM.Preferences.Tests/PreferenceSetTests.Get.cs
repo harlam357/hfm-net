@@ -37,6 +37,19 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void PreferenceSet_Get_NullStringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
+      {
+         // Arrange
+         var data = new PreferenceData();
+         data.WebDeployment.FtpMode = null;
+         var prefs = new InMemoryPreferenceSet(data);
+         // Act
+         var value = prefs.Get<FtpMode>(Preference.WebGenFtpMode);
+         // Assert
+         Assert.AreEqual(FtpMode.Default, value);
+      }
+
+      [Test]
       public void PreferenceSet_Get_StringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
       {
          // Arrange

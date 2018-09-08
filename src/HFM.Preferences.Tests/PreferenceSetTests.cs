@@ -154,6 +154,12 @@ namespace HFM.Preferences
          }
       }
 
+      private enum FtpMode
+      {
+         Default,
+         Passive
+      }
+
       private enum BonusCalculation
       {
          Default,
