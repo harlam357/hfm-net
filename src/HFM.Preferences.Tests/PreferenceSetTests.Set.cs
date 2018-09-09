@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 using HFM.Preferences.Data;
@@ -9,6 +10,15 @@ namespace HFM.Preferences
 {
    public partial class PreferenceSetTests
    {
+      [Test]
+      public void PreferenceSet_Set_ThrowsOnDataTypeMismatch_Test()
+      {
+         // Arrange
+         var prefs = new InMemoryPreferenceSet();
+         // Act & Assert
+         Assert.Throws<ArgumentException>(() => prefs.Set(Preference.ClientRetrievalTask, String.Empty));
+      }
+
       [Test]
       public void PreferenceSet_Set_ValueType_Test()
       {

@@ -1,8 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Xml;
 
 using NUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace HFM.Preferences
             Assert.AreEqual(artifacts.Path, prefs.Get<string>(Preference.ApplicationDataFolderPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
-            string cacheDirectory = System.IO.Path.Combine(artifacts.Path, "logcache");
+            string cacheDirectory = Path.Combine(artifacts.Path, "logcache");
             Assert.AreEqual(cacheDirectory, prefs.Get<string>(Preference.CacheDirectory));
          }
       }
@@ -42,13 +43,13 @@ namespace HFM.Preferences
          using (var artifacts = new ArtifactFolder())
          {
             const string applicationVersion = "1.0.0.0";
-            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
             var prefs = Create(artifacts.Path, applicationVersion);
-            Assert.IsFalse(System.IO.File.Exists(configPath));
+            Assert.IsFalse(File.Exists(configPath));
             // Act
             prefs.Reset();
             // Assert
-            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
          }
@@ -61,13 +62,13 @@ namespace HFM.Preferences
          using (var artifacts = new ArtifactFolder())
          {
             const string applicationVersion = "1.0.0.0";
-            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
             var prefs = Create(artifacts.Path, applicationVersion);
-            Assert.IsFalse(System.IO.File.Exists(configPath));
+            Assert.IsFalse(File.Exists(configPath));
             // Act
             prefs.Load();
             // Assert
-            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
          }
@@ -80,13 +81,13 @@ namespace HFM.Preferences
          using (var artifacts = new ArtifactFolder())
          {
             const string applicationVersion = "1.0.0.0";
-            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
             var prefs = new TestMigrateFromUserSettingsPreferenceSet(artifacts.Path, applicationVersion);
-            Assert.IsFalse(System.IO.File.Exists(configPath));
+            Assert.IsFalse(File.Exists(configPath));
             // Act
             prefs.Load();
             // Assert
-            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
             Assert.AreEqual("Foo", prefs.Get<string>(Preference.StanfordId));
@@ -116,13 +117,13 @@ namespace HFM.Preferences
          using (var artifacts = new ArtifactFolder())
          {
             const string applicationVersion = "1.0.0.0";
-            string configPath = System.IO.Path.Combine(artifacts.Path, "config.xml");
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
             var prefs = new TestPreferenceUpgradePreferenceSet(artifacts.Path, applicationVersion);
-            Assert.IsFalse(System.IO.File.Exists(configPath));
+            Assert.IsFalse(File.Exists(configPath));
             // Act
             prefs.Load();
             // Assert
-            Assert.IsTrue(System.IO.File.Exists(configPath));
+            Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
             Assert.AreEqual("foo", prefs.Get<string>(Preference.CacheFolder));
@@ -152,6 +153,74 @@ namespace HFM.Preferences
                Action = data => { data.ApplicationSettings.CacheFolder = "foo"; }
             };
          }
+      }
+
+      [Test]
+      public void PreferenceSet_Load_FromConfigFile_Test()
+      {
+         // Arrange
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
+
+            // write a config.xml file
+            var data = new PreferenceData { ApplicationVersion = applicationVersion };
+            data.ApplicationSettings.CacheFolder = "foo";
+            using (var fileStream = new FileStream(Path.Combine(artifacts.Path, "config.xml"), FileMode.Create, FileAccess.Write))
+            using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
+            {
+               var serializer = new DataContractSerializer(typeof(PreferenceData));
+               serializer.WriteObject(xmlWriter, data);
+            }
+            
+            var prefs = Create(artifacts.Path, applicationVersion);
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.IsTrue(File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+            Assert.AreEqual("foo", prefs.Get<string>(Preference.CacheFolder));
+         }
+      }
+
+      [Test]
+      public void PreferenceSet_Save_Test()
+      {
+         // Arrange
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
+            var prefs = Create(artifacts.Path, applicationVersion);
+            Assert.IsFalse(File.Exists(configPath));
+            // Act
+            prefs.Save();
+            // Assert
+            Assert.IsTrue(File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+         }
+      }
+
+      [Test]
+      public void PreferenceSet_PreferenceChanged_Test()
+      {
+         // Arrange
+         var prefs = new InMemoryPreferenceSet();
+         object sender = null;
+         PreferenceChangedEventArgs args = null;
+         prefs.PreferenceChanged += (s, e) =>
+         {
+            sender = s;
+            args = e;
+         };
+         // Act
+         prefs.Set(Preference.ColorLogFile, false);
+         // Assert
+         Assert.AreSame(prefs, sender);
+         Assert.AreEqual(Preference.ColorLogFile, args.Preference);
       }
 
       private enum FtpMode

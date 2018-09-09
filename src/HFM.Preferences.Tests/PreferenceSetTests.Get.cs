@@ -37,6 +37,15 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void PreferenceSet_Get_ThrowsOnDataTypeMismatch_Test()
+      {
+         // Arrange
+         var prefs = new InMemoryPreferenceSet();
+         // Act & Assert
+         Assert.Throws<ArgumentException>(() => prefs.Get<int>(Preference.CacheFolder));
+      }
+
+      [Test]
       public void PreferenceSet_Get_NullStringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
       {
          // Arrange
