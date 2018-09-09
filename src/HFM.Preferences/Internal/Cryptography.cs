@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HFM.Preferences.Support
+namespace HFM.Preferences.Internal
 {
    internal static class Cryptography
    {
@@ -38,7 +38,7 @@ namespace HFM.Preferences.Support
          return result;
       }
 
-      internal static string DecryptInternal(string value)
+      private static string DecryptInternal(string value)
       {
          string plainText;
          using (var algorithm = CreateSymmetricAlgorithm())
@@ -81,7 +81,7 @@ namespace HFM.Preferences.Support
          return result;
       }
 
-      internal static string EncryptInternal(string value)
+      private static string EncryptInternal(string value)
       {
          byte[] encrypted;
          using (var algorithm = CreateSymmetricAlgorithm())

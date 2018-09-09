@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 
 using HFM.Preferences.Properties;
-using HFM.Preferences.Support;
 
 namespace HFM.Preferences.Data
 {

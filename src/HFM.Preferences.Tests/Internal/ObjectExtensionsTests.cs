@@ -5,9 +5,8 @@ using System.Diagnostics;
 using NUnit.Framework;
 
 using HFM.Preferences.Data;
-using HFM.Preferences.Support;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Internal
 {
    [TestFixture]
    public class ObjectExtensionsTests

@@ -27,7 +27,7 @@ using System.Linq.Expressions;
 
 using HFM.Preferences.Data;
 
-namespace HFM.Preferences.Support
+namespace HFM.Preferences.Internal
 {
    internal interface IMetadata
    {

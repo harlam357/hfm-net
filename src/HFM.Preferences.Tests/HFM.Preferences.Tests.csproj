@@ -48,10 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -59,8 +56,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ArtifactFolder.cs" />
-    <Compile Include="CryptographyTests.cs" />
-    <Compile Include="ObjectExtensionsTests.cs" />
+    <Compile Include="Internal\CryptographyTests.cs" />
+    <Compile Include="Internal\ObjectExtensionsTests.cs" />
     <Compile Include="PreferenceSetTests.cs" />
     <Compile Include="PreferenceSetTests.Get.cs" />
     <Compile Include="PreferenceSetTests.Set.cs" />

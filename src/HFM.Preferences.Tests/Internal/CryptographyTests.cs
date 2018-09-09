@@ -3,7 +3,7 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Preferences
+namespace HFM.Preferences.Internal
 {
    [TestFixture]
    public class CryptographyTests
@@ -14,7 +14,7 @@ namespace HFM.Preferences
          // Arrange
          string plainText = null;
          // Act
-         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         string encryptedText = Cryptography.EncryptValue(plainText);
          // Assert
          Assert.AreEqual(String.Empty, encryptedText);
       }
@@ -25,7 +25,7 @@ namespace HFM.Preferences
          // Arrange
          string plainText = String.Empty;
          // Act
-         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         string encryptedText = Cryptography.EncryptValue(plainText);
          // Assert
          Assert.AreEqual(String.Empty, encryptedText);
       }
@@ -36,7 +36,7 @@ namespace HFM.Preferences
          // Arrange
          string plainText = "   ";
          // Act
-         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         string encryptedText = Cryptography.EncryptValue(plainText);
          // Assert
          Assert.AreEqual(String.Empty, encryptedText);
       }
@@ -47,7 +47,7 @@ namespace HFM.Preferences
          // Arrange
          string plainText = "fizzbizz";
          // Act
-         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         string encryptedText = Cryptography.EncryptValue(plainText);
          // Assert
          Assert.AreEqual("8YsqRpczouPuCPApFum1YQ==", encryptedText);
       }
@@ -58,7 +58,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = null;
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual(String.Empty, plainText);
       }
@@ -69,7 +69,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = String.Empty;
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual(String.Empty, plainText);
       }
@@ -80,7 +80,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = "   ";
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual(String.Empty, plainText);
       }
@@ -91,7 +91,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = "8YsqRpczouPuCPApFum1YQ==";
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual("fizzbizz", plainText);
       }
@@ -102,7 +102,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = "*notbase64encoded*";
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual("*notbase64encoded*", plainText);
       }
@@ -113,7 +113,7 @@ namespace HFM.Preferences
          // Arrange
          string encryptedText = "notencrypted";
          // Act
-         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         string plainText = Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual("notencrypted", plainText);
       }

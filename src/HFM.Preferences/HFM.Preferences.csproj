@@ -79,13 +79,13 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Support\Cryptography.cs" />
+    <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Enumerations.cs" />
-    <Compile Include="Support\ExpressionExtensions.cs" />
+    <Compile Include="Internal\ExpressionExtensions.cs" />
     <Compile Include="IPreferenceSet.cs" />
-    <Compile Include="Support\Metadata.cs" />
+    <Compile Include="Internal\Metadata.cs" />
     <Compile Include="Data\MigrateFromUserSettings.cs" />
-    <Compile Include="Support\ObjectExtensions.cs" />
+    <Compile Include="Internal\ObjectExtensions.cs" />
     <Compile Include="Data\PreferenceData.cs" />
     <Compile Include="PreferenceSet.cs" />
     <Compile Include="Data\PreferenceTasks.cs" />
@@ -95,7 +95,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Support\TypeExtensions.cs" />
+    <Compile Include="Internal\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357public.snk">
