@@ -52,7 +52,7 @@ namespace HFM.Forms.Models
          var clientRetrievalTask = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
          SyncTimeMinutes = clientRetrievalTask.Interval;
          SyncOnSchedule = clientRetrievalTask.Enabled;
-         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial;
+         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
          AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
 
          var webGenerationTask = prefs.Get<WebGenerationTask>(Preference.WebGenerationTask);
@@ -80,7 +80,7 @@ namespace HFM.Forms.Models
          {
             Enabled = SyncOnSchedule,
             Interval = SyncTimeMinutes,
-            ProcessingMode = SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel
+            ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
          };
          prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
          prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);

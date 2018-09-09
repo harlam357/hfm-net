@@ -80,7 +80,6 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Internal\Cryptography.cs" />
-    <Compile Include="Enumerations.cs" />
     <Compile Include="Internal\ExpressionExtensions.cs" />
     <Compile Include="IPreferenceSet.cs" />
     <Compile Include="Internal\Metadata.cs" />

@@ -16,7 +16,7 @@ namespace HFM.Preferences.Data
          //AutoSaveConfig = false;
          DecimalPlaces = 1;
          PpdCalculation = "LastThreeFrames";
-         BonusCalculation = "DownloadTime";
+         //BonusCalculation = null;
          LogFileViewer = "notepad.exe";
          FileExplorer = "explorer.exe";
          ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary";
@@ -67,7 +67,7 @@ namespace HFM.Preferences.Data
    {
       public WebDeployment()
       {
-         //DeploymentType = default(WebDeploymentType);
+         //DeploymentType = null;
          //DeploymentRoot = null;
          FtpServer = new ConnectionProperties
          {
@@ -76,7 +76,7 @@ namespace HFM.Preferences.Data
             //Username = null,
             //Password = null
          };
-         FtpMode = "Passive";
+         //FtpMode = null;
          CopyHtml = true;
          //CopyXml = false;
          CopyLog = true;
@@ -85,7 +85,7 @@ namespace HFM.Preferences.Data
       }
 
       [DataMember]
-      public WebDeploymentType DeploymentType { get; set; }
+      public string DeploymentType { get; set; }
 
       [DataMember]
       public string DeploymentRoot { get; set; }
@@ -294,19 +294,19 @@ namespace HFM.Preferences.Data
    {
       public MainWindowProperties()
       {
-         MinimizeTo = MinimizeToOption.SystemTray;
+         //MinimizeTo = null;
          EnableStats = true;
-         //StatsType = default(StatsType);
+         //StatsType = null;
       }
 
       [DataMember]
-      public MinimizeToOption MinimizeTo { get; set; }
+      public string MinimizeTo { get; set; }
 
       [DataMember]
       public bool EnableStats { get; set; }
 
       [DataMember]
-      public StatsType StatsType { get; set; }
+      public string StatsType { get; set; }
    }
 
    [DataContract(Namespace = "")]
@@ -314,21 +314,21 @@ namespace HFM.Preferences.Data
    {
       public MainWindowGridProperties()
       {
-         //TimeFormatting = default(TimeFormatting);
+         //TimeFormatting = null;
          OfflineClientsLast = true;
-         //UnitTotals = default(UnitTotalsType);
+         //UnitTotals = null;
          //DisplayVersions = false;
          //DisplayEtaAsDate = false;
       }
 
       [DataMember]
-      public TimeFormatting TimeFormatting { get; set; }
+      public string TimeFormatting { get; set; }
 
       [DataMember]
       public bool OfflineClientsLast { get; set; }
 
       [DataMember]
-      public UnitTotalsType UnitTotals { get; set; }
+      public string UnitTotals { get; set; }
 
       [DataMember]
       public bool DisplayVersions { get; set; }
@@ -342,7 +342,7 @@ namespace HFM.Preferences.Data
    {
       public BenchmarksGraphing()
       {
-         //GraphLayout = default(GraphLayoutType);
+         //GraphLayout = null;
          ClientsPerGraph = 5;
          GraphColors = new List<Color>
          {
@@ -359,7 +359,7 @@ namespace HFM.Preferences.Data
       }
 
       [DataMember]
-      public GraphLayoutType GraphLayout { get; set; }
+      public string GraphLayout { get; set; }
 
       [DataMember]
       public int ClientsPerGraph { get; set; }
@@ -373,7 +373,7 @@ namespace HFM.Preferences.Data
    {
       public HistoryWindowProperties()
       {
-         BonusCalculation = "DownloadTime";
+         //BonusCalculation = null;
          MaximumResults = 1000;
       }
 

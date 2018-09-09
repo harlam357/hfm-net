@@ -40,7 +40,7 @@ namespace HFM.Preferences.Data
          data.MainWindowState.QueueWindowVisible = Settings.Default.QueueViewerVisible;
          data.MainWindowProperties.MinimizeTo = GetFormShowStyle();
          data.MainWindowProperties.EnableStats = Settings.Default.ShowUserStats;
-         data.MainWindowProperties.StatsType = Settings.Default.ShowTeamStats ? StatsType.Team : StatsType.User;
+         data.MainWindowProperties.StatsType = Settings.Default.ShowTeamStats ? "Team" : null;
          data.MainWindowGridProperties.TimeFormatting = GetTimeStyle();
          data.MainWindowGridProperties.UnitTotals = GetCompletedCountDisplay();
          data.MainWindowGridProperties.DisplayVersions = Settings.Default.ShowVersions;
@@ -107,7 +107,7 @@ namespace HFM.Preferences.Data
 
          data.ClientRetrievalTask.Enabled = Settings.Default.SyncOnSchedule;
          data.ClientRetrievalTask.Interval = ToInt32(Settings.Default.SyncTimeMinutes);
-         data.ClientRetrievalTask.ProcessingMode = Settings.Default.SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel;
+         data.ClientRetrievalTask.ProcessingMode = Settings.Default.SyncOnLoad ? "Serial" : null;
 
          data.Email.Enabled = Settings.Default.EmailReportingEnabled;
          data.Email.SecureConnection = Settings.Default.EmailReportingServerSecure;
@@ -182,44 +182,37 @@ namespace HFM.Preferences.Data
          return order;
       }
 
-      private static TimeFormatting GetTimeStyle()
+      private static string GetTimeStyle()
       {
          switch (Settings.Default.TimeStyle)
          {
-            case "Standard":
-               return TimeFormatting.None;
             case "Formatted":
-               return TimeFormatting.Format1;
+               return "Format1";
             default:
-               return TimeFormatting.None;
+               return null;
          }
       }
 
-      private static UnitTotalsType GetCompletedCountDisplay()
+      private static string GetCompletedCountDisplay()
       {
          switch (Settings.Default.CompletedCountDisplay)
          {
-            case "ClientTotal":
-               return UnitTotalsType.All;
             case "ClientRunTotal":
-               return UnitTotalsType.ClientStart;
+               return "ClientStart";
             default:
-               return UnitTotalsType.ClientStart;
+               return null;
          }
       }
 
-      private static MinimizeToOption GetFormShowStyle()
+      private static string GetFormShowStyle()
       {
          switch (Settings.Default.FormShowStyle)
          {
-            case "SystemTray":
-               return MinimizeToOption.SystemTray;
             case "TaskBar":
-               return MinimizeToOption.TaskBar;
             case "Both":
-               return MinimizeToOption.Both;
+               return Settings.Default.FormShowStyle;
             default:
-               return MinimizeToOption.SystemTray;
+               return null;
          }
       }
 
@@ -249,29 +242,25 @@ namespace HFM.Preferences.Data
          return graphColors;
       }
 
-      private static GraphLayoutType GetBenchmarksGraphLayoutType()
+      private static string GetBenchmarksGraphLayoutType()
       {
          switch (Settings.Default.BenchmarksGraphLayoutType)
          {
-            case "Single":
-               return GraphLayoutType.Single;
             case "ClientsPerGraph":
-               return GraphLayoutType.ClientsPerGraph;
+               return Settings.Default.BenchmarksGraphLayoutType;
             default:
-               return GraphLayoutType.Single;
+               return null;
          }
       }
 
-      private static WebDeploymentType GetWebGenType()
+      private static string GetWebGenType()
       {
          switch (Settings.Default.WebGenType)
          {
-            case "Path":
-               return WebDeploymentType.Path;
             case "Ftp":
-               return WebDeploymentType.Ftp;
+               return Settings.Default.WebGenType;
             default:
-               return WebDeploymentType.Path;
+               return null;
          }
       }
 
@@ -290,11 +279,10 @@ namespace HFM.Preferences.Data
       {
          switch (Settings.Default.WebGenFtpMode)
          {
-            case "Passive":
             case "Active":
                return Settings.Default.WebGenFtpMode;
             default:
-               return "Passive";
+               return null;
          }
       }
 
@@ -316,12 +304,11 @@ namespace HFM.Preferences.Data
       {
          switch (Settings.Default.CalculateBonus)
          {
-            case "DownloadTime":
             case "FrameTime":
             case "None":
                return Settings.Default.CalculateBonus;
             default:
-               return "DownloadTime";
+               return null;
          }
       }
 
@@ -329,14 +316,12 @@ namespace HFM.Preferences.Data
       {
          switch (Settings.Default.HistoryProductionView)
          {
-            case 0:
-               return "DownloadTime";
             case 1:
                return "FrameTime";
             case 2:
                return "None";
             default:
-               return "DownloadTime";
+               return null;
          }
       }
 

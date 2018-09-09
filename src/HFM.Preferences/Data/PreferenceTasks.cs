@@ -11,7 +11,7 @@ namespace HFM.Preferences.Data
       {
          Enabled = true;
          Interval = 15;
-         //ProcessingMode = default(ProcessingMode);
+         //ProcessingMode = null;
       }
 
       public ClientRetrievalTask(ClientRetrievalTask other)
@@ -28,7 +28,7 @@ namespace HFM.Preferences.Data
       public int Interval { get; set; }
 
       [DataMember]
-      public ProcessingMode ProcessingMode { get; set; }
+      public string ProcessingMode { get; set; }
 
       public bool Equals(ClientRetrievalTask other)
       {
@@ -40,7 +40,7 @@ namespace HFM.Preferences.Data
          {
             return true;
          }
-         return Enabled.Equals(other.Enabled) && Interval == other.Interval && ProcessingMode == other.ProcessingMode;
+         return Enabled == other.Enabled && Interval == other.Interval && String.Equals(ProcessingMode, other.ProcessingMode);
       }
 
       public override bool Equals(object obj)
@@ -66,7 +66,7 @@ namespace HFM.Preferences.Data
          {
             int hashCode = Enabled.GetHashCode();
             hashCode = (hashCode * 397) ^ Interval;
-            hashCode = (hashCode * 397) ^ (int)ProcessingMode;
+            hashCode = (hashCode * 397) ^ (ProcessingMode != null ? ProcessingMode.GetHashCode() : 0);
             return hashCode;
          }
       }
