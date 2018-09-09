@@ -249,10 +249,9 @@ namespace HFM.Preferences.Data
    {
       public UserSettings()
       {
-         // TODO: Remove these defaults
-         TeamId = 32;
-         EocUserId = 136552;
-         StanfordId = "harlam357";
+         //TeamId = 0;
+         EocUserId = 260692;
+         StanfordId = "anonymous";
       }
 
       [DataMember]
