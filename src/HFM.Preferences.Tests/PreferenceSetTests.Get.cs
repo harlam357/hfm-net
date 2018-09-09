@@ -75,7 +75,9 @@ namespace HFM.Preferences
       public void PreferenceSet_Get_StringAsEnum_Test()
       {
          // Arrange
-         var prefs = new InMemoryPreferenceSet();
+         var data = new PreferenceData();
+         data.ApplicationSettings.BonusCalculation = "DownloadTime";
+         var prefs = new InMemoryPreferenceSet(data);
          // Act
          var value = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
          // Assert
