@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 using NUnit.Framework;
 
 namespace HFM.Preferences
@@ -6,6 +8,39 @@ namespace HFM.Preferences
    [TestFixture]
    public class CryptographyTests
    {
+      [Test]
+      public void Cryptography_EncryptValue_NullString_Test()
+      {
+         // Arrange
+         string plainText = null;
+         // Act
+         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         // Assert
+         Assert.AreEqual(String.Empty, encryptedText);
+      }
+
+      [Test]
+      public void Cryptography_EncryptValue_EmptyString_Test()
+      {
+         // Arrange
+         string plainText = String.Empty;
+         // Act
+         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         // Assert
+         Assert.AreEqual(String.Empty, encryptedText);
+      }
+
+      [Test]
+      public void Cryptography_EncryptValue_WhiteSpaceString_Test()
+      {
+         // Arrange
+         string plainText = "   ";
+         // Act
+         string encryptedText = Support.Cryptography.EncryptValue(plainText);
+         // Assert
+         Assert.AreEqual(String.Empty, encryptedText);
+      }
+
       [Test]
       public void Cryptography_EncryptValue_Test()
       {
@@ -18,6 +53,39 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void Cryptography_DecryptValue_NullString_Test()
+      {
+         // Arrange
+         string encryptedText = null;
+         // Act
+         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         // Assert
+         Assert.AreEqual(String.Empty, plainText);
+      }
+
+      [Test]
+      public void Cryptography_DecryptValue_EmptyString_Test()
+      {
+         // Arrange
+         string encryptedText = String.Empty;
+         // Act
+         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         // Assert
+         Assert.AreEqual(String.Empty, plainText);
+      }
+
+      [Test]
+      public void Cryptography_DecryptValue_WhiteSpaceString_Test()
+      {
+         // Arrange
+         string encryptedText = "   ";
+         // Act
+         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         // Assert
+         Assert.AreEqual(String.Empty, plainText);
+      }
+
+      [Test]
       public void Cryptography_DecryptValue_Test()
       {
          // Arrange
@@ -26,6 +94,17 @@ namespace HFM.Preferences
          string plainText = Support.Cryptography.DecryptValue(encryptedText);
          // Assert
          Assert.AreEqual("fizzbizz", plainText);
+      }
+
+      [Test]
+      public void Cryptography_DecryptValue_ThatIsNotBase64Encoded_Test()
+      {
+         // Arrange
+         string encryptedText = "*notbase64encoded*";
+         // Act
+         string plainText = Support.Cryptography.DecryptValue(encryptedText);
+         // Assert
+         Assert.AreEqual("*notbase64encoded*", plainText);
       }
 
       [Test]

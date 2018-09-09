@@ -64,7 +64,7 @@ namespace HFM.Preferences.Data
          data.MessagesWindow.Size = size;
 
          data.WebGenerationTask.Enabled = Settings.Default.GenerateWeb;
-         data.WebGenerationTask.Interval = Validation.GetValidInterval(Settings.Default.GenerateInterval);
+         data.WebGenerationTask.Interval = ToInt32(Settings.Default.GenerateInterval);
          data.WebGenerationTask.AfterClientRetrieval = Settings.Default.WebGenAfterRefresh;
          data.WebDeployment.DeploymentType = GetWebGenType();
          data.WebDeployment.DeploymentRoot = Settings.Default.WebRoot;
@@ -96,7 +96,7 @@ namespace HFM.Preferences.Data
          data.ApplicationSettings.CacheFolder = Settings.Default.CacheFolder;
          data.ApplicationSettings.AutoSaveConfig = Settings.Default.AutoSaveConfig;
          data.ApplicationSettings.DecimalPlaces = Settings.Default.DecimalPlaces;
-         data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(Settings.Default.MessageLevel);
+         data.ApplicationSettings.MessageLevel = Settings.Default.MessageLevel;
          data.ApplicationSettings.ProjectDownloadUrl = Settings.Default.ProjectDownloadUrl;
          data.ApplicationSettings.PpdCalculation = GetPpdCalculation();
          data.ApplicationSettings.BonusCalculation = GetBonusCalculation();
@@ -107,7 +107,7 @@ namespace HFM.Preferences.Data
          data.ApplicationSettings.DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
 
          data.ClientRetrievalTask.Enabled = Settings.Default.SyncOnSchedule;
-         data.ClientRetrievalTask.Interval = Validation.GetValidInterval(Settings.Default.SyncTimeMinutes);
+         data.ClientRetrievalTask.Interval = ToInt32(Settings.Default.SyncTimeMinutes);
          data.ClientRetrievalTask.ProcessingMode = Settings.Default.SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel;
 
          data.Email.Enabled = Settings.Default.EmailReportingEnabled;
@@ -146,6 +146,16 @@ namespace HFM.Preferences.Data
          data.HistoryWindowProperties.MaximumResults = Settings.Default.ShowEntriesValue;
 
          return data;
+      }
+
+      private static int ToInt32(string value)
+      {
+         int result;
+         if (Int32.TryParse(value, out result))
+         {
+            return result;
+         }
+         return 0;
       }
 
       private static void GetFormStateValues(ref Point location, ref Size size, ref List<string> columns)

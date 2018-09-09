@@ -251,15 +251,7 @@ namespace HFM.Preferences
 
       private PreferenceData Read()
       {
-         var data = OnRead();
-         if (data != null)
-         {
-            // validate interval properties
-            data.ClientRetrievalTask.Interval = Validation.GetValidInterval(data.ClientRetrievalTask.Interval);
-            data.WebGenerationTask.Interval = Validation.GetValidInterval(data.WebGenerationTask.Interval);
-            data.ApplicationSettings.MessageLevel = Validation.GetValidMessageLevel(data.ApplicationSettings.MessageLevel);
-         }
-         return data;
+         return OnRead();
       }
 
       protected virtual PreferenceData OnRead()

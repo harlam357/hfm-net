@@ -199,6 +199,7 @@ namespace HFM
             else
             {
                prefs.Load();
+               ValidatePreferences(prefs);
             }
          }
          catch (Exception ex)
@@ -209,6 +210,37 @@ namespace HFM
          // set logging level from prefs
          ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          return true;
+      }
+
+      private static void ValidatePreferences(IPreferenceSet prefs)
+      {
+         // MessageLevel
+         int level = prefs.Get<int>(Preference.MessageLevel);
+         if (level < 4)
+         {
+            level = 4;
+         }
+         else if (level > 5)
+         {
+            level = 5;
+         }
+         prefs.Set(Preference.MessageLevel, level);
+
+         const int defaultInterval = 15;
+         // ClientRetrievalTask.Interval
+         var clientRetrievalTask = prefs.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
+         if (!Validate.Minutes(clientRetrievalTask.Interval))
+         {
+            clientRetrievalTask.Interval = defaultInterval;
+            prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
+         }
+         // WebGenerationTask.Interval
+         var webGenerationTask = prefs.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
+         if (!Validate.Minutes(webGenerationTask.Interval))
+         {
+            webGenerationTask.Interval = defaultInterval;
+            prefs.Set(Preference.WebGenerationTask, webGenerationTask);
+         }
       }
 
       private static bool ClearCacheFolder(string cacheDirectory, ILogger logger)

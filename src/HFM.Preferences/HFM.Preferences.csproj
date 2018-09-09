@@ -79,9 +79,6 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Core\Utilities\Validate.Minutes.cs">
-      <Link>Support\Validate.Minutes.cs</Link>
-    </Compile>
     <Compile Include="Support\Cryptography.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Support\ExpressionExtensions.cs" />
@@ -99,7 +96,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Support\TypeExtensions.cs" />
-    <Compile Include="Support\Validation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357public.snk">
