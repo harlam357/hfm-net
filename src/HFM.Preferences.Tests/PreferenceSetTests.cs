@@ -126,7 +126,7 @@ namespace HFM.Preferences
             Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
-            Assert.AreEqual("foo", prefs.Get<string>(Preference.CacheFolder));
+            Assert.AreEqual("http://assign.stanford.edu/api/project/summary", prefs.Get<string>(Preference.ProjectDownloadUrl));
          }
       }
 
@@ -142,16 +142,8 @@ namespace HFM.Preferences
          {
             var data = new PreferenceData();
             data.ApplicationVersion = "0.0.0.0";
+            data.ApplicationSettings.ProjectDownloadUrl = String.Empty;
             return data;
-         }
-
-         protected override IEnumerable<PreferenceUpgrade> OnEnumerateUpgrades()
-         {
-            yield return new PreferenceUpgrade
-            {
-               Version = new Version(0, 1, 0),
-               Action = data => { data.ApplicationSettings.CacheFolder = "foo"; }
-            };
          }
       }
 
@@ -205,6 +197,20 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void PreferenceSet_RoundTripEncryptedPreference_Test()
+      {
+         // Arrange
+         const string value = "fizzbizz";
+         var data = new PreferenceData();
+         var prefs = new InMemoryPreferenceSet(data);
+         // Act
+         prefs.Set(Preference.WebGenPassword, value);
+         // Assert
+         Assert.AreNotEqual(value, data.WebDeployment.FtpServer.Password);
+         Assert.AreEqual(value, prefs.Get<string>(Preference.WebGenPassword));
+      }
+
+      [Test]
       public void PreferenceSet_PreferenceChanged_Test()
       {
          // Arrange
@@ -252,8 +258,7 @@ namespace HFM.Preferences
 
       private static PreferenceSet Create(string applicationDataFolderPath, string applicationVersion)
       {
-         var path = Environment.CurrentDirectory;
-         return new PreferenceSet(path, applicationDataFolderPath, applicationVersion);
+         return new PreferenceSet(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion);
       }
    }
 }

@@ -20,6 +20,15 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void PreferenceSet_Set_ThrowsOnReadOnlyPreference_Test()
+      {
+         // Arrange
+         var prefs = new InMemoryPreferenceSet();
+         // Act & Assert
+         Assert.Throws<InvalidOperationException>(() => prefs.Set(Preference.ApplicationPath, String.Empty));
+      }
+
+      [Test]
       public void PreferenceSet_Set_ValueType_Test()
       {
          var data = new PreferenceData();
