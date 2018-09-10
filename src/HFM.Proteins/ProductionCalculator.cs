@@ -244,26 +244,5 @@ namespace HFM.Proteins
       public double FrameTimeBonusCredit { get; set; }
 
       public double FrameTimeBonusPPD { get; set; }
-
-      public string ToMultiLineString()
-      {
-         var sb = new StringBuilder();
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}{1}", BaseCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}{1}", BasePPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}{1}", PreferredTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}{1}", MaximumTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}{1}", KFactor, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Download Time - + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", UnitTimeByDownloadTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", DownloadTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", DownloadTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", DownloadTimeBonusPPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", UnitTimeByFrameTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", FrameTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", FrameTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", FrameTimeBonusPPD, Environment.NewLine);
-         return sb.ToString();
-      }
    }
 }

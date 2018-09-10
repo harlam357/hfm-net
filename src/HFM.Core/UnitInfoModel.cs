@@ -18,6 +18,8 @@
  */
 
 using System;
+using System.Globalization;
+using System.Text;
 
 using Castle.Core.Logging;
 
@@ -490,7 +492,28 @@ namespace HFM.Core
          TimeSpan frameTime = GetFrameTime(calculationType);
          var values = ProductionCalculator.GetProductionValues(frameTime, CurrentProtein, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime));
          logger.DebugFormat(" - {0}", UnitInfoData.ToProjectString());
-         logger.Debug(values.ToMultiLineString());
+         logger.Debug(ToMultiLineString(values));
+      }
+
+      private string ToMultiLineString(ProductionValues values)
+      {
+         var sb = new StringBuilder();
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}{1}", values.BaseCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}{1}", values.BasePPD, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}{1}", values.PreferredTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}{1}", values.MaximumTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}{1}", values.KFactor, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Download Time - + {0}{1}", String.Empty, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", values.UnitTimeByDownloadTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", values.DownloadTimeBonusMulti, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", values.DownloadTimeBonusCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", values.DownloadTimeBonusPPD, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}{1}", String.Empty, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", values.UnitTimeByFrameTime, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", values.FrameTimeBonusMulti, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", values.FrameTimeBonusCredit, Environment.NewLine);
+         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", values.FrameTimeBonusPPD, Environment.NewLine);
+         return sb.ToString();
       }
 
       #endregion
