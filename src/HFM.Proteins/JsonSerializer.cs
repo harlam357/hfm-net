@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
 
@@ -27,20 +28,34 @@ namespace HFM.Proteins
 {
    public class JsonSerializer : IProteinSerializer
    {
-      public List<Protein> Deserialize(Stream stream)
+      public ICollection<Protein> Deserialize(Stream stream)
+      {
+         string json;
+         using (var reader = new StreamReader(stream))
+         {
+            json = reader.ReadToEnd();
+         }
+         return DeserializeInternal(json);
+      }
+
+      public async Task<ICollection<Protein>> DeserializeAsync(Stream stream)
+      {
+         string json;
+         using (var reader = new StreamReader(stream))
+         {
+            json = await reader.ReadToEndAsync().ConfigureAwait(false);
+         }
+         return DeserializeInternal(json);
+      }
+
+      private ICollection<Protein> DeserializeInternal(string json)
       {
          const double secondsToDays = 86400.0;
 
-         string text;
-         using (var reader = new StreamReader(stream))
+         var collection = new List<Protein>();
+         if (json.Length > 0)
          {
-            text = reader.ReadToEnd();
-         }
-
-         var proteins = new List<Protein>();
-         if (text.Length > 0)
-         {
-            foreach (var token in JArray.Parse(text))
+            foreach (var token in JArray.Parse(json))
             {
                if (!token.HasValues)
                {
@@ -57,14 +72,13 @@ namespace HFM.Proteins
                p.Credit = GetTokenValue<double>(token, "credit");
                p.Frames = 100;
                p.Core = GetTokenValue<string>(token, "type");
-               p.Description = @"http://fah-web.stanford.edu/cgi-bin/fahproject.overusingIPswillbebanned?p=" + p.ProjectNumber;
+               p.Description = @"https://apps.foldingathome.org/project.py?p=" + p.ProjectNumber;
                p.Contact = GetTokenValue<string>(token, "contact");
                p.KFactor = GetTokenValue<double>(token, "bonus");
-               proteins.Add(p);
+               collection.Add(p);
             }
          }
-
-         return proteins;
+         return collection;
       }
 
       private static T GetTokenValue<T>(JToken token, string path)
@@ -76,7 +90,12 @@ namespace HFM.Proteins
          return default(T);
       }
 
-      void IProteinSerializer.Serialize(Stream stream, List<Protein> value)
+      void IProteinSerializer.Serialize(Stream stream, ICollection<Protein> collection)
+      {
+         throw new NotSupportedException("JSON serialization is not supported.");
+      }
+
+      Task IProteinSerializer.SerializeAsync(Stream stream, ICollection<Protein> collection)
       {
          throw new NotSupportedException("JSON serialization is not supported.");
       }

@@ -33,28 +33,14 @@ namespace HFM.Proteins
 
    public sealed class ProteinLoadInfo
    {
-      private readonly int _projectNumber;
       /// <summary>
       /// Project Number
       /// </summary>
-      public int ProjectNumber
-      {
-         get { return _projectNumber; }
-      }
+      public int ProjectNumber { get; private set; }
 
-      private readonly ProteinLoadResult _result;
+      public ProteinLoadResult Result { get; private set; }
 
-      public ProteinLoadResult Result
-      {
-         get { return _result; }
-      }
-
-      private readonly IEnumerable<ProteinPropertyChange> _changes;
-
-      public IEnumerable<ProteinPropertyChange> Changes
-      {
-         get { return _changes; }
-      }
+      public IEnumerable<ProteinPropertyChange> Changes { get; private set; }
 
       public ProteinLoadInfo(int projectNumber, ProteinLoadResult result)
          : this(projectNumber, result, null)
@@ -64,24 +50,24 @@ namespace HFM.Proteins
 
       public ProteinLoadInfo(int projectNumber, ProteinLoadResult result, IEnumerable<ProteinPropertyChange> changes)
       {
-         _projectNumber = projectNumber;
-         _result = result;
-         _changes = changes;
+         ProjectNumber = projectNumber;
+         Result = result;
+         Changes = changes;
       }
 
       public override string ToString()
       {
          var sb = new StringBuilder();
          sb.Append("Project: ");
-         sb.Append(_projectNumber);
+         sb.Append(ProjectNumber);
          sb.Append(" - ");
-         sb.Append(_result);
-         if (_changes != null)
+         sb.Append(Result);
+         if (Changes != null)
          {
-            foreach (var change in _changes)
+            foreach (var change in Changes)
             {
                sb.Append(" / ");
-               sb.Append(change.ToString());
+               sb.Append(change);
             }            
          }
          return sb.ToString();
@@ -90,34 +76,22 @@ namespace HFM.Proteins
 
    public sealed class ProteinPropertyChange
    {
-      private readonly string _name;
-      public string Name
-      {
-         get { return _name; }
-      }
+      public string Name { get; private set; }
 
-      private readonly string _oldValue;
-      public string OldValue
-      {
-         get { return _oldValue; }
-      }
+      public string OldValue { get; private set; }
 
-      private readonly string _newValue;
-      public string NewValue
-      {
-         get { return _newValue; }
-      }
+      public string NewValue { get; private set; }
 
       public ProteinPropertyChange(string name, string oldValue, string newValue)
       {
-         _name = name;
-         _oldValue = oldValue;
-         _newValue = newValue;
+         Name = name;
+         OldValue = oldValue;
+         NewValue = newValue;
       }
 
       public override string ToString()
       {
-         return String.Format(CultureInfo.CurrentCulture, "{0} - {1} > {2}", _name, _oldValue, _newValue);
+         return String.Format(CultureInfo.CurrentCulture, "{0} - {1} > {2}", Name, OldValue, NewValue);
       }
    }
 }

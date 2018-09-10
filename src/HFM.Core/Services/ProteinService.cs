@@ -57,10 +57,10 @@ namespace HFM.Core
       /// Gets a collection of all protein project id numbers.
       /// </summary>
       /// <returns>A collection of all protein project id numbers.</returns>
-      ICollection<int> GetProjects();
+      IEnumerable<int> GetProjects();
 
       /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
@@ -69,7 +69,7 @@ namespace HFM.Core
 
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
-      private readonly ProteinDictionary _dictionary;
+      private IReadOnlyDictionary<int, Protein> _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
 
       private readonly Dictionary<int, DateTime> _projectsNotFound;
@@ -132,12 +132,12 @@ namespace HFM.Core
 
          public List<Protein> Deserialize(string fileName)
          {
-            return _serializer.Deserialize(fileName);
+            return _serializer.ReadFile(fileName).ToList();
          }
 
          public void Serialize(string fileName, List<Protein> value)
          {
-            _serializer.Serialize(fileName, value);
+            _serializer.WriteFile(fileName, value);
          }
       }
 
@@ -157,14 +157,14 @@ namespace HFM.Core
       /// Gets a collection of all protein project id numbers.
       /// </summary>
       /// <returns>A collection of all protein project id numbers.</returns>
-      public ICollection<int> GetProjects()
+      public IEnumerable<int> GetProjects()
       {
          return _dictionary.Keys;
       }
 
       internal void Add(Protein protein)
       {
-         _dictionary.Add(protein.ProjectNumber, protein);
+         ((ProteinDictionary)_dictionary).Add(protein.ProjectNumber, protein);
       }
 
       /// <summary>
@@ -211,22 +211,26 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
       public ICollection<ProteinLoadInfo> Refresh(IProgress<ProgressInfo> progress)
       {
-         ICollection<ProteinLoadInfo> loadInfo;
+         ICollection<ProteinLoadInfo> loadInformation;
          using (var stream = new MemoryStream())
          {
             Logger.Info("Downloading new project data from Stanford...");
             _downloader.Download(stream, progress);
             stream.Position = 0;
-            loadInfo = _dictionary.Load(stream);
+
+            var serializer = new JsonSerializer();
+            var newDictionary = ProteinDictionaryFactory.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
+            loadInformation = newDictionary.LoadInformation;
+            _dictionary = newDictionary;
          }
 
-         foreach (var info in loadInfo.Where(info => info.Result != ProteinLoadResult.NoChange))
+         foreach (var info in loadInformation.Where(info => info.Result != ProteinLoadResult.NoChange))
          {
             Logger.Info(info.ToString());
          }
@@ -246,7 +250,7 @@ namespace HFM.Core
          _lastRefreshTime = now;
 
          Write();
-         return loadInfo;
+         return loadInformation;
       }
 
       private bool CanRefresh(int projectId)

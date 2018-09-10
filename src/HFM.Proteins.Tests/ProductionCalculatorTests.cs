@@ -3,7 +3,7 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Proteins.Tests
+namespace HFM.Proteins
 {
    [TestFixture]
    public class ProductionCalculatorTests

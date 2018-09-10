@@ -1,27 +1,86 @@
 ﻿
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace HFM.Proteins.Tests
+namespace HFM.Proteins
 {
    [TestFixture]
    public class TabSerializerTests
    {
       [Test]
-      public void TabSerializer_DeserializeFromTabFile_Test()
+      public void TabSerializer_Deserialize_Test()
       {
          var serializer = new TabSerializer();
-         var proteins = serializer.Deserialize("..\\..\\TestFiles\\ProjectInfo.tab");
-         Assert.AreEqual(1409, proteins.Count);
+         using (var stream = File.OpenRead("..\\..\\TestFiles\\ProjectInfo.tab"))
+         {
+            var collection = serializer.Deserialize(stream);
+            Assert.AreEqual(1409, collection.Count);
+         }
       }
 
       [Test]
-      public void TabSerializer_SerializeToTabFile_Test()
+      public async Task TabSerializer_DeserializeAsync_Test()
       {
-         var proteins = new List<Protein>();
-         proteins.Add(new Protein
+         var serializer = new TabSerializer();
+         using (var stream = File.OpenRead("..\\..\\TestFiles\\ProjectInfo.tab"))
+         {
+            var collection = await serializer.DeserializeAsync(stream);
+            Assert.AreEqual(1409, collection.Count);
+         }
+      }
+
+      [Test]
+      public void TabSerializer_Deserialize_FromEmptyStream_Test()
+      {
+         var serializer = new TabSerializer();
+         using (var stream = new MemoryStream())
+         {
+            var proteins = serializer.Deserialize(stream);
+            Assert.AreEqual(0, proteins.Count);
+         }
+      }
+
+      [Test]
+      public void TabSerializer_Serialize_Test()
+      {
+         var collection = CreateCollectionForSerialize();
+
+         var buffer = new byte[256];
+         var serializer = new TabSerializer();
+         using (var stream = new MemoryStream(buffer))
+         {
+            serializer.Serialize(stream, collection);
+            string text = Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+            Debug.WriteLine(text);
+            Assert.IsTrue(text.Length > 0 && text.Length < buffer.Length);
+         }
+      }
+
+      [Test]
+      public async Task TabSerializer_SerializeAsync_Test()
+      {
+         var collection = CreateCollectionForSerialize();
+
+         var buffer = new byte[256];
+         var serializer = new TabSerializer();
+         using (var stream = new MemoryStream(buffer))
+         {
+            await serializer.SerializeAsync(stream, collection);
+            string text = Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+            Debug.WriteLine(text);
+            Assert.IsTrue(text.Length > 0 && text.Length < buffer.Length);
+         }
+      }
+
+      private static List<Protein> CreateCollectionForSerialize()
+      {
+         var collection = new List<Protein>();
+         collection.Add(new Protein
          {
             ProjectNumber = 6900,
             ServerIP = "1.2.3.4",
@@ -36,7 +95,7 @@ namespace HFM.Proteins.Tests
             Contact = "me",
             KFactor = 26.4
          });
-         proteins.Add(new Protein
+         collection.Add(new Protein
          {
             ProjectNumber = 6901,
             ServerIP = "5.6.7.8",
@@ -51,15 +110,7 @@ namespace HFM.Proteins.Tests
             Contact = "you",
             KFactor = 2
          });
-
-         const string fileName = "ProjectInfoTest.tab";
-
-         var serializer = new TabSerializer();
-         serializer.Serialize(fileName, proteins);
-         Assert.IsTrue(File.Exists(fileName));
-
-         proteins = serializer.Deserialize(fileName);
-         Assert.AreEqual(2, proteins.Count);
+         return collection;
       }
    }
 }

@@ -1,18 +1,19 @@
 ﻿
 using System.IO;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace HFM.Proteins.Tests
+namespace HFM.Proteins
 {
    [TestFixture]
    public class JsonSerializerTests
    {
       [Test]
-      public void JsonSerializer_DeserializeFromJsonFile_Test()
+      public void JsonSerializer_Deserialize_Test()
       {
          var serializer = new JsonSerializer();
-         using (var stream = File.Open("..\\..\\TestFiles\\summary.json", FileMode.Open, FileAccess.Read))
+         using (var stream = File.OpenRead("..\\..\\TestFiles\\summary.json"))
          {
             var proteins = serializer.Deserialize(stream);
             Assert.AreEqual(627, proteins.Count);
@@ -20,7 +21,18 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      public void JsonSerializer_DeserializeFromEmptyStream_Test()
+      public async Task JsonSerializer_DeserializeAsync_Test()
+      {
+         var serializer = new JsonSerializer();
+         using (var stream = File.OpenRead("..\\..\\TestFiles\\summary.json"))
+         {
+            var proteins = await serializer.DeserializeAsync(stream);
+            Assert.AreEqual(627, proteins.Count);
+         }
+      }
+
+      [Test]
+      public void JsonSerializer_Deserialize_FromEmptyStream_Test()
       {
          var serializer = new JsonSerializer();
          using (var stream = new MemoryStream())

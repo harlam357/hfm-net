@@ -19,7 +19,7 @@
 
 using NUnit.Framework;
 
-namespace HFM.Proteins.Tests
+namespace HFM.Proteins
 {
    [TestFixture]
    public class ProteinTests
@@ -43,28 +43,28 @@ namespace HFM.Proteins.Tests
       }
 
       [Test]
-      public void Protein_IsUnknown_Test1()
+      public void Protein_IsUnknown_ReturnsFalseWhenProjectNumberIsNotZero_Test()
       {
          var protein = new Protein { ProjectNumber = 1 };
          Assert.IsFalse(protein.IsUnknown);
       }
 
       [Test]
-      public void Protein_IsUnknown_Test2()
+      public void Protein_IsUnknown_ReturnsTrueWhenProjectNumberIsZero_Test()
       {
          var protein = new Protein();
          Assert.IsTrue(protein.IsUnknown);
       }
 
       [Test]
-      public void Protein_IsValid_Test1()
+      public void Protein_IsValid_ReturnsTrueWhenAllRequiredPropertiesArePopulated_Test()
       {
          var protein = new Protein { ProjectNumber = 1, PreferredDays = 3, MaximumDays = 5, Credit = 500, Frames = 100, KFactor = 26.4 };
          Assert.IsTrue(protein.IsValid);
       }
 
       [Test]
-      public void Protein_IsValid_Test2()
+      public void Protein_IsValid_ReturnsFalseWhenAllRequiredPropertiesAreNotPopulated_Test()
       {
          var protein = new Protein();
          Assert.IsFalse(protein.IsValid);

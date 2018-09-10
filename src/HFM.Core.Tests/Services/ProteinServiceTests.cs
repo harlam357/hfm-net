@@ -244,11 +244,11 @@ namespace HFM.Core
             }));
 
          var service = new ProteinService(null, downloader) { Logger = new Logging.DebugLogger() };
-         Assert.AreEqual(0, service.GetProjects().Count);
+         Assert.AreEqual(0, service.GetProjects().Count());
          // Act
          service.Refresh(null);
          // Assert
-         Assert.AreNotEqual(0, service.GetProjects().Count);
+         Assert.AreNotEqual(0, service.GetProjects().Count());
       }
 
       private static Protein CreateValidProtein(int projectNumber)
