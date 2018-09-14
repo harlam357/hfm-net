@@ -26,9 +26,9 @@ using System.Reflection;
 
 namespace HFM.Queue.Tool
 {
-   class Program
+   internal class Program
    {
-      static void Main(string[] args)
+      private static void Main(string[] args)
       {
          const string app = "HFM.Queue.Tool";
 
@@ -38,7 +38,7 @@ namespace HFM.Queue.Tool
          Console.WriteLine("Copyright (C) 2005-2008 Sebastiaan Couwenberg");
          Console.WriteLine("Copyright (C) 2009-2015 Ryan Harlamert");
          
-         IEnumerable<Argument> arguments;
+         IReadOnlyCollection<Argument> arguments;
          try
          {
             arguments = Arguments.Parse(args);
@@ -50,14 +50,14 @@ namespace HFM.Queue.Tool
             return;
          }
 
-         bool versionOnly = arguments.FirstOrDefault(a => a.Type == ArgumentType.VersionOnly) != null ? true : false;
+         bool versionOnly = arguments.FirstOrDefault(a => a.Type == ArgumentType.VersionOnly) != null;
          if (versionOnly)
          {
             return;
          }
 
-         bool showUsage = arguments.FirstOrDefault(a => a.Type == ArgumentType.Usage) != null ? true : false;
-         bool unknown = arguments.FirstOrDefault(a => a.Type == ArgumentType.Unknown) != null ? true : false;
+         bool showUsage = arguments.FirstOrDefault(a => a.Type == ArgumentType.Usage) != null;
+         bool unknown = arguments.FirstOrDefault(a => a.Type == ArgumentType.Unknown) != null;
          if (showUsage || unknown)
          {
             Console.WriteLine(Arguments.Usage);

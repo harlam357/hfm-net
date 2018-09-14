@@ -18,7 +18,7 @@ namespace HFM.Queue.Tool
 
    internal static class Arguments
    {
-      public static IEnumerable<Argument> Parse(string[] args)
+      public static IReadOnlyCollection<Argument> Parse(string[] args)
       {
          var arguments = new List<Argument>();
       

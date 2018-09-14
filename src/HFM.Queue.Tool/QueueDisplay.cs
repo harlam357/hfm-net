@@ -25,12 +25,12 @@ namespace HFM.Queue.Tool
 {
    internal static class QueueDisplay
    {
-      public static void Write(QueueData q, IEnumerable<Argument> arguments)
+      public static void Write(QueueData q, IReadOnlyCollection<Argument> arguments)
       {
          Console.WriteLine("Queue version {0:0.00}", q.Version / 100);
          Console.WriteLine("Current index: {0}", q.CurrentIndex);
 
-         bool currentOnly = arguments.FirstOrDefault(a => a.Type == ArgumentType.CurrentOnly) != null ? true : false;
+         bool currentOnly = arguments.FirstOrDefault(a => a.Type == ArgumentType.CurrentOnly) != null;
          if (currentOnly)
          {
             var entry = q.GetQueueEntry(q.CurrentIndex);
@@ -71,10 +71,10 @@ namespace HFM.Queue.Tool
          return i+1;
       }
 
-      private static void WriteEntry(QueueEntry e, IEnumerable<Argument> arguments)
+      private static void WriteEntry(QueueEntry e, IReadOnlyCollection<Argument> arguments)
       {
-         bool printProjectString = arguments.FirstOrDefault(a => a.Type == ArgumentType.PrintProjectString) != null ? true : false;
-         bool showAll = arguments.FirstOrDefault(a => a.Type == ArgumentType.ShowAll) != null ? true : false;
+         bool printProjectString = arguments.FirstOrDefault(a => a.Type == ArgumentType.PrintProjectString) != null;
+         bool showAll = arguments.FirstOrDefault(a => a.Type == ArgumentType.ShowAll) != null;
 
          Console.Write(" Index {0}: {1}", e.Index, e.EntryStatusLiteral);
          if (e.SpeedFactor == 0)
