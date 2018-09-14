@@ -726,25 +726,25 @@ namespace HFM.Queue.Tests
       }
 
       [Test]
-      public void QueueReaderArgumentNullTest()
+      public void QueueReader_ReadQueue_ThrowsWhenPathIsNull_Test()
       {
          Assert.Throws<ArgumentException>(() => QueueReader.ReadQueue(null));
       }
 
       [Test]
-      public void QueueReaderArgumentEmptyTest()
+      public void QueueReader_ReadQueue_ThrowsWhenPathIsEmpty_Test()
       {
          Assert.Throws<ArgumentException>(() => QueueReader.ReadQueue(String.Empty));
       }
 
       [Test]
-      public void QueueReaderFileNotExistTest()
+      public void QueueReader_ReadQueue_ThrowsWhenFileDoesNotExist_Test()
       {
          Assert.Throws<IOException>(() => QueueReader.ReadQueue("does_not_exist.dat"));
       }
 
       [Test]
-      public void QueueReaderFileWrongLengthTest()
+      public void QueueReader_ReadQueue_ThrowsWhenFileIsWrongLength_Test()
       {
          const string filePath = "wrong_length.dat";
 
@@ -757,7 +757,7 @@ namespace HFM.Queue.Tests
       }
 
       [Test]
-      public void QueueReaderFileWrongVersionTest()
+      public void QueueReader_ReadQueue_ThrowsWhenFileIsWrongVersion_Test()
       {
          const string filePath = "wrong_version.dat";
 
@@ -765,12 +765,12 @@ namespace HFM.Queue.Tests
          {
             fileStream.Write(new byte[7168], 0, 7168);
          }
-         Assert.Throws<NotSupportedException>(() => QueueReader.ReadQueue(filePath));
+         Assert.Throws<InvalidOperationException>(() => QueueReader.ReadQueue(filePath));
          File.Delete(filePath);
       }
 
       [Test]
-      public void UserIDCalculationTest()
+      public void QueueEntry_GetUserID_Test()
       {
          byte[] b = QueueEntry.HexToData("99D3CF222E1FA00");
          Array.Reverse(b);
