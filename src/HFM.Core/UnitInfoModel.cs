@@ -294,7 +294,7 @@ namespace HFM.Core
       public double GetCredit(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          TimeSpan frameTime = GetFrameTime(calculationType);
-         return GetCredit(GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
+         return GetCredit(GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
       }
 
       /// <summary>
@@ -311,7 +311,7 @@ namespace HFM.Core
       public double GetPPD(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
       {
          TimeSpan frameTime = GetFrameTime(calculationType);
-         return GetPPD(frameTime, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime), status, calculateBonus);
+         return GetPPD(frameTime, GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
       }
 
       /// <summary>
@@ -347,13 +347,12 @@ namespace HFM.Core
          get { return CurrentProtein.Frames == FramesComplete; }
       }
 
-      /// <summary>
-      /// Esimated Finishing Time (by Download Time)
-      /// </summary>
-      private TimeSpan GetEftByDownloadTime(TimeSpan frameTime)
+      private TimeSpan GetUnitTimeByDownloadTime(TimeSpan frameTime)
       {
-         if (DownloadTime.IsUnknown()) return TimeSpan.Zero;
-
+         if (DownloadTime.IsUnknown())
+         {
+            return TimeSpan.Zero;
+         }
          if (FinishedTime.IsKnown())
          {
             return FinishedTime.Subtract(DownloadTime);
@@ -362,14 +361,14 @@ namespace HFM.Core
          // Issue 156 - ETA must be a positive TimeSpan
          // Issue 134 - Since fixing Issue 156 it appears that once most
          // bigadv units finish their last frame they would be assigned a
-         // Zero EFT since their ETA values would have been zero and they
+         // Zero Unit Time since their ETA values would have been zero and they
          // had not yet written the FinishedTime to the queue.dat file.
          // In light of this I've added the AllFramesAreCompleted property.
-         // Now, if ETA is Zero and AllFramesAreCompleted == false, the EFT
+         // Now, if ETA is Zero and AllFramesAreCompleted == false, the Unit Time
          // will be Zero.  Otherwise, it will be given a value of the
          // (UnitRetrievalTime plus ETA) minus the DownloadTime.
          TimeSpan eta = GetEta(frameTime);
-         if (eta.IsZero() && AllFramesCompleted == false)
+         if (eta == TimeSpan.Zero && AllFramesCompleted == false)
          {
             return TimeSpan.Zero;
          }
@@ -377,23 +376,8 @@ namespace HFM.Core
          return _unitInfo.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
       }
 
-      /// <summary>
-      /// Esimated Finishing Time (by Frame Time)
-      /// </summary>
-      private TimeSpan GetEftByFrameTime(TimeSpan frameTime)
+      private TimeSpan GetUnitTimeByFrameTime(TimeSpan frameTime)
       {
-         // Don't do this anymore... we actually want to know the
-         // EftByFrameTime even if DownloadTime and FinishedTime
-         // are known values - 2/8/11
-         //if (DownloadTime.Equals(DateTime.MinValue) == false)
-         //{
-         //   if (FinishedTime.Equals(DateTime.MinValue) == false)
-         //   {
-         //      return FinishedTime.Subtract(DownloadTime);
-         //   }
-         //}
-
-         // Report even if CurrentProtein.IsUnknown - 2/8/11
          return TimeSpan.FromSeconds(frameTime.TotalSeconds * CurrentProtein.Frames);
       }
 
@@ -401,61 +385,57 @@ namespace HFM.Core
 
       #region Calculate Credit and PPD
 
-      private double GetCredit(TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
+      private double GetCredit(TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
          if (CurrentProtein.IsUnknown)
          {
-            return 0;
+            return 0.0;
          }
 
-         // Issue 125
-         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
+         if (calculateBonus == BonusCalculationType.DownloadTime)
          {
-            // Issue 183
-            if (status.Equals(SlotStatus.RunningAsync) ||
-                status.Equals(SlotStatus.RunningNoFrameTimes))
+            if (status == SlotStatus.RunningAsync ||
+                status == SlotStatus.RunningNoFrameTimes)
             {
-               return ProductionCalculator.GetCredit(CurrentProtein, eftByFrameTime);
+               return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
             }
 
-            return ProductionCalculator.GetCredit(CurrentProtein, eftByDownloadTime);
+            return CurrentProtein.GetBonusCredit(unitTimeByDownloadTime);
          }
-         if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         if (calculateBonus == BonusCalculationType.FrameTime)
          {
-            return ProductionCalculator.GetCredit(CurrentProtein, eftByFrameTime);
+            return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
          }
 
          return CurrentProtein.Credit;
       }
 
-      private double GetPPD(TimeSpan frameTime, TimeSpan eftByDownloadTime, TimeSpan eftByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
+      private double GetPPD(TimeSpan frameTime, TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
          if (CurrentProtein.IsUnknown)
          {
-            return 0;
+            return 0.0;
          }
 
-         // Issue 125
-         if (calculateBonus.Equals(BonusCalculationType.DownloadTime))
+         if (calculateBonus == BonusCalculationType.DownloadTime)
          {
-            // Issue 183
-            if (status.Equals(SlotStatus.RunningAsync) ||
-                status.Equals(SlotStatus.RunningNoFrameTimes))
+            if (status == SlotStatus.RunningAsync ||
+                status == SlotStatus.RunningNoFrameTimes)
             {
-               return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByFrameTime);
+               return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
             }
 
-            return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByDownloadTime);
+            return CurrentProtein.GetBonusPPD(frameTime, unitTimeByDownloadTime);
          }
-         if (calculateBonus.Equals(BonusCalculationType.FrameTime))
+         if (calculateBonus == BonusCalculationType.FrameTime)
          {
-            return ProductionCalculator.GetPPD(frameTime, CurrentProtein, eftByFrameTime);
+            return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
          }
 
-         return ProductionCalculator.GetPPD(frameTime, CurrentProtein);
+         return CurrentProtein.GetPPD(frameTime);
       }
 
-      public void ShowPPDTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType bonusCalculationType)
+      public void ShowProductionTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType bonusCalculationType)
       {
          // test the level
          if (!logger.IsDebugEnabled) return;
@@ -466,12 +446,10 @@ namespace HFM.Core
             return;
          }
 
-         // Issue 125
          if (bonusCalculationType == BonusCalculationType.DownloadTime)
          {
-            // Issue 183
-            if (status.Equals(SlotStatus.RunningAsync) ||
-                status.Equals(SlotStatus.RunningNoFrameTimes))
+            if (status == SlotStatus.RunningAsync ||
+                status == SlotStatus.RunningNoFrameTimes)
             {
                logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
             }
@@ -490,29 +468,41 @@ namespace HFM.Core
          }
 
          TimeSpan frameTime = GetFrameTime(calculationType);
-         var values = ProductionCalculator.GetProductionValues(frameTime, CurrentProtein, GetEftByDownloadTime(frameTime), GetEftByFrameTime(frameTime));
-         logger.DebugFormat(" - {0}", UnitInfoData.ToProjectString());
-         logger.Debug(ToMultiLineString(values));
+         var noBonusValues = CurrentProtein.GetProductionValues(frameTime, TimeSpan.Zero);
+         TimeSpan unitTimeByDownloadTime = GetUnitTimeByDownloadTime(frameTime);
+         var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);
+         TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
+         var bonusByFrameValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByFrameTime);
+         logger.Debug(CreateProductionDebugOutput(UnitInfoData.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues, 
+                                                  unitTimeByDownloadTime, bonusByDownloadValues, 
+                                                  unitTimeByFrameTime, bonusByFrameValues));
       }
 
-      private string ToMultiLineString(ProductionValues values)
+      private static string CreateProductionDebugOutput(string project, TimeSpan frameTime, Protein protein, ProductionValues noBonusValues, 
+                                                        TimeSpan unitTimeByDownloadTime, ProductionValues bonusByDownloadValues, 
+                                                        TimeSpan unitTimeByFrameTime, ProductionValues bonusByFrameValues)
       {
          var sb = new StringBuilder();
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base Credit--------- : {0}{1}", values.BaseCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Base PPD ----------- : {0}{1}", values.BasePPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Preferred Time ----- : {0}{1}", values.PreferredTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - Maximum Time ------- : {0}{1}", values.MaximumTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - KFactor ------------ : {0}{1}", values.KFactor, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Download Time - + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", values.UnitTimeByDownloadTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", values.DownloadTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", values.DownloadTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", values.DownloadTimeBonusPPD, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " + - by Frame Time ---- + {0}{1}", String.Empty, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- WU Time -------- : {0}{1}", values.UnitTimeByFrameTime, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Multiplier : {0}{1}", values.FrameTimeBonusMulti, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus Credit --- : {0}{1}", values.FrameTimeBonusCredit, Environment.NewLine);
-         sb.AppendFormat(CultureInfo.CurrentCulture, " - --- Bonus PPD ------ : {0}{1}", values.FrameTimeBonusPPD, Environment.NewLine);
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " ******* Project: {0} *******", project));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Frames: {0}", protein.Frames));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", protein.Credit));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "         KFactor: {0}", protein.KFactor));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "  Preferred Time: {0}", TimeSpan.FromDays(protein.PreferredDays)));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "    Maximum Time: {0}", TimeSpan.FromDays(protein.MaximumDays)));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "No Bonus"));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "      Frame Time: {0}", frameTime));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             UPD: {0}", noBonusValues.UPD));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", noBonusValues.PPD));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Download Time"));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByDownloadTime));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByDownloadValues.Multiplier));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByDownloadValues.Credit));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByDownloadValues.PPD));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Frame Time"));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByFrameTime));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByFrameValues.Multiplier));
+         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByFrameValues.Credit));
+         sb.Append(    String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByFrameValues.PPD));
          return sb.ToString();
       }
 

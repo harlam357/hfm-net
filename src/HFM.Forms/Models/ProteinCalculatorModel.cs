@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -65,7 +64,9 @@ namespace HFM.Forms.Models
          }
 
          var decimalPlaces = _prefs.Get<int>(Preference.DecimalPlaces);
-         var values = ProductionCalculator.GetProductionValues(frameTime, protein, totalTimeByUser, totalTimeByFrame);
+         var noBonusValues = protein.GetProductionValues(frameTime, TimeSpan.Zero);
+         var bonusByUserSpecifiedTimeValues = protein.GetProductionValues(frameTime, totalTimeByUser);
+         var bonusByFrameTimeValues = protein.GetProductionValues(frameTime, totalTimeByFrame);
          CoreName = protein.Core;
          SlotType = protein.Core.ToSlotType().ToString();
          NumberOfAtoms = protein.NumberOfAtoms;
@@ -73,11 +74,11 @@ namespace HFM.Forms.Models
          PreferredDeadline = protein.PreferredDays;
          FinalDeadline = protein.MaximumDays;
          KFactor = protein.KFactor;
-         BonusMultiplier = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusMulti : values.FrameTimeBonusMulti), decimalPlaces);
-         BaseCredit = values.BaseCredit;
-         TotalCredit = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusCredit : values.FrameTimeBonusCredit), decimalPlaces);
-         BasePpd = values.BasePPD;
-         TotalPpd = Math.Round((TotalWuTimeEnabled ? values.DownloadTimeBonusPPD : values.FrameTimeBonusPPD), decimalPlaces);
+         BonusMultiplier = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier), decimalPlaces);
+         BaseCredit = noBonusValues.Credit;
+         TotalCredit = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit), decimalPlaces);
+         BasePpd = noBonusValues.PPD;
+         TotalPpd = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD), decimalPlaces);
       }
 
       #region Properties

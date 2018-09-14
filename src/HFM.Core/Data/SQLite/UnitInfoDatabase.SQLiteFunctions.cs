@@ -72,9 +72,9 @@ namespace HFM.Core.Data.SQLite
 
             if (calcOption != 0)
             {
-               return ProductionCalculator.GetCredit(baseCredit, kFactor, preferredDays, maximumDays, unitTime);
+               return ProductionCalculator.GetBonusCredit(baseCredit, kFactor, preferredDays, maximumDays, unitTime);
             }
-            return ProductionCalculator.GetPPD(frameTime, frames, baseCredit, kFactor, preferredDays, maximumDays, unitTime);
+            return ProductionCalculator.GetBonusPPD(frameTime, frames, baseCredit, kFactor, preferredDays, maximumDays, unitTime);
          }
       }
    }

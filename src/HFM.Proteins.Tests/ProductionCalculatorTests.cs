@@ -9,75 +9,121 @@ namespace HFM.Proteins
    public class ProductionCalculatorTests
    {
       [Test]
-      public void GetPPD_Test1()
+      public void ProductionCalculator_GetUPD_ReturnsZeroWhenFrameTimeIsZero_Test()
       {
-         var protein = new Protein { Credit = 500 };
-         Assert.AreEqual(1440.0, ProductionCalculator.GetPPD(TimeSpan.FromMinutes(5), protein));
+         var frameTime = TimeSpan.Zero;
+         Assert.AreEqual(0.0, ProductionCalculator.GetUPD(frameTime, 100));
       }
 
       [Test]
-      public void GetPPD_Test2()
+      public void ProductionCalculator_GetUPD_Test()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(39307.35, ProductionCalculator.GetPPD(TimeSpan.FromMinutes(5), protein, true), 0.01);
+         var frameTime = TimeSpan.FromMinutes(5);
+         Assert.AreEqual(2.88, ProductionCalculator.GetUPD(frameTime, 100));
       }
 
       [Test]
-      public void GetPPD_Test3()
+      public void ProductionCalculator_GetBonusMultiplier_ReturnsOneWhenKFactorIsZero_Test()
       {
-         var protein = new Protein();
-         Assert.AreEqual(0.0, ProductionCalculator.GetPPD(TimeSpan.Zero, protein));
+         var unitTime = TimeSpan.FromMinutes(5 * 100);
+         Assert.AreEqual(1.0, ProductionCalculator.GetBonusMultiplier(0, 3.0, 5.0, unitTime), 0.01);
       }
 
       [Test]
-      public void GetUPD_Test1()
+      public void ProductionCalculator_GetBonusMultiplier_ReturnsOneWhenUnitTimeIsZero_Test()
       {
-         var protein = new Protein { Credit = 500 };
-         Assert.AreEqual(2.88, ProductionCalculator.GetUPD(TimeSpan.FromMinutes(5), protein.Frames));
+         var unitTime = TimeSpan.Zero;
+         Assert.AreEqual(1.0, ProductionCalculator.GetBonusMultiplier(26.4, 3.0, 5.0, unitTime), 0.01);
       }
 
       [Test]
-      public void GetCredit_Test1()
+      public void ProductionCalculator_GetBonusMultiplier_ReturnsOneWhenUnitTimeGreaterThanPreferredTime_Test()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(700, ProductionCalculator.GetCredit(protein, TimeSpan.Zero));
+         var unitTime = TimeSpan.FromDays(4);
+         Assert.AreEqual(1.0, ProductionCalculator.GetBonusMultiplier(26.4, 3.0, 5.0, unitTime), 0.01);
       }
 
       [Test]
-      public void GetCredit_Test2()
+      public void ProductionCalculator_GetBonusMultiplier_Test()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(13648.383, ProductionCalculator.GetCredit(protein, TimeSpan.FromMinutes(5 * 100)));
+         var unitTime = TimeSpan.FromMinutes(5 * 100);
+         Assert.AreEqual(19.5, ProductionCalculator.GetBonusMultiplier(26.4, 3.0, 5.0, unitTime), 0.01);
       }
 
       [Test]
-      public void GetMultiplier_Test1()
+      public void ProductionCalculator_GetBonusCredit_ReturnsCreditWithNoBonusWhenUnitTimeIsZero_Test()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         Assert.AreEqual(19.5, ProductionCalculator.GetMultiplier(protein, TimeSpan.FromMinutes(5 * 100)), 0.01);
+         var unitTime = TimeSpan.Zero;
+         Assert.AreEqual(700, ProductionCalculator.GetBonusCredit(700, 26.4, 3.0, 5.0, unitTime));
       }
 
       [Test]
-      public void GetProductionValues_Test1()
+      public void ProductionCalculator_GetBonusCredit_ReturnsCreditWithBonus_Test()
       {
-         var protein = new Protein { Credit = 700, PreferredDays = 3, MaximumDays = 5, KFactor = 26.4 };
-         var values = ProductionCalculator.GetProductionValues(TimeSpan.FromMinutes(5), protein, 
-                                                               TimeSpan.FromMinutes(5 * 100).Add(TimeSpan.FromMinutes(10)),
-                                                               TimeSpan.FromMinutes(5 * 100));
-         Assert.AreEqual(TimeSpan.FromMinutes(5), values.TimePerFrame);
-         Assert.AreEqual(700, values.BaseCredit);
-         Assert.AreEqual(2016.0, values.BasePPD);
-         Assert.AreEqual(TimeSpan.FromDays(3), values.PreferredTime);
-         Assert.AreEqual(TimeSpan.FromDays(5), values.MaximumTime);
-         Assert.AreEqual(26.4, values.KFactor);
-         Assert.AreEqual(TimeSpan.FromMinutes(5 * 100).Add(TimeSpan.FromMinutes(10)), values.UnitTimeByDownloadTime);
-         Assert.AreEqual(19.31, values.DownloadTimeBonusMulti, 0.01);
-         Assert.AreEqual(13513.913, values.DownloadTimeBonusCredit);
-         Assert.AreEqual(38920.07, values.DownloadTimeBonusPPD, 0.01);
-         Assert.AreEqual(TimeSpan.FromMinutes(5 * 100), values.UnitTimeByFrameTime);
-         Assert.AreEqual(19.5, values.FrameTimeBonusMulti, 0.01);
-         Assert.AreEqual(13648.383, values.FrameTimeBonusCredit);
-         Assert.AreEqual(39307.35, values.FrameTimeBonusPPD, 0.01);
+         var unitTime = TimeSpan.FromMinutes(5 * 100);
+         Assert.AreEqual(13648.383, ProductionCalculator.GetBonusCredit(700, 26.4, 3.0, 5.0, unitTime));
+      }
+
+      [Test]
+      public void ProductionCalculator_GetPPD_ReturnsZeroWhenFrameTimeIsZero_Test()
+      {
+         var frameTime = TimeSpan.Zero;
+         Assert.AreEqual(0.0, ProductionCalculator.GetPPD(frameTime, 0, 0.0));
+      }
+
+      [Test]
+      public void ProductionCalculator_GetPPD_ReturnsPPDWithNoBonus_Test()
+      {
+         var frameTime = TimeSpan.FromMinutes(5);
+         Assert.AreEqual(1440.0, ProductionCalculator.GetPPD(frameTime, 100, 500.0));
+      }
+
+      [Test]
+      public void ProductionCalculator_GetBonusPPD_ReturnsZeroWhenFrameTimeIsZero_Test()
+      {
+         var frameTime = TimeSpan.Zero;
+         var unitTime = TimeSpan.Zero;
+         Assert.AreEqual(0.0, ProductionCalculator.GetBonusPPD(frameTime, 0, 0.0, 0.0, 0.0, 0.0, unitTime));
+      }
+
+      [Test]
+      public void ProductionCalculator_GetBonusPPD_ReturnsPPDWithNoBonusWhenUnitTimeIsZero_Test()
+      {
+         var frameTime = TimeSpan.FromMinutes(5);
+         var unitTime = TimeSpan.Zero;
+         Assert.AreEqual(1440.0, ProductionCalculator.GetBonusPPD(frameTime, 100, 500.0, 0.0, 0.0, 0.0, unitTime));
+      }
+
+      [Test]
+      public void ProductionCalculator_GetBonusPPD_ReturnsPPDWithBonus_Test()
+      {
+         var frameTime = TimeSpan.FromMinutes(5);
+         var unitTime = TimeSpan.FromMinutes(5 * 100);
+         Assert.AreEqual(39307.35, ProductionCalculator.GetBonusPPD(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime), 0.01);
+      }
+
+      [Test]
+      public void ProductionCalculator_GetProductionValues_NoBonus_Test()
+      {
+         var frameTime = TimeSpan.FromMinutes(5);
+         var unitTime = TimeSpan.Zero;
+         var values = ProductionCalculator.GetProductionValues(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
+         Assert.AreEqual(2.88, values.UPD);
+         Assert.AreEqual(1.0, values.Multiplier);
+         Assert.AreEqual(700.0, values.Credit);
+         Assert.AreEqual(2016.0, values.PPD);
+      }
+
+      [Test]
+      public void ProductionCalculator_GetProductionValues_WithBonus_Test()
+      {
+         var frameTime = TimeSpan.FromMinutes(5);
+         var unitTime = TimeSpan.FromMinutes(5 * 100);
+         var values = ProductionCalculator.GetProductionValues(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
+         Assert.AreEqual(2.88, values.UPD);
+         Assert.AreEqual(19.5, values.Multiplier, 0.01);
+         Assert.AreEqual(13648.383, values.Credit);
+         Assert.AreEqual(39307.35, values.PPD, 0.01);
       }
    }
 }

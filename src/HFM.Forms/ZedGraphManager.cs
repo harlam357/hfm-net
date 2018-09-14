@@ -79,8 +79,8 @@ namespace HFM.Forms
                double averageFrameTimePPD = 0;
                if (protein != null)
                {
-                  minimumFrameTimePPD = ProductionCalculator.GetPPD(benchmark.MinimumFrameTime, protein, calculateBonus);
-                  averageFrameTimePPD = ProductionCalculator.GetPPD(benchmark.AverageFrameTime, protein, calculateBonus);
+                  minimumFrameTimePPD = GetPPD(benchmark.MinimumFrameTime, protein, calculateBonus);
+                  averageFrameTimePPD = GetPPD(benchmark.AverageFrameTime, protein, calculateBonus);
                }
 
                if (minimumFrameTimePPD >= 1000 || averageFrameTimePPD >= 1000)
@@ -145,6 +145,16 @@ namespace HFM.Forms
             // Refresh the control
             zg.Refresh();
          }
+      }
+
+      private static double GetPPD(TimeSpan frameTime, Protein protein, bool calculateUnitTimeByFrameTime)
+      {
+         if (calculateUnitTimeByFrameTime)
+         {
+            var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+            return protein.GetBonusPPD(frameTime, unitTime);
+         }
+         return protein.GetPPD(frameTime);
       }
 
       /// <summary>

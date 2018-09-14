@@ -36,7 +36,7 @@ namespace HFM.Core.DataTypes
          Assert.AreEqual(SlotType.Unknown, unitInfo.SlotType);
          Assert.IsTrue(unitInfo.DownloadTime.IsUnknown());
          Assert.IsTrue(unitInfo.DueTime.IsUnknown());
-         Assert.IsTrue(unitInfo.UnitStartTimeStamp.IsZero());
+         Assert.IsTrue(unitInfo.UnitStartTimeStamp == TimeSpan.Zero);
          Assert.IsTrue(unitInfo.FinishedTime.IsUnknown());
          Assert.IsTrue(unitInfo.CoreVersion == 0);
          Assert.IsTrue(unitInfo.ProteinName.Length == 0);

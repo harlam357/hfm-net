@@ -43,11 +43,6 @@ namespace HFM.Core
          return dateTime.Equals(DateTime.MinValue);
       }
 
-      public static bool IsZero(this TimeSpan timeSpan)
-      {
-         return timeSpan.Equals(TimeSpan.Zero);
-      }
-
       public static string ToDateString(this DateTime date)
       {
          return ToDateString(date, String.Format(CultureInfo.CurrentCulture,
@@ -332,9 +327,11 @@ namespace HFM.Core
             case "GRO-A5":
             case "GRO_A5":
             case "GRO-A6":
+            case "GRO_A7":
                return SlotType.CPU;
             case "GROGPU2":
             case "GROGPU2-MT":
+            case "OPENMM_21":
             case "OPENMMGPU":
             case "OPENMM_OPENCL":
             case "ATI-DEV":
@@ -376,6 +373,7 @@ namespace HFM.Core
             case "A3": // Gromacs SMP2
             case "A5": // Gromacs SMP2
             case "A6": // Gromacs SMP2
+            case "A7":
                return SlotType.CPU;
             case "11": // GPU2 - GROGPU2
             case "12": // GPU2 - ATI-DEV

@@ -179,7 +179,7 @@ namespace HFM.Core
 
          HandleReturnedStatus(result.Status, _slotModel);
 
-         _slotModel.UnitInfoModel.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
+         _slotModel.UnitInfoModel.ShowProductionTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 

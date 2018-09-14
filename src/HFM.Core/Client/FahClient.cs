@@ -398,7 +398,7 @@ namespace HFM.Core
 
                SetSlotStatus(slotModel);
 
-               slotModel.UnitInfoModel.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
+               slotModel.UnitInfoModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                   Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                   Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 

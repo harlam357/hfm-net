@@ -59,20 +59,6 @@ namespace HFM.Core
          Assert.IsFalse(dateTime.IsUnknown());
       }
 
-      [Test]
-      public void TimeSpanIsZeroTest1()
-      {
-         var timeSpan = TimeSpan.FromMinutes(1);
-         Assert.IsFalse(timeSpan.IsZero());
-      }
-
-      [Test]
-      public void TimeSpanIsZeroTest2()
-      {
-         var timeSpan = TimeSpan.Zero;
-         Assert.IsTrue(timeSpan.IsZero());
-      }
-
       #endregion
 
       #region IProjectInfo
