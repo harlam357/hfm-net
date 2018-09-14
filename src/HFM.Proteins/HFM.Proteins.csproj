@@ -85,8 +85,7 @@
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
-    <Compile Include="ProteinDictionaryFactory.cs" />
-    <Compile Include="ProteinLoadInfo.cs" />
+    <Compile Include="ProteinDictionaryChange.cs" />
     <Compile Include="ProteinProductionExtensions.cs" />
     <Compile Include="ProteinSerializerExtensions.cs" />
     <Compile Include="WebAddresses.cs" />

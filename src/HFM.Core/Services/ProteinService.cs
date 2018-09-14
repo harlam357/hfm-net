@@ -64,7 +64,7 @@ namespace HFM.Core
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      ICollection<ProteinLoadInfo> Refresh(IProgress<ProgressInfo> progress);
+      IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress);
    }
 
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
@@ -215,9 +215,9 @@ namespace HFM.Core
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      public ICollection<ProteinLoadInfo> Refresh(IProgress<ProgressInfo> progress)
+      public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
       {
-         ICollection<ProteinLoadInfo> loadInformation;
+         IReadOnlyCollection<ProteinDictionaryChange> dictionaryChanges;
          using (var stream = new MemoryStream())
          {
             Logger.Info("Downloading new project data from Stanford...");
@@ -226,11 +226,11 @@ namespace HFM.Core
 
             var serializer = new JsonSerializer();
             var newDictionary = ProteinDictionaryFactory.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
-            loadInformation = newDictionary.LoadInformation;
+            dictionaryChanges = newDictionary.Changes;
             _dictionary = newDictionary;
          }
 
-         foreach (var info in loadInformation.Where(info => info.Result != ProteinLoadResult.NoChange))
+         foreach (var info in dictionaryChanges.Where(info => info.Result != ProteinDictionaryChangeResult.NoChange))
          {
             Logger.Info(info.ToString());
          }
@@ -250,7 +250,7 @@ namespace HFM.Core
          _lastRefreshTime = now;
 
          Write();
-         return loadInformation;
+         return dictionaryChanges;
       }
 
       private bool CanRefresh(int projectId)

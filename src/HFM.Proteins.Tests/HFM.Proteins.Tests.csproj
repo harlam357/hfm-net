@@ -80,7 +80,7 @@
     <Compile Include="JsonSerializerTests.cs" />
     <Compile Include="ProductionCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinDictionaryFactoryTests.cs" />
+    <Compile Include="ProteinDictionaryTests.cs" />
     <Compile Include="ProteinProductionExtensionsTests.cs" />
     <Compile Include="ProteinSerializerExtensionsTests.cs" />
     <Compile Include="ProteinTests.cs" />

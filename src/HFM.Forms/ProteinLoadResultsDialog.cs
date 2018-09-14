@@ -31,11 +31,11 @@ namespace HFM.Forms
          InitializeComponent();
       }
 
-      public void DataBind(IEnumerable<ProteinLoadInfo> loadResults)
+      public void DataBind(IEnumerable<ProteinDictionaryChange> loadResults)
       {
          foreach (var loadResult in loadResults)
          {
-            if (!loadResult.Result.Equals(ProteinLoadResult.NoChange))
+            if (!loadResult.Result.Equals(ProteinDictionaryChangeResult.NoChange))
             {
                ProteinListBox.Items.Add(loadResult.ToString());
             }

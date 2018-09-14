@@ -1195,7 +1195,7 @@ namespace HFM.Forms
             await downloader.ExecuteAsyncWithProgress(true);
             if (downloader.Result != null)
             {
-               var proteinChanges = downloader.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
+               var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                if (proteinChanges.Count > 0)
                {
                   _retrievalModel.RunClientRetrieval();
@@ -1213,7 +1213,7 @@ namespace HFM.Forms
          }
       }
 
-      private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinLoadInfo>>
+      private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinDictionaryChange>>
       {
          private readonly IProteinService _proteinService;
 
@@ -1223,7 +1223,7 @@ namespace HFM.Forms
             _proteinService = proteinService;
          }
 
-         protected override async Task<IEnumerable<ProteinLoadInfo>> OnExecuteAsync(IProgress<ProgressInfo> progress)
+         protected override async Task<IEnumerable<ProteinDictionaryChange>> OnExecuteAsync(IProgress<ProgressInfo> progress)
          {
             return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
          }

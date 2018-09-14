@@ -24,31 +24,28 @@ using System.Text;
 
 namespace HFM.Proteins
 {
-   public enum ProteinLoadResult
+   public enum ProteinDictionaryChangeResult
    {
       Added,
       Changed,
-      NoChange,
+      NoChange
    }
 
-   public sealed class ProteinLoadInfo
+   public sealed class ProteinDictionaryChange
    {
-      /// <summary>
-      /// Project Number
-      /// </summary>
       public int ProjectNumber { get; private set; }
 
-      public ProteinLoadResult Result { get; private set; }
+      public ProteinDictionaryChangeResult Result { get; private set; }
 
-      public IEnumerable<ProteinPropertyChange> Changes { get; private set; }
+      public IReadOnlyCollection<ProteinPropertyChange> Changes { get; private set; }
 
-      public ProteinLoadInfo(int projectNumber, ProteinLoadResult result)
+      internal ProteinDictionaryChange(int projectNumber, ProteinDictionaryChangeResult result)
          : this(projectNumber, result, null)
       {
 
       }
 
-      public ProteinLoadInfo(int projectNumber, ProteinLoadResult result, IEnumerable<ProteinPropertyChange> changes)
+      internal ProteinDictionaryChange(int projectNumber, ProteinDictionaryChangeResult result, IReadOnlyCollection<ProteinPropertyChange> changes)
       {
          ProjectNumber = projectNumber;
          Result = result;
@@ -76,22 +73,22 @@ namespace HFM.Proteins
 
    public sealed class ProteinPropertyChange
    {
-      public string Name { get; private set; }
+      public string PropertyName { get; private set; }
 
-      public string OldValue { get; private set; }
+      public string Previous { get; private set; }
 
-      public string NewValue { get; private set; }
+      public string Current { get; private set; }
 
-      public ProteinPropertyChange(string name, string oldValue, string newValue)
+      internal ProteinPropertyChange(string propertyName, string previous, string current)
       {
-         Name = name;
-         OldValue = oldValue;
-         NewValue = newValue;
+         PropertyName = propertyName;
+         Previous = previous;
+         Current = current;
       }
 
       public override string ToString()
       {
-         return String.Format(CultureInfo.CurrentCulture, "{0} - {1} > {2}", Name, OldValue, NewValue);
+         return String.Format(CultureInfo.CurrentCulture, "{0} - {1} > {2}", PropertyName, Previous, Current);
       }
    }
 }
