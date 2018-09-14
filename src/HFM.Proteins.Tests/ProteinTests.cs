@@ -69,5 +69,42 @@ namespace HFM.Proteins
          var protein = new Protein();
          Assert.IsFalse(protein.IsValid);
       }
+
+      [Test]
+      public void Protein_DeepClone_Test()
+      {
+         // Arrange
+         var p = new Protein
+         {
+            ProjectNumber = 1234,
+            ServerIP = "1.2.3.4",
+            WorkUnitName = "Foo",
+            NumberOfAtoms = 20,
+            PreferredDays = 3.0,
+            MaximumDays = 5.0,
+            Credit = 357,
+            Frames = 5000,
+            Core = "A7",
+            Description = "http://foo.bar/biz",
+            Contact = "harlam357",
+            KFactor = 0.75
+         };
+         // Act
+         var clone = p.DeepClone();
+         // Assert
+         Assert.AreNotSame(p, clone);
+         Assert.AreEqual(p.ProjectNumber, clone.ProjectNumber);
+         Assert.AreEqual(p.ServerIP, clone.ServerIP);
+         Assert.AreEqual(p.WorkUnitName, clone.WorkUnitName);
+         Assert.AreEqual(p.NumberOfAtoms, clone.NumberOfAtoms);
+         Assert.AreEqual(p.PreferredDays, clone.PreferredDays);
+         Assert.AreEqual(p.MaximumDays, clone.MaximumDays);
+         Assert.AreEqual(p.Credit, clone.Credit);
+         Assert.AreEqual(p.Frames, clone.Frames);
+         Assert.AreEqual(p.Core, clone.Core);
+         Assert.AreEqual(p.Description, clone.Description);
+         Assert.AreEqual(p.Contact, clone.Contact);
+         Assert.AreEqual(p.KFactor, clone.KFactor);
+      }
    }
 }
