@@ -225,7 +225,7 @@ namespace HFM.Core
             stream.Position = 0;
 
             var serializer = new JsonSerializer();
-            var newDictionary = ProteinDictionaryFactory.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
+            var newDictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
             dictionaryChanges = newDictionary.Changes;
             _dictionary = newDictionary;
          }
