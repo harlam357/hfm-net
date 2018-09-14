@@ -69,7 +69,8 @@ namespace HFM.Proteins
       {
          if (frameTime.Equals(TimeSpan.Zero)) return 0;
 
-         return GetUPD(frameTime, frames) * credit;
+         double basePPD = GetUPD(frameTime, frames) * credit;
+         return Math.Round(basePPD, MaxDecimalPlaces);
       }
 
       /// <summary>
@@ -89,9 +90,7 @@ namespace HFM.Proteins
 
          double basePPD = GetUPD(frameTime, frames) * credit;
          double bonusMulti = GetBonusMultiplier(kFactor, preferredDays, maximumDays, unitTime);
-         double bonusPPD = Math.Round((basePPD * bonusMulti), MaxDecimalPlaces);
-
-         return bonusPPD;
+         return Math.Round(basePPD * bonusMulti, MaxDecimalPlaces);
       }
 
       /// <summary>
