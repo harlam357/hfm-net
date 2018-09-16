@@ -4,6 +4,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using HFM.Log.Legacy;
+
 namespace HFM.Log
 {
    [TestFixture]

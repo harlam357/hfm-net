@@ -25,7 +25,7 @@ using System.IO;
 using System.Linq;
 
 using HFM.Core.DataTypes;
-using HFM.Log;
+using HFM.Log.Legacy;
 using HFM.Preferences;
 using HFM.Proteins;
 using HFM.Queue;

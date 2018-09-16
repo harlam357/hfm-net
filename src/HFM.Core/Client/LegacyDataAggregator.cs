@@ -28,6 +28,7 @@ using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Log.Legacy;
 using HFM.Queue;
 
 namespace HFM.Core

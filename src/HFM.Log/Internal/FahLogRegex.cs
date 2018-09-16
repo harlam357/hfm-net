@@ -1,7 +1,7 @@
 ﻿
 using System.Text.RegularExpressions;
 
-namespace HFM.Log
+namespace HFM.Log.Internal
 {
    internal static class FahLogRegex
    {

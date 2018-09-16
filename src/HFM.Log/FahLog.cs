@@ -424,7 +424,7 @@ namespace HFM.Log
          private static bool SetLogLineProperties(LogLine logLine)
          {
             Match workUnitRunningMatch;
-            if ((workUnitRunningMatch = FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
+            if ((workUnitRunningMatch = Internal.FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
             {
                logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
                logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);

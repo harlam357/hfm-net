@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 using HFM.Log.Internal;
 
-namespace HFM.Log
+namespace HFM.Log.Legacy
 {
    public static class UnitInfoLog
    {
@@ -45,7 +45,7 @@ namespace HFM.Log
                   data.ProteinTag = line.Substring(5);
 
                   Match projectNumberFromTagMatch;
-                  if ((projectNumberFromTagMatch = UnitInfoLogRegex.RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
+                  if ((projectNumberFromTagMatch = RegexProjectNumberFromTag.Match(data.ProteinTag)).Success)
                   {
                      data.ProjectID = Int32.Parse(projectNumberFromTagMatch.Groups["ProjectNumber"].Value);
                      data.ProjectRun = Int32.Parse(projectNumberFromTagMatch.Groups["Run"].Value);
@@ -81,5 +81,10 @@ namespace HFM.Log
 
          return data;
       }
+
+      private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
+
+      private static readonly Regex RegexProjectNumberFromTag =
+         new Regex("P(?<ProjectNumber>.*)R(?<Run>.*)C(?<Clone>.*)G(?<Gen>.*)", Options);
    }
 }

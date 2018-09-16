@@ -27,7 +27,7 @@ namespace HFM.Core
          };
       }
 
-      internal static ProjectInfo ToProjectInfo(this Log.UnitInfoLogData value)
+      internal static ProjectInfo ToProjectInfo(this Log.Legacy.UnitInfoLogData value)
       {
          if (value == null) return null;
          return new ProjectInfo
