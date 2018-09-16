@@ -23,41 +23,41 @@ namespace HFM.Log
 
       private static class Common
       {
-         internal static LogLineType DetermineLineType(string logLine)
+         internal static LogLineType DetermineLineType(string line)
          {
-            return IsLineTypeWorkUnitRunning(logLine) ? LogLineType.WorkUnitRunning : LogLineType.None;
+            return IsLineTypeWorkUnitRunning(line) ? LogLineType.WorkUnitRunning : LogLineType.None;
          }
 
-         private static bool IsLineTypeWorkUnitRunning(string logLine)
+         private static bool IsLineTypeWorkUnitRunning(string line)
          {
             // Change for v7: Removed the leading "] " portion of the
             // string for all but the ProtoMol specific conditions.
 
-            return logLine.Contains("Preparing to commence simulation") ||
-                   logLine.Contains("Called DecompressByteArray") ||
-                   logLine.Contains("- Digital signature verified") ||
-                   logLine.Contains("] Digital signatures verified") ||
-                   logLine.Contains("Entering M.D.");
+            return line.Contains("Preparing to commence simulation") ||
+                   line.Contains("Called DecompressByteArray") ||
+                   line.Contains("- Digital signature verified") ||
+                   line.Contains("] Digital signatures verified") ||
+                   line.Contains("Entering M.D.");
 
-            //if (logLine.Contains("Preparing to commence simulation"))
+            //if (line.Contains("Preparing to commence simulation"))
             //{
             //   return true;
             //}
-            //if (logLine.Contains("Called DecompressByteArray"))
+            //if (line.Contains("Called DecompressByteArray"))
             //{
             //   return true;
             //}
-            //if (logLine.Contains("- Digital signature verified"))
+            //if (line.Contains("- Digital signature verified"))
             //{
             //   return true;
             //}
             ////*** ProtoMol Only */
-            //if (logLine.Contains("] Digital signatures verified"))
+            //if (line.Contains("] Digital signatures verified"))
             //{
             //   return true;
             //}
             ////*******************/
-            //if (logLine.Contains("Entering M.D."))
+            //if (line.Contains("Entering M.D."))
             //{
             //   return true;
             //}
@@ -68,178 +68,178 @@ namespace HFM.Log
 
       private static class Legacy
       {
-         internal static LogLineType DetermineLineType(string logLine)
+         internal static LogLineType DetermineLineType(string line)
          {
-            if (logLine.Contains("--- Opening Log file"))
+            if (line.Contains("--- Opening Log file"))
             {
                return LogLineType.LogOpen;
             }
-            if (logLine.Contains("###############################################################################"))
+            if (line.Contains("###############################################################################"))
             {
                return LogLineType.LogHeader;
             }
-            if (logLine.Contains("Folding@Home Client Version"))
+            if (line.Contains("Folding@Home Client Version"))
             {
                return LogLineType.ClientVersion;
             }
-            if (logLine.Contains("] Sending work to server"))
+            if (line.Contains("] Sending work to server"))
             {
                return LogLineType.ClientSendWorkToServer;
             }
-            if (logLine.Contains("] - Autosending finished units..."))
+            if (line.Contains("] - Autosending finished units..."))
             {
                return LogLineType.ClientAutosendStart;
             }
-            if (logLine.Contains("] - Autosend completed"))
+            if (line.Contains("] - Autosend completed"))
             {
                return LogLineType.ClientAutosendComplete;
             }
-            if (logLine.Contains("] + Attempting to send results"))
+            if (line.Contains("] + Attempting to send results"))
             {
                return LogLineType.ClientSendStart;
             }
-            if (logLine.Contains("] + Could not connect to Work Server"))
+            if (line.Contains("] + Could not connect to Work Server"))
             {
                return LogLineType.ClientSendConnectFailed;
             }
-            if (logLine.Contains("] - Error: Could not transmit unit"))
+            if (line.Contains("] - Error: Could not transmit unit"))
             {
                return LogLineType.ClientSendFailed;
             }
-            if (logLine.Contains("] + Results successfully sent"))
+            if (line.Contains("] + Results successfully sent"))
             {
                return LogLineType.ClientSendComplete;
             }
-            if (logLine.Contains("Arguments:"))
+            if (line.Contains("Arguments:"))
             {
                return LogLineType.ClientArguments;
             }
-            if (logLine.Contains("] - User name:"))
+            if (line.Contains("] - User name:"))
             {
                return LogLineType.ClientUserNameTeam;
             }
-            if (logLine.Contains("] + Requesting User ID from server"))
+            if (line.Contains("] + Requesting User ID from server"))
             {
                return LogLineType.ClientRequestingUserID;
             }
-            if (logLine.Contains("- Received User ID ="))
+            if (line.Contains("- Received User ID ="))
             {
                return LogLineType.ClientReceivedUserID;
             }
-            if (logLine.Contains("] - User ID:"))
+            if (line.Contains("] - User ID:"))
             {
                return LogLineType.ClientUserID;
             }
-            if (logLine.Contains("] - Machine ID:"))
+            if (line.Contains("] - Machine ID:"))
             {
                return LogLineType.ClientMachineID;
             }
-            if (logLine.Contains("] + Attempting to get work packet"))
+            if (line.Contains("] + Attempting to get work packet"))
             {
                return LogLineType.ClientAttemptGetWorkPacket;
             }
-            if (logLine.Contains("] - Will indicate memory of"))
+            if (line.Contains("] - Will indicate memory of"))
             {
                return LogLineType.ClientIndicateMemory;
             }
-            if (logLine.Contains("] - Detect CPU. Vendor:"))
+            if (line.Contains("] - Detect CPU. Vendor:"))
             {
                return LogLineType.ClientDetectCpu;
             }
-            if (logLine.Contains("] + Processing work unit"))
+            if (line.Contains("] + Processing work unit"))
             {
                return LogLineType.WorkUnitProcessing;
             }
-            if (logLine.Contains("] + Downloading new core"))
+            if (line.Contains("] + Downloading new core"))
             {
                return LogLineType.WorkUnitCoreDownload;
             }
-            if (logLine.Contains("] Working on Unit 0"))
+            if (line.Contains("] Working on Unit 0"))
             {
                return LogLineType.WorkUnitIndex;
             }
-            if (logLine.Contains("] Working on queue slot 0"))
+            if (line.Contains("] Working on queue slot 0"))
             {
                return LogLineType.WorkUnitQueueIndex;
             }
-            if (logLine.Contains("] + Working ..."))
+            if (line.Contains("] + Working ..."))
             {
                return LogLineType.WorkUnitWorking;
             }
-            if (logLine.Contains("] - Calling"))
+            if (line.Contains("] - Calling"))
             {
                return LogLineType.WorkUnitCallingCore;
             }
-            if (logLine.Contains("] *------------------------------*"))
+            if (line.Contains("] *------------------------------*"))
             {
                return LogLineType.WorkUnitStart;
             }
             /*** ProtoMol Only */
-            if (logLine.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
+            if (line.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
             {
                return LogLineType.WorkUnitStart;
             }
             /*******************/
-            if (logLine.Contains("] Version"))
+            if (line.Contains("] Version"))
             {
                return LogLineType.WorkUnitCoreVersion;
             }
             /*** ProtoMol Only */
-            if (logLine.Contains("]   Version:"))
+            if (line.Contains("]   Version:"))
             {
                return LogLineType.WorkUnitCoreVersion;
             }
             /*******************/
-            if (logLine.Contains("] Project:"))
+            if (line.Contains("] Project:"))
             {
                return LogLineType.WorkUnitProject;
             }
-            if (logLine.Contains("] Completed "))
+            if (line.Contains("] Completed "))
             {
                return LogLineType.WorkUnitFrame;
             }
-            if (logLine.Contains("] + Paused"))
+            if (line.Contains("] + Paused"))
             {
                return LogLineType.WorkUnitPaused;
             }
-            if (logLine.Contains("] + Running on battery power"))
+            if (line.Contains("] + Running on battery power"))
             {
                return LogLineType.WorkUnitPausedForBattery;
             }
-            if (logLine.Contains("] + Off battery, restarting core"))
+            if (line.Contains("] + Off battery, restarting core"))
             {
                return LogLineType.WorkUnitResumeFromBattery;
             }
-            if (logLine.Contains("] - Shutting down core"))
+            if (line.Contains("] - Shutting down core"))
             {
                return LogLineType.WorkUnitShuttingDownCore;
             }
-            if (logLine.Contains("] Folding@home Core Shutdown:"))
+            if (line.Contains("] Folding@home Core Shutdown:"))
             {
                return LogLineType.WorkUnitCoreShutdown;
             }
-            if (logLine.Contains("] + Number of Units Completed:"))
+            if (line.Contains("] + Number of Units Completed:"))
             {
                return LogLineType.ClientNumberOfUnitsCompleted;
             }
-            if (logLine.Contains("] Client-core communications error:"))
+            if (line.Contains("] Client-core communications error:"))
             {
                return LogLineType.ClientCoreCommunicationsError;
             }
-            if (logLine.Contains("] This is a sign of more serious problems, shutting down."))
+            if (line.Contains("] This is a sign of more serious problems, shutting down."))
             {
                //TODO: No unit test coverage - need test log that contains this string
                return LogLineType.ClientCoreCommunicationsErrorShutdown;
             }
-            if (logLine.Contains("] EUE limit exceeded. Pausing 24 hours."))
+            if (line.Contains("] EUE limit exceeded. Pausing 24 hours."))
             {
                return LogLineType.ClientEuePauseState;
             }
-            if (logLine.Contains("Folding@Home will go to sleep for 1 day"))
+            if (line.Contains("Folding@Home will go to sleep for 1 day"))
             {
                return LogLineType.ClientEuePauseState;
             }
-            if (logLine.Contains("Folding@Home Client Shutdown"))
+            if (line.Contains("Folding@Home Client Shutdown"))
             {
                return LogLineType.ClientShutdown;
             }
@@ -250,82 +250,82 @@ namespace HFM.Log
 
       private static class FahClient
       {
-         internal static LogLineType DetermineLineType(string logLine)
+         internal static LogLineType DetermineLineType(string line)
          {
-            if (logLine.Contains("*********************** Log Started"))
+            if (line.Contains("*********************** Log Started"))
             {
                return LogLineType.LogOpen;
             }
-            if (logLine.Contains(":Sending unit results:"))
+            if (line.Contains(":Sending unit results:"))
             {
                return LogLineType.ClientSendWorkToServer;
             }
-            if (logLine.Contains(": Uploading"))
+            if (line.Contains(": Uploading"))
             {
                return LogLineType.ClientSendStart;
             }
-            if (logLine.Contains(": Upload complete"))
+            if (line.Contains(": Upload complete"))
             {
                return LogLineType.ClientSendComplete;
             }
-            if (logLine.Contains(":Requesting new work unit for slot"))
+            if (line.Contains(":Requesting new work unit for slot"))
             {
                return LogLineType.ClientAttemptGetWorkPacket;
             }
-            if (logLine.Trim().EndsWith(":Starting"))
+            if (line.Trim().EndsWith(":Starting"))
             {
                return LogLineType.WorkUnitWorking;
             }
             /*** Appears to be for v7.1.38 and previous only ***/
-            if (logLine.Contains(":Starting Unit"))
+            if (line.Contains(":Starting Unit"))
             {
                return LogLineType.WorkUnitWorking;
             }
             /***************************************************/
-            if (logLine.Contains(":*------------------------------*"))
+            if (line.Contains(":*------------------------------*"))
             {
                return LogLineType.WorkUnitStart;
             }
-            if (logLine.Contains(":Version"))
+            if (line.Contains(":Version"))
             {
                return LogLineType.WorkUnitCoreVersion;
             }
-            if (logLine.Contains(":    Version"))
+            if (line.Contains(":    Version"))
             {
                return LogLineType.WorkUnitCoreVersion;
             }
-            if (logLine.Contains(":Project:"))
+            if (line.Contains(":Project:"))
             {
                return LogLineType.WorkUnitProject;
             }
-            if (logLine.Contains(":Completed "))
+            if (line.Contains(":Completed "))
             {
                return LogLineType.WorkUnitFrame;
             }
-            if (logLine.Contains(":- Shutting down core"))
+            if (line.Contains(":- Shutting down core"))
             {
                return LogLineType.WorkUnitShuttingDownCore;
             }
-            if (logLine.Contains(":Folding@home Core Shutdown:"))
+            if (line.Contains(":Folding@home Core Shutdown:"))
             {
                return LogLineType.WorkUnitCoreShutdown;
             }
-            if (System.Text.RegularExpressions.Regex.IsMatch(logLine, "FahCore returned: "))
+            if (System.Text.RegularExpressions.Regex.IsMatch(line, "FahCore returned: "))
             {
                return LogLineType.WorkUnitCoreReturn;
             }
             /*** Appears to be for v7.1.38 and previous only ***/
-            if (System.Text.RegularExpressions.Regex.IsMatch(logLine, "FahCore, running Unit \\d{2}, returned: "))
+            if (System.Text.RegularExpressions.Regex.IsMatch(line, "FahCore, running Unit \\d{2}, returned: "))
             {
                return LogLineType.WorkUnitCoreReturn;
             }
             /***************************************************/
-            if (logLine.Contains(":Cleaning up"))
+            if (line.Contains(":Cleaning up"))
             {
                return LogLineType.WorkUnitCleaningUp;
             }
             /*** Appears to be for v7.1.38 and previous only ***/
-            if (logLine.Contains(":Cleaning up Unit"))
+            if (line.Contains(":Cleaning up Unit"))
             {
                return LogLineType.WorkUnitCleaningUp;
             }
