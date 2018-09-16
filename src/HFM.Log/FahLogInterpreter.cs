@@ -9,12 +9,13 @@ namespace HFM.Log
    {
       internal static ClientRunData GetClientRunData(ClientRun clientRun)
       {
-         switch (clientRun.Parent.FahLogType)
+         if (clientRun.Parent is LegacyLog)
          {
-            case FahLogType.Legacy:
-               return GetClientRunDataLegacy(clientRun);
-            case FahLogType.FahClient:
-               return GetClientRunDataFahClient(clientRun);
+            return GetClientRunDataLegacy(clientRun);
+         }
+         if (clientRun.Parent is FahClientLog)
+         {
+            return GetClientRunDataFahClient(clientRun);
          }
          throw new ArgumentException("ClientRun FahLogType unknown", "clientRun");
       }
@@ -76,12 +77,13 @@ namespace HFM.Log
 
       internal static SlotRunData GetSlotRunData(SlotRun slotRun)
       {
-         switch (slotRun.Parent.Parent.FahLogType)
+         if (slotRun.Parent.Parent is LegacyLog)
          {
-            case FahLogType.Legacy:
-               return GetSlotRunDataLegacy(slotRun);
-            case FahLogType.FahClient:
-               return GetSlotRunDataFahClient(slotRun);
+            return GetSlotRunDataLegacy(slotRun);
+         }
+         if (slotRun.Parent.Parent is FahClientLog)
+         {
+            return GetSlotRunDataFahClient(slotRun);
          }
          throw new ArgumentException("SlotRun FahLogType unknown", "slotRun");
       }
@@ -195,12 +197,13 @@ namespace HFM.Log
 
       internal static UnitRunData GetUnitRunData(UnitRun unitRun)
       {
-         switch (unitRun.Parent.Parent.Parent.FahLogType)
+         if (unitRun.Parent.Parent.Parent is LegacyLog)
          {
-            case FahLogType.Legacy:
-               return GetUnitRunDataLegacy(unitRun);
-            case FahLogType.FahClient:
-               return GetUnitRunDataFahClient(unitRun);
+            return GetUnitRunDataLegacy(unitRun);
+         }
+         if (unitRun.Parent.Parent.Parent is FahClientLog)
+         {
+            return GetUnitRunDataFahClient(unitRun);
          }
          throw new ArgumentException("UnitRun FahLogType unknown", "unitRun");
       }

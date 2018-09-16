@@ -141,7 +141,7 @@ namespace HFM.Core
          #region Run the Aggregator
 
          var queue = ReadQueueFile(queueFilePath);
-         var fahLog = FahLog.Read(File.ReadLines(fahLogFilePath), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read(fahLogFilePath);
          var unitInfo = ReadUnitInfoFile(unitInfoLogFilePath);
 
          var result = dataAggregator.AggregateData(fahLog, queue, unitInfo);

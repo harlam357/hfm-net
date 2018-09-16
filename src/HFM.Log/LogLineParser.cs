@@ -9,29 +9,26 @@ namespace HFM.Log
 {
    internal static class LogLineParser
    {
-      internal static void SetLogLineParser(LogLine line, FahLogType fahLogType)
+      internal static Func<LogLine, object> GetLogLineParser(LogLineType lineType, FahLogType fahLogType)
       {
-         if (line.LineType == LogLineType.Unknown)
+         if (lineType == LogLineType.Unknown)
          {
-            return;
+            return null;
          }
          Func<LogLine, object> parser;
-         if (!CommonParsers.TryGetValue(line.LineType, out parser))
+         if (!CommonParsers.TryGetValue(lineType, out parser))
          {
             switch (fahLogType)
             {
                case FahLogType.Legacy:
-                  LegacyParsers.TryGetValue(line.LineType, out parser);
+                  LegacyParsers.TryGetValue(lineType, out parser);
                   break;
                case FahLogType.FahClient:
-                  FahClientParsers.TryGetValue(line.LineType, out parser);
+                  FahClientParsers.TryGetValue(lineType, out parser);
                   break;
             }
          }
-         if (parser != null)
-         {
-            line.SetParser(parser);
-         }
+         return parser;
       }
 
       private static readonly Dictionary<LogLineType, Func<LogLine, object>> CommonParsers = new Dictionary<LogLineType, Func<LogLine, object>>

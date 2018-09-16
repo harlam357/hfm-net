@@ -16,7 +16,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_10_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);
@@ -103,7 +103,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_13_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_13\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);
@@ -358,7 +358,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_14_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_14\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_14\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);
@@ -3160,7 +3160,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_15_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_15\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_15\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);
@@ -3937,7 +3937,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_16_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_16\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_16\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);
@@ -6859,7 +6859,7 @@ namespace HFM.Log
       public void FahClientLog_Read_Client_v7_17_Test()
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Client_v7_17\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_17\\log.txt");
 
          // Setup ClientRun 0
          var expectedRun = new ClientRun(null, 0);

@@ -105,6 +105,9 @@ namespace HFM.Log.Tool
          }
       }
 
+      private const string LegacyLogType = "Legacy";
+      private const string FahClientLogType = "FahClient";
+
       private void btnParse_Click(object sender, EventArgs e)
       {
          if (txtLogPath.Text.Length == 0) return;
@@ -113,12 +116,23 @@ namespace HFM.Log.Tool
 
          if (File.Exists(txtLogPath.Text))
          {
-            FahLogType fahLogType = GetLogFileType();
-
-            //var sw = Stopwatch.StartNew();
-            _fahLog = FahLog.Read(File.ReadLines(txtLogPath.Text), fahLogType);
-            //sw.Stop();
-            //Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
+#if DEBUG
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
+            string fahLogType = GetLogFileType();
+            switch (fahLogType)
+            {
+               case LegacyLogType:
+                  _fahLog = LegacyLog.Read(txtLogPath.Text);
+                  break;
+               case FahClientLogType:
+                  _fahLog = FahClientLog.Read(txtLogPath.Text);
+                  break;
+            }
+#if DEBUG
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
+#endif
             _logLines = _fahLog.ToList();
             PopulateClientRunsInTree(_fahLog);
             richTextBox1.SetLogLines(_logLines, String.Empty, true);
@@ -130,9 +144,9 @@ namespace HFM.Log.Tool
          }
       }
 
-      private FahLogType GetLogFileType()
+      private string GetLogFileType()
       {
-         return LegacyRadioButton.Checked ? FahLogType.Legacy : FahLogType.FahClient;
+         return LegacyRadioButton.Checked ? LegacyLogType : FahClientLogType;
       }
 
       private void PopulateClientRunsInTree(FahLog fahLog)

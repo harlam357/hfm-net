@@ -49,7 +49,7 @@ namespace HFM.Core
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -129,7 +129,7 @@ namespace HFM.Core
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -207,7 +207,7 @@ namespace HFM.Core
          const int slotId = 1;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();
@@ -287,7 +287,7 @@ namespace HFM.Core
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_11";
 
-         var fahLog = FahLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"), FahLogType.FahClient);
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt");
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
          var unitCollection = new UnitCollection();

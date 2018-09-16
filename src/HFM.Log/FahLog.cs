@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HFM.Log
 {
-   public enum FahLogType
+   internal enum FahLogType
    {
       Legacy,
       FahClient
@@ -14,39 +15,6 @@ namespace HFM.Log
 
    public abstract class FahLog : IEnumerable<LogLine>
    {
-      public static FahLog Create(FahLogType fahLogType)
-      {
-         switch (fahLogType)
-         {
-            case FahLogType.Legacy:
-               return new LegacyLog();
-            case FahLogType.FahClient:
-               return new FahClientLog();
-         }
-         throw new ArgumentException("FahLogType unknown", "fahLogType");
-      }
-
-      public static FahLog Read(IEnumerable<string> lines, FahLogType fahLogType)
-      {
-         if (lines == null) throw new ArgumentNullException("lines");
-
-         var fahLog = Create(fahLogType);
-         fahLog.AddRange(lines);
-         return fahLog;
-      }
-
-      private readonly FahLogType _fahLogType;
-
-      public FahLogType FahLogType
-      {
-         get { return _fahLogType; }
-      }
-
-      protected FahLog(FahLogType fahLogType)
-      {
-         _fahLogType = fahLogType;
-      }
-
       private Stack<ClientRun> _clientRuns;
 
       public Stack<ClientRun> ClientRuns
@@ -54,30 +22,16 @@ namespace HFM.Log
          get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun>()); }
       }
 
-      private int _lineIndex;
-
-      public void AddRange(IEnumerable<string> lines)
+      public void Read(FahLogReader reader)
       {
-         foreach (var line in lines)
+         if (reader == null) throw new ArgumentNullException("reader");
+
+         LogLine logLine;
+         while ((logLine = reader.ReadLine()) != null)
          {
-            AddInternal(line);
+            AddLogLine(logLine);
          }
          Finish();
-      }
-
-      public void Add(string line)
-      {
-         AddInternal(line);
-         Finish();
-      }
-
-      private void AddInternal(string line)
-      {
-         LogLineType lineType = LogLineIdentifier.GetLogLineType(line, FahLogType);
-         var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = _lineIndex };
-         LogLineParser.SetLogLineParser(logLine, FahLogType);
-         AddLogLine(logLine);
-         _lineIndex++;
       }
 
       public void Clear()
@@ -86,7 +40,6 @@ namespace HFM.Log
          {
             _clientRuns.Clear();
          }
-         _lineIndex = 0;
       }
 
       protected abstract void AddLogLine(LogLine logLine);
@@ -108,19 +61,32 @@ namespace HFM.Log
    {
       private const int FoldingSlot = 0;
 
+      private int _lineIndex;
       private LogLineType _currentLineType;
       private UnitIndexData _unitIndexData;
 
       private List<LogLine> _logBuffer;
 
       public LegacyLog()
-         : base(FahLogType.Legacy)
       {
          _unitIndexData.Initialize();
       }
 
+      public static LegacyLog Read(string path)
+      {
+         using (var textReader = new StreamReader(path))
+         using (var reader = LegacyLogReader.Create(textReader))
+         {
+            var log = new LegacyLog();
+            log.Read(reader);
+            return log;
+         }
+      }
+
       protected override void AddLogLine(LogLine logLine)
       {
+         logLine.LineIndex = _lineIndex++;
+
          switch (logLine.LineType)
          {
             case LogLineType.LogOpen:
@@ -382,14 +348,33 @@ namespace HFM.Log
 
    public class FahClientLog : FahLog
    {
-      public FahClientLog()
-         : base(FahLogType.FahClient)
-      {
+      private int _lineIndex;
 
+      public static FahClientLog Read(string path)
+      {
+         using (var textReader = new StreamReader(path))
+         using (var reader = FahClientLogReader.Create(textReader))
+         {
+            var log = new FahClientLog();
+            log.Read(reader);
+            return log;
+         }
+      }
+
+      public static FahClientLog Read(IEnumerable<string> lines)
+      {
+         using (var reader = FahClientLogReader.Create(lines))
+         {
+            var log = new FahClientLog();
+            log.Read(reader);
+            return log;
+         }
       }
 
       protected override void AddLogLine(LogLine logLine)
       {
+         logLine.LineIndex = _lineIndex++;
+
          bool isWorkUnitLogLine = SetLogLineProperties(logLine);
          if (!isWorkUnitLogLine)
          {

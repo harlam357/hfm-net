@@ -16,7 +16,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_1_Test() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -80,7 +80,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_2_Test() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -125,7 +125,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_3_Test() // verbosity (normal) / Handles Core Download on Startup / notfred's instance
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -168,7 +168,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_10_Test() // -smp 8 -bigadv verbosity 9 / Corrupted Log Section in Client Run Index 5
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_10\\FAHlog.txt");
 
          // Check Run 5 Positions
          var expectedRun = new ClientRun(null, 401);
@@ -209,7 +209,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_15_Test() // lots of Client-core communications error
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_15\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -282,7 +282,7 @@ namespace HFM.Log
       public void LegacyLog_Read_SMP_17_Test() // v6.23 A4 SMP
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\SMP_17\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);
@@ -323,7 +323,7 @@ namespace HFM.Log
       public void LegacyLog_Read_GPU2_1_Test() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\GPU2_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -402,7 +402,7 @@ namespace HFM.Log
       public void LegacyLog_Read_GPU2_2_Test() // verbosity (normal)
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\GPU2_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -444,7 +444,7 @@ namespace HFM.Log
       public void LegacyLog_Read_GPU2_3_Test() // verbosity (normal) / EUE Pause Test
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\GPU2_3\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);
@@ -515,7 +515,7 @@ namespace HFM.Log
       public void LegacyLog_Read_GPU2_7_Test() // verbosity (normal) / Project String After "+ Processing work unit"
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\GPU2_7\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);
@@ -565,7 +565,7 @@ namespace HFM.Log
       public void LegacyLog_Read_GPU3_2_Test() // verbosity 9 / OPENMMGPU v2.19
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\GPU3_2\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -616,7 +616,7 @@ namespace HFM.Log
       public void LegacyLog_Read_Standard_1_Test() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\Standard_1\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -696,7 +696,7 @@ namespace HFM.Log
       public void LegacyLog_Read_Standard_5_Test() // verbosity 9
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\Standard_5\\FAHlog.txt");
 
          // Check Run 3 Positions
          var expectedRun = new ClientRun(null, 788);
@@ -770,7 +770,7 @@ namespace HFM.Log
       public void LegacyLog_Read_Standard_6_Test() // verbosity normal / Gromacs 3.3
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\Standard_6\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 2);
@@ -820,7 +820,7 @@ namespace HFM.Log
       public void LegacyLog_Read_Standard_9_Test() // v6.23 A4 Uniprocessor
       {
          // Scan
-         var fahLog = FahLog.Read(File.ReadAllLines("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt"), FahLogType.Legacy);
+         var fahLog = LegacyLog.Read("..\\..\\..\\TestFiles\\Standard_9\\FAHlog.txt");
 
          // Check Run 0 Positions
          var expectedRun = new ClientRun(null, 0);

@@ -156,7 +156,7 @@ namespace HFM.Core
          _messageConnection = messageConnection;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
-         _fahLog = FahLog.Create(FahLogType.FahClient);
+         _fahLog = new FahClientLog();
          _messages = new MessageReceiver();
 
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
@@ -188,7 +188,7 @@ namespace HFM.Core
             }
 
             var logFragment = (LogFragment)e.TypedMessage;
-            _fahLog.AddRange(logFragment.Value.Split('\n').Where(x => x.Length != 0));
+            _fahLog.Read(FahClientLogReader.Create(logFragment.Value.Split('\n').Where(x => x.Length != 0)));
             WriteToLocalFahLogCache(logFragment.Value, createNew);
 
             if (_messages.LogRetrieved)
