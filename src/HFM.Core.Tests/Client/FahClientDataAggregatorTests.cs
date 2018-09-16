@@ -130,7 +130,13 @@ namespace HFM.Core
          const int slotId = 0;
          _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahClientLog.Read(File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
+         var fahLog = new FahClientLog();
+         string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
+         using (var textReader = new StringReader(filteredLogText))
+         using (var reader = new FahClientLogReader(textReader))
+         {
+            fahLog.Read(reader);
+         }
 
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
          var unitCollection = new UnitCollection();

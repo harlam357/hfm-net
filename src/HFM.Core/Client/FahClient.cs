@@ -188,7 +188,12 @@ namespace HFM.Core
             }
 
             var logFragment = (LogFragment)e.TypedMessage;
-            _fahLog.Read(Log.FahClient.FahClientLogReader.Create(logFragment.Value.Split('\n').Where(x => x.Length != 0)));
+            string filteredLogFragment = String.Join("\n", logFragment.Value.Split('\n').Where(x => x.Length != 0));
+            using (var textReader = new StringReader(filteredLogFragment))
+            using (var reader = new Log.FahClient.FahClientLogReader(textReader))
+            {
+               _fahLog.Read(reader);
+            }
             WriteToLocalFahLogCache(logFragment.Value, createNew);
 
             if (_messages.LogRetrieved)

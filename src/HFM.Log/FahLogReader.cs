@@ -8,14 +8,14 @@ namespace HFM.Log
 {
    public abstract class FahLogReader : IDisposable
    {
-      private readonly IFahLogLineReader _lineReader;
-      private readonly ILogLineTypeIdentifier _logLineTypeIdentifier;
+      private readonly TextReader _textReader;
+      private readonly ILogLineTypeIdentifier _typeIdentifier;
       private readonly ILogLineParserDictionary _parserDictionary;
 
-      internal FahLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineParserDictionary parserDictionary)
+      protected FahLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
       {
-         _lineReader = lineReader;
-         _logLineTypeIdentifier = logLineTypeIdentifier;
+         _textReader = textReader;
+         _typeIdentifier = typeIdentifier;
          _parserDictionary = parserDictionary;
       }
 
@@ -27,7 +27,7 @@ namespace HFM.Log
       /// <returns>The next line from the reader, or null if all lines have been read.</returns>
       public LogLine ReadLine()
       {
-         string line = _lineReader.ReadLine();
+         string line = _textReader.ReadLine();
          return CreateLine(line, _lineIndex++);
       }
 
@@ -37,14 +37,14 @@ namespace HFM.Log
       /// <returns>A task that represents the asynchronous read operation. The value of the TResult parameter contains the next line from the reader, or is null if all of the lines have been read.</returns>
       public async Task<LogLine> ReadLineAsync()
       {
-         string line = await _lineReader.ReadLineAsync().ConfigureAwait(false);
+         string line = await _textReader.ReadLineAsync().ConfigureAwait(false);
          return CreateLine(line, _lineIndex++);
       }
 
       private LogLine CreateLine(string line, int index)
       {
          if (line == null) return null;
-         var lineType = _logLineTypeIdentifier.DetermineLineType(line);
+         var lineType = _typeIdentifier.DetermineLineType(line);
          Func<LogLine, object> parser;
          _parserDictionary.TryGetValue(lineType, out parser);
          var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = index };
@@ -54,7 +54,7 @@ namespace HFM.Log
 
       public virtual void Close()
       {
-         _lineReader.Close();
+         _textReader.Close();
       }
 
       protected virtual void Dispose(bool disposing)
@@ -76,20 +76,16 @@ namespace HFM.Log
    {
       public class FahClientLogReader : FahLogReader
       {
-         private FahClientLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineParserDictionary parserDictionary)
-            : base(lineReader, logLineTypeIdentifier, parserDictionary)
+         public FahClientLogReader(TextReader textReader)
+            : this(textReader, new FahClientLogLineTypeIdentifier(), new FahClientLogLineParserDictionary())
          {
-
+            
          }
 
-         public static FahLogReader Create(TextReader textReader)
+         public FahClientLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
+            : base(textReader, typeIdentifier, parserDictionary)
          {
-            return new FahClientLogReader(new FahTextReaderLogLineReader(textReader), new FahClientLogLineTypeIdentifier(), new FahClientLogLineParserDictionary());
-         }
 
-         public static FahLogReader Create(IEnumerable<string> lines)
-         {
-            return new FahClientLogReader(new FahStringEnumerationLogLineReader(lines), new FahClientLogLineTypeIdentifier(), new FahClientLogLineParserDictionary());
          }
       }
    }
@@ -98,84 +94,17 @@ namespace HFM.Log
    {
       public class LegacyLogReader : FahLogReader
       {
-         private LegacyLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineParserDictionary parserDictionary)
-            : base(lineReader, logLineTypeIdentifier, parserDictionary)
+         public LegacyLogReader(TextReader textReader)
+            : this(textReader, new LegacyLogLineTypeIdentifier(), new LegacyLogLineParserDictionary())
+         {
+            
+         }
+
+         public LegacyLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
+            : base(textReader, typeIdentifier, parserDictionary)
          {
 
          }
-
-         public static FahLogReader Create(TextReader textReader)
-         {
-            return new LegacyLogReader(new FahTextReaderLogLineReader(textReader), new LegacyLogLineTypeIdentifier(), new LegacyLogLineParserDictionary());
-         }
-
-         public static FahLogReader Create(IEnumerable<string> lines)
-         {
-            return new LegacyLogReader(new FahStringEnumerationLogLineReader(lines), new LegacyLogLineTypeIdentifier(), new LegacyLogLineParserDictionary());
-         }
-      }
-   }
-
-   internal interface IFahLogLineReader
-   {
-      string ReadLine();
-
-      Task<string> ReadLineAsync();
-
-      void Close();
-   }
-
-   internal sealed class FahTextReaderLogLineReader : IFahLogLineReader
-   {
-      private readonly TextReader _textReader;
-
-      public FahTextReaderLogLineReader(TextReader textReader)
-      {
-         _textReader = textReader;
-      }
-
-      public string ReadLine()
-      {
-         return _textReader.ReadLine();
-      }
-
-      public async Task<string> ReadLineAsync()
-      {
-         return await _textReader.ReadLineAsync().ConfigureAwait(false);
-      }
-
-      public void Close()
-      {
-         _textReader.Close();
-      }
-   }
-
-   internal sealed class FahStringEnumerationLogLineReader : IFahLogLineReader
-   {
-      private readonly IEnumerator<string> _lineEnumerator;
-
-      public FahStringEnumerationLogLineReader(IEnumerable<string> lines)
-      {
-         _lineEnumerator = lines.GetEnumerator();
-      }
-
-      public string ReadLine()
-      {
-         if (_lineEnumerator.MoveNext())
-         {
-            return _lineEnumerator.Current;
-         }
-         return null;
-      }
-
-      public Task<string> ReadLineAsync()
-      {
-         return Task.FromResult(ReadLine());
-      }
-
-      public void Close()
-      {
-         
       }
    }
 }

@@ -71,7 +71,7 @@ namespace HFM.Log
          public static LegacyLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
-            using (var reader = LegacyLogReader.Create(textReader))
+            using (var reader = new LegacyLogReader(textReader))
             {
                var log = new LegacyLog();
                log.Read(reader);
@@ -352,17 +352,7 @@ namespace HFM.Log
          public static FahClientLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
-            using (var reader = FahClientLogReader.Create(textReader))
-            {
-               var log = new FahClientLog();
-               log.Read(reader);
-               return log;
-            }
-         }
-
-         public static FahClientLog Read(IEnumerable<string> lines)
-         {
-            using (var reader = FahClientLogReader.Create(lines))
+            using (var reader = new FahClientLogReader(textReader))
             {
                var log = new FahClientLog();
                log.Read(reader);
