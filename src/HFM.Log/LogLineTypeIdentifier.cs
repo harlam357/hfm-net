@@ -4,7 +4,7 @@ namespace HFM.Log
    public interface ILogLineTypeIdentifier
    {
       /// <summary>
-      /// Determines the log line type based on the contents of the string line.  
+      /// Determines the log line type based on the contents of the string line.
       /// </summary>
       LogLineType DetermineLineType(string line);
    }
@@ -12,7 +12,7 @@ namespace HFM.Log
    public abstract class LogLineTypeIdentifier : ILogLineTypeIdentifier
    {
       /// <summary>
-      /// Determines the log line type based on the contents of the string line.  
+      /// Determines the log line type based on the contents of the string line.
       /// </summary>
       public LogLineType DetermineLineType(string line)
       {
@@ -20,9 +20,17 @@ namespace HFM.Log
       }
 
       /// <summary>
+      /// Implement this method in derived types to determine the log line type based on the contents of the string line.
+      /// </summary>
+      protected abstract LogLineType OnDetermineLineType(string line);
+   }
+
+   public class CommonLogLineTypeIdentifier : LogLineTypeIdentifier
+   {
+      /// <summary>
       /// Contains logic to determine the log line type for FahClient or Legacy logs.
       /// </summary>
-      protected virtual LogLineType OnDetermineLineType(string line)
+      protected override LogLineType OnDetermineLineType(string line)
       {
          return IsLineTypeWorkUnitRunning(line) ? LogLineType.WorkUnitRunning : LogLineType.None;
       }
@@ -65,7 +73,7 @@ namespace HFM.Log
       }
    }
 
-   public class LegacyLogLineTypeIdentifier : LogLineTypeIdentifier
+   public class LegacyLogLineTypeIdentifier : CommonLogLineTypeIdentifier
    {
       /// <summary>
       /// Contains logic to determine the log line type for Legacy logs.
@@ -256,7 +264,7 @@ namespace HFM.Log
       }
    }
 
-   public class FahClientLogLineTypeIdentifier : LogLineTypeIdentifier
+   public class FahClientLogLineTypeIdentifier : CommonLogLineTypeIdentifier
    {
       /// <summary>
       /// Contains logic to determine the log line type for FahClient logs.
