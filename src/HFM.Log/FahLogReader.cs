@@ -9,11 +9,13 @@ namespace HFM.Log
    public abstract class FahLogReader : IDisposable
    {
       private readonly IFahLogLineReader _lineReader;
+      private readonly ILogLineTypeIdentifier _logLineTypeIdentifier;
       private readonly FahLogType _logType;
 
-      internal FahLogReader(IFahLogLineReader lineReader, FahLogType logType)
+      internal FahLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier, FahLogType logType)
       {
          _lineReader = lineReader;
+         _logLineTypeIdentifier = logLineTypeIdentifier;
          _logType = logType;
       }
 
@@ -42,7 +44,7 @@ namespace HFM.Log
       private LogLine CreateLine(string line, int index)
       {
          if (line == null) return null;
-         var lineType = LogLineTypeIdentifier.GetLogLineType(line, _logType);
+         var lineType = _logLineTypeIdentifier.DetermineLineType(line);
          var parser = LogLineParser.GetLogLineParser(lineType, _logType);
          var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = index };
          if (parser != null) logLine.SetParser(parser);
@@ -71,39 +73,39 @@ namespace HFM.Log
 
    public class FahClientLogReader : FahLogReader
    {
-      private FahClientLogReader(IFahLogLineReader lineReader)
-         : base(lineReader, FahLogType.FahClient)
+      private FahClientLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier)
+         : base(lineReader, logLineTypeIdentifier, FahLogType.FahClient)
       {
          
       }
 
       public static FahLogReader Create(TextReader textReader)
       {
-         return new FahClientLogReader(new FahTextReaderLogLineReader(textReader));
+         return new FahClientLogReader(new FahTextReaderLogLineReader(textReader), new FahClientLogLineTypeIdentifier());
       }
 
       public static FahLogReader Create(IEnumerable<string> lines)
       {
-         return new FahClientLogReader(new FahStringEnumerationLogLineReader(lines));
+         return new FahClientLogReader(new FahStringEnumerationLogLineReader(lines), new FahClientLogLineTypeIdentifier());
       }
    }
 
    public class LegacyLogReader : FahLogReader
    {
-      private LegacyLogReader(IFahLogLineReader lineReader)
-         : base(lineReader, FahLogType.Legacy)
+      private LegacyLogReader(IFahLogLineReader lineReader, ILogLineTypeIdentifier logLineTypeIdentifier)
+         : base(lineReader, logLineTypeIdentifier, FahLogType.Legacy)
       {
 
       }
 
       public static FahLogReader Create(TextReader textReader)
       {
-         return new LegacyLogReader(new FahTextReaderLogLineReader(textReader));
+         return new LegacyLogReader(new FahTextReaderLogLineReader(textReader), new LegacyLogLineTypeIdentifier());
       }
 
       public static FahLogReader Create(IEnumerable<string> lines)
       {
-         return new LegacyLogReader(new FahStringEnumerationLogLineReader(lines));
+         return new LegacyLogReader(new FahStringEnumerationLogLineReader(lines), new LegacyLogLineTypeIdentifier());
       }
    }
 
