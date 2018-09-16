@@ -13,7 +13,7 @@ namespace HFM.Log
       {
          Assert.Throws(typeof(ArgumentNullException), () =>
          {
-            FahLog log = new FahClientLog();
+            FahLog log = new FahClient.FahClientLog();
             log.Read(null);
          });
       }
@@ -23,7 +23,7 @@ namespace HFM.Log
       {
          Assert.Throws(typeof(ArgumentNullException), () =>
          {
-            FahLog log = new LegacyLog();
+            FahLog log = new Legacy.LegacyLog();
             log.Read(null);
          });
       }

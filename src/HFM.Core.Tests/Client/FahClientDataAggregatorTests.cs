@@ -27,6 +27,7 @@ using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Log.FahClient;
 
 namespace HFM.Core
 {

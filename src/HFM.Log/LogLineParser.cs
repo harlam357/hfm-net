@@ -9,248 +9,233 @@ using HFM.Log.Internal;
 
 namespace HFM.Log
 {
-   internal static class LogLineParser
+   internal static class CommonLogLineParser
    {
-      internal static Func<LogLine, object> GetLogLineParser(LogLineType lineType, FahLogType fahLogType)
+      internal static void AddToDictionary(IDictionary<LogLineType, Func<LogLine, object>> dictionary)
       {
-         if (lineType == LogLineType.None)
-         {
-            return null;
-         }
-         Func<LogLine, object> parser;
-         if (!CommonParsers.TryGetValue(lineType, out parser))
-         {
-            switch (fahLogType)
-            {
-               case FahLogType.Legacy:
-                  LegacyParsers.TryGetValue(lineType, out parser);
-                  break;
-               case FahLogType.FahClient:
-                  FahClientParsers.TryGetValue(lineType, out parser);
-                  break;
-            }
-         }
-         return parser;
+         dictionary.Add(LogLineType.WorkUnitProject, ParseWorkUnitProject);
+         dictionary.Add(LogLineType.WorkUnitFrame, ParseWorkUnitFrame);
+         dictionary.Add(LogLineType.WorkUnitCoreShutdown, ParseWorkUnitCoreShutdown);
       }
 
-      private static readonly Dictionary<LogLineType, Func<LogLine, object>> CommonParsers = new Dictionary<LogLineType, Func<LogLine, object>>
+      internal static Tuple<int, int, int, int> ParseWorkUnitProject(LogLine logLine)
       {
-         { LogLineType.WorkUnitProject, Common.ParseWorkUnitProject },
-         { LogLineType.WorkUnitFrame, Common.ParseWorkUnitFrame },
-         { LogLineType.WorkUnitCoreShutdown, Common.ParseWorkUnitCoreShutdown }
-      };
+         Match projectIdMatch;
+         if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.LineRaw)).Success)
+         {
+            return Tuple.Create(
+               Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
+               Int32.Parse(projectIdMatch.Groups["Run"].Value),
+               Int32.Parse(projectIdMatch.Groups["Clone"].Value),
+               Int32.Parse(projectIdMatch.Groups["Gen"].Value)
+            );
+         }
+         return null;
+      }
 
-      internal static class Common
+      internal static UnitFrame ParseWorkUnitFrame(LogLine logLine)
       {
-         internal static Tuple<int, int, int, int> ParseWorkUnitProject(LogLine logLine)
+         UnitFrame frame = GetUnitFrame(logLine);
+         if (frame != null)
          {
-            Match projectIdMatch;
-            if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.LineRaw)).Success)
-            {
-               return Tuple.Create(
-                  Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
-                  Int32.Parse(projectIdMatch.Groups["Run"].Value),
-                  Int32.Parse(projectIdMatch.Groups["Clone"].Value),
-                  Int32.Parse(projectIdMatch.Groups["Gen"].Value)
-               );
-            }
-            return null;
+            return frame;
          }
-
-         internal static UnitFrame ParseWorkUnitFrame(LogLine logLine)
+         frame = GetGpuUnitFrame(logLine);
+         if (frame != null)
          {
-            UnitFrame frame = GetUnitFrame(logLine);
-            if (frame != null)
-            {
-               return frame;
-            }
-            frame = GetGpuUnitFrame(logLine);
-            if (frame != null)
-            {
-               return frame;
-            }
-            return null;
+            return frame;
          }
+         return null;
+      }
 
-         private static UnitFrame GetUnitFrame(LogLine logLine)
+      private static UnitFrame GetUnitFrame(LogLine logLine)
+      {
+         Debug.Assert(logLine != null);
+
+         Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.LineRaw);
+         if (framesCompleted.Success)
          {
-            Debug.Assert(logLine != null);
+            var frame = new UnitFrame();
 
-            Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.LineRaw);
-            if (framesCompleted.Success)
+            int result;
+            if (Int32.TryParse(framesCompleted.Result("${Completed}"), out result))
             {
-               var frame = new UnitFrame();
-
-               int result;
-               if (Int32.TryParse(framesCompleted.Result("${Completed}"), out result))
-               {
-                  frame.RawFramesComplete = result;
-               }
-               else
-               {
-                  return null;
-               }
-
-               if (Int32.TryParse(framesCompleted.Result("${Total}"), out result))
-               {
-                  frame.RawFramesTotal = result;
-               }
-               else
-               {
-                  return null;
-               }
-
-               string percentString = framesCompleted.Result("${Percent}");
-
-               Match mPercent1 = FahLogRegex.Common.Percent1Regex.Match(percentString);
-               Match mPercent2 = FahLogRegex.Common.Percent2Regex.Match(percentString);
-
-               int framePercent;
-               if (mPercent1.Success)
-               {
-                  framePercent = Int32.Parse(mPercent1.Result("${Percent}"));
-               }
-               else if (mPercent2.Success)
-               {
-                  framePercent = Int32.Parse(mPercent2.Result("${Percent}"));
-               }
-               // Try to parse a percentage from in between the parentheses (for older single core clients like v5.02) - Issue 36
-               else if (!Int32.TryParse(percentString, out framePercent))
-               {
-                  return null;
-               }
-
-               // Validate the steps are in tolerance with the detected frame percent - Issue 98
-               double calculatedPercent = ((double)frame.RawFramesComplete / frame.RawFramesTotal) * 100;
-               // ex. [00:19:40] Completed 82499 out of 250000 steps  (33%) - Would Validate
-               //     [00:19:40] Completed 82750 out of 250000 steps  (33%) - Would Validate
-               // 10% frame step tolerance. In the example the completed must be within 250 steps.
-               if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
-               {
-                  frame.TimeOfFrame = ParseTimeStamp(logLine);
-                  frame.FrameID = framePercent;
-
-                  return frame;
-               }
-               /*** ProtoMol Only */
-               // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
-               if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
-               {
-                  frame.TimeOfFrame = ParseTimeStamp(logLine);
-                  frame.FrameID = framePercent + 1;
-
-                  return frame;
-               }
-               /*******************/
-
+               frame.RawFramesComplete = result;
+            }
+            else
+            {
                return null;
             }
 
-            return null;
-         }
-
-         private static UnitFrame GetGpuUnitFrame(LogLine logLine)
-         {
-            Debug.Assert(logLine != null);
-
-            Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.LineRaw);
-            if (framesCompletedGpu.Success)
+            if (Int32.TryParse(framesCompleted.Result("${Total}"), out result))
             {
-               var frame = new UnitFrame();
+               frame.RawFramesTotal = result;
+            }
+            else
+            {
+               return null;
+            }
 
-               frame.RawFramesComplete = Int32.Parse(framesCompletedGpu.Result("${Percent}"));
-               frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
-               // I get this from the project data but what's the point. 100% is 100%.
+            string percentString = framesCompleted.Result("${Percent}");
 
+            Match mPercent1 = FahLogRegex.Common.Percent1Regex.Match(percentString);
+            Match mPercent2 = FahLogRegex.Common.Percent2Regex.Match(percentString);
+
+            int framePercent;
+            if (mPercent1.Success)
+            {
+               framePercent = Int32.Parse(mPercent1.Result("${Percent}"));
+            }
+            else if (mPercent2.Success)
+            {
+               framePercent = Int32.Parse(mPercent2.Result("${Percent}"));
+            }
+            // Try to parse a percentage from in between the parentheses (for older single core clients like v5.02) - Issue 36
+            else if (!Int32.TryParse(percentString, out framePercent))
+            {
+               return null;
+            }
+
+            // Validate the steps are in tolerance with the detected frame percent - Issue 98
+            double calculatedPercent = ((double)frame.RawFramesComplete / frame.RawFramesTotal) * 100;
+            // ex. [00:19:40] Completed 82499 out of 250000 steps  (33%) - Would Validate
+            //     [00:19:40] Completed 82750 out of 250000 steps  (33%) - Would Validate
+            // 10% frame step tolerance. In the example the completed must be within 250 steps.
+            if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
+            {
                frame.TimeOfFrame = ParseTimeStamp(logLine);
-               frame.FrameID = frame.RawFramesComplete;
+               frame.FrameID = framePercent;
 
                return frame;
             }
+            /*** ProtoMol Only */
+            // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
+            if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
+            {
+               frame.TimeOfFrame = ParseTimeStamp(logLine);
+               frame.FrameID = framePercent + 1;
+
+               return frame;
+            }
+            /*******************/
 
             return null;
          }
 
-         internal static object ParseWorkUnitCoreShutdown(LogLine logLine)
-         {
-            Match coreShutdownMatch;
-            if ((coreShutdownMatch = FahLogRegex.Common.CoreShutdownRegex.Match(logLine.LineRaw)).Success)
-            {
-               // remove any carriage returns from fahclient log lines - 12/30/11
-               string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
-               return ToWorkUnitResult(unitResultValue);
-            }
-            return default(WorkUnitResult);
-         }
-
-         internal static TimeSpan? GetTimeStamp(LogLine logLine)
-         {
-            if (logLine.TimeStamp != null)
-            {
-               return logLine.TimeStamp;
-            }
-            Match timeStampMatch;
-            if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
-            {
-               return GetTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
-            }
-            return null;
-         }
-
-         internal static TimeSpan? GetTimeStamp(string value)
-         {
-            DateTime result;
-            if (DateTime.TryParseExact(value, "HH:mm:ss",
-                                       DateTimeFormatInfo.InvariantInfo,
-                                       DateTimeParse.Styles, out result))
-            {
-               return result.TimeOfDay;
-            }
-            return null;
-         }
-
-         internal static TimeSpan ParseTimeStamp(LogLine logLine)
-         {
-            if (logLine.TimeStamp != null)
-            {
-               return logLine.TimeStamp.Value;
-            }
-            Match timeStampMatch;
-            if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
-            {
-               return ParseTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
-            }
-
-            throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.LineRaw));
-         }
-
-         internal static TimeSpan ParseTimeStamp(string value)
-         {
-            return DateTime.ParseExact(value, "HH:mm:ss",
-                                       DateTimeFormatInfo.InvariantInfo,
-                                       DateTimeParse.Styles).TimeOfDay;
-         }
+         return null;
       }
 
-      private static readonly Dictionary<LogLineType, Func<LogLine, object>> LegacyParsers = new Dictionary<LogLineType, Func<LogLine, object>>
+      private static UnitFrame GetGpuUnitFrame(LogLine logLine)
       {
-         { LogLineType.LogOpen, Legacy.ParseLogOpen },
-         { LogLineType.ClientVersion, Legacy.ParseClientVersion },
-         { LogLineType.ClientArguments, Legacy.ParseClientArguments },
-         { LogLineType.ClientUserNameTeam, Legacy.ParseClientUserNameTeam },
-         { LogLineType.ClientReceivedUserID, Legacy.ParseClientReceivedUserID },
-         { LogLineType.ClientUserID, Legacy.ParseClientUserID },
-         { LogLineType.ClientMachineID, Legacy.ParseClientMachineID },
-         { LogLineType.WorkUnitIndex, Legacy.ParseWorkUnitIndex },
-         { LogLineType.WorkUnitQueueIndex, Legacy.ParseWorkUnitQueueIndex },
-         { LogLineType.WorkUnitCallingCore, Legacy.ParseWorkUnitCallingCore },
-         { LogLineType.WorkUnitCoreVersion, Legacy.ParseWorkUnitCoreVersion },
-         { LogLineType.ClientNumberOfUnitsCompleted, Legacy.ParseClientNumberOfUnitsCompleted },
-         { LogLineType.ClientCoreCommunicationsError, Legacy.ParseClientCoreCommunicationsError }
-      };
+         Debug.Assert(logLine != null);
 
-      internal static class Legacy
+         Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.LineRaw);
+         if (framesCompletedGpu.Success)
+         {
+            var frame = new UnitFrame();
+
+            frame.RawFramesComplete = Int32.Parse(framesCompletedGpu.Result("${Percent}"));
+            frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
+            // I get this from the project data but what's the point. 100% is 100%.
+
+            frame.TimeOfFrame = ParseTimeStamp(logLine);
+            frame.FrameID = frame.RawFramesComplete;
+
+            return frame;
+         }
+
+         return null;
+      }
+
+      internal static object ParseWorkUnitCoreShutdown(LogLine logLine)
       {
+         Match coreShutdownMatch;
+         if ((coreShutdownMatch = FahLogRegex.Common.CoreShutdownRegex.Match(logLine.LineRaw)).Success)
+         {
+            // remove any carriage returns from fahclient log lines - 12/30/11
+            string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
+            return WorkUnitResultString.ToWorkUnitResult(unitResultValue);
+         }
+         return default(WorkUnitResult);
+      }
+
+      internal static TimeSpan? GetTimeStamp(LogLine logLine)
+      {
+         if (logLine.TimeStamp != null)
+         {
+            return logLine.TimeStamp;
+         }
+         Match timeStampMatch;
+         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+         {
+            return GetTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
+         }
+         return null;
+      }
+
+      internal static TimeSpan? GetTimeStamp(string value)
+      {
+         DateTime result;
+         if (DateTime.TryParseExact(value, "HH:mm:ss",
+                                    DateTimeFormatInfo.InvariantInfo,
+                                    DateTimeParse.Styles, out result))
+         {
+            return result.TimeOfDay;
+         }
+         return null;
+      }
+
+      internal static TimeSpan ParseTimeStamp(LogLine logLine)
+      {
+         if (logLine.TimeStamp != null)
+         {
+            return logLine.TimeStamp.Value;
+         }
+         Match timeStampMatch;
+         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+         {
+            return ParseTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
+         }
+
+         throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.LineRaw));
+      }
+
+      internal static TimeSpan ParseTimeStamp(string value)
+      {
+         return DateTime.ParseExact(value, "HH:mm:ss",
+                                    DateTimeFormatInfo.InvariantInfo,
+                                    DateTimeParse.Styles).TimeOfDay;
+      }
+   }
+
+   public interface ILogLineParserDictionary : IReadOnlyDictionary<LogLineType, Func<LogLine, object>>
+   {
+
+   }
+
+   namespace Legacy
+   {
+      public class LegacyLogLineParserDictionary : Dictionary<LogLineType, Func<LogLine, object>>, ILogLineParserDictionary
+      {
+         public LegacyLogLineParserDictionary()
+         {
+            CommonLogLineParser.AddToDictionary(this);
+
+            Add(LogLineType.LogOpen, ParseLogOpen);
+            Add(LogLineType.ClientVersion, ParseClientVersion);
+            Add(LogLineType.ClientArguments, ParseClientArguments);
+            Add(LogLineType.ClientUserNameTeam, ParseClientUserNameTeam);
+            Add(LogLineType.ClientReceivedUserID, ParseClientReceivedUserID);
+            Add(LogLineType.ClientUserID, ParseClientUserID);
+            Add(LogLineType.ClientMachineID, ParseClientMachineID);
+            Add(LogLineType.WorkUnitIndex, ParseWorkUnitIndex);
+            Add(LogLineType.WorkUnitQueueIndex, ParseWorkUnitQueueIndex);
+            Add(LogLineType.WorkUnitCallingCore, ParseWorkUnitCallingCore);
+            Add(LogLineType.WorkUnitCoreVersion, ParseWorkUnitCoreVersion);
+            Add(LogLineType.ClientNumberOfUnitsCompleted, ParseClientNumberOfUnitsCompleted);
+            Add(LogLineType.ClientCoreCommunicationsError, ParseClientCoreCommunicationsError);
+         }
+
          internal static object ParseLogOpen(LogLine logLine)
          {
             Match logOpenMatch;
@@ -396,16 +381,21 @@ namespace HFM.Log
             return WorkUnitResult.ClientCoreError;
          }
       }
+   }
 
-      private static readonly Dictionary<LogLineType, Func<LogLine, object>> FahClientParsers = new Dictionary<LogLineType, Func<LogLine, object>>
+   namespace FahClient
+   {
+      public class FahClientLogLineParserDictionary : Dictionary<LogLineType, Func<LogLine, object>>, ILogLineParserDictionary
       {
-         { LogLineType.LogOpen, FahClient.ParseLogOpen },
-         { LogLineType.WorkUnitCoreVersion, FahClient.ParseWorkUnitCoreVersion },
-         { LogLineType.WorkUnitCoreReturn, FahClient.ParseWorkUnitCoreReturn },
-      };
+         public FahClientLogLineParserDictionary()
+         {
+            CommonLogLineParser.AddToDictionary(this);
 
-      internal static class FahClient
-      {
+            Add(LogLineType.LogOpen, ParseLogOpen);
+            Add(LogLineType.WorkUnitCoreVersion, ParseWorkUnitCoreVersion);
+            Add(LogLineType.WorkUnitCoreReturn, ParseWorkUnitCoreReturn);
+         }
+
          internal static object ParseLogOpen(LogLine logLine)
          {
             Match logOpenMatch;
@@ -459,34 +449,9 @@ namespace HFM.Log
             Match coreReturnMatch;
             if ((coreReturnMatch = FahLogRegex.FahClient.WorkUnitCoreReturnRegex.Match(logLine.LineRaw)).Success)
             {
-               return ToWorkUnitResult(coreReturnMatch.Groups["UnitResult"].Value);
+               return WorkUnitResultString.ToWorkUnitResult(coreReturnMatch.Groups["UnitResult"].Value);
             }
             return null;
-         }
-      }
-
-      private static WorkUnitResult ToWorkUnitResult(string result)
-      {
-         switch (result)
-         {
-            case WorkUnitResultString.FinishedUnit:
-               return WorkUnitResult.FinishedUnit;
-            case WorkUnitResultString.EarlyUnitEnd:
-               return WorkUnitResult.EarlyUnitEnd;
-            case WorkUnitResultString.UnstableMachine:
-               return WorkUnitResult.UnstableMachine;
-            case WorkUnitResultString.Interrupted:
-               return WorkUnitResult.Interrupted;
-            case WorkUnitResultString.BadWorkUnit:
-               return WorkUnitResult.BadWorkUnit;
-            case WorkUnitResultString.CoreOutdated:
-               return WorkUnitResult.CoreOutdated;
-            case WorkUnitResultString.GpuMemtestError:
-               return WorkUnitResult.GpuMemtestError;
-            case WorkUnitResultString.UnknownEnum:
-               return WorkUnitResult.UnknownEnum;
-            default:
-               return WorkUnitResult.Unknown;
          }
       }
    }

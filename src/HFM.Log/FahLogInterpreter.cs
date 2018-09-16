@@ -9,11 +9,11 @@ namespace HFM.Log
    {
       internal static ClientRunData GetClientRunData(ClientRun clientRun)
       {
-         if (clientRun.Parent is LegacyLog)
+         if (clientRun.Parent is Legacy.LegacyLog)
          {
             return GetClientRunDataLegacy(clientRun);
          }
-         if (clientRun.Parent is FahClientLog)
+         if (clientRun.Parent is FahClient.FahClientLog)
          {
             return GetClientRunDataFahClient(clientRun);
          }
@@ -77,11 +77,11 @@ namespace HFM.Log
 
       internal static SlotRunData GetSlotRunData(SlotRun slotRun)
       {
-         if (slotRun.Parent.Parent is LegacyLog)
+         if (slotRun.Parent.Parent is Legacy.LegacyLog)
          {
             return GetSlotRunDataLegacy(slotRun);
          }
-         if (slotRun.Parent.Parent is FahClientLog)
+         if (slotRun.Parent.Parent is FahClient.FahClientLog)
          {
             return GetSlotRunDataFahClient(slotRun);
          }
@@ -197,11 +197,11 @@ namespace HFM.Log
 
       internal static UnitRunData GetUnitRunData(UnitRun unitRun)
       {
-         if (unitRun.Parent.Parent.Parent is LegacyLog)
+         if (unitRun.Parent.Parent.Parent is Legacy.LegacyLog)
          {
             return GetUnitRunDataLegacy(unitRun);
          }
-         if (unitRun.Parent.Parent.Parent is FahClientLog)
+         if (unitRun.Parent.Parent.Parent is FahClient.FahClientLog)
          {
             return GetUnitRunDataFahClient(unitRun);
          }
@@ -224,7 +224,7 @@ namespace HFM.Log
                  line.LineType == LogLineType.WorkUnitFrame) &&
                  unitRunData.UnitStartTimeStamp == null)
             {
-               unitRunData.UnitStartTimeStamp = LogLineParser.Common.GetTimeStamp(line);
+               unitRunData.UnitStartTimeStamp = CommonLogLineParser.GetTimeStamp(line);
             }
 
             if (line.LineType == LogLineType.WorkUnitPaused ||
@@ -244,7 +244,7 @@ namespace HFM.Log
                // set frame times and determine status - Issue 13 (Revised)
                unitRunData.FramesObserved = 0;
                // Reset the Unit Start Time
-               unitRunData.UnitStartTimeStamp = LogLineParser.Common.GetTimeStamp(line);
+               unitRunData.UnitStartTimeStamp = CommonLogLineParser.GetTimeStamp(line);
             }
 
             #endregion

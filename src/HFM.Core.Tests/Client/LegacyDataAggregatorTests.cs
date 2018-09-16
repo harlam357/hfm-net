@@ -26,8 +26,8 @@ using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Core.Configuration;
-using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Log.Legacy;
 using HFM.Queue;
 
 namespace HFM.Core

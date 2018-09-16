@@ -123,10 +123,10 @@ namespace HFM.Log.Tool
             switch (fahLogType)
             {
                case LegacyLogType:
-                  _fahLog = LegacyLog.Read(txtLogPath.Text);
+                  _fahLog = Legacy.LegacyLog.Read(txtLogPath.Text);
                   break;
                case FahClientLogType:
-                  _fahLog = FahClientLog.Read(txtLogPath.Text);
+                  _fahLog = FahClient.FahClientLog.Read(txtLogPath.Text);
                   break;
             }
 #if DEBUG

@@ -1,9 +1,10 @@
 ﻿
 using System;
-using System.IO;
 using System.Linq;
 
 using NUnit.Framework;
+
+using HFM.Log.Legacy;
 
 namespace HFM.Log
 {

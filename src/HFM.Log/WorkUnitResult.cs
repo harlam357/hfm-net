@@ -38,5 +38,30 @@ namespace HFM.Log
       public const string CoreOutdated = "CORE_OUTDATED";
       public const string GpuMemtestError = "GPU_MEMTEST_ERROR";
       public const string UnknownEnum = "UNKNOWN_ENUM";
+
+      internal static WorkUnitResult ToWorkUnitResult(string result)
+      {
+         switch (result)
+         {
+            case WorkUnitResultString.FinishedUnit:
+               return WorkUnitResult.FinishedUnit;
+            case WorkUnitResultString.EarlyUnitEnd:
+               return WorkUnitResult.EarlyUnitEnd;
+            case WorkUnitResultString.UnstableMachine:
+               return WorkUnitResult.UnstableMachine;
+            case WorkUnitResultString.Interrupted:
+               return WorkUnitResult.Interrupted;
+            case WorkUnitResultString.BadWorkUnit:
+               return WorkUnitResult.BadWorkUnit;
+            case WorkUnitResultString.CoreOutdated:
+               return WorkUnitResult.CoreOutdated;
+            case WorkUnitResultString.GpuMemtestError:
+               return WorkUnitResult.GpuMemtestError;
+            case WorkUnitResultString.UnknownEnum:
+               return WorkUnitResult.UnknownEnum;
+            default:
+               return WorkUnitResult.Unknown;
+         }
+      }
    }
 }
