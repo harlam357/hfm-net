@@ -37,9 +37,9 @@ namespace HFM.Proteins
       public static async Task<ICollection<Protein>> ReadUriAsync(this IProteinSerializer serializer, Uri address)
       {
          var client = new WebClient();
-         using (var stream = await client.OpenReadTaskAsync(address))
+         using (var stream = await client.OpenReadTaskAsync(address).ConfigureAwait(false))
          {
-            return serializer.Deserialize(stream);
+            return await serializer.DeserializeAsync(stream).ConfigureAwait(false);
          }
       }
 
