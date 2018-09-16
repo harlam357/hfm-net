@@ -22,13 +22,14 @@ namespace HFM.Log
 #pragma warning disable 1591
 
    /// <summary>
-   /// Log line types.
+   /// Represents the types of log lines that can be detected by the HFM.Log API.
+   /// Once the type has been identified a parser may be assigned to find data in the line text.
    /// </summary>
    public enum LogLineType
    {
-      Error = -2,
-      Unknown = -1,
-      LogOpen = 0,
+      Error = -1,
+      None = 0,
+      LogOpen = 1,
       LogHeader,
       ClientVersion,
       ClientSendWorkToServer,

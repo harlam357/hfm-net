@@ -13,7 +13,7 @@ namespace HFM.Log
    {
       internal static Func<LogLine, object> GetLogLineParser(LogLineType lineType, FahLogType fahLogType)
       {
-         if (lineType == LogLineType.Unknown)
+         if (lineType == LogLineType.None)
          {
             return null;
          }

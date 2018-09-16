@@ -1,12 +1,12 @@
 ﻿
 namespace HFM.Log
 {
-   internal static class LogLineIdentifier
+   internal static class LogLineTypeIdentifier
    {
       internal static LogLineType GetLogLineType(string line, FahLogType fahLogType)
       {
          var logLineType = Common.DetermineLineType(line);
-         if (logLineType == LogLineType.Unknown)
+         if (logLineType == LogLineType.None)
          {
             switch (fahLogType)
             {
@@ -25,7 +25,7 @@ namespace HFM.Log
       {
          internal static LogLineType DetermineLineType(string logLine)
          {
-            return IsLineTypeWorkUnitRunning(logLine) ? LogLineType.WorkUnitRunning : LogLineType.Unknown;
+            return IsLineTypeWorkUnitRunning(logLine) ? LogLineType.WorkUnitRunning : LogLineType.None;
          }
 
          private static bool IsLineTypeWorkUnitRunning(string logLine)
@@ -244,7 +244,7 @@ namespace HFM.Log
                return LogLineType.ClientShutdown;
             }
 
-            return LogLineType.Unknown;
+            return LogLineType.None;
          }
       }
 
@@ -331,7 +331,7 @@ namespace HFM.Log
             }
             /***************************************************/
 
-            return LogLineType.Unknown;
+            return LogLineType.None;
          }
       }
    }

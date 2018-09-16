@@ -42,7 +42,7 @@ namespace HFM.Log
       private LogLine CreateLine(string line, int index)
       {
          if (line == null) return null;
-         var lineType = LogLineIdentifier.GetLogLineType(line, _logType);
+         var lineType = LogLineTypeIdentifier.GetLogLineType(line, _logType);
          var parser = LogLineParser.GetLogLineParser(lineType, _logType);
          var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = index };
          if (parser != null) logLine.SetParser(parser);

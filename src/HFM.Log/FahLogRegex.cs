@@ -22,7 +22,7 @@ namespace HFM.Log
          /// Regular Expression to match Core Version string.
          /// </summary>
          internal static readonly Regex CoreVersionRegex =
-            new Regex("\\[?\\d{2}:\\d{2}:\\d{2}[\\]|:].*Version:?\\s+(?<CoreVer>\\d+\\.\\d+(\\.\\d+)?)", RegexOptions.ExplicitCapture | RegexOptions.Compiled);
+            new Regex("\\[?\\d{2}:\\d{2}:\\d{2}[\\]|:].*Version:?\\s+(?<CoreVer>\\d+\\.\\d+(\\.\\d+)?)", Options);
 
          /// <summary>
          /// Regular Expression to match Standard and SMP Clients Frame Completion Lines (Gromacs Style).

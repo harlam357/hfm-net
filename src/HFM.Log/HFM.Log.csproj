@@ -84,7 +84,7 @@
     <Compile Include="FahLog.cs" />
     <Compile Include="FahLogInterpreter.cs" />
     <Compile Include="LogLineParser.cs" />
-    <Compile Include="LogLineIdentifier.cs" />
+    <Compile Include="LogLineTypeIdentifier.cs" />
     <Compile Include="FahLogDataTypes.cs" />
     <Compile Include="FahLogRegex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

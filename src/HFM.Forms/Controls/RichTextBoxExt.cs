@@ -132,7 +132,7 @@ namespace HFM.Forms.Controls
                return @"\cf2 ";
             case LogLineType.Error:
                return @"\cf3 ";
-            case LogLineType.Unknown:
+            case LogLineType.None:
                return @"\cf5 ";
             default:
                return @"\cf4 ";
