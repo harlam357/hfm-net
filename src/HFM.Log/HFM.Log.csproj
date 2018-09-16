@@ -79,8 +79,8 @@
     <Compile Include="LogLine.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="LogSlotStatus.cs" />
-    <Compile Include="Support\DateTimeParse.cs" />
-    <Compile Include="Support\Environment.cs" />
+    <Compile Include="Internal\DateTimeParse.cs" />
+    <Compile Include="Internal\Environment.cs" />
     <Compile Include="FahLog.cs" />
     <Compile Include="FahLogInterpreter.cs" />
     <Compile Include="LogLineParser.cs" />

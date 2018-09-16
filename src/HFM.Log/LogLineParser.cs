@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using HFM.Log.Internal;
+
 namespace HFM.Log
 {
    internal static class LogLineParser

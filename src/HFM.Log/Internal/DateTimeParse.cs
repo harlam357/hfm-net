@@ -1,7 +1,7 @@
 ﻿
 using System.Globalization;
 
-namespace HFM.Log
+namespace HFM.Log.Internal
 {
    internal static class DateTimeParse
    {
