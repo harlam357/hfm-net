@@ -402,7 +402,7 @@ namespace HFM.Core
       public void FramesCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new WorkUnitFrameData { ID = 1 });
+         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 1 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -414,7 +414,7 @@ namespace HFM.Core
       public void FramesCompleteTest2()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new WorkUnitFrameData { ID = -1 });
+         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = -1 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -426,7 +426,7 @@ namespace HFM.Core
       public void FramesCompleteTest3()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new WorkUnitFrameData { ID = 101 });
+         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 101 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -448,7 +448,7 @@ namespace HFM.Core
       public void PercentCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new WorkUnitFrameData { ID = 5 });
+         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 5 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -461,7 +461,7 @@ namespace HFM.Core
       {
          var protein = new Protein { Frames = 200 };
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new WorkUnitFrameData { ID = 5 });
+         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 5 });
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -478,10 +478,10 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
@@ -508,10 +508,10 @@ namespace HFM.Core
       public void PerUnitDownloadTest3()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -525,7 +525,7 @@ namespace HFM.Core
       public void PerUnitDownloadTest4()
       {
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", -1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", -1));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -540,11 +540,11 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -571,11 +571,11 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -602,11 +602,11 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -632,11 +632,11 @@ namespace HFM.Core
       public void TimePerSectionTest1()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -649,11 +649,11 @@ namespace HFM.Core
       public void TimePerSectionTest2()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -666,11 +666,11 @@ namespace HFM.Core
       public void TimePerSectionTest3()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:05:10", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:11:30", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:17:40", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:24:00", 4));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -684,10 +684,10 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
@@ -727,10 +727,10 @@ namespace HFM.Core
          var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
          var utcNow = DateTime.UtcNow;
          var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -746,10 +746,10 @@ namespace HFM.Core
          var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6};
          var utcNow = DateTime.UtcNow;
          var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -764,10 +764,10 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -781,10 +781,10 @@ namespace HFM.Core
       public void CreditUPDAndPPDTest4()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -802,10 +802,10 @@ namespace HFM.Core
       public void EtaTest1()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -817,10 +817,10 @@ namespace HFM.Core
       public void EtaTest2()
       {
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 0));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:04:00", 1));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:09:00", 2));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:15:00", 3));
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
@@ -837,7 +837,7 @@ namespace HFM.Core
       public void AllFramesCompleted1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(CreateWorkUnitFrameData("00:00:00", 100));
+         unitInfo.AddWorkUnitFrame(CreateWorkUnitFrameData("00:00:00", 100));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;

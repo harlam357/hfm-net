@@ -8,7 +8,7 @@ namespace HFM.Core
 {
    public static class UnitInfoExtensions
    {
-      public static void SetUnitFrame(this UnitInfo unitInfo, WorkUnitFrameData workUnitFrameData)
+      public static void AddWorkUnitFrame(this UnitInfo unitInfo, WorkUnitFrameData workUnitFrameData)
       {
          var logLines = unitInfo.LogLines ?? new List<LogLine>();
          logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, Data = workUnitFrameData });
