@@ -536,10 +536,10 @@ namespace HFM.Core
          for (int i = 0; i < numberOfFrames; i++)
          {
             // Issue 199
-            var unitFrame = _unitInfo.GetUnitFrame(frameId);
-            if (unitFrame != null && unitFrame.Duration > TimeSpan.Zero)
+            var frameData = _unitInfo.GetFrameData(frameId);
+            if (frameData != null && frameData.Duration > TimeSpan.Zero)
             {
-               totalTime = totalTime.Add(unitFrame.Duration);
+               totalTime = totalTime.Add(frameData.Duration);
                countFrames++;
             }
             frameId--;

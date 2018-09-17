@@ -22,7 +22,7 @@ using System.Globalization;
 
 namespace HFM.Log
 {
-   public class UnitFrame
+   public class WorkUnitFrameData
    {
       public int ID { get; set; }
 

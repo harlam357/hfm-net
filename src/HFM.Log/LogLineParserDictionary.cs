@@ -36,31 +36,26 @@ namespace HFM.Log
             return null;
          }
 
-         internal static UnitFrame ParseWorkUnitFrame(LogLine logLine)
+         internal static WorkUnitFrameData ParseWorkUnitFrame(LogLine logLine)
          {
-            UnitFrame frame = GetUnitFrame(logLine);
-            if (frame != null)
+            WorkUnitFrameData frameData = GetWorkUnitFrameData(logLine);
+            if (frameData != null)
             {
-               return frame;
+               return frameData;
             }
 
-            frame = GetGpuUnitFrame(logLine);
-            if (frame != null)
-            {
-               return frame;
-            }
-
-            return null;
+            frameData = GetGpuWorkUnitFrameData(logLine);
+            return frameData;
          }
 
-         private static UnitFrame GetUnitFrame(LogLine logLine)
+         private static WorkUnitFrameData GetWorkUnitFrameData(LogLine logLine)
          {
             Debug.Assert(logLine != null);
 
             Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.Raw);
             if (framesCompleted.Success)
             {
-               var frame = new UnitFrame();
+               var frame = new WorkUnitFrameData();
 
                int result;
                if (Int32.TryParse(framesCompleted.Result("${Completed}"), out result))
@@ -131,14 +126,14 @@ namespace HFM.Log
             return null;
          }
 
-         private static UnitFrame GetGpuUnitFrame(LogLine logLine)
+         private static WorkUnitFrameData GetGpuWorkUnitFrameData(LogLine logLine)
          {
             Debug.Assert(logLine != null);
 
             Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.Raw);
             if (framesCompletedGpu.Success)
             {
-               var frame = new UnitFrame();
+               var frame = new WorkUnitFrameData();
 
                frame.RawFramesComplete = Int32.Parse(framesCompletedGpu.Result("${Percent}"));
                frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames

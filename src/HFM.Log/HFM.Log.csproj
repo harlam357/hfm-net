@@ -88,7 +88,7 @@
     <Compile Include="FahLogDataTypes.cs" />
     <Compile Include="Internal\FahLogRegex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitFrame.cs" />
+    <Compile Include="WorkUnitFrameData.cs" />
     <Compile Include="Legacy\UnitInfoLog.cs" />
     <Compile Include="Legacy\UnitInfoLogData.cs" />
     <Compile Include="WorkUnitResult.cs" />

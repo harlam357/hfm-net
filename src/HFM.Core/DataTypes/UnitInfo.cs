@@ -140,7 +140,7 @@ namespace HFM.Core.DataTypes
       public DateTime DueTime { get; set; }
 
       /// <summary>
-      /// Unit Start Time Stamp (Time Stamp from First Parsable Line in LogLines)
+      /// Unit Start Time Stamp (Time Stamp from First Parseable Line in LogLines)
       /// </summary>
       /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See LegacyClient.HandleReturnedStatus</remarks>
       public TimeSpan UnitStartTimeStamp { get; set; }
@@ -208,20 +208,20 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
-      public UnitFrame CurrentFrame
+      public WorkUnitFrameData CurrentFrame
       {
          get
          {
-            if (UnitFrames == null || UnitFrames.Count == 0)
+            if (FrameData == null || FrameData.Count == 0)
             {
                return null;
             }
 
-            int max = UnitFrames.Keys.Max();
+            int max = FrameData.Keys.Max();
             if (max >= 0)
             {
-               Debug.Assert(UnitFrames[max].ID == max);
-               return UnitFrames[max];
+               Debug.Assert(FrameData[max].ID == max);
+               return FrameData[max];
             }
 
             return null;
@@ -240,43 +240,42 @@ namespace HFM.Core.DataTypes
                return;
             }
             _logLines = value;
-            UnitFrames = BuildUnitFrameDictionary(_logLines);
-            if (UnitFrames.Count > 0)
+            FrameData = BuildFrameDataDictionary(_logLines);
+            if (FrameData.Count > 0)
             {
-               var lastUnitFrame = UnitFrames[UnitFrames.Keys.Max()];
+               var lastUnitFrame = FrameData[FrameData.Keys.Max()];
                RawFramesComplete = lastUnitFrame.RawFramesComplete;
                RawFramesTotal = lastUnitFrame.RawFramesTotal;
             }
          }
       }
 
-      private static Dictionary<int, UnitFrame> BuildUnitFrameDictionary(IEnumerable<LogLine> logLines)
+      private static Dictionary<int, WorkUnitFrameData> BuildFrameDataDictionary(IEnumerable<LogLine> logLines)
       {
-         var unitFrames = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
+         var frameDataDictionary = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
          {
-            var unitFrame = x.Data as UnitFrame;
-            if (unitFrame != null && unitFrame.ID >= 0)
+            if (x.Data is WorkUnitFrameData frameData && frameData.ID >= 0)
             {
-               return unitFrame;
+               return frameData;
             }
             return null;
          }).Where(x => x != null).ToDictionary(x => x.ID, true);
 
-         foreach (var frame in unitFrames.Values)
+         foreach (var frame in frameDataDictionary.Values)
          {
-            if (unitFrames.ContainsKey(frame.ID - 1))
+            if (frameDataDictionary.ContainsKey(frame.ID - 1))
             {
-               frame.Duration = frame.TimeStamp.GetDelta(unitFrames[frame.ID - 1].TimeStamp);
+               frame.Duration = frame.TimeStamp.GetDelta(frameDataDictionary[frame.ID - 1].TimeStamp);
             }
          }
 
-         return unitFrames;
+         return frameDataDictionary;
       }
 
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      internal Dictionary<int, UnitFrame> UnitFrames { get; set; }
+      internal Dictionary<int, WorkUnitFrameData> FrameData { get; set; }
 
       /// <summary>
       /// Core ID (Hex) Value
@@ -293,11 +292,11 @@ namespace HFM.Core.DataTypes
       #region Methods
 
       /// <summary>
-      /// Gets the UnitFrame for the frame ID.
+      /// Gets the WorkUnitFrameData for the frame ID.
       /// </summary>
-      public UnitFrame GetUnitFrame(int frameId)
+      public WorkUnitFrameData GetFrameData(int frameId)
       {
-         return UnitFrames != null && UnitFrames.ContainsKey(frameId) ? UnitFrames[frameId] : null;
+         return FrameData != null && FrameData.ContainsKey(frameId) ? FrameData[frameId] : null;
       }
 
       #endregion

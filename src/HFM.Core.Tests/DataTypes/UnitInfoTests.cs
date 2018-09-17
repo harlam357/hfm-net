@@ -43,7 +43,7 @@ namespace HFM.Core.DataTypes
          Assert.IsTrue(unitInfo.ProteinTag.Length == 0);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfo.UnitResult);
          Assert.IsNull(unitInfo.LogLines);
-         Assert.IsNull(unitInfo.UnitFrames);
+         Assert.IsNull(unitInfo.FrameData);
          Assert.AreEqual(Constants.DefaultCoreID, unitInfo.CoreID);
       }
 
@@ -61,7 +61,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { ID = 0 };
+         var unitFrame = new WorkUnitFrameData { ID = 0 };
          var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
@@ -73,9 +73,9 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 0 } };
-         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 1 } };
-         var unitFrame5 = new UnitFrame { ID = 5 };
+         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new WorkUnitFrameData { ID = 0 } };
+         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new WorkUnitFrameData { ID = 1 } };
+         var unitFrame5 = new WorkUnitFrameData { ID = 5 };
          var logLine5 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame5 };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1, logLine5 });
          // Act & Assert
@@ -87,7 +87,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { ID = -1 };
+         var unitFrame = new WorkUnitFrameData { ID = -1 };
          var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
@@ -99,7 +99,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame
+         var unitFrame = new WorkUnitFrameData
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
@@ -111,7 +111,7 @@ namespace HFM.Core.DataTypes
          // Assert
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(1, unitInfo.FrameData.Count);
          Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
       }
 
@@ -120,7 +120,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame0 = new UnitFrame
+         var unitFrame0 = new WorkUnitFrameData
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
@@ -132,12 +132,12 @@ namespace HFM.Core.DataTypes
          // Assert 0
          Assert.AreEqual(0, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(1, unitInfo.FrameData.Count);
          Assert.AreSame(unitFrame0, unitInfo.CurrentFrame);
          // no duration - first frame
          Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.Duration);
 
-         var unitFrame1 = new UnitFrame
+         var unitFrame1 = new WorkUnitFrameData
          {
             RawFramesComplete = 1000,
             RawFramesTotal = 100000,
@@ -150,11 +150,11 @@ namespace HFM.Core.DataTypes
          // Assert 1
          Assert.AreEqual(1000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(2, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(2, unitInfo.FrameData.Count);
          Assert.AreSame(unitFrame1, unitInfo.CurrentFrame);
          Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.Duration);
 
-         var unitFrame2 = new UnitFrame
+         var unitFrame2 = new WorkUnitFrameData
          {
             RawFramesComplete = 2000,
             RawFramesTotal = 100000,
@@ -167,7 +167,7 @@ namespace HFM.Core.DataTypes
          // Assert 2
          Assert.AreEqual(2000, unitInfo.RawFramesComplete);
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(3, unitInfo.UnitFrames.Count);
+         Assert.AreEqual(3, unitInfo.FrameData.Count);
          Assert.AreSame(unitFrame2, unitInfo.CurrentFrame);
          Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.Duration);
       }
@@ -179,7 +179,7 @@ namespace HFM.Core.DataTypes
 
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame0 = new UnitFrame
+         var unitFrame0 = new WorkUnitFrameData
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
@@ -193,7 +193,7 @@ namespace HFM.Core.DataTypes
          // Assert 0 - no duration - first frame
          Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.Duration);
 
-         var unitFrame1 = new UnitFrame
+         var unitFrame1 = new WorkUnitFrameData
          {
             RawFramesComplete = 1000,
             RawFramesTotal = 100000,
@@ -214,7 +214,7 @@ namespace HFM.Core.DataTypes
          // Arrange
          var unitInfo = new UnitInfo();
          // Act & Assert
-         Assert.IsNull(unitInfo.GetUnitFrame(0));
+         Assert.IsNull(unitInfo.GetFrameData(0));
       }
 
       [Test]
@@ -222,11 +222,11 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 0 } };
+         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new WorkUnitFrameData { ID = 0 } };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
-         Assert.IsNotNull(unitInfo.GetUnitFrame(0));
-         Assert.IsNull(unitInfo.GetUnitFrame(1));
+         Assert.IsNotNull(unitInfo.GetFrameData(0));
+         Assert.IsNull(unitInfo.GetFrameData(1));
       }
    }
 }
