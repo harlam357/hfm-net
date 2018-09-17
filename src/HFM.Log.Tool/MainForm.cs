@@ -71,9 +71,9 @@ namespace HFM.Log.Tool
          {
             var logLine = _logLines[index];
 
-            txtLogLineIndex.Text = logLine.LineIndex.ToString();
+            txtLogLineIndex.Text = logLine.Index.ToString();
             txtLogLineType.Text = logLine.LineType.ToString();
-            txtLogLineData.Text = logLine.LineData != null ? logLine.LineData.ToString() : String.Empty;
+            txtLogLineData.Text = logLine.Data != null ? logLine.Data.ToString() : String.Empty;
          }
       }
 

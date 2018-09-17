@@ -10,14 +10,14 @@ namespace HFM.Core.DataTypes.Markup
       public string LineType { get; set; }
 
       [DataMember(Order = 2)]
-      public int LineIndex { get; set; }
+      public int Index { get; set; }
 
       [DataMember(Order = 3)]
-      public string LineRaw { get; set; }
+      public string Raw { get; set; }
 
       public override string ToString()
       {
-         return LineRaw;
+         return Raw;
       }
    }
 }

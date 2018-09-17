@@ -21,7 +21,7 @@ namespace HFM.Log
       internal static Tuple<int, int, int, int> ParseWorkUnitProject(LogLine logLine)
       {
          Match projectIdMatch;
-         if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.LineRaw)).Success)
+         if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.Raw)).Success)
          {
             return Tuple.Create(
                Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
@@ -52,7 +52,7 @@ namespace HFM.Log
       {
          Debug.Assert(logLine != null);
 
-         Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.LineRaw);
+         Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.Raw);
          if (framesCompleted.Success)
          {
             var frame = new UnitFrame();
@@ -129,7 +129,7 @@ namespace HFM.Log
       {
          Debug.Assert(logLine != null);
 
-         Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.LineRaw);
+         Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.Raw);
          if (framesCompletedGpu.Success)
          {
             var frame = new UnitFrame();
@@ -150,7 +150,7 @@ namespace HFM.Log
       internal static object ParseWorkUnitCoreShutdown(LogLine logLine)
       {
          Match coreShutdownMatch;
-         if ((coreShutdownMatch = FahLogRegex.Common.CoreShutdownRegex.Match(logLine.LineRaw)).Success)
+         if ((coreShutdownMatch = FahLogRegex.Common.CoreShutdownRegex.Match(logLine.Raw)).Success)
          {
             // remove any carriage returns from fahclient log lines - 12/30/11
             string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
@@ -166,7 +166,7 @@ namespace HFM.Log
             return logLine.TimeStamp;
          }
          Match timeStampMatch;
-         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.Raw)).Success)
          {
             return GetTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
          }
@@ -192,12 +192,12 @@ namespace HFM.Log
             return logLine.TimeStamp.Value;
          }
          Match timeStampMatch;
-         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.LineRaw)).Success)
+         if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.Raw)).Success)
          {
             return ParseTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
          }
 
-         throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.LineRaw));
+         throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.Raw));
       }
 
       internal static TimeSpan ParseTimeStamp(string value)
@@ -239,7 +239,7 @@ namespace HFM.Log
          internal static object ParseLogOpen(LogLine logLine)
          {
             Match logOpenMatch;
-            if ((logOpenMatch = FahLogRegex.Legacy.LogOpenRegex.Match(logLine.LineRaw)).Success)
+            if ((logOpenMatch = FahLogRegex.Legacy.LogOpenRegex.Match(logLine.Raw)).Success)
             {
                string startTime = logOpenMatch.Groups["StartTime"].Value;
                return DateTime.SpecifyKind(DateTime.ParseExact(startTime,
@@ -250,20 +250,20 @@ namespace HFM.Log
 
          internal static string ParseClientVersion(LogLine logLine)
          {
-            int versionIndex = logLine.LineRaw.IndexOf("Version", StringComparison.Ordinal) + 8;
-            if (versionIndex < logLine.LineRaw.Length)
+            int versionIndex = logLine.Raw.IndexOf("Version", StringComparison.Ordinal) + 8;
+            if (versionIndex < logLine.Raw.Length)
             {
-               return logLine.LineRaw.Substring(versionIndex).Trim();
+               return logLine.Raw.Substring(versionIndex).Trim();
             }
             return null;
          }
 
          internal static string ParseClientArguments(LogLine logLine)
          {
-            int argumentIndex = logLine.LineRaw.IndexOf("Arguments:", StringComparison.Ordinal) + 11;
-            if (argumentIndex < logLine.LineRaw.Length)
+            int argumentIndex = logLine.Raw.IndexOf("Arguments:", StringComparison.Ordinal) + 11;
+            if (argumentIndex < logLine.Raw.Length)
             {
-               return logLine.LineRaw.Substring(argumentIndex).Trim();
+               return logLine.Raw.Substring(argumentIndex).Trim();
             }
             return null;
          }
@@ -271,7 +271,7 @@ namespace HFM.Log
          internal static Tuple<string, int> ParseClientUserNameTeam(LogLine logLine)
          {
             Match userTeamMatch;
-            if ((userTeamMatch = FahLogRegex.Legacy.UserTeamRegex.Match(logLine.LineRaw)).Success)
+            if ((userTeamMatch = FahLogRegex.Legacy.UserTeamRegex.Match(logLine.Raw)).Success)
             {
                return Tuple.Create(userTeamMatch.Groups["Username"].Value, Int32.Parse(userTeamMatch.Groups["TeamNumber"].Value));
             }
@@ -282,7 +282,7 @@ namespace HFM.Log
          internal static string ParseClientReceivedUserID(LogLine logLine)
          {
             Match receivedUserIdMatch;
-            if ((receivedUserIdMatch = FahLogRegex.Legacy.ReceivedUserIDRegex.Match(logLine.LineRaw)).Success)
+            if ((receivedUserIdMatch = FahLogRegex.Legacy.ReceivedUserIDRegex.Match(logLine.Raw)).Success)
             {
                return receivedUserIdMatch.Groups["UserID"].Value;
             }
@@ -293,7 +293,7 @@ namespace HFM.Log
          internal static string ParseClientUserID(LogLine logLine)
          {
             Match userIdMatch;
-            if ((userIdMatch = FahLogRegex.Legacy.UserIDRegex.Match(logLine.LineRaw)).Success)
+            if ((userIdMatch = FahLogRegex.Legacy.UserIDRegex.Match(logLine.Raw)).Success)
             {
                return userIdMatch.Result("${UserID}");
             }
@@ -304,7 +304,7 @@ namespace HFM.Log
          internal static object ParseClientMachineID(LogLine logLine)
          {
             Match machineIdMatch;
-            if ((machineIdMatch = FahLogRegex.Legacy.MachineIDRegex.Match(logLine.LineRaw)).Success)
+            if ((machineIdMatch = FahLogRegex.Legacy.MachineIDRegex.Match(logLine.Raw)).Success)
             {
                return Int32.Parse(machineIdMatch.Result("${MachineID}"));
             }
@@ -314,7 +314,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitIndex(LogLine logLine)
          {
             Match unitIndexMatch;
-            if ((unitIndexMatch = FahLogRegex.Legacy.UnitIndexRegex.Match(logLine.LineRaw)).Success)
+            if ((unitIndexMatch = FahLogRegex.Legacy.UnitIndexRegex.Match(logLine.Raw)).Success)
             {
                return Int32.Parse(unitIndexMatch.Result("${QueueIndex}"));
             }
@@ -324,7 +324,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitQueueIndex(LogLine logLine)
          {
             Match queueIndexMatch;
-            if ((queueIndexMatch = FahLogRegex.Legacy.QueueIndexRegex.Match(logLine.LineRaw)).Success)
+            if ((queueIndexMatch = FahLogRegex.Legacy.QueueIndexRegex.Match(logLine.Raw)).Success)
             {
                return Int32.Parse(queueIndexMatch.Result("${QueueIndex}"));
             }
@@ -334,7 +334,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitCallingCore(LogLine logLine)
          {
             Match workUnitCallingCoreMatch;
-            if ((workUnitCallingCoreMatch = FahLogRegex.Legacy.WorkUnitCallingCore.Match(logLine.LineRaw)).Success)
+            if ((workUnitCallingCoreMatch = FahLogRegex.Legacy.WorkUnitCallingCore.Match(logLine.Raw)).Success)
             {
                return Int32.Parse(workUnitCallingCoreMatch.Result("${Threads}"));
             }
@@ -345,7 +345,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitCoreVersion(LogLine logLine)
          {
             Match coreVersionMatch;
-            if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.LineRaw)).Success)
+            if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.Raw)).Success)
             {
                float value;
                if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
@@ -354,7 +354,7 @@ namespace HFM.Log
                }
             }
             /*** ProtoMol Only */
-            if ((coreVersionMatch = FahLogRegex.Legacy.ProtoMolCoreVersionRegex.Match(logLine.LineRaw)).Success)
+            if ((coreVersionMatch = FahLogRegex.Legacy.ProtoMolCoreVersionRegex.Match(logLine.Raw)).Success)
             {
                float value;
                if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
@@ -369,7 +369,7 @@ namespace HFM.Log
          internal static object ParseClientNumberOfUnitsCompleted(LogLine logLine)
          {
             Match completedWorkUnitsMatch;
-            if ((completedWorkUnitsMatch = FahLogRegex.Legacy.CompletedWorkUnitsRegex.Match(logLine.LineRaw)).Success)
+            if ((completedWorkUnitsMatch = FahLogRegex.Legacy.CompletedWorkUnitsRegex.Match(logLine.Raw)).Success)
             {
                return Int32.Parse(completedWorkUnitsMatch.Result("${Completed}"));
             }
@@ -399,7 +399,7 @@ namespace HFM.Log
          internal static object ParseLogOpen(LogLine logLine)
          {
             Match logOpenMatch;
-            if ((logOpenMatch = FahLogRegex.FahClient.LogOpenRegex.Match(logLine.LineRaw)).Success)
+            if ((logOpenMatch = FahLogRegex.FahClient.LogOpenRegex.Match(logLine.Raw)).Success)
             {
                string startTime = logOpenMatch.Result("${StartTime}");
                // Similar code found in HFM.Client.Converters.DateTimeConverter
@@ -424,7 +424,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitCoreVersion(LogLine logLine)
          {
             Match coreVersionMatch;
-            if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.LineRaw)).Success)
+            if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.Raw)).Success)
             {
                string coreVer = coreVersionMatch.Groups["CoreVer"].Value.Trim();
                float value;
@@ -447,7 +447,7 @@ namespace HFM.Log
          internal static object ParseWorkUnitCoreReturn(LogLine logLine)
          {
             Match coreReturnMatch;
-            if ((coreReturnMatch = FahLogRegex.FahClient.WorkUnitCoreReturnRegex.Match(logLine.LineRaw)).Success)
+            if ((coreReturnMatch = FahLogRegex.FahClient.WorkUnitCoreReturnRegex.Match(logLine.Raw)).Success)
             {
                return WorkUnitResultString.ToWorkUnitResult(coreReturnMatch.Groups["UnitResult"].Value);
             }

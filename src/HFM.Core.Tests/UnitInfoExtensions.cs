@@ -11,7 +11,7 @@ namespace HFM.Core
       public static void SetUnitFrame(this UnitInfo unitInfo, UnitFrame unitFrame)
       {
          var logLines = unitInfo.LogLines ?? new List<LogLine>();
-         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame });
+         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame });
          unitInfo.LogLines = logLines;
       }
    }

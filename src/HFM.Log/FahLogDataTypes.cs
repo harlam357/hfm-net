@@ -83,7 +83,7 @@ namespace HFM.Log
 
       public IEnumerator<LogLine> GetEnumerator()
       {
-         return _logLines.Concat(_slotRuns.Values.SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines)).OrderBy(x => x.LineIndex).GetEnumerator();
+         return _logLines.Concat(_slotRuns.Values.SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines)).OrderBy(x => x.Index).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -201,7 +201,7 @@ namespace HFM.Log
 
       public IEnumerator<LogLine> GetEnumerator()
       {
-         return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.LineIndex).GetEnumerator();
+         return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.Index).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()

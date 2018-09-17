@@ -96,7 +96,7 @@ namespace HFM.Forms.Controls
          else
          {
             Rtf = null;
-            Lines = (from LogLine line in _logLines select line.LineRaw.Replace("\r", String.Empty)).ToArray();
+            Lines = _logLines.Select(line => line.Raw.Replace("\r", String.Empty)).ToArray();
          }
       }
 

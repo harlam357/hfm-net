@@ -26,27 +26,27 @@ namespace HFM.Log
    {
       public LogLineType LineType { get; set; }
 
-      public int LineIndex { get; set; }
+      public int Index { get; set; }
 
-      public string LineRaw { get; set; }
+      public string Raw { get; set; }
 
-      private object _lineData;
+      private object _data;
 
-      public object LineData
+      public object Data
       {
          get
          {
-            if (_lineData == null && _parser != null)
+            if (_data == null && _parser != null)
             {
-               _lineData = _parser(this);
-               if (_lineData == null)
+               _data = _parser(this);
+               if (_data == null)
                {
                   LineType = LogLineType.Error;
                }
             }
-            return _lineData;
+            return _data;
          }
-         set { _lineData = value; }
+         set { _data = value; }
       }
 
       public int FoldingSlot { get; set; }
@@ -57,7 +57,7 @@ namespace HFM.Log
 
       public override string ToString()
       {
-         return LineRaw;
+         return Raw;
       }
 
       private Func<LogLine, object> _parser;

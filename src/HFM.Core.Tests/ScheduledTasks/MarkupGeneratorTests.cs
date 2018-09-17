@@ -159,7 +159,7 @@ namespace HFM.Core.ScheduledTasks
          slot.Settings = new ClientSettings { Name = "Test2" };
          var logLines = new List<LogLine>
          {
-            new LogLine { LineType = LogLineType.LogHeader, LineIndex = 1, LineRaw = "Header" }
+            new LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
          };
          slot.CurrentLogLines = logLines;
          slot.UnitInfo.LogLines = logLines;

@@ -47,7 +47,7 @@ namespace HFM.Log
          var lineType = _typeIdentifier.DetermineLineType(line);
          Func<LogLine, object> parser;
          _parserDictionary.TryGetValue(lineType, out parser);
-         var logLine = new LogLine { LineRaw = line, LineType = lineType, LineIndex = index };
+         var logLine = new LogLine { Raw = line, LineType = lineType, Index = index };
          if (parser != null) logLine.SetParser(parser);
          return logLine;
       }

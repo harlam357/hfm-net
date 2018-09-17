@@ -254,7 +254,7 @@ namespace HFM.Core.DataTypes
       {
          var unitFrames = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
          {
-            var unitFrame = x.LineData as UnitFrame;
+            var unitFrame = x.Data as UnitFrame;
             if (unitFrame != null && unitFrame.FrameID >= 0)
             {
                return unitFrame;

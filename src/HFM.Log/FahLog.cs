@@ -95,7 +95,7 @@ namespace HFM.Log
 
          protected override void AddLogLine(LogLine logLine)
          {
-            logLine.LineIndex = _lineIndex++;
+            logLine.Index = _lineIndex++;
 
             switch (logLine.LineType)
             {
@@ -153,12 +153,12 @@ namespace HFM.Log
             {
                if (lastUnitRun != null)
                {
-                  lastUnitRun.EndIndex = _logBuffer[_logBuffer.Count - 1].LineIndex;
-                  foreach (var logLine in _logBuffer.Where(x => x.LineIndex < lastUnitRun.StartIndex))
+                  lastUnitRun.EndIndex = _logBuffer[_logBuffer.Count - 1].Index;
+                  foreach (var logLine in _logBuffer.Where(x => x.Index < lastUnitRun.StartIndex))
                   {
                      clientRun.LogLines.Add(logLine);
                   }
-                  foreach (var logLine in _logBuffer.Where(x => x.LineIndex >= lastUnitRun.StartIndex && x.LineIndex <= lastUnitRun.EndIndex))
+                  foreach (var logLine in _logBuffer.Where(x => x.Index >= lastUnitRun.StartIndex && x.Index <= lastUnitRun.EndIndex))
                   {
                      lastUnitRun.LogLines.Add(logLine);
                   }
@@ -176,7 +176,7 @@ namespace HFM.Log
 
          private void HandleLogOpen(LogLine logLine)
          {
-            EnsureSlotRunExists(logLine.LineIndex, FoldingSlot, true);
+            EnsureSlotRunExists(logLine.Index, FoldingSlot, true);
             _currentLineType = logLine.LineType;
          }
 
@@ -194,7 +194,7 @@ namespace HFM.Log
             // a LogOpen or a LogHeader, then we use this as a signal to create
             // a new ClientRun.  This is a backup option and I don't expect this
             // situtation to happen at all if the log file is not corrupt.
-            EnsureSlotRunExists(logLine.LineIndex, FoldingSlot, true);
+            EnsureSlotRunExists(logLine.Index, FoldingSlot, true);
 
             _currentLineType = logLine.LineType;
          }
@@ -210,7 +210,7 @@ namespace HFM.Log
                 (_unitIndexData.ProcessingIndex != -1 &&
                  _unitIndexData.CoreDownloadIndex > _unitIndexData.ProcessingIndex))
             {
-               _unitIndexData.ProcessingIndex = logLine.LineIndex;
+               _unitIndexData.ProcessingIndex = logLine.Index;
             }
 
             _currentLineType = logLine.LineType;
@@ -218,13 +218,13 @@ namespace HFM.Log
 
          private void HandleWorkUnitCoreDownload(LogLine logLine)
          {
-            _unitIndexData.CoreDownloadIndex = logLine.LineIndex;
+            _unitIndexData.CoreDownloadIndex = logLine.Index;
             _currentLineType = logLine.LineType;
          }
 
          private void HandleWorkUnitQueueIndex(LogLine logLine)
          {
-            _unitIndexData.QueueSlotIndex = (int)logLine.LineData;
+            _unitIndexData.QueueSlotIndex = (int)logLine.Data;
          }
 
          private void HandleWorkUnitWorking(LogLine logLine)
@@ -239,14 +239,14 @@ namespace HFM.Log
             }
             else
             {
-               _unitIndexData.WorkingIndex = logLine.LineIndex;
+               _unitIndexData.WorkingIndex = logLine.Index;
                _currentLineType = logLine.LineType;
             }
          }
 
          private void HandleWorkUnitStart(LogLine logLine)
          {
-            _unitIndexData.StartIndex = logLine.LineIndex;
+            _unitIndexData.StartIndex = logLine.Index;
             _currentLineType = logLine.LineType;
          }
 
@@ -273,7 +273,7 @@ namespace HFM.Log
             }
             else
             {
-               EnsureUnitRunExists(logLine.LineIndex, _unitIndexData.QueueSlotIndex);
+               EnsureUnitRunExists(logLine.Index, _unitIndexData.QueueSlotIndex);
             }
 
             _currentLineType = logLine.LineType;
@@ -321,15 +321,15 @@ namespace HFM.Log
                previousUnitRun.IsComplete = true;
 
                var clientRun = ClientRuns.Peek();
-               foreach (var logLine in _logBuffer.Where(x => x.LineIndex < previousUnitRun.StartIndex))
+               foreach (var logLine in _logBuffer.Where(x => x.Index < previousUnitRun.StartIndex))
                {
                   clientRun.LogLines.Add(logLine);
                }
-               foreach (var logLine in _logBuffer.Where(x => x.LineIndex >= previousUnitRun.StartIndex && x.LineIndex <= previousUnitRun.EndIndex))
+               foreach (var logLine in _logBuffer.Where(x => x.Index >= previousUnitRun.StartIndex && x.Index <= previousUnitRun.EndIndex))
                {
                   previousUnitRun.LogLines.Add(logLine);
                }
-               _logBuffer.RemoveAll(x => x.LineIndex <= previousUnitRun.EndIndex);
+               _logBuffer.RemoveAll(x => x.Index <= previousUnitRun.EndIndex);
             }
             slotRun.UnitRuns.Push(unitRun);
          }
@@ -388,31 +388,31 @@ namespace HFM.Log
 
          protected override void AddLogLine(LogLine logLine)
          {
-            logLine.LineIndex = _lineIndex++;
+            logLine.Index = _lineIndex++;
 
             bool isWorkUnitLogLine = SetLogLineProperties(logLine);
             if (!isWorkUnitLogLine)
             {
-               var clientRun = EnsureClientRunExists(logLine.LineIndex);
+               var clientRun = EnsureClientRunExists(logLine.Index);
                clientRun.LogLines.Add(logLine);
             }
             else
             {
-               var unitRun = EnsureUnitRunExists(logLine.LineIndex, logLine.FoldingSlot, logLine.QueueIndex);
+               var unitRun = EnsureUnitRunExists(logLine.Index, logLine.FoldingSlot, logLine.QueueIndex);
                if (logLine.LineType == LogLineType.WorkUnitCoreReturn)
                {
-                  var result = logLine.LineData != null ? (WorkUnitResult)logLine.LineData : default(WorkUnitResult);
+                  var result = logLine.Data != null ? (WorkUnitResult)logLine.Data : default(WorkUnitResult);
                   // FinishedUnit and BadWorkUnit results are the only terminating results identified in test logs
                   if (result != WorkUnitResult.FinishedUnit && result != WorkUnitResult.BadWorkUnit)
                   {
                      // NOT a terminating result...
-                     unitRun.EndIndex = logLine.LineIndex;
+                     unitRun.EndIndex = logLine.Index;
                      unitRun.IsComplete = true;
                   }
                }
                else if (logLine.LineType == LogLineType.WorkUnitCleaningUp)
                {
-                  unitRun.EndIndex = logLine.LineIndex;
+                  unitRun.EndIndex = logLine.Index;
                   unitRun.IsComplete = true;
                }
 
@@ -432,7 +432,7 @@ namespace HFM.Log
             {
                if (!unitRun.IsComplete)
                {
-                  unitRun.EndIndex = unitRun.LogLines[unitRun.LogLines.Count - 1].LineIndex;
+                  unitRun.EndIndex = unitRun.LogLines[unitRun.LogLines.Count - 1].Index;
                }
             }
          }
@@ -440,7 +440,7 @@ namespace HFM.Log
          private static bool SetLogLineProperties(LogLine logLine)
          {
             Match workUnitRunningMatch;
-            if ((workUnitRunningMatch = Internal.FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.LineRaw)).Success)
+            if ((workUnitRunningMatch = Internal.FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.Raw)).Success)
             {
                logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
                logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);
