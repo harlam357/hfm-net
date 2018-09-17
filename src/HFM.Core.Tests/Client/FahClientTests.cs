@@ -62,10 +62,10 @@ namespace HFM.Core
 
          var unitInfo1Clone = unitInfo1.DeepClone();
          unitInfo1Clone.FramesObserved = 4;
-         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(0), FrameID = 0 });
-         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(5), FrameID = 1 });
-         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(10), FrameID = 2 });
-         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeOfFrame = TimeSpan.FromMinutes(15), FrameID = 3 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeStamp = TimeSpan.FromMinutes(0), ID = 0 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeStamp = TimeSpan.FromMinutes(5), ID = 1 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeStamp = TimeSpan.FromMinutes(10), ID = 2 });
+         unitInfo1Clone.SetUnitFrame(new UnitFrame { TimeStamp = TimeSpan.FromMinutes(15), ID = 3 });
          unitInfo1Clone.UnitResult = WorkUnitResult.FinishedUnit;
          var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 

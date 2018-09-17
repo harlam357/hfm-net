@@ -224,7 +224,7 @@ namespace HFM.Core
             UnitFrame frame = unit.GetUnitFrame(i);
             if (frame != null)
             {
-               if (benchmark.SetFrameTime(frame.FrameDuration))
+               if (benchmark.SetFrameDuration(frame.Duration))
                {
                   result = true;
                }

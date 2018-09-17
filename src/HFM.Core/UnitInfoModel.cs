@@ -189,12 +189,12 @@ namespace HFM.Core
             if (_unitInfo.CurrentFrame != null)
             {
                // Make sure CurrentFrame.FrameID is 0 or greater
-               if (_unitInfo.CurrentFrame.FrameID >= 0)
+               if (_unitInfo.CurrentFrame.ID >= 0)
                {
                   // but not greater than the CurrentProtein.Frames
-                  if (_unitInfo.CurrentFrame.FrameID <= CurrentProtein.Frames)
+                  if (_unitInfo.CurrentFrame.ID <= CurrentProtein.Frames)
                   {
-                     return _unitInfo.CurrentFrame.FrameID;
+                     return _unitInfo.CurrentFrame.ID;
                   }
 
                   // if it is, just return the protein frame count
@@ -230,7 +230,7 @@ namespace HFM.Core
          switch (calculationType)
          {
             case PpdCalculationType.LastFrame:
-               return _unitInfo.FramesObserved > 1 ? Convert.ToInt32(_unitInfo.CurrentFrame.FrameDuration.TotalSeconds) : 0;
+               return _unitInfo.FramesObserved > 1 ? Convert.ToInt32(_unitInfo.CurrentFrame.Duration.TotalSeconds) : 0;
             case PpdCalculationType.LastThreeFrames:
                return _unitInfo.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
             case PpdCalculationType.AllFrames:
@@ -253,11 +253,11 @@ namespace HFM.Core
          if (_unitInfo.CurrentFrame == null) return 0;
 
          // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-         if (DownloadTime.IsUnknown() || _unitInfo.CurrentFrame.FrameID <= 0) { return 0; }
+         if (DownloadTime.IsUnknown() || _unitInfo.CurrentFrame.ID <= 0) { return 0; }
 
          // Issue 92
          TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
-         return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.FrameID);
+         return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.ID);
       }
 
       public bool IsUsingBenchmarkFrameTime(PpdCalculationType calculationType)
@@ -532,14 +532,14 @@ namespace HFM.Core
          TimeSpan totalTime = TimeSpan.Zero;
          int countFrames = 0;
 
-         int frameId = _unitInfo.CurrentFrame.FrameID;
+         int frameId = _unitInfo.CurrentFrame.ID;
          for (int i = 0; i < numberOfFrames; i++)
          {
             // Issue 199
             var unitFrame = _unitInfo.GetUnitFrame(frameId);
-            if (unitFrame != null && unitFrame.FrameDuration > TimeSpan.Zero)
+            if (unitFrame != null && unitFrame.Duration > TimeSpan.Zero)
             {
-               totalTime = totalTime.Add(unitFrame.FrameDuration);
+               totalTime = totalTime.Add(unitFrame.Duration);
                countFrames++;
             }
             frameId--;

@@ -220,7 +220,7 @@ namespace HFM.Core.DataTypes
             int max = UnitFrames.Keys.Max();
             if (max >= 0)
             {
-               Debug.Assert(UnitFrames[max].FrameID == max);
+               Debug.Assert(UnitFrames[max].ID == max);
                return UnitFrames[max];
             }
 
@@ -255,18 +255,18 @@ namespace HFM.Core.DataTypes
          var unitFrames = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
          {
             var unitFrame = x.Data as UnitFrame;
-            if (unitFrame != null && unitFrame.FrameID >= 0)
+            if (unitFrame != null && unitFrame.ID >= 0)
             {
                return unitFrame;
             }
             return null;
-         }).Where(x => x != null).ToDictionary(x => x.FrameID, true);
+         }).Where(x => x != null).ToDictionary(x => x.ID, true);
 
          foreach (var frame in unitFrames.Values)
          {
-            if (unitFrames.ContainsKey(frame.FrameID - 1))
+            if (unitFrames.ContainsKey(frame.ID - 1))
             {
-               frame.FrameDuration = frame.TimeOfFrame.GetDelta(unitFrames[frame.FrameID - 1].TimeOfFrame);
+               frame.Duration = frame.TimeStamp.GetDelta(unitFrames[frame.ID - 1].TimeStamp);
             }
          }
 

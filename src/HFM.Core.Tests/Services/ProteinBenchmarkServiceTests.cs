@@ -84,7 +84,7 @@ namespace HFM.Core
             
             for (int j = 1; j < 6; j++)
             {
-               benchmark.SetFrameTime(TimeSpan.FromMinutes(j));
+               benchmark.SetFrameDuration(TimeSpan.FromMinutes(j));
             }
             list.Add(benchmark);
          }
@@ -101,7 +101,7 @@ namespace HFM.Core
 
             for (int j = 1; j < 6; j++)
             {
-               benchmark.SetFrameTime(TimeSpan.FromMinutes(j + 10));
+               benchmark.SetFrameDuration(TimeSpan.FromMinutes(j + 10));
             }
             list.Add(benchmark);
          }

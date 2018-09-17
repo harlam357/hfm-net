@@ -61,7 +61,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { FrameID = 0 };
+         var unitFrame = new UnitFrame { ID = 0 };
          var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
@@ -73,9 +73,9 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { FrameID = 0 } };
-         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { FrameID = 1 } };
-         var unitFrame5 = new UnitFrame { FrameID = 5 };
+         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 0 } };
+         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 1 } };
+         var unitFrame5 = new UnitFrame { ID = 5 };
          var logLine5 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame5 };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1, logLine5 });
          // Act & Assert
@@ -87,7 +87,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { FrameID = -1 };
+         var unitFrame = new UnitFrame { ID = -1 };
          var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
@@ -103,7 +103,7 @@ namespace HFM.Core.DataTypes
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
-            FrameID = 0
+            ID = 0
          };
          var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame };
          // Act
@@ -124,7 +124,7 @@ namespace HFM.Core.DataTypes
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
-            FrameID = 0
+            ID = 0
          };
          var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame0 };
          // Act
@@ -135,14 +135,14 @@ namespace HFM.Core.DataTypes
          Assert.AreEqual(1, unitInfo.UnitFrames.Count);
          Assert.AreSame(unitFrame0, unitInfo.CurrentFrame);
          // no duration - first frame
-         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
+         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.Duration);
 
          var unitFrame1 = new UnitFrame
          {
             RawFramesComplete = 1000,
             RawFramesTotal = 100000,
-            FrameID = 1,
-            TimeOfFrame = new TimeSpan(0, 5, 0)
+            ID = 1,
+            TimeStamp = new TimeSpan(0, 5, 0)
          };
          var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame1 };
          // Act
@@ -152,14 +152,14 @@ namespace HFM.Core.DataTypes
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(2, unitInfo.UnitFrames.Count);
          Assert.AreSame(unitFrame1, unitInfo.CurrentFrame);
-         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.FrameDuration);
+         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.Duration);
 
          var unitFrame2 = new UnitFrame
          {
             RawFramesComplete = 2000,
             RawFramesTotal = 100000,
-            FrameID = 2,
-            TimeOfFrame = new TimeSpan(0, 10, 0)
+            ID = 2,
+            TimeStamp = new TimeSpan(0, 10, 0)
          };
          var logLine2 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame2 };
          // Act
@@ -169,7 +169,7 @@ namespace HFM.Core.DataTypes
          Assert.AreEqual(100000, unitInfo.RawFramesTotal);
          Assert.AreEqual(3, unitInfo.UnitFrames.Count);
          Assert.AreSame(unitFrame2, unitInfo.CurrentFrame);
-         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.FrameDuration);
+         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.Duration);
       }
 
       [Test]
@@ -183,29 +183,29 @@ namespace HFM.Core.DataTypes
          {
             RawFramesComplete = 0,
             RawFramesTotal = 100000,
-            FrameID = 0,
-            TimeOfFrame = new TimeSpan(23, 55, 0),
-            FrameDuration = new TimeSpan(0, 0, 0)
+            ID = 0,
+            TimeStamp = new TimeSpan(23, 55, 0),
+            Duration = new TimeSpan(0, 0, 0)
          };
          var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame0 };
          // Act
          unitInfo.LogLines = new List<LogLine>(new[] { logLine0 });
          // Assert 0 - no duration - first frame
-         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
+         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.Duration);
 
          var unitFrame1 = new UnitFrame
          {
             RawFramesComplete = 1000,
             RawFramesTotal = 100000,
-            FrameID = 1,
-            TimeOfFrame = new TimeSpan(0, 5, 0),
-            FrameDuration = new TimeSpan(0, 0, 0)
+            ID = 1,
+            TimeStamp = new TimeSpan(0, 5, 0),
+            Duration = new TimeSpan(0, 0, 0)
          };
          var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = unitFrame1 };
          // Act
          unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1 });
          // Assert 1 - now we get a frame duration
-         Assert.AreEqual(new TimeSpan(0, 10, 0), unitInfo.CurrentFrame.FrameDuration);
+         Assert.AreEqual(new TimeSpan(0, 10, 0), unitInfo.CurrentFrame.Duration);
       }
 
       [Test]
@@ -222,7 +222,7 @@ namespace HFM.Core.DataTypes
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { FrameID = 0 } };
+         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, Data = new UnitFrame { ID = 0 } };
          unitInfo.LogLines = new List<LogLine>(new[] { logLine });
          // Act & Assert
          Assert.IsNotNull(unitInfo.GetUnitFrame(0));

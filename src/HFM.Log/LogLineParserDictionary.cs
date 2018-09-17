@@ -108,8 +108,8 @@ namespace HFM.Log
                // 10% frame step tolerance. In the example the completed must be within 250 steps.
                if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
                {
-                  frame.TimeOfFrame = ParseTimeStamp(logLine);
-                  frame.FrameID = framePercent;
+                  frame.TimeStamp = ParseTimeStamp(logLine);
+                  frame.ID = framePercent;
 
                   return frame;
                }
@@ -118,8 +118,8 @@ namespace HFM.Log
                // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
                if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
                {
-                  frame.TimeOfFrame = ParseTimeStamp(logLine);
-                  frame.FrameID = framePercent + 1;
+                  frame.TimeStamp = ParseTimeStamp(logLine);
+                  frame.ID = framePercent + 1;
 
                   return frame;
                }
@@ -144,8 +144,8 @@ namespace HFM.Log
                frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
                // I get this from the project data but what's the point. 100% is 100%.
 
-               frame.TimeOfFrame = ParseTimeStamp(logLine);
-               frame.FrameID = frame.RawFramesComplete;
+               frame.TimeStamp = ParseTimeStamp(logLine);
+               frame.ID = frame.RawFramesComplete;
 
                return frame;
             }

@@ -286,8 +286,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
 
          return unitInfo;
       }
@@ -363,8 +363,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 55, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 56, TimeOfFrame = TimeSpan.FromSeconds(1000) });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 55, TimeStamp = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 56, TimeStamp = TimeSpan.FromSeconds(1000) });
          return unitInfo;
       }
 
@@ -439,8 +439,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
          return unitInfo;
       }
 
@@ -515,8 +515,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 99, TimeOfFrame = TimeSpan.Zero });
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 100, TimeOfFrame = TimeSpan.FromMinutes(10) });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
          return unitInfo;
       }
 

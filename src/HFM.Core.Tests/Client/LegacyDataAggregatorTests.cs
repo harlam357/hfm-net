@@ -108,9 +108,9 @@ namespace HFM.Core
          Assert.AreEqual(0, unitInfoData.RawFramesComplete);
          Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(1, unitInfoData.FramesObserved);
-         Assert.AreEqual(0, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(13, 18, 49), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(0, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(13, 18, 49), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
@@ -188,9 +188,9 @@ namespace HFM.Core
          Assert.AreEqual(80000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(31, unitInfoData.FramesObserved);
-         Assert.AreEqual(32, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(15, 4, 43), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 13, 8), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(32, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(15, 4, 43), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 13, 8), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
          #endregion
       }
@@ -403,9 +403,9 @@ namespace HFM.Core
          Assert.AreEqual(127500, unitInfoData.RawFramesComplete);
          Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(50, unitInfoData.FramesObserved);
-         Assert.AreEqual(51, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(7, 20, 44), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 59, 12), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(51, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(7, 20, 44), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 59, 12), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
          #endregion
       }
@@ -482,9 +482,9 @@ namespace HFM.Core
          Assert.AreEqual(150000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(59, unitInfoData.FramesObserved);
-         Assert.AreEqual(60, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(14, 33, 19), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 5, 22), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(60, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(14, 33, 19), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 5, 22), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
          #endregion
       }
@@ -561,9 +561,9 @@ namespace HFM.Core
          Assert.AreEqual(485000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(98, unitInfoData.FramesObserved);
-         Assert.AreEqual(97, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(18, 8, 4), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 6, 38), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(97, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(18, 8, 4), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 6, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A3", unitInfoData.CoreID);
          #endregion
       }
@@ -632,9 +632,9 @@ namespace HFM.Core
          Assert.AreEqual(500000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(55, unitInfoData.FramesObserved);
-         Assert.AreEqual(100, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(21, 33, 46), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 4, 32), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(21, 33, 46), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 4, 32), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A3", unitInfoData.CoreID);
          #endregion
       }
@@ -785,9 +785,9 @@ namespace HFM.Core
          Assert.AreEqual(0, unitInfoData.RawFramesComplete);
          Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(1, unitInfoData.FramesObserved);
-         Assert.AreEqual(0, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(9, 18, 38), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(0, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(9, 18, 38), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.Duration);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("A3", unitInfoData.CoreID);
          #endregion
@@ -848,9 +848,9 @@ namespace HFM.Core
          Assert.AreEqual(15000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(7, unitInfoData.FramesObserved);
-         Assert.AreEqual(6, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(8, 52, 30), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 0, 56), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(6, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(8, 52, 30), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 0, 56), unitInfoData.CurrentFrame.Duration);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
@@ -911,9 +911,9 @@ namespace HFM.Core
          Assert.AreEqual(4, unitInfoData.RawFramesComplete);
          Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(4, unitInfoData.FramesObserved);
-         Assert.AreEqual(4, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(6, 7, 44), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 1, 34), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(4, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(6, 7, 44), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 1, 34), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
@@ -991,9 +991,9 @@ namespace HFM.Core
          Assert.AreEqual(100, unitInfoData.RawFramesComplete);
          Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(100, unitInfoData.FramesObserved);
-         Assert.AreEqual(100, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(2, 32, 5), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 0, 38), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(2, 32, 5), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 0, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("11", unitInfoData.CoreID);
          #endregion
       }
@@ -1052,9 +1052,9 @@ namespace HFM.Core
          Assert.AreEqual(5, unitInfoData.RawFramesComplete);
          Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
-         Assert.AreEqual(5, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(2, 4, 2), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 1, 19), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(5, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(2, 4, 2), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 1, 19), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
@@ -1358,9 +1358,9 @@ namespace HFM.Core
          Assert.AreEqual(110000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(1000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
-         Assert.AreEqual(11, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(1, 30, 50), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 10, 10), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(11, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(1, 30, 50), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 10, 10), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("B4", unitInfoData.CoreID);
          #endregion
       }
@@ -1420,9 +1420,9 @@ namespace HFM.Core
          Assert.AreEqual(164800, unitInfoData.RawFramesComplete);
          Assert.AreEqual(499375, unitInfoData.RawFramesTotal);
          Assert.AreEqual(34, unitInfoData.FramesObserved);
-         Assert.AreEqual(33, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(4, 58, 09), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 15, 05), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(4, 58, 09), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 15, 05), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
@@ -1482,9 +1482,9 @@ namespace HFM.Core
          Assert.AreEqual(175000, unitInfoData.RawFramesComplete);
          Assert.AreEqual(2500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
-         Assert.AreEqual(7, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(2, 5, 30), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(0, 3, 38), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(7, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(2, 5, 30), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(0, 3, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }
@@ -1543,9 +1543,9 @@ namespace HFM.Core
          Assert.AreEqual(7000001, unitInfoData.RawFramesComplete);
          Assert.AreEqual(7000001, unitInfoData.RawFramesTotal);
          Assert.AreEqual(94, unitInfoData.FramesObserved);
-         Assert.AreEqual(100, unitInfoData.CurrentFrame.FrameID);
-         Assert.AreEqual(new TimeSpan(5, 37, 54), unitInfoData.CurrentFrame.TimeOfFrame);
-         Assert.AreEqual(new TimeSpan(1, 40, 36), unitInfoData.CurrentFrame.FrameDuration);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(new TimeSpan(5, 37, 54), unitInfoData.CurrentFrame.TimeStamp);
+         Assert.AreEqual(new TimeSpan(1, 40, 36), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
          #endregion
       }

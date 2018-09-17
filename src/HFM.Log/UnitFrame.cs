@@ -24,21 +24,21 @@ namespace HFM.Log
 {
    public class UnitFrame
    {
-      public int FrameID { get; set; }
+      public int ID { get; set; }
 
       public int RawFramesComplete { get; set; }
 
       public int RawFramesTotal { get; set; }
 
-      public TimeSpan TimeOfFrame { get; set; }
+      public TimeSpan TimeStamp { get; set; }
 
-      public TimeSpan FrameDuration { get; set; }
+      public TimeSpan Duration { get; set; }
 
       public override string ToString()
       {
          return String.Format(CultureInfo.CurrentCulture, 
-            "Frame ID: {0} / Raw Complete: {1} / Raw Total: {2} / Time Stamp: {3} / Duration: {4}",
-            FrameID, RawFramesComplete, RawFramesTotal, TimeOfFrame, FrameDuration);
+            "ID: {0} / Raw Complete: {1} / Raw Total: {2} / Time Stamp: {3} / Duration: {4}",
+            ID, RawFramesComplete, RawFramesTotal, TimeStamp, Duration);
       }
    }
 }

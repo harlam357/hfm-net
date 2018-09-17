@@ -402,7 +402,7 @@ namespace HFM.Core
       public void FramesCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 1 });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 1 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -414,7 +414,7 @@ namespace HFM.Core
       public void FramesCompleteTest2()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = -1 });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = -1 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -426,7 +426,7 @@ namespace HFM.Core
       public void FramesCompleteTest3()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 101 });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 101 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -448,7 +448,7 @@ namespace HFM.Core
       public void PercentCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 5 });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 5 });
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -461,7 +461,7 @@ namespace HFM.Core
       {
          var protein = new Protein { Frames = 200 };
          var unitInfo = new UnitInfo();
-         unitInfo.SetUnitFrame(new UnitFrame { FrameID = 5 });
+         unitInfo.SetUnitFrame(new UnitFrame { ID = 5 });
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -872,8 +872,8 @@ namespace HFM.Core
       {
          return new UnitFrame
                 {
-                   FrameID = frameId,
-                   TimeOfFrame = ParseTimeStamp(timeStamp),
+                   ID = frameId,
+                   TimeStamp = ParseTimeStamp(timeStamp),
                 };
       }
 

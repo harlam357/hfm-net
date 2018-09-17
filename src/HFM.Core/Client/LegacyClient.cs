@@ -365,7 +365,7 @@ namespace HFM.Core
                              BenchmarkAverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
                              TimeOfLastFrame = slot.UnitInfoModel.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
-                                                  : slot.UnitInfoModel.UnitInfoData.CurrentFrame.TimeOfFrame,
+                                                  : slot.UnitInfoModel.UnitInfoData.CurrentFrame.TimeStamp,
                              UnitStartTimeStamp = slot.UnitInfoModel.UnitInfoData.UnitStartTimeStamp,
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };
