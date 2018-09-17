@@ -62,7 +62,7 @@ namespace HFM.Log
             if (_data == null || IsDirty)
             {
                IsDirty = false;
-               _data = FahLogInterpreter.GetClientRunData(this);
+               _data = Parent.LogLineDataInterpreter.GetClientRunData(this);
             }
             return _data;
          }
@@ -170,7 +170,7 @@ namespace HFM.Log
             if (_data == null || IsDirty)
             {
                IsDirty = false;
-               _data = FahLogInterpreter.GetSlotRunData(this);
+               _data = Parent.Parent.LogLineDataInterpreter.GetSlotRunData(this);
             }
             return _data;
          }
@@ -231,6 +231,32 @@ namespace HFM.Log
       /// Client Status
       /// </summary>
       public LogSlotStatus Status { get; set; }
+
+      internal void AddWorkUnitResult(WorkUnitResult workUnitResult)
+      {
+         if (workUnitResult == WorkUnitResult.FinishedUnit)
+         {
+            CompletedUnits++;
+         }
+         else if (IsFailedWorkUnit(workUnitResult))
+         {
+            FailedUnits++;
+         }
+      }
+
+      private static bool IsFailedWorkUnit(WorkUnitResult result)
+      {
+         switch (result)
+         {
+            case WorkUnitResult.EarlyUnitEnd:
+            case WorkUnitResult.UnstableMachine:
+            case WorkUnitResult.BadWorkUnit:
+            case WorkUnitResult.ClientCoreError:
+               return true;
+            default:
+               return false;
+         }
+      }
    }
 
    public class UnitRun : IEnumerable<LogLine>
@@ -288,7 +314,7 @@ namespace HFM.Log
             if (_data == null || IsDirty)
             {
                IsDirty = false;
-               _data = FahLogInterpreter.GetUnitRunData(this);
+               _data = Parent.Parent.Parent.LogLineDataInterpreter.GetUnitRunData(this);
             }
             return _data;
          }

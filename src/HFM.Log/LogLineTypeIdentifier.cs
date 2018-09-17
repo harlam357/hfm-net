@@ -42,31 +42,6 @@ namespace HFM.Log
                 line.Contains("- Digital signature verified") ||
                 line.Contains("] Digital signatures verified") ||
                 line.Contains("Entering M.D.");
-
-         //if (line.Contains("Preparing to commence simulation"))
-         //{
-         //   return true;
-         //}
-         //if (line.Contains("Called DecompressByteArray"))
-         //{
-         //   return true;
-         //}
-         //if (line.Contains("- Digital signature verified"))
-         //{
-         //   return true;
-         //}
-         ////*** ProtoMol Only */
-         //if (line.Contains("] Digital signatures verified"))
-         //{
-         //   return true;
-         //}
-         ////*******************/
-         //if (line.Contains("Entering M.D."))
-         //{
-         //   return true;
-         //}
-         //
-         //return false;
       }
    }
 

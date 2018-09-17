@@ -9,6 +9,13 @@ namespace HFM.Log
 {
    public abstract class FahLog : IEnumerable<LogLine>
    {
+      public ILogLineDataInterpreter LogLineDataInterpreter { get; private set; }
+
+      protected FahLog(ILogLineDataInterpreter dataInterpreter)
+      {
+         LogLineDataInterpreter = dataInterpreter;
+      }
+
       private Stack<ClientRun> _clientRuns;
 
       public Stack<ClientRun> ClientRuns
@@ -64,6 +71,13 @@ namespace HFM.Log
          private List<LogLine> _logBuffer;
 
          public LegacyLog()
+            : this(new LegacyLogLineDataInterpreter())
+         {
+
+         }
+
+         public LegacyLog(ILogLineDataInterpreter dataInterpreter)
+            : base(dataInterpreter)
          {
             _unitIndexData.Initialize();
          }
@@ -348,6 +362,18 @@ namespace HFM.Log
       public class FahClientLog : FahLog
       {
          private int _lineIndex;
+
+         public FahClientLog()
+            : this(new FahClientLogLineDataInterpreter())
+         {
+            
+         }
+
+         public FahClientLog(ILogLineDataInterpreter dataInterpreter)
+            : base(dataInterpreter)
+         {
+
+         }
 
          public static FahClientLog Read(string path)
          {

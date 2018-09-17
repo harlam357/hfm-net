@@ -15,6 +15,7 @@ namespace HFM.Core
       Stopping = 5,   // v7 specific
       Failed = 6,     // v7 specific
       // Extended entries for Legacy clients
+      // Matches HFM.Log.LogSlotStatus
       Stopped = 7,
       EuePause = 8,
       Hung = 9,

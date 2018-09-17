@@ -8,7 +8,6 @@ namespace HFM.Log
    /// </summary>
    public enum LogSlotStatus
    {
-      // Matches HFM.Client.DataTypes.FahSlotStatus
       Unknown = 0,
       Paused = 1,
       Stopped = 7,

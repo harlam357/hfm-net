@@ -82,7 +82,7 @@
     <Compile Include="Internal\DateTimeParse.cs" />
     <Compile Include="Internal\Environment.cs" />
     <Compile Include="FahLog.cs" />
-    <Compile Include="FahLogInterpreter.cs" />
+    <Compile Include="LogLineDataInterpreter.cs" />
     <Compile Include="LogLineParser.cs" />
     <Compile Include="LogLineTypeIdentifier.cs" />
     <Compile Include="FahLogDataTypes.cs" />
