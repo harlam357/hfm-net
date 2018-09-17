@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
 
 namespace HFM.Log
 {
@@ -30,15 +29,17 @@ namespace HFM.Log
 
       public string Raw { get; set; }
 
+      public LogLineParser Parser { get; set; }
+
       private object _data;
 
       public object Data
       {
          get
          {
-            if (_data == null && _parser != null)
+            if (_data == null && Parser != null)
             {
-               _data = _parser(this);
+               _data = Parser(this);
                if (_data == null)
                {
                   LineType = LogLineType.Error;
@@ -58,14 +59,6 @@ namespace HFM.Log
       public override string ToString()
       {
          return Raw;
-      }
-
-      private Func<LogLine, object> _parser;
-
-      public void SetParser(Func<LogLine, object> parser)
-      {
-         Debug.Assert(parser != null);
-         _parser = parser;
       }
    }
 }

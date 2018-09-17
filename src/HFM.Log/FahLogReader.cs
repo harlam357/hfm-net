@@ -44,11 +44,12 @@ namespace HFM.Log
       private LogLine CreateLine(string line, int index)
       {
          if (line == null) return null;
+
          var lineType = _typeIdentifier.DetermineLineType(line);
-         Func<LogLine, object> parser;
+         LogLineParser parser;
          _parserDictionary.TryGetValue(lineType, out parser);
-         var logLine = new LogLine { Raw = line, LineType = lineType, Index = index };
-         if (parser != null) logLine.SetParser(parser);
+
+         var logLine = new LogLine { LineType = lineType, Index = index, Raw = line, Parser = parser };
          return logLine;
       }
 

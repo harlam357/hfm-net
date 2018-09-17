@@ -241,7 +241,7 @@ namespace HFM.Log
                     line.LineType == LogLineType.WorkUnitFrame) &&
                     unitRunData.UnitStartTimeStamp == null)
                {
-                  unitRunData.UnitStartTimeStamp = CommonLogLineParser.GetTimeStamp(line);
+                  unitRunData.UnitStartTimeStamp = Internal.CommonLogLineParser.GetTimeStamp(line);
                }
 
                if (line.LineType == LogLineType.WorkUnitPaused ||
@@ -261,7 +261,7 @@ namespace HFM.Log
                   // set frame times and determine status - Issue 13 (Revised)
                   unitRunData.FramesObserved = 0;
                   // Reset the Unit Start Time
-                  unitRunData.UnitStartTimeStamp = CommonLogLineParser.GetTimeStamp(line);
+                  unitRunData.UnitStartTimeStamp = Internal.CommonLogLineParser.GetTimeStamp(line);
                }
 
                #endregion

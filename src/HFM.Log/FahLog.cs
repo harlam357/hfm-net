@@ -444,7 +444,7 @@ namespace HFM.Log
             {
                logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
                logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);
-               logLine.TimeStamp = CommonLogLineParser.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
+               logLine.TimeStamp = Internal.CommonLogLineParser.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
                return true;
             }
 

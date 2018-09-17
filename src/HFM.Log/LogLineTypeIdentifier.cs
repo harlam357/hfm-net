@@ -25,23 +25,26 @@ namespace HFM.Log
       protected abstract LogLineType OnDetermineLineType(string line);
    }
 
-   internal static class CommonLogLineTypeIdentifier
+   namespace Internal
    {
-      internal static LogLineType DetermineLineType(string line)
+      internal static class CommonLogLineTypeIdentifier
       {
-         return IsLineTypeWorkUnitRunning(line) ? LogLineType.WorkUnitRunning : LogLineType.None;
-      }
+         internal static LogLineType DetermineLineType(string line)
+         {
+            return IsLineTypeWorkUnitRunning(line) ? LogLineType.WorkUnitRunning : LogLineType.None;
+         }
 
-      private static bool IsLineTypeWorkUnitRunning(string line)
-      {
-         // Change for v7: Removed the leading "] " portion of the
-         // string for all but the ProtoMol specific conditions.
+         private static bool IsLineTypeWorkUnitRunning(string line)
+         {
+            // Change for v7: Removed the leading "] " portion of the
+            // string for all but the ProtoMol specific conditions.
 
-         return line.Contains("Preparing to commence simulation") ||
-                line.Contains("Called DecompressByteArray") ||
-                line.Contains("- Digital signature verified") ||
-                line.Contains("] Digital signatures verified") ||
-                line.Contains("Entering M.D.");
+            return line.Contains("Preparing to commence simulation") ||
+                   line.Contains("Called DecompressByteArray") ||
+                   line.Contains("- Digital signature verified") ||
+                   line.Contains("] Digital signatures verified") ||
+                   line.Contains("Entering M.D.");
+         }
       }
    }
 
@@ -54,7 +57,7 @@ namespace HFM.Log
          /// </summary>
          protected override LogLineType OnDetermineLineType(string line)
          {
-            var logLineType = CommonLogLineTypeIdentifier.DetermineLineType(line);
+            var logLineType = Internal.CommonLogLineTypeIdentifier.DetermineLineType(line);
             if (logLineType != LogLineType.None)
             {
                return logLineType;
@@ -248,7 +251,7 @@ namespace HFM.Log
          /// </summary>
          protected override LogLineType OnDetermineLineType(string line)
          {
-            var logLineType = CommonLogLineTypeIdentifier.DetermineLineType(line);
+            var logLineType = Internal.CommonLogLineTypeIdentifier.DetermineLineType(line);
             if (logLineType != LogLineType.None)
             {
                return logLineType;
