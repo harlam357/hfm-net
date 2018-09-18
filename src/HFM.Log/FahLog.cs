@@ -128,8 +128,8 @@ namespace HFM.Log
                case LogLineType.WorkUnitWorking:
                   HandleWorkUnitWorking(logLine);
                   break;
-               case LogLineType.WorkUnitStart:
-                  HandleWorkUnitStart(logLine);
+               case LogLineType.WorkUnitCoreStart:
+                  HandleWorkUnitCoreStart(logLine);
                   break;
                case LogLineType.WorkUnitRunning:
                   HandleWorkUnitRunning(logLine);
@@ -244,7 +244,7 @@ namespace HFM.Log
             }
          }
 
-         private void HandleWorkUnitStart(LogLine logLine)
+         private void HandleWorkUnitCoreStart(LogLine logLine)
          {
             _unitIndexData.StartIndex = logLine.Index;
             _currentLineType = logLine.LineType;

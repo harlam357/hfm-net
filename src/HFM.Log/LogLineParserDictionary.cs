@@ -20,12 +20,12 @@ namespace HFM.Log
             dictionary.Add(LogLineType.WorkUnitCoreShutdown, ParseWorkUnitCoreShutdown);
          }
 
-         internal static Tuple<int, int, int, int> ParseWorkUnitProject(LogLine logLine)
+         internal static WorkUnitProjectData ParseWorkUnitProject(LogLine logLine)
          {
             Match projectIdMatch;
             if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.Raw)).Success)
             {
-               return Tuple.Create(
+               return new WorkUnitProjectData(
                   Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
                   Int32.Parse(projectIdMatch.Groups["Run"].Value),
                   Int32.Parse(projectIdMatch.Groups["Clone"].Value),
@@ -233,7 +233,7 @@ namespace HFM.Log
             Add(LogLineType.LogOpen, ParseLogOpen);
             Add(LogLineType.ClientVersion, ParseClientVersion);
             Add(LogLineType.ClientArguments, ParseClientArguments);
-            Add(LogLineType.ClientUserNameTeam, ParseClientUserNameTeam);
+            Add(LogLineType.ClientUserNameAndTeam, ParseClientUserNameAndTeam);
             Add(LogLineType.ClientReceivedUserID, ParseClientReceivedUserID);
             Add(LogLineType.ClientUserID, ParseClientUserID);
             Add(LogLineType.ClientMachineID, ParseClientMachineID);
@@ -277,12 +277,12 @@ namespace HFM.Log
             return null;
          }
 
-         internal static Tuple<string, int> ParseClientUserNameTeam(LogLine logLine)
+         internal static ClientUserNameAndTeamData ParseClientUserNameAndTeam(LogLine logLine)
          {
             Match userTeamMatch;
             if ((userTeamMatch = FahLogRegex.Legacy.UserTeamRegex.Match(logLine.Raw)).Success)
             {
-               return Tuple.Create(userTeamMatch.Groups["Username"].Value, Int32.Parse(userTeamMatch.Groups["TeamNumber"].Value));
+               return new ClientUserNameAndTeamData(userTeamMatch.Groups["Username"].Value, Int32.Parse(userTeamMatch.Groups["TeamNumber"].Value));
             }
             return null;
          }

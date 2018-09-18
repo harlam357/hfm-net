@@ -79,41 +79,13 @@ namespace HFM.Log
             {
                return LogLineType.ClientSendWorkToServer;
             }
-            if (line.Contains("] - Autosending finished units..."))
-            {
-               return LogLineType.ClientAutosendStart;
-            }
-            if (line.Contains("] - Autosend completed"))
-            {
-               return LogLineType.ClientAutosendComplete;
-            }
-            if (line.Contains("] + Attempting to send results"))
-            {
-               return LogLineType.ClientSendStart;
-            }
-            if (line.Contains("] + Could not connect to Work Server"))
-            {
-               return LogLineType.ClientSendConnectFailed;
-            }
-            if (line.Contains("] - Error: Could not transmit unit"))
-            {
-               return LogLineType.ClientSendFailed;
-            }
-            if (line.Contains("] + Results successfully sent"))
-            {
-               return LogLineType.ClientSendComplete;
-            }
             if (line.Contains("Arguments:"))
             {
                return LogLineType.ClientArguments;
             }
             if (line.Contains("] - User name:"))
             {
-               return LogLineType.ClientUserNameTeam;
-            }
-            if (line.Contains("] + Requesting User ID from server"))
-            {
-               return LogLineType.ClientRequestingUserID;
+               return LogLineType.ClientUserNameAndTeam;
             }
             if (line.Contains("- Received User ID ="))
             {
@@ -130,14 +102,6 @@ namespace HFM.Log
             if (line.Contains("] + Attempting to get work packet"))
             {
                return LogLineType.ClientAttemptGetWorkPacket;
-            }
-            if (line.Contains("] - Will indicate memory of"))
-            {
-               return LogLineType.ClientIndicateMemory;
-            }
-            if (line.Contains("] - Detect CPU. Vendor:"))
-            {
-               return LogLineType.ClientDetectCpu;
             }
             if (line.Contains("] + Processing work unit"))
             {
@@ -165,12 +129,12 @@ namespace HFM.Log
             }
             if (line.Contains("] *------------------------------*"))
             {
-               return LogLineType.WorkUnitStart;
+               return LogLineType.WorkUnitCoreStart;
             }
             /*** ProtoMol Only */
             if (line.Contains("] ************************** ProtoMol Folding@Home Core **************************"))
             {
-               return LogLineType.WorkUnitStart;
+               return LogLineType.WorkUnitCoreStart;
             }
             /*******************/
             if (line.Contains("] Version"))
@@ -202,10 +166,6 @@ namespace HFM.Log
             if (line.Contains("] + Off battery, restarting core"))
             {
                return LogLineType.WorkUnitResumeFromBattery;
-            }
-            if (line.Contains("] - Shutting down core"))
-            {
-               return LogLineType.WorkUnitShuttingDownCore;
             }
             if (line.Contains("] Folding@home Core Shutdown:"))
             {
@@ -265,14 +225,6 @@ namespace HFM.Log
             {
                return LogLineType.ClientSendWorkToServer;
             }
-            if (line.Contains(": Uploading"))
-            {
-               return LogLineType.ClientSendStart;
-            }
-            if (line.Contains(": Upload complete"))
-            {
-               return LogLineType.ClientSendComplete;
-            }
             if (line.Contains(":Requesting new work unit for slot"))
             {
                return LogLineType.ClientAttemptGetWorkPacket;
@@ -289,7 +241,7 @@ namespace HFM.Log
             /***************************************************/
             if (line.Contains(":*------------------------------*"))
             {
-               return LogLineType.WorkUnitStart;
+               return LogLineType.WorkUnitCoreStart;
             }
             if (line.Contains(":Version"))
             {
@@ -306,10 +258,6 @@ namespace HFM.Log
             if (line.Contains(":Completed "))
             {
                return LogLineType.WorkUnitFrame;
-            }
-            if (line.Contains(":- Shutting down core"))
-            {
-               return LogLineType.WorkUnitShuttingDownCore;
             }
             if (line.Contains(":Folding@home Core Shutdown:"))
             {

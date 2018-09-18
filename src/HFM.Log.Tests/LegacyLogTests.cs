@@ -116,10 +116,6 @@ namespace HFM.Log
          Assert.AreEqual(2.08f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[17].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[150].Data);
-
-         // Special Check to be sure the reader is catching the Attempting To Send line (Current ClientRun - Last Unit)
-         unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
-         Assert.AreEqual(LogLineType.ClientSendStart, unitRun.LogLines[158].LineType);
       }
 
       [Test]

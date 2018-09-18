@@ -98,11 +98,11 @@ namespace HFM.Log
                      }
                      break;
                   case LogLineType.WorkUnitProject:
-                     var projectInfo = (Tuple<int, int, int, int>)line.Data;
-                     unitRunData.ProjectID = projectInfo.Item1;
-                     unitRunData.ProjectRun = projectInfo.Item2;
-                     unitRunData.ProjectClone = projectInfo.Item3;
-                     unitRunData.ProjectGen = projectInfo.Item4;
+                     var data = (WorkUnitProjectData)line.Data;
+                     unitRunData.ProjectID = data.ProjectID;
+                     unitRunData.ProjectRun = data.ProjectRun;
+                     unitRunData.ProjectClone = data.ProjectClone;
+                     unitRunData.ProjectGen = data.ProjectGen;
                      break;
                   case LogLineType.WorkUnitCoreReturn:
                      unitRunData.WorkUnitResult = (WorkUnitResult)line.Data;
@@ -136,11 +136,11 @@ namespace HFM.Log
                {
                   clientRunData.Arguments = line.Data.ToString();
                }
-               else if (line.LineType == LogLineType.ClientUserNameTeam)
+               else if (line.LineType == LogLineType.ClientUserNameAndTeam)
                {
-                  var userAndTeam = (Tuple<string, int>)line.Data;
-                  clientRunData.FoldingID = userAndTeam.Item1;
-                  clientRunData.Team = userAndTeam.Item2;
+                  var data = (ClientUserNameAndTeamData)line.Data;
+                  clientRunData.FoldingID = data.FoldingID;
+                  clientRunData.Team = data.Team;
                }
                else if (line.LineType == LogLineType.ClientUserID ||
                         line.LineType == LogLineType.ClientReceivedUserID)
@@ -192,7 +192,7 @@ namespace HFM.Log
             {
                if (line.LineType == LogLineType.WorkUnitProcessing ||
                    line.LineType == LogLineType.WorkUnitWorking ||
-                   line.LineType == LogLineType.WorkUnitStart ||
+                   line.LineType == LogLineType.WorkUnitCoreStart ||
                    line.LineType == LogLineType.WorkUnitFrame ||
                    line.LineType == LogLineType.WorkUnitResumeFromBattery)
                {
@@ -237,7 +237,7 @@ namespace HFM.Log
 
                if ((line.LineType == LogLineType.WorkUnitProcessing ||
                     line.LineType == LogLineType.WorkUnitWorking ||
-                    line.LineType == LogLineType.WorkUnitStart ||
+                    line.LineType == LogLineType.WorkUnitCoreStart ||
                     line.LineType == LogLineType.WorkUnitFrame) &&
                     unitRunData.UnitStartTimeStamp == null)
                {
@@ -280,11 +280,11 @@ namespace HFM.Log
                   {
                      if (line.Data != null)
                      {
-                        var projectInfo = (Tuple<int, int, int, int>)line.Data;
-                        unitRunData.ProjectID = projectInfo.Item1;
-                        unitRunData.ProjectRun = projectInfo.Item2;
-                        unitRunData.ProjectClone = projectInfo.Item3;
-                        unitRunData.ProjectGen = projectInfo.Item4;
+                        var data = (WorkUnitProjectData)line.Data;
+                        unitRunData.ProjectID = data.ProjectID;
+                        unitRunData.ProjectRun = data.ProjectRun;
+                        unitRunData.ProjectClone = data.ProjectClone;
+                        unitRunData.ProjectGen = data.ProjectGen;
                      }
                   }
                }

@@ -77,6 +77,7 @@
     </Compile>
     <Compile Include="ClientRun.cs" />
     <Compile Include="FahLogReader.cs" />
+    <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="LogSlotStatus.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="WorkUnitFrameData.cs" />
     <Compile Include="Legacy\UnitInfoLog.cs" />
     <Compile Include="Legacy\UnitInfoLogData.cs" />
+    <Compile Include="WorkUnitProjectData.cs" />
     <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
