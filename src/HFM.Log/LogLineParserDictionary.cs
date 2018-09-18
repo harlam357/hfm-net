@@ -226,6 +226,8 @@ namespace HFM.Log
    {
       public class LegacyLogLineParserDictionary : Dictionary<LogLineType, LogLineParser>, ILogLineParserDictionary
       {
+         internal static LegacyLogLineParserDictionary Instance { get; } = new LegacyLogLineParserDictionary();
+
          public LegacyLogLineParserDictionary()
          {
             CommonLogLineParser.AddToDictionary(this);
@@ -396,6 +398,8 @@ namespace HFM.Log
    {
       public class FahClientLogLineParserDictionary : Dictionary<LogLineType, LogLineParser>, ILogLineParserDictionary
       {
+         internal static FahClientLogLineParserDictionary Instance { get; } = new FahClientLogLineParserDictionary();
+         
          public FahClientLogLineParserDictionary()
          {
             CommonLogLineParser.AddToDictionary(this);

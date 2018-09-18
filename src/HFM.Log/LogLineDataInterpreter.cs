@@ -42,6 +42,8 @@ namespace HFM.Log
    {
       public class FahClientLogLineDataInterpreter : LogLineDataInterpreter
       {
+         internal static FahClientLogLineDataInterpreter Instance { get; } = new FahClientLogLineDataInterpreter();
+
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
             var clientRunData = new ClientRunData();
@@ -118,6 +120,8 @@ namespace HFM.Log
    {
       public class LegacyLogLineDataInterpreter : LogLineDataInterpreter
       {
+         internal static LegacyLogLineDataInterpreter Instance { get; } = new LegacyLogLineDataInterpreter();
+
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
             var clientRunData = new ClientRunData();

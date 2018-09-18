@@ -52,6 +52,8 @@ namespace HFM.Log
    {
       public class LegacyLogLineTypeIdentifier : LogLineTypeIdentifier
       {
+         internal static LegacyLogLineTypeIdentifier Instance { get; } = new LegacyLogLineTypeIdentifier();
+
          /// <summary>
          /// Contains logic to determine the log line type for Legacy logs.
          /// </summary>
@@ -206,6 +208,8 @@ namespace HFM.Log
    {
       public class FahClientLogLineTypeIdentifier : LogLineTypeIdentifier
       {
+         internal static FahClientLogLineTypeIdentifier Instance { get; } = new FahClientLogLineTypeIdentifier();
+
          /// <summary>
          /// Contains logic to determine the log line type for FahClient logs.
          /// </summary>

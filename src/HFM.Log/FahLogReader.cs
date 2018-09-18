@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,9 +13,9 @@ namespace HFM.Log
 
       protected FahLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
       {
-         _textReader = textReader;
-         _typeIdentifier = typeIdentifier;
-         _parserDictionary = parserDictionary;
+         _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
+         _typeIdentifier = typeIdentifier ?? throw new ArgumentNullException(nameof(typeIdentifier));
+         _parserDictionary = parserDictionary ?? throw new ArgumentNullException(nameof(parserDictionary));
       }
 
       private int _lineIndex;
@@ -28,7 +27,7 @@ namespace HFM.Log
       public LogLine ReadLine()
       {
          string line = _textReader.ReadLine();
-         return CreateLine(line, _lineIndex++);
+         return CreateLogLine(line, _lineIndex++);
       }
 
       /// <summary>
@@ -38,19 +37,22 @@ namespace HFM.Log
       public async Task<LogLine> ReadLineAsync()
       {
          string line = await _textReader.ReadLineAsync().ConfigureAwait(false);
-         return CreateLine(line, _lineIndex++);
+         return CreateLogLine(line, _lineIndex++);
       }
 
-      private LogLine CreateLine(string line, int index)
+      private LogLine CreateLogLine(string line, int index)
       {
          if (line == null) return null;
 
          var lineType = _typeIdentifier.DetermineLineType(line);
-         LogLineParser parser;
-         _parserDictionary.TryGetValue(lineType, out parser);
+         _parserDictionary.TryGetValue(lineType, out LogLineParser parser);
 
-         var logLine = new LogLine { LineType = lineType, Index = index, Raw = line, Parser = parser };
-         return logLine;
+         return OnCreateLogLine(lineType, index, line, parser);
+      }
+
+      protected virtual LogLine OnCreateLogLine(LogLineType lineType, int index, string raw, LogLineParser parser)
+      {
+         return new LogLine { LineType = lineType, Index = index, Raw = raw, Parser = parser };
       }
 
       public virtual void Close()
@@ -78,7 +80,7 @@ namespace HFM.Log
       public class FahClientLogReader : FahLogReader
       {
          public FahClientLogReader(TextReader textReader)
-            : this(textReader, new FahClientLogLineTypeIdentifier(), new FahClientLogLineParserDictionary())
+            : this(textReader, FahClientLogLineTypeIdentifier.Instance, FahClientLogLineParserDictionary.Instance)
          {
             
          }
@@ -96,7 +98,7 @@ namespace HFM.Log
       public class LegacyLogReader : FahLogReader
       {
          public LegacyLogReader(TextReader textReader)
-            : this(textReader, new LegacyLogLineTypeIdentifier(), new LegacyLogLineParserDictionary())
+            : this(textReader, LegacyLogLineTypeIdentifier.Instance, LegacyLogLineParserDictionary.Instance)
          {
             
          }
