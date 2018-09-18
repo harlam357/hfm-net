@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HFM.Log
 {
-   public interface ILogLineDataInterpreter
+   public interface IRunDataAggregator
    {
       ClientRunData GetClientRunData(ClientRun clientRun);
 
@@ -14,7 +14,7 @@ namespace HFM.Log
       UnitRunData GetUnitRunData(UnitRun unitRun);
    }
 
-   public abstract class LogLineDataInterpreter : ILogLineDataInterpreter
+   public abstract class RunDataAggregator : IRunDataAggregator
    {
       public ClientRunData GetClientRunData(ClientRun clientRun)
       {
@@ -40,9 +40,9 @@ namespace HFM.Log
 
    namespace FahClient
    {
-      public class FahClientLogLineDataInterpreter : LogLineDataInterpreter
+      public class FahClientRunDataAggregator : RunDataAggregator
       {
-         internal static FahClientLogLineDataInterpreter Instance { get; } = new FahClientLogLineDataInterpreter();
+         internal static FahClientRunDataAggregator Instance { get; } = new FahClientRunDataAggregator();
 
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
@@ -118,9 +118,9 @@ namespace HFM.Log
 
    namespace Legacy
    {
-      public class LegacyLogLineDataInterpreter : LogLineDataInterpreter
+      public class LegacyRunDataAggregator : RunDataAggregator
       {
-         internal static LegacyLogLineDataInterpreter Instance { get; } = new LegacyLogLineDataInterpreter();
+         internal static LegacyRunDataAggregator Instance { get; } = new LegacyRunDataAggregator();
 
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {

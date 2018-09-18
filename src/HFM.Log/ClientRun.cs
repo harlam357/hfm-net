@@ -62,7 +62,7 @@ namespace HFM.Log
             if (_data == null || IsDirty)
             {
                IsDirty = false;
-               _data = Parent.LogLineDataInterpreter.GetClientRunData(this);
+               _data = Parent.RunDataAggregator.GetClientRunData(this);
             }
             return _data;
          }

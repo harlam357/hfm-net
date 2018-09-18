@@ -45,7 +45,7 @@ namespace HFM.Log
             if (_data == null || IsDirty)
             {
                IsDirty = false;
-               _data = Parent.Parent.LogLineDataInterpreter.GetSlotRunData(this);
+               _data = Parent.Parent.RunDataAggregator.GetSlotRunData(this);
             }
             return _data;
          }
