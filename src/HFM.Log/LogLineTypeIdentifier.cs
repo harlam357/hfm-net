@@ -1,26 +1,32 @@
 ﻿
 namespace HFM.Log
 {
+   /// <summary>
+   /// Identifies the <see cref="LogLineType"/> based on the contents of a string line.
+   /// </summary>
    public interface ILogLineTypeIdentifier
    {
       /// <summary>
-      /// Determines the log line type based on the contents of the string line.
+      /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.
       /// </summary>
-      LogLineType DetermineLineType(string line);
+      LogLineType GetLogLineType(string line);
    }
 
+   /// <summary>
+   /// Identifies the <see cref="LogLineType"/> based on the contents of a string line.
+   /// </summary>
    public abstract class LogLineTypeIdentifier : ILogLineTypeIdentifier
    {
       /// <summary>
-      /// Determines the log line type based on the contents of the string line.
+      /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.
       /// </summary>
-      public LogLineType DetermineLineType(string line)
+      public LogLineType GetLogLineType(string line)
       {
          return OnDetermineLineType(line);
       }
 
       /// <summary>
-      /// Implement this method in derived types to determine the log line type based on the contents of the string line.
+      /// Implement this method in a derived type and return a <see cref="LogLineType"/> value based on the contents of the string line.
       /// </summary>
       protected abstract LogLineType OnDetermineLineType(string line);
    }
@@ -50,12 +56,15 @@ namespace HFM.Log
 
    namespace Legacy
    {
+      /// <summary>
+      /// Identifies the log line type of Legacy client log lines.
+      /// </summary>
       public class LegacyLogLineTypeIdentifier : LogLineTypeIdentifier
       {
          internal static LegacyLogLineTypeIdentifier Instance { get; } = new LegacyLogLineTypeIdentifier();
 
          /// <summary>
-         /// Contains logic to determine the log line type for Legacy logs.
+         /// Contains logic to identify the log line type of Legacy client log lines.
          /// </summary>
          protected override LogLineType OnDetermineLineType(string line)
          {
@@ -206,12 +215,15 @@ namespace HFM.Log
 
    namespace FahClient
    {
+      /// <summary>
+      /// Identifies the log line type of FahClient client log lines.
+      /// </summary>
       public class FahClientLogLineTypeIdentifier : LogLineTypeIdentifier
       {
          internal static FahClientLogLineTypeIdentifier Instance { get; } = new FahClientLogLineTypeIdentifier();
 
          /// <summary>
-         /// Contains logic to determine the log line type for FahClient logs.
+         /// Contains logic to identify the log line type of FahClient client log lines.
          /// </summary>
          protected override LogLineType OnDetermineLineType(string line)
          {

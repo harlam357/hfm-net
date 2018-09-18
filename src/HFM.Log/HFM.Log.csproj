@@ -85,7 +85,7 @@
     <Compile Include="Internal\Environment.cs" />
     <Compile Include="FahLog.cs" />
     <Compile Include="RunDataAggregator.cs" />
-    <Compile Include="LogLineParserDictionary.cs" />
+    <Compile Include="LogLineDataParserDictionary.cs" />
     <Compile Include="LogLineTypeIdentifier.cs" />
     <Compile Include="Internal\FahLogRegex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

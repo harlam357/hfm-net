@@ -29,7 +29,7 @@ namespace HFM.Log
 
       public string Raw { get; set; }
 
-      public LogLineParser Parser { get; set; }
+      public LogLineDataParser DataParser { get; set; }
 
       private object _data;
 
@@ -37,9 +37,9 @@ namespace HFM.Log
       {
          get
          {
-            if (_data == null && Parser != null)
+            if (_data == null && DataParser != null)
             {
-               _data = Parser(this);
+               _data = DataParser(this);
                if (_data == null)
                {
                   LineType = LogLineType.Error;

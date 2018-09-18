@@ -8,14 +8,14 @@ namespace HFM.Log
    public abstract class FahLogReader : IDisposable
    {
       private readonly TextReader _textReader;
-      private readonly ILogLineTypeIdentifier _typeIdentifier;
-      private readonly ILogLineParserDictionary _parserDictionary;
+      private readonly ILogLineTypeIdentifier _logLineTypeIdentifier;
+      private readonly ILogLineDataParserDictionary _logLineDataParserDictionary;
 
-      protected FahLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
+      protected FahLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
       {
          _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
-         _typeIdentifier = typeIdentifier ?? throw new ArgumentNullException(nameof(typeIdentifier));
-         _parserDictionary = parserDictionary ?? throw new ArgumentNullException(nameof(parserDictionary));
+         _logLineTypeIdentifier = logLineTypeIdentifier ?? throw new ArgumentNullException(nameof(logLineTypeIdentifier));
+         _logLineDataParserDictionary = logLineDataParserDictionary ?? throw new ArgumentNullException(nameof(logLineDataParserDictionary));
       }
 
       private int _lineIndex;
@@ -44,15 +44,15 @@ namespace HFM.Log
       {
          if (line == null) return null;
 
-         var lineType = _typeIdentifier.DetermineLineType(line);
-         _parserDictionary.TryGetValue(lineType, out LogLineParser parser);
+         var lineType = _logLineTypeIdentifier.GetLogLineType(line);
+         _logLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParser parser);
 
          return OnCreateLogLine(lineType, index, line, parser);
       }
 
-      protected virtual LogLine OnCreateLogLine(LogLineType lineType, int index, string raw, LogLineParser parser)
+      protected virtual LogLine OnCreateLogLine(LogLineType lineType, int index, string raw, LogLineDataParser dataParser)
       {
-         return new LogLine { LineType = lineType, Index = index, Raw = raw, Parser = parser };
+         return new LogLine { LineType = lineType, Index = index, Raw = raw, DataParser = dataParser };
       }
 
       public virtual void Close()
@@ -80,13 +80,13 @@ namespace HFM.Log
       public class FahClientLogReader : FahLogReader
       {
          public FahClientLogReader(TextReader textReader)
-            : this(textReader, FahClientLogLineTypeIdentifier.Instance, FahClientLogLineParserDictionary.Instance)
+            : this(textReader, FahClientLogLineTypeIdentifier.Instance, FahClientLogLineDataParserDictionary.Instance)
          {
             
          }
 
-         public FahClientLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
-            : base(textReader, typeIdentifier, parserDictionary)
+         public FahClientLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader, logLineTypeIdentifier, logLineDataParserDictionary)
          {
 
          }
@@ -98,13 +98,13 @@ namespace HFM.Log
       public class LegacyLogReader : FahLogReader
       {
          public LegacyLogReader(TextReader textReader)
-            : this(textReader, LegacyLogLineTypeIdentifier.Instance, LegacyLogLineParserDictionary.Instance)
+            : this(textReader, LegacyLogLineTypeIdentifier.Instance, LegacyLogLineDataParserDictionary.Instance)
          {
             
          }
 
-         public LegacyLogReader(TextReader textReader, ILogLineTypeIdentifier typeIdentifier, ILogLineParserDictionary parserDictionary)
-            : base(textReader, typeIdentifier, parserDictionary)
+         public LegacyLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader, logLineTypeIdentifier, logLineDataParserDictionary)
          {
 
          }

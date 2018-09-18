@@ -5,17 +5,35 @@ using System.Linq;
 
 namespace HFM.Log
 {
+   /// <summary>
+   /// Creates run data objects by aggregating information owned by <see cref="ClientRun"/>, <see cref="SlotRun"/>, and <see cref="UnitRun"/> objects.
+   /// </summary>
    public interface IRunDataAggregator
    {
+      /// <summary>
+      /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
+      /// </summary>
       ClientRunData GetClientRunData(ClientRun clientRun);
 
+      /// <summary>
+      /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
+      /// </summary>
       SlotRunData GetSlotRunData(SlotRun slotRun);
 
+      /// <summary>
+      /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
+      /// </summary>
       UnitRunData GetUnitRunData(UnitRun unitRun);
    }
 
+   /// <summary>
+   /// Creates run data objects by aggregating information owned by <see cref="ClientRun"/>, <see cref="SlotRun"/>, and <see cref="UnitRun"/> objects.
+   /// </summary>
    public abstract class RunDataAggregator : IRunDataAggregator
    {
+      /// <summary>
+      /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
+      /// </summary>
       public ClientRunData GetClientRunData(ClientRun clientRun)
       {
          return OnGetClientRunData(clientRun);
@@ -23,6 +41,9 @@ namespace HFM.Log
 
       protected abstract ClientRunData OnGetClientRunData(ClientRun clientRun);
 
+      /// <summary>
+      /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
+      /// </summary>
       public SlotRunData GetSlotRunData(SlotRun slotRun)
       {
          return OnGetSlotRunData(slotRun);
@@ -30,6 +51,9 @@ namespace HFM.Log
 
       protected abstract SlotRunData OnGetSlotRunData(SlotRun slotRun);
 
+      /// <summary>
+      /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
+      /// </summary>
       public UnitRunData GetUnitRunData(UnitRun unitRun)
       {
          return OnGetUnitRunData(unitRun);
