@@ -8,13 +8,13 @@ namespace HFM.Log
    public abstract class FahLogReader : IDisposable
    {
       private readonly TextReader _textReader;
-      private readonly ILogLineTypeIdentifier _logLineTypeIdentifier;
+      private readonly ILogLineTypeResolver _logLineTypeResolver;
       private readonly ILogLineDataParserDictionary _logLineDataParserDictionary;
 
-      protected FahLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
+      protected FahLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
       {
          _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
-         _logLineTypeIdentifier = logLineTypeIdentifier ?? throw new ArgumentNullException(nameof(logLineTypeIdentifier));
+         _logLineTypeResolver = logLineTypeResolver ?? throw new ArgumentNullException(nameof(logLineTypeResolver));
          _logLineDataParserDictionary = logLineDataParserDictionary ?? throw new ArgumentNullException(nameof(logLineDataParserDictionary));
       }
 
@@ -44,7 +44,7 @@ namespace HFM.Log
       {
          if (line == null) return null;
 
-         var lineType = _logLineTypeIdentifier.GetLogLineType(line);
+         var lineType = _logLineTypeResolver.Resolve(line);
          _logLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParser parser);
 
          return OnCreateLogLine(lineType, index, line, parser);
@@ -80,13 +80,13 @@ namespace HFM.Log
       public class FahClientLogReader : FahLogReader
       {
          public FahClientLogReader(TextReader textReader)
-            : this(textReader, FahClientLogLineTypeIdentifier.Instance, FahClientLogLineDataParserDictionary.Instance)
+            : this(textReader, FahClientLogLineTypeResolver.Instance, FahClientLogLineDataParserDictionary.Instance)
          {
             
          }
 
-         public FahClientLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
-            : base(textReader, logLineTypeIdentifier, logLineDataParserDictionary)
+         public FahClientLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader, logLineTypeResolver, logLineDataParserDictionary)
          {
 
          }
@@ -98,13 +98,13 @@ namespace HFM.Log
       public class LegacyLogReader : FahLogReader
       {
          public LegacyLogReader(TextReader textReader)
-            : this(textReader, LegacyLogLineTypeIdentifier.Instance, LegacyLogLineDataParserDictionary.Instance)
+            : this(textReader, LegacyLogLineTypeResolver.Instance, LegacyLogLineDataParserDictionary.Instance)
          {
             
          }
 
-         public LegacyLogReader(TextReader textReader, ILogLineTypeIdentifier logLineTypeIdentifier, ILogLineDataParserDictionary logLineDataParserDictionary)
-            : base(textReader, logLineTypeIdentifier, logLineDataParserDictionary)
+         public LegacyLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader, logLineTypeResolver, logLineDataParserDictionary)
          {
 
          }

@@ -2,40 +2,40 @@
 namespace HFM.Log
 {
    /// <summary>
-   /// Identifies the <see cref="LogLineType"/> based on the contents of a string line.
+   /// Resolves the <see cref="LogLineType"/> based on the contents of a string line.
    /// </summary>
-   public interface ILogLineTypeIdentifier
+   public interface ILogLineTypeResolver
    {
       /// <summary>
       /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.
       /// </summary>
-      LogLineType GetLogLineType(string line);
+      LogLineType Resolve(string line);
    }
 
    /// <summary>
-   /// Identifies the <see cref="LogLineType"/> based on the contents of a string line.
+   /// Resolves the <see cref="LogLineType"/> based on the contents of a string line.
    /// </summary>
-   public abstract class LogLineTypeIdentifier : ILogLineTypeIdentifier
+   public abstract class LogLineTypeResolver : ILogLineTypeResolver
    {
       /// <summary>
       /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.
       /// </summary>
-      public LogLineType GetLogLineType(string line)
+      public LogLineType Resolve(string line)
       {
-         return OnDetermineLineType(line);
+         return OnResolveLogLineType(line);
       }
 
       /// <summary>
       /// Implement this method in a derived type and return a <see cref="LogLineType"/> value based on the contents of the string line.
       /// </summary>
-      protected abstract LogLineType OnDetermineLineType(string line);
+      protected abstract LogLineType OnResolveLogLineType(string line);
    }
 
    namespace Internal
    {
-      internal static class CommonLogLineTypeIdentifier
+      internal static class CommonLogLineTypeResolver
       {
-         internal static LogLineType DetermineLineType(string line)
+         internal static LogLineType ResolveLogLineType(string line)
          {
             return IsLineTypeWorkUnitRunning(line) ? LogLineType.WorkUnitRunning : LogLineType.None;
          }
@@ -59,16 +59,16 @@ namespace HFM.Log
       /// <summary>
       /// Identifies the log line type of Legacy client log lines.
       /// </summary>
-      public class LegacyLogLineTypeIdentifier : LogLineTypeIdentifier
+      public class LegacyLogLineTypeResolver : LogLineTypeResolver
       {
-         internal static LegacyLogLineTypeIdentifier Instance { get; } = new LegacyLogLineTypeIdentifier();
+         internal static LegacyLogLineTypeResolver Instance { get; } = new LegacyLogLineTypeResolver();
 
          /// <summary>
          /// Contains logic to identify the log line type of Legacy client log lines.
          /// </summary>
-         protected override LogLineType OnDetermineLineType(string line)
+         protected override LogLineType OnResolveLogLineType(string line)
          {
-            var logLineType = Internal.CommonLogLineTypeIdentifier.DetermineLineType(line);
+            var logLineType = Internal.CommonLogLineTypeResolver.ResolveLogLineType(line);
             if (logLineType != LogLineType.None)
             {
                return logLineType;
@@ -218,16 +218,16 @@ namespace HFM.Log
       /// <summary>
       /// Identifies the log line type of FahClient client log lines.
       /// </summary>
-      public class FahClientLogLineTypeIdentifier : LogLineTypeIdentifier
+      public class FahClientLogLineTypeResolver : LogLineTypeResolver
       {
-         internal static FahClientLogLineTypeIdentifier Instance { get; } = new FahClientLogLineTypeIdentifier();
+         internal static FahClientLogLineTypeResolver Instance { get; } = new FahClientLogLineTypeResolver();
 
          /// <summary>
          /// Contains logic to identify the log line type of FahClient client log lines.
          /// </summary>
-         protected override LogLineType OnDetermineLineType(string line)
+         protected override LogLineType OnResolveLogLineType(string line)
          {
-            var logLineType = Internal.CommonLogLineTypeIdentifier.DetermineLineType(line);
+            var logLineType = Internal.CommonLogLineTypeResolver.ResolveLogLineType(line);
             if (logLineType != LogLineType.None)
             {
                return logLineType;
