@@ -46,51 +46,51 @@ namespace HFM.Log
       // ReSharper restore InconsistentNaming
 
       [Test]
-      public void UnitInfoLog_Read_ArgumentException_Test1()
+      public void UnitInfoLog_Read_ThrowsWhenPathIsNull_Test()
       {
-         Assert.Throws<ArgumentException>(() => UnitInfoLog.Read(null));
+         Assert.Throws<ArgumentNullException>(() => UnitInfoLog.Read(null));
       }
 
       [Test]
-      public void UnitInfoLog_Read_ArgumentException_Test2()
+      public void UnitInfoLog_Read_ThrowsWhenPathIsEmptyString_Test()
       {
          Assert.Throws<ArgumentException>(() => UnitInfoLog.Read(String.Empty));
       }
 
       [Test]
-      public void UnitInfoLog_Read_DirectoryNotFoundException_Test()
+      public void UnitInfoLog_Read_ThrowsWhenDirectoryNotFound_Test()
       {
          Assert.Throws<DirectoryNotFoundException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\DoesNotExist\\unitinfo.txt"));
       }
 
       [Test]
-      public void UnitInfoLog_Read_Malformed_1_UnitInfo1_Test()
+      public void UnitInfoLog_Read_LegacyUnitinfo_ThrowsOnTagFormat_Test()
       {
-         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo1.txt"));
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\LegacyUnitinfo\\unitinfo_TagFormat.txt"));
       }
 
       [Test]
-      public void UnitInfoLog_Read_Malformed_1_UnitInfo2_Test()
+      public void UnitInfoLog_Read_LegacyUnitinfo_ThrowsOnDownloadDateFormat_Test()
       {
-         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo2.txt"));
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\LegacyUnitinfo\\unitinfo_DownloadDateFormat.txt"));
       }
 
       [Test]
-      public void UnitInfoLog_Read_Malformed_1_UnitInfo3_Test()
+      public void UnitInfoLog_Read_LegacyUnitinfo_ThrowsOnDueDateFormat_Test()
       {
-         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo3.txt"));
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\LegacyUnitinfo\\unitinfo_DueDateFormat.txt"));
       }
 
       [Test]
-      public void UnitInfoLog_Read_Malformed_1_UnitInfo4_Test()
+      public void UnitInfoLog_Read_LegacyUnitinfo_ThrowsOnDueTimeFormat_Test()
       {
-         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo4.txt"));
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\LegacyUnitinfo\\unitinfo_DueTimeFormat.txt"));
       }
 
       [Test]
-      public void UnitInfoLog_Read_Malformed_1_UnitInfo5_Test()
+      public void UnitInfoLog_Read_LegacyUnitinfo_ThrowsOnProgressOverflow_Test()
       {
-         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\Malformed_1\\unitinfo5.txt"));
+         Assert.Throws<FormatException>(() => UnitInfoLog.Read("..\\..\\..\\TestFiles\\LegacyUnitinfo\\unitinfo_ProgressOverflow.txt"));
       }
    }
 }

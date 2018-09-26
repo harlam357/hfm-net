@@ -13,15 +13,14 @@ namespace HFM.Log.Legacy
       /// <summary>
       /// Reads the content from a unitinfo.txt file.
       /// </summary>
-      /// <param name="path">Path to the log file.</param>
-      /// <exception cref="System.ArgumentException">if path is null or empty.</exception>
-      /// <exception cref="System.FormatException">if log data fails parsing.</exception>
+      /// <param name="path">The file to read.</param>
+      /// <exception cref="ArgumentNullException">path is null.</exception>
+      /// <exception cref="ArgumentException">path is empty or white space string.</exception>
+      /// <exception cref="FormatException">file contents fails parsing.</exception>
       public static UnitInfoLogData Read(string path)
       {
-         if (String.IsNullOrEmpty(path))
-         {
-            throw new ArgumentException("Argument 'path' cannot be a null or empty string.");
-         }
+         if (path is null) throw new ArgumentNullException(nameof(path));
+         if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException("path cannot be an empty or white space string.", nameof(path));
 
          string[] logLines = File.ReadAllLines(path);
 
