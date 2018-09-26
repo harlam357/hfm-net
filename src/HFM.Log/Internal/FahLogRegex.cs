@@ -15,7 +15,7 @@ namespace HFM.Log.Internal
          /// <summary>
          /// Regular Expression to match Work Unit Project string.
          /// </summary>
-         internal static readonly Regex ProjectIDRegex =
+         internal static readonly Regex ProjectIdRegex =
             new Regex("\\[?\\d{2}:\\d{2}:\\d{2}[\\]|:].*Project: (?<ProjectNumber>\\d+) \\(Run (?<Run>\\d+), Clone (?<Clone>\\d+), Gen (?<Gen>\\d+)\\)", Options);
 
          /// <summary>

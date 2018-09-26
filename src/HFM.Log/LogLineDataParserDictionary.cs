@@ -23,7 +23,7 @@ namespace HFM.Log
          internal static WorkUnitProjectData ParseWorkUnitProject(LogLine logLine)
          {
             Match projectIdMatch;
-            if ((projectIdMatch = FahLogRegex.Common.ProjectIDRegex.Match(logLine.Raw)).Success)
+            if ((projectIdMatch = FahLogRegex.Common.ProjectIdRegex.Match(logLine.Raw)).Success)
             {
                return new WorkUnitProjectData(
                   Int32.Parse(projectIdMatch.Groups["ProjectNumber"].Value),
