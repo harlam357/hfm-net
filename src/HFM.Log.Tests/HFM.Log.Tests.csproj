@@ -81,6 +81,7 @@
     <Compile Include="FahLogAssert.cs" />
     <Compile Include="FahLogTests.cs" />
     <Compile Include="LegacyLogTests.cs" />
+    <Compile Include="LogLineTests.cs" />
     <Compile Include="UnitInfoLogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
