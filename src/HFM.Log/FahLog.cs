@@ -85,7 +85,7 @@ namespace HFM.Log
          public static LegacyLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
-            using (var reader = new LegacyLogReader(textReader))
+            using (var reader = new LegacyLogTextReader(textReader))
             {
                var log = new LegacyLog();
                log.Read(reader);
@@ -190,10 +190,10 @@ namespace HFM.Log
                return;
             }
 
-            // Otherwise, if we see a LogHeader and the preceeding line was not
+            // Otherwise, if we see a LogHeader and the preceding line was not
             // a LogOpen or a LogHeader, then we use this as a signal to create
             // a new ClientRun.  This is a backup option and I don't expect this
-            // situtation to happen at all if the log file is not corrupt.
+            // situation to happen at all if the log file is not corrupt.
             EnsureSlotRunExists(logLine.Index, FoldingSlot, true);
 
             _currentLineType = logLine.LineType;
@@ -378,7 +378,7 @@ namespace HFM.Log
          public static FahClientLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
-            using (var reader = new FahClientLogReader(textReader))
+            using (var reader = new FahClientLogTextReader(textReader))
             {
                var log = new FahClientLog();
                log.Read(reader);

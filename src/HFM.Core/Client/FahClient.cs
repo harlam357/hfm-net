@@ -190,7 +190,7 @@ namespace HFM.Core
             var logFragment = (LogFragment)e.TypedMessage;
             string filteredLogFragment = String.Join("\n", logFragment.Value.Split('\n').Where(x => x.Length != 0));
             using (var textReader = new StringReader(filteredLogFragment))
-            using (var reader = new Log.FahClient.FahClientLogReader(textReader))
+            using (var reader = new Log.FahClient.FahClientLogTextReader(textReader))
             {
                _fahLog.Read(reader);
             }

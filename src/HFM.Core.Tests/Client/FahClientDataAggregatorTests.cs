@@ -133,7 +133,7 @@ namespace HFM.Core
          var fahLog = new FahClientLog();
          string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
          using (var textReader = new StringReader(filteredLogText))
-         using (var reader = new FahClientLogReader(textReader))
+         using (var reader = new FahClientLogTextReader(textReader))
          {
             fahLog.Read(reader);
          }
