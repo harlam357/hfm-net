@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.IO;
 using System.Linq;
 
 using NUnit.Framework;
@@ -11,6 +12,23 @@ namespace HFM.Log
    [TestFixture]
    public class LegacyLogTests
    {
+      [Test]
+      public void LegacyLog_Clear_Test()
+      {
+         // Arrange
+         var log = new LegacyLog();
+         using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+         using (var reader = new LegacyLogTextReader(textReader))
+         {
+            log.Read(reader);
+         }
+         Assert.IsTrue(log.ClientRuns.Count > 0);
+         // Act
+         log.Clear();
+         // Assert
+         Assert.AreEqual(0, log.ClientRuns.Count);
+      }
+
       // ReSharper disable InconsistentNaming
 
       [Test]

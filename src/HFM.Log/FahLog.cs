@@ -76,7 +76,7 @@ namespace HFM.Log
 
          }
 
-         public LegacyLog(IRunDataAggregator dataAggregator)
+         protected LegacyLog(IRunDataAggregator dataAggregator)
             : base(dataAggregator)
          {
             _unitIndexData.Initialize();
@@ -369,7 +369,7 @@ namespace HFM.Log
             
          }
 
-         public FahClientLog(IRunDataAggregator dataAggregator)
+         protected FahClientLog(IRunDataAggregator dataAggregator)
             : base(dataAggregator)
          {
 
