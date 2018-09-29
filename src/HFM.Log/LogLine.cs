@@ -58,7 +58,7 @@ namespace HFM.Log
          return new LogLine { Raw = raw, Index = index, LineType = lineType, TimeStamp = timeStamp, Data = data };
       }
 
-      public static LogLine Create(string raw, int index, LogLineType lineType, LogLineTimeStampParserDelegate timeStampParser, LogLineDataParserDelegate dataParser)
+      public static LogLine Create(string raw, int index, LogLineType lineType, LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
       {
          return new Internal.LazyLogLine(timeStampParser, dataParser) { Raw = raw, Index = index, LineType = lineType };
       }
@@ -71,7 +71,7 @@ namespace HFM.Log
          private Lazy<TimeSpan?> _lazyTimeStampParser;
          private Lazy<object> _lazyDataParser;
 
-         internal LazyLogLine(LogLineTimeStampParserDelegate timeStampParser, LogLineDataParserDelegate dataParser)
+         internal LazyLogLine(LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
          {
             _lazyTimeStampParser = new Lazy<TimeSpan?>(() => timeStampParser(this));
             _lazyDataParser = new Lazy<object>(() => dataParser(this));

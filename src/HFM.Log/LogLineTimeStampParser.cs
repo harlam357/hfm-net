@@ -12,7 +12,7 @@ namespace HFM.Log
    /// </summary>
    /// <param name="logLine">The log line to parse.</param>
    /// <returns>A TimeSpan representing the time stamp data parsed from the log line.</returns>
-   public delegate TimeSpan? LogLineTimeStampParserDelegate(LogLine logLine);
+   public delegate TimeSpan? LogLineTimeStampParserFunction(LogLine logLine);
 
    /// <summary>
    /// Parses time stamp information from client log lines.
