@@ -9,15 +9,9 @@ namespace HFM.Log
    {
       private readonly TextReader _textReader;
 
-      protected ILogLineTypeResolver LineTypeResolver { get; }
-
-      protected ILogLineDataParserDictionary LogLineDataParserDictionary { get; }
-
-      protected FahLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
+      protected FahLogReader(TextReader textReader)
       {
          _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
-         LineTypeResolver = logLineTypeResolver ?? throw new ArgumentNullException(nameof(logLineTypeResolver));
-         LogLineDataParserDictionary = logLineDataParserDictionary ?? throw new ArgumentNullException(nameof(logLineDataParserDictionary));
       }
 
       private int _lineIndex;
@@ -48,13 +42,10 @@ namespace HFM.Log
          return OnCreateLogLine(line, index);
       }
 
-      protected virtual LogLine OnCreateLogLine(string line, int index)
-      {
-         LogLineType lineType = LineTypeResolver.Resolve(line);
-         LogLineTimeStampParserDelegate timeStampParser = LogLineTimeStampParser.Default;
-         LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserDelegate dataParser);
-         return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
-      }
+      /// <summary>
+      /// Implement this method in a derived type and return a <see cref="LogLine"/> value based on the contents of the string line and line index.
+      /// </summary>
+      protected abstract LogLine OnCreateLogLine(string line, int index);
 
       public virtual void Close()
       {
@@ -80,16 +71,35 @@ namespace HFM.Log
    {
       public class FahClientLogReader : FahLogReader
       {
+         protected ILogLineTypeResolver LogLineTypeResolver { get; }
+
+         protected ILogLineTimeStampParser LogLineTimeStampParser { get; }
+
+         protected ILogLineDataParserDictionary LogLineDataParserDictionary { get; }
+
          public FahClientLogReader(TextReader textReader)
-            : this(textReader, FahClientLogLineTypeResolver.Instance, FahClientLogLineDataParserDictionary.Instance)
+            : this(textReader, FahClientLogLineTypeResolver.Instance, FahClientLogLineTimeStampParser.Instance, FahClientLogLineDataParserDictionary.Instance)
          {
-            
+
          }
 
-         public FahClientLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
-            : base(textReader, logLineTypeResolver, logLineDataParserDictionary)
+         protected FahClientLogReader(TextReader textReader, 
+                                      ILogLineTypeResolver logLineTypeResolver, 
+                                      ILogLineTimeStampParser logLineTimeStampParser, 
+                                      ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader)
          {
+            LogLineTypeResolver = logLineTypeResolver;
+            LogLineTimeStampParser = logLineTimeStampParser;
+            LogLineDataParserDictionary = logLineDataParserDictionary;
+         }
 
+         protected override LogLine OnCreateLogLine(string line, int index)
+         {
+            LogLineType lineType = LogLineTypeResolver.Resolve(line);
+            LogLineTimeStampParserDelegate timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
+            LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserDelegate dataParser);
+            return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }
@@ -98,16 +108,35 @@ namespace HFM.Log
    {
       public class LegacyLogReader : FahLogReader
       {
+         protected ILogLineTypeResolver LogLineTypeResolver { get; }
+
+         protected ILogLineTimeStampParser LogLineTimeStampParser { get; }
+
+         protected ILogLineDataParserDictionary LogLineDataParserDictionary { get; }
+
          public LegacyLogReader(TextReader textReader)
-            : this(textReader, LegacyLogLineTypeResolver.Instance, LegacyLogLineDataParserDictionary.Instance)
+            : this(textReader, LegacyLogLineTypeResolver.Instance, LegacyLogLineTimeStampParser.Instance, LegacyLogLineDataParserDictionary.Instance)
          {
             
          }
 
-         public LegacyLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
-            : base(textReader, logLineTypeResolver, logLineDataParserDictionary)
+         protected LegacyLogReader(TextReader textReader, 
+                                   ILogLineTypeResolver logLineTypeResolver, 
+                                   ILogLineTimeStampParser logLineTimeStampParser,
+                                   ILogLineDataParserDictionary logLineDataParserDictionary)
+            : base(textReader)
          {
+            LogLineTypeResolver = logLineTypeResolver;
+            LogLineTimeStampParser = logLineTimeStampParser;
+            LogLineDataParserDictionary = logLineDataParserDictionary;
+         }
 
+         protected override LogLine OnCreateLogLine(string line, int index)
+         {
+            LogLineType lineType = LogLineTypeResolver.Resolve(line);
+            LogLineTimeStampParserDelegate timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
+            LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserDelegate dataParser);
+            return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }

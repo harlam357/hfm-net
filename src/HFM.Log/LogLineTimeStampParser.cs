@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -13,14 +14,30 @@ namespace HFM.Log
    /// <returns>A TimeSpan representing the time stamp data parsed from the log line.</returns>
    public delegate TimeSpan? LogLineTimeStampParserDelegate(LogLine logLine);
 
-   public static class LogLineTimeStampParser
+   /// <summary>
+   /// Parses time stamp information from client log lines.
+   /// </summary>
+   public interface ILogLineTimeStampParser
    {
-      /// <summary>
-      /// Gets a delegate representing the default time stamp parsing function.
-      /// </summary>
-      public static LogLineTimeStampParserDelegate Default { get; } = TryParseTimeStamp;
+      TimeSpan? ParseTimeStamp(LogLine logLine);
+   }
 
-      private static TimeSpan? TryParseTimeStamp(LogLine logLine)
+   /// <summary>
+   /// Parses time stamp information from client log lines.
+   /// </summary>
+   public abstract class LogLineTimeStampParser : ILogLineTimeStampParser
+   {
+      public TimeSpan? ParseTimeStamp(LogLine logLine)
+      {
+         return OnParseTimeStamp(logLine);
+      }
+
+      /// <summary>
+      /// Implement this method in a derived type and return a <see cref="TimeSpan"/> value based on the contents of the string line.
+      /// </summary>
+      /// <param name="logLine">The log line to parse.</param>
+      /// <returns>A TimeSpan representing the time stamp data parsed from the log line or null if parsing fails.</returns>
+      protected virtual TimeSpan? OnParseTimeStamp(LogLine logLine)
       {
          Match timeStampMatch;
          if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.Raw)).Success)
@@ -35,6 +52,28 @@ namespace HFM.Log
          }
 
          return null;
+      }
+   }
+
+   namespace FahClient
+   {
+      /// <summary>
+      /// Parses time stamp information from FahClient client log lines.
+      /// </summary>
+      public class FahClientLogLineTimeStampParser : LogLineTimeStampParser
+      {
+         public static FahClientLogLineTimeStampParser Instance { get; } = new FahClientLogLineTimeStampParser();
+      }
+   }
+
+   namespace Legacy
+   {
+      /// <summary>
+      /// Parses time stamp information from Legacy client log lines.
+      /// </summary>
+      public class LegacyLogLineTimeStampParser : LogLineTimeStampParser
+      {
+         public static LegacyLogLineTimeStampParser Instance { get; } = new LegacyLogLineTimeStampParser();
       }
    }
 }

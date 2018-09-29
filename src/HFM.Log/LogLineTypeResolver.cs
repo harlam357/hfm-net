@@ -62,7 +62,7 @@ namespace HFM.Log
       /// </summary>
       public class LegacyLogLineTypeResolver : LogLineTypeResolver
       {
-         internal static LegacyLogLineTypeResolver Instance { get; } = new LegacyLogLineTypeResolver();
+         public static LegacyLogLineTypeResolver Instance { get; } = new LegacyLogLineTypeResolver();
 
          /// <summary>
          /// Contains logic to identify the log line type of Legacy client log lines.
@@ -122,7 +122,7 @@ namespace HFM.Log
       /// </summary>
       public class FahClientLogLineTypeResolver : LogLineTypeResolver
       {
-         internal static FahClientLogLineTypeResolver Instance { get; } = new FahClientLogLineTypeResolver();
+         public static FahClientLogLineTypeResolver Instance { get; } = new FahClientLogLineTypeResolver();
 
          /// <summary>
          /// Contains logic to identify the log line type of FahClient client log lines.

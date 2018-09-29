@@ -187,14 +187,22 @@ namespace HFM.Log
 
    }
 
+   /// <summary>
+   /// Represents a read-only collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from client log lines.
+   /// </summary>
+   public abstract class LogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserDelegate>, ILogLineDataParserDictionary
+   {
+
+   }
+
    namespace Legacy
    {
       /// <summary>
       /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from Legacy client log lines.
       /// </summary>
-      public class LegacyLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserDelegate>, ILogLineDataParserDictionary
+      public class LegacyLogLineDataParserDictionary : LogLineDataParserDictionary
       {
-         internal static LegacyLogLineDataParserDictionary Instance { get; } = new LegacyLogLineDataParserDictionary();
+         public static LegacyLogLineDataParserDictionary Instance { get; } = new LegacyLogLineDataParserDictionary();
 
          public LegacyLogLineDataParserDictionary()
          {
@@ -367,9 +375,9 @@ namespace HFM.Log
       /// <summary>
       /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from FahClient client log lines.
       /// </summary>
-      public class FahClientLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserDelegate>, ILogLineDataParserDictionary
+      public class FahClientLogLineDataParserDictionary : LogLineDataParserDictionary
       {
-         internal static FahClientLogLineDataParserDictionary Instance { get; } = new FahClientLogLineDataParserDictionary();
+         public static FahClientLogLineDataParserDictionary Instance { get; } = new FahClientLogLineDataParserDictionary();
          
          public FahClientLogLineDataParserDictionary()
          {
