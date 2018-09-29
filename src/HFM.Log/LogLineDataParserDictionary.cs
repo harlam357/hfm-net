@@ -13,7 +13,7 @@ namespace HFM.Log
    {
       internal static class CommonLogLineParser
       {
-         internal static void AddToDictionary(IDictionary<LogLineType, LogLineDataParser> dictionary)
+         internal static void AddToDictionary(IDictionary<LogLineType, LogLineDataParserDelegate> dictionary)
          {
             dictionary.Add(LogLineType.WorkUnitProject, ParseWorkUnitProject);
             dictionary.Add(LogLineType.WorkUnitFrame, ParseWorkUnitFrame);
@@ -103,17 +103,23 @@ namespace HFM.Log
                // 10% frame step tolerance. In the example the completed must be within 250 steps.
                if (Math.Abs(calculatedPercent - framePercent) <= 0.1)
                {
-                  frame.TimeStamp = ParseTimeStamp(logLine);
+                  if (logLine.TimeStamp != null)
+                  {
+                     frame.TimeStamp = logLine.TimeStamp.Value;
+                  }
                   frame.ID = framePercent;
 
                   return frame;
                }
 
                /*** ProtoMol Only */
-               // Issue 191 - New ProtoMol Projects don't report frame progress on the precent boundry.
+               // Issue 191 - New ProtoMol Projects don't report frame progress on the percent boundary.
                if (Math.Abs(calculatedPercent - (framePercent + 1)) <= 0.1)
                {
-                  frame.TimeStamp = ParseTimeStamp(logLine);
+                  if (logLine.TimeStamp != null)
+                  {
+                     frame.TimeStamp = logLine.TimeStamp.Value;
+                  }
                   frame.ID = framePercent + 1;
 
                   return frame;
@@ -139,7 +145,10 @@ namespace HFM.Log
                frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames
                // I get this from the project data but what's the point. 100% is 100%.
 
-               frame.TimeStamp = ParseTimeStamp(logLine);
+               if (logLine.TimeStamp != null)
+               {
+                  frame.TimeStamp = logLine.TimeStamp.Value;
+               }
                frame.ID = frame.RawFramesComplete;
 
                return frame;
@@ -160,58 +169,6 @@ namespace HFM.Log
 
             return default(WorkUnitResult);
          }
-
-         internal static TimeSpan? GetTimeStamp(LogLine logLine)
-         {
-            if (logLine.TimeStamp != null)
-            {
-               return logLine.TimeStamp;
-            }
-
-            Match timeStampMatch;
-            if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.Raw)).Success)
-            {
-               return GetTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
-            }
-
-            return null;
-         }
-
-         internal static TimeSpan? GetTimeStamp(string value)
-         {
-            DateTime result;
-            if (DateTime.TryParseExact(value, "HH:mm:ss",
-                                       DateTimeFormatInfo.InvariantInfo,
-                                       DateTimeParse.Styles, out result))
-            {
-               return result.TimeOfDay;
-            }
-
-            return null;
-         }
-
-         internal static TimeSpan ParseTimeStamp(LogLine logLine)
-         {
-            if (logLine.TimeStamp != null)
-            {
-               return logLine.TimeStamp.Value;
-            }
-
-            Match timeStampMatch;
-            if ((timeStampMatch = FahLogRegex.Common.TimeStampRegex.Match(logLine.Raw)).Success)
-            {
-               return ParseTimeStamp(timeStampMatch.Groups["Timestamp"].Value);
-            }
-
-            throw new FormatException(String.Format("Failed to parse time stamp from '{0}'", logLine.Raw));
-         }
-
-         internal static TimeSpan ParseTimeStamp(string value)
-         {
-            return DateTime.ParseExact(value, "HH:mm:ss",
-                                       DateTimeFormatInfo.InvariantInfo,
-                                       DateTimeParse.Styles).TimeOfDay;
-         }
       }
    }
 
@@ -220,12 +177,12 @@ namespace HFM.Log
    /// </summary>
    /// <param name="logLine">The log line to parse.</param>
    /// <returns>An object representing the data parsed from the log line.</returns>
-   public delegate object LogLineDataParser(LogLine logLine);
+   public delegate object LogLineDataParserDelegate(LogLine logLine);
 
    /// <summary>
-   /// Represents a read-only collection of <see cref="LogLineType"/> / <see cref="LogLineDataParser"/> pairs used to parse data from client log lines.
+   /// Represents a read-only collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from client log lines.
    /// </summary>
-   public interface ILogLineDataParserDictionary : IReadOnlyDictionary<LogLineType, LogLineDataParser>
+   public interface ILogLineDataParserDictionary : IReadOnlyDictionary<LogLineType, LogLineDataParserDelegate>
    {
 
    }
@@ -233,9 +190,9 @@ namespace HFM.Log
    namespace Legacy
    {
       /// <summary>
-      /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParser"/> pairs used to parse data from Legacy client log lines.
+      /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from Legacy client log lines.
       /// </summary>
-      public class LegacyLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParser>, ILogLineDataParserDictionary
+      public class LegacyLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserDelegate>, ILogLineDataParserDictionary
       {
          internal static LegacyLogLineDataParserDictionary Instance { get; } = new LegacyLogLineDataParserDictionary();
 
@@ -408,9 +365,9 @@ namespace HFM.Log
    namespace FahClient
    {
       /// <summary>
-      /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParser"/> pairs used to parse data from FahClient client log lines.
+      /// Represents a collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserDelegate"/> pairs used to parse data from FahClient client log lines.
       /// </summary>
-      public class FahClientLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParser>, ILogLineDataParserDictionary
+      public class FahClientLogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserDelegate>, ILogLineDataParserDictionary
       {
          internal static FahClientLogLineDataParserDictionary Instance { get; } = new FahClientLogLineDataParserDictionary();
          

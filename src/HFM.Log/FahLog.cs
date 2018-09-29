@@ -390,15 +390,15 @@ namespace HFM.Log
          {
             logLine.Index = _lineIndex++;
 
-            bool isWorkUnitLogLine = SetLogLineProperties(logLine);
-            if (!isWorkUnitLogLine)
+            var properties = GetLogLineProperties(logLine);
+            if (!properties.IsWorkUnitLogLine)
             {
                var clientRun = EnsureClientRunExists(logLine.Index);
                clientRun.LogLines.Add(logLine);
             }
             else
             {
-               var unitRun = EnsureUnitRunExists(logLine.Index, logLine.FoldingSlot, logLine.QueueIndex);
+               var unitRun = EnsureUnitRunExists(logLine.Index, properties.FoldingSlot, properties.QueueIndex);
                if (logLine.LineType == LogLineType.WorkUnitCoreReturn)
                {
                   var result = logLine.Data != null ? (WorkUnitResult)logLine.Data : default(WorkUnitResult);
@@ -437,18 +437,27 @@ namespace HFM.Log
             }
          }
 
-         private static bool SetLogLineProperties(LogLine logLine)
+         private static LogLineProperties GetLogLineProperties(LogLine logLine)
          {
             Match workUnitRunningMatch;
             if ((workUnitRunningMatch = Internal.FahLogRegex.FahClient.WorkUnitRunningRegex.Match(logLine.Raw)).Success)
             {
-               logLine.QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value);
-               logLine.FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value);
-               logLine.TimeStamp = Internal.CommonLogLineParser.ParseTimeStamp(workUnitRunningMatch.Groups["Timestamp"].Value);
-               return true;
+               return new LogLineProperties
+               {
+                  IsWorkUnitLogLine = true,
+                  QueueIndex = Int32.Parse(workUnitRunningMatch.Groups["UnitIndex"].Value),
+                  FoldingSlot = Int32.Parse(workUnitRunningMatch.Groups["FoldingSlot"].Value)
+               };
             }
 
-            return false;
+            return new LogLineProperties();
+         }
+
+         private struct LogLineProperties
+         {
+            public bool IsWorkUnitLogLine { get; set; }
+            public int QueueIndex { get; set; }
+            public int FoldingSlot { get; set; }
          }
 
          private ClientRun EnsureClientRunExists(int lineIndex)

@@ -76,6 +76,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="FahClientLogReaderTests.cs" />
     <Compile Include="FahClientLogTests.cs" />
     <Compile Include="FahLogAssert.cs" />
     <Compile Include="FahLogTests.cs" />

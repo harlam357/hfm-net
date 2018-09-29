@@ -8,14 +8,16 @@ namespace HFM.Log
    public abstract class FahLogReader : IDisposable
    {
       private readonly TextReader _textReader;
-      private readonly ILogLineTypeResolver _logLineTypeResolver;
-      private readonly ILogLineDataParserDictionary _logLineDataParserDictionary;
+
+      protected ILogLineTypeResolver LineTypeResolver { get; }
+
+      protected ILogLineDataParserDictionary LogLineDataParserDictionary { get; }
 
       protected FahLogReader(TextReader textReader, ILogLineTypeResolver logLineTypeResolver, ILogLineDataParserDictionary logLineDataParserDictionary)
       {
          _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
-         _logLineTypeResolver = logLineTypeResolver ?? throw new ArgumentNullException(nameof(logLineTypeResolver));
-         _logLineDataParserDictionary = logLineDataParserDictionary ?? throw new ArgumentNullException(nameof(logLineDataParserDictionary));
+         LineTypeResolver = logLineTypeResolver ?? throw new ArgumentNullException(nameof(logLineTypeResolver));
+         LogLineDataParserDictionary = logLineDataParserDictionary ?? throw new ArgumentNullException(nameof(logLineDataParserDictionary));
       }
 
       private int _lineIndex;
@@ -43,16 +45,15 @@ namespace HFM.Log
       private LogLine CreateLogLine(string line, int index)
       {
          if (line == null) return null;
-
-         var lineType = _logLineTypeResolver.Resolve(line);
-         _logLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParser parser);
-
-         return OnCreateLogLine(lineType, index, line, parser);
+         return OnCreateLogLine(line, index);
       }
 
-      protected virtual LogLine OnCreateLogLine(LogLineType lineType, int index, string raw, LogLineDataParser dataParser)
+      protected virtual LogLine OnCreateLogLine(string line, int index)
       {
-         return new LogLine { LineType = lineType, Index = index, Raw = raw, DataParser = dataParser };
+         LogLineType lineType = LineTypeResolver.Resolve(line);
+         LogLineTimeStampParserDelegate timeStampParser = LogLineTimeStampParser.Default;
+         LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserDelegate dataParser);
+         return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
       }
 
       public virtual void Close()

@@ -79,6 +79,7 @@
     <Compile Include="FahLogReader.cs" />
     <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
     <Compile Include="LogLine.cs" />
+    <Compile Include="LogLineTimeStampParser.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="LogSlotStatus.cs" />
     <Compile Include="Internal\DateTimeParse.cs" />
