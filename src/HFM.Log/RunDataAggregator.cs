@@ -50,6 +50,41 @@ namespace HFM.Log
       protected abstract UnitRunData OnGetUnitRunData(UnitRun unitRun);
    }
 
+   namespace Internal
+   {
+      internal static class CommonRunDataAggregator
+      {
+         internal static void IncrementCompletedOrFailedUnitCount(SlotRunData slotRunData, UnitRunData unitRunData)
+         {
+            if (unitRunData.WorkUnitResult == WorkUnitResult.FinishedUnit)
+            {
+               slotRunData.CompletedUnits++;
+            }
+            else if (IsFailedWorkUnit(unitRunData.WorkUnitResult))
+            {
+               slotRunData.FailedUnits++;
+            }
+            else if (unitRunData.ClientCoreCommunicationsError)
+            {
+               slotRunData.FailedUnits++;
+            }
+         }
+
+         private static bool IsFailedWorkUnit(string result)
+         {
+            switch (result)
+            {
+               case WorkUnitResult.EarlyUnitEnd:
+               case WorkUnitResult.UnstableMachine:
+               case WorkUnitResult.BadWorkUnit:
+                  return true;
+               default:
+                  return false;
+            }
+         }
+      }
+   }
+
    namespace FahClient
    {
       /// <summary>
@@ -91,7 +126,7 @@ namespace HFM.Log
 
             foreach (var unitRun in slotRun.UnitRuns)
             {
-               slotRunData.AddWorkUnitResult(unitRun.Data);
+               Internal.CommonRunDataAggregator.IncrementCompletedOrFailedUnitCount(slotRunData, unitRun.Data);
             }
 
             return slotRunData;
@@ -205,7 +240,7 @@ namespace HFM.Log
 
             foreach (var unitRun in slotRun.UnitRuns)
             {
-               slotRunData.AddWorkUnitResult(unitRun.Data);
+               Internal.CommonRunDataAggregator.IncrementCompletedOrFailedUnitCount(slotRunData, unitRun.Data);
                if (slotRunData.TotalCompletedUnits == null)
                {
                   slotRunData.TotalCompletedUnits = unitRun.Data.TotalCompletedUnits;

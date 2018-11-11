@@ -129,34 +129,5 @@ namespace HFM.Log
       /// Gets or sets the client status.
       /// </summary>
       public LogSlotStatus Status { get; set; }
-
-      internal void AddWorkUnitResult(UnitRunData unitRunData)
-      {
-         if (unitRunData.WorkUnitResult == WorkUnitResult.FinishedUnit)
-         {
-            CompletedUnits++;
-         }
-         else if (IsFailedWorkUnit(unitRunData.WorkUnitResult))
-         {
-            FailedUnits++;
-         }
-         else if (unitRunData.ClientCoreCommunicationsError)
-         {
-            FailedUnits++;
-         }
-      }
-
-      private static bool IsFailedWorkUnit(string result)
-      {
-         switch (result)
-         {
-            case WorkUnitResult.EarlyUnitEnd:
-            case WorkUnitResult.UnstableMachine:
-            case WorkUnitResult.BadWorkUnit:
-               return true;
-            default:
-               return false;
-         }
-      }
    }
 }
