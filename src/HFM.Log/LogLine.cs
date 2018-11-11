@@ -21,6 +21,9 @@ using System;
 
 namespace HFM.Log
 {
+   /// <summary>
+   /// Represents a line of a Folding@Home client log.
+   /// </summary>
    public class LogLine
    {
       /// <summary>
@@ -29,7 +32,7 @@ namespace HFM.Log
       public virtual string Raw { get; set; }
 
       /// <summary>
-      /// Gets or sets the index of the line in the log file.
+      /// Gets or sets the index of the line in the log.
       /// </summary>
       public virtual int Index { get; set; }
 
@@ -44,20 +47,42 @@ namespace HFM.Log
       public virtual TimeSpan? TimeStamp { get; set; }
 
       /// <summary>
-      /// Gets or sets the object that contains data about the log line.
+      /// Gets or sets the object that represents the data parsed from the raw log line.
       /// </summary>
       public virtual object Data { get; set; }
 
+      /// <summary>
+      /// Returns a string that represents the current <see cref="LogLine"/> object.
+      /// </summary>
+      /// <returns>A string that represents the current <see cref="LogLine"/> object.</returns>
       public override string ToString()
       {
          return Raw;
       }
 
+      /// <summary>
+      /// Creates a new <see cref="LogLine"/> object.
+      /// </summary>
+      /// <param name="raw">The raw log line string.</param>
+      /// <param name="index">The index of the line in the log.</param>
+      /// <param name="lineType">The type of log line.</param>
+      /// <param name="timeStamp">The time stamp of the log line if the log line contains time information.</param>
+      /// <param name="data">The object that represents the data parsed from the raw log line.</param>
+      /// <returns>A new <see cref="LogLine"/> object with the given values.</returns>
       public static LogLine Create(string raw, int index, LogLineType lineType, TimeSpan? timeStamp, object data)
       {
          return new LogLine { Raw = raw, Index = index, LineType = lineType, TimeStamp = timeStamp, Data = data };
       }
 
+      /// <summary>
+      /// Creates a new <see cref="LogLine"/> object where the TimeStamp and Data properties are lazily evaluated using the given parsing functions.
+      /// </summary>
+      /// <param name="raw">The raw log line string.</param>
+      /// <param name="index">The index of the line in the log.</param>
+      /// <param name="lineType">The type of log line.</param>
+      /// <param name="timeStampParser">The <see cref="LogLineTimeStampParserFunction"/> used to lazily parse time stamp information when the TimeStamp property getter is accessed.</param>
+      /// <param name="dataParser">The <see cref="LogLineDataParserFunction"/> used to lazily parse log line data when the Data property getter is accessed.</param>
+      /// <returns>A new <see cref="LogLine"/> object where the TimeStamp and Data properties are lazily evaluated using the given parsing functions.</returns>
       public static LogLine Create(string raw, int index, LogLineType lineType, LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
       {
          return new Internal.LazyLogLine(timeStampParser, dataParser) { Raw = raw, Index = index, LineType = lineType };

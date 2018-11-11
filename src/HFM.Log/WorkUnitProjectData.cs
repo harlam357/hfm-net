@@ -15,22 +15,22 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Project ID Number
+      /// Gets or sets the project ID (Number).
       /// </summary>
       public int ProjectID { get; set; }
 
       /// <summary>
-      /// Project Run Number
+      /// Gets or sets the project ID (Run).
       /// </summary>
       public int ProjectRun { get; set; }
 
       /// <summary>
-      /// Project Clone Number
+      /// Gets or sets the project ID (Clone).
       /// </summary>
       public int ProjectClone { get; set; }
 
       /// <summary>
-      /// Project Gen (Generation) Number
+      /// Gets or sets the project ID (Gen).
       /// </summary>
       public int ProjectGen { get; set; }
 
