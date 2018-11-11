@@ -202,8 +202,8 @@ namespace HFM.Log
          private void HandleWorkUnitProcessing(LogLine logLine)
          {
             // If we have not found a ProcessingIndex (== -1) then set it.
-            // Othwerwise, if ProcessingIndex (!= -1) and a CoreDownloadIndex
-            // has been observerd and is greater than the current ProcessingIndex,
+            // Otherwise, if ProcessingIndex (!= -1) and a CoreDownloadIndex
+            // has been observed and is greater than the current ProcessingIndex,
             // then update the ProcessingIndex to bypass the CoreDownload section
             // of the log file.
             if (_unitIndexData.ProcessingIndex == -1 ||
