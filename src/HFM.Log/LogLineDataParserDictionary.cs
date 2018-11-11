@@ -182,16 +182,8 @@ namespace HFM.Log
    /// <summary>
    /// Represents a read-only collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserFunction"/> pairs used to parse data from client log lines.
    /// </summary>
-   public interface ILogLineDataParserCollection : IReadOnlyDictionary<LogLineType, LogLineDataParserFunction>
-   {
-
-   }
-
-   /// <summary>
-   /// Represents a read-only collection of <see cref="LogLineType"/> / <see cref="LogLineDataParserFunction"/> pairs used to parse data from client log lines.
-   /// </summary>
    [Serializable]
-   public abstract class LogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserFunction>, ILogLineDataParserCollection
+   public abstract class LogLineDataParserDictionary : Dictionary<LogLineType, LogLineDataParserFunction>
    {
 
    }
@@ -204,8 +196,14 @@ namespace HFM.Log
       [Serializable]
       public class LegacyLogLineDataParserDictionary : LogLineDataParserDictionary
       {
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="LegacyLogLineDataParserDictionary"/> class.
+         /// </summary>
          public static LegacyLogLineDataParserDictionary Instance { get; } = new LegacyLogLineDataParserDictionary();
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyLogLineDataParserDictionary"/> class.
+         /// </summary>
          public LegacyLogLineDataParserDictionary()
          {
             CommonLogLineParser.AddToDictionary(this);
@@ -380,8 +378,14 @@ namespace HFM.Log
       [Serializable]
       public class FahClientLogLineDataParserDictionary : LogLineDataParserDictionary
       {
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="FahClientLogLineDataParserDictionary"/> class.
+         /// </summary>
          public static FahClientLogLineDataParserDictionary Instance { get; } = new FahClientLogLineDataParserDictionary();
-         
+
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientLogLineDataParserDictionary"/> class.
+         /// </summary>
          public FahClientLogLineDataParserDictionary()
          {
             CommonLogLineParser.AddToDictionary(this);

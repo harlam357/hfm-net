@@ -6,10 +6,15 @@ using System.Collections.ObjectModel;
 
 namespace HFM.Log
 {
+   /// <summary>
+   /// A <see cref="UnitRun"/> encapsulates all the Folding@Home client log information for a single work unit execution (run).
+   /// </summary>
    public class UnitRun : IEnumerable<LogLine>
    {
       private readonly SlotRun _parent;
-
+      /// <summary>
+      /// Gets the parent <see cref="SlotRun"/> object.
+      /// </summary>
       public SlotRun Parent
       {
          get { return _parent; }
@@ -22,6 +27,10 @@ namespace HFM.Log
          get { return _logLines; }
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="UnitRun"/> class.
+      /// </summary>
+      /// <param name="parent">The parent <see cref="SlotRun"/> object.</param>
       public UnitRun(SlotRun parent)
       {
          _parent = parent;
@@ -30,6 +39,7 @@ namespace HFM.Log
          _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
+      // for unit testing only
       internal UnitRun(SlotRun parent, int? queueIndex, int? startIndex, int? endIndex)
       {
          _parent = parent;
@@ -41,19 +51,25 @@ namespace HFM.Log
          _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
-      public int? FoldingSlot
-      {
-         get { return _parent != null ? (int?)_parent.FoldingSlot : null; }
-      }
-
+      /// <summary>
+      /// Gets or sets the queue index.
+      /// </summary>
       public int? QueueIndex { get; set; }
 
+      /// <summary>
+      /// Gets or sets log line index for the starting line of this unit run.
+      /// </summary>
       public int? StartIndex { get; set; }
 
+      /// <summary>
+      /// Gets or sets log line index for the ending line of this unit run.
+      /// </summary>
       public int? EndIndex { get; set; }
 
       private UnitRunData _data;
-
+      /// <summary>
+      /// Gets the data object containing information aggregated from the <see cref="LogLine"/> objects assigned to this unit run.
+      /// </summary>
       public UnitRunData Data
       {
          get
@@ -89,6 +105,10 @@ namespace HFM.Log
 
       internal bool IsComplete { get; set; }
 
+      /// <summary>
+      /// Returns an enumerator that iterates through the collection of log lines.
+      /// </summary>
+      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
       public IEnumerator<LogLine> GetEnumerator()
       {
          return _logLines.GetEnumerator();
@@ -100,55 +120,59 @@ namespace HFM.Log
       }
    }
 
+   /// <summary>
+   /// Represents data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="UnitRun"/> object.
+   /// </summary>
    public class UnitRunData
    {
       /// <summary>
-      /// Unit Start Time Stamp
+      /// Gets or sets the time stamp of the start of the work unit.
       /// </summary>
       public TimeSpan? UnitStartTimeStamp { get; set; }
 
-      ///// <summary>
-      ///// List of Log Lines containing Frame Data
-      ///// </summary>
-      //public IList<LogLine> FrameDataList { get; set; }
-
       /// <summary>
-      /// Number of Frames Observed since Last Unit Start or Resume from Pause
+      /// Gets or sets the number of frames observed (completed) since last unit start or resume from pause.
       /// </summary>
       public int FramesObserved { get; set; }
 
       /// <summary>
-      /// Core Version
+      /// Gets or sets the core version number.
       /// </summary>
       public float CoreVersion { get; set; }
 
       /// <summary>
-      /// Project ID Number
+      /// Gets or sets the project ID (Number).
       /// </summary>
       public int ProjectID { get; set; }
 
       /// <summary>
-      /// Project ID (Run)
+      /// Gets or sets the project ID (Run).
       /// </summary>
       public int ProjectRun { get; set; }
 
       /// <summary>
-      /// Project ID (Clone)
+      /// Gets or sets the project ID (Clone).
       /// </summary>
       public int ProjectClone { get; set; }
 
       /// <summary>
-      /// Project ID (Gen)
+      /// Gets or sets the project ID (Gen).
       /// </summary>
       public int ProjectGen { get; set; }
 
       /// <summary>
-      /// Number of threads specified in the call to the FahCore process.
+      /// Gets or sets the number of threads specified in the call to the FahCore process.
       /// </summary>
       public int Threads { get; set; }
 
+      /// <summary>
+      /// Gets or sets the work unit result.
+      /// </summary>
       public WorkUnitResult WorkUnitResult { get; set; }
 
+      /// <summary>
+      /// Gets or sets the total number of completed units for the life of the slot.
+      /// </summary>
       public int? TotalCompletedUnits { get; set; }
    }
 }

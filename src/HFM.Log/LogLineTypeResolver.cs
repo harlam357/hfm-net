@@ -4,18 +4,7 @@ namespace HFM.Log
    /// <summary>
    /// Resolves the <see cref="LogLineType"/> based on the contents of a string line.
    /// </summary>
-   public interface ILogLineTypeResolver
-   {
-      /// <summary>
-      /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.
-      /// </summary>
-      LogLineType Resolve(string line);
-   }
-
-   /// <summary>
-   /// Resolves the <see cref="LogLineType"/> based on the contents of a string line.
-   /// </summary>
-   public abstract class LogLineTypeResolver : ILogLineTypeResolver
+   public abstract class LogLineTypeResolver
    {
       /// <summary>
       /// Returns a <see cref="LogLineType"/> value if the line represents a known log line type; otherwise, returns <see cref="LogLineType.None"/>.

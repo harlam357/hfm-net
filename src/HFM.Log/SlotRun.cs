@@ -5,22 +5,34 @@ using System.Linq;
 
 namespace HFM.Log
 {
+   /// <summary>
+   /// A <see cref="SlotRun"/> encapsulates all the Folding@Home client log information for a single slot execution (run) of the client.
+   /// </summary>
    public class SlotRun : IEnumerable<LogLine>
    {
       private readonly ClientRun _parent;
-
+      /// <summary>
+      /// Gets the parent <see cref="ClientRun"/> object.
+      /// </summary>
       public ClientRun Parent
       {
          get { return _parent; }
       }
 
       private readonly int _foldingSlot;
-
+      /// <summary>
+      /// Gets the folding slot number.
+      /// </summary>
       public int FoldingSlot
       {
          get { return _foldingSlot; }
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="SlotRun"/> class.
+      /// </summary>
+      /// <param name="parent">The parent <see cref="ClientRun"/> object.</param>
+      /// <param name="foldingSlot">The folding slot number.</param>
       public SlotRun(ClientRun parent, int foldingSlot)
       {
          _parent = parent;
@@ -29,7 +41,7 @@ namespace HFM.Log
 
       private Stack<UnitRun> _unitRuns;
       /// <summary>
-      /// Gets a stack of unit runs.
+      /// Gets the collection of <see cref="UnitRun"/> objects.
       /// </summary>
       public Stack<UnitRun> UnitRuns
       {
@@ -37,7 +49,9 @@ namespace HFM.Log
       }
 
       private SlotRunData _data;
-
+      /// <summary>
+      /// Gets the data object containing information aggregated from the <see cref="LogLine"/> objects assigned to this slot run.
+      /// </summary>
       public SlotRunData Data
       {
          get
@@ -74,6 +88,10 @@ namespace HFM.Log
          }
       }
 
+      /// <summary>
+      /// Returns an enumerator that iterates through the collection of log lines.
+      /// </summary>
+      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
       public IEnumerator<LogLine> GetEnumerator()
       {
          return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.Index).GetEnumerator();
@@ -85,25 +103,28 @@ namespace HFM.Log
       }
    }
 
+   /// <summary>
+   /// Represents data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="SlotRun"/> object.
+   /// </summary>
    public class SlotRunData
    {
       /// <summary>
-      /// Number of Completed Units for this Client Run
+      /// Gets or sets the number of completed units.
       /// </summary>
       public int CompletedUnits { get; set; }
 
       /// <summary>
-      /// Number of Failed Units for this Client Run
+      /// Gets or sets the number of failed units.
       /// </summary>
       public int FailedUnits { get; set; }
 
       /// <summary>
-      /// Total Number of Completed Units (for the life of the client - as reported in the FAHlog.txt file)
+      /// Gets or sets the total number of completed units for the life of the slot.
       /// </summary>
       public int? TotalCompletedUnits { get; set; }
 
       /// <summary>
-      /// Client Status
+      /// Gets or sets the client status.
       /// </summary>
       public LogSlotStatus Status { get; set; }
 

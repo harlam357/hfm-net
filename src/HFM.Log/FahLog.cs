@@ -7,22 +7,38 @@ using System.Text.RegularExpressions;
 
 namespace HFM.Log
 {
+   /// <summary>
+   /// Represents a Folding@Home client log.
+   /// </summary>
    public abstract class FahLog : IEnumerable<LogLine>
    {
-      public IRunDataAggregator RunDataAggregator { get; }
+      /// <summary>
+      /// Gets the <see cref="RunDataAggregator"/> instance.
+      /// </summary>
+      protected internal RunDataAggregator RunDataAggregator { get; }
 
-      protected FahLog(IRunDataAggregator dataAggregator)
+      /// <summary>
+      /// Initializes a new instance of the <see cref="FahLog"/> class.
+      /// </summary>
+      /// <param name="runDataAggregator">The <see cref="RunDataAggregator"/> that will be used to generate <see cref="ClientRunData"/>, <see cref="SlotRunData"/>, and <see cref="UnitRunData"/> objects.</param>
+      protected FahLog(RunDataAggregator runDataAggregator)
       {
-         RunDataAggregator = dataAggregator ?? throw new ArgumentNullException(nameof(dataAggregator));
+         RunDataAggregator = runDataAggregator ?? throw new ArgumentNullException(nameof(runDataAggregator));
       }
 
       private Stack<ClientRun> _clientRuns;
-
+      /// <summary>
+      /// Gets the collection of <see cref="ClientRun"/> objects.
+      /// </summary>
       public Stack<ClientRun> ClientRuns
       {
          get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun>()); }
       }
 
+      /// <summary>
+      /// Reads Folding@Home log line data from the <see cref="FahLogReader"/>.
+      /// </summary>
+      /// <param name="reader">The <see cref="FahLogReader"/> that reads the Folding@Home log line data.</param>
       public void Read(FahLogReader reader)
       {
          if (reader == null) throw new ArgumentNullException("reader");
@@ -30,11 +46,14 @@ namespace HFM.Log
          LogLine logLine;
          while ((logLine = reader.ReadLine()) != null)
          {
-            AddLogLine(logLine);
+            OnLogLineRead(logLine);
          }
-         Finish();
+         OnReadFinished();
       }
 
+      /// <summary>
+      /// Clears the log data.
+      /// </summary>
       public void Clear()
       {
          if (_clientRuns != null)
@@ -43,10 +62,21 @@ namespace HFM.Log
          }
       }
 
-      protected abstract void AddLogLine(LogLine logLine);
+      /// <summary>
+      /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.
+      /// </summary>
+      /// <param name="logLine">The <see cref="LogLine"/> that was read from the <see cref="FahLogReader"/>.</param>
+      protected abstract void OnLogLineRead(LogLine logLine);
 
-      protected abstract void Finish();
+      /// <summary>
+      /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+      /// </summary>
+      protected abstract void OnReadFinished();
 
+      /// <summary>
+      /// Returns an enumerator that iterates through the collection of log lines.
+      /// </summary>
+      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
       public IEnumerator<LogLine> GetEnumerator()
       {
          return ClientRuns.Reverse().SelectMany(x => x).GetEnumerator();
@@ -60,6 +90,9 @@ namespace HFM.Log
 
    namespace Legacy
    {
+      /// <summary>
+      /// Represents a Folding@Home client log from a v6 or prior client.
+      /// </summary>
       public class LegacyLog : FahLog
       {
          private const int FoldingSlot = 0;
@@ -70,14 +103,21 @@ namespace HFM.Log
 
          private List<LogLine> _logBuffer;
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyLog"/> class.
+         /// </summary>
          public LegacyLog()
             : this(LegacyRunDataAggregator.Instance)
          {
 
          }
 
-         protected LegacyLog(IRunDataAggregator dataAggregator)
-            : base(dataAggregator)
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyLog"/> class.
+         /// </summary>
+         /// <param name="runDataAggregator">The <see cref="RunDataAggregator"/> that will be used to generate <see cref="ClientRunData"/>, <see cref="SlotRunData"/>, and <see cref="UnitRunData"/> objects.</param>
+         protected LegacyLog(RunDataAggregator runDataAggregator)
+            : base(runDataAggregator)
          {
             _unitIndexData.Initialize();
          }
@@ -93,7 +133,11 @@ namespace HFM.Log
             }
          }
 
-         protected override void AddLogLine(LogLine logLine)
+         /// <summary>
+         /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.
+         /// </summary>
+         /// <param name="logLine">The <see cref="LogLine"/> that was read from the <see cref="FahLogReader"/>.</param>
+         protected override void OnLogLineRead(LogLine logLine)
          {
             logLine.Index = _lineIndex++;
 
@@ -140,7 +184,10 @@ namespace HFM.Log
             }
          }
 
-         protected override void Finish()
+         /// <summary>
+         /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+         /// </summary>
+         protected override void OnReadFinished()
          {
             var clientRun = ClientRuns.FirstOrDefault();
             if (clientRun == null)
@@ -291,7 +338,7 @@ namespace HFM.Log
          {
             if (createNew && ClientRuns.Count != 0)
             {
-               Finish();
+               OnReadFinished();
             }
             if (createNew || ClientRuns.Count == 0)
             {
@@ -359,18 +406,28 @@ namespace HFM.Log
 
    namespace FahClient
    {
+      /// <summary>
+      /// Represents a Folding@Home client log from a v7 or newer client.
+      /// </summary>
       public class FahClientLog : FahLog
       {
          private int _lineIndex;
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientLog"/> class.
+         /// </summary>
          public FahClientLog()
             : this(FahClientRunDataAggregator.Instance)
          {
             
          }
 
-         protected FahClientLog(IRunDataAggregator dataAggregator)
-            : base(dataAggregator)
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientLog"/> class.
+         /// </summary>
+         /// <param name="runDataAggregator">The <see cref="RunDataAggregator"/> that will be used to generate <see cref="ClientRunData"/>, <see cref="SlotRunData"/>, and <see cref="UnitRunData"/> objects.</param>
+         protected FahClientLog(RunDataAggregator runDataAggregator)
+            : base(runDataAggregator)
          {
 
          }
@@ -386,7 +443,11 @@ namespace HFM.Log
             }
          }
 
-         protected override void AddLogLine(LogLine logLine)
+         /// <summary>
+         /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.
+         /// </summary>
+         /// <param name="logLine">The <see cref="LogLine"/> that was read from the <see cref="FahLogReader"/>.</param>
+         protected override void OnLogLineRead(LogLine logLine)
          {
             logLine.Index = _lineIndex++;
 
@@ -420,7 +481,10 @@ namespace HFM.Log
             }
          }
 
-         protected override void Finish()
+         /// <summary>
+         /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+         /// </summary>
+         protected override void OnReadFinished()
          {
             var clientRun = ClientRuns.FirstOrDefault();
             if (clientRun == null)

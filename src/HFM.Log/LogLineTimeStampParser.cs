@@ -17,16 +17,10 @@ namespace HFM.Log
    /// <summary>
    /// Parses time stamp information from client log lines.
    /// </summary>
-   public interface ILogLineTimeStampParser
+   public class LogLineTimeStampParser
    {
-      TimeSpan? ParseTimeStamp(LogLine logLine);
-   }
+      public static LogLineTimeStampParser Instance { get; } = new LogLineTimeStampParser();
 
-   /// <summary>
-   /// Parses time stamp information from client log lines.
-   /// </summary>
-   public abstract class LogLineTimeStampParser : ILogLineTimeStampParser
-   {
       public TimeSpan? ParseTimeStamp(LogLine logLine)
       {
          return OnParseTimeStamp(logLine);
@@ -52,28 +46,6 @@ namespace HFM.Log
          }
 
          return null;
-      }
-   }
-
-   namespace FahClient
-   {
-      /// <summary>
-      /// Parses time stamp information from FahClient client log lines.
-      /// </summary>
-      public class FahClientLogLineTimeStampParser : LogLineTimeStampParser
-      {
-         public static FahClientLogLineTimeStampParser Instance { get; } = new FahClientLogLineTimeStampParser();
-      }
-   }
-
-   namespace Legacy
-   {
-      /// <summary>
-      /// Parses time stamp information from Legacy client log lines.
-      /// </summary>
-      public class LegacyLogLineTimeStampParser : LogLineTimeStampParser
-      {
-         public static LegacyLogLineTimeStampParser Instance { get; } = new LegacyLogLineTimeStampParser();
       }
    }
 }

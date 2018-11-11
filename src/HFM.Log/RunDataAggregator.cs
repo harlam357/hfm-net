@@ -8,28 +8,7 @@ namespace HFM.Log
    /// <summary>
    /// Creates run data objects by aggregating information owned by <see cref="ClientRun"/>, <see cref="SlotRun"/>, and <see cref="UnitRun"/> objects.
    /// </summary>
-   public interface IRunDataAggregator
-   {
-      /// <summary>
-      /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
-      /// </summary>
-      ClientRunData GetClientRunData(ClientRun clientRun);
-
-      /// <summary>
-      /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
-      /// </summary>
-      SlotRunData GetSlotRunData(SlotRun slotRun);
-
-      /// <summary>
-      /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
-      /// </summary>
-      UnitRunData GetUnitRunData(UnitRun unitRun);
-   }
-
-   /// <summary>
-   /// Creates run data objects by aggregating information owned by <see cref="ClientRun"/>, <see cref="SlotRun"/>, and <see cref="UnitRun"/> objects.
-   /// </summary>
-   public abstract class RunDataAggregator : IRunDataAggregator
+   public abstract class RunDataAggregator
    {
       /// <summary>
       /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
@@ -39,6 +18,9 @@ namespace HFM.Log
          return OnGetClientRunData(clientRun);
       }
 
+      /// <summary>
+      /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
+      /// </summary>
       protected abstract ClientRunData OnGetClientRunData(ClientRun clientRun);
 
       /// <summary>
@@ -49,6 +31,9 @@ namespace HFM.Log
          return OnGetSlotRunData(slotRun);
       }
 
+      /// <summary>
+      /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
+      /// </summary>
       protected abstract SlotRunData OnGetSlotRunData(SlotRun slotRun);
 
       /// <summary>
@@ -59,15 +44,27 @@ namespace HFM.Log
          return OnGetUnitRunData(unitRun);
       }
 
+      /// <summary>
+      /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
+      /// </summary>
       protected abstract UnitRunData OnGetUnitRunData(UnitRun unitRun);
    }
 
    namespace FahClient
    {
+      /// <summary>
+      /// Creates run data objects for a v7 or newer client.
+      /// </summary>
       public class FahClientRunDataAggregator : RunDataAggregator
       {
-         internal static FahClientRunDataAggregator Instance { get; } = new FahClientRunDataAggregator();
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="FahClientRunDataAggregator"/> class.
+         /// </summary>
+         public static FahClientRunDataAggregator Instance { get; } = new FahClientRunDataAggregator();
 
+         /// <summary>
+         /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
+         /// </summary>
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
             var clientRunData = new ClientRunData();
@@ -85,6 +82,9 @@ namespace HFM.Log
             return clientRunData;
          }
 
+         /// <summary>
+         /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
+         /// </summary>
          protected override SlotRunData OnGetSlotRunData(SlotRun slotRun)
          {
             var slotRunData = new SlotRunData();
@@ -97,6 +97,9 @@ namespace HFM.Log
             return slotRunData;
          }
 
+         /// <summary>
+         /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
+         /// </summary>
          protected override UnitRunData OnGetUnitRunData(UnitRun unitRun)
          {
             var unitRunData = new UnitRunData();
@@ -142,10 +145,19 @@ namespace HFM.Log
 
    namespace Legacy
    {
+      /// <summary>
+      /// Creates run data objects for a v6 or prior client.
+      /// </summary>
       public class LegacyRunDataAggregator : RunDataAggregator
       {
-         internal static LegacyRunDataAggregator Instance { get; } = new LegacyRunDataAggregator();
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="LegacyRunDataAggregator"/> class.
+         /// </summary>
+         public static LegacyRunDataAggregator Instance { get; } = new LegacyRunDataAggregator();
 
+         /// <summary>
+         /// Creates a new <see cref="ClientRunData"/> object from the information contained in the <see cref="ClientRun"/> object.
+         /// </summary>
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
             var clientRunData = new ClientRunData();
@@ -184,6 +196,9 @@ namespace HFM.Log
             return clientRunData;
          }
 
+         /// <summary>
+         /// Creates a new <see cref="SlotRunData"/> object from the information contained in the <see cref="SlotRun"/> object.
+         /// </summary>
          protected override SlotRunData OnGetSlotRunData(SlotRun slotRun)
          {
             var slotRunData = new SlotRunData();
@@ -253,6 +268,9 @@ namespace HFM.Log
             return status;
          }
 
+         /// <summary>
+         /// Creates a new <see cref="UnitRunData"/> object from the information contained in the <see cref="UnitRun"/> object.
+         /// </summary>
          protected override UnitRunData OnGetUnitRunData(UnitRun unitRun)
          {
             bool clientWasPaused = false;

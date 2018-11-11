@@ -566,7 +566,6 @@ namespace HFM.Log
 
          unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitRun.Data.UnitStartTimeStamp);
-         //Assert.AreEqual(5, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual(1.31f, unitRun.Data.CoreVersion);
          Assert.AreEqual(5781, unitRun.Data.ProjectID);
@@ -617,7 +616,6 @@ namespace HFM.Log
 
          unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
          Assert.AreEqual(new TimeSpan(17, 31, 22), unitRun.Data.UnitStartTimeStamp);
-         //Assert.AreEqual(12, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(12, unitRun.Data.FramesObserved);
          Assert.AreEqual(2.19f, unitRun.Data.CoreVersion);
          Assert.AreEqual(10634, unitRun.Data.ProjectID);
@@ -771,7 +769,6 @@ namespace HFM.Log
 
          unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitRun.Data.UnitStartTimeStamp);
-         //Assert.AreEqual(5, unitRun.Data.FrameDataList.Count);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual(23f, unitRun.Data.CoreVersion);
          Assert.AreEqual(10002, unitRun.Data.ProjectID);

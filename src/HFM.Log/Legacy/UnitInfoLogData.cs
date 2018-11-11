@@ -21,50 +21,53 @@ using System;
 
 namespace HFM.Log.Legacy
 {
+   /// <summary>
+   /// Represents data read from a Folding@Home v6 or prior client unitinfo.txt log.
+   /// </summary>
    public class UnitInfoLogData
    {
       /// <summary>
-      /// Protein Name
+      /// Gets or sets the protein name.
       /// </summary>
       public string ProteinName { get; set; }
 
       /// <summary>
-      /// Protein Tag
+      /// Gets or sets the protein tag.
       /// </summary>
       public string ProteinTag { get; set; }
 
       /// <summary>
-      /// Project ID Number
+      /// Gets or sets the project ID (Number).
       /// </summary>
       public int ProjectID { get; set; }
 
       /// <summary>
-      /// Project ID (Run)
+      /// Gets or sets the project ID (Run).
       /// </summary>
       public int ProjectRun { get; set; }
 
       /// <summary>
-      /// Project ID (Clone)
+      /// Gets or sets the project ID (Clone).
       /// </summary>
       public int ProjectClone { get; set; }
 
       /// <summary>
-      /// Project ID (Gen)
+      /// Gets or sets the project ID (Gen).
       /// </summary>
       public int ProjectGen { get; set; }
 
       /// <summary>
-      /// Download Time
+      /// Gets or sets the download time.
       /// </summary>
       public DateTime DownloadTime { get; set; }
 
       /// <summary>
-      /// Due Time
+      /// Gets or sets the due time.
       /// </summary>
       public DateTime DueTime { get; set; }
 
       /// <summary>
-      /// Progress Percentage
+      /// Gets or sets the progress percentage.
       /// </summary>
       public int Progress { get; set; }
    }

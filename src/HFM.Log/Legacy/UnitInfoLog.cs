@@ -8,12 +8,15 @@ using HFM.Log.Internal;
 
 namespace HFM.Log.Legacy
 {
+   /// <summary>
+   /// Reads the content from a Folding@Home v6 or prior client unitinfo.txt log file.
+   /// </summary>
    public static class UnitInfoLog
    {
       /// <summary>
-      /// Reads the content from a unitinfo.txt file.
+      /// Reads the content from a unitinfo.txt file and returns an object representation of the content.
       /// </summary>
-      /// <param name="path">The file to read.</param>
+      /// <param name="path">The complete file path to be read.</param>
       /// <exception cref="ArgumentNullException">path is null.</exception>
       /// <exception cref="ArgumentException">path is empty or white space string.</exception>
       /// <exception cref="FormatException">file contents fails parsing.</exception>
@@ -22,7 +25,7 @@ namespace HFM.Log.Legacy
          if (path is null) throw new ArgumentNullException(nameof(path));
          if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException("path cannot be an empty or white space string.", nameof(path));
 
-         string[] logLines = File.ReadAllLines(path);
+         var logLines = File.ReadLines(path);
 
          var data = new UnitInfoLogData();
 

@@ -10,6 +10,9 @@ namespace HFM.Log
    /// </summary>
    public abstract class FahLogReader : IDisposable
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="FahLogReader"/> class.
+      /// </summary>
       protected FahLogReader()
       {
 
@@ -25,11 +28,18 @@ namespace HFM.Log
       /// </summary>
       public abstract Task<LogLine> ReadLineAsync();
 
+      /// <summary>
+      /// Closes the <see cref="FahLogReader"/> and releases any system resources associated with the it.
+      /// </summary>
       public virtual void Close()
       {
-         
+
       }
 
+      /// <summary>
+      /// Releases the unmanaged resources used by the <see cref="FahLogReader"/> and optionally releases the managed resources.
+      /// </summary>
+      /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
       protected virtual void Dispose(bool disposing)
       {
          if (disposing)
@@ -38,6 +48,9 @@ namespace HFM.Log
          }
       }
 
+      /// <summary>
+      /// Releases all resources used by the <see cref="FahLogReader"/> object.
+      /// </summary>
       public void Dispose()
       {
          Dispose(true);
@@ -51,7 +64,10 @@ namespace HFM.Log
    public abstract class FahLogTextReader : FahLogReader
    {
       private readonly TextReader _textReader;
-
+      /// <summary>
+      /// Initializes a new instance of the <see cref="FahLogTextReader"/> class.
+      /// </summary>
+      /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
       protected FahLogTextReader(TextReader textReader)
       {
          _textReader = textReader ?? throw new ArgumentNullException(nameof(textReader));
@@ -66,7 +82,8 @@ namespace HFM.Log
       public override LogLine ReadLine()
       {
          string line = _textReader.ReadLine();
-         return CreateLogLine(line, _lineIndex++);
+         if (line == null) return null;
+         return OnReadLine(line, _lineIndex++);
       }
 
       /// <summary>
@@ -76,17 +93,21 @@ namespace HFM.Log
       public override async Task<LogLine> ReadLineAsync()
       {
          string line = await _textReader.ReadLineAsync().ConfigureAwait(false);
-         return CreateLogLine(line, _lineIndex++);
-      }
-
-      private LogLine CreateLogLine(string line, int index)
-      {
          if (line == null) return null;
-         return OnCreateLogLine(line, index);
+         return OnReadLine(line, _lineIndex++);
       }
 
-      protected abstract LogLine OnCreateLogLine(string line, int index);
+      /// <summary>
+      /// Occurs after a line was read from the <see cref="TextReader"/> and returns a new <see cref="LogLine"/> object.
+      /// </summary>
+      /// <param name="line">The line read from the <see cref="TextReader"/>.</param>
+      /// <param name="index">The index of the line read from the <see cref="TextReader"/>.</param>
+      /// <returns>A new <see cref="LogLine"/> object from the string line and line index.</returns>
+      protected abstract LogLine OnReadLine(string line, int index);
 
+      /// <summary>
+      /// Closes the <see cref="FahLogTextReader"/> and releases any system resources associated with the it.
+      /// </summary>
       public override void Close()
       {
          _textReader.Close();
@@ -95,36 +116,65 @@ namespace HFM.Log
 
    namespace FahClient
    {
+      /// <summary>
+      /// Represents a reader that reads Folding@Home log line text data from a v7 or newer client.
+      /// </summary>
       public class FahClientLogTextReader : FahLogTextReader
       {
-         protected ILogLineTypeResolver LogLineTypeResolver { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.
+         /// </summary>
+         protected LogLineTypeResolver LogLineTypeResolver { get; }
 
-         protected ILogLineTimeStampParser LogLineTimeStampParser { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
+         /// </summary>
+         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
 
-         protected ILogLineDataParserCollection LogLineDataParserCollection { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.
+         /// </summary>
+         protected LogLineDataParserDictionary LogLineDataParserDictionary { get; }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientLogTextReader"/> class.
+         /// </summary>
+         /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          public FahClientLogTextReader(TextReader textReader)
-            : this(textReader, FahClientLogLineTypeResolver.Instance, FahClientLogLineTimeStampParser.Instance, FahClientLogLineDataParserDictionary.Instance)
+            : this(textReader, FahClientLogLineTypeResolver.Instance, LogLineTimeStampParser.Instance, FahClientLogLineDataParserDictionary.Instance)
          {
 
          }
 
-         protected FahClientLogTextReader(TextReader textReader, 
-                                      ILogLineTypeResolver logLineTypeResolver, 
-                                      ILogLineTimeStampParser logLineTimeStampParser, 
-                                      ILogLineDataParserCollection logLineDataParserCollection)
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientLogTextReader"/> class.
+         /// </summary>
+         /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
+         /// <param name="logLineTypeResolver">The <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.</param>
+         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
+         /// <param name="logLineDataParserDictionary">The <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.</param>
+         protected FahClientLogTextReader(TextReader textReader,
+                                          LogLineTypeResolver logLineTypeResolver,
+                                          LogLineTimeStampParser logLineTimeStampParser,
+                                          LogLineDataParserDictionary logLineDataParserDictionary)
             : base(textReader)
          {
             LogLineTypeResolver = logLineTypeResolver;
             LogLineTimeStampParser = logLineTimeStampParser;
-            LogLineDataParserCollection = logLineDataParserCollection;
+            LogLineDataParserDictionary = logLineDataParserDictionary;
          }
 
-         protected override LogLine OnCreateLogLine(string line, int index)
+         /// <summary>
+         /// Occurs after a line was read from the <see cref="TextReader"/> and returns a new <see cref="LogLine"/> object.
+         /// </summary>
+         /// <param name="line">The line read from the <see cref="TextReader"/>.</param>
+         /// <param name="index">The index of the line read from the <see cref="TextReader"/>.</param>
+         /// <returns>A new <see cref="LogLine"/> object from the string line and line index.</returns>
+         protected override LogLine OnReadLine(string line, int index)
          {
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
-            LogLineDataParserCollection.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
+            LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
             return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
          }
       }
@@ -132,36 +182,65 @@ namespace HFM.Log
 
    namespace Legacy
    {
+      /// <summary>
+      /// Represents a reader that reads Folding@Home log line text data from a v6 or prior client.
+      /// </summary>
       public class LegacyLogTextReader : FahLogTextReader
       {
-         protected ILogLineTypeResolver LogLineTypeResolver { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.
+         /// </summary>
+         protected LogLineTypeResolver LogLineTypeResolver { get; }
 
-         protected ILogLineTimeStampParser LogLineTimeStampParser { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
+         /// </summary>
+         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
 
-         protected ILogLineDataParserCollection LogLineDataParserCollection { get; }
+         /// <summary>
+         /// Gets the <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.
+         /// </summary>
+         protected LogLineDataParserDictionary LogLineDataParserDictionary { get; }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyLogTextReader"/> class.
+         /// </summary>
+         /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          public LegacyLogTextReader(TextReader textReader)
-            : this(textReader, LegacyLogLineTypeResolver.Instance, LegacyLogLineTimeStampParser.Instance, LegacyLogLineDataParserDictionary.Instance)
+            : this(textReader, LegacyLogLineTypeResolver.Instance, LogLineTimeStampParser.Instance, LegacyLogLineDataParserDictionary.Instance)
          {
-            
+
          }
 
-         protected LegacyLogTextReader(TextReader textReader, 
-                                   ILogLineTypeResolver logLineTypeResolver, 
-                                   ILogLineTimeStampParser logLineTimeStampParser,
-                                   ILogLineDataParserCollection logLineDataParserCollection)
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyLogTextReader"/> class.
+         /// </summary>
+         /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
+         /// <param name="logLineTypeResolver">The <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.</param>
+         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
+         /// <param name="logLineDataParserDictionary">The <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.</param>
+         protected LegacyLogTextReader(TextReader textReader,
+                                       LogLineTypeResolver logLineTypeResolver,
+                                       LogLineTimeStampParser logLineTimeStampParser,
+                                       LogLineDataParserDictionary logLineDataParserDictionary)
             : base(textReader)
          {
             LogLineTypeResolver = logLineTypeResolver;
             LogLineTimeStampParser = logLineTimeStampParser;
-            LogLineDataParserCollection = logLineDataParserCollection;
+            LogLineDataParserDictionary = logLineDataParserDictionary;
          }
 
-         protected override LogLine OnCreateLogLine(string line, int index)
+         /// <summary>
+         /// Occurs after a line was read from the <see cref="TextReader"/> and returns a new <see cref="LogLine"/> object.
+         /// </summary>
+         /// <param name="line">The line read from the <see cref="TextReader"/>.</param>
+         /// <param name="index">The index of the line read from the <see cref="TextReader"/>.</param>
+         /// <returns>A new <see cref="LogLine"/> object from the string line and line index.</returns>
+         protected override LogLine OnReadLine(string line, int index)
          {
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
-            LogLineDataParserCollection.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
+            LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
             return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
          }
       }
