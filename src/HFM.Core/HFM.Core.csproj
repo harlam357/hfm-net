@@ -164,6 +164,7 @@
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\XmlStatsDataContainer.cs" />
+    <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">

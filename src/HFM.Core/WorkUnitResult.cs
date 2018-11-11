@@ -1,5 +1,5 @@
 ﻿
-namespace HFM.Log
+namespace HFM.Core
 {
    /// <summary>
    /// Work unit result types.

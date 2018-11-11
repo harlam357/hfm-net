@@ -6,6 +6,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using HFM.Log.Legacy;
+using HFM.Log.Internal;
 
 namespace HFM.Log
 {
@@ -290,7 +291,7 @@ namespace HFM.Log
          Assert.AreEqual(0, unitRun.LogLines[3].Data);
          Assert.AreEqual(2.22f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[20].ToString().Contains("Project: 6071 (Run 0, Clone 39, Gen 70)"));
-         Assert.AreEqual(WorkUnitResult.ClientCoreError, unitRun.LogLines[26].Data);
+         Assert.AreEqual(LogLineType.ClientCoreCommunicationsError, unitRun.LogLines[26].LineType);
       }
 
       [Test]

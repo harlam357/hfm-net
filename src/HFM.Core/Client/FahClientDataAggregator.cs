@@ -347,7 +347,7 @@ namespace HFM.Core
          unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unitInfo.FramesObserved = unitRun.Data.FramesObserved;
          unitInfo.CoreVersion = unitRun.Data.CoreVersion;
-         unitInfo.UnitResult = unitRun.Data.WorkUnitResult;
+         unitInfo.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
          // there is no finished time available from the client API
          // since the unit history database won't write the same

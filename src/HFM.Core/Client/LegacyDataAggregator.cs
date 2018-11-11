@@ -267,7 +267,14 @@ namespace HFM.Core
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRunData.FramesObserved;
          unit.CoreVersion = unitRunData.CoreVersion;
-         unit.UnitResult = unitRunData.WorkUnitResult;
+         if (unitRunData.ClientCoreCommunicationsError)
+         {
+            unit.UnitResult = WorkUnitResult.ClientCoreError;
+         }
+         else
+         {
+            unit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRunData.WorkUnitResult);
+         }
 
          if (queueEntry != null)
          {

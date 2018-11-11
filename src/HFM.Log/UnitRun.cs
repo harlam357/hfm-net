@@ -168,7 +168,12 @@ namespace HFM.Log
       /// <summary>
       /// Gets or sets the work unit result.
       /// </summary>
-      public WorkUnitResult WorkUnitResult { get; set; }
+      public string WorkUnitResult { get; set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating if this work unit failed with a client-core communications error.
+      /// </summary>
+      public bool ClientCoreCommunicationsError { get; set; }
 
       /// <summary>
       /// Gets or sets the total number of completed units for the life of the slot.

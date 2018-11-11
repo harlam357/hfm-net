@@ -1,9 +1,12 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using HFM.Log.Internal;
 
 namespace HFM.Log
 {
@@ -462,7 +465,7 @@ namespace HFM.Log
                var unitRun = EnsureUnitRunExists(logLine.Index, properties.FoldingSlot, properties.QueueIndex);
                if (logLine.LineType == LogLineType.WorkUnitCoreReturn)
                {
-                  var result = logLine.Data != null ? (WorkUnitResult)logLine.Data : default(WorkUnitResult);
+                  var result = (string)logLine.Data;
                   // FinishedUnit and BadWorkUnit results are the only terminating results identified in test logs
                   if (result != WorkUnitResult.FinishedUnit && result != WorkUnitResult.BadWorkUnit)
                   {

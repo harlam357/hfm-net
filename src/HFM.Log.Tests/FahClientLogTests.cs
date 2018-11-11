@@ -6,6 +6,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using HFM.Log.FahClient;
+using HFM.Log.Internal;
 
 namespace HFM.Log
 {

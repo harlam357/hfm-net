@@ -91,7 +91,7 @@ namespace HFM.Log
 
             foreach (var unitRun in slotRun.UnitRuns)
             {
-               slotRunData.AddWorkUnitResult(unitRun.Data.WorkUnitResult);
+               slotRunData.AddWorkUnitResult(unitRun.Data);
             }
 
             return slotRunData;
@@ -134,7 +134,7 @@ namespace HFM.Log
                      unitRunData.ProjectGen = data.ProjectGen;
                      break;
                   case LogLineType.WorkUnitCoreReturn:
-                     unitRunData.WorkUnitResult = (WorkUnitResult)line.Data;
+                     unitRunData.WorkUnitResult = (string)line.Data;
                      break;
                }
             }
@@ -205,7 +205,7 @@ namespace HFM.Log
 
             foreach (var unitRun in slotRun.UnitRuns)
             {
-               slotRunData.AddWorkUnitResult(unitRun.Data.WorkUnitResult);
+               slotRunData.AddWorkUnitResult(unitRun.Data);
                if (slotRunData.TotalCompletedUnits == null)
                {
                   slotRunData.TotalCompletedUnits = unitRun.Data.TotalCompletedUnits;
@@ -352,8 +352,10 @@ namespace HFM.Log
                      }
                      break;
                   case LogLineType.WorkUnitCoreShutdown:
+                     unitRunData.WorkUnitResult = (string)line.Data;
+                     break;
                   case LogLineType.ClientCoreCommunicationsError:
-                     unitRunData.WorkUnitResult = (WorkUnitResult)line.Data;
+                     unitRunData.ClientCoreCommunicationsError = true;
                      break;
                   case LogLineType.WorkUnitCallingCore:
                      unitRunData.Threads = (int)line.Data;

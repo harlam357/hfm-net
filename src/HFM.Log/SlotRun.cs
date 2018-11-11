@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using HFM.Log.Internal;
+
 namespace HFM.Log
 {
    /// <summary>
@@ -128,26 +130,29 @@ namespace HFM.Log
       /// </summary>
       public LogSlotStatus Status { get; set; }
 
-      internal void AddWorkUnitResult(WorkUnitResult workUnitResult)
+      internal void AddWorkUnitResult(UnitRunData unitRunData)
       {
-         if (workUnitResult == WorkUnitResult.FinishedUnit)
+         if (unitRunData.WorkUnitResult == WorkUnitResult.FinishedUnit)
          {
             CompletedUnits++;
          }
-         else if (IsFailedWorkUnit(workUnitResult))
+         else if (IsFailedWorkUnit(unitRunData.WorkUnitResult))
+         {
+            FailedUnits++;
+         }
+         else if (unitRunData.ClientCoreCommunicationsError)
          {
             FailedUnits++;
          }
       }
 
-      private static bool IsFailedWorkUnit(WorkUnitResult result)
+      private static bool IsFailedWorkUnit(string result)
       {
          switch (result)
          {
             case WorkUnitResult.EarlyUnitEnd:
             case WorkUnitResult.UnstableMachine:
             case WorkUnitResult.BadWorkUnit:
-            case WorkUnitResult.ClientCoreError:
                return true;
             default:
                return false;

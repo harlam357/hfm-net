@@ -157,17 +157,17 @@ namespace HFM.Log
             return null;
          }
 
-         internal static object ParseWorkUnitCoreShutdown(LogLine logLine)
+         internal static string ParseWorkUnitCoreShutdown(LogLine logLine)
          {
             Match coreShutdownMatch;
             if ((coreShutdownMatch = FahLogRegex.Common.CoreShutdownRegex.Match(logLine.Raw)).Success)
             {
                // remove any carriage returns from fahclient log lines - 12/30/11
                string unitResultValue = coreShutdownMatch.Result("${UnitResult}").Replace("\r", String.Empty);
-               return WorkUnitResultString.ToWorkUnitResult(unitResultValue);
+               return unitResultValue;
             }
 
-            return default(WorkUnitResult);
+            return null;
          }
       }
    }
@@ -220,7 +220,6 @@ namespace HFM.Log
             Add(LogLineType.WorkUnitCallingCore, ParseWorkUnitCallingCore);
             Add(LogLineType.WorkUnitCoreVersion, ParseWorkUnitCoreVersion);
             Add(LogLineType.ClientNumberOfUnitsCompleted, ParseClientNumberOfUnitsCompleted);
-            Add(LogLineType.ClientCoreCommunicationsError, ParseClientCoreCommunicationsError);
          }
 
          internal static object ParseLogOpen(LogLine logLine)
@@ -362,11 +361,6 @@ namespace HFM.Log
             }
             return null;
          }
-
-         internal static object ParseClientCoreCommunicationsError(LogLine logLine)
-         {
-            return WorkUnitResult.ClientCoreError;
-         }
       }
    }
 
@@ -443,12 +437,12 @@ namespace HFM.Log
             return null;
          }
 
-         internal static object ParseWorkUnitCoreReturn(LogLine logLine)
+         internal static string ParseWorkUnitCoreReturn(LogLine logLine)
          {
             Match coreReturnMatch;
             if ((coreReturnMatch = FahLogRegex.FahClient.WorkUnitCoreReturnRegex.Match(logLine.Raw)).Success)
             {
-               return WorkUnitResultString.ToWorkUnitResult(coreReturnMatch.Groups["UnitResult"].Value);
+               return coreReturnMatch.Groups["UnitResult"].Value;
             }
             return null;
          }
