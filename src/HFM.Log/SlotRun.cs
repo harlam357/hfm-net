@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using HFM.Log.Internal;
-
 namespace HFM.Log
 {
    /// <summary>
@@ -52,7 +50,7 @@ namespace HFM.Log
 
       private SlotRunData _data;
       /// <summary>
-      /// Gets the data object containing information aggregated from the <see cref="LogLine"/> objects assigned to this slot run.
+      /// Gets or sets the data object containing information aggregated from the <see cref="LogLine"/> objects assigned to this slot run.
       /// </summary>
       public SlotRunData Data
       {
@@ -65,7 +63,7 @@ namespace HFM.Log
             }
             return _data;
          }
-         internal set
+         set
          {
             IsDirty = false;
             _data = value;
@@ -73,20 +71,19 @@ namespace HFM.Log
       }
 
       private bool _isDirty = true;
-
-      internal bool IsDirty
+      /// <summary>
+      /// Gets or sets a value indicating if the <see cref="Data"/> property value is not current.
+      /// </summary>
+      public bool IsDirty
       {
          get { return _isDirty; }
          set
          {
             _isDirty = value;
-            // don't push dirty flag up to ClientRun at this time
-            // there is no ClientRunData that depends on SlotRun
-            // or further child LogLine data
-            //if (Parent != null && _isDirty)
-            //{
-            //   Parent.IsDirty = true;
-            //}
+            if (Parent != null && _isDirty)
+            {
+               Parent.IsDirty = true;
+            }
          }
       }
 

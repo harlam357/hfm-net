@@ -44,14 +44,14 @@ namespace HFM.Log
       /// <param name="reader">The <see cref="FahLogReader"/> that reads the Folding@Home log line data.</param>
       public void Read(FahLogReader reader)
       {
-         if (reader == null) throw new ArgumentNullException("reader");
+         if (reader == null) throw new ArgumentNullException(nameof(reader));
 
          LogLine logLine;
          while ((logLine = reader.ReadLine()) != null)
          {
             OnLogLineRead(logLine);
          }
-         OnReadFinished();
+         OnClientRunFinished();
       }
 
       /// <summary>
@@ -72,9 +72,9 @@ namespace HFM.Log
       protected abstract void OnLogLineRead(LogLine logLine);
 
       /// <summary>
-      /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+      /// Occurs after log information indicates that a <see cref="ClientRun"/> has been finished.
       /// </summary>
-      protected abstract void OnReadFinished();
+      protected abstract void OnClientRunFinished();
 
       /// <summary>
       /// Returns an enumerator that iterates through the collection of log lines.
@@ -188,9 +188,9 @@ namespace HFM.Log
          }
 
          /// <summary>
-         /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+         /// Occurs after log information indicates that a <see cref="ClientRun"/> has been finished.
          /// </summary>
-         protected override void OnReadFinished()
+         protected override void OnClientRunFinished()
          {
             var clientRun = ClientRuns.FirstOrDefault();
             if (clientRun == null)
@@ -341,7 +341,7 @@ namespace HFM.Log
          {
             if (createNew && ClientRuns.Count != 0)
             {
-               OnReadFinished();
+               OnClientRunFinished();
             }
             if (createNew || ClientRuns.Count == 0)
             {
@@ -368,7 +368,6 @@ namespace HFM.Log
             if (previousUnitRun != null)
             {
                previousUnitRun.EndIndex = lineIndex - 1;
-               previousUnitRun.IsComplete = true;
 
                var clientRun = ClientRuns.Peek();
                foreach (var logLine in _logBuffer.Where(x => x.Index < previousUnitRun.StartIndex))
@@ -485,9 +484,9 @@ namespace HFM.Log
          }
 
          /// <summary>
-         /// Occurs after all log lines have been read from the <see cref="FahLogReader"/>.
+         /// Occurs after log information indicates that a <see cref="ClientRun"/> has been finished.
          /// </summary>
-         protected override void OnReadFinished()
+         protected override void OnClientRunFinished()
          {
             var clientRun = ClientRuns.FirstOrDefault();
             if (clientRun == null)
@@ -495,7 +494,7 @@ namespace HFM.Log
                return;
             }
 
-            foreach (var unitRun in clientRun.SlotRuns.Values.SelectMany(x => x.UnitRuns))
+            foreach (var unitRun in clientRun.SlotRuns.Values.SelectMany(x => x.UnitRuns).Cast<FahClientUnitRun>())
             {
                if (!unitRun.IsComplete)
                {
@@ -548,22 +547,44 @@ namespace HFM.Log
             return clientRun.SlotRuns[foldingSlot];
          }
 
-         private UnitRun EnsureUnitRunExists(int lineIndex, int foldingSlot, int queueIndex)
+         private FahClientUnitRun EnsureUnitRunExists(int lineIndex, int foldingSlot, int queueIndex)
          {
             var slotRun = EnsureSlotRunExists(lineIndex, foldingSlot);
             var unitRun = GetMostRecentUnitRun(slotRun, queueIndex);
             if (unitRun == null)
             {
-               unitRun = new UnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
+               unitRun = new FahClientUnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
                slotRun.UnitRuns.Push(unitRun);
             }
 
             return unitRun;
          }
 
-         private static UnitRun GetMostRecentUnitRun(SlotRun slotRun, int queueIndex)
+         private static FahClientUnitRun GetMostRecentUnitRun(SlotRun slotRun, int queueIndex)
          {
-            return slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
+            return slotRun.UnitRuns
+               .Cast<FahClientUnitRun>()
+               .FirstOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
+         }
+
+         /// <summary>
+         /// A <see cref="FahClientUnitRun"/> encapsulates all the Folding@Home client log information for a single work unit execution (run).
+         /// </summary>
+         private class FahClientUnitRun : UnitRun
+         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FahClientUnitRun"/> class.
+            /// </summary>
+            internal FahClientUnitRun(SlotRun parent)
+               : base(parent)
+            {
+
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating if the <see cref="UnitRun"/> is complete.
+            /// </summary>
+            internal bool IsComplete { get; set; }
          }
       }
    }

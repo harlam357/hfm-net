@@ -21,8 +21,10 @@ namespace HFM.Log
       }
 
       private readonly ObservableCollection<LogLine> _logLines;
-
-      internal IList<LogLine> LogLines
+      /// <summary>
+      /// Gets a collection of <see cref="LogLine"/> assigned to this unit run.
+      /// </summary>
+      public IList<LogLine> LogLines
       {
          get { return _logLines; }
       }
@@ -81,7 +83,7 @@ namespace HFM.Log
             }
             return _data;
          }
-         internal set
+         set
          {
             IsDirty = false;
             _data = value;
@@ -89,8 +91,10 @@ namespace HFM.Log
       }
 
       private bool _isDirty = true;
-
-      internal bool IsDirty
+      /// <summary>
+      /// Gets or sets a value indicating if the <see cref="Data"/> property value is not current.
+      /// </summary>
+      public bool IsDirty
       {
          get { return _isDirty; }
          set
@@ -102,8 +106,6 @@ namespace HFM.Log
             }
          }
       }
-
-      internal bool IsComplete { get; set; }
 
       /// <summary>
       /// Returns an enumerator that iterates through the collection of log lines.
