@@ -98,8 +98,8 @@ namespace HFM.Log
 
          internal LazyLogLine(LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
          {
-            _lazyTimeStampParser = new Lazy<TimeSpan?>(() => timeStampParser(this));
-            _lazyDataParser = new Lazy<object>(() => dataParser(this));
+            if (timeStampParser != null) _lazyTimeStampParser = new Lazy<TimeSpan?>(() => timeStampParser(this));
+            if (dataParser != null) _lazyDataParser = new Lazy<object>(() => dataParser(this));
          }
 
          private TimeSpan? _timeStamp;
