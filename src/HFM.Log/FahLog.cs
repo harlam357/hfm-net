@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using HFM.Log.Internal;
-
 namespace HFM.Log
 {
    /// <summary>
@@ -363,7 +361,7 @@ namespace HFM.Log
          private void EnsureUnitRunExists(int lineIndex, int queueIndex)
          {
             var slotRun = EnsureSlotRunExists(lineIndex, FoldingSlot);
-            var unitRun = new UnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
+            var unitRun = new UnitRun(slotRun, queueIndex, lineIndex);
             var previousUnitRun = slotRun.UnitRuns.FirstOrDefault();
             if (previousUnitRun != null)
             {
@@ -466,7 +464,7 @@ namespace HFM.Log
                {
                   var result = (string)logLine.Data;
                   // FinishedUnit and BadWorkUnit results are the only terminating results identified in test logs
-                  if (result != WorkUnitResult.FinishedUnit && result != WorkUnitResult.BadWorkUnit)
+                  if (result != Internal.WorkUnitResult.FinishedUnit && result != Internal.WorkUnitResult.BadWorkUnit)
                   {
                      // NOT a terminating result...
                      unitRun.EndIndex = logLine.Index;
@@ -553,7 +551,7 @@ namespace HFM.Log
             var unitRun = GetMostRecentUnitRun(slotRun, queueIndex);
             if (unitRun == null)
             {
-               unitRun = new FahClientUnitRun(slotRun) { QueueIndex = queueIndex, StartIndex = lineIndex };
+               unitRun = new FahClientUnitRun(slotRun, queueIndex, lineIndex);
                slotRun.UnitRuns.Push(unitRun);
             }
 
@@ -575,8 +573,11 @@ namespace HFM.Log
             /// <summary>
             /// Initializes a new instance of the <see cref="FahClientUnitRun"/> class.
             /// </summary>
-            internal FahClientUnitRun(SlotRun parent)
-               : base(parent)
+            /// <param name="parent">The parent <see cref="SlotRun"/> object.</param>
+            /// <param name="queueIndex">The queue index.</param>
+            /// <param name="startIndex">The log line index for the starting line of this unit run.</param>
+            internal FahClientUnitRun(SlotRun parent, int queueIndex, int startIndex)
+               : base(parent, queueIndex, startIndex)
             {
 
             }

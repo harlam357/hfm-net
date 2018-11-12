@@ -51,6 +51,9 @@ namespace HFM.Log
       /// </summary>
       public class LegacyLogLineTypeResolver : LogLineTypeResolver
       {
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="LegacyLogLineTypeResolver"/> class.
+         /// </summary>
          public static LegacyLogLineTypeResolver Instance { get; } = new LegacyLogLineTypeResolver();
 
          /// <summary>
@@ -111,6 +114,9 @@ namespace HFM.Log
       /// </summary>
       public class FahClientLogLineTypeResolver : LogLineTypeResolver
       {
+         /// <summary>
+         /// Gets a singleton instance of the <see cref="FahClientLogLineTypeResolver"/> class.
+         /// </summary>
          public static FahClientLogLineTypeResolver Instance { get; } = new FahClientLogLineTypeResolver();
 
          /// <summary>

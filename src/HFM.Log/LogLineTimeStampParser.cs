@@ -19,15 +19,23 @@ namespace HFM.Log
    /// </summary>
    public class LogLineTimeStampParser
    {
+      /// <summary>
+      /// Gets a singleton instance of the <see cref="LogLineTimeStampParser"/> class.
+      /// </summary>
       public static LogLineTimeStampParser Instance { get; } = new LogLineTimeStampParser();
 
+      /// <summary>
+      /// Returns a <see cref="TimeSpan"/> value based on the contents of the raw log line.
+      /// </summary>
+      /// <param name="logLine">The log line to parse.</param>
+      /// <returns>A TimeSpan representing the time stamp data parsed from the log line or null if parsing fails.</returns>
       public TimeSpan? ParseTimeStamp(LogLine logLine)
       {
          return OnParseTimeStamp(logLine);
       }
 
       /// <summary>
-      /// Implement this method in a derived type and return a <see cref="TimeSpan"/> value based on the contents of the string line.
+      /// Implement this method in a derived type and return a <see cref="TimeSpan"/> value based on the contents of the raw log line.
       /// </summary>
       /// <param name="logLine">The log line to parse.</param>
       /// <returns>A TimeSpan representing the time stamp data parsed from the log line or null if parsing fails.</returns>

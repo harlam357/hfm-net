@@ -33,16 +33,20 @@ namespace HFM.Log
       /// Initializes a new instance of the <see cref="UnitRun"/> class.
       /// </summary>
       /// <param name="parent">The parent <see cref="SlotRun"/> object.</param>
-      public UnitRun(SlotRun parent)
+      /// <param name="queueIndex">The queue index.</param>
+      /// <param name="startIndex">The log line index for the starting line of this unit run.</param>
+      public UnitRun(SlotRun parent, int queueIndex, int startIndex)
       {
          _parent = parent;
+         QueueIndex = queueIndex;
+         StartIndex = startIndex;
 
          _logLines = new ObservableCollection<LogLine>();
          _logLines.CollectionChanged += (s, e) => IsDirty = true;
       }
 
       // for unit testing only
-      internal UnitRun(SlotRun parent, int? queueIndex, int? startIndex, int? endIndex)
+      internal UnitRun(SlotRun parent, int queueIndex, int startIndex, int endIndex)
       {
          _parent = parent;
          QueueIndex = queueIndex;
@@ -54,17 +58,17 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Gets or sets the queue index.
+      /// Gets the queue index.
       /// </summary>
-      public int? QueueIndex { get; set; }
+      public int QueueIndex { get; }
 
       /// <summary>
-      /// Gets or sets log line index for the starting line of this unit run.
+      /// Gets the log line index for the starting line of this unit run.
       /// </summary>
-      public int? StartIndex { get; set; }
+      public int StartIndex { get; }
 
       /// <summary>
-      /// Gets or sets log line index for the ending line of this unit run.
+      /// Gets or sets the log line index for the ending line of this unit run.
       /// </summary>
       public int? EndIndex { get; set; }
 
