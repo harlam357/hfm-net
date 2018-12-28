@@ -107,6 +107,19 @@ namespace HFM.Log
    /// </summary>
    public class SlotRunData
    {
+      public SlotRunData()
+      {
+         
+      }
+
+      public SlotRunData(SlotRunData other)
+      {
+         CompletedUnits = other.CompletedUnits;
+         FailedUnits = other.FailedUnits;
+         TotalCompletedUnits = other.TotalCompletedUnits;
+         Status = other.Status;
+      }
+
       /// <summary>
       /// Gets or sets the number of completed units.
       /// </summary>

@@ -109,6 +109,22 @@ namespace HFM.Log
    /// </summary>
    public class ClientRunData
    {
+      public ClientRunData()
+      {
+         
+      }
+
+      public ClientRunData(ClientRunData other)
+      {
+         StartTime = other.StartTime;
+         ClientVersion = other.ClientVersion;
+         Arguments = other.Arguments;
+         FoldingID = other.FoldingID;
+         Team = other.Team;
+         UserID = other.UserID;
+         MachineID = other.MachineID;
+      }
+
       /// <summary>
       /// Gets or sets the client start time.
       /// </summary>

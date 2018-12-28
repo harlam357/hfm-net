@@ -141,7 +141,7 @@ namespace HFM.Log
          /// </summary>
          /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          public FahClientLogTextReader(TextReader textReader)
-            : this(textReader, FahClientLogLineTypeResolver.Instance, LogLineTimeStampParser.Instance, FahClientLogLineDataParserDictionary.Instance)
+            : this(textReader, null, null, null)
          {
 
          }
@@ -151,17 +151,17 @@ namespace HFM.Log
          /// </summary>
          /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          /// <param name="logLineTypeResolver">The <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.</param>
-         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
          /// <param name="logLineDataParserDictionary">The <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.</param>
+         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
          protected FahClientLogTextReader(TextReader textReader,
                                           LogLineTypeResolver logLineTypeResolver,
-                                          LogLineTimeStampParser logLineTimeStampParser,
-                                          LogLineDataParserDictionary logLineDataParserDictionary)
+                                          LogLineDataParserDictionary logLineDataParserDictionary,
+                                          LogLineTimeStampParser logLineTimeStampParser)
             : base(textReader)
          {
-            LogLineTypeResolver = logLineTypeResolver;
-            LogLineTimeStampParser = logLineTimeStampParser;
-            LogLineDataParserDictionary = logLineDataParserDictionary;
+            LogLineTypeResolver = logLineTypeResolver ?? FahClientLogLineTypeResolver.Instance;
+            LogLineDataParserDictionary = logLineDataParserDictionary ?? FahClientLogLineDataParserDictionary.Instance;
+            LogLineTimeStampParser = logLineTimeStampParser ?? LogLineTimeStampParser.Instance;
          }
 
          /// <summary>
@@ -207,7 +207,7 @@ namespace HFM.Log
          /// </summary>
          /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          public LegacyLogTextReader(TextReader textReader)
-            : this(textReader, LegacyLogLineTypeResolver.Instance, LogLineTimeStampParser.Instance, LegacyLogLineDataParserDictionary.Instance)
+            : this(textReader, null, null, null)
          {
 
          }
@@ -217,17 +217,17 @@ namespace HFM.Log
          /// </summary>
          /// <param name="textReader">The <see cref="TextReader"/> that provides line data as a string.</param>
          /// <param name="logLineTypeResolver">The <see cref="LogLineTypeResolver"/> used to resolve the <see cref="LogLineType"/> from a log line.</param>
-         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
          /// <param name="logLineDataParserDictionary">The <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.</param>
+         /// <param name="logLineTimeStampParser">The <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.</param>
          protected LegacyLogTextReader(TextReader textReader,
                                        LogLineTypeResolver logLineTypeResolver,
-                                       LogLineTimeStampParser logLineTimeStampParser,
-                                       LogLineDataParserDictionary logLineDataParserDictionary)
+                                       LogLineDataParserDictionary logLineDataParserDictionary,
+                                       LogLineTimeStampParser logLineTimeStampParser)
             : base(textReader)
          {
-            LogLineTypeResolver = logLineTypeResolver;
-            LogLineTimeStampParser = logLineTimeStampParser;
-            LogLineDataParserDictionary = logLineDataParserDictionary;
+            LogLineTypeResolver = logLineTypeResolver ?? LegacyLogLineTypeResolver.Instance;
+            LogLineDataParserDictionary = logLineDataParserDictionary ?? LegacyLogLineDataParserDictionary.Instance;
+            LogLineTimeStampParser = logLineTimeStampParser ?? LogLineTimeStampParser.Instance;
          }
 
          /// <summary>

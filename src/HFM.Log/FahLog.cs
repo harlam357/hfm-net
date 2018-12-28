@@ -108,7 +108,7 @@ namespace HFM.Log
          /// Initializes a new instance of the <see cref="LegacyLog"/> class.
          /// </summary>
          public LegacyLog()
-            : this(LegacyRunDataAggregator.Instance)
+            : this(null)
          {
 
          }
@@ -118,7 +118,7 @@ namespace HFM.Log
          /// </summary>
          /// <param name="runDataAggregator">The <see cref="RunDataAggregator"/> that will be used to generate <see cref="ClientRunData"/>, <see cref="SlotRunData"/>, and <see cref="UnitRunData"/> objects.</param>
          protected LegacyLog(RunDataAggregator runDataAggregator)
-            : base(runDataAggregator)
+            : base(runDataAggregator ?? LegacyRunDataAggregator.Instance)
          {
             _unitIndexData.Initialize();
          }
@@ -417,7 +417,7 @@ namespace HFM.Log
          /// Initializes a new instance of the <see cref="FahClientLog"/> class.
          /// </summary>
          public FahClientLog()
-            : this(FahClientRunDataAggregator.Instance)
+            : this(null)
          {
             
          }
@@ -427,7 +427,7 @@ namespace HFM.Log
          /// </summary>
          /// <param name="runDataAggregator">The <see cref="RunDataAggregator"/> that will be used to generate <see cref="ClientRunData"/>, <see cref="SlotRunData"/>, and <see cref="UnitRunData"/> objects.</param>
          protected FahClientLog(RunDataAggregator runDataAggregator)
-            : base(runDataAggregator)
+            : base(runDataAggregator ?? FahClientRunDataAggregator.Instance)
          {
 
          }

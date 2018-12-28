@@ -131,6 +131,26 @@ namespace HFM.Log
    /// </summary>
    public class UnitRunData
    {
+      public UnitRunData()
+      {
+         
+      }
+
+      public UnitRunData(UnitRunData other)
+      {
+         UnitStartTimeStamp = other.UnitStartTimeStamp;
+         FramesObserved = other.FramesObserved;
+         CoreVersion = other.CoreVersion;
+         ProjectID = other.ProjectID;
+         ProjectRun = other.ProjectRun;
+         ProjectClone = other.ProjectClone;
+         ProjectGen = other.ProjectGen;
+         Threads = other.Threads;
+         WorkUnitResult = other.WorkUnitResult;
+         ClientCoreCommunicationsError = other.ClientCoreCommunicationsError;
+         TotalCompletedUnits = other.TotalCompletedUnits;
+      }
+
       /// <summary>
       /// Gets or sets the time stamp of the start of the work unit.
       /// </summary>
