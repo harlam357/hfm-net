@@ -52,11 +52,11 @@ namespace HFM.Core
       public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
                                                 SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
-         if (clientRun == null) throw new ArgumentNullException("clientRun");
-         if (unitCollection == null) throw new ArgumentNullException("unitCollection");
-         if (options == null) throw new ArgumentNullException("options");
-         if (slotOptions == null) throw new ArgumentNullException("slotOptions");
-         if (currentUnitInfo == null) throw new ArgumentNullException("currentUnitInfo");
+         if (clientRun == null) throw new ArgumentNullException(nameof(clientRun));
+         if (unitCollection == null) throw new ArgumentNullException(nameof(unitCollection));
+         if (options == null) throw new ArgumentNullException(nameof(options));
+         if (slotOptions == null) throw new ArgumentNullException(nameof(slotOptions));
+         if (currentUnitInfo == null) throw new ArgumentNullException(nameof(currentUnitInfo));
 
          var result = new DataAggregatorResult();
          result.CurrentUnitIndex = -1;
@@ -67,10 +67,6 @@ namespace HFM.Core
             slotRun = clientRun.SlotRuns[slotId];
          }
          result.StartTime = clientRun.Data.StartTime;
-         result.Arguments = clientRun.Data.Arguments;
-         result.ClientVersion = clientRun.Data.ClientVersion;
-         result.UserID = clientRun.Data.UserID;
-         result.MachineID = clientRun.Data.MachineID;
          result.Status = slotRun != null ? (SlotStatus)slotRun.Data.Status : SlotStatus.Unknown;
 
          if (Logger.IsDebugEnabled)

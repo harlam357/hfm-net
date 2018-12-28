@@ -223,15 +223,26 @@ namespace HFM.Log.Tool
             }
             sb.AppendLine();
             sb.AppendLine("// Setup ClientRunData " + i);
-            sb.AppendLine("expectedRun.Data = new ClientRunData();");
-            var st2 = clientRun.Data.StartTime;
-            sb.AppendLine("expectedRun.Data.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
-            sb.AppendLine("expectedRun.Data.Arguments = " + GetStringOrNull(clientRun.Data.Arguments) + ";");
-            sb.AppendLine("expectedRun.Data.ClientVersion = " + GetStringOrNull(clientRun.Data.ClientVersion) + ";");
-            sb.AppendLine("expectedRun.Data.FoldingID = " + GetStringOrNull(clientRun.Data.FoldingID) + ";");
-            sb.AppendLine("expectedRun.Data.Team = " + clientRun.Data.Team + ";");
-            sb.AppendLine("expectedRun.Data.UserID = " + GetStringOrNull(clientRun.Data.UserID) + ";");
-            sb.AppendLine("expectedRun.Data.MachineID = " + clientRun.Data.MachineID + ";");
+            if (clientRun.Data is Legacy.LegacyClientRunData legacyClientRunData)
+            {
+               sb.AppendLine("var expectedRunData = new LegacyClientRunData();");
+               var st2 = clientRun.Data.StartTime;
+               sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
+               sb.AppendLine("expectedRunData.Arguments = " + GetStringOrNull(legacyClientRunData.Arguments) + ";");
+               sb.AppendLine("expectedRunData.ClientVersion = " + GetStringOrNull(legacyClientRunData.ClientVersion) + ";");
+               sb.AppendLine("expectedRunData.FoldingID = " + GetStringOrNull(legacyClientRunData.FoldingID) + ";");
+               sb.AppendLine("expectedRunData.Team = " + legacyClientRunData.Team + ";");
+               sb.AppendLine("expectedRunData.UserID = " + GetStringOrNull(legacyClientRunData.UserID) + ";");
+               sb.AppendLine("expectedRunData.MachineID = " + legacyClientRunData.MachineID + ";");
+               sb.AppendLine("expectedRun.Data = expectedRunData;");
+            }
+            if (clientRun.Data is FahClient.FahClientClientRunData)
+            {
+               sb.AppendLine("var expectedRunData = new FahClientClientRunData();");
+               var st2 = clientRun.Data.StartTime;
+               sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
+               sb.AppendLine("expectedRun.Data = expectedRunData;");
+            }
             sb.AppendLine();
             sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
             sb.AppendLine("FahLogAssert.AreEqual(expectedRun, actualRun, true);");

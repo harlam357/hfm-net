@@ -9,8 +9,7 @@ namespace HFM.Core
 {
    internal sealed class DataAggregatorResult
    {
-      #region ClientRun Values
-
+      // ClientRun Values
       public DateTime StartTime { get; set; }
 
       public string Arguments { get; set; }
@@ -21,24 +20,16 @@ namespace HFM.Core
 
       public int MachineID { get; set; }
 
-      #endregion
-
-      #region SlotRun Values
-
+      // SlotRun Values
       public SlotStatus Status { get; set; }
-
-      #endregion
 
       public IList<LogLine> CurrentLogLines { get; set; }
 
-      #region Queue Values
-
+      // Queue Values
       public int CurrentUnitIndex { get; set; }
 
       public QueueDictionary Queue { get; set; }
 
       public IDictionary<int, UnitInfo> UnitInfos { get; set; }
-
-      #endregion
    }
 }

@@ -102,7 +102,7 @@ namespace HFM.Log
          /// </summary>
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
-            var clientRunData = new ClientRunData();
+            var clientRunData = new FahClientClientRunData();
 
             foreach (var line in clientRun.LogLines)
             {
@@ -195,7 +195,7 @@ namespace HFM.Log
          /// </summary>
          protected override ClientRunData OnGetClientRunData(ClientRun clientRun)
          {
-            var clientRunData = new ClientRunData();
+            var clientRunData = new LegacyClientRunData();
 
             foreach (var line in clientRun.LogLines)
             {

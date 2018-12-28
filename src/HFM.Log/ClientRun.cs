@@ -107,57 +107,96 @@ namespace HFM.Log
    /// <summary>
    /// Represents data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="ClientRun"/> object.
    /// </summary>
-   public class ClientRunData
+   public abstract class ClientRunData
    {
-      public ClientRunData()
+      protected ClientRunData()
       {
          
       }
 
-      public ClientRunData(ClientRunData other)
+      protected ClientRunData(ClientRunData other)
       {
          StartTime = other.StartTime;
-         ClientVersion = other.ClientVersion;
-         Arguments = other.Arguments;
-         FoldingID = other.FoldingID;
-         Team = other.Team;
-         UserID = other.UserID;
-         MachineID = other.MachineID;
       }
 
       /// <summary>
       /// Gets or sets the client start time.
       /// </summary>
       public DateTime StartTime { get; set; }
+   }
 
+   namespace FahClient
+   {
       /// <summary>
-      /// Gets or sets the client version number.
+      /// Represents v7 or newer client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="ClientRun"/> object.
       /// </summary>
-      public string ClientVersion { get; set; }
+      public class FahClientClientRunData : ClientRunData
+      {
+         public FahClientClientRunData()
+         {
 
-      /// <summary>
-      /// Gets or sets the client command line arguments.
-      /// </summary>
-      public string Arguments { get; set; }
+         }
 
-      /// <summary>
-      /// Gets or sets the Folding ID (Username).
-      /// </summary>
-      public string FoldingID { get; set; }
+         public FahClientClientRunData(FahClientClientRunData other)
+            : base(other)
+         {
+            
+         }
+      }
+   }
 
+   namespace Legacy
+   {
       /// <summary>
-      /// Gets or sets the team number.
+      /// Represents v6 or prior client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="ClientRun"/> object.
       /// </summary>
-      public int Team { get; set; }
+      public class LegacyClientRunData : ClientRunData
+      {
+         public LegacyClientRunData()
+         {
 
-      /// <summary>
-      /// Gets or sets the user ID (unique hexadecimal value).
-      /// </summary>
-      public string UserID { get; set; }
+         }
 
-      /// <summary>
-      /// Gets or sets the machine ID.
-      /// </summary>
-      public int MachineID { get; set; }
+         public LegacyClientRunData(LegacyClientRunData other)
+            : base(other)
+         {
+            ClientVersion = other.ClientVersion;
+            Arguments = other.Arguments;
+            FoldingID = other.FoldingID;
+            Team = other.Team;
+            UserID = other.UserID;
+            MachineID = other.MachineID;
+         }
+
+         /// <summary>
+         /// Gets or sets the client version number.
+         /// </summary>
+         public string ClientVersion { get; set; }
+
+         /// <summary>
+         /// Gets or sets the client command line arguments.
+         /// </summary>
+         public string Arguments { get; set; }
+
+         /// <summary>
+         /// Gets or sets the Folding ID (Username).
+         /// </summary>
+         public string FoldingID { get; set; }
+
+         /// <summary>
+         /// Gets or sets the team number.
+         /// </summary>
+         public int Team { get; set; }
+
+         /// <summary>
+         /// Gets or sets the user ID (unique hexadecimal value).
+         /// </summary>
+         public string UserID { get; set; }
+
+         /// <summary>
+         /// Gets or sets the machine ID.
+         /// </summary>
+         public int MachineID { get; set; }
+      }
    }
 }

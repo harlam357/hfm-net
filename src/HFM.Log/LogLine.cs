@@ -83,7 +83,7 @@ namespace HFM.Log
       /// <param name="timeStampParser">The <see cref="LogLineTimeStampParserFunction"/> used to lazily parse time stamp information when the TimeStamp property getter is accessed.</param>
       /// <param name="dataParser">The <see cref="LogLineDataParserFunction"/> used to lazily parse log line data when the Data property getter is accessed.</param>
       /// <returns>A new <see cref="LogLine"/> object where the TimeStamp and Data properties are lazily evaluated using the given parsing functions.</returns>
-      public static LogLine Create(string raw, int index, LogLineType lineType, LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
+      public static LogLine CreateLazy(string raw, int index, LogLineType lineType, LogLineTimeStampParserFunction timeStampParser, LogLineDataParserFunction dataParser)
       {
          return new Internal.LazyLogLine(timeStampParser, dataParser) { Raw = raw, Index = index, LineType = lineType };
       }

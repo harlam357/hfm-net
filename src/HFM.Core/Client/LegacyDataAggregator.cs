@@ -68,11 +68,12 @@ namespace HFM.Core
          }
 
          var result = new DataAggregatorResult();
-         result.StartTime = currentClientRun.Data.StartTime;
-         result.Arguments = currentClientRun.Data.Arguments;
-         result.ClientVersion = currentClientRun.Data.ClientVersion;
-         result.UserID = currentClientRun.Data.UserID;
-         result.MachineID = currentClientRun.Data.MachineID;
+         var currentClientRunData = (LegacyClientRunData)currentClientRun.Data;
+         result.StartTime = currentClientRunData.StartTime;
+         result.Arguments = currentClientRunData.Arguments;
+         result.ClientVersion = currentClientRunData.ClientVersion;
+         result.UserID = currentClientRunData.UserID;
+         result.MachineID = currentClientRunData.MachineID;
          result.Status = (SlotStatus)currentClientRun.SlotRuns[0].Data.Status;
 
          // Decision Time: If Queue Read fails parse from logs only
@@ -276,10 +277,11 @@ namespace HFM.Core
             unit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRunData.WorkUnitResult);
          }
 
+         var clientRunData = (LegacyClientRunData)clientRun.Data;
          if (queueEntry != null)
          {
             UpdateUnitInfoFromQueueData(unit, queueEntry);
-            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
+            UpdateUnitInfoFromLogData(unit, clientRunData, unitRunData, unitInfoLogData);
 
             if (!ProjectsMatch(unit, unitRunData.ToProjectInfo()) && !ProjectsMatch(unit, unitInfoLogData.ToProjectInfo()) && !matchOverride)
             {
@@ -288,7 +290,7 @@ namespace HFM.Core
          }
          else
          {
-            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
+            UpdateUnitInfoFromLogData(unit, clientRunData, unitRunData, unitInfoLogData);
          }
 
          return unit;
@@ -350,7 +352,7 @@ namespace HFM.Core
          }
       }
 
-      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, ClientRunData clientRunData, UnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
+      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, LegacyClientRunData clientRunData, UnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
       {
          Debug.Assert(unitInfo != null);
          Debug.Assert(clientRunData != null);

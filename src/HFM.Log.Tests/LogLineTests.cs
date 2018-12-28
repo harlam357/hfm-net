@@ -47,7 +47,7 @@ namespace HFM.Log
       public void LazyLogLine_Properties_Test()
       {
          // Arrange
-         var logLine = LogLine.Create(null, 0, LogLineType.None, line => null, line => null);
+         var logLine = LogLine.CreateLazy(null, 0, LogLineType.None, line => null, line => null);
          // Act
          logLine.Raw = "Foo";
          logLine.Index = 1;
@@ -66,7 +66,7 @@ namespace HFM.Log
       public void LazyLogLine_Create_Properties_Test()
       {
          // Arrange & Act
-         var logLine = LogLine.Create("Foo", 1, LogLineType.ClientArguments, line => TimeSpan.FromMinutes(1), line => "Foo");
+         var logLine = LogLine.CreateLazy("Foo", 1, LogLineType.ClientArguments, line => TimeSpan.FromMinutes(1), line => "Foo");
          // Assert
          Assert.AreEqual("Foo", logLine.Raw);
          Assert.AreEqual(1, logLine.Index);

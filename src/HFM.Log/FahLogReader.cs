@@ -127,14 +127,14 @@ namespace HFM.Log
          protected LogLineTypeResolver LogLineTypeResolver { get; }
 
          /// <summary>
-         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
-         /// </summary>
-         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
-
-         /// <summary>
          /// Gets the <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.
          /// </summary>
          protected LogLineDataParserDictionary LogLineDataParserDictionary { get; }
+
+         /// <summary>
+         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
+         /// </summary>
+         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
 
          /// <summary>
          /// Initializes a new instance of the <see cref="FahClientLogTextReader"/> class.
@@ -175,7 +175,7 @@ namespace HFM.Log
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
             LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
-            return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
+            return LogLine.CreateLazy(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }
@@ -193,14 +193,14 @@ namespace HFM.Log
          protected LogLineTypeResolver LogLineTypeResolver { get; }
 
          /// <summary>
-         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
-         /// </summary>
-         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
-
-         /// <summary>
          /// Gets the <see cref="LogLineDataParserDictionary"/> that provides parsing functions for each <see cref="LogLineType"/>.
          /// </summary>
          protected LogLineDataParserDictionary LogLineDataParserDictionary { get; }
+
+         /// <summary>
+         /// Gets the <see cref="LogLineTimeStampParser"/> used to parse time stamp information from a log line.
+         /// </summary>
+         protected LogLineTimeStampParser LogLineTimeStampParser { get; }
 
          /// <summary>
          /// Initializes a new instance of the <see cref="LegacyLogTextReader"/> class.
@@ -241,7 +241,7 @@ namespace HFM.Log
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
             LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
-            return LogLine.Create(line, index, lineType, timeStampParser, dataParser);
+            return LogLine.CreateLazy(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }

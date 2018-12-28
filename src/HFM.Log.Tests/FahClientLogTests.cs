@@ -103,14 +103,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2012, 1, 11, 3, 24, 22, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
@@ -359,14 +353,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2014, 7, 25, 13, 57, 36, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
@@ -3161,14 +3149,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2015, 12, 8, 12, 44, 41, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
@@ -3938,14 +3920,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2016, 3, 5, 5, 0, 47, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
@@ -6860,14 +6836,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2016, 6, 18, 15, 50, 21, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
@@ -6935,14 +6905,8 @@ namespace HFM.Log
          expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new ClientRunData();
+         expectedRun.Data = new FahClientClientRunData();
          expectedRun.Data.StartTime = new DateTime(2017, 3, 13, 5, 47, 4, DateTimeKind.Utc);
-         expectedRun.Data.Arguments = null;
-         expectedRun.Data.ClientVersion = null;
-         expectedRun.Data.FoldingID = null;
-         expectedRun.Data.Team = 0;
-         expectedRun.Data.UserID = null;
-         expectedRun.Data.MachineID = 0;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          FahLogAssert.AreEqual(expectedRun, actualRun, true);
