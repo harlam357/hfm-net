@@ -105,19 +105,17 @@ namespace HFM.Log
    /// <summary>
    /// Represents data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="SlotRun"/> object.
    /// </summary>
-   public class SlotRunData
+   public abstract class SlotRunData
    {
-      public SlotRunData()
+      protected SlotRunData()
       {
          
       }
 
-      public SlotRunData(SlotRunData other)
+      protected SlotRunData(SlotRunData other)
       {
          CompletedUnits = other.CompletedUnits;
          FailedUnits = other.FailedUnits;
-         TotalCompletedUnits = other.TotalCompletedUnits;
-         Status = other.Status;
       }
 
       /// <summary>
@@ -129,15 +127,56 @@ namespace HFM.Log
       /// Gets or sets the number of failed units.
       /// </summary>
       public int FailedUnits { get; set; }
+   }
 
+   namespace FahClient
+   {
       /// <summary>
-      /// Gets or sets the total number of completed units for the life of the slot.
+      /// Represents v7 or newer client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="SlotRun"/> object.
       /// </summary>
-      public int? TotalCompletedUnits { get; set; }
+      public class FahClientSlotRunData : SlotRunData
+      {
+         public FahClientSlotRunData()
+         {
 
+         }
+
+         public FahClientSlotRunData(FahClientSlotRunData other)
+            : base(other)
+         {
+
+         }
+      }
+   }
+
+   namespace Legacy
+   {
       /// <summary>
-      /// Gets or sets the client status.
+      /// Represents v6 or prior client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="SlotRun"/> object.
       /// </summary>
-      public LogSlotStatus Status { get; set; }
+      public class LegacySlotRunData : SlotRunData
+      {
+         public LegacySlotRunData()
+         {
+
+         }
+
+         public LegacySlotRunData(LegacySlotRunData other)
+            : base(other)
+         {
+            TotalCompletedUnits = other.TotalCompletedUnits;
+            Status = other.Status;
+         }
+
+         /// <summary>
+         /// Gets or sets the total number of completed units for the life of the slot.
+         /// </summary>
+         public int? TotalCompletedUnits { get; set; }
+
+         /// <summary>
+         /// Gets or sets the client status.
+         /// </summary>
+         public LogSlotStatus Status { get; set; }
+      }
    }
 }

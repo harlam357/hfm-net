@@ -67,7 +67,6 @@ namespace HFM.Core
             slotRun = clientRun.SlotRuns[slotId];
          }
          result.StartTime = clientRun.Data.StartTime;
-         result.Status = slotRun != null ? (SlotStatus)slotRun.Data.Status : SlotStatus.Unknown;
 
          if (Logger.IsDebugEnabled)
          {

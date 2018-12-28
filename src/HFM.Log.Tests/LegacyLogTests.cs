@@ -53,11 +53,12 @@ namespace HFM.Log
          expectedRunData.UserID = "5131EA752EB60547";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 261;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 261;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -77,11 +78,12 @@ namespace HFM.Log
          expectedRunData.UserID = "5131EA752EB60547";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 2;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 263;
-         expectedSlotRun.Data.Status = LogSlotStatus.GettingWorkPacket;
+         expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 2;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 263;
+         expectedSlotRunData.Status = LogSlotStatus.GettingWorkPacket;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -119,11 +121,12 @@ namespace HFM.Log
          expectedRunData.UserID = "3A49EBB303C19834";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 2;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 292;
-         expectedSlotRun.Data.Status = LogSlotStatus.SendingWorkPacket;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 2;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 292;
+         expectedSlotRunData.Status = LogSlotStatus.SendingWorkPacket;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -163,11 +166,12 @@ namespace HFM.Log
          expectedRunData.UserID = null;
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -204,11 +208,12 @@ namespace HFM.Log
          expectedRunData.UserID = "5D2DCEF06CE524B3";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(4);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -279,11 +284,12 @@ namespace HFM.Log
          expectedRunData.UserID = "DC1DAF57D91DF79";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 33;
-         expectedSlotRun.Data.TotalCompletedUnits = 617;
-         expectedSlotRun.Data.Status = LogSlotStatus.EuePause;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 33;
+         expectedSlotRunData.TotalCompletedUnits = 617;
+         expectedSlotRunData.Status = LogSlotStatus.EuePause;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -321,11 +327,12 @@ namespace HFM.Log
          expectedRunData.UserID = "51EA5C9A7EF9D58E";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 885;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 885;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -367,11 +374,12 @@ namespace HFM.Log
          expectedRunData.UserID = "CF185086C102A47";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 5;
-         expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 5;
+         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -402,11 +410,12 @@ namespace HFM.Log
          expectedRunData.UserID = "CF185086C102A47";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 11;
-         expectedSlotRun.Data.FailedUnits = 1;
-         expectedSlotRun.Data.TotalCompletedUnits = 12;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 11;
+         expectedSlotRunData.FailedUnits = 1;
+         expectedSlotRunData.TotalCompletedUnits = 12;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -445,11 +454,12 @@ namespace HFM.Log
          expectedRunData.UserID = "51108B97183EA3DF";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 2;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 4221;
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 2;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 4221;
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -486,11 +496,12 @@ namespace HFM.Log
          expectedRunData.UserID = "1D1493BB0A79C9AE";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null;
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -514,11 +525,12 @@ namespace HFM.Log
          expectedRunData.UserID = "1D1493BB0A79C9AE";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 5;
-         expectedSlotRun.Data.TotalCompletedUnits = 224;
-         expectedSlotRun.Data.Status = LogSlotStatus.EuePause;
+         expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 5;
+         expectedSlotRunData.TotalCompletedUnits = 224;
+         expectedSlotRunData.Status = LogSlotStatus.EuePause;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -559,11 +571,12 @@ namespace HFM.Log
          expectedRunData.UserID = "xxxxxxxxxxxxxxxxxxx";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 1994;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 1994;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -610,11 +623,12 @@ namespace HFM.Log
          expectedRunData.UserID = "37114EB5198643C1";
          expectedRunData.MachineID = 2;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 847;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 847;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -659,7 +673,7 @@ namespace HFM.Log
          expectedRunData.UserID = "4E34332601E26450";
          expectedRunData.MachineID = 5;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
+         expectedSlotRun.Data = new LegacySlotRunData();
 
          var actualRun = fahLog.ClientRuns.ElementAt(2);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -679,11 +693,12 @@ namespace HFM.Log
          expectedRunData.UserID = "4E34332601E26450";
          expectedRunData.MachineID = 5;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -702,11 +717,12 @@ namespace HFM.Log
          expectedRunData.UserID = "4E34332601E26450";
          expectedRunData.MachineID = 5;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 2;
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 2;
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -743,11 +759,12 @@ namespace HFM.Log
          expectedRunData.UserID = "722723950C6887C2";
          expectedRunData.MachineID = 3;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -766,11 +783,12 @@ namespace HFM.Log
          expectedRunData.UserID = "722723950C6887C2";
          expectedRunData.MachineID = 3;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = null;
+         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -826,11 +844,12 @@ namespace HFM.Log
          expectedRunData.UserID = "1E19BD450434A6ED";
          expectedRunData.MachineID = 1;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 8;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 229;
-         expectedSlotRun.Data.Status = LogSlotStatus.Paused;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 8;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 229;
+         expectedSlotRunData.Status = LogSlotStatus.Paused;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);
@@ -869,11 +888,12 @@ namespace HFM.Log
          expectedRunData.UserID = "1E53CB2Axxxxxxxx";
          expectedRunData.MachineID = 14;
          expectedRun.Data = expectedRunData;
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = 173;
-         expectedSlotRun.Data.Status = LogSlotStatus.Stopped;
+         var expectedSlotRunData = new LegacySlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRunData.TotalCompletedUnits = 173;
+         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
          FahLogAssert.AreEqual(expectedRun, actualRun);

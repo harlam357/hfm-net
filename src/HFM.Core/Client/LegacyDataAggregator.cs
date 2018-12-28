@@ -74,7 +74,8 @@ namespace HFM.Core
          result.ClientVersion = currentClientRunData.ClientVersion;
          result.UserID = currentClientRunData.UserID;
          result.MachineID = currentClientRunData.MachineID;
-         result.Status = (SlotStatus)currentClientRun.SlotRuns[0].Data.Status;
+         var currentSlotRunData = (LegacySlotRunData)currentClientRun.SlotRuns[0].Data;
+         result.Status = (SlotStatus)currentSlotRunData.Status;
 
          // Decision Time: If Queue Read fails parse from logs only
          if (queueData != null)
@@ -204,7 +205,8 @@ namespace HFM.Core
                   unitRun = GetCurrentUnitRun(fahLog);
 
                   var slotRun = GetCurrentSlotRun(fahLog);
-                  if (slotRun != null && ((SlotStatus)slotRun.Data.Status) == SlotStatus.GettingWorkPacket)
+                  var slotRunData = (LegacySlotRunData)slotRun?.Data;
+                  if (slotRun != null && slotRunData != null && ((SlotStatus)slotRunData.Status) == SlotStatus.GettingWorkPacket)
                   {
                      unitRun = null;
                      unitInfoLogData = new UnitInfoLogData();

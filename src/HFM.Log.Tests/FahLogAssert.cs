@@ -28,8 +28,12 @@ namespace HFM.Log
             var actualSlotRun = actualRun.SlotRuns[key];
             Assert.AreEqual(expectedSlotRun.Data.CompletedUnits, actualSlotRun.Data.CompletedUnits);
             Assert.AreEqual(expectedSlotRun.Data.FailedUnits, actualSlotRun.Data.FailedUnits);
-            Assert.AreEqual(expectedSlotRun.Data.TotalCompletedUnits, actualSlotRun.Data.TotalCompletedUnits);
-            Assert.AreEqual(expectedSlotRun.Data.Status, actualSlotRun.Data.Status);
+            if (expectedSlotRun.Data is Legacy.LegacySlotRunData legacyExpectedSlotRunData &&
+                actualSlotRun.Data is Legacy.LegacySlotRunData legacyActualSlotRunData)
+            {
+               Assert.AreEqual(legacyExpectedSlotRunData.TotalCompletedUnits, legacyActualSlotRunData.TotalCompletedUnits);
+               Assert.AreEqual(legacyExpectedSlotRunData.Status, legacyActualSlotRunData.Status);
+            }
 
             Assert.AreEqual(expectedSlotRun.UnitRuns.Count, actualSlotRun.UnitRuns.Count);
             for (int i = 0; i < expectedSlotRun.UnitRuns.Count; i++)

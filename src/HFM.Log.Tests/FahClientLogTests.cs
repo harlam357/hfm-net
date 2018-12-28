@@ -59,11 +59,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 0
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 0;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup SlotRun 1
          expectedSlotRun = new SlotRun(expectedRun, 1);
@@ -96,11 +95,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 1
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 1;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 1;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();
@@ -231,11 +229,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 1
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 7;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 7;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup SlotRun 0
          expectedSlotRun = new SlotRun(expectedRun, 0);
@@ -346,11 +343,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 0
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 7;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 7;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();
@@ -1961,11 +1957,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 1
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 95;
-         expectedSlotRun.Data.FailedUnits = 11;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 95;
+         expectedSlotRunData.FailedUnits = 11;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup SlotRun 2
          expectedSlotRun = new SlotRun(expectedRun, 2);
@@ -3142,11 +3137,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 2
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 46;
-         expectedSlotRun.Data.FailedUnits = 8;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 46;
+         expectedSlotRunData.FailedUnits = 8;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();
@@ -3913,11 +3907,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 0
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 54;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 54;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();
@@ -6829,11 +6822,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 0
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 220;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 220;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();
@@ -6898,11 +6890,10 @@ namespace HFM.Log
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
          // Setup SlotRunData 0
-         expectedSlotRun.Data = new SlotRunData();
-         expectedSlotRun.Data.CompletedUnits = 3;
-         expectedSlotRun.Data.FailedUnits = 0;
-         expectedSlotRun.Data.TotalCompletedUnits = null;
-         expectedSlotRun.Data.Status = LogSlotStatus.Unknown;
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 3;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
          expectedRun.Data = new FahClientClientRunData();

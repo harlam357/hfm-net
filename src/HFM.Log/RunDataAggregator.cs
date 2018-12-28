@@ -122,7 +122,7 @@ namespace HFM.Log
          /// </summary>
          protected override SlotRunData OnGetSlotRunData(SlotRun slotRun)
          {
-            var slotRunData = new SlotRunData();
+            var slotRunData = new FahClientSlotRunData();
 
             foreach (var unitRun in slotRun.UnitRuns)
             {
@@ -236,7 +236,7 @@ namespace HFM.Log
          /// </summary>
          protected override SlotRunData OnGetSlotRunData(SlotRun slotRun)
          {
-            var slotRunData = new SlotRunData();
+            var slotRunData = new LegacySlotRunData();
 
             foreach (var unitRun in slotRun.UnitRuns)
             {

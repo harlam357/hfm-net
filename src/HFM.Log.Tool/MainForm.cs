@@ -214,11 +214,22 @@ namespace HFM.Log.Tool
                }
                sb.AppendLine();
                sb.AppendLine("// Setup SlotRunData " + slotRun.FoldingSlot);
-               sb.AppendLine("expectedSlotRun.Data = new SlotRunData();");
-               sb.AppendLine("expectedSlotRun.Data.CompletedUnits = " + slotRun.Data.CompletedUnits + ";");
-               sb.AppendLine("expectedSlotRun.Data.FailedUnits = " + slotRun.Data.FailedUnits + ";");
-               sb.AppendLine("expectedSlotRun.Data.TotalCompletedUnits = " + GetStringOrNull(slotRun.Data.TotalCompletedUnits) + ";");
-               sb.AppendLine("expectedSlotRun.Data.Status = SlotStatus." + slotRun.Data.Status + ";");
+               if (slotRun.Data is Legacy.LegacySlotRunData legacySlotRunData)
+               {
+                  sb.AppendLine("var expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine("expectedSlotRunData.CompletedUnits = " + legacySlotRunData.CompletedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.FailedUnits = " + legacySlotRunData.FailedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.TotalCompletedUnits = " + GetStringOrNull(legacySlotRunData.TotalCompletedUnits) + ";");
+                  sb.AppendLine("expectedSlotRunData.Status = SlotStatus." + legacySlotRunData.Status + ";");
+                  sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
+               }
+               else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)
+               {
+                  sb.AppendLine("var expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine("expectedSlotRunData.CompletedUnits = " + fahClientSlotRunData.CompletedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.FailedUnits = " + fahClientSlotRunData.FailedUnits + ";");
+                  sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
+               }
                j++;
             }
             sb.AppendLine();
@@ -236,7 +247,7 @@ namespace HFM.Log.Tool
                sb.AppendLine("expectedRunData.MachineID = " + legacyClientRunData.MachineID + ";");
                sb.AppendLine("expectedRun.Data = expectedRunData;");
             }
-            if (clientRun.Data is FahClient.FahClientClientRunData)
+            else if (clientRun.Data is FahClient.FahClientClientRunData)
             {
                sb.AppendLine("var expectedRunData = new FahClientClientRunData();");
                var st2 = clientRun.Data.StartTime;
