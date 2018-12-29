@@ -168,7 +168,8 @@ namespace HFM.Log.Legacy
          var expectedSlotRunData = new LegacySlotRunData();
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
-         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         // NOTE: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.TotalCompletedUnits = null; 
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
@@ -376,7 +377,8 @@ namespace HFM.Log.Legacy
          var expectedSlotRunData = new LegacySlotRunData();
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 5;
-         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         // NOTE: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.TotalCompletedUnits = null; 
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
@@ -695,7 +697,8 @@ namespace HFM.Log.Legacy
          var expectedSlotRunData = new LegacySlotRunData();
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
-         expectedSlotRunData.TotalCompletedUnits = null; // TODO: not capturing line "+ Starting local stats count at 1"
+         // NOTE: not capturing line "+ Starting local stats count at 1"
+         expectedSlotRunData.TotalCompletedUnits = null; 
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
