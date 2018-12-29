@@ -175,7 +175,7 @@ namespace HFM.Log
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
             LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
-            return LogLine.CreateLazy(line, index, lineType, timeStampParser, dataParser);
+            return new LazyLogLine(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }
@@ -241,7 +241,7 @@ namespace HFM.Log
             LogLineType lineType = LogLineTypeResolver.Resolve(line);
             LogLineTimeStampParserFunction timeStampParser = LogLineTimeStampParser.ParseTimeStamp;
             LogLineDataParserDictionary.TryGetValue(lineType, out LogLineDataParserFunction dataParser);
-            return LogLine.CreateLazy(line, index, lineType, timeStampParser, dataParser);
+            return new LazyLogLine(line, index, lineType, timeStampParser, dataParser);
          }
       }
    }

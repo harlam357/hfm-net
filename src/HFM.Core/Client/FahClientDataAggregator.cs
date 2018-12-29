@@ -235,8 +235,13 @@ namespace HFM.Core
          return "Unknown";
       }
 
-      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
-                                                 SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
+      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, 
+                                                 SlotRun slotRun, 
+                                                 ICollection<Unit> unitCollection, 
+                                                 Options options,
+                                                 SlotOptions slotOptions, 
+                                                 UnitInfo currentUnitInfo, 
+                                                 int slotId)
       {
          Debug.Assert(unitCollection != null);
          Debug.Assert(options != null);

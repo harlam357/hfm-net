@@ -77,11 +77,17 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ExtendingFahLogTests.cs" />
+    <Compile Include="FahClient\FahClientClientRunDataTests.cs" />
     <Compile Include="FahClient\FahClientLogTextReaderTests.cs" />
     <Compile Include="FahClient\FahClientLogTests.cs" />
     <Compile Include="AssertClientRun.cs" />
+    <Compile Include="FahClient\FahClientSlotRunDataTests.cs" />
+    <Compile Include="FahClient\FahClientUnitRunDataTests.cs" />
     <Compile Include="FahLogTests.cs" />
+    <Compile Include="Legacy\LegacyClientRunDataTests.cs" />
     <Compile Include="Legacy\LegacyLogTests.cs" />
+    <Compile Include="Legacy\LegacySlotRunDataTests.cs" />
+    <Compile Include="Legacy\LegacyUnitRunDataTests.cs" />
     <Compile Include="LogLineTests.cs" />
     <Compile Include="Legacy\UnitInfoLogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

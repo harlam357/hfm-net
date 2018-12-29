@@ -24,6 +24,20 @@ namespace HFM.Log
 {
    public class UnitRunFrameData
    {
+      public UnitRunFrameData()
+      {
+         
+      }
+
+      public UnitRunFrameData(UnitRunFrameData other)
+      {
+         ID = other.ID;
+         RawFramesComplete = other.RawFramesComplete;
+         RawFramesTotal = other.RawFramesTotal;
+         TimeStamp = other.TimeStamp;
+         Duration = other.Duration;
+      }
+
       public int ID { get; set; }
 
       public int RawFramesComplete { get; set; }

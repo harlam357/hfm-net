@@ -369,19 +369,21 @@ namespace HFM.Core
                // Re-Init Slot Level Members Before Processing
                slotModel.Initialize();
 
-               #region Run the Aggregator
-
+               // Run the Aggregator
                var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                dataAggregator.ClientName = slotModel.Name;
-               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.LastOrDefault(), _messages.UnitCollection, info, options,
-                                                                          slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
+               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.LastOrDefault(), 
+                                                                          _messages.UnitCollection, 
+                                                                          info, 
+                                                                          options,
+                                                                          slotModel.SlotOptions, 
+                                                                          slotModel.UnitInfo, 
+                                                                          slotModel.SlotId);
                PopulateRunLevelData(result, info, slotModel);
 
                slotModel.Queue = result.Queue;
                slotModel.CurrentLogLines = result.CurrentLogLines;
                //slotModel.UnitLogLines = result.UnitLogLines;
-
-               #endregion
 
                var parsedUnits = new Dictionary<int, UnitInfoModel>(result.UnitInfos.Count);
                foreach (int key in result.UnitInfos.Keys)
