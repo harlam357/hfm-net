@@ -6,13 +6,15 @@ using HFM.Log;
 
 namespace HFM.Core
 {
-   public static class UnitInfoExtensions
+   internal static class UnitInfoExtensions
    {
-      public static void AddWorkUnitFrame(this UnitInfo unitInfo, UnitRunFrameData frameData)
+      internal static void AddLogLineWithFrameData(this UnitInfo unitInfo, UnitRunFrameData frameData)
       {
-         var logLines = unitInfo.LogLines ?? new List<LogLine>();
-         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, Data = frameData });
-         unitInfo.LogLines = logLines;
+         if (unitInfo.LogLines == null)
+         {
+            unitInfo.LogLines = new List<LogLine>();
+         }
+         unitInfo.LogLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, Data = frameData });
       }
    }
 }
