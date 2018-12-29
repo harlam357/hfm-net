@@ -269,7 +269,7 @@ namespace HFM.Log.Tool
             }
             sb.AppendLine();
             sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
-            sb.AppendLine("FahLogAssert.AreEqual(expectedRun, actualRun, true);");
+            sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
             sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.LineType == LogLineType.Error));", clientRun.Count(x => x.LineType == LogLineType.Error)));
             i++;

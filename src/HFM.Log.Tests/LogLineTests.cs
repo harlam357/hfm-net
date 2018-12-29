@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System;
 
 using NUnit.Framework;
 
@@ -12,7 +9,7 @@ namespace HFM.Log
    public class LogLineTests
    {
       [Test]
-      public void LogLine_Properties_Test()
+      public void LogLine_VerifyPropertyValuesCanBeSet_Test()
       {
          // Arrange
          var logLine = new LogLine();
@@ -31,7 +28,7 @@ namespace HFM.Log
       }
 
       [Test]
-      public void LogLine_Create_Properties_Test()
+      public void LogLine_Create_VerifyPropertyValuesAfterCreate_Test()
       {
          // Arrange & Act
          var logLine = LogLine.Create("Foo", 1, LogLineType.ClientArguments, TimeSpan.FromMinutes(1), "Foo");
@@ -44,7 +41,7 @@ namespace HFM.Log
       }
 
       [Test]
-      public void LazyLogLine_Properties_Test()
+      public void LazyLogLine_VerifyPropertyValuesCanBeSet_Test()
       {
          // Arrange
          var logLine = LogLine.CreateLazy(null, 0, LogLineType.None, line => null, line => null);
@@ -63,7 +60,7 @@ namespace HFM.Log
       }
 
       [Test]
-      public void LazyLogLine_Create_Properties_Test()
+      public void LazyLogLine_Create_VerifyPropertyValuesAfterCreate_Test()
       {
          // Arrange & Act
          var logLine = LogLine.CreateLazy("Foo", 1, LogLineType.ClientArguments, line => TimeSpan.FromMinutes(1), line => "Foo");

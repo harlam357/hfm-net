@@ -9,6 +9,8 @@ using HFM.Log.FahClient;
 
 namespace HFM.Log
 {
+   // These tests are examples of how to extend and override the FahLog and FahLogReader implementations.
+
    [TestFixture]
    public class ExtendingFahLogTests
    {
@@ -51,6 +53,7 @@ namespace HFM.Log
          }
       }
 
+      // This test uses a custom FahClientLogTextReader to define a new LogLineType detection and LogLineType data parsing.
       [Test]
       public void FahClientLog_DefineCustomLogLineTypeAndParseData_Test()
       {
@@ -113,6 +116,8 @@ namespace HFM.Log
          }
       }
 
+      // This test uses a custom FahClientLog, defines a new ClientRunData property, and adds additional aggregator logic to support populating the property.
+      // The property value is trivial and something that could easily be gleaned through a LINQ statement.  For demonstration purposes only.
       [Test]
       public void FahClientLog_AddCustomDataToClientRunData_Test()
       {

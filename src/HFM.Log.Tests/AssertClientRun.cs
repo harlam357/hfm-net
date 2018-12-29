@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace HFM.Log
 {
-   internal static class FahLogAssert
+   internal static class AssertClientRun
    {
       internal static void AreEqual(ClientRun expectedRun, ClientRun actualRun, bool assertUnitRunData = false)
       {

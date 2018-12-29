@@ -4,9 +4,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Log.Legacy;
-
-namespace HFM.Log
+namespace HFM.Log.Legacy
 {
    [TestFixture]
    public class UnitInfoLogTests

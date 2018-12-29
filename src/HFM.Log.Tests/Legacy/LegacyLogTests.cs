@@ -5,10 +5,9 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using HFM.Log.Legacy;
 using HFM.Log.Internal;
 
-namespace HFM.Log
+namespace HFM.Log.Legacy
 {
    [TestFixture]
    public class LegacyLogTests
@@ -61,7 +60,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 274);
@@ -86,7 +85,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -129,7 +128,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -174,7 +173,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -216,7 +215,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(4);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          actualRun = fahLog.ClientRuns.Peek();
@@ -292,7 +291,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -335,7 +334,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -382,7 +381,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 618);
@@ -418,7 +417,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -462,7 +461,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -504,7 +503,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 56);
@@ -533,7 +532,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -579,7 +578,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -631,7 +630,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -676,7 +675,7 @@ namespace HFM.Log
          expectedSlotRun.Data = new LegacySlotRunData();
 
          var actualRun = fahLog.ClientRuns.ElementAt(2);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 30);
@@ -701,7 +700,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.ElementAt(1);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 2 Positions
          expectedRun = new ClientRun(null, 839);
@@ -725,7 +724,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -767,7 +766,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(1);
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 4 Positions
          expectedRun = new ClientRun(null, 927);
@@ -791,7 +790,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
@@ -852,7 +851,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(1).LogLines); // previous
@@ -896,7 +895,7 @@ namespace HFM.Log
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Peek();
-         FahLogAssert.AreEqual(expectedRun, actualRun);
+         AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous

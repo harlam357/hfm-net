@@ -9,7 +9,7 @@ namespace HFM.Log
    public class FahLogTests
    {
       [Test]
-      public void FahClientLog_Read_ArgumentNullException_Test()
+      public void FahClientLog_Read_ThrowsWhenFahLogReaderIsNull_Test()
       {
          Assert.Throws(typeof(ArgumentNullException), () =>
          {
@@ -19,7 +19,7 @@ namespace HFM.Log
       }
 
       [Test]
-      public void LegacyLog_Read_ArgumentNullException_Test()
+      public void LegacyLog_Read_ThrowsWhenFahLogReaderIsNull_Test()
       {
          Assert.Throws(typeof(ArgumentNullException), () =>
          {

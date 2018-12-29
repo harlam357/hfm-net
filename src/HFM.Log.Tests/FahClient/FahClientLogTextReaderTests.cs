@@ -3,11 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-using HFM.Log.FahClient;
-
 using NUnit.Framework;
 
-namespace HFM.Log
+namespace HFM.Log.FahClient
 {
    [TestFixture]
    public class FahClientLogTextReaderTests

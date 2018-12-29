@@ -57,10 +57,7 @@ namespace HFM.Log
       /// </summary>
       public void Clear()
       {
-         if (_clientRuns != null)
-         {
-            _clientRuns.Clear();
-         }
+         _clientRuns?.Clear();
       }
 
       /// <summary>

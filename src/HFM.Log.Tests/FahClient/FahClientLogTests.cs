@@ -5,10 +5,9 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using HFM.Log.FahClient;
 using HFM.Log.Internal;
 
-namespace HFM.Log
+namespace HFM.Log.FahClient
 {
    [TestFixture]
    public class FahClientLogTests
@@ -108,7 +107,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2012, 1, 11, 3, 24, 22, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(1, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
@@ -371,7 +370,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2014, 7, 25, 13, 57, 36, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(1, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
@@ -3377,7 +3376,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2015, 12, 8, 12, 44, 41, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
@@ -4204,7 +4203,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2016, 3, 5, 5, 0, 47, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
@@ -7341,7 +7340,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2016, 6, 18, 15, 50, 21, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
@@ -7412,7 +7411,7 @@ namespace HFM.Log
          expectedRun.Data.StartTime = new DateTime(2017, 3, 13, 5, 47, 4, DateTimeKind.Utc);
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
-         FahLogAssert.AreEqual(expectedRun, actualRun, true);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
       }
