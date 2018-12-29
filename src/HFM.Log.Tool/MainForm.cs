@@ -212,8 +212,15 @@ namespace HFM.Log.Tool
                   sb.AppendLine("expectedUnitRunData.ProjectRun = " + unitRun.Data.ProjectRun + ";");
                   sb.AppendLine("expectedUnitRunData.ProjectClone = " + unitRun.Data.ProjectClone + ";");
                   sb.AppendLine("expectedUnitRunData.ProjectGen = " + unitRun.Data.ProjectGen + ";");
-                  sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
-                  sb.AppendLine("expectedUnitRun.Data = expectedUnitRunData");
+                  if (!String.IsNullOrEmpty(unitRun.Data.WorkUnitResult))
+                  {
+                     sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
+                  }
+                  else
+                  {
+                     sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;");
+                  }
+                  sb.AppendLine("expectedUnitRun.Data = expectedUnitRunData;");
                   sb.AppendLine("expectedSlotRun.UnitRuns.Push(expectedUnitRun);");
                   unitCount++;
                   k++;
@@ -231,7 +238,7 @@ namespace HFM.Log.Tool
                }
                else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)
                {
-                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new FahClientSlotRunData();");
                   sb.AppendLine("expectedSlotRunData.CompletedUnits = " + fahClientSlotRunData.CompletedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.FailedUnits = " + fahClientSlotRunData.FailedUnits + ";");
                   sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
