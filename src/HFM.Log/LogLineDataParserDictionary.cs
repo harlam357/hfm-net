@@ -333,20 +333,12 @@ namespace HFM.Log
             Match coreVersionMatch;
             if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.Raw)).Success)
             {
-               float value;
-               if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-               {
-                  return value;
-               }
+               return coreVersionMatch.Groups["CoreVer"].Value.Trim();
             }
             /*** ProtoMol Only */
             if ((coreVersionMatch = FahLogRegex.Legacy.ProtoMolCoreVersionRegex.Match(logLine.Raw)).Success)
             {
-               float value;
-               if (Single.TryParse(coreVersionMatch.Result("${CoreVer}").Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-               {
-                  return value;
-               }
+               return coreVersionMatch.Groups["CoreVer"].Value.Trim();
             }
             /*******************/
             return null;
@@ -419,20 +411,7 @@ namespace HFM.Log
             Match coreVersionMatch;
             if ((coreVersionMatch = FahLogRegex.Common.CoreVersionRegex.Match(logLine.Raw)).Success)
             {
-               string coreVer = coreVersionMatch.Groups["CoreVer"].Value.Trim();
-               float value;
-               if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-               {
-                  return value;
-               }
-               // Try to parse Core Versions in the 0.#.## format
-               if (coreVer.StartsWith("0."))
-               {
-                  if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-                  {
-                     return value;
-                  }
-               }
+               return coreVersionMatch.Groups["CoreVer"].Value.Trim();
             }
             return null;
          }

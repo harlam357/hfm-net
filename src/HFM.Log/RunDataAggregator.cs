@@ -150,15 +150,15 @@ namespace HFM.Log
                      {
                         unitRunData.UnitStartTimeStamp = line.TimeStamp;
                      }
-                     if (line.Data != null)
+                     if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
                         unitRunData.FramesObserved++;
                      }
                      break;
                   case LogLineType.WorkUnitCoreVersion:
-                     if (Math.Abs(unitRunData.CoreVersion) < Single.Epsilon && line.Data != null)
+                     if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
-                        unitRunData.CoreVersion = (float)line.Data;
+                        unitRunData.CoreVersion = (string)line.Data;
                      }
                      break;
                   case LogLineType.WorkUnitProject:
@@ -359,7 +359,7 @@ namespace HFM.Log
                   }
                   if (line.LineType == LogLineType.WorkUnitProject)
                   {
-                     if (line.Data != null)
+                     if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
                         var data = (WorkUnitProjectData)line.Data;
                         unitRunData.ProjectID = data.ProjectID;
@@ -375,15 +375,15 @@ namespace HFM.Log
                switch (line.LineType)
                {
                   case LogLineType.WorkUnitFrame:
-                     if (line.Data != null)
+                     if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
                         unitRunData.FramesObserved++;
                      }
                      break;
                   case LogLineType.WorkUnitCoreVersion:
-                     if (Math.Abs(unitRunData.CoreVersion) < Single.Epsilon && line.Data != null)
+                     if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
-                        unitRunData.CoreVersion = (float)line.Data;
+                        unitRunData.CoreVersion = (string)line.Data;
                      }
                      break;
                   case LogLineType.WorkUnitCoreShutdown:

@@ -27,7 +27,6 @@ namespace HFM.Log
    /// </summary>
    public struct LogLineType : IEquatable<LogLineType>
    {
-      public const int Error = -1;
       /// <summary>
       /// Line does not contain any information or indicate any condition of interest.
       /// </summary>

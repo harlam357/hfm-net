@@ -89,6 +89,9 @@ namespace HFM.Forms.Controls
 
       public void HighlightLines(bool value)
       {
+#if DEBUG
+         var sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
          if (value)
          {
             Rtf = BuildRtfString();
@@ -98,6 +101,9 @@ namespace HFM.Forms.Controls
             Rtf = null;
             Lines = _logLines.Select(line => line.Raw.Replace("\r", String.Empty)).ToArray();
          }
+#if DEBUG
+         System.Diagnostics.Debug.WriteLine("HighlightLines: {0:#,##0} ms", sw.ElapsedMilliseconds);
+#endif
       }
 
       private string BuildRtfString()
@@ -119,24 +125,32 @@ namespace HFM.Forms.Controls
 
       private static string GetLineColor(LogLine line)
       {
-         switch (line.LineType)
+         if (line.LineType == LogLineType.None)
          {
-            case LogLineType.WorkUnitFrame:
-               return @"\cf1 ";
-            case LogLineType.ClientShutdown:
-            case LogLineType.ClientCoreCommunicationsError:
-            case LogLineType.ClientCoreCommunicationsErrorShutdown:
-            case LogLineType.ClientEuePauseState:
-            case LogLineType.WorkUnitCoreShutdown:
-            case LogLineType.WorkUnitCoreReturn:
-               return @"\cf2 ";
-            case LogLineType.Error:
-               return @"\cf3 ";
-            case LogLineType.None:
-               return @"\cf5 ";
-            default:
-               return @"\cf4 ";
+            return @"\cf5 ";
          }
+
+         if (line.Data is LogLineDataParserError)
+         {
+            return @"\cf3 ";
+         }
+
+         if (line.LineType == LogLineType.WorkUnitFrame)
+         {
+            return @"\cf1 ";
+         }
+
+         if (line.LineType == LogLineType.ClientShutdown || 
+             line.LineType == LogLineType.ClientCoreCommunicationsError ||
+             line.LineType == LogLineType.ClientCoreCommunicationsErrorShutdown || 
+             line.LineType == LogLineType.ClientEuePauseState ||
+             line.LineType == LogLineType.WorkUnitCoreShutdown || 
+             line.LineType == LogLineType.WorkUnitCoreReturn)
+         {
+            return @"\cf2 ";
+         }
+
+         return @"\cf4 ";
       }
       
       public void SetNoLogLines()

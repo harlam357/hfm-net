@@ -89,6 +89,17 @@ namespace HFM.Log
       }
    }
 
+   /// <summary>
+   /// Defines an error returned from a log line data parsing function.
+   /// </summary>
+   public class LogLineDataParserError
+   {
+      /// <summary>
+      /// Gets or sets the error message.
+      /// </summary>
+      public string Message { get; set; }
+   }
+
    namespace Internal
    {
       internal class LazyLogLine : LogLine
@@ -139,7 +150,9 @@ namespace HFM.Log
                         object data = _lazyDataParser.Value;
                         if (data == null)
                         {
-                           LineType = LogLineType.Error;
+                           _lazyDataParser = null;
+                           _data = new LogLineDataParserError();
+                           return _data;
                         }
                      }
                      return _lazyDataParser.Value;

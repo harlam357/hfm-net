@@ -31,7 +31,7 @@ namespace HFM.Forms.Controls
       }
 
       // https://stackoverflow.com/questions/76993/how-to-double-buffer-net-controls-on-a-form
-
+      // TODO: Determine if this is still necessary.  Getting scroll bar artifacts on Main window RichTextBox on Windows 10.
       protected override CreateParams CreateParams
       {
          get

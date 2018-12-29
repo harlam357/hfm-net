@@ -70,7 +70,7 @@ namespace HFM.Core
 
          if (Logger.IsDebugEnabled)
          {
-            foreach (var s in clientRun.Where(x => x.LineType == LogLineType.Error))
+            foreach (var s in clientRun.Where(x => x.Data is LogLineDataParserError))
             {
                Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
@@ -341,7 +341,7 @@ namespace HFM.Core
          unitInfo.LogLines = unitRun.ToList();
          unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unitInfo.FramesObserved = unitRun.Data.FramesObserved;
-         unitInfo.CoreVersion = unitRun.Data.CoreVersion;
+         unitInfo.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
          unitInfo.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
          // there is no finished time available from the client API
@@ -357,6 +357,24 @@ namespace HFM.Core
             //Logger.Debug(Constants.ClientNameFormat, ClientName, message);
             unitInfo.FinishedTime = finishedTime;
          }
+      }
+
+      private static float ParseCoreVersion(string coreVer)
+      {
+         float value;
+         if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+         {
+            return value;
+         }
+         // Try to parse Core Versions in the 0.#.## format
+         if (coreVer.StartsWith("0."))
+         {
+            if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+            {
+               return value;
+            }
+         }
+         return 0.0f;
       }
 
       private static void UpdateUnitInfoFromFahClientData(UnitInfo unitInfo, Unit queueEntry, Options options, SlotOptions slotOptions)

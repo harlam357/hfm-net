@@ -55,7 +55,7 @@ namespace HFM.Core
       {
          if (Logger.IsDebugEnabled)
          {
-            foreach (var s in fahLog.Where(x => x.LineType == LogLineType.Error))
+            foreach (var s in fahLog.Where(x => x.Data is LogLineDataParserError))
             {
                Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
@@ -269,7 +269,7 @@ namespace HFM.Core
          }
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRunData.FramesObserved;
-         unit.CoreVersion = unitRunData.CoreVersion;
+         unit.CoreVersion = ParseCoreVersion(unitRunData.CoreVersion);
          if (unitRunData.ClientCoreCommunicationsError)
          {
             unit.UnitResult = WorkUnitResult.ClientCoreError;
@@ -296,6 +296,26 @@ namespace HFM.Core
          }
 
          return unit;
+      }
+
+      private static float ParseCoreVersion(string coreVer)
+      {
+         if (String.IsNullOrWhiteSpace(coreVer)) return 0.0f;
+
+         float value;
+         if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+         {
+            return value;
+         }
+         // Try to parse Core Versions in the 0.#.## format
+         if (coreVer.StartsWith("0."))
+         {
+            if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+            {
+               return value;
+            }
+         }
+         return 0.0f;
       }
 
       private static bool ProjectsMatch(UnitInfo unit, IProjectInfo projectInfo)

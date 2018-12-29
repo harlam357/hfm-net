@@ -206,7 +206,14 @@ namespace HFM.Log.Tool
                      var st1 = unitRun.Data.UnitStartTimeStamp.Value;
                      sb.AppendLine("expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
                   }
-                  sb.AppendLine("expectedUnitRunData.CoreVersion = " + unitRun.Data.CoreVersion + "f;");
+                  if (unitRun.Data.CoreVersion == null)
+                  {
+                     sb.AppendLine("expectedUnitRunData.CoreVersion = null;");
+                  }
+                  else
+                  {
+                     sb.AppendLine("expectedUnitRunData.CoreVersion = \"" + unitRun.Data.CoreVersion + "\";");
+                  }
                   sb.AppendLine("expectedUnitRunData.FramesObserved = " + unitRun.Data.FramesObserved + ";");
                   sb.AppendLine("expectedUnitRunData.ProjectID = " + unitRun.Data.ProjectID + ";");
                   sb.AppendLine("expectedUnitRunData.ProjectRun = " + unitRun.Data.ProjectRun + ";");
@@ -271,7 +278,7 @@ namespace HFM.Log.Tool
             sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
             sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
-            sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.LineType == LogLineType.Error));", clientRun.Count(x => x.LineType == LogLineType.Error)));
+            sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.Data is LogLineDataParserError));", clientRun.Count(x => x.Data is LogLineDataParserError)));
             i++;
          }
 

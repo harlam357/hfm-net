@@ -161,7 +161,7 @@ namespace HFM.Log
       /// <summary>
       /// Gets or sets the core version number.
       /// </summary>
-      public float CoreVersion { get; set; }
+      public string CoreVersion { get; set; }
 
       /// <summary>
       /// Gets or sets the project ID (Number).

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace HFM.Log
 {
    /// <summary>
@@ -138,7 +140,8 @@ namespace HFM.Log
             if (line.Contains(":Starting Unit")) return LogLineType.WorkUnitWorking;
             if (line.Contains(":*------------------------------*")) return LogLineType.WorkUnitCoreStart;
             if (line.Contains(":Version")) return LogLineType.WorkUnitCoreVersion;
-            if (line.Contains(":    Version")) return LogLineType.WorkUnitCoreVersion;
+            // Ignore v7 client version information by looking for this pattern beyond index 8 - see TestFiles\Client_v7_14\log.txt for an example
+            if (line.IndexOf(":    Version", StringComparison.InvariantCulture) > 8) return LogLineType.WorkUnitCoreVersion;
             if (line.Contains(":Project:")) return LogLineType.WorkUnitProject;
             if (line.Contains(":Completed ")) return LogLineType.WorkUnitFrame;
             if (line.Contains(":Folding@home Core Shutdown:")) return LogLineType.WorkUnitCoreShutdown;

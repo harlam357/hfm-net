@@ -48,7 +48,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 85, 402);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 25, 32);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 10;
          expectedUnitRunData.ProjectID = 7610;
          expectedUnitRunData.ProjectRun = 630;
@@ -72,7 +72,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 90, 349);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 25, 36);
-         expectedUnitRunData.CoreVersion = 1.31f;
+         expectedUnitRunData.CoreVersion = "1.31";
          expectedUnitRunData.FramesObserved = 100;
          expectedUnitRunData.ProjectID = 5767;
          expectedUnitRunData.ProjectRun = 3;
@@ -86,7 +86,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 276, 413);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 21, 52);
-         expectedUnitRunData.CoreVersion = 1.31f;
+         expectedUnitRunData.CoreVersion = "1.31";
          expectedUnitRunData.FramesObserved = 53;
          expectedUnitRunData.ProjectID = 5772;
          expectedUnitRunData.ProjectRun = 7;
@@ -109,7 +109,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(1, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(1, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -129,7 +129,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 2, 74, 212);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 57, 36);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 28;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 416;
@@ -143,7 +143,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 161, 522);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 44, 55);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 274;
@@ -157,7 +157,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 471, 831);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 41, 51);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 681;
@@ -171,7 +171,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 780, 1141);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 38, 53);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 1573;
@@ -185,7 +185,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1090, 1451);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 36, 43);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 529;
@@ -199,7 +199,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1400, 1760);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 33, 23);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 715;
@@ -213,7 +213,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 1709, 2070);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 30, 18);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 248;
@@ -227,7 +227,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2019, 2301);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 26, 26);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 88;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 1719;
@@ -251,7 +251,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 79, 271);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 57, 36);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 31;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 340;
@@ -265,7 +265,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 219, 581);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 59, 51);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 430;
@@ -279,7 +279,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 529, 890);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 57, 4);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 291;
@@ -293,7 +293,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 838, 1200);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 54, 4);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 1958;
@@ -307,7 +307,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 1148, 1510);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 51, 12);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 509;
@@ -321,7 +321,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1458, 1819);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 48, 2);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 507;
@@ -335,7 +335,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1767, 2129);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 44, 44);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13001;
          expectedUnitRunData.ProjectRun = 228;
@@ -349,7 +349,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 2078, 2302);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 41, 56);
-         expectedUnitRunData.CoreVersion = 0.52f;
+         expectedUnitRunData.CoreVersion = "0.0.52";
          expectedUnitRunData.FramesObserved = 86;
          expectedUnitRunData.ProjectID = 13000;
          expectedUnitRunData.ProjectRun = 671;
@@ -372,7 +372,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(1, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(1, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -392,7 +392,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 98, 643);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 47, 0);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 91;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 14;
@@ -406,7 +406,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 605, 987);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 20, 45);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10496;
          expectedUnitRunData.ProjectRun = 80;
@@ -420,7 +420,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 948, 1284);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 28, 59);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 6;
@@ -434,7 +434,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1244, 1550);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 55, 55);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9712;
          expectedUnitRunData.ProjectRun = 7;
@@ -448,7 +448,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1509, 1838);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 47, 52);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 88;
@@ -462,7 +462,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 1801, 2094);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 48, 25);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 0;
@@ -476,7 +476,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2054, 2355);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 15, 47);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 2;
@@ -490,7 +490,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2316, 2408);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 14, 35);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 36;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 25;
@@ -504,7 +504,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2409, 2436);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 37, 49);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 25;
@@ -518,7 +518,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2437, 2569);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 37, 54);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 53;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 3;
@@ -532,7 +532,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2570, 2597);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 23, 26);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 3;
@@ -546,7 +546,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2598, 2860);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 23, 32);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 18;
@@ -560,7 +560,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 2821, 3125);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 21, 22);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 0;
@@ -574,7 +574,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3085, 3329);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 20, 13);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 243;
@@ -588,7 +588,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3292, 3356);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 21, 31);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 16;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 38;
@@ -602,7 +602,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3357, 3384);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 57, 19);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 38;
@@ -616,7 +616,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3385, 3752);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 57, 25);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 0;
@@ -630,7 +630,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3712, 4035);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 59, 8);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 4;
@@ -644,7 +644,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3997, 4089);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 1, 6);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 16;
          expectedUnitRunData.ProjectID = 11410;
          expectedUnitRunData.ProjectRun = 4;
@@ -658,7 +658,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4090, 4117);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 22, 23);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11410;
          expectedUnitRunData.ProjectRun = 4;
@@ -672,7 +672,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4118, 4522);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 22, 29);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 11;
@@ -686,7 +686,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4482, 4910);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 24, 30);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 15;
@@ -700,7 +700,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4870, 5183);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 26, 12);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 9;
@@ -714,7 +714,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5143, 5455);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 24, 55);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 36;
@@ -728,7 +728,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5415, 5536);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 22, 30);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 41;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 8;
@@ -742,7 +742,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5537, 5565);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 51, 20);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 8;
@@ -756,7 +756,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5562, 5743);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 51, 33);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 53;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 4;
@@ -770,7 +770,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5744, 5771);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 3, 23);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 4;
@@ -784,7 +784,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 5772, 6113);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 3, 29);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 22;
@@ -798,7 +798,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6075, 6551);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 5, 11);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11410;
          expectedUnitRunData.ProjectRun = 1;
@@ -812,7 +812,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6511, 6937);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 1, 34);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11411;
          expectedUnitRunData.ProjectRun = 1;
@@ -826,7 +826,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6897, 6958);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 2, 43);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 11;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 22;
@@ -840,7 +840,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6959, 6986);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 40);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 22;
@@ -854,7 +854,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6987, 7417);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 45);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 10;
@@ -868,7 +868,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7376, 7767);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 28, 31);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 45;
@@ -882,7 +882,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 7727, 8058);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 29, 45);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 256;
@@ -896,7 +896,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8021, 8468);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 31, 15);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11410;
          expectedUnitRunData.ProjectRun = 1;
@@ -910,7 +910,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8430, 8512);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 27, 24);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 12;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 13;
@@ -924,7 +924,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8506, 8827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 50, 30);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 12;
@@ -938,7 +938,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8786, 9081);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 55, 33);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 1;
@@ -952,7 +952,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9041, 9365);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 7, 39);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 9;
@@ -966,7 +966,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9327, 9690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 19, 56);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10494;
          expectedUnitRunData.ProjectRun = 11;
@@ -980,7 +980,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9650, 9928);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 18, 18);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 1;
@@ -994,7 +994,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9893, 10116);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 8, 13);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 3;
@@ -1008,7 +1008,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10079, 10384);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 57, 46);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 25;
@@ -1022,7 +1022,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10346, 10385);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 55, 17);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 12;
@@ -1036,7 +1036,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10386, 10767);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 55, 31);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 12;
@@ -1050,7 +1050,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 10727, 10947);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 41, 55);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9152;
          expectedUnitRunData.ProjectRun = 15;
@@ -1064,7 +1064,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10909, 11465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 8, 10);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9212;
          expectedUnitRunData.ProjectRun = 0;
@@ -1078,7 +1078,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11424, 11639);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 14, 3);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 119;
@@ -1092,7 +1092,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11603, 11681);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 15, 11);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 33;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 11;
@@ -1106,7 +1106,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11682, 11712);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 36);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 11;
@@ -1120,7 +1120,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11705, 11732);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 41);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10494;
          expectedUnitRunData.ProjectRun = 11;
@@ -1134,7 +1134,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11733, 12288);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 51);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10494;
          expectedUnitRunData.ProjectRun = 11;
@@ -1148,7 +1148,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12245, 12511);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 8, 21);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 7;
@@ -1162,7 +1162,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12473, 12697);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 7, 0);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 47;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 7;
@@ -1176,7 +1176,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12752, 12866);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 2, 18);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 8;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 7;
@@ -1190,7 +1190,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12867, 12894);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 28, 57);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 7;
@@ -1204,7 +1204,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12895, 13177);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 29, 4);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 11;
@@ -1218,7 +1218,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13173, 13488);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 45);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 2;
@@ -1232,7 +1232,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13178, 13205);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 36);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 11;
@@ -1246,7 +1246,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 13450, 13747);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 53, 8);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 11;
@@ -1260,7 +1260,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13688, 13722);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 28, 18);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 30;
@@ -1274,7 +1274,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13723, 14009);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 28, 21);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 30;
@@ -1288,7 +1288,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13970, 14320);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 20, 43);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 10;
@@ -1302,7 +1302,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14279, 14810);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 16, 32);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 1;
@@ -1316,7 +1316,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14772, 14951);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 8, 36);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1330,7 +1330,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14913, 15092);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 9, 45);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1344,7 +1344,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15053, 15248);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 10, 50);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1358,7 +1358,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15193, 15370);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 11, 54);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1372,7 +1372,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15332, 15525);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 12, 47);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1386,7 +1386,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15472, 15650);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 13, 55);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1400,7 +1400,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15612, 15789);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 14, 45);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1414,7 +1414,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15761, 15927);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 15, 58);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1428,7 +1428,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15901, 16067);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 17, 14);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1442,7 +1442,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16041, 16209);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 18, 33);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1456,7 +1456,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16171, 16349);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 19, 28);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1470,7 +1470,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16310, 16502);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 20, 35);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1484,7 +1484,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16449, 16643);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 21, 42);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1498,7 +1498,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16589, 16764);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 22, 34);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1512,7 +1512,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16738, 16906);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 23, 31);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1526,7 +1526,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16868, 17044);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 24, 39);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1540,7 +1540,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17018, 17185);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 25, 55);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1554,7 +1554,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17158, 17326);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 27, 7);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1568,7 +1568,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17298, 17465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 28, 25);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1582,7 +1582,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17439, 17625);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 29, 33);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1596,7 +1596,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17569, 17603);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 30, 25);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1610,7 +1610,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17604, 17764);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 30, 30);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1624,7 +1624,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17737, 17923);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 31, 45);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1638,7 +1638,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17867, 18043);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 32, 58);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1652,7 +1652,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18017, 18186);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 33, 55);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1666,7 +1666,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18147, 18323);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 34, 47);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1680,7 +1680,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18296, 18465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 35, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1694,7 +1694,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18426, 18605);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 37, 13);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1708,7 +1708,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18567, 18762);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 38, 23);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1722,7 +1722,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18707, 18885);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 39, 31);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1736,7 +1736,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18846, 18995);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 40, 25);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1750,7 +1750,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18996, 19178);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 41, 38);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1764,7 +1764,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19123, 19318);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 42, 47);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1778,7 +1778,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19262, 19440);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 43, 38);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1792,7 +1792,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19402, 19581);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 44, 32);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1806,7 +1806,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19542, 19721);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 45, 45);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1820,7 +1820,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19681, 19857);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 46, 47);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1834,7 +1834,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19831, 20000);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 48, 0);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1848,7 +1848,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19961, 20140);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 49, 5);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1862,7 +1862,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20101, 20279);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 50, 5);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1876,7 +1876,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20240, 20419);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 51, 10);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1890,7 +1890,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20380, 20574);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 52, 16);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1904,7 +1904,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20520, 20714);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 53, 23);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1918,7 +1918,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20659, 20837);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 54, 15);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1932,7 +1932,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20799, 20977);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 55, 9);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1946,7 +1946,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20939, 21133);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 56, 21);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1960,7 +1960,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21078, 21257);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 57, 32);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1974,7 +1974,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21218, 21396);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 58, 24);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -1988,7 +1988,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21358, 21566);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 59, 26);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2002,7 +2002,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 4, 21512, 21723);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 40);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2016,7 +2016,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 21696, 22021);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 7, 1);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2030,7 +2030,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21963, 22162);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 8, 6);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2044,7 +2044,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22139, 22429);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 14, 28);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2058,7 +2058,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 22417, 22715);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 20, 54);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2072,7 +2072,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22676, 22847);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 22, 0);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11501;
          expectedUnitRunData.ProjectRun = 0;
@@ -2085,7 +2085,7 @@ namespace HFM.Log.FahClient
          // Setup SlotRun 1 - UnitRun 121
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22888, 22954);
          expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 0;
          expectedUnitRunData.ProjectRun = 0;
@@ -2109,7 +2109,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 113, 128);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 47, 2);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10496;
          expectedUnitRunData.ProjectRun = 83;
@@ -2123,7 +2123,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 129, 146);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 47, 11);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10496;
          expectedUnitRunData.ProjectRun = 83;
@@ -2137,7 +2137,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 197, 212);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 48, 11);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10496;
          expectedUnitRunData.ProjectRun = 83;
@@ -2151,7 +2151,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 213, 228);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 49, 11);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10496;
          expectedUnitRunData.ProjectRun = 83;
@@ -2165,7 +2165,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 283, 296);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 50, 34);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 0;
          expectedUnitRunData.ProjectRun = 0;
@@ -2179,7 +2179,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 293, 599);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 50, 39);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 15;
@@ -2193,7 +2193,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 558, 827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 15, 50);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9151;
          expectedUnitRunData.ProjectRun = 10;
@@ -2207,7 +2207,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 791, 1097);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 47, 24);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 350;
@@ -2221,7 +2221,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1060, 1098);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 47, 7);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 8;
@@ -2235,7 +2235,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1099, 1405);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 47, 26);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 8;
@@ -2249,7 +2249,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 1367, 1690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 12, 22);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9704;
          expectedUnitRunData.ProjectRun = 4;
@@ -2263,7 +2263,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1650, 1976);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 37, 54);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 215;
@@ -2277,7 +2277,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1939, 2294);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 37, 41);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 2;
@@ -2291,7 +2291,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 2256, 2744);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 36, 45);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 0;
@@ -2305,7 +2305,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2703, 3057);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 33, 58);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 0;
@@ -2319,7 +2319,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3017, 3478);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 36, 7);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 0;
@@ -2333,7 +2333,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3438, 3700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 45, 57);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 2;
@@ -2347,7 +2347,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3662, 3983);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 42, 51);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 1;
@@ -2361,7 +2361,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3945, 4281);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 44, 39);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 28;
@@ -2375,7 +2375,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4241, 4364);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 41, 11);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 46;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 11;
@@ -2389,7 +2389,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4365, 4392);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 54, 52);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 11;
@@ -2403,7 +2403,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4393, 4700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 54, 56);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 7;
@@ -2417,7 +2417,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4626, 4671);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 51, 53);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 25;
@@ -2431,7 +2431,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 4672, 4741);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 52, 2);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 16;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 2;
@@ -2445,7 +2445,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 4742, 4769);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 12, 29);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 2;
@@ -2459,7 +2459,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4770, 5094);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 12, 35);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 5;
@@ -2473,7 +2473,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5053, 5370);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 21, 56);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 158;
@@ -2487,7 +2487,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 5333, 5720);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 21, 54);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 7;
@@ -2501,7 +2501,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5680, 5987);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 31, 23);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 16;
@@ -2515,7 +2515,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5947, 6252);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 27, 56);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 7;
@@ -2529,7 +2529,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6212, 6434);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 29, 44);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 256;
@@ -2543,7 +2543,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6397, 6659);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 29, 19);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 17;
@@ -2557,7 +2557,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6621, 6708);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 14, 26);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 31;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 16;
@@ -2571,7 +2571,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6709, 6736);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 4, 32);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 16;
@@ -2585,7 +2585,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6737, 7077);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 4, 40);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 350;
@@ -2599,7 +2599,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7040, 7266);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 4, 15);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 7;
@@ -2613,7 +2613,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7226, 7522);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 50, 30);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 92;
@@ -2627,7 +2627,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 7486, 7673);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 50, 15);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 81;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 2;
@@ -2641,7 +2641,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7674, 7949);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 2, 44);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 9;
@@ -2655,7 +2655,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7909, 8223);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 48, 48);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 0;
@@ -2669,7 +2669,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8183, 8409);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 58, 24);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10495;
          expectedUnitRunData.ProjectRun = 4;
@@ -2683,7 +2683,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8369, 8700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 54, 32);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 177;
@@ -2697,7 +2697,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8663, 9029);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 53, 52);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10493;
          expectedUnitRunData.ProjectRun = 6;
@@ -2711,7 +2711,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8989, 9309);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 48, 23);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 30;
@@ -2725,7 +2725,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9269, 9571);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 47, 22);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 10;
@@ -2739,7 +2739,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9531, 9880);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 57, 14);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11400;
          expectedUnitRunData.ProjectRun = 7;
@@ -2753,7 +2753,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9835, 10279);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 54, 1);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 29;
@@ -2767,7 +2767,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 10241, 10570);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 52, 57);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 3;
@@ -2781,7 +2781,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10530, 11051);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 38, 34);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 13;
@@ -2795,7 +2795,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11015, 11215);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 37, 27);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 0;
@@ -2809,7 +2809,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11178, 11798);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 26, 51);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9212;
          expectedUnitRunData.ProjectRun = 0;
@@ -2823,7 +2823,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11760, 11973);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 32, 4);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 12;
@@ -2837,7 +2837,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11935, 12164);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 22, 8);
-         expectedUnitRunData.CoreVersion = 0.4f;
+         expectedUnitRunData.CoreVersion = "0.0.4";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10490;
          expectedUnitRunData.ProjectRun = 182;
@@ -2851,7 +2851,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12127, 12221);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 21, 46);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 26;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 1;
@@ -2865,7 +2865,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12215, 12584);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 7, 3);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 31;
@@ -2879,7 +2879,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12546, 12698);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 6, 17);
-         expectedUnitRunData.CoreVersion = 0.14f;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 70;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 3;
@@ -2893,7 +2893,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12775, 12986);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 2, 35);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 36;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 3;
@@ -2907,7 +2907,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12946, 13288);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 56, 30);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11401;
          expectedUnitRunData.ProjectRun = 26;
@@ -2921,7 +2921,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13251, 13580);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 42, 59);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 16;
@@ -2935,7 +2935,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13540, 13935);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 33, 19);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11403;
          expectedUnitRunData.ProjectRun = 15;
@@ -2949,7 +2949,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 13895, 14141);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 22, 16);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 71;
          expectedUnitRunData.ProjectID = 10494;
          expectedUnitRunData.ProjectRun = 1;
@@ -2963,7 +2963,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14142, 14169);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 37, 12);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 10494;
          expectedUnitRunData.ProjectRun = 1;
@@ -2977,7 +2977,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14170, 14422);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 37, 23);
-         expectedUnitRunData.CoreVersion = 0f;
+         expectedUnitRunData.CoreVersion = null;
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9201;
          expectedUnitRunData.ProjectRun = 19;
@@ -2991,7 +2991,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 14404, 21577);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 58);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3005,7 +3005,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21504, 21578);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 44);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3019,7 +3019,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21579, 21615);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3033,7 +3033,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21716, 21736);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 1, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3047,7 +3047,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21742, 21759);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 2, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3061,7 +3061,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21760, 21777);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 3, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3075,7 +3075,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21783, 21800);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 4, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3089,7 +3089,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21801, 21818);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 5, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3103,7 +3103,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21819, 21863);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 6, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3117,7 +3117,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21970, 22016);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 7, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3131,7 +3131,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22098, 22155);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 8, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3145,7 +3145,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22163, 22185);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 9, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3159,7 +3159,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22186, 22203);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 10, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3173,7 +3173,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22209, 22226);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 11, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3187,7 +3187,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22227, 22244);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 12, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3201,7 +3201,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22245, 22262);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 13, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3215,7 +3215,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22310, 22361);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 14, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3229,7 +3229,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22430, 22447);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 15, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3243,7 +3243,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22453, 22470);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 16, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3257,7 +3257,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22471, 22488);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 17, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3271,7 +3271,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22494, 22511);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 18, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3285,7 +3285,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22512, 22529);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 19, 59);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3299,7 +3299,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22569, 22615);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 21, 19);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3313,7 +3313,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22716, 22766);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 22, 19);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3327,7 +3327,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22848, 22865);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 23, 19);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3341,7 +3341,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22866, 22883);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 24, 19);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3355,7 +3355,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22957, 22974);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 27, 17);
-         expectedUnitRunData.CoreVersion = 0.16f;
+         expectedUnitRunData.CoreVersion = "0.0.16";
          expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 9852;
          expectedUnitRunData.ProjectRun = 6;
@@ -3378,7 +3378,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(0, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -3398,7 +3398,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 72, 132);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 1, 31);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 30;
          expectedUnitRunData.ProjectID = 11633;
          expectedUnitRunData.ProjectRun = 1;
@@ -3412,7 +3412,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 133, 312);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 17, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 69;
          expectedUnitRunData.ProjectID = 11633;
          expectedUnitRunData.ProjectRun = 1;
@@ -3426,7 +3426,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 232, 467);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 35, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 867;
@@ -3440,7 +3440,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 411, 647);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 34, 47);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11636;
          expectedUnitRunData.ProjectRun = 0;
@@ -3454,7 +3454,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 568, 807);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10197;
          expectedUnitRunData.ProjectRun = 0;
@@ -3468,7 +3468,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 746, 971);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 54, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 779;
@@ -3482,7 +3482,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 908, 1150);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 13, 20);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11626;
          expectedUnitRunData.ProjectRun = 0;
@@ -3496,7 +3496,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1072, 1330);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 26, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11636;
          expectedUnitRunData.ProjectRun = 1;
@@ -3510,7 +3510,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1251, 1493);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 54, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9762;
          expectedUnitRunData.ProjectRun = 0;
@@ -3524,7 +3524,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1430, 1650);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 48, 23);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 23;
@@ -3538,7 +3538,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1594, 1803);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 38, 21);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6396;
          expectedUnitRunData.ProjectRun = 18;
@@ -3552,7 +3552,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1750, 1985);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 4, 20);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11626;
          expectedUnitRunData.ProjectRun = 1;
@@ -3566,7 +3566,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1906, 2137);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 18, 39);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6392;
          expectedUnitRunData.ProjectRun = 30;
@@ -3580,7 +3580,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2084, 2319);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 8, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11634;
          expectedUnitRunData.ProjectRun = 0;
@@ -3594,7 +3594,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2240, 2472);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 21, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6393;
          expectedUnitRunData.ProjectRun = 18;
@@ -3608,7 +3608,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2419, 2630);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 17, 23);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 78;
@@ -3622,7 +3622,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2574, 2787);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 3, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 592;
@@ -3636,7 +3636,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2731, 2968);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 46, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11641;
          expectedUnitRunData.ProjectRun = 0;
@@ -3650,7 +3650,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2888, 3120);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 13, 7);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6398;
          expectedUnitRunData.ProjectRun = 65;
@@ -3664,7 +3664,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3067, 3283);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 39, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 10197;
          expectedUnitRunData.ProjectRun = 2;
@@ -3678,7 +3678,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3223, 3439);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 16, 40);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 60;
@@ -3692,7 +3692,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3383, 3592);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 5, 18);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6393;
          expectedUnitRunData.ProjectRun = 25;
@@ -3706,7 +3706,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3539, 3751);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 32, 2);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 26;
@@ -3720,7 +3720,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3695, 3907);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 17, 10);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 79;
@@ -3734,7 +3734,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3851, 4070);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 36, 51);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9761;
          expectedUnitRunData.ProjectRun = 86;
@@ -3748,7 +3748,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4007, 4224);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 6, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6391;
          expectedUnitRunData.ProjectRun = 111;
@@ -3762,7 +3762,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4171, 4383);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 49, 57);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 205;
@@ -3776,7 +3776,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4326, 4538);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 36, 5);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6395;
          expectedUnitRunData.ProjectRun = 28;
@@ -3790,7 +3790,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4484, 4703);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 1, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 414;
@@ -3804,7 +3804,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4640, 4860);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 18, 59);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 6;
@@ -3818,7 +3818,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4803, 5024);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 3, 51);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 514;
@@ -3832,7 +3832,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4961, 5180);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 20, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 683;
@@ -3846,7 +3846,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5124, 5336);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 7, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 538;
@@ -3860,7 +3860,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5280, 5490);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 53, 50);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 8600;
          expectedUnitRunData.ProjectRun = 121;
@@ -3874,7 +3874,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5437, 5648);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 19, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 805;
@@ -3888,7 +3888,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5592, 5829);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 30, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11635;
          expectedUnitRunData.ProjectRun = 0;
@@ -3902,7 +3902,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5749, 5993);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 23, 22);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 2534;
@@ -3916,7 +3916,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5929, 6156);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 40, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 1080;
@@ -3930,7 +3930,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6093, 6312);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 57, 31);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 246;
@@ -3944,7 +3944,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6256, 6493);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 40, 34);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11641;
          expectedUnitRunData.ProjectRun = 0;
@@ -3958,7 +3958,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6413, 6648);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 6, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 384;
@@ -3972,7 +3972,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6592, 6827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 54, 44);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11625;
          expectedUnitRunData.ProjectRun = 0;
@@ -3986,7 +3986,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6749, 7008);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 40, 34);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11641;
          expectedUnitRunData.ProjectRun = 0;
@@ -4000,7 +4000,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6928, 7171);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 54, 52);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9752;
          expectedUnitRunData.ProjectRun = 424;
@@ -4014,7 +4014,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7107, 7324);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 10, 54);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6393;
          expectedUnitRunData.ProjectRun = 124;
@@ -4028,7 +4028,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7271, 7483);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 36, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 184;
@@ -4042,7 +4042,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7427, 7636);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 35, 3);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6392;
          expectedUnitRunData.ProjectRun = 20;
@@ -4056,7 +4056,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7583, 7795);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 2, 22);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 241;
@@ -4070,7 +4070,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7739, 7976);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 49, 25);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11636;
          expectedUnitRunData.ProjectRun = 1;
@@ -4084,7 +4084,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7896, 8128);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 30, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6394;
          expectedUnitRunData.ProjectRun = 58;
@@ -4098,7 +4098,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8075, 8283);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 56, 54);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 6398;
          expectedUnitRunData.ProjectRun = 2;
@@ -4112,7 +4112,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8230, 8444);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 22, 57);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11643;
          expectedUnitRunData.ProjectRun = 0;
@@ -4126,7 +4126,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8386, 8601);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 12, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 112;
@@ -4140,7 +4140,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8545, 8665);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 59, 10);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 62;
          expectedUnitRunData.ProjectID = 11626;
          expectedUnitRunData.ProjectRun = 0;
@@ -4154,7 +4154,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8666, 8816);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 25, 11);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 40;
          expectedUnitRunData.ProjectID = 11626;
          expectedUnitRunData.ProjectRun = 0;
@@ -4168,7 +4168,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8736, 8997);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 57, 0);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 11642;
          expectedUnitRunData.ProjectRun = 1;
@@ -4182,7 +4182,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8917, 9016);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 30, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 21;
          expectedUnitRunData.ProjectID = 10197;
          expectedUnitRunData.ProjectRun = 0;
@@ -4205,7 +4205,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(2, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -4225,7 +4225,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 73, 192);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 51, 3);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 39;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 587;
@@ -4239,7 +4239,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 142, 347);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 35, 32);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 17;
@@ -4253,7 +4253,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 294, 502);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 14, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 233;
@@ -4267,7 +4267,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 449, 660);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 52, 41);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 61;
@@ -4281,7 +4281,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 604, 814);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 35, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 144;
@@ -4295,7 +4295,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 761, 969);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 11, 44);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 723;
@@ -4309,7 +4309,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 916, 1121);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 55, 6);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 693;
@@ -4323,7 +4323,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1071, 1277);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 34, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 875;
@@ -4337,7 +4337,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1224, 1432);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 13, 4);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 479;
@@ -4351,7 +4351,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1379, 1584);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 54, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 802;
@@ -4365,7 +4365,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1534, 1739);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 33, 13);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 346;
@@ -4379,7 +4379,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1686, 1895);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 12, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 424;
@@ -4393,7 +4393,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1842, 2052);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 49, 25);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 172;
@@ -4407,7 +4407,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1997, 2205);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 28, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 59;
@@ -4421,7 +4421,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2152, 2360);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 8, 17);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 60;
@@ -4435,7 +4435,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2307, 2516);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 50, 44);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 606;
@@ -4449,7 +4449,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2463, 2671);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 31, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 559;
@@ -4463,7 +4463,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2618, 2826);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 13, 7);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 633;
@@ -4477,7 +4477,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2773, 2982);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 51, 23);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 159;
@@ -4491,7 +4491,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2929, 3137);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 34, 5);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 796;
@@ -4505,7 +4505,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3084, 3292);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 16, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 519;
@@ -4519,7 +4519,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3239, 3447);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 59, 13);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 615;
@@ -4533,7 +4533,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3394, 3603);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 39, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 457;
@@ -4547,7 +4547,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3550, 3758);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 18, 26);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 229;
@@ -4561,7 +4561,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3705, 3913);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 58, 2);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 476;
@@ -4575,7 +4575,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3860, 4069);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 38, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 671;
@@ -4589,7 +4589,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4016, 4224);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 19, 20);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 166;
@@ -4603,7 +4603,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4171, 4379);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 59, 52);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 716;
@@ -4617,7 +4617,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4326, 4534);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 45, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 800;
@@ -4631,7 +4631,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4481, 4690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 24, 41);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 720;
@@ -4645,7 +4645,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4637, 4849);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 6, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 844;
@@ -4659,7 +4659,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4792, 5004);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 47, 55);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 401;
@@ -4673,7 +4673,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4949, 5158);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 31, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 250;
@@ -4687,7 +4687,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5105, 5313);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 12, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 904;
@@ -4701,7 +4701,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5260, 5466);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 54, 5);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 900;
@@ -4715,7 +4715,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5415, 5623);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 37, 31);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 204;
@@ -4729,7 +4729,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5568, 5777);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 20, 8);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 219;
@@ -4743,7 +4743,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5724, 5929);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 4, 21);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 445;
@@ -4757,7 +4757,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5879, 6084);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 48, 12);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 701;
@@ -4771,7 +4771,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6031, 6238);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 31, 15);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 608;
@@ -4785,7 +4785,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6187, 6392);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 10, 51);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 286;
@@ -4799,7 +4799,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6339, 6547);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 53, 57);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 710;
@@ -4813,7 +4813,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6494, 6699);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 35, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 533;
@@ -4827,7 +4827,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6649, 6855);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 15, 41);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 264;
@@ -4841,7 +4841,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6802, 7010);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 58, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 339;
@@ -4855,7 +4855,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6957, 7167);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 38, 25);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 259;
@@ -4869,7 +4869,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7112, 7321);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 22, 12);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 786;
@@ -4883,7 +4883,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7268, 7476);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 0, 59);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 835;
@@ -4897,7 +4897,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7423, 7631);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 43, 11);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 516;
@@ -4911,7 +4911,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7578, 7787);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 24, 53);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 802;
@@ -4925,7 +4925,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7733, 7941);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 7, 0);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 758;
@@ -4939,7 +4939,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7889, 8094);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 48, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 664;
@@ -4953,7 +4953,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8041, 8249);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 31, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 69;
@@ -4967,7 +4967,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8196, 8405);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 13, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 54;
@@ -4981,7 +4981,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8351, 8560);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 56, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 629;
@@ -4995,7 +4995,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8507, 8716);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 35, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 808;
@@ -5009,7 +5009,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8662, 8870);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 15, 53);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 28;
@@ -5023,7 +5023,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8817, 9026);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 58, 5);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 875;
@@ -5037,7 +5037,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8973, 9178);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 40, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 558;
@@ -5051,7 +5051,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9128, 9333);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 23, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 74;
@@ -5065,7 +5065,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9280, 9488);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 6, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 603;
@@ -5079,7 +5079,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9435, 9644);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 48, 59);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 742;
@@ -5093,7 +5093,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9591, 9801);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 28, 4);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 96;
@@ -5107,7 +5107,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9746, 9956);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 9, 27);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 376;
@@ -5121,7 +5121,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9901, 10110);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 48, 44);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 747;
@@ -5135,7 +5135,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10057, 10267);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 29, 15);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 613;
@@ -5149,7 +5149,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10212, 10417);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 12, 27);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 641;
@@ -5163,7 +5163,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10367, 10572);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 56, 55);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 862;
@@ -5177,7 +5177,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10519, 10728);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 39, 22);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 447;
@@ -5191,7 +5191,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10675, 10883);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 18, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 129;
@@ -5205,7 +5205,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10830, 11039);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 58, 50);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 673;
@@ -5219,7 +5219,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10985, 11194);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 37, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 178;
@@ -5233,7 +5233,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11141, 11346);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 19, 39);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 340;
@@ -5247,7 +5247,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11296, 11501);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 1, 20);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 774;
@@ -5261,7 +5261,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11448, 11656);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 43, 8);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 663;
@@ -5275,7 +5275,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11603, 11814);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 23, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 108;
@@ -5289,7 +5289,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11759, 11969);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 7, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 678;
@@ -5303,7 +5303,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11914, 12119);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 48, 52);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 552;
@@ -5317,7 +5317,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12069, 12275);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 30, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 710;
@@ -5331,7 +5331,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12222, 12430);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 9, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 350;
@@ -5345,7 +5345,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12377, 12585);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 52, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 287;
@@ -5359,7 +5359,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12532, 12742);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 32, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 95;
@@ -5373,7 +5373,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12687, 12896);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 18, 51);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 895;
@@ -5387,7 +5387,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12843, 13051);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 1, 3);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 556;
@@ -5401,7 +5401,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12998, 13206);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 42, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 881;
@@ -5415,7 +5415,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13153, 13362);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 23, 42);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 851;
@@ -5429,7 +5429,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13309, 13516);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 5, 44);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 324;
@@ -5443,7 +5443,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13464, 13671);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 44, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 70;
@@ -5457,7 +5457,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13616, 13825);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 22, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 687;
@@ -5471,7 +5471,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13772, 13981);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 6, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 395;
@@ -5485,7 +5485,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13928, 14134);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 47, 27);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 316;
@@ -5499,7 +5499,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14083, 14286);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 28, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 70;
@@ -5513,7 +5513,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 14236, 14441);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 7, 50);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 582;
@@ -5527,7 +5527,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14388, 14597);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 52, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 909;
@@ -5541,7 +5541,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 14544, 14749);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 31, 20);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 303;
@@ -5555,7 +5555,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14699, 14904);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 12, 12);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 921;
@@ -5569,7 +5569,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 14851, 15060);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 54, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 863;
@@ -5583,7 +5583,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15007, 15212);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 35, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 150;
@@ -5597,7 +5597,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 15162, 15368);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 20, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 82;
@@ -5611,7 +5611,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15314, 15519);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 59, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 590;
@@ -5625,7 +5625,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 15469, 15675);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 44, 26);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 820;
@@ -5639,7 +5639,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15622, 15832);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 28, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 194;
@@ -5653,7 +5653,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 15777, 15987);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 12, 51);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 112;
@@ -5667,7 +5667,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15932, 16138);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 51, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 1;
@@ -5681,7 +5681,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 16088, 16290);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 30, 59);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 792;
@@ -5695,7 +5695,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16240, 16445);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 12, 25);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 79;
@@ -5709,7 +5709,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 16392, 16600);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 56, 52);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 169;
@@ -5723,7 +5723,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16547, 16756);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 40, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 551;
@@ -5737,7 +5737,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 16703, 16913);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 23, 6);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 804;
@@ -5751,7 +5751,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16858, 17066);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 3, 12);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 111;
@@ -5765,7 +5765,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 17013, 17222);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 46, 23);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 406;
@@ -5779,7 +5779,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17169, 17374);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 27, 15);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 453;
@@ -5793,7 +5793,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 17324, 17529);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 10, 7);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 533;
@@ -5807,7 +5807,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17476, 17686);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 56, 15);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 784;
@@ -5821,7 +5821,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 17631, 17842);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 36, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 193;
@@ -5835,7 +5835,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17787, 17995);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 17, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 637;
@@ -5849,7 +5849,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 17942, 18145);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 2, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 185;
@@ -5863,7 +5863,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18097, 18305);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 47, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 877;
@@ -5877,7 +5877,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 18248, 18463);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 27, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 761;
@@ -5891,7 +5891,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18407, 18623);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 9, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 144;
@@ -5905,7 +5905,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 18563, 18780);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 48, 3);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 529;
@@ -5919,7 +5919,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18723, 18939);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 30, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 84;
@@ -5933,7 +5933,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 18883, 19097);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 9, 42);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 494;
@@ -5947,7 +5947,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19041, 19258);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 51, 8);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 199;
@@ -5961,7 +5961,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 19199, 19416);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 31, 30);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 256;
@@ -5975,7 +5975,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19359, 19575);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 13, 27);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 150;
@@ -5989,7 +5989,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 19518, 19736);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 55, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 479;
@@ -6003,7 +6003,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19677, 19895);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 40, 32);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 56;
@@ -6017,7 +6017,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 19836, 20056);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 20, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 189;
@@ -6031,7 +6031,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19996, 20215);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 1, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 6;
@@ -6045,7 +6045,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 20156, 20374);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 42, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 869;
@@ -6059,7 +6059,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20315, 20536);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 26, 55);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 154;
@@ -6073,7 +6073,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 20474, 20690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 6, 56);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 231;
@@ -6087,7 +6087,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20637, 20825);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 48, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 413;
@@ -6101,7 +6101,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 20792, 21006);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 29, 40);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 181;
@@ -6115,7 +6115,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20953, 21162);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 15, 13);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 528;
@@ -6129,7 +6129,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 21109, 21317);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 54, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 595;
@@ -6143,7 +6143,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21264, 21472);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 34, 40);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 86;
@@ -6157,7 +6157,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 21419, 21627);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 17, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 81;
@@ -6171,7 +6171,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21574, 21780);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 57, 29);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 430;
@@ -6185,7 +6185,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 21730, 21935);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 36, 11);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 869;
@@ -6199,7 +6199,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21882, 22090);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 17, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 159;
@@ -6213,7 +6213,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22037, 22246);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 59, 30);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 883;
@@ -6227,7 +6227,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22193, 22401);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 43, 23);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 481;
@@ -6241,7 +6241,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22348, 22557);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 25, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 31;
@@ -6255,7 +6255,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22503, 22712);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 7, 56);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 158;
@@ -6269,7 +6269,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22659, 22870);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 48, 2);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 563;
@@ -6283,7 +6283,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22815, 23022);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 29, 14);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 333;
@@ -6297,7 +6297,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22970, 23177);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 9, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 189;
@@ -6311,7 +6311,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 23122, 23328);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 50, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 86;
@@ -6325,7 +6325,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 23278, 23483);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 34, 10);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 49;
@@ -6339,7 +6339,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 23430, 23638);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 17, 22);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 38;
@@ -6353,7 +6353,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 23585, 23793);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 57, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 733;
@@ -6367,7 +6367,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 23740, 23949);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 42, 6);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 179;
@@ -6381,7 +6381,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 23896, 24104);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 25, 33);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 66;
@@ -6395,7 +6395,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 24051, 24259);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 9, 26);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 45;
@@ -6409,7 +6409,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 24206, 24415);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 51, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 793;
@@ -6423,7 +6423,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 24362, 24572);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 33, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 72;
@@ -6437,7 +6437,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 24517, 24725);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 11, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 497;
@@ -6451,7 +6451,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 24672, 24882);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 54, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 234;
@@ -6465,7 +6465,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 24827, 25033);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 37, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 512;
@@ -6479,7 +6479,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 24983, 25185);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 22, 17);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 865;
@@ -6493,7 +6493,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 25135, 25340);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 6, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 321;
@@ -6507,7 +6507,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 25287, 25496);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 54, 38);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 738;
@@ -6521,7 +6521,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 25443, 25651);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 40, 36);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 803;
@@ -6535,7 +6535,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 25598, 25803);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 22, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 553;
@@ -6549,7 +6549,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 25753, 25958);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 3, 15);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 135;
@@ -6563,7 +6563,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 25905, 26111);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 48, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 149;
@@ -6577,7 +6577,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 26061, 26268);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 30, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 605;
@@ -6591,7 +6591,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 26213, 26421);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 15, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 38;
@@ -6605,7 +6605,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 26368, 26577);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 55, 27);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 521;
@@ -6619,7 +6619,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 26524, 26732);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 36, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 86;
@@ -6633,7 +6633,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 26679, 26884);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 18, 55);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 274;
@@ -6647,7 +6647,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 26834, 27039);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 1, 57);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 36;
@@ -6661,7 +6661,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 26986, 27199);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 44, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 867;
@@ -6675,7 +6675,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 27142, 27349);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 29, 6);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 698;
@@ -6689,7 +6689,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 27299, 27506);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 8, 22);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 665;
@@ -6703,7 +6703,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 27451, 27660);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 48, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 875;
@@ -6717,7 +6717,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 27607, 27812);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 30, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 514;
@@ -6731,7 +6731,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 27762, 27964);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 14, 32);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 329;
@@ -6745,7 +6745,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 27914, 28122);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 54, 39);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 382;
@@ -6759,7 +6759,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 28066, 28276);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 35, 41);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 4;
@@ -6773,7 +6773,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 28223, 28431);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 16, 7);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 321;
@@ -6787,7 +6787,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 28378, 28588);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 57, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 601;
@@ -6801,7 +6801,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 28533, 28741);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 35, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 19;
@@ -6815,7 +6815,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 28688, 28897);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 15, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 790;
@@ -6829,7 +6829,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 28844, 29052);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 54, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 296;
@@ -6843,7 +6843,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 28999, 29209);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 33, 8);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 342;
@@ -6857,7 +6857,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 29154, 29363);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 13, 14);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 65;
@@ -6871,7 +6871,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 29310, 29517);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 54, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 910;
@@ -6885,7 +6885,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 29465, 29670);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 36, 18);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 514;
@@ -6899,7 +6899,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 29617, 29823);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 16, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 105;
@@ -6913,7 +6913,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 29772, 29979);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 58, 35);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 109;
@@ -6927,7 +6927,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 29926, 30134);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 38, 12);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 115;
@@ -6941,7 +6941,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 30081, 30286);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 20, 4);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 86;
@@ -6955,7 +6955,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 30236, 30442);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 2, 6);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 296;
@@ -6969,7 +6969,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 30389, 30597);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 40, 28);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 632;
@@ -6983,7 +6983,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 30544, 30752);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 19, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 759;
@@ -6997,7 +6997,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 30699, 30907);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 58, 16);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 79;
@@ -7011,7 +7011,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 30854, 31065);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 38, 52);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 599;
@@ -7025,7 +7025,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 31010, 31222);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 19, 58);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 189;
@@ -7039,7 +7039,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 31167, 31372);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 3, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 116;
@@ -7053,7 +7053,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 31322, 31528);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 41, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 656;
@@ -7067,7 +7067,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 31475, 31680);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 24, 55);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 381;
@@ -7081,7 +7081,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 31630, 31838);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 7, 1);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9036;
          expectedUnitRunData.ProjectRun = 228;
@@ -7095,7 +7095,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 31782, 31991);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 52, 14);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9033;
          expectedUnitRunData.ProjectRun = 118;
@@ -7109,7 +7109,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 31938, 32147);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 37, 26);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 129;
@@ -7123,7 +7123,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 32094, 32302);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 18, 42);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 783;
@@ -7137,7 +7137,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 32249, 32457);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 2, 9);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 771;
@@ -7151,7 +7151,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 32404, 32613);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 41, 46);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 767;
@@ -7165,7 +7165,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 32560, 32768);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 24, 57);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9032;
          expectedUnitRunData.ProjectRun = 555;
@@ -7179,7 +7179,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 32715, 32920);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 3, 43);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9040;
          expectedUnitRunData.ProjectRun = 13;
@@ -7193,7 +7193,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 32870, 33076);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 44, 45);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 508;
@@ -7207,7 +7207,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 33022, 33233);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 27, 37);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 564;
@@ -7221,7 +7221,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 33178, 33386);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 8, 19);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 68;
@@ -7235,7 +7235,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 33333, 33541);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 49, 21);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9031;
          expectedUnitRunData.ProjectRun = 459;
@@ -7249,7 +7249,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 33488, 33696);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 29, 48);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9039;
          expectedUnitRunData.ProjectRun = 864;
@@ -7263,7 +7263,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 33643, 33852);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 8, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9037;
          expectedUnitRunData.ProjectRun = 28;
@@ -7277,7 +7277,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 33799, 34007);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 49, 26);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9035;
          expectedUnitRunData.ProjectRun = 6;
@@ -7291,7 +7291,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 33954, 34159);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 31, 3);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 9034;
          expectedUnitRunData.ProjectRun = 739;
@@ -7305,7 +7305,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 34109, 34249);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 10, 49);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 82;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 353;
@@ -7319,7 +7319,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 34282, 34345);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 41, 24);
-         expectedUnitRunData.CoreVersion = 2.27f;
+         expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 5;
          expectedUnitRunData.ProjectID = 9038;
          expectedUnitRunData.ProjectRun = 353;
@@ -7342,7 +7342,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(2, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(2, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -7362,7 +7362,7 @@ namespace HFM.Log.FahClient
          var expectedUnitRun = new UnitRun(expectedSlotRun, 0, 89, 366);
          var expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 47, 36);
-         expectedUnitRunData.CoreVersion = 0.11f;
+         expectedUnitRunData.CoreVersion = "0.0.11";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13127;
          expectedUnitRunData.ProjectRun = 53;
@@ -7376,7 +7376,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 292, 540);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 45, 15);
-         expectedUnitRunData.CoreVersion = 0.11f;
+         expectedUnitRunData.CoreVersion = "0.0.11";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 8673;
          expectedUnitRunData.ProjectRun = 21;
@@ -7390,7 +7390,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 472, 662);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 26, 21);
-         expectedUnitRunData.CoreVersion = 0.11f;
+         expectedUnitRunData.CoreVersion = "0.0.11";
          expectedUnitRunData.FramesObserved = 101;
          expectedUnitRunData.ProjectID = 13801;
          expectedUnitRunData.ProjectRun = 0;
@@ -7413,7 +7413,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(0, actualRun.Count(x => x.LineType == LogLineType.Error));
+         Assert.AreEqual(0, actualRun.Count(x => x.Data is LogLineDataParserError));
       }
 
       // ReSharper restore InconsistentNaming
