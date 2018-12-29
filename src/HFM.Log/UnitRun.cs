@@ -129,14 +129,14 @@ namespace HFM.Log
    /// <summary>
    /// Represents data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="UnitRun"/> object.
    /// </summary>
-   public class UnitRunData
+   public abstract class UnitRunData
    {
-      public UnitRunData()
+      protected UnitRunData()
       {
          
       }
 
-      public UnitRunData(UnitRunData other)
+      protected UnitRunData(UnitRunData other)
       {
          UnitStartTimeStamp = other.UnitStartTimeStamp;
          FramesObserved = other.FramesObserved;
@@ -145,10 +145,7 @@ namespace HFM.Log
          ProjectRun = other.ProjectRun;
          ProjectClone = other.ProjectClone;
          ProjectGen = other.ProjectGen;
-         Threads = other.Threads;
          WorkUnitResult = other.WorkUnitResult;
-         ClientCoreCommunicationsError = other.ClientCoreCommunicationsError;
-         TotalCompletedUnits = other.TotalCompletedUnits;
       }
 
       /// <summary>
@@ -187,23 +184,65 @@ namespace HFM.Log
       public int ProjectGen { get; set; }
 
       /// <summary>
-      /// Gets or sets the number of threads specified in the call to the FahCore process.
-      /// </summary>
-      public int Threads { get; set; }
-
-      /// <summary>
       /// Gets or sets the work unit result.
       /// </summary>
       public string WorkUnitResult { get; set; }
+   }
 
+   namespace FahClient
+   {
       /// <summary>
-      /// Gets or sets a value indicating if this work unit failed with a client-core communications error.
+      /// Represents v7 or newer client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="UnitRun"/> object.
       /// </summary>
-      public bool ClientCoreCommunicationsError { get; set; }
+      public class FahClientUnitRunData : UnitRunData
+      {
+         public FahClientUnitRunData()
+         {
 
+         }
+
+         public FahClientUnitRunData(FahClientUnitRunData other)
+            : base(other)
+         {
+            
+         }
+      }
+   }
+
+   namespace Legacy
+   {
       /// <summary>
-      /// Gets or sets the total number of completed units for the life of the slot.
+      /// Represents v6 or prior client data aggregated from <see cref="LogLine"/> objects assigned to a <see cref="UnitRun"/> object.
       /// </summary>
-      public int? TotalCompletedUnits { get; set; }
+      public class LegacyUnitRunData : UnitRunData
+      {
+         public LegacyUnitRunData()
+         {
+
+         }
+
+         public LegacyUnitRunData(LegacyUnitRunData other)
+            : base(other)
+         {
+            Threads = other.Threads;
+            ClientCoreCommunicationsError = other.ClientCoreCommunicationsError;
+            TotalCompletedUnits = other.TotalCompletedUnits;
+         }
+
+         /// <summary>
+         /// Gets or sets the number of threads specified in the call to the FahCore process.
+         /// </summary>
+         public int Threads { get; set; }
+
+         /// <summary>
+         /// Gets or sets a value indicating if this work unit failed with a client-core communications error.
+         /// </summary>
+         public bool ClientCoreCommunicationsError { get; set; }
+
+         /// <summary>
+         /// Gets or sets the total number of completed units for the life of the slot.
+         /// </summary>
+         public int? TotalCompletedUnits { get; set; }
+      }
    }
 }

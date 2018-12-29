@@ -64,7 +64,7 @@ namespace HFM.Log
             {
                slotRunData.FailedUnits++;
             }
-            else if (unitRunData.ClientCoreCommunicationsError)
+            else if (unitRunData is Legacy.LegacyUnitRunData legacyUnitRunData && legacyUnitRunData.ClientCoreCommunicationsError)
             {
                slotRunData.FailedUnits++;
             }
@@ -137,7 +137,7 @@ namespace HFM.Log
          /// </summary>
          protected override UnitRunData OnGetUnitRunData(UnitRun unitRun)
          {
-            var unitRunData = new UnitRunData();
+            var unitRunData = new FahClientUnitRunData();
             foreach (var line in unitRun.LogLines)
             {
                switch (line.LineType)
@@ -243,7 +243,7 @@ namespace HFM.Log
                Internal.CommonRunDataAggregator.IncrementCompletedOrFailedUnitCount(slotRunData, unitRun.Data);
                if (slotRunData.TotalCompletedUnits == null)
                {
-                  slotRunData.TotalCompletedUnits = unitRun.Data.TotalCompletedUnits;
+                  slotRunData.TotalCompletedUnits = ((LegacyUnitRunData)unitRun.Data).TotalCompletedUnits;
                }
             }
 
@@ -311,7 +311,7 @@ namespace HFM.Log
             bool clientWasPaused = false;
             bool lookForProject = true;
 
-            var unitRunData = new UnitRunData();
+            var unitRunData = new LegacyUnitRunData();
             foreach (var line in unitRun.LogLines)
             {
                #region Unit Start

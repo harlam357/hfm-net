@@ -193,21 +193,27 @@ namespace HFM.Log.Tool
                   sb.AppendLine();
                   sb.AppendLine("// Setup SlotRun " + slotRun.FoldingSlot + " - UnitRun " + unitCount);
                   sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRun = new UnitRun(expectedSlotRun, " + unitRun.QueueIndex + "," + unitRun.StartIndex + "," + unitRun.EndIndex + ");");
-                  sb.AppendLine("expectedUnitRun.Data = new UnitRunData();");
+                  if (unitRun.Data is Legacy.LegacyUnitRunData)
+                  {
+                     sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRunData = new LegacyUnitRunData();");
+                  }
+                  else if (unitRun.Data is FahClient.FahClientUnitRunData)
+                  {
+                     sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRunData = new FahClientUnitRunData();");
+                  }
                   if (unitRun.Data.UnitStartTimeStamp.HasValue)
                   {
                      var st1 = unitRun.Data.UnitStartTimeStamp.Value;
-                     sb.AppendLine("expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
+                     sb.AppendLine("expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
                   }
-                  sb.AppendLine("expectedUnitRun.Data.CoreVersion = " + unitRun.Data.CoreVersion + "f;");
-                  sb.AppendLine("expectedUnitRun.Data.FramesObserved = " + unitRun.Data.FramesObserved + ";");
-                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedProjectInfo = new ProjectInfo();");
-                  sb.AppendLine("expectedProjectInfo.ProjectID = " + unitRun.Data.ProjectID + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectRun = " + unitRun.Data.ProjectRun + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectClone = " + unitRun.Data.ProjectClone + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectGen = " + unitRun.Data.ProjectGen + ";");
-                  sb.AppendLine("expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);");
-                  sb.AppendLine("expectedUnitRun.Data.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
+                  sb.AppendLine("expectedUnitRunData.CoreVersion = " + unitRun.Data.CoreVersion + "f;");
+                  sb.AppendLine("expectedUnitRunData.FramesObserved = " + unitRun.Data.FramesObserved + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectID = " + unitRun.Data.ProjectID + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectRun = " + unitRun.Data.ProjectRun + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectClone = " + unitRun.Data.ProjectClone + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectGen = " + unitRun.Data.ProjectGen + ";");
+                  sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
+                  sb.AppendLine("expectedUnitRun.Data = expectedUnitRunData");
                   sb.AppendLine("expectedSlotRun.UnitRuns.Push(expectedUnitRun);");
                   unitCount++;
                   k++;
@@ -216,7 +222,7 @@ namespace HFM.Log.Tool
                sb.AppendLine("// Setup SlotRunData " + slotRun.FoldingSlot);
                if (slotRun.Data is Legacy.LegacySlotRunData legacySlotRunData)
                {
-                  sb.AppendLine("var expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new LegacySlotRunData();");
                   sb.AppendLine("expectedSlotRunData.CompletedUnits = " + legacySlotRunData.CompletedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.FailedUnits = " + legacySlotRunData.FailedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.TotalCompletedUnits = " + GetStringOrNull(legacySlotRunData.TotalCompletedUnits) + ";");
@@ -225,7 +231,7 @@ namespace HFM.Log.Tool
                }
                else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)
                {
-                  sb.AppendLine("var expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new LegacySlotRunData();");
                   sb.AppendLine("expectedSlotRunData.CompletedUnits = " + fahClientSlotRunData.CompletedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.FailedUnits = " + fahClientSlotRunData.FailedUnits + ";");
                   sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
@@ -236,7 +242,7 @@ namespace HFM.Log.Tool
             sb.AppendLine("// Setup ClientRunData " + i);
             if (clientRun.Data is Legacy.LegacyClientRunData legacyClientRunData)
             {
-               sb.AppendLine("var expectedRunData = new LegacyClientRunData();");
+               sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRunData = new LegacyClientRunData();");
                var st2 = clientRun.Data.StartTime;
                sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
                sb.AppendLine("expectedRunData.Arguments = " + GetStringOrNull(legacyClientRunData.Arguments) + ";");
@@ -249,7 +255,7 @@ namespace HFM.Log.Tool
             }
             else if (clientRun.Data is FahClient.FahClientClientRunData)
             {
-               sb.AppendLine("var expectedRunData = new FahClientClientRunData();");
+               sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRunData = new FahClientClientRunData();");
                var st2 = clientRun.Data.StartTime;
                sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
                sb.AppendLine("expectedRun.Data = expectedRunData;");

@@ -250,12 +250,12 @@ namespace HFM.Core
 
          var unit = new UnitInfo();
 
-         UnitRunData unitRunData;
+         LegacyUnitRunData unitRunData;
          if (unitRun == null)
          {
             if (matchOverride)
             {
-               unitRunData = new UnitRunData();
+               unitRunData = new LegacyUnitRunData();
             }
             else
             {
@@ -265,7 +265,7 @@ namespace HFM.Core
          else
          {
             unit.LogLines = unitRun.ToList();
-            unitRunData = unitRun.Data;
+            unitRunData = (LegacyUnitRunData)unitRun.Data;
          }
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRunData.FramesObserved;
@@ -354,7 +354,7 @@ namespace HFM.Core
          }
       }
 
-      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, LegacyClientRunData clientRunData, UnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
+      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, LegacyClientRunData clientRunData, LegacyUnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
       {
          Debug.Assert(unitInfo != null);
          Debug.Assert(clientRunData != null);
