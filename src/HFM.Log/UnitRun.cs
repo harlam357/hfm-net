@@ -138,6 +138,8 @@ namespace HFM.Log
 
       protected UnitRunData(UnitRunData other)
       {
+         if (other == null) return;
+
          UnitStartTimeStamp = other.UnitStartTimeStamp;
          FramesObserved = other.FramesObserved;
          CoreVersion = other.CoreVersion;
@@ -204,7 +206,7 @@ namespace HFM.Log
          public FahClientUnitRunData(FahClientUnitRunData other)
             : base(other)
          {
-            
+            //if (other == null) return;
          }
       }
    }
@@ -224,6 +226,8 @@ namespace HFM.Log
          public LegacyUnitRunData(LegacyUnitRunData other)
             : base(other)
          {
+            if (other == null) return;
+
             Threads = other.Threads;
             ClientCoreCommunicationsError = other.ClientCoreCommunicationsError;
             TotalCompletedUnits = other.TotalCompletedUnits;

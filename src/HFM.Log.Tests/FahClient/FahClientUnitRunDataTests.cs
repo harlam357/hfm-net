@@ -33,5 +33,20 @@ namespace HFM.Log.FahClient
          Assert.AreEqual(data.ProjectGen, copy.ProjectGen);
          Assert.AreEqual(data.WorkUnitResult, copy.WorkUnitResult);
       }
+
+      [Test]
+      public void FahClientUnitRunData_CopyConstructor_OtherIsNull_Test()
+      {
+         // Act
+         var copy = new FahClientUnitRunData(null);
+         // Assert
+         Assert.AreEqual(0, copy.FramesObserved);
+         Assert.AreEqual(null, copy.CoreVersion);
+         Assert.AreEqual(0, copy.ProjectID);
+         Assert.AreEqual(0, copy.ProjectRun);
+         Assert.AreEqual(0, copy.ProjectClone);
+         Assert.AreEqual(0, copy.ProjectGen);
+         Assert.AreEqual(null, copy.WorkUnitResult);
+      }
    }
 }

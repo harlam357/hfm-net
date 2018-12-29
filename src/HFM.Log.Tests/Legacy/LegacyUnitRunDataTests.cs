@@ -39,5 +39,23 @@ namespace HFM.Log.Legacy
          Assert.AreEqual(data.ClientCoreCommunicationsError, copy.ClientCoreCommunicationsError);
          Assert.AreEqual(data.TotalCompletedUnits, copy.TotalCompletedUnits);
       }
+
+      [Test]
+      public void LegacyUnitRunData_CopyConstructor_OtherIsNull_Test()
+      {
+         // Act
+         var copy = new LegacyUnitRunData(null);
+         // Assert
+         Assert.AreEqual(0, copy.FramesObserved);
+         Assert.AreEqual(null, copy.CoreVersion);
+         Assert.AreEqual(0, copy.ProjectID);
+         Assert.AreEqual(0, copy.ProjectRun);
+         Assert.AreEqual(0, copy.ProjectClone);
+         Assert.AreEqual(0, copy.ProjectGen);
+         Assert.AreEqual(null, copy.WorkUnitResult);
+         Assert.AreEqual(0, copy.Threads);
+         Assert.AreEqual(false, copy.ClientCoreCommunicationsError);
+         Assert.AreEqual(null, copy.TotalCompletedUnits);
+      }
    }
 }

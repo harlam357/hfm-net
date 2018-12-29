@@ -23,5 +23,16 @@ namespace HFM.Log.Legacy
          Assert.AreEqual(data.FailedUnits, copy.FailedUnits);
          Assert.AreEqual(data.TotalCompletedUnits, copy.TotalCompletedUnits);
       }
+
+      [Test]
+      public void LegacySlotRunData_CopyConstructor_OtherIsNull_Test()
+      {
+         // Act
+         var copy = new LegacySlotRunData(null);
+         // Assert
+         Assert.AreEqual(0, copy.CompletedUnits);
+         Assert.AreEqual(0, copy.FailedUnits);
+         Assert.AreEqual(null, copy.TotalCompletedUnits);
+      }
    }
 }

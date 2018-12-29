@@ -116,6 +116,8 @@ namespace HFM.Log
 
       protected ClientRunData(ClientRunData other)
       {
+         if (other == null) return;
+
          StartTime = other.StartTime;
       }
 
@@ -140,7 +142,7 @@ namespace HFM.Log
          public FahClientClientRunData(FahClientClientRunData other)
             : base(other)
          {
-            
+            //if (other == null) return;
          }
       }
    }
@@ -160,6 +162,8 @@ namespace HFM.Log
          public LegacyClientRunData(LegacyClientRunData other)
             : base(other)
          {
+            if (other == null) return;
+
             ClientVersion = other.ClientVersion;
             Arguments = other.Arguments;
             FoldingID = other.FoldingID;

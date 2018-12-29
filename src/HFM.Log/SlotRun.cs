@@ -114,6 +114,8 @@ namespace HFM.Log
 
       protected SlotRunData(SlotRunData other)
       {
+         if (other == null) return;
+
          CompletedUnits = other.CompletedUnits;
          FailedUnits = other.FailedUnits;
       }
@@ -144,7 +146,7 @@ namespace HFM.Log
          public FahClientSlotRunData(FahClientSlotRunData other)
             : base(other)
          {
-
+            //if (other == null) return;
          }
       }
    }
@@ -164,6 +166,8 @@ namespace HFM.Log
          public LegacySlotRunData(LegacySlotRunData other)
             : base(other)
          {
+            if (other == null) return;
+
             TotalCompletedUnits = other.TotalCompletedUnits;
             Status = other.Status;
          }

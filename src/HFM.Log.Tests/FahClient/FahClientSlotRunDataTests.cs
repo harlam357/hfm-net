@@ -21,5 +21,14 @@ namespace HFM.Log.FahClient
          Assert.AreEqual(data.CompletedUnits, copy.CompletedUnits);
          Assert.AreEqual(data.FailedUnits, copy.FailedUnits);
       }
+
+      [Test]
+      public void FahClientSlotRunData_CopyConstructor_OtherIsNull_Test()
+      {
+         var copy = new FahClientSlotRunData(null);
+         // Assert
+         Assert.AreEqual(0, copy.CompletedUnits);
+         Assert.AreEqual(0, copy.FailedUnits);
+      }
    }
 }
