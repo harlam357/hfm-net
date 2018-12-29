@@ -56,7 +56,7 @@ namespace HFM.Log
       {
          internal static void IncrementCompletedOrFailedUnitCount(SlotRunData slotRunData, UnitRunData unitRunData)
          {
-            if (unitRunData.WorkUnitResult == WorkUnitResult.FinishedUnit)
+            if (unitRunData.WorkUnitResult == WorkUnitResult.FINISHED_UNIT)
             {
                slotRunData.CompletedUnits++;
             }
@@ -74,9 +74,9 @@ namespace HFM.Log
          {
             switch (result)
             {
-               case WorkUnitResult.EarlyUnitEnd:
-               case WorkUnitResult.UnstableMachine:
-               case WorkUnitResult.BadWorkUnit:
+               case WorkUnitResult.EARLY_UNIT_END:
+               case WorkUnitResult.UNSTABLE_MACHINE:
+               case WorkUnitResult.BAD_WORK_UNIT:
                   return true;
                default:
                   return false;

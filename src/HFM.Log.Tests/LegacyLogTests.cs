@@ -97,7 +97,7 @@ namespace HFM.Log
          Assert.AreEqual(5, unitRun.LogLines[3].Data);
          Assert.AreEqual(2.08f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[21].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[79].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[79].Data);
       }
 
       [Test]
@@ -140,7 +140,7 @@ namespace HFM.Log
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual(2.08f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[17].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[150].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[150].Data);
       }
 
       [Test]
@@ -185,7 +185,7 @@ namespace HFM.Log
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual(2.08f, unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[15].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[137].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[137].Data);
       }
 
       [Test]
@@ -228,7 +228,7 @@ namespace HFM.Log
          Assert.AreEqual(6, unitRun.LogLines[3].Data);
          Assert.AreEqual(2.10f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[21].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[53].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[53].Data);
       }
 
       [Test]
@@ -346,7 +346,7 @@ namespace HFM.Log
          Assert.AreEqual(0, unitRun.LogLines[8].Data);
          Assert.AreEqual(2.27f, unitRun.LogLines[15].Data);
          Assert.That(unitRun.LogLines[27].ToString().Contains("Project: 8022 (Run 11, Clone 318, Gen 24)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[106].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[106].Data);
       }
 
       [Test]
@@ -429,7 +429,7 @@ namespace HFM.Log
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual(1.19f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[24].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[156].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[156].Data);
       }
 
       [Test]
@@ -473,7 +473,7 @@ namespace HFM.Log
          Assert.AreEqual(8, unitRun.LogLines[3].Data);
          Assert.AreEqual(1.19f, unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[22].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[154].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[154].Data);
       }
 
       [Test]
@@ -544,7 +544,7 @@ namespace HFM.Log
          Assert.AreEqual(9, unitRun.LogLines[3].Data);
          Assert.AreEqual(1.19f, unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[22].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
-         Assert.AreEqual(WorkUnitResult.UnstableMachine, unitRun.LogLines[39].Data);
+         Assert.AreEqual(WorkUnitResult.UNSTABLE_MACHINE, unitRun.LogLines[39].Data);
 
          // Special Check to be sure the reader is catching the EUE Pause line (Current ClientRun - Current UnitRun)
          unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
@@ -599,7 +599,7 @@ namespace HFM.Log
          Assert.AreEqual(2, unitRun.Data.ProjectRun);
          Assert.AreEqual(700, unitRun.Data.ProjectClone);
          Assert.AreEqual(2, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
+         Assert.AreEqual(WorkUnitResult.None, unitRun.Data.WorkUnitResult);
       }
 
       [Test]
@@ -651,7 +651,7 @@ namespace HFM.Log
          Assert.AreEqual(8, unitRun.Data.ProjectRun);
          Assert.AreEqual(24, unitRun.Data.ProjectClone);
          Assert.AreEqual(24, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
+         Assert.AreEqual(WorkUnitResult.None, unitRun.Data.WorkUnitResult);
       }
 
       [Test]
@@ -736,7 +736,7 @@ namespace HFM.Log
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual(1.90f, unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[18].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
-         Assert.AreEqual(WorkUnitResult.FinishedUnit, unitRun.LogLines[254].Data);
+         Assert.AreEqual(WorkUnitResult.FINISHED_UNIT, unitRun.LogLines[254].Data);
       }
 
       [Test]
@@ -813,7 +813,7 @@ namespace HFM.Log
          Assert.AreEqual(19, unitRun.Data.ProjectRun);
          Assert.AreEqual(0, unitRun.Data.ProjectClone);
          Assert.AreEqual(51, unitRun.Data.ProjectGen);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitRun.Data.WorkUnitResult);
+         Assert.AreEqual(WorkUnitResult.None, unitRun.Data.WorkUnitResult);
       }
 
       [Test]

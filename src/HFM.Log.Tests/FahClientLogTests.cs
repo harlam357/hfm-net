@@ -55,7 +55,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 630;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 59;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -79,7 +79,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 138;
          expectedUnitRunData.ProjectGen = 144;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -93,7 +93,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 364;
          expectedUnitRunData.ProjectGen = 252;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -136,7 +136,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 416;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 32;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -150,7 +150,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 274;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 54;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -164,7 +164,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 681;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 51;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -178,7 +178,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1573;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 38;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -192,7 +192,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 529;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 41;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -206,7 +206,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 715;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 49;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -220,7 +220,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 248;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 51;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -234,7 +234,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1719;
          expectedUnitRunData.ProjectClone = 9;
          expectedUnitRunData.ProjectGen = 68;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -258,7 +258,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 340;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 36;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -272,7 +272,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 430;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 48;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -286,7 +286,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 291;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 54;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -300,7 +300,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1958;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 48;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -314,7 +314,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 509;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 33;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -328,7 +328,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 507;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 49;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -342,7 +342,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 228;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 62;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -356,7 +356,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 671;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 50;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -399,7 +399,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 14;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 87;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -413,7 +413,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 80;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 3;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -427,7 +427,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 171;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -441,7 +441,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 167;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -455,7 +455,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 88;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 170;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -469,7 +469,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 504;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -483,7 +483,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -497,7 +497,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 25;
          expectedUnitRunData.ProjectClone = 17;
          expectedUnitRunData.ProjectGen = 67;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -511,7 +511,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 25;
          expectedUnitRunData.ProjectClone = 17;
          expectedUnitRunData.ProjectGen = 67;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -525,7 +525,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -539,7 +539,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -553,7 +553,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 18;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 86;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -567,7 +567,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 18;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -581,7 +581,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 243;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -595,7 +595,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 38;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -609,7 +609,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 38;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -623,7 +623,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 57;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -637,7 +637,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -651,7 +651,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -665,7 +665,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -679,7 +679,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -693,7 +693,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 15;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -707,7 +707,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 9;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -721,7 +721,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 36;
          expectedUnitRunData.ProjectClone = 7;
          expectedUnitRunData.ProjectGen = 79;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -735,7 +735,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 8;
          expectedUnitRunData.ProjectClone = 10;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -749,7 +749,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 8;
          expectedUnitRunData.ProjectClone = 10;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -763,7 +763,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -777,7 +777,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -791,7 +791,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 22;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -805,7 +805,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 25;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -819,7 +819,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 34;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -833,7 +833,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 22;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 65;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -847,7 +847,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 22;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 65;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -861,7 +861,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 10;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -875,7 +875,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 45;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 153;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -889,7 +889,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 256;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -903,7 +903,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -917,7 +917,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 13;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 24;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -931,7 +931,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 12;
          expectedUnitRunData.ProjectClone = 44;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -945,7 +945,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 31;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -959,7 +959,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 9;
          expectedUnitRunData.ProjectClone = 28;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -973,7 +973,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 7;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -987,7 +987,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 43;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1001,7 +1001,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 40;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1015,7 +1015,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 25;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 77;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1029,7 +1029,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 12;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 75;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1043,7 +1043,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 12;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 75;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1057,7 +1057,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 15;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1071,7 +1071,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 50;
          expectedUnitRunData.ProjectGen = 38;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1085,7 +1085,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 119;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 114;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1099,7 +1099,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 79;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1113,7 +1113,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 79;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1127,7 +1127,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 31;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1141,7 +1141,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 31;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1155,7 +1155,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1169,7 +1169,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 44;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1183,7 +1183,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 44;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1197,7 +1197,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 44;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1211,7 +1211,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1225,7 +1225,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 29;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1239,7 +1239,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1253,7 +1253,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 68;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1267,7 +1267,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 30;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1281,7 +1281,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 30;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1295,7 +1295,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 10;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1309,7 +1309,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 74;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1323,7 +1323,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 22;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1337,7 +1337,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1351,7 +1351,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1365,7 +1365,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1379,7 +1379,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 22;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1393,7 +1393,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1407,7 +1407,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1421,7 +1421,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1435,7 +1435,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1449,7 +1449,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1463,7 +1463,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 22;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1477,7 +1477,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1491,7 +1491,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1505,7 +1505,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1519,7 +1519,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 13;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1533,7 +1533,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1547,7 +1547,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1561,7 +1561,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1575,7 +1575,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1589,7 +1589,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1603,7 +1603,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1617,7 +1617,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1631,7 +1631,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1645,7 +1645,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 14;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1659,7 +1659,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1673,7 +1673,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1687,7 +1687,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1701,7 +1701,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1715,7 +1715,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1729,7 +1729,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 15;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1743,7 +1743,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1757,7 +1757,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 15;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1771,7 +1771,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 13;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1785,7 +1785,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1799,7 +1799,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1813,7 +1813,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1827,7 +1827,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1841,7 +1841,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1855,7 +1855,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 16;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1869,7 +1869,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1883,7 +1883,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 16;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1897,7 +1897,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1911,7 +1911,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1925,7 +1925,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 13;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1939,7 +1939,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1953,7 +1953,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 16;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1967,7 +1967,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1981,7 +1981,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -1995,7 +1995,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2009,7 +2009,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 10;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2023,7 +2023,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 9;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2037,7 +2037,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 16;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2051,7 +2051,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2065,7 +2065,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 12;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2079,7 +2079,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 10;
          expectedUnitRunData.ProjectGen = 3;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2092,7 +2092,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2116,7 +2116,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 83;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2130,7 +2130,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 83;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2144,7 +2144,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 83;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2158,7 +2158,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 83;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2172,7 +2172,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2186,7 +2186,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 15;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 125;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2200,7 +2200,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 10;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2214,7 +2214,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 350;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2228,7 +2228,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 8;
          expectedUnitRunData.ProjectClone = 7;
          expectedUnitRunData.ProjectGen = 247;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2242,7 +2242,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 8;
          expectedUnitRunData.ProjectClone = 7;
          expectedUnitRunData.ProjectGen = 247;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2256,7 +2256,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 12;
          expectedUnitRunData.ProjectGen = 205;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2270,7 +2270,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 215;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 3;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2284,7 +2284,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2298,7 +2298,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 24;
          expectedUnitRunData.ProjectGen = 18;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2312,7 +2312,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 61;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2326,7 +2326,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 27;
          expectedUnitRunData.ProjectGen = 15;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2340,7 +2340,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2354,7 +2354,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 26;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2368,7 +2368,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 28;
          expectedUnitRunData.ProjectClone = 18;
          expectedUnitRunData.ProjectGen = 61;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2382,7 +2382,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2396,7 +2396,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 5;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2410,7 +2410,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 14;
          expectedUnitRunData.ProjectGen = 80;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2424,7 +2424,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 25;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 68;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2438,7 +2438,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2452,7 +2452,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2466,7 +2466,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 5;
          expectedUnitRunData.ProjectClone = 38;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2480,7 +2480,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 158;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 26;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2494,7 +2494,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 47;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2508,7 +2508,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 16;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 67;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2522,7 +2522,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 45;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2536,7 +2536,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 256;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 9;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2550,7 +2550,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 17;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 18;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2564,7 +2564,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 16;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2578,7 +2578,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 16;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2592,7 +2592,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 350;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 17;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2606,7 +2606,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 49;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2620,7 +2620,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 92;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 125;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2634,7 +2634,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 18;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2648,7 +2648,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 9;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 60;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2662,7 +2662,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 43;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2676,7 +2676,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 80;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2690,7 +2690,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 177;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 17;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2704,7 +2704,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 15;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2718,7 +2718,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 30;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2732,7 +2732,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 10;
          expectedUnitRunData.ProjectClone = 34;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2746,7 +2746,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 7;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 13;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2760,7 +2760,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 29;
          expectedUnitRunData.ProjectClone = 8;
          expectedUnitRunData.ProjectGen = 4;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2774,7 +2774,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2788,7 +2788,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 13;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2802,7 +2802,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 77;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2816,7 +2816,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 77;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2830,7 +2830,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 12;
          expectedUnitRunData.ProjectClone = 46;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2844,7 +2844,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 182;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 14;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2858,7 +2858,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 30;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2872,7 +2872,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 31;
          expectedUnitRunData.ProjectClone = 19;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2886,7 +2886,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2900,7 +2900,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 3;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2914,7 +2914,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 26;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2928,7 +2928,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 16;
          expectedUnitRunData.ProjectClone = 46;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2942,7 +2942,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 15;
          expectedUnitRunData.ProjectClone = 21;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2956,7 +2956,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 38;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2970,7 +2970,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 38;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BadWorkUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2984,7 +2984,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 19;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -2998,7 +2998,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 23;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3012,7 +3012,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3026,7 +3026,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3040,7 +3040,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3054,7 +3054,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3068,7 +3068,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3082,7 +3082,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3096,7 +3096,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3110,7 +3110,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3124,7 +3124,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3138,7 +3138,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3152,7 +3152,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3166,7 +3166,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3180,7 +3180,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3194,7 +3194,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3208,7 +3208,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3222,7 +3222,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3236,7 +3236,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3250,7 +3250,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3264,7 +3264,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3278,7 +3278,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3292,7 +3292,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3306,7 +3306,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3320,7 +3320,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3334,7 +3334,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3348,7 +3348,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3362,7 +3362,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3405,7 +3405,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UnknownEnum;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UNKNOWN_ENUM;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3419,7 +3419,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3433,7 +3433,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 867;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 113;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3447,7 +3447,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 69;
          expectedUnitRunData.ProjectGen = 31;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3461,7 +3461,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 16;
          expectedUnitRunData.ProjectGen = 39;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3475,7 +3475,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 779;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 981;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3489,7 +3489,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 168;
          expectedUnitRunData.ProjectGen = 20;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3503,7 +3503,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 92;
          expectedUnitRunData.ProjectGen = 15;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3517,7 +3517,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 25;
          expectedUnitRunData.ProjectGen = 166;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3531,7 +3531,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 23;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 73;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3545,7 +3545,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 18;
          expectedUnitRunData.ProjectClone = 23;
          expectedUnitRunData.ProjectGen = 248;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3559,7 +3559,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 42;
          expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3573,7 +3573,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 30;
          expectedUnitRunData.ProjectClone = 31;
          expectedUnitRunData.ProjectGen = 288;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3587,7 +3587,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 204;
          expectedUnitRunData.ProjectGen = 24;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3601,7 +3601,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 18;
          expectedUnitRunData.ProjectClone = 38;
          expectedUnitRunData.ProjectGen = 194;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3615,7 +3615,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 78;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 96;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3629,7 +3629,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 592;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 125;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3643,7 +3643,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 317;
          expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3657,7 +3657,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 65;
          expectedUnitRunData.ProjectClone = 27;
          expectedUnitRunData.ProjectGen = 285;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3671,7 +3671,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 32;
          expectedUnitRunData.ProjectGen = 30;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3685,7 +3685,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 60;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 34;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3699,7 +3699,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 25;
          expectedUnitRunData.ProjectClone = 28;
          expectedUnitRunData.ProjectGen = 150;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3713,7 +3713,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 26;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 98;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3727,7 +3727,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 79;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 55;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3741,7 +3741,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 86;
          expectedUnitRunData.ProjectClone = 26;
          expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3755,7 +3755,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 111;
          expectedUnitRunData.ProjectClone = 34;
          expectedUnitRunData.ProjectGen = 82;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3769,7 +3769,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 205;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 79;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3783,7 +3783,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 28;
          expectedUnitRunData.ProjectClone = 10;
          expectedUnitRunData.ProjectGen = 135;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3797,7 +3797,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 414;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 1025;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3811,7 +3811,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 102;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3825,7 +3825,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 514;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 998;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3839,7 +3839,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 683;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 69;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3853,7 +3853,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 538;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 71;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3867,7 +3867,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 121;
          expectedUnitRunData.ProjectClone = 13;
          expectedUnitRunData.ProjectGen = 312;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3881,7 +3881,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 805;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 91;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3895,7 +3895,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 664;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3909,7 +3909,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2534;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 701;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3923,7 +3923,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1080;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 934;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3937,7 +3937,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 246;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3951,7 +3951,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 588;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3965,7 +3965,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 384;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3979,7 +3979,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 896;
          expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -3993,7 +3993,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 608;
          expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4007,7 +4007,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 424;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 975;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4021,7 +4021,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 124;
          expectedUnitRunData.ProjectClone = 20;
          expectedUnitRunData.ProjectGen = 115;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4035,7 +4035,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 184;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 131;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4049,7 +4049,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 20;
          expectedUnitRunData.ProjectClone = 26;
          expectedUnitRunData.ProjectGen = 172;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4063,7 +4063,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 241;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 80;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4077,7 +4077,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 89;
          expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4091,7 +4091,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 58;
          expectedUnitRunData.ProjectClone = 26;
          expectedUnitRunData.ProjectGen = 222;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4105,7 +4105,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 2;
          expectedUnitRunData.ProjectClone = 20;
          expectedUnitRunData.ProjectGen = 319;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4119,7 +4119,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 9;
          expectedUnitRunData.ProjectGen = 21;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4133,7 +4133,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 112;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 80;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4147,7 +4147,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 886;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UnknownEnum;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UNKNOWN_ENUM;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4161,7 +4161,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 886;
          expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4175,7 +4175,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 95;
          expectedUnitRunData.ProjectGen = 26;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4189,7 +4189,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 11;
          expectedUnitRunData.ProjectGen = 32;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4232,7 +4232,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 587;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 266;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4246,7 +4246,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 17;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 245;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4260,7 +4260,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 233;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 160;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4274,7 +4274,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 61;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 258;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4288,7 +4288,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 144;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 226;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4302,7 +4302,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 723;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 240;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4316,7 +4316,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 693;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 232;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4330,7 +4330,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 875;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 209;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4344,7 +4344,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 479;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 233;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4358,7 +4358,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 802;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 155;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4372,7 +4372,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 346;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 78;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4386,7 +4386,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 424;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 150;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4400,7 +4400,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 172;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 205;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4414,7 +4414,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 59;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 130;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4428,7 +4428,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 60;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 220;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4442,7 +4442,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 606;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 253;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4456,7 +4456,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 559;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 225;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4470,7 +4470,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 633;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 184;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4484,7 +4484,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 159;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 360;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4498,7 +4498,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 796;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 89;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4512,7 +4512,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 519;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 254;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4526,7 +4526,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 615;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 227;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4540,7 +4540,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 457;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 305;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4554,7 +4554,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 229;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 222;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4568,7 +4568,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 476;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 124;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4582,7 +4582,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 671;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 226;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4596,7 +4596,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 166;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 109;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4610,7 +4610,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 716;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 64;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4624,7 +4624,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 800;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 160;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4638,7 +4638,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 720;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 281;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4652,7 +4652,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 844;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 239;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4666,7 +4666,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 401;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 135;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4680,7 +4680,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 250;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 65;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4694,7 +4694,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 904;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 71;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4708,7 +4708,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 900;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 226;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4722,7 +4722,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 204;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 74;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4736,7 +4736,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 219;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 58;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4750,7 +4750,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 445;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 252;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4764,7 +4764,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 701;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 120;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4778,7 +4778,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 608;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4792,7 +4792,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 286;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 159;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4806,7 +4806,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 710;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 243;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4820,7 +4820,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 533;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 218;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4834,7 +4834,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 264;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 58;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4848,7 +4848,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 339;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 87;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4862,7 +4862,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 259;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 89;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4876,7 +4876,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 786;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 138;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4890,7 +4890,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 835;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 183;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4904,7 +4904,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 516;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 231;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4918,7 +4918,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 802;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 93;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4932,7 +4932,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 758;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 285;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4946,7 +4946,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 664;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 181;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4960,7 +4960,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 69;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 98;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4974,7 +4974,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 54;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 157;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -4988,7 +4988,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 629;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 60;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5002,7 +5002,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 808;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 75;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5016,7 +5016,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 28;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 42;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5030,7 +5030,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 875;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 63;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5044,7 +5044,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 558;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 56;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5058,7 +5058,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 74;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 145;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5072,7 +5072,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 603;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 55;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5086,7 +5086,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 742;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 147;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5100,7 +5100,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 96;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 267;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5114,7 +5114,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 376;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 175;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5128,7 +5128,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 747;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 246;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5142,7 +5142,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 613;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 187;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5156,7 +5156,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 641;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 155;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5170,7 +5170,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 862;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 295;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5184,7 +5184,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 447;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 136;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5198,7 +5198,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 129;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 284;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5212,7 +5212,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 673;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 178;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5226,7 +5226,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 178;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 194;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5240,7 +5240,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 340;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 184;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5254,7 +5254,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 774;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 266;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5268,7 +5268,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 663;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 296;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5282,7 +5282,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 108;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 176;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5296,7 +5296,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 678;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 204;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5310,7 +5310,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 552;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 216;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5324,7 +5324,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 710;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 275;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5338,7 +5338,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 350;
          expectedUnitRunData.ProjectClone = 6;
          expectedUnitRunData.ProjectGen = 110;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5352,7 +5352,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 287;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 200;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5366,7 +5366,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 95;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 239;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5380,7 +5380,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 895;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 148;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5394,7 +5394,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 556;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 196;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5408,7 +5408,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 881;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 171;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5422,7 +5422,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 851;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 119;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5436,7 +5436,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 324;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 173;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5450,7 +5450,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 70;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 75;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5464,7 +5464,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 687;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5478,7 +5478,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 395;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 227;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5492,7 +5492,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 316;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 141;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5506,7 +5506,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 70;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 178;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5520,7 +5520,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 582;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 275;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5534,7 +5534,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 909;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 113;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5548,7 +5548,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 303;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 91;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5562,7 +5562,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 921;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 274;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5576,7 +5576,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 863;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 317;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5590,7 +5590,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 150;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5604,7 +5604,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 82;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 256;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5618,7 +5618,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 590;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 204;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5632,7 +5632,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 820;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 251;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5646,7 +5646,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 194;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 306;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5660,7 +5660,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 112;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 199;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5674,7 +5674,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 1;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 211;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5688,7 +5688,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 792;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 149;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5702,7 +5702,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 79;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 295;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5716,7 +5716,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 169;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 172;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5730,7 +5730,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 551;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 244;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5744,7 +5744,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 804;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 327;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5758,7 +5758,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 111;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 178;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5772,7 +5772,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 406;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 221;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5786,7 +5786,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 453;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 207;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5800,7 +5800,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 533;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 208;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5814,7 +5814,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 784;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 279;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5828,7 +5828,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 193;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 273;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5842,7 +5842,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 637;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 296;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5856,7 +5856,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 185;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 312;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5870,7 +5870,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 877;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 262;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5884,7 +5884,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 761;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 173;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5898,7 +5898,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 144;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 239;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5912,7 +5912,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 529;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 167;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5926,7 +5926,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 84;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 331;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5940,7 +5940,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 494;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 188;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5954,7 +5954,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 199;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 364;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5968,7 +5968,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 256;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 292;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5982,7 +5982,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 150;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 279;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -5996,7 +5996,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 479;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 291;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6010,7 +6010,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 56;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 306;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6024,7 +6024,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 189;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 233;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6038,7 +6038,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 161;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6052,7 +6052,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 869;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 312;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6066,7 +6066,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 154;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 293;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6080,7 +6080,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 231;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 280;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6094,7 +6094,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 413;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 274;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6108,7 +6108,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 181;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 310;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6122,7 +6122,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 528;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 274;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6136,7 +6136,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 595;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 262;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6150,7 +6150,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 86;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 246;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6164,7 +6164,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 81;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 217;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6178,7 +6178,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 430;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 263;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6192,7 +6192,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 869;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 319;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6206,7 +6206,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 159;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 237;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6220,7 +6220,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 883;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 176;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6234,7 +6234,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 481;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 216;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6248,7 +6248,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 31;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 307;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6262,7 +6262,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 158;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 266;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6276,7 +6276,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 563;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 314;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6290,7 +6290,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 333;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 299;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6304,7 +6304,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 189;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 242;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6318,7 +6318,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 86;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 274;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6332,7 +6332,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 49;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 298;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6346,7 +6346,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 38;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 313;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6360,7 +6360,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 733;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 151;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6374,7 +6374,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 179;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 197;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6388,7 +6388,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 66;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 328;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6402,7 +6402,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 45;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 262;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6416,7 +6416,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 793;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 298;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6430,7 +6430,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 72;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 267;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6444,7 +6444,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 497;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 274;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6458,7 +6458,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 234;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 218;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6472,7 +6472,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 512;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 249;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6486,7 +6486,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 865;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 338;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6500,7 +6500,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 321;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 241;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6514,7 +6514,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 738;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 281;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6528,7 +6528,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 803;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 188;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6542,7 +6542,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 553;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 300;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6556,7 +6556,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 135;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 306;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6570,7 +6570,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 149;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 322;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6584,7 +6584,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 605;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6598,7 +6598,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 38;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 178;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6612,7 +6612,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 521;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 285;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6626,7 +6626,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 86;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 154;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6640,7 +6640,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 274;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 292;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6654,7 +6654,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 36;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 248;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6668,7 +6668,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 867;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 250;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6682,7 +6682,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 698;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 322;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6696,7 +6696,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 665;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 278;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6710,7 +6710,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 875;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 176;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6724,7 +6724,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 514;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 250;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6738,7 +6738,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 329;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 331;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6752,7 +6752,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 382;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 312;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6766,7 +6766,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 4;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 328;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6780,7 +6780,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 321;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 192;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6794,7 +6794,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 601;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 283;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6808,7 +6808,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 19;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 245;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6822,7 +6822,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 790;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 283;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6836,7 +6836,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 296;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 250;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6850,7 +6850,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 342;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 289;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6864,7 +6864,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 65;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 242;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6878,7 +6878,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 910;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 255;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6892,7 +6892,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 514;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 256;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6906,7 +6906,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 105;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 325;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6920,7 +6920,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 109;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 281;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6934,7 +6934,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 115;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 135;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6948,7 +6948,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 86;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 273;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6962,7 +6962,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 296;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 343;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6976,7 +6976,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 632;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 208;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -6990,7 +6990,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 759;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 272;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7004,7 +7004,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 79;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 232;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7018,7 +7018,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 599;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 305;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7032,7 +7032,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 189;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 273;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7046,7 +7046,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 116;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 301;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7060,7 +7060,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 656;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 342;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7074,7 +7074,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 381;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 156;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7088,7 +7088,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 228;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 275;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7102,7 +7102,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 118;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 310;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7116,7 +7116,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 129;
          expectedUnitRunData.ProjectClone = 3;
          expectedUnitRunData.ProjectGen = 292;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7130,7 +7130,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 783;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 297;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7144,7 +7144,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 771;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 279;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7158,7 +7158,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 767;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 363;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7172,7 +7172,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 555;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 235;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7186,7 +7186,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 13;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 240;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7200,7 +7200,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 508;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 314;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7214,7 +7214,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 564;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 305;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7228,7 +7228,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 68;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 273;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7242,7 +7242,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 459;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 250;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7256,7 +7256,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 864;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 289;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7270,7 +7270,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 28;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 277;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7284,7 +7284,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 6;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7298,7 +7298,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 739;
          expectedUnitRunData.ProjectClone = 0;
          expectedUnitRunData.ProjectGen = 272;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7312,7 +7312,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 353;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Interrupted;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7326,7 +7326,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 353;
          expectedUnitRunData.ProjectClone = 1;
          expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.Unknown;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7369,7 +7369,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 53;
          expectedUnitRunData.ProjectClone = 4;
          expectedUnitRunData.ProjectGen = 59;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7383,7 +7383,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 21;
          expectedUnitRunData.ProjectClone = 2;
          expectedUnitRunData.ProjectGen = 61;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
@@ -7397,7 +7397,7 @@ namespace HFM.Log
          expectedUnitRunData.ProjectRun = 0;
          expectedUnitRunData.ProjectClone = 2696;
          expectedUnitRunData.ProjectGen = 19;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FinishedUnit;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.FINISHED_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Push(expectedUnitRun);
 
