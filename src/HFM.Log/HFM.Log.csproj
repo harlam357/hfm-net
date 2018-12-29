@@ -81,6 +81,7 @@
     <Compile Include="Internal\WorkUnitResult.cs" />
     <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
     <Compile Include="LogLine.cs" />
+    <Compile Include="LogLineDataParserError.cs" />
     <Compile Include="LogLineTimeStampParser.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="LogSlotStatus.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlotRun.cs" />
     <Compile Include="UnitRun.cs" />
-    <Compile Include="UnitRunFrameData.cs" />
+    <Compile Include="WorkUnitFrameData.cs" />
     <Compile Include="Legacy\UnitInfoLog.cs" />
     <Compile Include="Legacy\UnitInfoLogData.cs" />
     <Compile Include="WorkUnitProjectData.cs" />

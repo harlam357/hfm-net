@@ -117,26 +117,6 @@ namespace HFM.Log
    }
 
    /// <summary>
-   /// Defines an error returned from a log line data parsing function.
-   /// </summary>
-   public class LogLineDataParserError
-   {
-      /// <summary>
-      /// Gets or sets the error message.
-      /// </summary>
-      public string Message { get; set; }
-
-      /// <summary>
-      /// Returns a string that represents the current <see cref="LogLineDataParserError"/> object.
-      /// </summary>
-      /// <returns>A string that represents the current <see cref="LogLineDataParserError"/> object.</returns>
-      public override string ToString()
-      {
-         return Message;
-      }
-   }
-
-   /// <summary>
    /// Represents a line of a Folding@Home client log where the TimeStamp and Data properties are lazily evaluated.
    /// </summary>
    public class LazyLogLine : LogLine

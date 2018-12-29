@@ -22,15 +22,17 @@ using System.Globalization;
 
 namespace HFM.Log
 {
-   public class UnitRunFrameData
+   public class WorkUnitFrameData
    {
-      public UnitRunFrameData()
+      public WorkUnitFrameData()
       {
          
       }
 
-      public UnitRunFrameData(UnitRunFrameData other)
+      public WorkUnitFrameData(WorkUnitFrameData other)
       {
+         if (other == null) return;
+
          ID = other.ID;
          RawFramesComplete = other.RawFramesComplete;
          RawFramesTotal = other.RawFramesTotal;
@@ -51,7 +53,7 @@ namespace HFM.Log
       public override string ToString()
       {
          return String.Format(CultureInfo.CurrentCulture, 
-            "ID: {0} / Raw Complete: {1} / Raw Total: {2} / Time Stamp: {3} / Duration: {4}",
+            "ID: {0}, Raw Complete: {1}, Raw Total: {2}, Time Stamp: {3}, Duration: {4}",
             ID, RawFramesComplete, RawFramesTotal, TimeStamp, Duration);
       }
    }

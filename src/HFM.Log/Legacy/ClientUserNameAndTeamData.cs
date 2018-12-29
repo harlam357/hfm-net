@@ -6,6 +6,14 @@ namespace HFM.Log.Legacy
 {
    public class ClientUserNameAndTeamData
    {
+      public ClientUserNameAndTeamData(ClientUserNameAndTeamData other)
+      {
+         if (other == null) return;
+
+         FoldingID = other.FoldingID;
+         Team = other.Team;
+      }
+
       public ClientUserNameAndTeamData(string foldingID, int team)
       {
          FoldingID = foldingID;

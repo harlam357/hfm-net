@@ -6,6 +6,16 @@ namespace HFM.Log
 {
    public class WorkUnitProjectData
    {
+      public WorkUnitProjectData(WorkUnitProjectData other)
+      {
+         if (other == null) return;
+
+         ProjectID = other.ProjectID;
+         ProjectRun = other.ProjectRun;
+         ProjectClone = other.ProjectClone;
+         ProjectGen = other.ProjectGen;
+      }
+
       public WorkUnitProjectData(int projectID, int run, int clone, int gen)
       {
          ProjectID = projectID;

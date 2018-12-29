@@ -9,7 +9,7 @@ namespace HFM.Log
    public class LogLineTests
    {
       [Test]
-      public void LogLine_CopyConstructor_Test()
+      public void LogLine_ConstructorWithParameters_Test()
       {
          // Arrange
          var logLine = new LogLine
@@ -35,7 +35,7 @@ namespace HFM.Log
       {
          // Arrange
          var timeStamp = TimeSpan.FromMinutes(1);
-         var frameData = new UnitRunFrameData
+         var frameData = new WorkUnitFrameData
          {
             ID = 1,
             RawFramesComplete = 10000,
@@ -60,7 +60,7 @@ namespace HFM.Log
          Assert.AreEqual(logLine.LineType, copy.LineType);
          Assert.AreEqual(logLine.TimeStamp, copy.TimeStamp);
          Assert.AreNotSame(logLine.Data, copy.Data);
-         var dataCopy = (UnitRunFrameData)copy.Data;
+         var dataCopy = (WorkUnitFrameData)copy.Data;
          Assert.AreEqual(frameData.ID, dataCopy.ID);
          Assert.AreEqual(frameData.RawFramesComplete, dataCopy.RawFramesComplete);
          Assert.AreEqual(frameData.RawFramesTotal, dataCopy.RawFramesTotal);
