@@ -286,8 +286,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
 
          return unitInfo;
       }
@@ -363,8 +363,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          unitInfo.FramesObserved = 2;
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 55, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 56, TimeStamp = TimeSpan.FromSeconds(1000) });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 55, TimeStamp = TimeSpan.Zero });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 56, TimeStamp = TimeSpan.FromSeconds(1000) });
          return unitInfo;
       }
 
@@ -439,8 +439,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
          return unitInfo;
       }
 
@@ -515,8 +515,8 @@ namespace HFM.Core.Data.SQLite
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
          //unitInfo.FramesObserved = 
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddWorkUnitFrame(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
+         unitInfo.AddWorkUnitFrame(new UnitRunFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
          return unitInfo;
       }
 

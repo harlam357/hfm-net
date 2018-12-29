@@ -36,26 +36,26 @@ namespace HFM.Log
             return null;
          }
 
-         internal static WorkUnitFrameData ParseWorkUnitFrame(LogLine logLine)
+         internal static UnitRunFrameData ParseWorkUnitFrame(LogLine logLine)
          {
-            WorkUnitFrameData frameData = GetWorkUnitFrameData(logLine);
+            UnitRunFrameData frameData = GetFrameData(logLine);
             if (frameData != null)
             {
                return frameData;
             }
 
-            frameData = GetGpuWorkUnitFrameData(logLine);
+            frameData = GetGpuFrameData(logLine);
             return frameData;
          }
 
-         private static WorkUnitFrameData GetWorkUnitFrameData(LogLine logLine)
+         private static UnitRunFrameData GetFrameData(LogLine logLine)
          {
             Debug.Assert(logLine != null);
 
             Match framesCompleted = FahLogRegex.Common.FramesCompletedRegex.Match(logLine.Raw);
             if (framesCompleted.Success)
             {
-               var frame = new WorkUnitFrameData();
+               var frame = new UnitRunFrameData();
 
                int result;
                if (Int32.TryParse(framesCompleted.Result("${Completed}"), out result))
@@ -132,14 +132,14 @@ namespace HFM.Log
             return null;
          }
 
-         private static WorkUnitFrameData GetGpuWorkUnitFrameData(LogLine logLine)
+         private static UnitRunFrameData GetGpuFrameData(LogLine logLine)
          {
             Debug.Assert(logLine != null);
 
             Match framesCompletedGpu = FahLogRegex.Common.FramesCompletedGpuRegex.Match(logLine.Raw);
             if (framesCompletedGpu.Success)
             {
-               var frame = new WorkUnitFrameData();
+               var frame = new UnitRunFrameData();
 
                frame.RawFramesComplete = Int32.Parse(framesCompletedGpu.Result("${Percent}"));
                frame.RawFramesTotal = 100; //Instance.CurrentProtein.Frames

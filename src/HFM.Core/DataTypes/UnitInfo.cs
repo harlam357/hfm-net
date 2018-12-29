@@ -51,6 +51,7 @@ namespace HFM.Core.DataTypes
 
       #endregion
 
+      // TODO: Rename to Copy()
       public UnitInfo DeepClone()
       {
          var u = new UnitInfo
@@ -76,6 +77,7 @@ namespace HFM.Core.DataTypes
             RawFramesComplete = RawFramesComplete,
             RawFramesTotal = RawFramesTotal,
             FramesObserved = FramesObserved,
+            // TODO: LogLines is NOT a clone
             LogLines = LogLines,
             CoreID = CoreID,
             QueueIndex = QueueIndex,
@@ -208,7 +210,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Last Observed Frame on this Unit
       /// </summary>
-      public WorkUnitFrameData CurrentFrame
+      public UnitRunFrameData CurrentFrame
       {
          get
          {
@@ -250,11 +252,11 @@ namespace HFM.Core.DataTypes
          }
       }
 
-      private static Dictionary<int, WorkUnitFrameData> BuildFrameDataDictionary(IEnumerable<LogLine> logLines)
+      private static Dictionary<int, UnitRunFrameData> BuildFrameDataDictionary(IEnumerable<LogLine> logLines)
       {
          var frameDataDictionary = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
          {
-            if (x.Data is WorkUnitFrameData frameData && frameData.ID >= 0)
+            if (x.Data is UnitRunFrameData frameData && frameData.ID >= 0)
             {
                return frameData;
             }
@@ -275,7 +277,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      internal Dictionary<int, WorkUnitFrameData> FrameData { get; set; }
+      internal Dictionary<int, UnitRunFrameData> FrameData { get; set; }
 
       /// <summary>
       /// Core ID (Hex) Value
@@ -294,7 +296,7 @@ namespace HFM.Core.DataTypes
       /// <summary>
       /// Gets the WorkUnitFrameData for the frame ID.
       /// </summary>
-      public WorkUnitFrameData GetFrameData(int frameId)
+      public UnitRunFrameData GetFrameData(int frameId)
       {
          return FrameData != null && FrameData.ContainsKey(frameId) ? FrameData[frameId] : null;
       }

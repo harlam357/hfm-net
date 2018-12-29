@@ -221,7 +221,7 @@ namespace HFM.Core
 
          for (int i = startingFrame; i <= endingFrame; i++)
          {
-            WorkUnitFrameData frameData = unit.GetFrameData(i);
+            UnitRunFrameData frameData = unit.GetFrameData(i);
             if (frameData != null)
             {
                if (benchmark.SetFrameDuration(frameData.Duration))
