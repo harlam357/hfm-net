@@ -27,13 +27,13 @@ namespace HFM.Log
          RunDataAggregator = runDataAggregator ?? throw new ArgumentNullException(nameof(runDataAggregator));
       }
 
-      private Stack<ClientRun> _clientRuns;
+      private List<ClientRun> _clientRuns;
       /// <summary>
       /// Gets the collection of <see cref="ClientRun"/> objects.
       /// </summary>
-      public Stack<ClientRun> ClientRuns
+      public IList<ClientRun> ClientRuns
       {
-         get { return _clientRuns ?? (_clientRuns = new Stack<ClientRun>()); }
+         get { return _clientRuns ?? (_clientRuns = new List<ClientRun>()); }
       }
 
       /// <summary>
@@ -77,7 +77,7 @@ namespace HFM.Log
       /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
       public IEnumerator<LogLine> GetEnumerator()
       {
-         return ClientRuns.Reverse().SelectMany(x => x).GetEnumerator();
+         return ClientRuns.SelectMany(x => x).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -187,13 +187,13 @@ namespace HFM.Log
          /// </summary>
          protected override void OnClientRunFinished()
          {
-            var clientRun = ClientRuns.FirstOrDefault();
+            var clientRun = ClientRuns.LastOrDefault();
             if (clientRun == null)
             {
                return;
             }
             var slotRun = clientRun.SlotRuns.Count != 0 ? clientRun.SlotRuns[FoldingSlot] : null;
-            var lastUnitRun = slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
+            var lastUnitRun = slotRun != null ? slotRun.UnitRuns.LastOrDefault() : null;
             if (_logBuffer != null && _logBuffer.Count != 0)
             {
                if (lastUnitRun != null)
@@ -340,9 +340,9 @@ namespace HFM.Log
             }
             if (createNew || ClientRuns.Count == 0)
             {
-               ClientRuns.Push(new ClientRun(this, lineIndex));
+               ClientRuns.Add(new ClientRun(this, lineIndex));
             }
-            return ClientRuns.Peek();
+            return ClientRuns.Last();
          }
 
          private SlotRun EnsureSlotRunExists(int lineIndex, int foldingSlot, bool createNew = false)
@@ -359,12 +359,12 @@ namespace HFM.Log
          {
             var slotRun = EnsureSlotRunExists(lineIndex, FoldingSlot);
             var unitRun = new UnitRun(slotRun, queueIndex, lineIndex);
-            var previousUnitRun = slotRun.UnitRuns.FirstOrDefault();
+            var previousUnitRun = slotRun.UnitRuns.LastOrDefault();
             if (previousUnitRun != null)
             {
                previousUnitRun.EndIndex = lineIndex - 1;
 
-               var clientRun = ClientRuns.Peek();
+               var clientRun = ClientRuns.Last();
                foreach (var logLine in _logBuffer.Where(x => x.Index < previousUnitRun.StartIndex))
                {
                   clientRun.LogLines.Add(logLine);
@@ -375,7 +375,7 @@ namespace HFM.Log
                }
                _logBuffer.RemoveAll(x => x.Index <= previousUnitRun.EndIndex);
             }
-            slotRun.UnitRuns.Push(unitRun);
+            slotRun.UnitRuns.Add(unitRun);
          }
 
          /// <summary>
@@ -483,7 +483,7 @@ namespace HFM.Log
          /// </summary>
          protected override void OnClientRunFinished()
          {
-            var clientRun = ClientRuns.FirstOrDefault();
+            var clientRun = ClientRuns.LastOrDefault();
             if (clientRun == null)
             {
                return;
@@ -525,10 +525,10 @@ namespace HFM.Log
          {
             if (ClientRuns.Count == 0)
             {
-               ClientRuns.Push(new ClientRun(this, lineIndex));
+               ClientRuns.Add(new ClientRun(this, lineIndex));
             }
 
-            return ClientRuns.Peek();
+            return ClientRuns.Last();
          }
 
          private SlotRun EnsureSlotRunExists(int lineIndex, int foldingSlot)
@@ -549,7 +549,7 @@ namespace HFM.Log
             if (unitRun == null)
             {
                unitRun = new FahClientUnitRun(slotRun, queueIndex, lineIndex);
-               slotRun.UnitRuns.Push(unitRun);
+               slotRun.UnitRuns.Add(unitRun);
             }
 
             return unitRun;
@@ -559,7 +559,7 @@ namespace HFM.Log
          {
             return slotRun.UnitRuns
                .Cast<FahClientUnitRun>()
-               .FirstOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
+               .LastOrDefault(x => x.QueueIndex == queueIndex && !x.IsComplete);
          }
 
          /// <summary>

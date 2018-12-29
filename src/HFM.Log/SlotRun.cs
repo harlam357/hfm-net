@@ -39,13 +39,13 @@ namespace HFM.Log
          _foldingSlot = foldingSlot;
       }
 
-      private Stack<UnitRun> _unitRuns;
+      private List<UnitRun> _unitRuns;
       /// <summary>
       /// Gets the collection of <see cref="UnitRun"/> objects.
       /// </summary>
-      public Stack<UnitRun> UnitRuns
+      public IList<UnitRun> UnitRuns
       {
-         get { return _unitRuns ?? (_unitRuns = new Stack<UnitRun>()); }
+         get { return _unitRuns ?? (_unitRuns = new List<UnitRun>()); }
       }
 
       private SlotRunData _data;

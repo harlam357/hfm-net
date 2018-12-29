@@ -34,13 +34,13 @@ namespace HFM.Log.Tool
          TreeNode node = e.Node;
          if (node.Level == 0)
          {
-            index = _fahLog.ClientRuns.Reverse().ElementAt(Int32.Parse(node.Name)).ClientStartIndex;
+            index = _fahLog.ClientRuns.ElementAt(Int32.Parse(node.Name)).ClientStartIndex;
          }
          else if (node.Level == 2)
          {
             TreeNode slotParent = node.Parent;
             TreeNode runParent = slotParent.Parent;
-            index = (int)_fahLog.ClientRuns.Reverse().ElementAt(Int32.Parse(runParent.Name)).SlotRuns[Int32.Parse(slotParent.Name)].UnitRuns.Reverse().ElementAt(Int32.Parse(node.Name)).StartIndex;
+            index = _fahLog.ClientRuns.ElementAt(Int32.Parse(runParent.Name)).SlotRuns[Int32.Parse(slotParent.Name)].UnitRuns.ElementAt(Int32.Parse(node.Name)).StartIndex;
          }
 
          if (index > -1)
@@ -171,7 +171,7 @@ namespace HFM.Log.Tool
       private void PopulateClientRunsInTree(FahLog fahLog)
       {
          int i = 0;
-         foreach (var clientRun in fahLog.ClientRuns.Reverse())
+         foreach (var clientRun in fahLog.ClientRuns)
          {
             treeView1.Nodes.Add(i.ToString(), "Run " + i);
             foreach (var slotRun in clientRun.SlotRuns.Values)
@@ -179,7 +179,7 @@ namespace HFM.Log.Tool
                treeView1.Nodes[i].Nodes.Add(slotRun.FoldingSlot.ToString(), String.Format(CultureInfo.InvariantCulture,
                   "Slot {0}", slotRun.FoldingSlot));
                int j = 0;
-               foreach (var unitRun in slotRun.UnitRuns.Reverse())
+               foreach (var unitRun in slotRun.UnitRuns)
                {
                   treeView1.Nodes[i].Nodes[slotRun.FoldingSlot.ToString()].Nodes.Add(j.ToString(), String.Format(CultureInfo.InvariantCulture,
                      "Queue ({0}) Line ({1}) Index", unitRun.QueueIndex, unitRun.StartIndex));
@@ -196,7 +196,7 @@ namespace HFM.Log.Tool
          int i = 0;
          int j = 0;
          int k = 0;
-         foreach (var clientRun in _fahLog.ClientRuns.Reverse())
+         foreach (var clientRun in _fahLog.ClientRuns)
          {
             sb.AppendLine("// Setup ClientRun " + i);
             sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRun = new ClientRun(null, " + clientRun.ClientStartIndex + ");");
@@ -207,7 +207,7 @@ namespace HFM.Log.Tool
                sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRun = new SlotRun(expectedRun, " + slotRun.FoldingSlot + ");");
                sb.AppendLine("expectedRun.SlotRuns.Add(" + slotRun.FoldingSlot + ", expectedSlotRun);");
                int unitCount = 0;
-               foreach (var unitRun in slotRun.UnitRuns.Reverse())
+               foreach (var unitRun in slotRun.UnitRuns)
                {
                   sb.AppendLine();
                   sb.AppendLine("// Setup SlotRun " + slotRun.FoldingSlot + " - UnitRun " + unitCount);
@@ -294,7 +294,7 @@ namespace HFM.Log.Tool
                sb.AppendLine("expectedRun.Data = expectedRunData;");
             }
             sb.AppendLine();
-            sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
+            sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1) + ");");
             sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
             sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.Data is LogLineDataParserError));", clientRun.Count(x => x.Data is LogLineDataParserError)));

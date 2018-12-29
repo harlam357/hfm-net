@@ -41,8 +41,8 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 30, 149));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 150, 273));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 30, 149));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 150, 273));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 30, 0, 40, 27, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
@@ -59,15 +59,15 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.ElementAt(1);
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 274);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 302, 401));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 402, 752));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 302, 401));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 402, 752));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 31, 0, 7, 43, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
@@ -84,7 +84,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.GettingWorkPacket;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -92,7 +92,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (First ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.First().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(5, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.08", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[21].ToString().Contains("Project: 2677 (Run 10, Clone 29, Gen 28)"));
@@ -109,8 +109,8 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 30, 220));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 221, 382));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 30, 220));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 221, 382));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 40, 5, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
@@ -127,7 +127,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.SendingWorkPacket;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -135,7 +135,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.08", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[17].ToString().Contains("Project: 2677 (Run 10, Clone 49, Gen 38)"));
@@ -152,8 +152,8 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 231, 384));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 385, 408));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 231, 384));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 385, 408));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37, DateTimeKind.Utc);
          expectedRunData.Arguments = "-local -forceasm -smp 4";
@@ -172,7 +172,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -180,7 +180,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.08", unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[15].ToString().Contains("Project: 2677 (Run 4, Clone 60, Gen 40)"));
@@ -197,7 +197,7 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 401);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, -1, 426, 449));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, -1, 426, 449));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 12, 11, 13, 20, 57, DateTimeKind.Utc);
          expectedRunData.Arguments = "-configonly";
@@ -214,16 +214,16 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.ElementAt(4);
+         var actualRun = fahLog.ClientRuns.ElementAt(5);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          Assert.AreEqual(1, actualRun.SlotRuns[0].UnitRuns.Count); // no previous
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (ClientRun 8 - First UnitRun)
-         var unitRun = fahLog.ClientRuns.ElementAt(1).SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.ElementAt(8).SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(6, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.10", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[21].ToString().Contains("Project: 2683 (Run 4, Clone 11, Gen 18)"));
@@ -240,40 +240,40 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 36, 233));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 234, 283));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 284, 333));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 334, 657));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 658, 707));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 708, 757));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 758, 1081));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 1082, 1146));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 1147, 1218));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 1219, 1268));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 1269, 1340));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 1341, 1435));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 1436, 1537));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 1538, 1587));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 1588, 1637));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 1638, 1709));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 1710, 1759));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 1760, 1824));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 1825, 2148));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 2149, 2198));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 2199, 2417));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 2418, 2489));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 2490, 2539));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 2540, 2589));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 2590, 2913));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 2914, 2963));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 2964, 3013));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 3014, 3352));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 3353, 3447));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 3448, 3497));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 3498, 3644));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 3645, 3709));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 3710, 3759));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 3760, 3792));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 36, 233));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 234, 283));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 284, 333));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 334, 657));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 658, 707));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 708, 757));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 758, 1081));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 1082, 1146));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 1147, 1218));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 1219, 1268));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 1269, 1340));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 1341, 1435));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 1436, 1537));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 1538, 1587));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 1588, 1637));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 1638, 1709));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 1710, 1759));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 1760, 1824));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 1825, 2148));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 2149, 2198));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 2199, 2417));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 2418, 2489));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 2490, 2539));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 2540, 2589));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 2590, 2913));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 2914, 2963));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 2964, 3013));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 3014, 3352));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 3353, 3447));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 3448, 3497));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 3498, 3644));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 3645, 3709));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 3710, 3759));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 3760, 3792));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
@@ -290,7 +290,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.EuePause;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -298,7 +298,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (First ClientRun - Current UnitRun)
-         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Peek();
+         var unitRun = fahLog.ClientRuns.First().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(0, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.22", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[20].ToString().Contains("Project: 6071 (Run 0, Clone 39, Gen 70)"));
@@ -315,8 +315,8 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 24, 174));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 175, 207));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 24, 174));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 175, 207));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -bigadv -betateam -verbosity 9";
@@ -333,7 +333,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -341,7 +341,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(0, unitRun.LogLines[8].Data);
          Assert.AreEqual("2.27", unitRun.LogLines[15].Data);
          Assert.That(unitRun.LogLines[27].ToString().Contains("Project: 8022 (Run 11, Clone 318, Gen 24)"));
@@ -358,12 +358,12 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 130, 325));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 326, 386));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 387, 448));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 449, 509));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 510, 570));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 571, 617));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 130, 325));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 326, 386));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 387, 448));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 449, 509));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 510, 570));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 571, 617));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 5, 7, 18, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -local";
@@ -380,26 +380,26 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.ElementAt(1);
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 618);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 663, 736));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 737, 934));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 935, 1131));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 1132, 1328));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 1329, 1525));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 1526, 1723));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 1724, 1925));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 1926, 2122));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 2123, 2320));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 2321, 2517));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 2518, 2714));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 2715, 2916));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 2917, 2995));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 663, 736));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 737, 934));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 935, 1131));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 1132, 1328));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 1329, 1525));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 1526, 1723));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 1724, 1925));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 1926, 2122));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 2123, 2320));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 2321, 2517));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 2518, 2714));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 2715, 2916));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 2917, 2995));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 6, 18, 28, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -local";
@@ -416,7 +416,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -424,7 +424,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (First ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.First().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual("1.19", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[24].ToString().Contains("Project: 5771 (Run 12, Clone 109, Gen 805)"));
@@ -441,9 +441,9 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 34, 207));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 208, 381));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 382, 446));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 34, 207));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 208, 381));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 382, 446));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 14, 4, 40, 2, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
@@ -460,7 +460,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -468,7 +468,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (First ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.First().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(8, unitRun.LogLines[3].Data);
          Assert.AreEqual("1.19", unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[22].ToString().Contains("Project: 5751 (Run 8, Clone 205, Gen 527)"));
@@ -485,7 +485,7 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 24, 55));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 24, 55));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 26, 33, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
@@ -502,19 +502,19 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.ElementAt(1);
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 56);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 80, 220));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 221, 270));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 8, 271, 319));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 320, 372));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 373, 420));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 421, 463));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 80, 220));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 221, 270));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 271, 319));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 320, 372));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 373, 420));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 421, 463));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
@@ -531,7 +531,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.EuePause;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -539,14 +539,14 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - UnitRun 3)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.ElementAt(2);
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.ElementAt(3);
          Assert.AreEqual(9, unitRun.LogLines[3].Data);
          Assert.AreEqual("1.19", unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[22].ToString().Contains("Project: 5756 (Run 6, Clone 32, Gen 480)"));
          Assert.AreEqual(WorkUnitResult.UNSTABLE_MACHINE, unitRun.LogLines[39].Data);
 
          // Special Check to be sure the reader is catching the EUE Pause line (Current ClientRun - Current UnitRun)
-         unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
+         unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(LogLineType.ClientEuePauseState, unitRun.LogLines[42].LineType);
       }
 
@@ -560,7 +560,7 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 24, 82));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 24, 82));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
@@ -577,7 +577,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -585,12 +585,12 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(0, unitRun.LogLines[4].Data);
          Assert.AreEqual("1.31", unitRun.LogLines[13].Data);
          Assert.That(unitRun.LogLines[26].ToString().Contains("Project: 5781 (Run 2, Clone 700, Gen 2)"));
 
-         unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
+         unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(new TimeSpan(1, 57, 21), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual("1.31", unitRun.Data.CoreVersion);
@@ -611,8 +611,8 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 27, 169));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 170, 218));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 27, 169));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 170, 218));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 2, 17, 17, 19, 31, DateTimeKind.Utc);
          expectedRunData.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
@@ -629,7 +629,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -637,12 +637,12 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(3, unitRun.LogLines[7].Data);
          Assert.AreEqual("2.19", unitRun.LogLines[14].Data);
          Assert.That(unitRun.LogLines[29].ToString().Contains("Project: 10634 (Run 11, Clone 24, Gen 14)"));
 
-         unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
+         unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(new TimeSpan(17, 31, 22), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(12, unitRun.Data.FramesObserved);
          Assert.AreEqual("2.19", unitRun.Data.CoreVersion);
@@ -674,15 +674,15 @@ namespace HFM.Log.Legacy
          expectedRun.Data = expectedRunData;
          expectedSlotRun.Data = new LegacySlotRunData();
 
-         var actualRun = fahLog.ClientRuns.ElementAt(2);
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 1 Positions
          expectedRun = new ClientRun(null, 30);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 179, 592));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 593, 838));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 179, 592));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 593, 838));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 17, 46, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -forceasm";
@@ -706,7 +706,7 @@ namespace HFM.Log.Legacy
          expectedRun = new ClientRun(null, 839);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 874, 951));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 874, 951));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 20, 4, 17, 29, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -forceasm -oneunit";
@@ -723,7 +723,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -731,7 +731,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (ClientRun 1 - First UnitRun)
-         var unitRun = fahLog.ClientRuns.ElementAt(1).SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.ElementAt(1).SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(1, unitRun.LogLines[3].Data);
          Assert.AreEqual("1.90", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[18].ToString().Contains("Project: 4456 (Run 173, Clone 0, Gen 31)"));
@@ -748,7 +748,7 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 788);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 820, 926));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 820, 926));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 28, 52, DateTimeKind.Utc);
          expectedRunData.Arguments = "-oneunit -forceasm -verbosity 9";
@@ -765,14 +765,14 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.ElementAt(1);
+         var actualRun = fahLog.ClientRuns.ElementAt(3);
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Check Run 4 Positions
          expectedRun = new ClientRun(null, 927);
          expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 961, 1014));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 961, 1014));
          expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 07, DateTimeKind.Utc);
          expectedRunData.Arguments = "-forceasm -verbosity 9 -oneunit";
@@ -789,7 +789,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         actualRun = fahLog.ClientRuns.Peek();
+         actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -797,14 +797,14 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(4, unitRun.LogLines[6].Data);
          Assert.AreEqual("23", unitRun.LogLines[17].Data);
          Assert.That(unitRun.LogLines[2].ToString().Contains("Project: 6501 (Run 13, Clone 0, Gen 0)"));
          Assert.That(unitRun.LogLines[10].ToString().Contains("Project: 6501 (Run 15, Clone 0, Gen 0)"));
          Assert.That(unitRun.LogLines[45].ToString().Contains("Project: 10002 (Run 19, Clone 0, Gen 51)"));
 
-         unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
+         unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(new TimeSpan(0, 41, 7), unitRun.Data.UnitStartTimeStamp);
          Assert.AreEqual(5, unitRun.Data.FramesObserved);
          Assert.AreEqual("23", unitRun.Data.CoreVersion);
@@ -825,15 +825,15 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 2);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 9, 27, 293));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 0, 294, 553));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 1, 554, 813));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 2, 814, 1073));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 3, 1074, 1337));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 4, 1338, 1601));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 1602, 1869));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 6, 1870, 2129));
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 7, 2130, 2323));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 27, 293));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 294, 553));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 554, 813));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 814, 1073));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 1074, 1337));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 1338, 1601));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 1602, 1869));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 1870, 2129));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 2130, 2323));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 10, 15, 48, 32, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
@@ -850,7 +850,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Paused;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -858,7 +858,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (Current ClientRun - Current UnitRun)
-         var unitRun = fahLog.ClientRuns.Peek().SlotRuns[0].UnitRuns.Peek();
+         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
          Assert.AreEqual(7, unitRun.LogLines[3].Data);
          Assert.AreEqual("1.90", unitRun.LogLines[8].Data);
          Assert.That(unitRun.LogLines[17].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
@@ -877,7 +877,7 @@ namespace HFM.Log.Legacy
          var expectedRun = new ClientRun(null, 0);
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
-         expectedSlotRun.UnitRuns.Push(new UnitRun(expectedSlotRun, 5, 24, 276));
+         expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 24, 276));
          var expectedRunData = new LegacyClientRunData();
          expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15, DateTimeKind.Utc);
          expectedRunData.Arguments = "-oneunit -verbosity 9";
@@ -894,7 +894,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.Status = LogSlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
-         var actualRun = fahLog.ClientRuns.Peek();
+         var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun);
 
          // Verify LogLine Properties
@@ -902,7 +902,7 @@ namespace HFM.Log.Legacy
          Assert.IsNotNull(actualRun.SlotRuns[0].UnitRuns.ElementAt(0).LogLines); // current
 
          // Spot Check Work Unit Data (First ClientRun - First UnitRun)
-         var unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
+         var unitRun = fahLog.ClientRuns.First().SlotRuns[0].UnitRuns.First();
          Assert.AreEqual(5, unitRun.LogLines[7].Data);
          Assert.AreEqual("2.27", unitRun.LogLines[14].Data);
          Assert.That(unitRun.LogLines[23].ToString().Contains("Project: 10741 (Run 0, Clone 1996, Gen 3)"));

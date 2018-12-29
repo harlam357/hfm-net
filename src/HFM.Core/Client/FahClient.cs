@@ -373,7 +373,7 @@ namespace HFM.Core
 
                var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                dataAggregator.ClientName = slotModel.Name;
-               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
+               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.LastOrDefault(), _messages.UnitCollection, info, options,
                                                                           slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
                PopulateRunLevelData(result, info, slotModel);
 

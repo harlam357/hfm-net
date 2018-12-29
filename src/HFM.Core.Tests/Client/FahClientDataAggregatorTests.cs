@@ -26,7 +26,6 @@ using NUnit.Framework;
 using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
-using HFM.Log;
 using HFM.Log.FahClient;
 
 namespace HFM.Core
@@ -68,7 +67,7 @@ namespace HFM.Core
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, result.UnitInfos.Count);
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
@@ -154,7 +153,7 @@ namespace HFM.Core
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, result.UnitInfos.Count);
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
@@ -172,7 +171,7 @@ namespace HFM.Core
          Assert.IsTrue(result.UnitInfos.All(x => x.Value.LogLines == null));
          if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.FirstOrDefault());
+            Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.LastOrDefault());
          }
 
          #endregion
@@ -232,7 +231,7 @@ namespace HFM.Core
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, result.UnitInfos.Count);
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 
@@ -312,7 +311,7 @@ namespace HFM.Core
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.First(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
          Assert.AreEqual(1, result.UnitInfos.Count);
          Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
 

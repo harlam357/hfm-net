@@ -129,7 +129,7 @@ namespace HFM.Log
             // Act
             log.Read(reader);
          }
-         var clientRun = log.ClientRuns.First();
+         var clientRun = log.ClientRuns.Last();
 
          var allProjectIDs = clientRun.SlotRuns
             .Select(x => x.Value)

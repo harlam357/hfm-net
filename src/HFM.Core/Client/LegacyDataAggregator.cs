@@ -142,7 +142,7 @@ namespace HFM.Core
       {
          Debug.Assert(fahLog != null);
 
-         return fahLog.ClientRuns.FirstOrDefault();
+         return fahLog.ClientRuns.LastOrDefault();
       }
 
       private static SlotRun GetCurrentSlotRun(FahLog fahLog)
@@ -166,7 +166,7 @@ namespace HFM.Core
          Debug.Assert(fahLog != null);
 
          var slotRun = GetCurrentSlotRun(fahLog);
-         return slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
+         return slotRun != null ? slotRun.UnitRuns.LastOrDefault() : null;
       }
 
       private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, QueueData q, FahLog fahLog, UnitInfoLogData unitInfo)
@@ -230,10 +230,10 @@ namespace HFM.Core
 
       private static UnitRun GetUnitRunForQueueIndex(FahLog fahLog, int queueIndex)
       {
-         foreach (var clientRun in fahLog.ClientRuns)
+         foreach (var clientRun in fahLog.ClientRuns.Reverse())
          {
             var slotRun = clientRun.SlotRuns[0];
-            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex);
+            var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex);
             if (unitRun != null)
             {
                return unitRun;

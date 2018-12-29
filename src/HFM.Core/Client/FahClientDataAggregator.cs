@@ -308,7 +308,7 @@ namespace HFM.Core
       {
          if (slotRun != null)
          {
-            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
+            var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
             if (unitRun != null)
             {
                return unitRun;

@@ -241,14 +241,15 @@ namespace HFM.Log
             foreach (var unitRun in slotRun.UnitRuns)
             {
                Internal.CommonRunDataAggregator.IncrementCompletedOrFailedUnitCount(slotRunData, unitRun.Data);
-               if (slotRunData.TotalCompletedUnits == null)
+               int? totalCompletedUnits = ((LegacyUnitRunData)unitRun.Data).TotalCompletedUnits;
+               if (totalCompletedUnits.HasValue)
                {
-                  slotRunData.TotalCompletedUnits = ((LegacyUnitRunData)unitRun.Data).TotalCompletedUnits;
+                  slotRunData.TotalCompletedUnits = totalCompletedUnits.Value;
                }
             }
 
             // try to get the status from the most recent unit run
-            var lastUnitRun = slotRun.UnitRuns.FirstOrDefault();
+            var lastUnitRun = slotRun.UnitRuns.LastOrDefault();
             if (lastUnitRun != null)
             {
                slotRunData.Status = GetSlotRunDataStatusLegacy(lastUnitRun.LogLines);
