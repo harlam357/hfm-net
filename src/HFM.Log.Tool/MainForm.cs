@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -72,9 +73,27 @@ namespace HFM.Log.Tool
             var logLine = _logLines[index];
 
             txtLogLineIndex.Text = logLine.Index.ToString();
-            txtLogLineType.Text = logLine.LineType.ToString();
+            txtLogLineType.Text = GetLogLineTypeName(logLine.LineType);
             txtLogLineData.Text = logLine.Data != null ? logLine.Data.ToString() : String.Empty;
          }
+      }
+
+      private static Dictionary<int, string> LogLineTypeNameDictionary;
+
+      private static string GetLogLineTypeName(LogLineType logLineType)
+      {
+         if (LogLineTypeNameDictionary == null)
+         {
+            LogLineTypeNameDictionary = new Dictionary<int, string>();
+            var logLineTypeFields = typeof(LogLineType).GetFields(BindingFlags.Public | BindingFlags.Static);
+            foreach (var fi in logLineTypeFields.Where(x => x.IsLiteral && !x.IsInitOnly))
+            {
+               int fieldValue = (int)fi.GetValue(null);
+               string fieldName = fi.Name;
+               LogLineTypeNameDictionary.Add(fieldValue, fieldName);
+            }
+         }
+         return LogLineTypeNameDictionary.ContainsKey(logLineType) ? LogLineTypeNameDictionary[logLineType] : null;
       }
 
       private void btnBrowse_Click(object sender, EventArgs e)

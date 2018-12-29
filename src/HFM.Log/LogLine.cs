@@ -98,6 +98,15 @@ namespace HFM.Log
       /// Gets or sets the error message.
       /// </summary>
       public string Message { get; set; }
+
+      /// <summary>
+      /// Returns a string that represents the current <see cref="LogLineDataParserError"/> object.
+      /// </summary>
+      /// <returns>A string that represents the current <see cref="LogLineDataParserError"/> object.</returns>
+      public override string ToString()
+      {
+         return Message;
+      }
    }
 
    namespace Internal
