@@ -48,7 +48,7 @@ namespace HFM.Proteins
          return DeserializeInternal(json);
       }
 
-      private ICollection<Protein> DeserializeInternal(string json)
+      private static ICollection<Protein> DeserializeInternal(string json)
       {
          const double secondsToDays = 86400.0;
 
