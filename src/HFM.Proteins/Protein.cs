@@ -102,43 +102,5 @@ namespace HFM.Proteins
       {
          get { return ProjectNumber == 0; }
       }
-
-      /// <summary>
-      /// Returns true if this <see cref="Protein"/> has valid values for <see cref="ProjectNumber"/>, <see cref="PreferredDays"/>, <see cref="MaximumDays"/>, <see cref="Credit"/>, <see cref="Frames"/>, and <see cref="KFactor"/>; otherwise, false.
-      /// </summary>
-      public bool IsValid
-      {
-         get
-         {
-            return ProjectNumber > 0 &&
-                   PreferredDays > 0 &&
-                   MaximumDays > 0 &&
-                   Credit > 0 &&
-                   Frames > 0 &&
-                   KFactor >= 0;
-         }
-      }
-
-      /// <summary>
-      /// Returns a new <see cref="Protein"/> object containing the data copied from this object.
-      /// </summary>
-      public Protein Copy()
-      {
-         return new Protein
-         {
-            ProjectNumber = ProjectNumber,
-            ServerIP = ServerIP,
-            WorkUnitName = WorkUnitName,
-            NumberOfAtoms = NumberOfAtoms,
-            PreferredDays = PreferredDays,
-            MaximumDays = MaximumDays,
-            Credit = Credit,
-            Frames = Frames,
-            Core = Core,
-            Description = Description,
-            Contact = Contact,
-            KFactor = KFactor
-         };
-      }
    }
 }

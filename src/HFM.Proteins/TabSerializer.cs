@@ -27,7 +27,7 @@ namespace HFM.Proteins
             while ((line = reader.ReadLine()) != null)
             {
                var p = ParseProtein(line);
-               if (p != null && p.IsValid)
+               if (ProteinValidator.IsValid(p))
                {
                   collection.Add(p);
                }
@@ -50,7 +50,7 @@ namespace HFM.Proteins
             while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
             {
                var p = ParseProtein(line);
-               if (p != null && p.IsValid)
+               if (ProteinValidator.IsValid(p))
                {
                   collection.Add(p);
                }

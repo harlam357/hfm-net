@@ -45,7 +45,7 @@ namespace HFM.Forms.Models
          {
             return;
          }
-         Protein protein = value.Copy();
+         Protein protein = CopyProtein(value);
          if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
          if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
          if (KFactorChecked) protein.KFactor = KFactor;
@@ -79,6 +79,28 @@ namespace HFM.Forms.Models
          TotalCredit = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit), decimalPlaces);
          BasePpd = noBonusValues.PPD;
          TotalPpd = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD), decimalPlaces);
+      }
+
+      /// <summary>
+      /// Returns a new <see cref="Protein"/> object containing the data copied from the given object.
+      /// </summary>
+      private static Protein CopyProtein(Protein p)
+      {
+         return new Protein
+         {
+            ProjectNumber = p.ProjectNumber,
+            ServerIP = p.ServerIP,
+            WorkUnitName = p.WorkUnitName,
+            NumberOfAtoms = p.NumberOfAtoms,
+            PreferredDays = p.PreferredDays,
+            MaximumDays = p.MaximumDays,
+            Credit = p.Credit,
+            Frames = p.Frames,
+            Core = p.Core,
+            Description = p.Description,
+            Contact = p.Contact,
+            KFactor = p.KFactor
+         };
       }
 
       #region Properties

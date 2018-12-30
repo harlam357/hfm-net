@@ -88,6 +88,7 @@
     <Compile Include="ProteinDictionaryChange.cs" />
     <Compile Include="ProteinProductionExtensions.cs" />
     <Compile Include="ProteinSerializerExtensions.cs" />
+    <Compile Include="ProteinValidator.cs" />
     <Compile Include="WebAddresses.cs" />
     <Compile Include="TabSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

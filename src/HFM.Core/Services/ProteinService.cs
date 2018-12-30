@@ -24,13 +24,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Cache;
 
-using Castle.Core.Logging;
-
 using harlam357.Core;
 using harlam357.Core.Net;
 
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -69,7 +66,7 @@ namespace HFM.Core
 
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
-      private IReadOnlyDictionary<int, Protein> _dictionary;
+      private ProteinDictionary _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
 
       private readonly Dictionary<int, DateTime> _projectsNotFound;
@@ -164,7 +161,7 @@ namespace HFM.Core
 
       internal void Add(Protein protein)
       {
-         ((ProteinDictionary)_dictionary).Add(protein.ProjectNumber, protein);
+         _dictionary.Add(protein.ProjectNumber, protein);
       }
 
       /// <summary>
@@ -317,8 +314,7 @@ namespace HFM.Core
 
       public ProjectSummaryDownloader(IPreferenceSet prefs)
       {
-         if (prefs == null) throw new ArgumentNullException("prefs");
-         _prefs = prefs;
+         _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
       }
 
       /// <summary>
