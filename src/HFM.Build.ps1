@@ -48,8 +48,6 @@ Function Build-Solution
     param([string]$Target='Rebuild',
           [string]$Configuration='ScriptedRelease',
           [string]$Platform=$Global:Platform,
-          [string]$DelaySign='true',
-          [string]$AssemblyOriginatorKeyFile="$PSScriptRoot\harlam357public.snk",
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
 
@@ -60,12 +58,10 @@ Function Build-Solution
     Write-Host "Building Solution"
     Write-Host " Target: $Target"
     Write-Host " Platform: $Platform"
-    Write-Host " DelaySign: $DelaySign"
-    Write-Host " AssemblyOriginatorKeyFile: $AssemblyOriginatorKeyFile"
     Write-Host "---------------------------------------------------"
 
     Exec { & $NuGetPath restore $SolutionFileName }
-    Exec { & $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;DelaySign=$DelaySign`;AssemblyOriginatorKeyFile=$AssemblyOriginatorKeyFile`;NoWarn=1591 }
+    Exec { & $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;NoWarn=1591 }
 }
 
 Function Test-Build
