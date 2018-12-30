@@ -435,11 +435,6 @@ namespace HFM.Core
          return ProtoBuf.Serializer.DeepClone(value);
       }
 
-      internal static ClientSettings DeepClone(this ClientSettings value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
       #endregion
 
       internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector, bool ignoreDuplicateKeys)

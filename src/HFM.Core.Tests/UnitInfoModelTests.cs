@@ -26,6 +26,7 @@ using Rhino.Mocks;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Proteins;
+using static HFM.Core.Internal.ProteinExtensions;
 
 namespace HFM.Core
 {
@@ -391,7 +392,7 @@ namespace HFM.Core
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
-         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown);
+         Assert.IsTrue(unitInfoLogic.CurrentProtein.IsUnknown());
       }
       
       #endregion

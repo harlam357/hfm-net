@@ -41,19 +41,5 @@ namespace HFM.Proteins
          Assert.AreEqual("Unknown", protein.Contact);
          Assert.AreEqual(0, protein.KFactor);
       }
-
-      [Test]
-      public void Protein_IsUnknown_ReturnsFalseWhenProjectNumberIsNotZero_Test()
-      {
-         var protein = new Protein { ProjectNumber = 1 };
-         Assert.IsFalse(protein.IsUnknown);
-      }
-
-      [Test]
-      public void Protein_IsUnknown_ReturnsTrueWhenProjectNumberIsZero_Test()
-      {
-         var protein = new Protein();
-         Assert.IsTrue(protein.IsUnknown);
-      }
    }
 }

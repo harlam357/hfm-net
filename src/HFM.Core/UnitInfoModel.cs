@@ -25,6 +25,7 @@ using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
 using HFM.Proteins;
+using static HFM.Core.Internal.ProteinExtensions;
 
 namespace HFM.Core
 {
@@ -122,7 +123,7 @@ namespace HFM.Core
          {
             if (_unitInfo.DownloadTime.IsUnknown()) return _unitInfo.DownloadTime;
 
-            return CurrentProtein.IsUnknown
+            return CurrentProtein.IsUnknown()
                       ? DueTime
                       : AdjustDeadlineForDaylightSavings(CurrentProtein.PreferredDays);
          }
@@ -137,7 +138,7 @@ namespace HFM.Core
          {
             if (_unitInfo.DownloadTime.IsUnknown()) return _unitInfo.DownloadTime;
 
-            return CurrentProtein.IsUnknown
+            return CurrentProtein.IsUnknown()
                       ? DateTime.MinValue
                       : AdjustDeadlineForDaylightSavings(CurrentProtein.MaximumDays);
          }
@@ -387,7 +388,7 @@ namespace HFM.Core
 
       private double GetCredit(TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
-         if (CurrentProtein.IsUnknown)
+         if (CurrentProtein.IsUnknown())
          {
             return 0.0;
          }
@@ -412,7 +413,7 @@ namespace HFM.Core
 
       private double GetPPD(TimeSpan frameTime, TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
       {
-         if (CurrentProtein.IsUnknown)
+         if (CurrentProtein.IsUnknown())
          {
             return 0.0;
          }
@@ -440,7 +441,7 @@ namespace HFM.Core
          // test the level
          if (!logger.IsDebugEnabled) return;
 
-         if (CurrentProtein.IsUnknown)
+         if (CurrentProtein.IsUnknown())
          {
             logger.DebugFormat(Constants.ClientNameFormat, slotName, "Protein is unknown... 0 PPD.");
             return;

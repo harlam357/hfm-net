@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Client\ClientFactoryTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
+    <Compile Include="Internal\ProteinExtensionsTests.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />

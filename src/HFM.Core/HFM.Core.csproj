@@ -94,6 +94,7 @@
     <Compile Include="Extensions.ToProjectInfo.cs" />
     <Compile Include="Extensions.WorkUnitResult.cs" />
     <Compile Include="FtpMode.cs" />
+    <Compile Include="Internal\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="DataTypes\ProjectInfo.cs" />
     <Compile Include="PpdCalculationType.cs" />

@@ -97,10 +97,5 @@ namespace HFM.Proteins
       /// Gets or sets the bonus K factor.
       /// </summary>
       public double KFactor { get; set; }
-
-      public bool IsUnknown
-      {
-         get { return ProjectNumber == 0; }
-      }
    }
 }
