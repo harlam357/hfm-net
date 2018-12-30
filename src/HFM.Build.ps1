@@ -190,7 +190,6 @@ Function Build-Zip
 {
     param([string]$ArtifactsBin=$Global:ArtifactsBin,
           [string]$ArtifactsPackages=$Global:ArtifactsPackages,
-          [string]$Platform=$Global:Platform,
           [string]$Version=$Global:Version)
 
     Write-Host "---------------------------------------------------"
@@ -202,7 +201,7 @@ Function Build-Zip
     Write-Host "---------------------------------------------------"
 
     Add-Type -assembly "System.IO.Compression.FileSystem"
-    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, "$ArtifactsPackages\HFM $Platform $Version.zip") 
+    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, "$ArtifactsPackages\HFM $Version.zip") 
 }
 
 Function Build-Msi
@@ -226,7 +225,26 @@ Function Build-Msi
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
 
     Exec { & $MSBuild $SetupSolutionFileName /t:$Target /p:Configuration=$Configuration }
-    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$ArtifactsPackages\HFM $Platform $Version.msi" -ErrorAction Stop -Verbose:$localVerbose
+    Deploy-Msi -Configuration $Configuration -ArtifactsPackages $ArtifactsPackages -Version $Version
+}
+
+Function Deploy-Msi
+{
+    [CmdletBinding()]
+    param([string]$Configuration='Release',
+          [string]$ArtifactsPackages=$Global:ArtifactsPackages,
+          [string]$Version=$Global:Version)
+
+    Write-Host "---------------------------------------------------"
+    Write-Host "Deploying Msi Package"
+    Write-Host " Configuration: $Configuration"
+    Write-Host " ArtifactsPackages: $ArtifactsPackages"
+    Write-Host " Version: $Version"
+    Write-Host "---------------------------------------------------"
+
+    $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
+
+    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$ArtifactsPackages\HFM $Version.msi" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Configure-Artifacts
