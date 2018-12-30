@@ -43,7 +43,7 @@ namespace HFM.Queue
       // ReSharper disable InconsistentNaming
 
       [Test, Category("SMP")]
-      public void SMP_4_queue() // WinSMP v6.24R3
+      public void QueueReader_ReadQueue_SMP_4_queue() // WinSMP v6.24R3
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\SMP_4\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -112,7 +112,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("SMP")]
-      public void SMP_5_queue() // Linux SMP v6.24
+      public void QueueReader_ReadQueue_SMP_5_queue() // Linux SMP v6.24
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\SMP_5\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -181,7 +181,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("SMP")]
-      public void SMP_6_queue() // Linux SMP v6.24 - Waiting Upload
+      public void QueueReader_ReadQueue_SMP_6_queue() // Linux SMP v6.24 - Waiting Upload
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\SMP_6\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -250,7 +250,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("SMP")]
-      public void SMP_16_queue() // WinSMP v6.30
+      public void QueueReader_ReadQueue_SMP_16_queue() // WinSMP v6.30
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\SMP_16\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -319,7 +319,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("GPU")]
-      public void GPU2_4_queue() // GPU2 v6.23
+      public void QueueReader_ReadQueue_GPU2_4_queue() // GPU2 v6.23
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_4\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -388,7 +388,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("GPU")]
-      public void GPU2_5_queue() // GPU2 v6.23 - ID value for p10xxx Projects is written Big Endian
+      public void QueueReader_ReadQueue_GPU2_5_queue() // GPU2 v6.23 - ID value for p10xxx Projects is written Big Endian
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\GPU2_5\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -457,7 +457,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("Standard")]
-      public void Standard_2_queue() // Standard PPC v6.xx
+      public void QueueReader_ReadQueue_Standard_2_queue() // Standard PPC v6.xx
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\Standard_2\\queue.dat");
          Assert.AreEqual(600, queue.Version);
@@ -584,7 +584,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("Standard")]
-      public void Standard_3_queue() // Standard PPC v5.01
+      public void QueueReader_ReadQueue_Standard_3_queue() // Standard PPC v5.01
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\Standard_3\\queue.dat");
          Assert.AreEqual(501, queue.Version);
@@ -653,7 +653,7 @@ namespace HFM.Queue
       }
 
       [Test, Category("Standard")]
-      public void Standard_4_queue() // Standard x86 v6.xx
+      public void QueueReader_ReadQueue_Standard_4_queue() // Standard x86 v6.xx
       {
          QueueData queue = QueueReader.ReadQueue("..\\..\\..\\TestFiles\\Standard_4\\queue.dat");
          Assert.AreEqual(600, queue.Version);
