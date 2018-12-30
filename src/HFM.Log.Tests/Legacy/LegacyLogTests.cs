@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -13,11 +14,34 @@ namespace HFM.Log.Legacy
    public class LegacyLogTests
    {
       [Test]
+      public async Task LegacyLog_ReadAsync_FromFahLogReader_Test()
+      {
+         // Arrange
+         var log = new LegacyLog();
+         using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"))
+         using (var reader = new LegacyLogTextReader(textReader))
+         {
+            // Act
+            await log.ReadAsync(reader);
+         }
+         // Assert
+         Assert.IsTrue(log.ClientRuns.Count > 0);
+      }
+
+      [Test]
+      public async Task LegacyLog_ReadAsync_FromPath_Test()
+      {
+         // Arrange
+         var log = await LegacyLog.ReadAsync("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt");
+         Assert.IsTrue(log.ClientRuns.Count > 0);
+      }
+
+      [Test]
       public void LegacyLog_Clear_Test()
       {
          // Arrange
          var log = new LegacyLog();
-         using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+         using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\SMP_1\\FAHlog.txt"))
          using (var reader = new LegacyLogTextReader(textReader))
          {
             log.Read(reader);

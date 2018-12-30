@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -12,6 +13,28 @@ namespace HFM.Log.FahClient
    [TestFixture]
    public class FahClientLogTests
    {
+      [Test]
+      public async Task FahClientLog_ReadAsync_FromFahLogReader_Test()
+      {
+         // Arrange
+         var log = new FahClientLog();
+         using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+         using (var reader = new FahClientLogTextReader(textReader))
+         {
+            // Act
+            await log.ReadAsync(reader);
+         }
+         // Assert
+         Assert.IsTrue(log.ClientRuns.Count > 0);
+      }
+
+      [Test]
+      public async Task FahClientLog_ReadAsync_FromPath_Test()
+      {
+         var log = await FahClientLog.ReadAsync("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+         Assert.IsTrue(log.ClientRuns.Count > 0);
+      }
+
       [Test]
       public void FahClientLog_Clear_Test()
       {

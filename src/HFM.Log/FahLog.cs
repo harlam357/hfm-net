@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace HFM.Log
 {
@@ -51,7 +52,21 @@ namespace HFM.Log
          OnClientRunFinished();
       }
 
-      // TODO: Add ReadAsync()
+      /// <summary>
+      /// Reads Folding@Home log line data asynchronously from the <see cref="FahLogReader"/>.
+      /// </summary>
+      /// <param name="reader">The <see cref="FahLogReader"/> that reads the Folding@Home log line data.</param>
+      public async Task ReadAsync(FahLogReader reader)
+      {
+         if (reader == null) throw new ArgumentNullException(nameof(reader));
+
+         LogLine logLine;
+         while ((logLine = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
+         {
+            OnLogLineRead(logLine);
+         }
+         OnClientRunFinished();
+      }
 
       /// <summary>
       /// Clears the log data.
@@ -123,7 +138,21 @@ namespace HFM.Log
             }
          }
 
-         // TODO: Add ReadAsync()
+         /// <summary>
+         /// Reads the log file asynchronously from the given path and returns a new <see cref="LegacyLog"/> object.
+         /// </summary>
+         /// <param name="path">The log file path.</param>
+         /// <returns>A new <see cref="LegacyLog"/> object.</returns>
+         public static async Task<LegacyLog> ReadAsync(string path)
+         {
+            using (var textReader = new StreamReader(path))
+            using (var reader = new LegacyLogTextReader(textReader))
+            {
+               var log = new LegacyLog();
+               await log.ReadAsync(reader).ConfigureAwait(false);
+               return log;
+            }
+         }
 
          /// <summary>
          /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.
@@ -187,7 +216,7 @@ namespace HFM.Log
                return;
             }
             var slotRun = clientRun.SlotRuns.Count != 0 ? clientRun.SlotRuns[FoldingSlot] : null;
-            var lastUnitRun = slotRun != null ? slotRun.UnitRuns.LastOrDefault() : null;
+            var lastUnitRun = slotRun?.UnitRuns.LastOrDefault();
             if (_logBuffer != null && _logBuffer.Count != 0)
             {
                if (lastUnitRun != null)
@@ -439,7 +468,21 @@ namespace HFM.Log
             }
          }
 
-         // TODO: Add ReadAsync()
+         /// <summary>
+         /// Reads the log file asynchronously from the given path and returns a new <see cref="FahClientLog"/> object.
+         /// </summary>
+         /// <param name="path">The log file path.</param>
+         /// <returns>A new <see cref="FahClientLog"/> object.</returns>
+         public static async Task<FahClientLog> ReadAsync(string path)
+         {
+            using (var textReader = new StreamReader(path))
+            using (var reader = new FahClientLogTextReader(textReader))
+            {
+               var log = new FahClientLog();
+               await log.ReadAsync(reader).ConfigureAwait(false);
+               return log;
+            }
+         }
 
          /// <summary>
          /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.

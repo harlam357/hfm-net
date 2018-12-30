@@ -19,12 +19,32 @@ namespace HFM.Log
       }
 
       [Test]
+      public void FahClientLog_ReadAsync_ThrowsWhenFahLogReaderIsNull_Test()
+      {
+         Assert.Throws(typeof(ArgumentNullException), async () =>
+         {
+            FahLog log = new FahClient.FahClientLog();
+            await log.ReadAsync(null);
+         });
+      }
+
+      [Test]
       public void LegacyLog_Read_ThrowsWhenFahLogReaderIsNull_Test()
       {
          Assert.Throws(typeof(ArgumentNullException), () =>
          {
             FahLog log = new Legacy.LegacyLog();
             log.Read(null);
+         });
+      }
+
+      [Test]
+      public void LegacyLog_ReadAsync_ThrowsWhenFahLogReaderIsNull_Test()
+      {
+         Assert.Throws(typeof(ArgumentNullException), async () =>
+         {
+            FahLog log = new Legacy.LegacyLog();
+            await log.ReadAsync(null);
          });
       }
    }
