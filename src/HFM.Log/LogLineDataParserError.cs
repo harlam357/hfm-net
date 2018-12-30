@@ -6,11 +6,18 @@ namespace HFM.Log
    /// </summary>
    public class LogLineDataParserError
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="LogLineDataParserError"/> class.
+      /// </summary>
       public LogLineDataParserError()
       {
          
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="LogLineDataParserError"/> class.
+      /// </summary>
+      /// <param name="other">The other instance from which data will be copied.</param>
       public LogLineDataParserError(LogLineDataParserError other)
       {
          if (other == null) return;

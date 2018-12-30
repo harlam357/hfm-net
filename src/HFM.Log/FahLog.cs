@@ -52,6 +52,8 @@ namespace HFM.Log
          OnClientRunFinished();
       }
 
+      // TODO: Add ReadAsync()
+
       /// <summary>
       /// Clears the log data.
       /// </summary>
@@ -120,6 +122,11 @@ namespace HFM.Log
             _unitIndexData.Initialize();
          }
 
+         /// <summary>
+         /// Reads the log file from the given path and returns a new <see cref="LegacyLog"/> object.
+         /// </summary>
+         /// <param name="path">The log file path.</param>
+         /// <returns>A new <see cref="LegacyLog"/> object.</returns>
          public static LegacyLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
@@ -130,6 +137,8 @@ namespace HFM.Log
                return log;
             }
          }
+
+         // TODO: Add ReadAsync()
 
          /// <summary>
          /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.
@@ -429,6 +438,11 @@ namespace HFM.Log
 
          }
 
+         /// <summary>
+         /// Reads the log file from the given path and returns a new <see cref="FahClientLog"/> object.
+         /// </summary>
+         /// <param name="path">The log file path.</param>
+         /// <returns>A new <see cref="FahClientLog"/> object.</returns>
          public static FahClientLog Read(string path)
          {
             using (var textReader = new StreamReader(path))
@@ -439,6 +453,8 @@ namespace HFM.Log
                return log;
             }
          }
+
+         // TODO: Add ReadAsync()
 
          /// <summary>
          /// Occurs after a <see cref="LogLine"/> was read from the <see cref="FahLogReader"/>.

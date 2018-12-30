@@ -131,11 +131,18 @@ namespace HFM.Log
    /// </summary>
    public abstract class UnitRunData
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="UnitRunData"/> class.
+      /// </summary>
       protected UnitRunData()
       {
          
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="UnitRunData"/> class.
+      /// </summary>
+      /// <param name="other">The other instance from which data will be copied.</param>
       protected UnitRunData(UnitRunData other)
       {
          if (other == null) return;
@@ -198,11 +205,18 @@ namespace HFM.Log
       /// </summary>
       public class FahClientUnitRunData : UnitRunData
       {
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientUnitRunData"/> class.
+         /// </summary>
          public FahClientUnitRunData()
          {
 
          }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientUnitRunData"/> class.
+         /// </summary>
+         /// <param name="other">The other instance from which data will be copied.</param>
          public FahClientUnitRunData(FahClientUnitRunData other)
             : base(other)
          {
@@ -218,11 +232,18 @@ namespace HFM.Log
       /// </summary>
       public class LegacyUnitRunData : UnitRunData
       {
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyUnitRunData"/> class.
+         /// </summary>
          public LegacyUnitRunData()
          {
 
          }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacyUnitRunData"/> class.
+         /// </summary>
+         /// <param name="other">The other instance from which data will be copied.</param>
          public LegacyUnitRunData(LegacyUnitRunData other)
             : base(other)
          {

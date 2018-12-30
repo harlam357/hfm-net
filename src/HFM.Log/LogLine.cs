@@ -27,7 +27,7 @@ namespace HFM.Log
    public class LogLine
    {
       /// <summary>
-      /// Initializes a new <see cref="LogLine"/> object.
+      /// Initializes a new instance of the <see cref="LogLine"/> class.
       /// </summary>
       public LogLine()
       {
@@ -35,7 +35,7 @@ namespace HFM.Log
       }
 
       /// <summary>
-      /// Initializes a new <see cref="LogLine"/> object.
+      /// Initializes a new instance of the <see cref="LogLine"/> class.
       /// </summary>
       /// <param name="raw">The raw log line string.</param>
       /// <param name="index">The index of the line in the log.</param>
@@ -120,7 +120,7 @@ namespace HFM.Log
       private Lazy<object> _lazyDataParser;
 
       /// <summary>
-      /// Initializes a new <see cref="LogLine"/> object where the TimeStamp and Data properties are lazily evaluated using the given parsing functions.
+      /// Initializes a new instance of the <see cref="LazyLogLine"/> class where the TimeStamp and Data properties are lazily evaluated using the given parsing functions.
       /// </summary>
       /// <param name="raw">The raw log line string.</param>
       /// <param name="index">The index of the line in the log.</param>
@@ -135,7 +135,9 @@ namespace HFM.Log
       }
 
       private TimeSpan? _timeStamp;
-
+      /// <summary>
+      /// Gets or sets the time stamp of the log line if the log line contains time information.
+      /// </summary>
       public override TimeSpan? TimeStamp
       {
          get
@@ -157,7 +159,9 @@ namespace HFM.Log
       }
 
       private object _data;
-
+      /// <summary>
+      /// Gets or sets the object that represents the data parsed from the raw log line.
+      /// </summary>
       public override object Data
       {
          get

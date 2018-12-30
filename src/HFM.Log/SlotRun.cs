@@ -107,11 +107,18 @@ namespace HFM.Log
    /// </summary>
    public abstract class SlotRunData
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="SlotRunData"/> class.
+      /// </summary>
       protected SlotRunData()
       {
          
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="SlotRunData"/> class.
+      /// </summary>
+      /// <param name="other">The other instance from which data will be copied.</param>
       protected SlotRunData(SlotRunData other)
       {
          if (other == null) return;
@@ -138,11 +145,18 @@ namespace HFM.Log
       /// </summary>
       public class FahClientSlotRunData : SlotRunData
       {
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientSlotRunData"/> class.
+         /// </summary>
          public FahClientSlotRunData()
          {
 
          }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="FahClientSlotRunData"/> class.
+         /// </summary>
+         /// <param name="other">The other instance from which data will be copied.</param>
          public FahClientSlotRunData(FahClientSlotRunData other)
             : base(other)
          {
@@ -158,11 +172,18 @@ namespace HFM.Log
       /// </summary>
       public class LegacySlotRunData : SlotRunData
       {
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacySlotRunData"/> class.
+         /// </summary>
          public LegacySlotRunData()
          {
 
          }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="LegacySlotRunData"/> class.
+         /// </summary>
+         /// <param name="other">The other instance from which data will be copied.</param>
          public LegacySlotRunData(LegacySlotRunData other)
             : base(other)
          {
