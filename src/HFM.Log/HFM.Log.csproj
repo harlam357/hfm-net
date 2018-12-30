@@ -77,7 +77,6 @@
     </Compile>
     <Compile Include="ClientRun.cs" />
     <Compile Include="FahLogReader.cs" />
-    <Compile Include="Internal\ObjectCopier.cs" />
     <Compile Include="Internal\WorkUnitResult.cs" />
     <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
     <Compile Include="LogLine.cs" />

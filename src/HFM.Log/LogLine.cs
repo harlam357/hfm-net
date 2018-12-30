@@ -101,11 +101,6 @@ namespace HFM.Log
          set => _data = value;
       }
 
-      public LogLine Copy()
-      {
-         return new LogLine(Raw, Index, LineType, TimeStamp, Internal.ObjectCopier.Copy(Data));
-      }
-
       /// <summary>
       /// Returns a string that represents the current <see cref="LogLine"/> object.
       /// </summary>

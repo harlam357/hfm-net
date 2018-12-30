@@ -31,44 +31,6 @@ namespace HFM.Log
       }
 
       [Test]
-      public void LogLine_Copy_DataClassInstanceIsCopied_Test()
-      {
-         // Arrange
-         var timeStamp = TimeSpan.FromMinutes(1);
-         var frameData = new WorkUnitFrameData
-         {
-            ID = 1,
-            RawFramesComplete = 10000,
-            RawFramesTotal = 1000000,
-            TimeStamp = timeStamp,
-            Duration = TimeSpan.FromMinutes(2)
-         };
-         var logLine = new LogLine
-         {
-            Raw = "Foo",
-            Index = 1,
-            LineType = LogLineType.WorkUnitFrame,
-            TimeStamp = timeStamp,
-            Data = frameData
-         };
-         // Act
-         var copy = logLine.Copy();
-         // Assert
-         Assert.AreNotSame(logLine, copy);
-         Assert.AreEqual(logLine.Raw, copy.Raw);
-         Assert.AreEqual(logLine.Index, copy.Index);
-         Assert.AreEqual(logLine.LineType, copy.LineType);
-         Assert.AreEqual(logLine.TimeStamp, copy.TimeStamp);
-         Assert.AreNotSame(logLine.Data, copy.Data);
-         var dataCopy = (WorkUnitFrameData)copy.Data;
-         Assert.AreEqual(frameData.ID, dataCopy.ID);
-         Assert.AreEqual(frameData.RawFramesComplete, dataCopy.RawFramesComplete);
-         Assert.AreEqual(frameData.RawFramesTotal, dataCopy.RawFramesTotal);
-         Assert.AreEqual(frameData.TimeStamp, dataCopy.TimeStamp);
-         Assert.AreEqual(frameData.Duration, dataCopy.Duration);
-      }
-
-      [Test]
       public void LogLine_VerifyPropertyValuesCanBeSet_Test()
       {
          // Arrange

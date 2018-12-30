@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="BonusCalculationType.cs" />
+    <Compile Include="Client\LogLineCopier.cs" />
     <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
     <Compile Include="DataTypes\Markup\UnitInfo.cs" />
