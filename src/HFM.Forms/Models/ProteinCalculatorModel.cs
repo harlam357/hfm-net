@@ -45,7 +45,7 @@ namespace HFM.Forms.Models
          {
             return;
          }
-         Protein protein = value.DeepClone();
+         Protein protein = value.Copy();
          if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
          if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
          if (KFactorChecked) protein.KFactor = KFactor;

@@ -20,8 +20,14 @@
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Represents Folding@Home project (protein) information.
+   /// </summary>
    public class Protein
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Protein"/> class.
+      /// </summary>
       public Protein()
       {
          ServerIP = "0.0.0.0";
@@ -33,62 +39,62 @@ namespace HFM.Proteins
       }
 
       /// <summary>
-      /// Project Number
+      /// Gets or sets the project number.
       /// </summary>
       public int ProjectNumber { get; set; }
 
       /// <summary>
-      /// Server IP Address
+      /// Gets or sets the server IP address.
       /// </summary>
       public string ServerIP { get; set; }
 
       /// <summary>
-      /// Work Unit Name
+      /// Gets or sets the name of the work unit (project).
       /// </summary>
       public string WorkUnitName { get; set; }
 
       /// <summary>
-      /// Number of Atoms
+      /// Gets or sets the number of atoms defined by the project.
       /// </summary>
       public int NumberOfAtoms { get; set; }
 
       /// <summary>
-      /// Deadline - Preferred Days
+      /// Gets or sets the preferred deadline in days.
       /// </summary>
       public double PreferredDays { get; set; }
 
       /// <summary>
-      /// Deadline - Maximum Days
+      /// Gets or sets the maximum deadline in days.
       /// </summary>
       public double MaximumDays { get; set; }
 
       /// <summary>
-      /// Work Unit Credit
+      /// Gets or sets the project credit value.
       /// </summary>
       public double Credit { get; set; }
 
       /// <summary>
-      /// Number of Frames
+      /// Gets or sets the number of project frames.
       /// </summary>
       public int Frames { get; set; }
 
       /// <summary>
-      /// Core Identification string
+      /// Gets or sets the core identification string.
       /// </summary>
       public string Core { get; set; }
 
       /// <summary>
-      /// Project Description (usually a URL)
+      /// Gets or sets the project description (usually a URL).
       /// </summary>
       public string Description { get; set; }
 
       /// <summary>
-      /// Project Research Contact
+      /// Gets or sets the project contact.
       /// </summary>
       public string Contact { get; set; }
 
       /// <summary>
-      /// Bonus (K) Factor
+      /// Gets or sets the bonus K factor.
       /// </summary>
       public double KFactor { get; set; }
 
@@ -97,6 +103,9 @@ namespace HFM.Proteins
          get { return ProjectNumber == 0; }
       }
 
+      /// <summary>
+      /// Returns true if this <see cref="Protein"/> has valid values for <see cref="ProjectNumber"/>, <see cref="PreferredDays"/>, <see cref="MaximumDays"/>, <see cref="Credit"/>, <see cref="Frames"/>, and <see cref="KFactor"/>; otherwise, false.
+      /// </summary>
       public bool IsValid
       {
          get
@@ -110,7 +119,10 @@ namespace HFM.Proteins
          }
       }
 
-      public Protein DeepClone()
+      /// <summary>
+      /// Returns a new <see cref="Protein"/> object containing the data copied from this object.
+      /// </summary>
+      public Protein Copy()
       {
          return new Protein
          {

@@ -9,8 +9,14 @@ using System.Threading.Tasks;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Represents a serializer capable of serializing and deserializing a collection of <see cref="Protein"/> objects to and from a tab delimited text file.
+   /// </summary>
    public sealed class TabSerializer : IProteinSerializer
    {
+      /// <summary>
+      /// Deserializes a collection of <see cref="Protein"/> objects from a <see cref="Stream"/>.
+      /// </summary>
       public ICollection<Protein> Deserialize(Stream stream)
       {
          var collection = new List<Protein>();
@@ -31,6 +37,9 @@ namespace HFM.Proteins
          return collection;
       }
 
+      /// <summary>
+      /// Asynchronously deserializes a collection of <see cref="Protein"/> objects from a <see cref="Stream"/>.
+      /// </summary>
       public async Task<ICollection<Protein>> DeserializeAsync(Stream stream)
       {
          var collection = new List<Protein>();
@@ -79,6 +88,9 @@ namespace HFM.Proteins
          return null;
       }
 
+      /// <summary>
+      /// Serializes a collection of <see cref="Protein"/> objects to a <see cref="Stream"/>.
+      /// </summary>
       public void Serialize(Stream stream, ICollection<Protein> collection)
       { 
          using (var writer = new StreamWriter(stream))
@@ -91,6 +103,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Asynchronously serializes a collection of <see cref="Protein"/> objects to a <see cref="Stream"/>.
+      /// </summary>
       public async Task SerializeAsync(Stream stream, ICollection<Protein> collection)
       {
          using (var writer = new StreamWriter(stream))

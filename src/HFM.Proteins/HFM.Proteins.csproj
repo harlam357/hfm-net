@@ -82,7 +82,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="IProteinSerializer.cs" />
-    <Compile Include="JsonSerializer.cs" />
+    <Compile Include="ProjectSummaryJsonDeserializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
     <Compile Include="ProteinDictionaryChange.cs" />

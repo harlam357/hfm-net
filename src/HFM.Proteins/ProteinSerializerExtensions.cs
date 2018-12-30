@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Provides extensions to the <see cref="IProteinSerializer"/> interface to assist with read and writing to the file system and reading from resources described by a <see cref="Uri"/>.
+   /// </summary>
    public static class ProteinSerializerExtensions
    {
+      /// <summary>
+      /// Reads a collection of <see cref="Protein"/> objects from a file.
+      /// </summary>
       public static ICollection<Protein> ReadFile(this IProteinSerializer serializer, string path)
       {
          using (var stream = File.OpenRead(path))
@@ -17,6 +23,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Asynchronously reads a collection of <see cref="Protein"/> objects from a file.
+      /// </summary>
       public static async Task<ICollection<Protein>> ReadFileAsync(this IProteinSerializer serializer, string path)
       {
          using (var stream = File.OpenRead(path))
@@ -25,6 +34,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Reads a collection of <see cref="Protein"/> objects from a resource described by a <see cref="Uri"/>.
+      /// </summary>
       public static ICollection<Protein> ReadUri(this IProteinSerializer serializer, Uri address)
       {
          var client = new WebClient();
@@ -34,6 +46,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Asynchronously reads a collection of <see cref="Protein"/> objects from a resource described by a <see cref="Uri"/>.
+      /// </summary>
       public static async Task<ICollection<Protein>> ReadUriAsync(this IProteinSerializer serializer, Uri address)
       {
          var client = new WebClient();
@@ -43,6 +58,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Writes a collection of <see cref="Protein"/> objects to a file.
+      /// </summary>
       public static void WriteFile(this IProteinSerializer serializer, string path, ICollection<Protein> values)
       {
          using (var stream = File.Create(path))
@@ -51,6 +69,9 @@ namespace HFM.Proteins
          }
       }
 
+      /// <summary>
+      /// Asynchronously writes a collection of <see cref="Protein"/> objects to a file.
+      /// </summary>
       public static async Task WriteFileAsync(this IProteinSerializer serializer, string path, ICollection<Protein> values)
       {
          using (var stream = File.Create(path))

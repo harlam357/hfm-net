@@ -224,7 +224,7 @@ namespace HFM.Core
             _downloader.Download(stream, progress);
             stream.Position = 0;
 
-            var serializer = new JsonSerializer();
+            var serializer = new ProjectSummaryJsonDeserializer();
             var newDictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
             dictionaryChanges = newDictionary.Changes;
             _dictionary = newDictionary;

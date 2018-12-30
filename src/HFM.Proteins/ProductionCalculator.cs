@@ -3,6 +3,9 @@ using System;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Measures work unit (protein) production based on frame time, work unit information, and the unit completion time.
+   /// </summary>
    public static class ProductionCalculator
    {
       private const int MaxDecimalPlaces = 5;
@@ -117,14 +120,29 @@ namespace HFM.Proteins
       }
    }
 
+   /// <summary>
+   /// Represents all production measurements.
+   /// </summary>
    public struct ProductionValues
    {
+      /// <summary>
+      /// Gets or sets the units per day (UPD) measurement.
+      /// </summary>
       public double UPD { get; set; }
 
+      /// <summary>
+      /// Gets or sets the bonus multiplier measurement.
+      /// </summary>
       public double Multiplier { get; set; }
 
+      /// <summary>
+      /// Gets or sets the work unit credit measurement.
+      /// </summary>
       public double Credit { get; set; }
 
+      /// <summary>
+      /// Gets or sets the points per day (PPD) measurement.
+      /// </summary>
       public double PPD { get; set; }
    }
 }

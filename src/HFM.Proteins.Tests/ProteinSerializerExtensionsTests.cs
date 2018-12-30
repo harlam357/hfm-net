@@ -12,7 +12,7 @@ namespace HFM.Proteins
       [Test]
       public void ProteinSerializerExtensions_ReadFile_Test()
       {
-         var serializer = new JsonSerializer();
+         var serializer = new ProjectSummaryJsonDeserializer();
          var proteins = serializer.ReadFile("..\\..\\TestFiles\\summary.json");
          Assert.AreEqual(627, proteins.Count);
       }
@@ -20,7 +20,7 @@ namespace HFM.Proteins
       [Test]
       public async Task ProteinSerializerExtensions_ReadFileAsync_Test()
       {
-         var serializer = new JsonSerializer();
+         var serializer = new ProjectSummaryJsonDeserializer();
          var proteins = await serializer.ReadFileAsync("..\\..\\TestFiles\\summary.json");
          Assert.AreEqual(627, proteins.Count);
       }

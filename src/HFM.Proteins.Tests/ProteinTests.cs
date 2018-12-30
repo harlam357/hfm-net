@@ -71,7 +71,7 @@ namespace HFM.Proteins
       }
 
       [Test]
-      public void Protein_DeepClone_Test()
+      public void Protein_Copy_Test()
       {
          // Arrange
          var p = new Protein
@@ -90,7 +90,7 @@ namespace HFM.Proteins
             KFactor = 0.75
          };
          // Act
-         var clone = p.DeepClone();
+         var clone = p.Copy();
          // Assert
          Assert.AreNotSame(p, clone);
          Assert.AreEqual(p.ProjectNumber, clone.ProjectNumber);
