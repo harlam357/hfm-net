@@ -77,14 +77,14 @@ Function Test-Build
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
-    $NUnitPath = 'packages\NUnit.Runners.2.7.0\tools\nunit-console-x86.exe'
-    Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Client.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Core.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Log.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Queue.Tests.Results.xml }
+    $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
+    Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Client.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Log.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Queue.Tests.Results.xml }
 }
 
 Function Analyze-Build
