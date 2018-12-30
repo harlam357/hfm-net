@@ -341,7 +341,7 @@ namespace HFM.Core
          if ((queueEntryStatus == QueueEntryStatus.Unknown ||
               queueEntryStatus == QueueEntryStatus.Empty ||
               queueEntryStatus == QueueEntryStatus.Garbage ||
-              queueEntryStatus == QueueEntryStatus.Abandonded) == false)
+              queueEntryStatus == QueueEntryStatus.Abandoned) == false)
          {
             /* Tag (Could be read here or through the unitinfo.txt file) */
             unitInfo.ProteinTag = queueEntry.WorkUnitTag;

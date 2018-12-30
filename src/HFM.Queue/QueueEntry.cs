@@ -31,6 +31,7 @@ namespace HFM.Queue
    /// </summary>
    public enum QueueEntryStatus
    {
+#pragma warning disable 1591
       Unknown,
       Empty,
       Deleted,
@@ -39,8 +40,9 @@ namespace HFM.Queue
       FoldingNow,
       Queued,
       ReadyForUpload,
-      Abandonded,
+      Abandoned,
       FetchingFromServer
+#pragma warning restore 1591
    }
 
    /// <summary>
@@ -143,7 +145,7 @@ namespace HFM.Queue
                    "Folding Now",
                    "Queued",
                    "Ready For Upload",
-                   "Abandonded",
+                   "Abandoned",
                    "Fetching From Server"
                 };
       }                                              
@@ -222,7 +224,7 @@ namespace HFM.Queue
       // ReSharper disable InconsistentNaming
 
       /// <summary>
-      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
+      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandoned (Ignore if found) / (4) Fetching from Server
       /// </summary>
       public UInt32 Status
       {
@@ -236,7 +238,7 @@ namespace HFM.Queue
       /// <summary>
       /// Entry Status (status value based on Status property and other properties of this queue entry)
       /// (0) Unknown / (1) Empty / (2) Deleted / (3) Finished / (4) Garbage / (5) Folding Now
-      /// (6) Queued / (7) Ready For Upload / (8) Abandonded / (9) Fetching From Server
+      /// (6) Queued / (7) Ready For Upload / (8) Abandoned / (9) Fetching From Server
       /// </summary>
       public UInt32 EntryStatus
       {
@@ -276,7 +278,7 @@ namespace HFM.Queue
                   /* The core has finished the unit, but it is still in the queue. */
                   return 7; // Ready For Upload
                case 3: /* Issue before V3b5, neglected to post status (1). */
-                  return 8; // Abandonded
+                  return 8; // Abandoned
                case 4:
                   /* Client presently contacting the server, or something failed in download.
 			          * If this state persists past the current unit, the queue entry will be
@@ -293,7 +295,7 @@ namespace HFM.Queue
       /// <summary>
       /// Entry Status (status value based on Status property and other properties of this queue entry)
       /// (0) Unknown / (1) Empty / (2) Deleted / (3) Finished / (4) Garbage / (5) Folding Now
-      /// (6) Queued / (7) Ready For Upload / (8) Abandonded / (9) Fetching From Server
+      /// (6) Queued / (7) Ready For Upload / (8) Abandoned / (9) Fetching From Server
       /// </summary>
       public string EntryStatusLiteral
       {
