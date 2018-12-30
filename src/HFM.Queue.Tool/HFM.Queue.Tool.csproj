@@ -70,10 +70,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -150,8 +150,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="app.config" />
   </ItemGroup>

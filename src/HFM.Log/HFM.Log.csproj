@@ -60,10 +60,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -123,8 +123,8 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup />

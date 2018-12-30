@@ -40,10 +40,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
@@ -70,8 +70,8 @@
     <Compile Include="SetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -62,10 +62,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -145,8 +145,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\TestClientSettings.hfmx" />
