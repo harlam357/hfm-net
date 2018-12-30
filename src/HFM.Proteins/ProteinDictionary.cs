@@ -24,13 +24,40 @@ using System.Linq;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Represents a collection of <see cref="Protein"/> values keyed by project number.
+   /// </summary>
    public class ProteinDictionary : Dictionary<int, Protein>
    {
-      public IReadOnlyCollection<ProteinDictionaryChange> Changes { get; internal set; }
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ProteinDictionary"/> class.
+      /// </summary>
+      public ProteinDictionary()
+      {
+         
+      }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ProteinDictionary"/> class that contains elements copied from the specified dictionary.
+      /// </summary>
+      public ProteinDictionary(IDictionary<int, Protein> dictionary)
+         : base(dictionary)
+      {
+         
+      }
+
+      /// <summary>
+      /// Gets a collection of proteins that changed.
+      /// </summary>
+      public IReadOnlyCollection<ProteinDictionaryChange> Changes { get; private set; }
+
+      /// <summary>
+      /// Creates a new <see cref="ProteinDictionary"/> from the collection of <see cref="Protein"/> objects.
+      /// </summary>
+      /// <param name="proteins">The collection of <see cref="Protein"/> objects that will populate the new dictionary.</param>
       public static ProteinDictionary Create(IEnumerable<Protein> proteins)
       {
-         if (proteins == null) throw new ArgumentNullException("proteins");
+         if (proteins == null) throw new ArgumentNullException(nameof(proteins));
 
          var dictionary = new ProteinDictionary();
          var dictionaryChanges = new List<ProteinDictionaryChange>();
@@ -43,18 +70,23 @@ namespace HFM.Proteins
          return dictionary;
       }
 
-      public static ProteinDictionary CreateFromExisting(IReadOnlyDictionary<int, Protein> existingDictionary, IEnumerable<Protein> proteins)
+      /// <summary>
+      /// Creates a new <see cref="ProteinDictionary"/> using elements copied from the existing dictionary and changes applied from the collection of <see cref="Protein"/> objects.
+      /// </summary>
+      /// <param name="existingDictionary">The existing dictionary with elements to use as the basis for the new dictionary.</param>
+      /// <param name="proteins">The collection of <see cref="Protein"/> objects used to apply changes to the new dictionary.</param>
+      public static ProteinDictionary CreateFromExisting(IDictionary<int, Protein> existingDictionary, IEnumerable<Protein> proteins)
       {
-         if (existingDictionary == null) throw new ArgumentNullException("existingDictionary");
-         if (proteins == null) throw new ArgumentNullException("proteins");
+         if (existingDictionary == null) throw new ArgumentNullException(nameof(existingDictionary));
+         if (proteins == null) throw new ArgumentNullException(nameof(proteins));
 
-         var dictionary = new ProteinDictionary();
+         var dictionary = new ProteinDictionary(existingDictionary);
          var dictionaryChanges = new List<ProteinDictionaryChange>();
          foreach (Protein protein in proteins.Where(x => x.IsValid))
          {
-            if (existingDictionary.ContainsKey(protein.ProjectNumber))
+            if (dictionary.ContainsKey(protein.ProjectNumber))
             {
-               var propertyChanges = GetChangedProperties(existingDictionary[protein.ProjectNumber], protein);
+               var propertyChanges = GetChangedProperties(dictionary[protein.ProjectNumber], protein);
                dictionaryChanges.Add(propertyChanges.Count == 0
                   ? new ProteinDictionaryChange(protein.ProjectNumber, ProteinDictionaryChangeResult.NoChange)
                   : new ProteinDictionaryChange(protein.ProjectNumber, ProteinDictionaryChangeResult.Changed, propertyChanges));

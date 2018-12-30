@@ -24,20 +24,44 @@ using System.Text;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Defines the result of a change to a <see cref="ProteinDictionary"/>.
+   /// </summary>
    public enum ProteinDictionaryChangeResult
    {
+      /// <summary>
+      /// A protein was added.
+      /// </summary>
       Added,
+      /// <summary>
+      /// An existing protein was changed.
+      /// </summary>
       Changed,
+      /// <summary>
+      /// An existing protein was not changed.
+      /// </summary>
       NoChange
    }
 
+   /// <summary>
+   /// Represents a change to a <see cref="ProteinDictionary"/>.
+   /// </summary>
    public sealed class ProteinDictionaryChange
    {
-      public int ProjectNumber { get; private set; }
+      /// <summary>
+      /// Gets the project number.
+      /// </summary>
+      public int ProjectNumber { get; }
 
-      public ProteinDictionaryChangeResult Result { get; private set; }
+      /// <summary>
+      /// Gets the result of the change.
+      /// </summary>
+      public ProteinDictionaryChangeResult Result { get; }
 
-      public IReadOnlyCollection<ProteinPropertyChange> Changes { get; private set; }
+      /// <summary>
+      /// Gets a collection of protein properties that changed.
+      /// </summary>
+      public IReadOnlyCollection<ProteinPropertyChange> Changes { get; }
 
       internal ProteinDictionaryChange(int projectNumber, ProteinDictionaryChangeResult result)
          : this(projectNumber, result, null)
@@ -52,6 +76,10 @@ namespace HFM.Proteins
          Changes = changes;
       }
 
+      /// <summary>
+      /// Returns a string that represents the current <see cref="ProteinDictionaryChange"/> object.
+      /// </summary>
+      /// <returns>A string that represents the current <see cref="ProteinDictionaryChange"/> object.</returns>
       public override string ToString()
       {
          var sb = new StringBuilder();
@@ -63,7 +91,7 @@ namespace HFM.Proteins
          {
             foreach (var change in Changes)
             {
-               sb.Append(" / ");
+               sb.Append(", ");
                sb.Append(change);
             }            
          }
@@ -71,13 +99,25 @@ namespace HFM.Proteins
       }
    }
 
+   /// <summary>
+   /// Represents a change to a <see cref="Protein"/>.
+   /// </summary>
    public sealed class ProteinPropertyChange
    {
-      public string PropertyName { get; private set; }
+      /// <summary>
+      /// Gets the name of the property that changed.
+      /// </summary>
+      public string PropertyName { get; }
 
-      public string Previous { get; private set; }
+      /// <summary>
+      /// Gets the previous property value (before the change).
+      /// </summary>
+      public string Previous { get; }
 
-      public string Current { get; private set; }
+      /// <summary>
+      /// Gets the current property value (after the change).
+      /// </summary>
+      public string Current { get; }
 
       internal ProteinPropertyChange(string propertyName, string previous, string current)
       {
@@ -86,9 +126,13 @@ namespace HFM.Proteins
          Current = current;
       }
 
+      /// <summary>
+      /// Returns a string that represents the current <see cref="ProteinPropertyChange"/> object.
+      /// </summary>
+      /// <returns>A string that represents the current <see cref="ProteinPropertyChange"/> object.</returns>
       public override string ToString()
       {
-         return String.Format(CultureInfo.CurrentCulture, "{0} - {1} > {2}", PropertyName, Previous, Current);
+         return String.Format(CultureInfo.CurrentCulture, "{0}: {1} > {2}", PropertyName, Previous, Current);
       }
    }
 }

@@ -3,6 +3,9 @@ using System;
 
 namespace HFM.Proteins
 {
+   /// <summary>
+   /// Provides extensions to the <see cref="Protein"/> class to assist with measuring work unit (protein) production with the <see cref="ProductionCalculator"/>.
+   /// </summary>
    public static class ProteinProductionExtensions
    {
       /// <summary>

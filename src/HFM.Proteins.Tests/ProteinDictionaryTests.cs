@@ -133,10 +133,7 @@ namespace HFM.Proteins
          dictionary.Add(3, CreateValidProtein(3));
          // build the collection of proteins to load
          var values = new List<Protein>();
-         var protein = CreateValidProtein(1);
-         protein.Credit = 100;
-         values.Add(protein);
-         protein = CreateValidProtein(2);
+         var protein = CreateValidProtein(2);
          protein.MaximumDays = 3;
          protein.KFactor = 26.4;
          values.Add(protein);
@@ -147,7 +144,6 @@ namespace HFM.Proteins
          Assert.AreEqual(3, dictionary.Count);
          // check project 1
          Assert.AreEqual(1, dictionary[1].ProjectNumber);
-         Assert.AreEqual(100, dictionary[1].Credit);
          // check project 2
          Assert.AreEqual(2, dictionary[2].ProjectNumber);
          Assert.AreEqual(3, dictionary[2].MaximumDays);
