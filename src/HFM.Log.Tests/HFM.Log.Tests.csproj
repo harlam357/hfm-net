@@ -90,6 +90,7 @@
     <Compile Include="Legacy\LegacySlotRunDataTests.cs" />
     <Compile Include="Legacy\LegacyUnitRunDataTests.cs" />
     <Compile Include="LogLineDataParserErrorTests.cs" />
+    <Compile Include="LogLineEnumerableTests.cs" />
     <Compile Include="LogLineTests.cs" />
     <Compile Include="Legacy\UnitInfoLogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

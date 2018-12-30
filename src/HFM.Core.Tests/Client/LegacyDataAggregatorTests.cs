@@ -673,7 +673,7 @@ namespace HFM.Core
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.IsNotNull(result.UnitInfos[0].LogLines);
          Assert.IsNull(result.UnitInfos[1].LogLines);
-         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.Last());
+         Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
 
          #endregion
 
@@ -1092,7 +1092,7 @@ namespace HFM.Core
          Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.IsNull(result.UnitInfos[8].LogLines);
-         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.Last());
+         Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
 
          #endregion
 
@@ -1151,7 +1151,7 @@ namespace HFM.Core
          Assert.AreEqual(SlotStatus.Stopped, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
          Assert.IsNull(result.UnitInfos[1].LogLines);
-         Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.Last());
+         Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
 
          #endregion
 

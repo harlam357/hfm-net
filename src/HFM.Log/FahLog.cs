@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace HFM.Log
    /// <summary>
    /// Represents a Folding@Home client log.
    /// </summary>
-   public abstract class FahLog : IEnumerable<LogLine>
+   public abstract class FahLog
    {
       /// <summary>
       /// Gets the <see cref="RunDataAggregator"/> instance.
@@ -72,20 +71,6 @@ namespace HFM.Log
       /// Occurs after log information indicates that a <see cref="ClientRun"/> has been finished.
       /// </summary>
       protected abstract void OnClientRunFinished();
-
-      /// <summary>
-      /// Returns an enumerator that iterates through the collection of log lines.
-      /// </summary>
-      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return ClientRuns.SelectMany(x => x).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
    }
 
    namespace Legacy

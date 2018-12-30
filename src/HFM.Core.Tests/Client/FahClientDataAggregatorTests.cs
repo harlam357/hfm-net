@@ -26,6 +26,7 @@ using NUnit.Framework;
 using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
+using HFM.Log;
 using HFM.Log.FahClient;
 
 namespace HFM.Core
@@ -171,7 +172,7 @@ namespace HFM.Core
          Assert.IsTrue(result.UnitInfos.All(x => x.Value.LogLines == null));
          if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, fahLog.ClientRuns.LastOrDefault());
+            Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
          }
 
          #endregion

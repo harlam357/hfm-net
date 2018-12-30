@@ -109,7 +109,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(1, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(1, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -372,7 +372,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(1, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(1, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -3378,7 +3378,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(0, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(0, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -4205,7 +4205,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(2, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(2, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -7342,7 +7342,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(2, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(2, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       [Test]
@@ -7413,7 +7413,7 @@ namespace HFM.Log.FahClient
          var actualRun = fahLog.ClientRuns.Last();
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
-         Assert.AreEqual(0, actualRun.Count(x => x.Data is LogLineDataParserError));
+         Assert.AreEqual(0, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
       // ReSharper restore InconsistentNaming

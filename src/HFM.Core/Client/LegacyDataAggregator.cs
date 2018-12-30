@@ -55,7 +55,7 @@ namespace HFM.Core
       {
          if (Logger.IsDebugEnabled)
          {
-            foreach (var s in fahLog.Where(x => x.Data is LogLineDataParserError))
+            foreach (var s in LogLineEnumerable.Create(fahLog).Where(x => x.Data is LogLineDataParserError))
             {
                Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
@@ -96,7 +96,7 @@ namespace HFM.Core
 
          if (result.UnitInfos == null || result.UnitInfos[result.CurrentUnitIndex] == null || result.UnitInfos[result.CurrentUnitIndex].LogLines == null)
          {
-            result.CurrentLogLines = currentClientRun.ToList();
+            result.CurrentLogLines = LogLineEnumerable.Create(currentClientRun).ToList();
          }
          else
          {
@@ -264,7 +264,7 @@ namespace HFM.Core
          }
          else
          {
-            unit.LogLines = unitRun.ToList();
+            unit.LogLines = LogLineEnumerable.Create(unitRun).ToList();
             unitRunData = (LegacyUnitRunData)unitRun.Data;
          }
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;

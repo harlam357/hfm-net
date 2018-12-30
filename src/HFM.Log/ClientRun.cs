@@ -1,34 +1,24 @@
 ﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace HFM.Log
 {
    /// <summary>
    /// A <see cref="ClientRun"/> encapsulates all the Folding@Home client log information for a single execution (run) of the client.
    /// </summary>
-   public class ClientRun : IEnumerable<LogLine>
+   public class ClientRun
    {
-      private readonly FahLog _parent;
       /// <summary>
       /// Gets the parent <see cref="FahLog"/> object.
       /// </summary>
-      public FahLog Parent
-      {
-         get { return _parent; }
-      }
+      public FahLog Parent { get; }
 
-      private readonly int _clientStartIndex;
       /// <summary>
       /// Gets the log line index for the starting line of this client run.
       /// </summary>
-      public int ClientStartIndex
-      {
-         get { return _clientStartIndex; }
-      }
+      public int ClientStartIndex { get; }
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ClientRun"/> class.
@@ -37,8 +27,8 @@ namespace HFM.Log
       /// <param name="clientStartIndex">The log line index for the starting line of this client run.</param>
       public ClientRun(FahLog parent, int clientStartIndex)
       {
-         _parent = parent;
-         _clientStartIndex = clientStartIndex;
+         Parent = parent;
+         ClientStartIndex = clientStartIndex;
 
          _logLines = new ObservableCollection<LogLine>();
          _logLines.CollectionChanged += (s, e) => IsDirty = true;
@@ -88,20 +78,6 @@ namespace HFM.Log
       /// Gets or sets a value indicating if the <see cref="Data"/> property value is not current.
       /// </summary>
       public bool IsDirty { get; set; } = true;
-
-      /// <summary>
-      /// Returns an enumerator that iterates through the collection of log lines.
-      /// </summary>
-      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _logLines.Concat(_slotRuns.Values.SelectMany(x => x.UnitRuns).SelectMany(x => x.LogLines)).OrderBy(x => x.Index).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
-      }
    }
 
    /// <summary>

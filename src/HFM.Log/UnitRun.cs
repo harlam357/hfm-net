@@ -9,16 +9,12 @@ namespace HFM.Log
    /// <summary>
    /// A <see cref="UnitRun"/> encapsulates all the Folding@Home client log information for a single work unit execution (run).
    /// </summary>
-   public class UnitRun : IEnumerable<LogLine>
+   public class UnitRun
    {
-      private readonly SlotRun _parent;
       /// <summary>
       /// Gets the parent <see cref="SlotRun"/> object.
       /// </summary>
-      public SlotRun Parent
-      {
-         get { return _parent; }
-      }
+      public SlotRun Parent { get; }
 
       private readonly ObservableCollection<LogLine> _logLines;
       /// <summary>
@@ -37,7 +33,7 @@ namespace HFM.Log
       /// <param name="startIndex">The log line index for the starting line of this unit run.</param>
       public UnitRun(SlotRun parent, int queueIndex, int startIndex)
       {
-         _parent = parent;
+         Parent = parent;
          QueueIndex = queueIndex;
          StartIndex = startIndex;
 
@@ -48,7 +44,7 @@ namespace HFM.Log
       // for unit testing only
       internal UnitRun(SlotRun parent, int queueIndex, int startIndex, int endIndex)
       {
-         _parent = parent;
+         Parent = parent;
          QueueIndex = queueIndex;
          StartIndex = startIndex;
          EndIndex = endIndex;
@@ -109,20 +105,6 @@ namespace HFM.Log
                Parent.IsDirty = true;
             }
          }
-      }
-
-      /// <summary>
-      /// Returns an enumerator that iterates through the collection of log lines.
-      /// </summary>
-      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _logLines.GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
       }
    }
 

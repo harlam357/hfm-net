@@ -81,6 +81,7 @@
     <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="LogLineDataParserError.cs" />
+    <Compile Include="LogLineEnumerable.cs" />
     <Compile Include="LogLineTimeStampParser.cs" />
     <Compile Include="LogLineType.cs" />
     <Compile Include="LogSlotStatus.cs" />

@@ -152,7 +152,7 @@ namespace HFM.Log.Tool
             sw.Stop();
             System.Diagnostics.Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
 #endif
-            _logLines = _fahLog.ToList();
+            _logLines = LogLineEnumerable.Create(_fahLog).ToList();
             PopulateClientRunsInTree(_fahLog);
             richTextBox1.SetLogLines(_logLines, String.Empty, true);
          }
@@ -297,7 +297,7 @@ namespace HFM.Log.Tool
             sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1) + ");");
             sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
-            sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.Data is LogLineDataParserError));", clientRun.Count(x => x.Data is LogLineDataParserError)));
+            sb.AppendLine(String.Format("Assert.AreEqual({0}, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));", LogLineEnumerable.Create(clientRun).Count(x => x.Data is LogLineDataParserError)));
             i++;
          }
 

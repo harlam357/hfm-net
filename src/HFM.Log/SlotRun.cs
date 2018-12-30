@@ -8,25 +8,17 @@ namespace HFM.Log
    /// <summary>
    /// A <see cref="SlotRun"/> encapsulates all the Folding@Home client log information for a single slot execution (run) of the client.
    /// </summary>
-   public class SlotRun : IEnumerable<LogLine>
+   public class SlotRun
    {
-      private readonly ClientRun _parent;
       /// <summary>
       /// Gets the parent <see cref="ClientRun"/> object.
       /// </summary>
-      public ClientRun Parent
-      {
-         get { return _parent; }
-      }
+      public ClientRun Parent { get; }
 
-      private readonly int _foldingSlot;
       /// <summary>
       /// Gets the folding slot number.
       /// </summary>
-      public int FoldingSlot
-      {
-         get { return _foldingSlot; }
-      }
+      public int FoldingSlot { get; }
 
       /// <summary>
       /// Initializes a new instance of the <see cref="SlotRun"/> class.
@@ -35,8 +27,8 @@ namespace HFM.Log
       /// <param name="foldingSlot">The folding slot number.</param>
       public SlotRun(ClientRun parent, int foldingSlot)
       {
-         _parent = parent;
-         _foldingSlot = foldingSlot;
+         Parent = parent;
+         FoldingSlot = foldingSlot;
       }
 
       private List<UnitRun> _unitRuns;
@@ -85,20 +77,6 @@ namespace HFM.Log
                Parent.IsDirty = true;
             }
          }
-      }
-
-      /// <summary>
-      /// Returns an enumerator that iterates through the collection of log lines.
-      /// </summary>
-      /// <returns>An enumerator that can be used to iterate through the collection of log lines.</returns>
-      public IEnumerator<LogLine> GetEnumerator()
-      {
-         return _unitRuns.SelectMany(x => x.LogLines).OrderBy(x => x.Index).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return GetEnumerator();
       }
    }
 

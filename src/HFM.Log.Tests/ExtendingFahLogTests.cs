@@ -65,7 +65,7 @@ namespace HFM.Log
             // Act
             log.Read(reader);
          }
-         var lines = log.Where(x => x.LineType == CustomLogLineType.ConnectingTo).ToList();
+         var lines = LogLineEnumerable.Create(log).Where(x => x.LineType == CustomLogLineType.ConnectingTo).ToList();
          foreach (var logLine in lines)
          {
             System.Diagnostics.Debug.WriteLine(logLine.Data);
