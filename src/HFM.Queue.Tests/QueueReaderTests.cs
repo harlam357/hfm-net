@@ -23,7 +23,7 @@ using System.Globalization;
 
 using NUnit.Framework;
 
-namespace HFM.Queue.Tests
+namespace HFM.Queue
 {
    // EntryStatus values
    // 0 - Unknown
@@ -34,7 +34,7 @@ namespace HFM.Queue.Tests
    // 5 - Folding Now
    // 6 - Queued
    // 7 - Ready For Upload
-   // 8 - Abandonded
+   // 8 - Abandoned
    // 9 - Fetching From Server
 
    [TestFixture]

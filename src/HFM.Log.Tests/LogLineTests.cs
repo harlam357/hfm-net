@@ -44,7 +44,7 @@ namespace HFM.Log
          // Assert
          Assert.AreEqual("Foo", logLine.Raw);
          Assert.AreEqual(1, logLine.Index);
-         Assert.AreEqual(LogLineType.ClientArguments, logLine.LineType);
+         Assert.AreEqual(LogLineType.ClientArguments, (int)logLine.LineType);
          Assert.AreEqual(TimeSpan.FromMinutes(1), logLine.TimeStamp);
          Assert.AreEqual("Foo", logLine.Data);
       }
@@ -57,7 +57,7 @@ namespace HFM.Log
          // Assert
          Assert.AreEqual("Foo", logLine.Raw);
          Assert.AreEqual(1, logLine.Index);
-         Assert.AreEqual(LogLineType.ClientArguments, logLine.LineType);
+         Assert.AreEqual(LogLineType.ClientArguments, (int)logLine.LineType);
          Assert.AreEqual(TimeSpan.FromMinutes(1), logLine.TimeStamp);
          Assert.AreEqual("Foo", logLine.Data);
       }
@@ -76,7 +76,7 @@ namespace HFM.Log
          // Assert
          Assert.AreEqual("Foo", logLine.Raw);
          Assert.AreEqual(1, logLine.Index);
-         Assert.AreEqual(LogLineType.ClientArguments, logLine.LineType);
+         Assert.AreEqual(LogLineType.ClientArguments, (int)logLine.LineType);
          Assert.AreEqual(TimeSpan.FromMinutes(1), logLine.TimeStamp);
          Assert.AreEqual("Foo", logLine.Data);
       }
@@ -89,7 +89,7 @@ namespace HFM.Log
          // Assert
          Assert.AreEqual("Foo", logLine.Raw);
          Assert.AreEqual(1, logLine.Index);
-         Assert.AreEqual(LogLineType.ClientArguments, logLine.LineType);
+         Assert.AreEqual(LogLineType.ClientArguments, (int)logLine.LineType);
          Assert.AreEqual(TimeSpan.FromMinutes(1), logLine.TimeStamp);
          Assert.AreEqual("Foo", logLine.Data);
       }

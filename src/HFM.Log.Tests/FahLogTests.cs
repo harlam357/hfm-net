@@ -11,7 +11,7 @@ namespace HFM.Log
       [Test]
       public void FahClientLog_Read_ThrowsWhenFahLogReaderIsNull_Test()
       {
-         Assert.Throws(typeof(ArgumentNullException), () =>
+         Assert.Throws<ArgumentNullException>(() =>
          {
             FahLog log = new FahClient.FahClientLog();
             log.Read(null);
@@ -21,7 +21,7 @@ namespace HFM.Log
       [Test]
       public void FahClientLog_ReadAsync_ThrowsWhenFahLogReaderIsNull_Test()
       {
-         Assert.Throws(typeof(ArgumentNullException), async () =>
+         Assert.ThrowsAsync<ArgumentNullException>(async () =>
          {
             FahLog log = new FahClient.FahClientLog();
             await log.ReadAsync(null);
@@ -31,7 +31,7 @@ namespace HFM.Log
       [Test]
       public void LegacyLog_Read_ThrowsWhenFahLogReaderIsNull_Test()
       {
-         Assert.Throws(typeof(ArgumentNullException), () =>
+         Assert.Throws<ArgumentNullException>(() =>
          {
             FahLog log = new Legacy.LegacyLog();
             log.Read(null);
@@ -41,7 +41,7 @@ namespace HFM.Log
       [Test]
       public void LegacyLog_ReadAsync_ThrowsWhenFahLogReaderIsNull_Test()
       {
-         Assert.Throws(typeof(ArgumentNullException), async () =>
+         Assert.ThrowsAsync<ArgumentNullException>(async () =>
          {
             FahLog log = new Legacy.LegacyLog();
             await log.ReadAsync(null);

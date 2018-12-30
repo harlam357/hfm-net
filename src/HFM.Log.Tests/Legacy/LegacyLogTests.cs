@@ -327,7 +327,7 @@ namespace HFM.Log.Legacy
          Assert.AreEqual(0, unitRun.LogLines[3].Data);
          Assert.AreEqual("2.22", unitRun.LogLines[10].Data);
          Assert.That(unitRun.LogLines[20].ToString().Contains("Project: 6071 (Run 0, Clone 39, Gen 70)"));
-         Assert.AreEqual(LogLineType.ClientCoreCommunicationsError, unitRun.LogLines[26].LineType);
+         Assert.AreEqual(LogLineType.ClientCoreCommunicationsError, (int)unitRun.LogLines[26].LineType);
       }
 
       [Test]
@@ -573,7 +573,7 @@ namespace HFM.Log.Legacy
 
          // Special Check to be sure the reader is catching the EUE Pause line (Current ClientRun - Current UnitRun)
          unitRun = fahLog.ClientRuns.Last().SlotRuns[0].UnitRuns.Last();
-         Assert.AreEqual(LogLineType.ClientEuePauseState, unitRun.LogLines[42].LineType);
+         Assert.AreEqual(LogLineType.ClientEuePauseState, (int)unitRun.LogLines[42].LineType);
       }
 
       [Test]
@@ -891,7 +891,7 @@ namespace HFM.Log.Legacy
          Assert.That(unitRun.LogLines[17].ToString().Contains("Project: 4461 (Run 886, Clone 3, Gen 56)"));
 
          // Special Check to be sure the reader is catching the Pause For Battery line
-         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, unitRun.LogLines[193].LineType);
+         Assert.AreEqual(LogLineType.WorkUnitPausedForBattery, (int)unitRun.LogLines[193].LineType);
       }
 
       [Test]

@@ -43,7 +43,7 @@ namespace HFM.Core.Data.SQLite
 
       #region Setup and TearDown
 
-      [TestFixtureSetUp]
+      [OneTimeSetUp]
       public void FixtureInit()
       {
          SetupTestDataFileCopies();
@@ -65,7 +65,7 @@ namespace HFM.Core.Data.SQLite
          Thread.Sleep(100);
       }
 
-      [TestFixtureTearDown]
+      [OneTimeTearDown]
       public void FixtureDestroy()
       {
          foreach (var file in Directory.EnumerateFiles(TestDataFilesFolder, "*.dbcopy"))

@@ -60,7 +60,7 @@ namespace HFM.Core.Data.SQLite
 
       #region Setup and TearDown
 
-      [TestFixtureSetUp]
+      [OneTimeSetUp]
       public void FixtureInit()
       {
          Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
@@ -106,7 +106,7 @@ namespace HFM.Core.Data.SQLite
          }
       }
 
-      [TestFixtureTearDown]
+      [OneTimeTearDown]
       public void FixtureDestroy()
       {
          foreach (var file in Directory.EnumerateFiles(TestDataFilesFolder, "*.dbcopy"))
