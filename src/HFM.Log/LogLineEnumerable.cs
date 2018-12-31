@@ -7,7 +7,7 @@ using System.Linq;
 namespace HFM.Log
 {
    /// <summary>
-   /// Enumerates the <see cref="LogLine"/> objects bound to the source, and child, objects in the original log order.
+   /// Enumerates the <see cref="LogLine"/> objects bound to the source and child objects in the original log order.
    /// </summary>
    public abstract class LogLineEnumerable : IEnumerable<LogLine>
    {
