@@ -22,10 +22,10 @@ namespace HFM.Log
          }
 
          Assert.AreEqual(expectedRun.SlotRuns.Count, actualRun.SlotRuns.Count);
-         foreach (int key in expectedRun.SlotRuns.Keys)
+         foreach (int slotRunKey in expectedRun.SlotRuns.Keys)
          {
-            var expectedSlotRun = expectedRun.SlotRuns[key];
-            var actualSlotRun = actualRun.SlotRuns[key];
+            var expectedSlotRun = expectedRun.SlotRuns[slotRunKey];
+            var actualSlotRun = actualRun.SlotRuns[slotRunKey];
             Assert.AreEqual(expectedSlotRun.Data.CompletedUnits, actualSlotRun.Data.CompletedUnits);
             Assert.AreEqual(expectedSlotRun.Data.FailedUnits, actualSlotRun.Data.FailedUnits);
             if (expectedSlotRun.Data is Legacy.LegacySlotRunData legacyExpectedSlotRunData &&
@@ -53,6 +53,20 @@ namespace HFM.Log
                   Assert.AreEqual(expectedUnitRun.Data.ProjectClone, actualUnitRun.Data.ProjectClone);
                   Assert.AreEqual(expectedUnitRun.Data.ProjectGen, actualUnitRun.Data.ProjectGen);
                   Assert.AreEqual(expectedUnitRun.Data.WorkUnitResult, actualUnitRun.Data.WorkUnitResult);
+                  if (expectedUnitRun.Data.FrameDataDictionary != null && actualUnitRun.Data.FrameDataDictionary != null)
+                  {
+                     Assert.AreEqual(expectedUnitRun.Data.FrameDataDictionary.Count, actualUnitRun.Data.FrameDataDictionary.Count);
+                     foreach (int frameDataKey in expectedUnitRun.Data.FrameDataDictionary.Keys)
+                     {
+                        var expectedFrameDataDictionary = expectedUnitRun.Data.FrameDataDictionary[frameDataKey];
+                        var actualFrameDataDictionary = actualUnitRun.Data.FrameDataDictionary[frameDataKey];
+                        Assert.AreEqual(expectedFrameDataDictionary.ID, actualFrameDataDictionary.ID);
+                        Assert.AreEqual(expectedFrameDataDictionary.RawFramesComplete, actualFrameDataDictionary.RawFramesComplete);
+                        Assert.AreEqual(expectedFrameDataDictionary.RawFramesTotal, actualFrameDataDictionary.RawFramesTotal);
+                        Assert.AreEqual(expectedFrameDataDictionary.TimeStamp, actualFrameDataDictionary.TimeStamp);
+                        Assert.AreEqual(expectedFrameDataDictionary.Duration, actualFrameDataDictionary.Duration);
+                     }
+                  }
                }
             }
          }

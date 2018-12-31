@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -137,6 +136,20 @@ namespace HFM.Log
          ProjectClone = other.ProjectClone;
          ProjectGen = other.ProjectGen;
          WorkUnitResult = other.WorkUnitResult;
+         FrameDataDictionary = CopyFrameData(other.FrameDataDictionary);
+      }
+
+      private static Dictionary<int, WorkUnitFrameData> CopyFrameData(IDictionary<int, WorkUnitFrameData> source)
+      {
+         if (source == null) return null;
+
+         var copy = new Dictionary<int, WorkUnitFrameData>();
+         foreach (var kvp in source)
+         {
+            var valueCopy = new WorkUnitFrameData(kvp.Value);
+            copy.Add(kvp.Key, valueCopy);
+         }
+         return copy;
       }
 
       /// <summary>
@@ -178,6 +191,11 @@ namespace HFM.Log
       /// Gets or sets the work unit result.
       /// </summary>
       public string WorkUnitResult { get; set; }
+
+      /// <summary>
+      /// Gets or sets the work unit frame data dictionary.
+      /// </summary>
+      public IDictionary<int, WorkUnitFrameData> FrameDataDictionary { get; set; }
    }
 
    namespace FahClient

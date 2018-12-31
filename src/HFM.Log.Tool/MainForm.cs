@@ -246,8 +246,22 @@ namespace HFM.Log.Tool
                   {
                      sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;");
                   }
+                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();");
+                  int frameDataCount = 0;
+                  foreach (var kvp in unitRun.Data.FrameDataDictionary)
+                  {
+                     sb.AppendLine((k == 0 && frameDataCount == 0 ? "var " : String.Empty) + "frameData = new WorkUnitFrameData();");
+                     sb.AppendLine("frameData.ID = " + kvp.Value.ID + ";");
+                     sb.AppendLine("frameData.RawFramesComplete = " + kvp.Value.RawFramesComplete + ";");
+                     sb.AppendLine("frameData.RawFramesTotal = " + kvp.Value.RawFramesTotal + ";");
+                     sb.AppendLine("frameData.TimeStamp = TimeSpan.FromTicks(" + kvp.Value.TimeStamp.Ticks + ");");
+                     sb.AppendLine("frameData.Duration = TimeSpan.FromTicks(" + kvp.Value.Duration.Ticks + ");");
+                     sb.AppendLine("frameDataDictionary.Add(frameData.ID, frameData);");
+                     frameDataCount++;
+                  }
+                  sb.AppendLine("expectedUnitRunData.FrameDataDictionary = frameDataDictionary;");
                   sb.AppendLine("expectedUnitRun.Data = expectedUnitRunData;");
-                  sb.AppendLine("expectedSlotRun.UnitRuns.Push(expectedUnitRun);");
+                  sb.AppendLine("expectedSlotRun.UnitRuns.Add(expectedUnitRun);");
                   unitCount++;
                   k++;
                }
@@ -259,7 +273,7 @@ namespace HFM.Log.Tool
                   sb.AppendLine("expectedSlotRunData.CompletedUnits = " + legacySlotRunData.CompletedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.FailedUnits = " + legacySlotRunData.FailedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.TotalCompletedUnits = " + GetStringOrNull(legacySlotRunData.TotalCompletedUnits) + ";");
-                  sb.AppendLine("expectedSlotRunData.Status = SlotStatus." + legacySlotRunData.Status + ";");
+                  sb.AppendLine("expectedSlotRunData.Status = LogSlotStatus." + legacySlotRunData.Status + ";");
                   sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
                }
                else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)
@@ -294,7 +308,7 @@ namespace HFM.Log.Tool
                sb.AppendLine("expectedRun.Data = expectedRunData;");
             }
             sb.AppendLine();
-            sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1) + ");");
+            sb.AppendLine((i == 0 ? "var " : String.Empty) + "actualRun = fahLog.ClientRuns.ElementAt(" + i + ");");
             sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
             sb.AppendLine(String.Format("Assert.AreEqual({0}, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));", LogLineEnumerable.Create(clientRun).Count(x => x.Data is LogLineDataParserError)));

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using static HFM.Log.Internal.CollectionExtensions;
+
 namespace HFM.Log
 {
    /// <summary>
@@ -82,6 +84,44 @@ namespace HFM.Log
                   return false;
             }
          }
+
+         internal static void CalculateFrameDataDurations(IDictionary<int, WorkUnitFrameData> frameDataDictionary)
+         {
+            foreach (var frameData in frameDataDictionary.Values)
+            {
+               int previousFrameID = frameData.ID - 1;
+               if (frameDataDictionary.ContainsKey(previousFrameID))
+               {
+                  var previousFrameData = frameDataDictionary[previousFrameID];
+                  frameData.Duration = GetTimeSpanDelta(frameData.TimeStamp, previousFrameData.TimeStamp);
+               }
+            }
+         }
+
+         /// <summary>
+         /// Get time delta between the TimeSpan values.
+         /// </summary>
+         /// <param name="first">The first TimeSpan value.</param>
+         /// <param name="second">The second TimeSpan value.</param>
+         private static TimeSpan GetTimeSpanDelta(TimeSpan first, TimeSpan second)
+         {
+            TimeSpan delta;
+
+            // check for rollover back to 00:00:00 time1 will be less than previous time2 reading
+            if (first < second)
+            {
+               // get time before rollover
+               delta = TimeSpan.FromDays(1).Subtract(second);
+               // add time from latest reading
+               delta = delta.Add(first);
+            }
+            else
+            {
+               delta = first.Subtract(second);
+            }
+
+            return delta;
+         }
       }
    }
 
@@ -138,6 +178,7 @@ namespace HFM.Log
          protected override UnitRunData OnGetUnitRunData(UnitRun unitRun)
          {
             var unitRunData = new FahClientUnitRunData();
+            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();
             foreach (var line in unitRun.LogLines)
             {
                switch (line.LineType)
@@ -153,6 +194,12 @@ namespace HFM.Log
                      if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
                         unitRunData.FramesObserved++;
+                        if (line.Data is WorkUnitFrameData frameData)
+                        {
+                           // Make a copy so UnitRunData is not holding a reference to the same 
+                           // WorkUnitFrameData instance as the LogLine it was sourced from.
+                           frameDataDictionary.TryAdd(frameData.ID, new WorkUnitFrameData(frameData));
+                        }
                      }
                      break;
                   case LogLineType.WorkUnitCoreVersion:
@@ -162,17 +209,19 @@ namespace HFM.Log
                      }
                      break;
                   case LogLineType.WorkUnitProject:
-                     var data = (WorkUnitProjectData)line.Data;
-                     unitRunData.ProjectID = data.ProjectID;
-                     unitRunData.ProjectRun = data.ProjectRun;
-                     unitRunData.ProjectClone = data.ProjectClone;
-                     unitRunData.ProjectGen = data.ProjectGen;
+                     var projectData = (WorkUnitProjectData)line.Data;
+                     unitRunData.ProjectID = projectData.ProjectID;
+                     unitRunData.ProjectRun = projectData.ProjectRun;
+                     unitRunData.ProjectClone = projectData.ProjectClone;
+                     unitRunData.ProjectGen = projectData.ProjectGen;
                      break;
                   case LogLineType.WorkUnitCoreReturn:
                      unitRunData.WorkUnitResult = (string)line.Data;
                      break;
                }
             }
+            Internal.CommonRunDataAggregator.CalculateFrameDataDurations(frameDataDictionary);
+            unitRunData.FrameDataDictionary = frameDataDictionary;
             return unitRunData;
          }
       }
@@ -199,32 +248,31 @@ namespace HFM.Log
 
             foreach (var line in clientRun.LogLines)
             {
-               if (line.LineType == LogLineType.LogOpen)
+               switch (line.LineType)
                {
-                  clientRunData.StartTime = (DateTime)line.Data;
-               }
-               else if (line.LineType == LogLineType.ClientVersion)
-               {
-                  clientRunData.ClientVersion = line.Data.ToString();
-               }
-               else if (line.LineType == LogLineType.ClientArguments)
-               {
-                  clientRunData.Arguments = line.Data.ToString();
-               }
-               else if (line.LineType == LogLineType.ClientUserNameAndTeam)
-               {
-                  var data = (ClientUserNameAndTeamData)line.Data;
-                  clientRunData.FoldingID = data.FoldingID;
-                  clientRunData.Team = data.Team;
-               }
-               else if (line.LineType == LogLineType.ClientUserID ||
-                        line.LineType == LogLineType.ClientReceivedUserID)
-               {
-                  clientRunData.UserID = line.Data.ToString();
-               }
-               else if (line.LineType == LogLineType.ClientMachineID)
-               {
-                  clientRunData.MachineID = (int)line.Data;
+                  case LogLineType.LogOpen:
+                     clientRunData.StartTime = (DateTime)line.Data;
+                     break;
+                  case LogLineType.ClientVersion:
+                     clientRunData.ClientVersion = line.Data.ToString();
+                     break;
+                  case LogLineType.ClientArguments:
+                     clientRunData.Arguments = line.Data.ToString();
+                     break;
+                  case LogLineType.ClientUserNameAndTeam:
+                  {
+                     var data = (ClientUserNameAndTeamData)line.Data;
+                     clientRunData.FoldingID = data.FoldingID;
+                     clientRunData.Team = data.Team;
+                     break;
+                  }
+                  case LogLineType.ClientUserID:
+                  case LogLineType.ClientReceivedUserID:
+                     clientRunData.UserID = line.Data.ToString();
+                     break;
+                  case LogLineType.ClientMachineID:
+                     clientRunData.MachineID = (int)line.Data;
+                     break;
                }
             }
 
@@ -269,35 +317,32 @@ namespace HFM.Log
 
             foreach (var line in logLines)
             {
-               if (line.LineType == LogLineType.WorkUnitProcessing ||
-                   line.LineType == LogLineType.WorkUnitWorking ||
-                   line.LineType == LogLineType.WorkUnitCoreStart ||
-                   line.LineType == LogLineType.WorkUnitFrame ||
-                   line.LineType == LogLineType.WorkUnitResumeFromBattery)
+               switch (line.LineType)
                {
-                  status = LogSlotStatus.RunningNoFrameTimes;
-               }
-               else if (line.LineType == LogLineType.WorkUnitPaused ||
-                        line.LineType == LogLineType.WorkUnitPausedForBattery)
-               {
-                  status = LogSlotStatus.Paused;
-               }
-               else if (line.LineType == LogLineType.ClientSendWorkToServer)
-               {
-                  status = LogSlotStatus.SendingWorkPacket;
-               }
-               else if (line.LineType == LogLineType.ClientAttemptGetWorkPacket)
-               {
-                  status = LogSlotStatus.GettingWorkPacket;
-               }
-               else if (line.LineType == LogLineType.ClientEuePauseState)
-               {
-                  status = LogSlotStatus.EuePause;
-               }
-               else if (line.LineType == LogLineType.ClientShutdown ||
-                        line.LineType == LogLineType.ClientCoreCommunicationsErrorShutdown)
-               {
-                  status = LogSlotStatus.Stopped;
+                  case LogLineType.WorkUnitProcessing:
+                  case LogLineType.WorkUnitWorking:
+                  case LogLineType.WorkUnitCoreStart:
+                  case LogLineType.WorkUnitFrame:
+                  case LogLineType.WorkUnitResumeFromBattery:
+                     status = LogSlotStatus.RunningNoFrameTimes;
+                     break;
+                  case LogLineType.WorkUnitPaused:
+                  case LogLineType.WorkUnitPausedForBattery:
+                     status = LogSlotStatus.Paused;
+                     break;
+                  case LogLineType.ClientSendWorkToServer:
+                     status = LogSlotStatus.SendingWorkPacket;
+                     break;
+                  case LogLineType.ClientAttemptGetWorkPacket:
+                     status = LogSlotStatus.GettingWorkPacket;
+                     break;
+                  case LogLineType.ClientEuePauseState:
+                     status = LogSlotStatus.EuePause;
+                     break;
+                  case LogLineType.ClientShutdown:
+                  case LogLineType.ClientCoreCommunicationsErrorShutdown:
+                     status = LogSlotStatus.Stopped;
+                     break;
                }
             }
 
@@ -313,6 +358,7 @@ namespace HFM.Log
             bool lookForProject = true;
 
             var unitRunData = new LegacyUnitRunData();
+            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();
             foreach (var line in unitRun.LogLines)
             {
                #region Unit Start
@@ -379,6 +425,12 @@ namespace HFM.Log
                      if (line.Data != null && !(line.Data is LogLineDataParserError))
                      {
                         unitRunData.FramesObserved++;
+                        if (line.Data is WorkUnitFrameData frameData)
+                        {
+                           // Make a copy so UnitRunData is not holding a reference to the same 
+                           // WorkUnitFrameData instance as the LogLine it was sourced from.
+                           frameDataDictionary.TryAdd(frameData.ID, new WorkUnitFrameData(frameData));
+                        }
                      }
                      break;
                   case LogLineType.WorkUnitCoreVersion:
@@ -401,6 +453,8 @@ namespace HFM.Log
                      break;
                }
             }
+            Internal.CommonRunDataAggregator.CalculateFrameDataDurations(frameDataDictionary);
+            unitRunData.FrameDataDictionary = frameDataDictionary;
             return unitRunData;
          }
       }
