@@ -81,16 +81,16 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="IProteinSerializer.cs" />
+    <Compile Include="IProteinCollectionSerializer.cs" />
     <Compile Include="ProjectSummaryJsonDeserializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
     <Compile Include="ProteinDictionaryChange.cs" />
     <Compile Include="ProteinProductionExtensions.cs" />
-    <Compile Include="ProteinSerializerExtensions.cs" />
+    <Compile Include="ProteinCollectionSerializerExtensions.cs" />
     <Compile Include="ProteinValidator.cs" />
     <Compile Include="WebAddresses.cs" />
-    <Compile Include="TabSerializer.cs" />
+    <Compile Include="TabDelimitedTextSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinDictionary.cs" />
   </ItemGroup>

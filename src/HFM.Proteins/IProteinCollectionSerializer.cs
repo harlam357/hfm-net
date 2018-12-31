@@ -8,7 +8,7 @@ namespace HFM.Proteins
    /// <summary>
    /// Represents a serializer capable of serializing and deserializing a collection of <see cref="Protein"/> objects.
    /// </summary>
-   public interface IProteinSerializer
+   public interface IProteinCollectionSerializer
    {
       /// <summary>
       /// Serializes a collection of <see cref="Protein"/> objects to a <see cref="Stream"/>.

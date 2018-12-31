@@ -28,9 +28,9 @@ namespace HFM.Proteins
 {
    /// <summary>
    /// Represents a serializer capable of deserializing a collection of <see cref="Protein"/> objects from the Folding@Home project summary json.
-   /// This class does not support serialization through the <see cref="IProteinSerializer"/> interface. The serialize methods will throw <see cref="NotSupportedException"/>.
+   /// This class does not support serialization through the <see cref="IProteinCollectionSerializer"/> interface. The serialize methods will throw <see cref="NotSupportedException"/>.
    /// </summary>
-   public class ProjectSummaryJsonDeserializer : IProteinSerializer
+   public class ProjectSummaryJsonDeserializer : IProteinCollectionSerializer
    {
       /// <summary>
       /// Deserializes a collection of <see cref="Protein"/> objects from a <see cref="Stream"/>.
@@ -100,14 +100,14 @@ namespace HFM.Proteins
          return default(T);
       }
 
-      void IProteinSerializer.Serialize(Stream stream, ICollection<Protein> collection)
+      void IProteinCollectionSerializer.Serialize(Stream stream, ICollection<Protein> collection)
       {
-         throw new NotSupportedException("JSON serialization is not supported.");
+         throw new NotSupportedException("Serialization is not supported.");
       }
 
-      Task IProteinSerializer.SerializeAsync(Stream stream, ICollection<Protein> collection)
+      Task IProteinCollectionSerializer.SerializeAsync(Stream stream, ICollection<Protein> collection)
       {
-         throw new NotSupportedException("JSON serialization is not supported.");
+         throw new NotSupportedException("Serialization is not supported.");
       }
    }
 }

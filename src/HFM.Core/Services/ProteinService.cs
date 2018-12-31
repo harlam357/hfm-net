@@ -115,7 +115,7 @@ namespace HFM.Core
 
       private sealed class TabSerializer : Serializers.IFileSerializer<List<Protein>>
       {
-         private readonly Proteins.TabSerializer _serializer = new Proteins.TabSerializer();
+         private readonly Proteins.TabDelimitedTextSerializer _serializer = new Proteins.TabDelimitedTextSerializer();
 
          public string FileExtension
          {
