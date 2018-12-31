@@ -74,8 +74,6 @@ namespace HFM.Core.DataTypes
             ProteinName = ProteinName,
             ProteinTag = ProteinTag,
             UnitResult = UnitResult,
-            RawFramesComplete = RawFramesComplete,
-            RawFramesTotal = RawFramesTotal,
             FramesObserved = FramesObserved,
             // TODO: LogLines is NOT a clone
             LogLines = LogLines,
@@ -193,16 +191,6 @@ namespace HFM.Core.DataTypes
       public WorkUnitResult UnitResult { get; set; }
 
       /// <summary>
-      /// Raw number of steps complete
-      /// </summary>
-      public int RawFramesComplete { get; set; }
-
-      /// <summary>
-      /// Raw total number of steps
-      /// </summary>
-      public int RawFramesTotal { get; set; }
-
-      /// <summary>
       /// Gets or sets the number of frames observed since the unit was last started.
       /// </summary>
       public int FramesObserved { get; set; }
@@ -242,42 +230,13 @@ namespace HFM.Core.DataTypes
                return;
             }
             _logLines = value;
-            FrameData = BuildFrameDataDictionary(_logLines);
-            if (FrameData.Count > 0)
-            {
-               var lastUnitFrame = FrameData[FrameData.Keys.Max()];
-               RawFramesComplete = lastUnitFrame.RawFramesComplete;
-               RawFramesTotal = lastUnitFrame.RawFramesTotal;
-            }
          }
-      }
-
-      private static Dictionary<int, WorkUnitFrameData> BuildFrameDataDictionary(IEnumerable<LogLine> logLines)
-      {
-         var frameDataDictionary = logLines.Where(x => x.LineType == LogLineType.WorkUnitFrame).Select(x =>
-         {
-            if (x.Data is WorkUnitFrameData frameData && frameData.ID >= 0)
-            {
-               return frameData;
-            }
-            return null;
-         }).Where(x => x != null).ToDictionary(x => x.ID, true);
-
-         foreach (var frame in frameDataDictionary.Values)
-         {
-            if (frameDataDictionary.ContainsKey(frame.ID - 1))
-            {
-               frame.Duration = frame.TimeStamp.GetDelta(frameDataDictionary[frame.ID - 1].TimeStamp);
-            }
-         }
-
-         return frameDataDictionary;
       }
 
       /// <summary>
       /// Frame Data for this Unit
       /// </summary>
-      internal Dictionary<int, WorkUnitFrameData> FrameData { get; set; }
+      public IDictionary<int, WorkUnitFrameData> FrameData { get; set; }
 
       /// <summary>
       /// Core ID (Hex) Value

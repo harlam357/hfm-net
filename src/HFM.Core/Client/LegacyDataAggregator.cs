@@ -265,6 +265,7 @@ namespace HFM.Core
          else
          {
             unit.LogLines = LogLineEnumerable.Create(unitRun).ToList();
+            unit.FrameData = unitRun.Data.FrameDataDictionary;
             unitRunData = (LegacyUnitRunData)unitRun.Data;
          }
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;

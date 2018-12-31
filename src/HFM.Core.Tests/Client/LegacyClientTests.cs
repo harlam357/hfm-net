@@ -53,10 +53,12 @@ namespace HFM.Core
 
          var unitInfo1Clone = unitInfo1.DeepClone();
          unitInfo1Clone.FramesObserved = 4;
-         unitInfo1Clone.AddLogLineWithFrameData(new WorkUnitFrameData { TimeStamp = TimeSpan.FromMinutes(0), ID = 0 });
-         unitInfo1Clone.AddLogLineWithFrameData(new WorkUnitFrameData { TimeStamp = TimeSpan.FromMinutes(5), ID = 1 });
-         unitInfo1Clone.AddLogLineWithFrameData(new WorkUnitFrameData { TimeStamp = TimeSpan.FromMinutes(10), ID = 2 });
-         unitInfo1Clone.AddLogLineWithFrameData(new WorkUnitFrameData { TimeStamp = TimeSpan.FromMinutes(15), ID = 3 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
+                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
+                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
+                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
+         unitInfo1Clone.FrameData = frameDataDictionary;
          var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
 
          var unitInfo2 = new UnitInfo();

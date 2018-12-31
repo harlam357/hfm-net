@@ -105,10 +105,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(1, unitInfoData.FramesObserved);
          Assert.AreEqual(0, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(0, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(13, 18, 49), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -185,10 +185,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P2669R13C159G153", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(80000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(31, unitInfoData.FramesObserved);
          Assert.AreEqual(32, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(80000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(15, 4, 43), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 13, 8), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
@@ -264,8 +264,6 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual("P2683R2C8G24", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.AreEqual(null, unitInfoData.CurrentFrame);
          Assert.AreEqual("A2", unitInfoData.CoreID);
@@ -330,8 +328,6 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P2683R2C8G24", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.AreEqual(null, unitInfoData.CurrentFrame);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -400,10 +396,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P2681R9C8G55", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(127500, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(50, unitInfoData.FramesObserved);
          Assert.AreEqual(51, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(127500, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(7, 20, 44), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 59, 12), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
@@ -479,10 +475,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P2671R30C81G165", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(150000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(59, unitInfoData.FramesObserved);
          Assert.AreEqual(60, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(150000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(14, 33, 19), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 5, 22), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A2", unitInfoData.CoreID);
@@ -558,10 +554,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P6024R0C9G78", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(485000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(98, unitInfoData.FramesObserved);
          Assert.AreEqual(97, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(485000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(500000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(18, 8, 4), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 6, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A3", unitInfoData.CoreID);
@@ -629,10 +625,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P6073R0C10G53", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
-         Assert.AreEqual(500000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(55, unitInfoData.FramesObserved);
          Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(500000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(500000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(21, 33, 46), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 4, 32), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A3", unitInfoData.CoreID);
@@ -700,13 +696,7 @@ namespace HFM.Core
          Assert.AreEqual(null, unitInfoData.ProteinName);
          Assert.AreEqual("P2653R28C194G125", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
-         // no CurrentFrame has been set
-         //Assert.AreEqual(0, unitInfoData.CurrentFrame.FrameID);
-         //Assert.AreEqual(TimeSpan.MinValue, unitInfoData.CurrentFrame.TimeOfFrame);
-         //Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.FrameDuration);
          Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("A1", unitInfoData.CoreID);
          #endregion
@@ -782,10 +772,10 @@ namespace HFM.Core
          Assert.AreEqual("Gromacs", unitInfoData.ProteinName);
          Assert.AreEqual("P6071R0C39G70", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.ClientCoreError, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(1, unitInfoData.FramesObserved);
          Assert.AreEqual(0, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(0, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(500000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(9, 18, 38), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(TimeSpan.Zero, unitInfoData.CurrentFrame.Duration);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
@@ -845,10 +835,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(15000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(250000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(7, unitInfoData.FramesObserved);
          Assert.AreEqual(6, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(15000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(250000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(8, 52, 30), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 0, 56), unitInfoData.CurrentFrame.Duration);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
@@ -908,10 +898,10 @@ namespace HFM.Core
          Assert.AreEqual("", unitInfoData.ProteinName);
          Assert.AreEqual("", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.UnstableMachine, unitInfoData.UnitResult);
-         Assert.AreEqual(4, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(4, unitInfoData.FramesObserved);
          Assert.AreEqual(4, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(4, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(6, 7, 44), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 1, 34), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -988,10 +978,10 @@ namespace HFM.Core
          Assert.AreEqual("Protein", unitInfoData.ProteinName);
          Assert.AreEqual("P5770R4C242G1366", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
-         Assert.AreEqual(100, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(100, unitInfoData.FramesObserved);
          Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(2, 32, 5), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 0, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("11", unitInfoData.CoreID);
@@ -1049,10 +1039,10 @@ namespace HFM.Core
          Assert.AreEqual("", unitInfoData.ProteinName);
          Assert.AreEqual("", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(5, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
          Assert.AreEqual(5, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(5, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(2, 4, 2), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 1, 19), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -1119,8 +1109,6 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual("P6603R10C601G62", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("11", unitInfoData.CoreID);
@@ -1178,8 +1166,6 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -1256,10 +1242,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
-         Assert.AreEqual(49999999, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(50000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(100, unitInfoData.FramesObserved);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual(49999999, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(50000000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual("15", unitInfoData.CoreID);
          #endregion
 
@@ -1286,10 +1272,10 @@ namespace HFM.Core
          Assert.AreEqual("PEPTIDE (1-42)", unitInfoData.ProteinName);
          Assert.AreEqual("-", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(11500000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(50000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(23, unitInfoData.FramesObserved);
          Assert.IsNotNull(unitInfoData.CurrentFrame);
+         Assert.AreEqual(11500000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(50000000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual("15", unitInfoData.CoreID);
          #endregion
       }
@@ -1355,10 +1341,10 @@ namespace HFM.Core
          Assert.AreEqual("ProtoMol p10002", unitInfoData.ProteinName);
          Assert.AreEqual("-", unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(110000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(1000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
          Assert.AreEqual(11, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(110000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(1000000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(1, 30, 50), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 10, 10), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("B4", unitInfoData.CoreID);
@@ -1417,10 +1403,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(164800, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(499375, unitInfoData.RawFramesTotal);
          Assert.AreEqual(34, unitInfoData.FramesObserved);
          Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(164800, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(499375, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(4, 58, 09), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 15, 05), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -1479,10 +1465,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(175000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(2500000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(5, unitInfoData.FramesObserved);
          Assert.AreEqual(7, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(175000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(2500000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(2, 5, 30), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 3, 38), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);
@@ -1540,10 +1526,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.FinishedUnit, unitInfoData.UnitResult);
-         Assert.AreEqual(7000001, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(7000001, unitInfoData.RawFramesTotal);
          Assert.AreEqual(94, unitInfoData.FramesObserved);
          Assert.AreEqual(100, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(7000001, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(7000001, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(5, 37, 54), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(1, 40, 36), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("Unknown", unitInfoData.CoreID);

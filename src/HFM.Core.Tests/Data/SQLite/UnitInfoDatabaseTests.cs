@@ -285,10 +285,10 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         unitInfo.FramesObserved = 2;
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
-
+         unitInfo.FramesObserved = 1;
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+         unitInfo.FrameData = frameDataDictionary;
          return unitInfo;
       }
 
@@ -362,9 +362,10 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = DateTime.MinValue;
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         unitInfo.FramesObserved = 2;
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 55, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 56, TimeStamp = TimeSpan.FromSeconds(1000) });
+         unitInfo.FramesObserved = 1;
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 56, Duration = TimeSpan.FromSeconds(1000) });
+         unitInfo.FrameData = frameDataDictionary;
          return unitInfo;
       }
 
@@ -438,9 +439,10 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = DateTime.MinValue;
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         //unitInfo.FramesObserved = 
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
+         //unitInfo.FramesObserved = 1;
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+         unitInfo.FrameData = frameDataDictionary;
          return unitInfo;
       }
 
@@ -514,9 +516,10 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = new DateTime(2012, 1, 5);
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         //unitInfo.FramesObserved = 
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 99, TimeStamp = TimeSpan.Zero });
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 100, TimeStamp = TimeSpan.FromMinutes(10) });
+         //unitInfo.FramesObserved = 1;
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+         unitInfo.FrameData = frameDataDictionary;
          return unitInfo;
       }
 

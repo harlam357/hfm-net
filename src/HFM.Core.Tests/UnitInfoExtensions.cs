@@ -1,19 +1,19 @@
 ﻿
 using System.Collections.Generic;
 
-using HFM.Core.DataTypes;
 using HFM.Log;
 
 namespace HFM.Core
 {
    internal static class UnitInfoExtensions
    {
-      internal static void AddLogLineWithFrameData(this UnitInfo unitInfo, WorkUnitFrameData frameData)
+      internal static IDictionary<int, WorkUnitFrameData> With(this IDictionary<int, WorkUnitFrameData> frameDataDictionary, params WorkUnitFrameData[] frameDataCollection)
       {
-         // TODO: This is a weird requirement, but the FrameData dictionary is only updated when the LogLines property is set.
-         var logLines = unitInfo.LogLines ?? new List<LogLine>();
-         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, Data = frameData });
-         unitInfo.LogLines = logLines;
+         foreach (var frameData in frameDataCollection)
+         {
+            frameDataDictionary.Add(frameData.ID, frameData);
+         }
+         return frameDataDictionary;
       }
    }
 }

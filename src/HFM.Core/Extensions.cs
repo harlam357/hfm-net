@@ -54,31 +54,6 @@ namespace HFM.Core
          return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
       }
 
-      /// <summary>
-      /// Get time delta between the TimeSpan arguments.
-      /// </summary>
-      /// <param name="time1">First TimeSpan value.</param>
-      /// <param name="time2">Second TimeSpan value.</param>
-      internal static TimeSpan GetDelta(this TimeSpan time1, TimeSpan time2)
-      {
-         TimeSpan delta;
-
-         // check for rollover back to 00:00:00 time1 will be less than previous time2 reading
-         if (time1 < time2)
-         {
-            // get time before rollover
-            delta = TimeSpan.FromDays(1).Subtract(time2);
-            // add time from latest reading
-            delta = delta.Add(time1);
-         }
-         else
-         {
-            delta = time1.Subtract(time2);
-         }
-
-         return delta;
-      }
-
       #endregion
 
       #region SlotStatus

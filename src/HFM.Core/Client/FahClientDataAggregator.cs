@@ -344,6 +344,7 @@ namespace HFM.Core
          Debug.Assert(unitRun != null);
 
          unitInfo.LogLines = LogLineEnumerable.Create(unitRun).ToList();
+         unitInfo.FrameData = unitRun.Data.FrameDataDictionary;
          unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unitInfo.FramesObserved = unitRun.Data.FramesObserved;
          unitInfo.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);

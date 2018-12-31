@@ -114,10 +114,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(660000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(2000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(10, unitInfoData.FramesObserved);
          Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(660000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(4, 46, 8), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 8, 31), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A4", unitInfoData.CoreID);
@@ -200,8 +200,6 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(0, unitInfoData.RawFramesTotal);
          Assert.AreEqual(0, unitInfoData.FramesObserved);
          Assert.IsNull(unitInfoData.CurrentFrame);
          Assert.AreEqual("A4", unitInfoData.CoreID);
@@ -278,10 +276,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(53, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(100, unitInfoData.RawFramesTotal);
          Assert.AreEqual(53, unitInfoData.FramesObserved);
          Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(53, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(4, 51, 53), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 0, 42), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("11", unitInfoData.CoreID);
@@ -358,10 +356,10 @@ namespace HFM.Core
          Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
          Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(1900000, unitInfoData.RawFramesComplete);
-         Assert.AreEqual(2000000, unitInfoData.RawFramesTotal);
          Assert.AreEqual(3, unitInfoData.FramesObserved);
          Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);
+         Assert.AreEqual(1900000, unitInfoData.CurrentFrame.RawFramesComplete);
+         Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
          Assert.AreEqual(new TimeSpan(6, 46, 16), unitInfoData.CurrentFrame.TimeStamp);
          Assert.AreEqual(new TimeSpan(0, 4, 50), unitInfoData.CurrentFrame.Duration);
          Assert.AreEqual("A4", unitInfoData.CoreID);

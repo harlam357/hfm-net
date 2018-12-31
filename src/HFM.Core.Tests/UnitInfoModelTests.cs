@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using NUnit.Framework;
@@ -403,7 +404,9 @@ namespace HFM.Core
       public void FramesCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 1 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 1 });
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -415,7 +418,9 @@ namespace HFM.Core
       public void FramesCompleteTest2()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = -1 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = -1 });
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -427,7 +432,9 @@ namespace HFM.Core
       public void FramesCompleteTest3()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 101 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 101 });
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -449,7 +456,9 @@ namespace HFM.Core
       public void PercentCompleteTest1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 5 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 5 });
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -462,7 +471,9 @@ namespace HFM.Core
       {
          var protein = new Protein { Frames = 200 };
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(new WorkUnitFrameData { ID = 5 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 5 });
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -479,10 +490,12 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
@@ -509,10 +522,12 @@ namespace HFM.Core
       public void PerUnitDownloadTest3()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -526,7 +541,9 @@ namespace HFM.Core
       public void PerUnitDownloadTest4()
       {
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", -1));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, -1));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -541,11 +558,13 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -572,11 +591,13 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -603,11 +624,13 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -633,11 +656,13 @@ namespace HFM.Core
       public void TimePerSectionTest1()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -650,11 +675,13 @@ namespace HFM.Core
       public void TimePerSectionTest2()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -667,11 +694,13 @@ namespace HFM.Core
       public void TimePerSectionTest3()
       {
          var unitInfo = new UnitInfo { FramesObserved = 5 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:05:10", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:11:30", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:17:40", 3));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:24:00", 4));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(new TimeSpan(0, 5, 10), 1),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 2),
+                  CreateFrameData(new TimeSpan(0, 6, 10), 3),
+                  CreateFrameData(new TimeSpan(0, 6, 20), 4));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -685,10 +714,12 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
@@ -728,10 +759,12 @@ namespace HFM.Core
          var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
          var utcNow = DateTime.UtcNow;
          var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -747,10 +780,12 @@ namespace HFM.Core
          var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6};
          var utcNow = DateTime.UtcNow;
          var unitInfo = new UnitInfo { FinishedTime = utcNow, DownloadTime = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -765,10 +800,12 @@ namespace HFM.Core
       {
          var protein = new Protein { ProjectNumber = 1, Credit = 100 };
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -782,10 +819,12 @@ namespace HFM.Core
       public void CreditUPDAndPPDTest4()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -803,10 +842,12 @@ namespace HFM.Core
       public void EtaTest1()
       {
          var unitInfo = new UnitInfo { FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -818,10 +859,12 @@ namespace HFM.Core
       public void EtaTest2()
       {
          var unitInfo = new UnitInfo { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 0));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:04:00", 1));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:09:00", 2));
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:15:00", 3));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(CreateFrameData(TimeSpan.Zero, 0),
+                  CreateFrameData(TimeSpan.FromMinutes(4), 1),
+                  CreateFrameData(TimeSpan.FromMinutes(5), 2),
+                  CreateFrameData(TimeSpan.FromMinutes(6), 3));
+         unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
@@ -838,7 +881,8 @@ namespace HFM.Core
       public void AllFramesCompleted1()
       {
          var unitInfo = new UnitInfo();
-         unitInfo.AddLogLineWithFrameData(CreateFrameData("00:00:00", 100));
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(CreateFrameData(TimeSpan.Zero, 100));
+         unitInfo.FrameData = frameDataDictionary;
          var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
@@ -869,33 +913,11 @@ namespace HFM.Core
                 };
       }
       
-      private static WorkUnitFrameData CreateFrameData(string timeStamp, int frameId)
+      private static WorkUnitFrameData CreateFrameData(TimeSpan duration, int frameId)
       {
-         return new WorkUnitFrameData
-                {
-                   ID = frameId,
-                   TimeStamp = ParseTimeStamp(timeStamp),
-                };
+         return new WorkUnitFrameData { ID = frameId, Duration = duration };
       }
 
-      private static TimeSpan ParseTimeStamp(string timeStamp)
-      {
-         return DateTime.ParseExact(timeStamp, "HH:mm:ss",
-                                    DateTimeFormatInfo.InvariantInfo,
-                                    DateTimeStyle).TimeOfDay;
-      }
-
-      private static DateTimeStyles DateTimeStyle
-      {
-         get
-         {
-            // set parse style to parse local
-            return DateTimeStyles.NoCurrentDateDefault |
-                   DateTimeStyles.AssumeUniversal |
-                   DateTimeStyles.AdjustToUniversal;
-         }
-      }
-      
       #endregion
    }
 }
