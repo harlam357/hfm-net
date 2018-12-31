@@ -57,8 +57,5 @@ namespace HFM.Core.DataTypes.Markup
 
       [DataMember(Order = 11)]
       public IList<LogLine> CurrentLogLines { get; set; }
-
-      [DataMember(Order = 12)]
-      public UnitInfo UnitInfo { get; set; }
    }
 }

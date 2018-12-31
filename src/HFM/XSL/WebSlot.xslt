@@ -98,7 +98,7 @@
                <tr>
                   <td class="LeftCol" colspan="2">
                      <xsl:for-each select="CurrentLogLines/LogLine">
-                        <xsl:value-of select="LineRaw" disable-output-escaping="yes"/><xsl:element name="br"/>
+                        <xsl:value-of select="Raw" disable-output-escaping="yes"/><xsl:element name="br"/>
                      </xsl:for-each>
                   </td>
                </tr>

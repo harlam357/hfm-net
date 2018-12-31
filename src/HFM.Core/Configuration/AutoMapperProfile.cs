@@ -49,23 +49,8 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
             .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
 
-         CreateMap<UnitInfo, DataTypes.Markup.UnitInfo>();
          CreateMap<Log.LogLine, DataTypes.Markup.LogLine>();
          CreateMap<Proteins.Protein, DataTypes.Markup.Protein>();
-
-         // TODO: Old mapping attempting to read in slot/grid data from xml and display in the UI... look for an alternative
-         //CreateMap<SlotData, SlotModel>()
-         //   .ForMember(dest => dest.Prefs, opt => opt.Ignore())
-         //   .ForMember(dest => dest.UnitInfoModel, opt => opt.Ignore())
-         //   .ForMember(dest => dest.Settings, opt => opt.Ignore())
-         //   .ForMember(dest => dest.SlotOptions, opt => opt.Ignore())
-         //   .ForMember(dest => dest.UserIdIsDuplicate, opt => opt.Ignore())
-         //   .ForMember(dest => dest.ProjectIsDuplicate, opt => opt.Ignore())
-         //   .ForMember(dest => dest.TimeOfLastUnitStart, opt => opt.Ignore())
-         //   .ForMember(dest => dest.TimeOfLastFrameProgress, opt => opt.Ignore())
-         //   .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.GridData.Status))
-         //   .ForMember(dest => dest.Queue, opt => opt.Ignore()) // Ignore for now, may want to include later
-         //   .ForMember(dest => dest.UnitLogLines, opt => opt.Ignore()); // Ignore for now, may want to include later
 
          CreateMap<UnitInfo, HistoryEntry>()
             .ForMember(dest => dest.ID, opt => opt.Ignore())
