@@ -85,7 +85,7 @@
     <Compile Include="LogLineEnumerable.cs" />
     <Compile Include="LogLineTimeStampParser.cs" />
     <Compile Include="LogLineType.cs" />
-    <Compile Include="LogSlotStatus.cs" />
+    <Compile Include="Legacy\LogSlotStatus.cs" />
     <Compile Include="Internal\DateTimeParse.cs" />
     <Compile Include="Internal\Environment.cs" />
     <Compile Include="FahLog.cs" />

@@ -1,5 +1,5 @@
 ﻿
-namespace HFM.Log
+namespace HFM.Log.Legacy
 {
    // See HFM.Core.SlotStatus for the global enumeration covering Legacy and v7 clients
 
