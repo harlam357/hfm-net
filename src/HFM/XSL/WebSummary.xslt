@@ -80,21 +80,21 @@
       <tr>
          <td width="5%" class="StatusCol">
             <xsl:attribute name="bgcolor">
-               <xsl:value-of select="GridData/StatusColor"/>
+               <xsl:value-of select="StatusColor"/>
             </xsl:attribute>
             <font>
                <xsl:attribute name="color">
-                  <xsl:value-of select="GridData/StatusFontColor"/>
+                  <xsl:value-of select="StatusFontColor"/>
                </xsl:attribute>
-               <xsl:value-of select="GridData/Status"/>
+               <xsl:value-of select="Status"/>
             </font>
          </td>
          <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/PercentComplete"/>%
+            <xsl:value-of select="PercentComplete"/>%
          </td>
          <td width="15%">
             <xsl:choose>
-               <xsl:when test="GridData/UserIdIsDuplicate='true'">
+               <xsl:when test="UserIdIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
                   <xsl:attribute name="bgcolor">Orange</xsl:attribute>
                </xsl:when>
@@ -103,30 +103,30 @@
                </xsl:otherwise>
             </xsl:choose>
             <a>
-               <xsl:attribute name="href"><xsl:value-of select="GridData/Name"/>.html</xsl:attribute><xsl:value-of select="GridData/Name"/>
+               <xsl:attribute name="href"><xsl:value-of select="Name"/>.html</xsl:attribute><xsl:value-of select="Name"/>
             </a>
          </td>
          <td width="5%" class="RightCol">
-            <xsl:value-of select="GridData/SlotType"/>
+            <xsl:value-of select="SlotType"/>
          </td>
          <td width="5%" class="RightCol">
-            <xsl:value-of select="GridData/TPF"/>
+            <xsl:value-of select="TPF"/>
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="GridData/PPD"/> (<xsl:value-of select="GridData/UPD"/> WUs)
+            <xsl:value-of select="PPD"/> (<xsl:value-of select="UPD"/> WUs)
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="GridData/ETA"/>
+            <xsl:value-of select="ETA"/>
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="GridData/Core"/>
+            <xsl:value-of select="Core"/>
          </td>
          <td width="2%" class="RightCol">
-            <xsl:value-of select="GridData/CoreId"/>
+            <xsl:value-of select="CoreId"/>
          </td>
          <td width="8%">
             <xsl:choose>
-               <xsl:when test="GridData/ProjectIsDuplicate='true'">
+               <xsl:when test="ProjectIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
                   <xsl:attribute name="bgcolor">Orange</xsl:attribute>
                </xsl:when>
@@ -134,20 +134,20 @@
                   <xsl:attribute name="class">RightCol</xsl:attribute>
                </xsl:otherwise>
             </xsl:choose>
-            <xsl:value-of select="GridData/ProjectRunCloneGen"/>
+            <xsl:value-of select="ProjectRunCloneGen"/>
          </td>
          <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/Credit"/>
+            <xsl:value-of select="Credit"/>
          </td>
          <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/Completed"/>
+            <xsl:value-of select="Completed"/>
          </td>
          <td width="3%" class="RightCol">
-            <xsl:value-of select="GridData/Failed"/>
+            <xsl:value-of select="Failed"/>
          </td>
          <td width="8%">
             <xsl:choose>
-               <xsl:when test="GridData/UsernameOk='false'">
+               <xsl:when test="UsernameOk='false'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
                   <xsl:attribute name="bgcolor">Orange</xsl:attribute>
                </xsl:when>
@@ -155,13 +155,13 @@
                   <xsl:attribute name="class">RightCol</xsl:attribute>
                </xsl:otherwise>
             </xsl:choose>
-            <xsl:value-of select="GridData/Username"/>
+            <xsl:value-of select="Username"/>
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="GridData/DownloadTime"/>
+            <xsl:value-of select="DownloadTime"/>
          </td>
          <td width="8%" class="RightCol"> <!--100%-->
-            <xsl:value-of select="GridData/PreferredDeadline"/>
+            <xsl:value-of select="PreferredDeadline"/>
          </td>
       </tr>
    </xsl:template>

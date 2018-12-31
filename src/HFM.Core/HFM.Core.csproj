@@ -110,7 +110,6 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
     <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
-    <Compile Include="DataTypes\Markup\GridData.cs" />
     <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />

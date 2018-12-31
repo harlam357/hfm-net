@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.DataTypes.Markup
@@ -54,12 +53,6 @@ namespace HFM.Core.DataTypes.Markup
       public int TotalFailedUnits { get; set; }
 
       [DataMember(Order = 10)]
-      public GridData GridData { get; set; }
-
-      [DataMember(Order = 11)]
-      public IList<LogLine> CurrentLogLines { get; set; }
-
-      [DataMember(Order = 12)]
-      public Protein Protein { get; set; }
+      public SlotData SlotData { get; set; }
    }
 }

@@ -26,36 +26,75 @@ namespace HFM.Core.DataTypes.Markup
    public class SlotData
    {
       [DataMember(Order = 1)]
-      public string Arguments { get; set; }
+      public SlotStatus Status { get; set; }
 
       [DataMember(Order = 2)]
-      public string ClientVersion { get; set; }
+      public string StatusColor { get; set; }
 
       [DataMember(Order = 3)]
-      public string UserId { get; set; }
+      public string StatusFontColor { get; set; }
 
       [DataMember(Order = 4)]
-      public int MachineId { get; set; }
+      public int PercentComplete { get; set; }
 
       [DataMember(Order = 5)]
-      public int SlotId { get; set; }
+      public bool UserIdIsDuplicate { get; set; }
 
       [DataMember(Order = 6)]
-      public int TotalRunCompletedUnits { get; set; }
+      public string Name { get; set; }
 
       [DataMember(Order = 7)]
-      public int TotalCompletedUnits { get; set; }
+      public string SlotType { get; set; }
 
       [DataMember(Order = 8)]
-      public int TotalRunFailedUnits { get; set; }
+      public string TPF { get; set; }
 
       [DataMember(Order = 9)]
-      public int TotalFailedUnits { get; set; }
+      public double PPD { get; set; }
 
       [DataMember(Order = 10)]
-      public GridData GridData { get; set; }
+      public double UPD { get; set; }
 
       [DataMember(Order = 11)]
+      public string ETA { get; set; }
+
+      [DataMember(Order = 12)]
+      public string Core { get; set; }
+
+      [DataMember(Order = 13)]
+      public string CoreId { get; set; }
+
+      [DataMember(Order = 14)]
+      public bool ProjectIsDuplicate { get; set; }
+
+      [DataMember(Order = 15)]
+      public string ProjectRunCloneGen { get; set; }
+
+      [DataMember(Order = 16)]
+      public double Credit { get; set; }
+
+      [DataMember(Order = 17)]
+      public int Completed { get; set; }
+
+      [DataMember(Order = 18)]
+      public int Failed { get; set; }
+
+      [DataMember(Order = 19)]
+      public bool UsernameOk { get; set; }
+
+      [DataMember(Order = 20)]
+      public string Username { get; set; }
+
+      [DataMember(Order = 21)]
+      public string DownloadTime { get; set; }
+
+      [DataMember(Order = 22)]
+      public string PreferredDeadline { get; set; }
+
+      [DataMember(Order = 23)]
       public IList<LogLine> CurrentLogLines { get; set; }
+
+      [DataMember(Order = 24)]
+      public Protein Protein { get; set; }
    }
 }

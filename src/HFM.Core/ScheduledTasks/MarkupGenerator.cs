@@ -336,24 +336,10 @@ namespace HFM.Core.ScheduledTasks
          slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
          slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
          slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
-         slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
-         slotDetail.CurrentLogLines = CreateMarkupLogLines(slot.CurrentLogLines);
-         slotDetail.Protein = CreateMarkupProtein(slot.UnitInfoModel.CurrentProtein);
+         slotDetail.SlotData = AutoMapper.Mapper.Map<SlotModel, SlotData>(slot);
          return slotDetail;
       }
 
-      private static IList<LogLine> CreateMarkupLogLines(IEnumerable<Log.LogLine> lines)
-      {
-         if (lines == null) return null;
-         return lines.Select(AutoMapper.Mapper.Map<LogLine>).ToList();
-      }
-
-      private static Protein CreateMarkupProtein(Proteins.Protein p)
-      {
-         if (p == null) return null;
-         return AutoMapper.Mapper.Map<Protein>(p);
-      }
-      
       #endregion
    }
 }

@@ -39,15 +39,13 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.NextAttempt, opt => opt.Ignore());
 
          CreateMap<SlotModel, DataTypes.Markup.SlotData>()
-            .ForMember(dest => dest.GridData, opt => opt.MapFrom(src => Mapper.Map<SlotModel, DataTypes.Markup.GridData>(src)));
-
-         CreateMap<SlotModel, DataTypes.Markup.GridData>()
             .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => src.Status.GetHtmlColor()))
             .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => src.Status.GetHtmlFontColor()))
             .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToDateString() : src.ETA.ToString()))
             .ForMember(dest => dest.Failed, opt => opt.MapFrom(src => src.TotalRunFailedUnits))
             .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
-            .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()));
+            .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()))
+            .ForMember(dest => dest.Protein, opt => opt.MapFrom(src => CreateMarkupProtein(src.UnitInfoModel.CurrentProtein)));
 
          CreateMap<Log.LogLine, DataTypes.Markup.LogLine>();
          CreateMap<Proteins.Protein, DataTypes.Markup.Protein>();
@@ -74,6 +72,12 @@ namespace HFM.Core.Configuration
             .ForMember(dest => dest.ProductionView, opt => opt.Ignore())
             .ForMember(dest => dest.PPD, opt => opt.Ignore())
             .ForMember(dest => dest.Credit, opt => opt.Ignore());
+      }
+
+      private static DataTypes.Markup.Protein CreateMarkupProtein(Proteins.Protein p)
+      {
+         if (p == null) return null;
+         return Mapper.Map<DataTypes.Markup.Protein>(p);
       }
    }
 }

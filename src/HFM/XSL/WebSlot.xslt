@@ -15,7 +15,7 @@
             <table class="Instance">
                <tr>
                   <td class="Heading">
-                     <xsl:value-of select="GridData/Name"/>
+                     <xsl:value-of select="SlotData/Name"/>
                   </td>
                   <td class="Plain">
                      <a href="index.html">Overview Page</a>
@@ -28,7 +28,7 @@
                      Current Progress
                   </td>
                   <td class="AltRightCol">
-                     <xsl:value-of select="GridData/PercentComplete"/> Percent Complete
+                     <xsl:value-of select="SlotData/PercentComplete"/> Percent Complete
                   </td>
                </tr>
                <tr>
@@ -36,7 +36,7 @@
                      Time Per Frame
                   </td>
                   <td class="RightCol">
-                     <xsl:value-of select="GridData/TPF"/>
+                     <xsl:value-of select="SlotData/TPF"/>
                   </td>
                </tr>
                <tr>
@@ -44,7 +44,7 @@
                      PPD
                   </td>
                   <td class="AltRightCol">
-                     <xsl:value-of select="GridData/PPD"/> (<xsl:value-of select="GridData/UPD"/> WUs)
+                     <xsl:value-of select="SlotData/PPD"/> (<xsl:value-of select="SlotData/UPD"/> WUs)
                   </td>
                </tr>
                <tr>
@@ -52,7 +52,7 @@
                      PPW
                   </td>
                   <td class="RightCol">
-                     <xsl:value-of select="format-number(GridData/PPD * 7, NumberFormat)"/> (<xsl:value-of select="format-number(GridData/UPD * 7, NumberFormat)"/> WUs)
+                     <xsl:value-of select="format-number(SlotData/PPD * 7, NumberFormat)"/> (<xsl:value-of select="format-number(SlotData/UPD * 7, NumberFormat)"/> WUs)
                   </td>
                </tr>
                <tr>
@@ -68,7 +68,7 @@
                      Download Time
                   </td>
                   <td class="RightCol">
-                     <xsl:value-of select="GridData/DownloadTime"/>
+                     <xsl:value-of select="SlotData/DownloadTime"/>
                   </td>
                </tr>
                <tr>
@@ -76,7 +76,7 @@
                      Expected Completion
                   </td>
                   <td class="AltRightCol">
-                     <xsl:value-of select="GridData/ETA"/>
+                     <xsl:value-of select="SlotData/ETA"/>
                   </td>
                </tr>
                <tr>
@@ -97,7 +97,7 @@
                </tr>
                <tr>
                   <td class="LeftCol" colspan="2">
-                     <xsl:for-each select="CurrentLogLines/LogLine">
+                     <xsl:for-each select="SlotData/CurrentLogLines/LogLine">
                         <xsl:value-of select="Raw" disable-output-escaping="yes"/><xsl:element name="br"/>
                      </xsl:for-each>
                   </td>
@@ -112,7 +112,7 @@
                   </td>
                   <td class="Blank"> </td>
                </tr>
-               <xsl:apply-templates select="Protein" />
+               <xsl:apply-templates select="SlotData/Protein" />
                <tr>
                   <td class="Plain" colspan="2" align="center">
                   </td>
@@ -126,7 +126,7 @@
          </body>
       </html>
    </xsl:template>
-   <xsl:template match="Protein">
+   <xsl:template match="SlotData/Protein">
       <tr>
          <td class="AltLeftCol">Project ID</td>
          <td class="AltRightCol">
