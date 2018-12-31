@@ -179,7 +179,7 @@ namespace HFM.Log
          /// <summary>
          /// Gets or sets the client status.
          /// </summary>
-         public LogSlotStatus Status { get; set; }
+         public LegacySlotStatus Status { get; set; }
       }
    }
 }

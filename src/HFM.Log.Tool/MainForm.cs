@@ -273,7 +273,7 @@ namespace HFM.Log.Tool
                   sb.AppendLine("expectedSlotRunData.CompletedUnits = " + legacySlotRunData.CompletedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.FailedUnits = " + legacySlotRunData.FailedUnits + ";");
                   sb.AppendLine("expectedSlotRunData.TotalCompletedUnits = " + GetStringOrNull(legacySlotRunData.TotalCompletedUnits) + ";");
-                  sb.AppendLine("expectedSlotRunData.Status = LogSlotStatus." + legacySlotRunData.Status + ";");
+                  sb.AppendLine("expectedSlotRunData.Status = LegacySlotStatus." + legacySlotRunData.Status + ";");
                   sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
                }
                else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)

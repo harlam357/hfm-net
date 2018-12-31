@@ -81,7 +81,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 261;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
@@ -106,7 +106,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 2;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 263;
-         expectedSlotRunData.Status = LogSlotStatus.GettingWorkPacket;
+         expectedSlotRunData.Status = LegacySlotStatus.GettingWorkPacket;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Last();
@@ -149,7 +149,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 2;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 292;
-         expectedSlotRunData.Status = LogSlotStatus.SendingWorkPacket;
+         expectedSlotRunData.Status = LegacySlotStatus.SendingWorkPacket;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -195,7 +195,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.FailedUnits = 0;
          // NOTE: not capturing line "+ Starting local stats count at 1"
          expectedSlotRunData.TotalCompletedUnits = null; 
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -359,7 +359,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
@@ -615,7 +615,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 1
@@ -927,7 +927,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 2
@@ -980,7 +980,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 3
@@ -1026,7 +1026,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 4
@@ -1086,7 +1086,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 5
@@ -1153,7 +1153,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 6
@@ -1227,7 +1227,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 7
@@ -1345,7 +1345,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 8
@@ -1482,7 +1482,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 9
@@ -1571,7 +1571,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 33;
          expectedSlotRunData.TotalCompletedUnits = 617;
-         expectedSlotRunData.Status = LogSlotStatus.EuePause;
+         expectedSlotRunData.Status = LegacySlotStatus.EuePause;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -1614,7 +1614,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 885;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -1662,7 +1662,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.FailedUnits = 5;
          // NOTE: not capturing line "+ Starting local stats count at 1"
          expectedSlotRunData.TotalCompletedUnits = null; 
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
@@ -1698,7 +1698,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 11;
          expectedSlotRunData.FailedUnits = 1;
          expectedSlotRunData.TotalCompletedUnits = 12;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Last();
@@ -1742,7 +1742,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 2;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 4221;
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -1784,7 +1784,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(0);
@@ -1813,7 +1813,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 5;
          expectedSlotRunData.TotalCompletedUnits = 224;
-         expectedSlotRunData.Status = LogSlotStatus.EuePause;
+         expectedSlotRunData.Status = LegacySlotStatus.EuePause;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Last();
@@ -1859,7 +1859,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 1994;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -1911,7 +1911,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 847;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -1982,7 +1982,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.FailedUnits = 0;
          // NOTE: not capturing line "+ Starting local stats count at 1"
          expectedSlotRunData.TotalCompletedUnits = null; 
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.ElementAt(1);
@@ -2006,7 +2006,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 2;
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Last();
@@ -2048,7 +2048,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.ElementAt(3);
@@ -2072,7 +2072,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 0;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = null;
-         expectedSlotRunData.Status = LogSlotStatus.RunningNoFrameTimes;
+         expectedSlotRunData.Status = LegacySlotStatus.RunningNoFrameTimes;
          expectedSlotRun.Data = expectedSlotRunData;
 
          actualRun = fahLog.ClientRuns.Last();
@@ -2133,7 +2133,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 8;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 229;
-         expectedSlotRunData.Status = LogSlotStatus.Paused;
+         expectedSlotRunData.Status = LegacySlotStatus.Paused;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();
@@ -2177,7 +2177,7 @@ namespace HFM.Log.Legacy
          expectedSlotRunData.CompletedUnits = 1;
          expectedSlotRunData.FailedUnits = 0;
          expectedSlotRunData.TotalCompletedUnits = 173;
-         expectedSlotRunData.Status = LogSlotStatus.Stopped;
+         expectedSlotRunData.Status = LegacySlotStatus.Stopped;
          expectedSlotRun.Data = expectedSlotRunData;
 
          var actualRun = fahLog.ClientRuns.Last();

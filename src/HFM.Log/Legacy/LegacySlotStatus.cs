@@ -6,7 +6,7 @@ namespace HFM.Log.Legacy
    /// <summary>
    /// Represents the status of a Folding@Home client slot.
    /// </summary>
-   public enum LogSlotStatus
+   public enum LegacySlotStatus
    {
       /// <summary>
       /// The status of the slot is unknown.
