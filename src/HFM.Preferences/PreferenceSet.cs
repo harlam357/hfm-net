@@ -66,13 +66,21 @@ namespace HFM.Preferences
          string path = Path.Combine(ApplicationDataFolderPath, "config.xml");
          if (File.Exists(path))
          {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            try
             {
-               var serializer = new DataContractSerializer(typeof(PreferenceData));
-               var data = (PreferenceData)serializer.ReadObject(fileStream);
-               return data;
+               using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+               {
+                  var serializer = new DataContractSerializer(typeof(PreferenceData));
+                  var data = (PreferenceData)serializer.ReadObject(fileStream);
+                  return data;
+               }
+            }
+            catch (Exception)
+            {
+               return null;
             }
          }
+         
          return null;
       }
 

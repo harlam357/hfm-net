@@ -14,19 +14,19 @@ namespace HFM.Preferences
 {
    public abstract class PreferenceSetBase : IPreferenceSet
    {
-      public string ApplicationPath { get; private set; }
+      public string ApplicationPath { get; }
 
-      public string ApplicationDataFolderPath { get; private set; }
+      public string ApplicationDataFolderPath { get; set; }
 
-      public string ApplicationVersion { get; private set; }
+      public string ApplicationVersion { get; set; }
 
       private PreferenceDictionary _prefs;
 
       protected PreferenceSetBase(string applicationPath, string applicationDataFolderPath, string applicationVersion)
       {
-         if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationPath");
-         if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationDataFolderPath");
-         if (String.IsNullOrWhiteSpace(applicationVersion)) throw new ArgumentException("Value cannot be null or whitespace.", "applicationVersion");
+         if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationPath));
+         if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationDataFolderPath));
+         if (String.IsNullOrWhiteSpace(applicationVersion)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationVersion));
          ApplicationPath = applicationPath;
          ApplicationDataFolderPath = applicationDataFolderPath;
          ApplicationVersion = applicationVersion;
@@ -71,8 +71,7 @@ namespace HFM.Preferences
             return;
          }
 
-         Version settingsVersion;
-         if (Version.TryParse(data.ApplicationVersion, out settingsVersion))
+         if (Version.TryParse(data.ApplicationVersion, out Version settingsVersion))
          {
             ExecuteUpgrades(settingsVersion, data);
          }
@@ -335,48 +334,37 @@ namespace HFM.Preferences
 
       protected virtual void OnPreferenceChanged(Preference preference)
       {
-         var handler = PreferenceChanged;
-         if (handler != null)
-         {
-            handler(this, new PreferenceChangedEventArgs(preference));
-         }
+         PreferenceChanged?.Invoke(this, new PreferenceChangedEventArgs(preference));
       }
 
       private sealed class PreferenceDictionary
       {
-         public PreferenceData Data
-         {
-            get { return _data; }
-         }
+         public PreferenceData Data { get; }
 
-         private readonly PreferenceData _data;
          private readonly Dictionary<Preference, IMetadata> _inner;
 
          public PreferenceDictionary(PreferenceData data)
          {
-            _data = data;
+            Data = data;
             _inner = new Dictionary<Preference, IMetadata>();
          }
 
          public void Add<T>(Preference key, Expression<Func<PreferenceData, T>> propertyExpression)
          {
-            _inner.Add(key, new ExpressionMetadata<T>(_data, propertyExpression));
+            _inner.Add(key, new ExpressionMetadata<T>(Data, propertyExpression));
          }
 
          public void AddReadOnly<T>(Preference key, Expression<Func<PreferenceData, T>> propertyExpression)
          {
-            _inner.Add(key, new ExpressionMetadata<T>(_data, propertyExpression, true));
+            _inner.Add(key, new ExpressionMetadata<T>(Data, propertyExpression, true));
          }
 
          public void AddEncrypted(Preference key, Expression<Func<PreferenceData, string>> propertyExpression)
          {
-            _inner.Add(key, new EncryptedExpressionMetadata(_data, propertyExpression));
+            _inner.Add(key, new EncryptedExpressionMetadata(Data, propertyExpression));
          }
 
-         public IMetadata this[Preference key]
-         {
-            get { return _inner[key]; }
-         }
+         public IMetadata this[Preference key] => _inner[key];
       }
    }
 }
