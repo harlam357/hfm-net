@@ -69,7 +69,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 8, 25, 18, 11, 37), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.02", result.ClientVersion);
          Assert.IsNull(result.UserID);
@@ -141,7 +141,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 9, 7, 23, 11, 31), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 9, 7, 23, 11, 31), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24beta", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -227,7 +227,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(3, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 20, 6, 6, 41), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 20, 6, 6, 41), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24R3", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -292,7 +292,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 20, 6, 6, 41), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 20, 6, 6, 41), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24R3", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -360,7 +360,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(5, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 19, 8, 43, 24), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 19, 8, 43, 24), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24R3", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -432,7 +432,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(5, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 12, 24, 13, 21, 20), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 12, 24, 13, 21, 20), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24R3", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -511,7 +511,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(7, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 28, 6, 7, 54), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 28, 6, 7, 54), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.29", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -590,7 +590,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(0, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 5, 28, 17, 19, 4), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 5, 28, 17, 19, 4), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.29", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -660,7 +660,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 7, 9, 21, 55), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 7, 9, 21, 55), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.24R3", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -728,7 +728,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(0, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 9, 14, 2, 48, 27), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.30", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -799,7 +799,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 3, 20, 7, 52, 34), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.34", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -862,7 +862,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 8, 18, 3, 54, 16), result.StartTime);
          Assert.IsNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -934,7 +934,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 10, 13, 31, 6), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 10, 13, 31, 6), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1004,7 +1004,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 1, 31, 1, 57, 21), result.StartTime);
          Assert.IsNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1074,7 +1074,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 29, 4, 55, 24), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 4, 29, 4, 55, 24), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1131,7 +1131,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 29, 4, 55, 24), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 4, 29, 4, 55, 24), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1198,7 +1198,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(8, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 11, 2, 9, 24, 59), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 11, 2, 9, 24, 59), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.30r2", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1306,7 +1306,7 @@ namespace HFM.Core
 
          Assert.IsNotNull(result.Queue);
          Assert.AreEqual(4, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 7), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 3, 24, 0, 41, 7), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1367,7 +1367,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 4, 8, 23, 31, 9), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 4, 8, 23, 31, 9), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1429,7 +1429,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 31, 13, 33, 32), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 3, 31, 13, 33, 32), result.StartTime);
          Assert.IsNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);
@@ -1491,7 +1491,7 @@ namespace HFM.Core
 
          Assert.IsNull(result.Queue);
          Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15), result.StartTime);
+         Assert.AreEqual(new DateTime(DateTime.Now.Year, 3, 16, 18, 46, 15), result.StartTime);
          Assert.IsNotNull(result.Arguments);
          Assert.AreEqual("6.23", result.ClientVersion);
          Assert.IsNotNull(result.UserID);

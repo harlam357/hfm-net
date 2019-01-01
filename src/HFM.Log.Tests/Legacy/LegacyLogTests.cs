@@ -69,7 +69,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 30, 149));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 150, 273));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 30, 0, 40, 27, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 7, 30, 0, 40, 27, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
          expectedRunData.ClientVersion = "6.24beta";
          expectedRunData.FoldingID = "harlam357";
@@ -94,7 +94,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 302, 401));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 402, 752));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 7, 31, 0, 7, 43, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 7, 31, 0, 7, 43, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
          expectedRunData.ClientVersion = "6.24beta";
          expectedRunData.FoldingID = "harlam357";
@@ -137,7 +137,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 30, 220));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 221, 382));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 40, 5, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 18, 2, 40, 5, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
          expectedRunData.ClientVersion = "6.24beta";
          expectedRunData.FoldingID = "harlam357";
@@ -180,7 +180,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 231, 384));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 385, 408));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 25, 18, 11, 37, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 25, 18, 11, 37, DateTimeKind.Utc);
          expectedRunData.Arguments = "-local -forceasm -smp 4";
          expectedRunData.ClientVersion = "6.02";
          expectedRunData.FoldingID = "harlam357";
@@ -364,7 +364,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 0
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 9, 11, 40, 51, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 9, 11, 40, 51, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -620,7 +620,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 1
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 9, 21, 28, 23, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 9, 21, 28, 23, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -932,7 +932,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 2
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 10, 15, 4, 22, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 10, 15, 4, 22, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -985,7 +985,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 3
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 13, 1, 31, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 13, 1, 31, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1031,7 +1031,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 4
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 13, 20, 2, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 13, 20, 2, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1091,7 +1091,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 5
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 13, 20, 57, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 13, 20, 57, DateTimeKind.Utc);
          expectedRunData.Arguments = "-configonly";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1158,7 +1158,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 6
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 14, 25, 41, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 14, 25, 41, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1232,7 +1232,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 7
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 16, 51, 7, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 16, 51, 7, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1350,7 +1350,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 8
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 11, 19, 21, 4, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 11, 19, 21, 4, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1487,7 +1487,7 @@ namespace HFM.Log.Legacy
 
          // Setup ClientRunData 9
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(2018, 12, 12, 1, 12, 10, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 12, 12, 1, 12, 10, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp 8 -bigadv -verbosity 9";
          expectedRunData.ClientVersion = "6.24R3";
          expectedRunData.FoldingID = "sneakysnowman";
@@ -1559,7 +1559,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 3710, 3759));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 3760, 3792));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 9, 14, 2, 48, 27, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 9, 14, 2, 48, 27, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -verbosity 9";
          expectedRunData.ClientVersion = "6.30";
          expectedRunData.FoldingID = "harlam357";
@@ -1602,7 +1602,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 24, 174));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 175, 207));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 20, 7, 52, 34, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 3, 20, 7, 52, 34, DateTimeKind.Utc);
          expectedRunData.Arguments = "-smp -bigadv -betateam -verbosity 9";
          expectedRunData.ClientVersion = "6.34";
          expectedRunData.FoldingID = "GreyWhiskers";
@@ -1649,7 +1649,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 510, 570));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 571, 617));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 5, 7, 18, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 8, 5, 7, 18, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -local";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -1686,7 +1686,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 8, 2715, 2916));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 2917, 2995));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 8, 6, 18, 28, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 8, 6, 18, 28, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -local";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -1730,7 +1730,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 9, 208, 381));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 382, 446));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 14, 4, 40, 2, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 14, 4, 40, 2, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -1772,7 +1772,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 24, 55));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 26, 33, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 18, 3, 26, 33, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "JollySwagman";
@@ -1801,7 +1801,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 373, 420));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 421, 463));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 3, 54, 16, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 18, 3, 54, 16, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "JollySwagman";
@@ -1847,7 +1847,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 0, 24, 82));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 1, 31, 1, 57, 21, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 1, 31, 1, 57, 21, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "Zagen30";
@@ -1899,7 +1899,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 3, 27, 169));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 170, 218));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 2, 17, 17, 19, 31, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 2, 17, 17, 19, 31, DateTimeKind.Utc);
          expectedRunData.Arguments = "-gpu 0 -verbosity 9 -local -verbosity 9";
          expectedRunData.ClientVersion = "6.41r2";
          expectedRunData.FoldingID = "HayesK";
@@ -1949,7 +1949,7 @@ namespace HFM.Log.Legacy
          var expectedSlotRun = new SlotRun(expectedRun, 0);
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 15, 30, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 18, 2, 15, 30, DateTimeKind.Utc);
          expectedRunData.Arguments = "-configonly";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -1969,7 +1969,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 1, 179, 592));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 593, 838));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 18, 2, 17, 46, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 18, 2, 17, 46, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -forceasm";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -1994,7 +1994,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 2, 874, 951));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 8, 20, 4, 17, 29, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 8, 20, 4, 17, 29, DateTimeKind.Utc);
          expectedRunData.Arguments = "-verbosity 9 -forceasm -oneunit";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "harlam357";
@@ -2036,7 +2036,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 820, 926));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 28, 52, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 3, 24, 0, 28, 52, DateTimeKind.Utc);
          expectedRunData.Arguments = "-oneunit -forceasm -verbosity 9";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "borden.b";
@@ -2060,7 +2060,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 4, 961, 1014));
          expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 24, 0, 41, 07, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 3, 24, 0, 41, 07, DateTimeKind.Utc);
          expectedRunData.Arguments = "-forceasm -verbosity 9 -oneunit";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "borden.b";
@@ -2121,7 +2121,7 @@ namespace HFM.Log.Legacy
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 6, 1870, 2129));
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 7, 2130, 2323));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 10, 15, 48, 32, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 3, 10, 15, 48, 32, DateTimeKind.Utc);
          expectedRunData.Arguments = null;
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "DrSpalding";
@@ -2165,7 +2165,7 @@ namespace HFM.Log.Legacy
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
          expectedSlotRun.UnitRuns.Add(new UnitRun(expectedSlotRun, 5, 24, 276));
          var expectedRunData = new LegacyClientRunData();
-         expectedRunData.StartTime = new DateTime(DateTime.UtcNow.Year, 3, 16, 18, 46, 15, DateTimeKind.Utc);
+         expectedRunData.StartTime = new DateTime(DateTime.Now.Year, 3, 16, 18, 46, 15, DateTimeKind.Utc);
          expectedRunData.Arguments = "-oneunit -verbosity 9";
          expectedRunData.ClientVersion = "6.23";
          expectedRunData.FoldingID = "Amaruk";
