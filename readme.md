@@ -4,6 +4,22 @@
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
+## Version 0.9.9.789
+
+### Release Date: January 1, 2019
+
+* Change: Log viewer and message viewer font changed to Consolas 10pt.  The mono-space font makes reading the log much better on the eyes.
+* Change: Auto updates source location.  HFM will auto update from v0.9.8 for a short time.  But it will begin to fail soon.
+          I've maintained some paid web hosting over the years that I intended to do more with.  At this point I've decided to cut 
+		  my losses there as there are many more options now.  The new update location should do well for the foreseeable future.
+* Change: Lots of things behind the scenes.  I won't bore you with the details.  These are all things I've been working on for the last few
+          years, as time has allowed, to make the application leaner and meaner.  Again, users won't really care, unless I created a bug.
+
+* Notes: I hope those of you using the project enjoy.  If you have an issue please post in the Google Group or add a new Issue here on GitHub.
+         I'll do my best to respond as quickly as possible.  I'm working my way through the Issues here on GitHub to clean them up, some of 
+		 them are very old and were imported from Google Code.
+
+
 ## Version 0.9.8.615
 
 ### Release Date: May 12, 2017
