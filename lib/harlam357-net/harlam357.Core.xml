@@ -4,123 +4,43 @@
         <name>harlam357.Core</name>
     </assembly>
     <members>
-        <member name="T:harlam357.Core.ComponentModel.ProgressChangedEventArgs">
+        <member name="T:harlam357.Core.ProgressInfo">
             <summary>
-            Provides data for the a ProgressChanged event.
+            Provides progress information data.
             </summary>
         </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressChangedEventArgs.#ctor(System.Int32,System.String)">
+        <member name="M:harlam357.Core.ProgressInfo.#ctor(System.Int32,System.String)">
             <summary>
-            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
+            Initializes a new instance of the ProgressInfo class with progress percentage and message values.
             </summary>
             <param name="progressPercentage">The progress value.</param>
             <param name="message">The text message value.</param>
         </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressChangedEventArgs.#ctor(System.Int32,System.String,System.Object)">
+        <member name="M:harlam357.Core.ProgressInfo.#ctor(System.Int32,System.String,System.Object)">
             <summary>
-            Initializes a new instance of the ProgressEventArgs class with progress percentage and message values.
+            Initializes a new instance of the ProgressInfo class with progress percentage and message values.
             </summary>
             <param name="progressPercentage">A percentage value indicating the task progress.</param>
             <param name="message">A message value indicating the task progress.</param>
             <param name="userState">A unique user state.</param>
         </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.ProgressPercentage">
+        <member name="P:harlam357.Core.ProgressInfo.ProgressPercentage">
             <summary>
             Gets the task progress percentage.
             </summary>
             <returns>A percentage value indicating the task progress.</returns>
         </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.Message">
+        <member name="P:harlam357.Core.ProgressInfo.Message">
             <summary>
             Gets a message value indicating the task progress.
             </summary>
             <returns>A System.String message value indicating the task progress.</returns>
         </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressChangedEventArgs.UserState">
+        <member name="P:harlam357.Core.ProgressInfo.UserState">
             <summary>
             Gets a unique user state.
             </summary>
             <returns>A unique System.Object indicating the user state.</returns>
-        </member>
-        <member name="T:harlam357.Core.ComponentModel.IProgressProcessRunner">
-            <summary>
-            Represents an object that runs a process and reports progress.
-            </summary>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.IProgressProcessRunner.Process">
-            <summary>
-            Executes the runner.
-            </summary>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.IProgressProcessRunner.Cancel">
-            <summary>
-            Cancels the runner.
-            </summary>
-        </member>
-        <member name="E:harlam357.Core.ComponentModel.IProgressProcessRunner.ProgressChanged">
-            <summary>
-            Occurs when the runner's progress has changed.
-            </summary>
-        </member>
-        <member name="E:harlam357.Core.ComponentModel.IProgressProcessRunner.ProcessFinished">
-            <summary>
-            Occurs when the runner's process has finished.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.IProgressProcessRunner.Exception">
-            <summary>
-            Gets the exception that resulted from executing the runner or null if no exception occurred.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.IProgressProcessRunner.SupportsCancellation">
-            <summary>
-            Gets a value that defines if this runner supports being cancelled.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.IProgressProcessRunner.Processing">
-            <summary>
-            Gets a value that reports if the runner is currently processing.
-            </summary>
-        </member>
-        <member name="T:harlam357.Core.ComponentModel.ProgressProcessRunnerBase">
-            <summary>
-            Represents an object that runs a process and reports progress.
-            </summary>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.Process">
-            <summary>
-            Executes the runner.
-            </summary>
-        </member>
-        <member name="M:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.Cancel">
-            <summary>
-            Cancels the runner.
-            </summary>
-        </member>
-        <member name="E:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.ProgressChanged">
-            <summary>
-            Occurs when the runner's progress has changed.
-            </summary>
-        </member>
-        <member name="E:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.ProcessFinished">
-            <summary>
-            Occurs when the runner's process has finished.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.Exception">
-            <summary>
-            Gets the exception that resulted from executing the runner or null if no exception occurred.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.SupportsCancellation">
-            <summary>
-            Gets a value that defines if this runner supports being cancelled.
-            </summary>
-        </member>
-        <member name="P:harlam357.Core.ComponentModel.ProgressProcessRunnerBase.Processing">
-            <summary>
-            Gets a value that reports if the runner is currently processing.
-            </summary>
         </member>
         <member name="T:harlam357.Core.ComponentModel.SortMode">
             <summary>
@@ -291,14 +211,6 @@
             <summary>
             Gets a byte array containing a number of bytes from the end of the last stream read.
             </summary>
-        </member>
-        <member name="M:harlam357.Core.ProgressExtensions.WithEvent``1(System.Progress{``0})">
-            <summary>
-            Creates a wrapper around a Progress instance that implements IProgressWithEvent. 
-            </summary>
-            <typeparam name="T">Specifies the type of the progress report value.</typeparam>
-            <param name="progress">The source Progress instance to wrap.</param>
-            <returns>A wrapper around a Progress instance that implements IProgressWithEvent. </returns>
         </member>
         <member name="T:harlam357.Core.Net.IFtpWebRequest">
             <summary>

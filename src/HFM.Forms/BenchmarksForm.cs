@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Benchmarks Form Class
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,7 @@ using ZedGraph;
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Forms
@@ -66,9 +67,7 @@ namespace HFM.Forms
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -283,6 +282,7 @@ namespace HFM.Forms
          }
 
          var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+         var calculateBonusEnabled = calculateBonus.IsEnabled();
 
          lines.Add(String.Empty);
          lines.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));
@@ -290,9 +290,9 @@ namespace HFM.Forms
          lines.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
          lines.Add(String.Empty);
          lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-            benchmark.MinimumFrameTime, ProductionCalculator.GetPPD(benchmark.MinimumFrameTime, protein, calculateBonus.IsEnabled())));
+            benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein, calculateBonusEnabled)));
          lines.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-            benchmark.AverageFrameTime, ProductionCalculator.GetPPD(benchmark.AverageFrameTime, protein, calculateBonus.IsEnabled())));
+            benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled)));
 
          if (unitInfoModel != null)
          {
@@ -307,6 +307,16 @@ namespace HFM.Forms
          }
 
          lines.Add(String.Empty);
+      }
+
+      private static double GetPPD(TimeSpan frameTime, Protein protein, bool calculateUnitTimeByFrameTime)
+      {
+         if (calculateUnitTimeByFrameTime)
+         {
+            var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+            return protein.GetBonusPPD(frameTime, unitTime);
+         }
+         return protein.GetPPD(frameTime);
       }
 
       private void listBox1_MouseDown(object sender, MouseEventArgs e)

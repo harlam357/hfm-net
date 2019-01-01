@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,9 +31,12 @@ using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
+using HFM.Core.Serializers;
 using HFM.Forms.Models;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {
@@ -51,13 +54,9 @@ namespace HFM.Forms
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
-
-      public IFileSerializerPluginManager<List<HistoryEntry>> HistoryEntrySerializerPlugins { get; set; }
 
       public event EventHandler PresenterClosed;
       
@@ -126,15 +125,22 @@ namespace HFM.Forms
          _model.Update(_prefs, _queryContainer);
       }
 
+      internal IList<IFileSerializer<List<HistoryEntry>>> ExportSerializers { get; set; }
+
       internal void ExportClick()
       {
+         var serializers = ExportSerializers ?? new List <IFileSerializer<List<HistoryEntry>>>
+         {
+            new HistoryEntryCsvSerializer()
+         };
+
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
-         saveFileDialogView.Filter = HistoryEntrySerializerPlugins.FileTypeFilters;
+         saveFileDialogView.Filter = serializers.GetFileTypeFilters();
          if (saveFileDialogView.ShowDialog() == DialogResult.OK)
          {
             try
             {
-               var serializer = HistoryEntrySerializerPlugins[saveFileDialogView.FilterIndex - 1].Interface;
+               var serializer = serializers[saveFileDialogView.FilterIndex - 1];
                serializer.Serialize(saveFileDialogView.FileName, _model.FetchSelectedQuery().ToList());
             }
             catch (Exception ex)
@@ -257,8 +263,28 @@ namespace HFM.Forms
             }
          }
       }
-      
-      public void RefreshProjectDataClick(ProteinUpdateType type)
+
+      public async void RefreshAllProjectDataClick()
+      {
+         await RefreshProjectData(ProteinUpdateType.All);
+      }
+
+      public async void RefreshUnknownProjectDataClick()
+      {
+         await RefreshProjectData(ProteinUpdateType.Unknown);
+      }
+
+      public async void RefreshDataByProjectClick()
+      {
+         await RefreshProjectData(ProteinUpdateType.Project);
+      }
+
+      public async void RefreshDataByIdClick()
+      {
+         await RefreshProjectData(ProteinUpdateType.Id);
+      }
+
+      private async Task RefreshProjectData(ProteinUpdateType type)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
          if (result == DialogResult.No)
@@ -266,44 +292,29 @@ namespace HFM.Forms
             return;
          }
 
-         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         var cancellationTokenSource = new CancellationTokenSource();
-         var projectDownloadView = _viewFactory.GetProgressDialogAsync();
-         projectDownloadView.Icon = Properties.Resources.hfm_48_48;
-         projectDownloadView.Text = "Updating Project Data";
-         projectDownloadView.CancellationTokenSource = cancellationTokenSource;
-         projectDownloadView.Progress = progress;
-
-         projectDownloadView.Shown += (s, args) =>
+         long updateArg = 0;
+         if (type == ProteinUpdateType.Project)
          {
-            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            long updateArg = 0;
-            if (type == ProteinUpdateType.Project)
+            updateArg = _model.SelectedHistoryEntry.ProjectID;
+         }
+         else if (type == ProteinUpdateType.Id)
+         {
+            updateArg = _model.SelectedHistoryEntry.ID;
+         }
+
+         try
+         {
+            bool updated = await _database.UpdateProteinDataAsync(type, updateArg).ConfigureAwait(false);
+            if (updated)
             {
-               updateArg = _model.SelectedHistoryEntry.ProjectID;
+               _model.ResetBindings(true);
             }
-            else if (type == ProteinUpdateType.Id)
-            {
-               updateArg = _model.SelectedHistoryEntry.ID;
-            }
-            _database.UpdateProteinDataAsync(type, updateArg, cancellationTokenSource.Token, progress)
-               .ContinueWith(t =>
-               {
-                  if (t.IsFaulted)
-                  {
-                     var ex = t.Exception.Flatten().InnerException;
-                     Logger.Error(ex.Message, ex);
-                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-                  }
-                  else
-                  {
-                     _model.ResetBindings(true);
-                  }
-                  projectDownloadView.Close();
-               }, uiTaskScheduler);
-         };
-         projectDownloadView.ShowDialog(_view);
-         _viewFactory.Release(projectDownloadView);
+         }
+         catch (Exception ex)
+         {
+            Logger.Error(ex.Message, ex);
+            _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+         }
       }
    }
 }

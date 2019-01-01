@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - TypedMessageConnection Class
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using HFM.Client.DataTypes;
 
@@ -45,7 +46,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the TypedMessageConnection class.
       /// </summary>
-      [CoverageExclude]
+      [ExcludeFromCodeCoverage]
       public TypedMessageConnection()
       {
 

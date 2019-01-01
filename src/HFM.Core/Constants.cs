@@ -21,23 +21,14 @@ namespace HFM.Core
 {
    public static class Constants
    {
-      public const string ExeName = "HFM";
-
       public const string HfmLogFileName = "HFM.log";
       public const string HfmPrevLogFileName = "HFM-prev.log";
 
       public const string SqLiteFilename = "WuHistory.db3";
       public const string ProjectInfoFileName = "ProjectInfo.tab";
-      public const string UnitInfoCacheFileName = "UnitInfoCache.dat";
       public const string BenchmarkCacheFileName = "BenchmarkCache.dat";
       public const string UserStatsCacheFileName = "UserStatsCache.dat";
       public const string QueryCacheFileName = "WuHistoryQuery.dat";
-
-      // Plugins Folder Constants
-      public const string PluginsFolderName = "Plugins";
-      public const string PluginsProteinsFolderName = "Proteins";
-      public const string PluginsBenchmarksFolderName = "Benchmarks";
-      public const string PluginsClientSettingsFolderName = "ClientSettings";
 
       public const string CssFolderName = "CSS";
       public const string XmlFolderName = "XML";
@@ -75,13 +66,8 @@ namespace HFM.Core
 
       public const int MaxDecimalPlaces = 5;
 
-      public const int MinMinutes = 1;
-      public const int MaxMinutes = 180;
-
       public const int MinOffsetMinutes = -720;
       public const int MaxOffsetMinutes = 720;
-
-      public const int ProxyPortDefault = 8080;
 
       // Default ID Constants
       public const string DefaultUserID = "";

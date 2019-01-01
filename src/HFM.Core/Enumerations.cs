@@ -58,22 +58,29 @@ namespace HFM.Core
 
    // ReSharper restore InconsistentNaming
 
-   public enum PpdCalculationType
+   public enum ProcessingMode
    {
-      LastFrame,
-      LastThreeFrames,
-      AllFrames,
-      EffectiveRate
+      Parallel,
+      Serial
    }
 
-   /// <summary>
-   /// Bonus Calculation Types
-   /// </summary>
-   public enum BonusCalculationType
+   public enum WebDeploymentType
    {
-      DownloadTime,
-      FrameTime,
-      None
+      Path,
+      Ftp
+   }
+
+   public enum MinimizeToOption
+   {
+      SystemTray,
+      TaskBar,
+      Both
+   }
+
+   public enum StatsType
+   {
+      User,
+      Team
    }
 
    public enum TimeFormatting
@@ -88,43 +95,9 @@ namespace HFM.Core
       ClientStart
    }
 
-   public enum MinimizeToOption
-   {
-      SystemTray,
-      TaskBar,
-      Both
-   }
-
    public enum GraphLayoutType
    {
       Single,
       ClientsPerGraph
-   }
-
-   /// <summary>
-   /// Ftp Transfer Types
-   /// </summary>
-   public enum FtpMode
-   {
-      Passive,
-      Active
-   }
-
-   public enum WebDeploymentType
-   {
-      Path,
-      Ftp
-   }
-
-   public enum ProcessingMode
-   {
-      Parallel,
-      Serial
-   }
-
-   public enum StatsType
-   {
-      User,
-      Team
    }
 }

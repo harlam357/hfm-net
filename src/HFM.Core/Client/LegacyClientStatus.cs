@@ -163,7 +163,7 @@ namespace HFM.Core
          adjustedFrameTime = adjustedFrameTime.Subtract(offset);
 
          // client time has already rolled over to the next day. the offset correction has 
-         // caused the adjusted frame time span to be negetive.  take the that negetive span
+         // caused the adjusted frame time span to be negative.  take the that negative span
          // and add it to a full 24 hours to correct.
          if (adjustedFrameTime < TimeSpan.Zero)
          {

@@ -29,7 +29,7 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public static class Extensions
+   public static partial class Extensions
    {
       #region DateTime/TimeSpan
 
@@ -43,11 +43,6 @@ namespace HFM.Core
          return dateTime.Equals(DateTime.MinValue);
       }
 
-      public static bool IsZero(this TimeSpan timeSpan)
-      {
-         return timeSpan.Equals(TimeSpan.Zero);
-      }
-
       public static string ToDateString(this DateTime date)
       {
          return ToDateString(date, String.Format(CultureInfo.CurrentCulture,
@@ -57,31 +52,6 @@ namespace HFM.Core
       public static string ToDateString(this IEquatable<DateTime> date, string formattedValue)
       {
          return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
-      }
-
-      /// <summary>
-      /// Get time delta between the TimeSpan arguments.
-      /// </summary>
-      /// <param name="time1">First TimeSpan value.</param>
-      /// <param name="time2">Second TimeSpan value.</param>
-      internal static TimeSpan GetDelta(this TimeSpan time1, TimeSpan time2)
-      {
-         TimeSpan delta;
-
-         // check for rollover back to 00:00:00 time1 will be less than previous time2 reading
-         if (time1 < time2)
-         {
-            // get time before rollover
-            delta = TimeSpan.FromDays(1).Subtract(time2);
-            // add time from latest reading
-            delta = delta.Add(time1);
-         }
-         else
-         {
-            delta = time1.Subtract(time2);
-         }
-
-         return delta;
       }
 
       #endregion
@@ -332,9 +302,11 @@ namespace HFM.Core
             case "GRO-A5":
             case "GRO_A5":
             case "GRO-A6":
+            case "GRO_A7":
                return SlotType.CPU;
             case "GROGPU2":
             case "GROGPU2-MT":
+            case "OPENMM_21":
             case "OPENMMGPU":
             case "OPENMM_OPENCL":
             case "ATI-DEV":
@@ -376,6 +348,7 @@ namespace HFM.Core
             case "A3": // Gromacs SMP2
             case "A5": // Gromacs SMP2
             case "A6": // Gromacs SMP2
+            case "A7":
                return SlotType.CPU;
             case "11": // GPU2 - GROGPU2
             case "12": // GPU2 - ATI-DEV
@@ -432,22 +405,7 @@ namespace HFM.Core
 
       #region DeepClone
 
-      public static Protein DeepClone(this Protein value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
       public static QueryParameters DeepClone(this QueryParameters value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
-      internal static UnitInfo DeepClone(this UnitInfo value)
-      {
-         return ProtoBuf.Serializer.DeepClone(value);
-      }
-
-      internal static ClientSettings DeepClone(this ClientSettings value)
       {
          return ProtoBuf.Serializer.DeepClone(value);
       }
@@ -469,69 +427,11 @@ namespace HFM.Core
          return dictionary;
       }
 
-      internal static ProjectInfo ToProjectInfo(this Unit unit)
-      {
-         return new ProjectInfo
-         {
-            ProjectID = unit.Project,
-            ProjectRun = unit.Run,
-            ProjectClone = unit.Clone,
-            ProjectGen = unit.Gen
-         };
-      }
-
-      internal static ProjectInfo ToProjectInfo(this Queue.QueueEntry unit)
-      {
-         return new ProjectInfo
-         {
-            ProjectID = unit.ProjectID,
-            ProjectRun = unit.ProjectRun,
-            ProjectClone = unit.ProjectClone,
-            ProjectGen = unit.ProjectGen
-         };
-      }
-
       #region ProteinBenchmark
 
       internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)
       {
          return new ProteinBenchmarkSlotIdentifier(proteinBenchmark.OwningSlotName, proteinBenchmark.OwningClientPath);
-      }
-
-      #endregion
-
-      #region IProjectInfo
-
-      /// <summary>
-      /// Is the project information unknown?
-      /// </summary>
-      /// <returns>true if Project (R/C/G) has not been identified; otherwise, false.</returns>
-      internal static bool ProjectIsUnknown(this IProjectInfo projectInfo)
-      {
-         if (projectInfo == null)
-         {
-            return true;
-         }
-         return projectInfo.ProjectID == 0 &&
-                projectInfo.ProjectRun == 0 &&
-                projectInfo.ProjectClone == 0 &&
-                projectInfo.ProjectGen == 0;
-      }
-
-      /// <summary>
-      /// Determines whether the specified project information is equal to this project information.
-      /// </summary>
-      /// <returns>true if the specified Project (R/C/G) is equal to the this Project (R/C/G); otherwise, false.</returns>
-      internal static bool EqualsProject(this IProjectInfo projectInfo1, IProjectInfo projectInfo2)
-      {
-         if (projectInfo1 == null || projectInfo2 == null)
-         {
-            return false;
-         }
-         return projectInfo1.ProjectID == projectInfo2.ProjectID &&
-                projectInfo1.ProjectRun == projectInfo2.ProjectRun &&
-                projectInfo1.ProjectClone == projectInfo2.ProjectClone &&
-                projectInfo1.ProjectGen == projectInfo2.ProjectGen;
       }
 
       #endregion

@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -26,7 +28,7 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms.Configuration
 {
-   [Core.CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class ContainerInstaller : IWindsorInstaller
    {
       #region IWindsorInstaller Members
@@ -114,14 +116,6 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<FolderBrowserView>()
                   .Named("FolderBrowserView")
                      .LifeStyle.Transient,
-            Component.For<IProgressDialogView>()
-               .ImplementedBy<ProgressDialog>()
-                  .Named("ProgressDialog")
-                     .LifeStyle.Transient,
-            Component.For<IProgressDialogAsyncView>()
-               .ImplementedBy<ProjectDownloadDialog>()
-                  .Named("ProjectDownloadDialog")
-                     .LifeStyle.Transient,
             Component.For<IProgressDialogAsyncView>()
                .ImplementedBy<ProgressDialogAsync>()
                   .Named("ProgressDialogAsync")
@@ -165,6 +159,11 @@ namespace HFM.Forms.Configuration
                .ImplementedBy<UpdateLogic>());
 
          #endregion
+
+         // IClientSettingsManager - Singleton
+         container.Register(
+            Component.For<IClientSettingsManager>()
+               .ImplementedBy<ClientSettingsManager>());
       }
 
       #endregion

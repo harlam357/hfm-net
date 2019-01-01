@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,10 @@ using System.Linq;
 
 using Castle.Core.Logging;
 
-namespace HFM.Core
+using HFM.Core.DataTypes;
+using HFM.Preferences;
+
+namespace HFM.Core.ScheduledTasks
 {
    public interface IWebsiteDeployer
    {
@@ -37,9 +40,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -89,7 +90,7 @@ namespace HFM.Core
             {
                var cssFile = _prefs.Get<string>(Preference.CssFile);
                // Copy the CSS file to the output directory
-               string cssFilePath = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName), cssFile);
+               string cssFilePath = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName, cssFile);
                if (File.Exists(cssFilePath))
                {
                   File.Copy(cssFilePath, Path.Combine(webRoot, cssFile), true);
@@ -104,7 +105,7 @@ namespace HFM.Core
                {
                   foreach (var slot in slots)
                   {
-                     string cachedFahlogPath = Path.Combine(_prefs.CacheDirectory, slot.Settings.CachedFahLogFileName());
+                     string cachedFahlogPath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), slot.Settings.CachedFahLogFileName());
                      if (File.Exists(cachedFahlogPath))
                      {
                         File.Copy(cachedFahlogPath, Path.Combine(webRoot, slot.Settings.CachedFahLogFileName()), true);
@@ -132,7 +133,7 @@ namespace HFM.Core
             var ftpMode = _prefs.Get<FtpMode>(Preference.WebGenFtpMode);
 
             // Upload CSS File
-            _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.CssFolderName),
+            _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName,
                _prefs.Get<string>(Preference.CssFile)), username, password, ftpMode);
 
             // Upload each HTML File
@@ -147,7 +148,7 @@ namespace HFM.Core
                                     ? _prefs.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                                     : -1;
 
-               var logPaths = slots.Select(x => Path.Combine(_prefs.CacheDirectory, x.Settings.CachedFahLogFileName())).Distinct();
+               var logPaths = slots.Select(x => Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), x.Settings.CachedFahLogFileName())).Distinct();
                foreach (var cachedFahlogPath in logPaths)
                {
                   if (File.Exists(cachedFahlogPath))

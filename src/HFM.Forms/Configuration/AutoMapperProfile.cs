@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoMapper;
 
 using HFM.Core;
@@ -25,7 +27,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms.Configuration
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class AutoMapperProfile : Profile
    {
       public AutoMapperProfile()

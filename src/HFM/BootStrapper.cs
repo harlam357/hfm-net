@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,11 +29,14 @@ using System.Windows.Forms;
 using Castle.Core.Logging;
 using Castle.Windsor;
 
+using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data.SQLite;
 using HFM.Forms;
 using HFM.Forms.Models;
+using HFM.Preferences;
 
 namespace HFM
 {
@@ -50,6 +53,7 @@ namespace HFM
          }
 
          AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
+         Core.AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = Forms.AsyncProcessorExtensions.ExecuteAsyncWithProgress;
 
          // Issue 180 - Restore the already running instance to the screen.
          using (var singleInstance = new SingleInstanceHelper())
@@ -73,12 +77,10 @@ namespace HFM
                return;
             }
 
-            if (!ClearCacheFolder(prefs.CacheDirectory, logger))
+            if (!ClearCacheFolder(prefs.Get<string>(Preference.CacheDirectory), logger))
             {
                return;
             }
-
-            LoadPlugins(container);
 
             if (!RegisterIpcChannel(container))
             {
@@ -196,7 +198,8 @@ namespace HFM
             }
             else
             {
-               prefs.Initialize();
+               prefs.Load();
+               ValidatePreferences(prefs);
             }
          }
          catch (Exception ex)
@@ -207,6 +210,37 @@ namespace HFM
          // set logging level from prefs
          ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          return true;
+      }
+
+      private static void ValidatePreferences(IPreferenceSet prefs)
+      {
+         // MessageLevel
+         int level = prefs.Get<int>(Preference.MessageLevel);
+         if (level < 4)
+         {
+            level = 4;
+         }
+         else if (level > 5)
+         {
+            level = 5;
+         }
+         prefs.Set(Preference.MessageLevel, level);
+
+         const int defaultInterval = 15;
+         // ClientRetrievalTask.Interval
+         var clientRetrievalTask = prefs.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
+         if (!Validate.Minutes(clientRetrievalTask.Interval))
+         {
+            clientRetrievalTask.Interval = defaultInterval;
+            prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
+         }
+         // WebGenerationTask.Interval
+         var webGenerationTask = prefs.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
+         if (!Validate.Minutes(webGenerationTask.Interval))
+         {
+            webGenerationTask.Interval = defaultInterval;
+            prefs.Set(Preference.WebGenerationTask, webGenerationTask);
+         }
       }
 
       private static bool ClearCacheFolder(string cacheDirectory, ILogger logger)
@@ -239,12 +273,6 @@ namespace HFM
             return false;
          }
          return true;
-      }
-
-      private static void LoadPlugins(IWindsorContainer container)
-      {
-         var pluginLoader = container.Resolve<Core.Plugins.PluginLoader>();
-         pluginLoader.Load();
       }
 
       private static bool RegisterIpcChannel(IWindsorContainer container)
@@ -283,18 +311,6 @@ namespace HFM
          var database = container.Resolve<IUnitInfoDatabase>();
          if (database.Connected)
          {
-            EventHandler<UpgradeExecutingEventArgs> upgradeExecuting = (s, e) =>
-            {
-               // Execute Asynchronous Operation
-               var view = container.Resolve<IProgressDialogView>("ProgressDialog");
-               view.ProcessRunner = e.Process;
-               view.Icon = Properties.Resources.hfm_48_48;
-               view.Text = "Upgrading Database";
-               view.StartPosition = FormStartPosition.CenterScreen;
-               view.Process();
-            };
-
-            database.UpgradeExecuting += upgradeExecuting;
             try
             {
                database.Upgrade();
@@ -303,10 +319,6 @@ namespace HFM
             catch (Exception ex)
             {
                ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
-            }
-            finally
-            {
-               database.UpgradeExecuting -= upgradeExecuting;
             }
          }
          return true;

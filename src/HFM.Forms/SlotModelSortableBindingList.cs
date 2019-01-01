@@ -27,7 +27,6 @@ using HFM.Core;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    internal class SlotModelSortableBindingList : SortableBindingList<SlotModel>
    {
       public bool OfflineClientsLast

@@ -20,12 +20,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    public partial class ProteinLoadResultsDialog : Form
    {
       public ProteinLoadResultsDialog()
@@ -33,11 +31,11 @@ namespace HFM.Forms
          InitializeComponent();
       }
 
-      public void DataBind(IEnumerable<ProteinLoadInfo> loadResults)
+      public void DataBind(IEnumerable<ProteinDictionaryChange> loadResults)
       {
          foreach (var loadResult in loadResults)
          {
-            if (!loadResult.Result.Equals(ProteinLoadResult.NoChange))
+            if (!loadResult.Result.Equals(ProteinDictionaryChangeResult.NoChange))
             {
                ProteinListBox.Items.Add(loadResult.ToString());
             }

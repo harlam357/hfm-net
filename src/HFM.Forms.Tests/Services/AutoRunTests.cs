@@ -1,6 +1,6 @@
 /*
- * HFM.NET - AutoRun Registry Class Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Forms.Tests
+namespace HFM.Forms
 {
    [TestFixture]
    public class AutoRunTests

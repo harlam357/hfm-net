@@ -61,15 +61,12 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HTMLparser">
-      <HintPath>..\..\lib\HTMLparser2\bin\Release\HTMLparser.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -84,22 +81,18 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="HtmlSerializer.cs" />
-    <Compile Include="JsonSerializer.cs" />
+    <Compile Include="IProteinCollectionSerializer.cs" />
+    <Compile Include="ProjectSummaryJsonDeserializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
-    <Compile Include="TabSerializer.cs" />
+    <Compile Include="Protein.cs" />
+    <Compile Include="ProteinDictionaryChange.cs" />
+    <Compile Include="ProteinProductionExtensions.cs" />
+    <Compile Include="ProteinCollectionSerializerExtensions.cs" />
+    <Compile Include="ProteinValidator.cs" />
+    <Compile Include="WebAddresses.cs" />
+    <Compile Include="TabDelimitedTextSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteinDictionary.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
-      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
-      <Name>HFM.Core.Plugins</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -124,8 +117,8 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

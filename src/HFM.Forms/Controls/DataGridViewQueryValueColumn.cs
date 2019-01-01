@@ -18,13 +18,12 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
-
-using HFM.Core;
 
 namespace HFM.Forms.Controls
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    internal class DataGridViewQueryValueColumn : DataGridViewColumn
    {
       public DataGridViewQueryValueColumn()

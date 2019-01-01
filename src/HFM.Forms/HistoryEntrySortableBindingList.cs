@@ -27,7 +27,6 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
-   [CoverageExclude]
    internal class HistoryEntrySortableBindingList : SortableBindingList<HistoryEntry>
    {
       public HistoryEntrySortableBindingList()
@@ -37,7 +36,6 @@ namespace HFM.Forms
 
       #region HistoryEntrySortComparer
 
-      [CoverageExclude]
       private class HistoryEntrySortComparer : SortComparer<HistoryEntry>
       {
          protected override int CompareInternal(HistoryEntry xVal, HistoryEntry yVal)

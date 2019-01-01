@@ -26,6 +26,7 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {
@@ -64,9 +65,7 @@ namespace HFM.Forms
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
       

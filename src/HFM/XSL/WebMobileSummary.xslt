@@ -55,7 +55,7 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="4" align="center">
-                     Page rendered by <a href="http://code.google.com/p/hfm-net/">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate"><xsl:with-param name="dateTime" select="UpdateDateTime" /></xsl:call-template>
+                     Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate"><xsl:with-param name="dateTime" select="UpdateDateTime" /></xsl:call-template>
                   </td>
                </tr>
             </table>
@@ -66,17 +66,17 @@
       <tr>
          <td width="5" class="StatusCol">
             <xsl:attribute name="bgcolor">
-               <xsl:value-of select="GridData/StatusColor"/>
+               <xsl:value-of select="StatusColor"/>
             </xsl:attribute>
          </td>
          <td width="10" class="RightCol">
-            <xsl:value-of select="GridData/PercentComplete"/>%
+            <xsl:value-of select="PercentComplete"/>%
          </td>
          <td width="40" class="RightCol">
-            <xsl:value-of select="GridData/Name"/>
+            <xsl:value-of select="Name"/>
          </td>
          <td width="30" class="RightCol">
-            <xsl:value-of select="GridData/PPD"/>
+            <xsl:value-of select="PPD"/>
          </td>
       </tr>
    </xsl:template>

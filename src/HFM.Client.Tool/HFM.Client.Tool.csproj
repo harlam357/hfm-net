@@ -41,10 +41,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMerge|AnyCPU'">
     <OutputPath>bin\ReleaseMerge\</OutputPath>
@@ -129,8 +129,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -155,19 +155,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF '$(ConfigurationName)'=='ReleaseMerge' (
-   IF '$(DelaySign)'=='true' (
-      IF '$(BuildingInsideVisualStudio)'=='true' (
-         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.dll
-      ) ELSE (
-         "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /delaysign /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.dll
-      )
-   ) ELSE (
-      IF '$(BuildingInsideVisualStudio)'=='true' (
-      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"..\..\$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.dll
-      ) ELSE (
-      "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:exe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll HFM.Core.DataTypes.dll Newtonsoft.Json.dll
-      )
-   )
+   "$(SolutionDir)..\tools\ILMerge\ILMerge.exe" /keyfile:"$(ProjectDir)$(AssemblyOriginatorKeyFile)" /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5" /t:winexe /ndebug /out:HFM.Client.exe HFM.Client.Tool.exe HFM.Client.dll Newtonsoft.Json.dll
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

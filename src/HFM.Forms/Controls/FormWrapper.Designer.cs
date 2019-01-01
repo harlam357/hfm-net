@@ -29,7 +29,8 @@ namespace HFM.Forms.Controls
       private void InitializeComponent()
       {
          components = new System.ComponentModel.Container();
-         this.DoubleBuffered = true;
+         // Removed in favor of CreateParams override
+         //this.DoubleBuffered = true;
       }
 
       #endregion

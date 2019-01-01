@@ -25,7 +25,9 @@ using System.Threading;
 
 using Castle.Core.Logging;
 
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Core
 {
@@ -111,9 +113,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 

@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-
-using HFM.Core.DataTypes;
 
 namespace HFM.Log.Tool
 {
@@ -35,13 +34,13 @@ namespace HFM.Log.Tool
          TreeNode node = e.Node;
          if (node.Level == 0)
          {
-            index = _fahLog.ClientRuns.Reverse().ElementAt(Int32.Parse(node.Name)).ClientStartIndex;
+            index = _fahLog.ClientRuns.ElementAt(Int32.Parse(node.Name)).ClientStartIndex;
          }
          else if (node.Level == 2)
          {
             TreeNode slotParent = node.Parent;
             TreeNode runParent = slotParent.Parent;
-            index = (int)_fahLog.ClientRuns.Reverse().ElementAt(Int32.Parse(runParent.Name)).SlotRuns[Int32.Parse(slotParent.Name)].UnitRuns.Reverse().ElementAt(Int32.Parse(node.Name)).StartIndex;
+            index = _fahLog.ClientRuns.ElementAt(Int32.Parse(runParent.Name)).SlotRuns[Int32.Parse(slotParent.Name)].UnitRuns.ElementAt(Int32.Parse(node.Name)).StartIndex;
          }
 
          if (index > -1)
@@ -73,10 +72,28 @@ namespace HFM.Log.Tool
          {
             var logLine = _logLines[index];
 
-            txtLogLineIndex.Text = logLine.LineIndex.ToString();
-            txtLogLineType.Text = logLine.LineType.ToString();
-            txtLogLineData.Text = logLine.LineData != null ? logLine.LineData.ToString() : String.Empty;
+            txtLogLineIndex.Text = logLine.Index.ToString();
+            txtLogLineType.Text = GetLogLineTypeName(logLine.LineType);
+            txtLogLineData.Text = logLine.Data != null ? logLine.Data.ToString() : String.Empty;
          }
+      }
+
+      private static Dictionary<int, string> LogLineTypeNameDictionary;
+
+      private static string GetLogLineTypeName(LogLineType logLineType)
+      {
+         if (LogLineTypeNameDictionary == null)
+         {
+            LogLineTypeNameDictionary = new Dictionary<int, string>();
+            var logLineTypeFields = typeof(LogLineType).GetFields(BindingFlags.Public | BindingFlags.Static);
+            foreach (var fi in logLineTypeFields.Where(x => x.IsLiteral && !x.IsInitOnly))
+            {
+               int fieldValue = (int)fi.GetValue(null);
+               string fieldName = fi.Name;
+               LogLineTypeNameDictionary.Add(fieldValue, fieldName);
+            }
+         }
+         return LogLineTypeNameDictionary.ContainsKey(logLineType) ? LogLineTypeNameDictionary[logLineType] : null;
       }
 
       private void btnBrowse_Click(object sender, EventArgs e)
@@ -107,6 +124,9 @@ namespace HFM.Log.Tool
          }
       }
 
+      private const string LegacyLogType = "Legacy";
+      private const string FahClientLogType = "FahClient";
+
       private void btnParse_Click(object sender, EventArgs e)
       {
          if (txtLogPath.Text.Length == 0) return;
@@ -115,13 +135,24 @@ namespace HFM.Log.Tool
 
          if (File.Exists(txtLogPath.Text))
          {
-            FahLogType fahLogType = GetLogFileType();
-
-            //var sw = Stopwatch.StartNew();
-            _fahLog = FahLog.Read(File.ReadLines(txtLogPath.Text), fahLogType);
-            //sw.Stop();
-            //Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
-            _logLines = _fahLog.ToList();
+#if DEBUG
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
+            string fahLogType = GetLogFileType();
+            switch (fahLogType)
+            {
+               case LegacyLogType:
+                  _fahLog = Legacy.LegacyLog.Read(txtLogPath.Text);
+                  break;
+               case FahClientLogType:
+                  _fahLog = FahClient.FahClientLog.Read(txtLogPath.Text);
+                  break;
+            }
+#if DEBUG
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine("FahLog.Read ET: {0}", sw.Elapsed);
+#endif
+            _logLines = LogLineEnumerable.Create(_fahLog).ToList();
             PopulateClientRunsInTree(_fahLog);
             richTextBox1.SetLogLines(_logLines, String.Empty, true);
          }
@@ -132,15 +163,15 @@ namespace HFM.Log.Tool
          }
       }
 
-      private FahLogType GetLogFileType()
+      private string GetLogFileType()
       {
-         return LegacyRadioButton.Checked ? FahLogType.Legacy : FahLogType.FahClient;
+         return LegacyRadioButton.Checked ? LegacyLogType : FahClientLogType;
       }
 
       private void PopulateClientRunsInTree(FahLog fahLog)
       {
          int i = 0;
-         foreach (var clientRun in fahLog.ClientRuns.Reverse())
+         foreach (var clientRun in fahLog.ClientRuns)
          {
             treeView1.Nodes.Add(i.ToString(), "Run " + i);
             foreach (var slotRun in clientRun.SlotRuns.Values)
@@ -148,7 +179,7 @@ namespace HFM.Log.Tool
                treeView1.Nodes[i].Nodes.Add(slotRun.FoldingSlot.ToString(), String.Format(CultureInfo.InvariantCulture,
                   "Slot {0}", slotRun.FoldingSlot));
                int j = 0;
-               foreach (var unitRun in slotRun.UnitRuns.Reverse())
+               foreach (var unitRun in slotRun.UnitRuns)
                {
                   treeView1.Nodes[i].Nodes[slotRun.FoldingSlot.ToString()].Nodes.Add(j.ToString(), String.Format(CultureInfo.InvariantCulture,
                      "Queue ({0}) Line ({1}) Index", unitRun.QueueIndex, unitRun.StartIndex));
@@ -165,7 +196,7 @@ namespace HFM.Log.Tool
          int i = 0;
          int j = 0;
          int k = 0;
-         foreach (var clientRun in _fahLog.ClientRuns.Reverse())
+         foreach (var clientRun in _fahLog.ClientRuns)
          {
             sb.AppendLine("// Setup ClientRun " + i);
             sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRun = new ClientRun(null, " + clientRun.ClientStartIndex + ");");
@@ -176,55 +207,111 @@ namespace HFM.Log.Tool
                sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRun = new SlotRun(expectedRun, " + slotRun.FoldingSlot + ");");
                sb.AppendLine("expectedRun.SlotRuns.Add(" + slotRun.FoldingSlot + ", expectedSlotRun);");
                int unitCount = 0;
-               foreach (var unitRun in slotRun.UnitRuns.Reverse())
+               foreach (var unitRun in slotRun.UnitRuns)
                {
                   sb.AppendLine();
                   sb.AppendLine("// Setup SlotRun " + slotRun.FoldingSlot + " - UnitRun " + unitCount);
                   sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRun = new UnitRun(expectedSlotRun, " + unitRun.QueueIndex + "," + unitRun.StartIndex + "," + unitRun.EndIndex + ");");
-                  sb.AppendLine("expectedUnitRun.Data = new UnitRunData();");
+                  if (unitRun.Data is Legacy.LegacyUnitRunData)
+                  {
+                     sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRunData = new LegacyUnitRunData();");
+                  }
+                  else if (unitRun.Data is FahClient.FahClientUnitRunData)
+                  {
+                     sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedUnitRunData = new FahClientUnitRunData();");
+                  }
                   if (unitRun.Data.UnitStartTimeStamp.HasValue)
                   {
                      var st1 = unitRun.Data.UnitStartTimeStamp.Value;
-                     sb.AppendLine("expectedUnitRun.Data.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
+                     sb.AppendLine("expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(" + st1.Hours + ", " + st1.Minutes + ", " + st1.Seconds + ");");
                   }
-                  sb.AppendLine("expectedUnitRun.Data.CoreVersion = " + unitRun.Data.CoreVersion + "f;");
-                  sb.AppendLine("expectedUnitRun.Data.FramesObserved = " + unitRun.Data.FramesObserved + ";");
-                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "expectedProjectInfo = new ProjectInfo();");
-                  sb.AppendLine("expectedProjectInfo.ProjectID = " + unitRun.Data.ProjectID + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectRun = " + unitRun.Data.ProjectRun + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectClone = " + unitRun.Data.ProjectClone + ";");
-                  sb.AppendLine("expectedProjectInfo.ProjectGen = " + unitRun.Data.ProjectGen + ";");
-                  sb.AppendLine("expectedUnitRun.Data.ProjectInfoList.Add(expectedProjectInfo);");
-                  sb.AppendLine("expectedUnitRun.Data.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
-                  sb.AppendLine("expectedSlotRun.UnitRuns.Push(expectedUnitRun);");
+                  if (unitRun.Data.CoreVersion == null)
+                  {
+                     sb.AppendLine("expectedUnitRunData.CoreVersion = null;");
+                  }
+                  else
+                  {
+                     sb.AppendLine("expectedUnitRunData.CoreVersion = \"" + unitRun.Data.CoreVersion + "\";");
+                  }
+                  sb.AppendLine("expectedUnitRunData.FramesObserved = " + unitRun.Data.FramesObserved + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectID = " + unitRun.Data.ProjectID + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectRun = " + unitRun.Data.ProjectRun + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectClone = " + unitRun.Data.ProjectClone + ";");
+                  sb.AppendLine("expectedUnitRunData.ProjectGen = " + unitRun.Data.ProjectGen + ";");
+                  if (!String.IsNullOrEmpty(unitRun.Data.WorkUnitResult))
+                  {
+                     sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult." + unitRun.Data.WorkUnitResult + ";");
+                  }
+                  else
+                  {
+                     sb.AppendLine("expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;");
+                  }
+                  sb.AppendLine((k == 0 ? "var " : String.Empty) + "frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();");
+                  int frameDataCount = 0;
+                  foreach (var kvp in unitRun.Data.FrameDataDictionary)
+                  {
+                     sb.AppendLine((k == 0 && frameDataCount == 0 ? "var " : String.Empty) + "frameData = new WorkUnitFrameData();");
+                     sb.AppendLine("frameData.ID = " + kvp.Value.ID + ";");
+                     sb.AppendLine("frameData.RawFramesComplete = " + kvp.Value.RawFramesComplete + ";");
+                     sb.AppendLine("frameData.RawFramesTotal = " + kvp.Value.RawFramesTotal + ";");
+                     sb.AppendLine("frameData.TimeStamp = TimeSpan.FromTicks(" + kvp.Value.TimeStamp.Ticks + ");");
+                     sb.AppendLine("frameData.Duration = TimeSpan.FromTicks(" + kvp.Value.Duration.Ticks + ");");
+                     sb.AppendLine("frameDataDictionary.Add(frameData.ID, frameData);");
+                     frameDataCount++;
+                  }
+                  sb.AppendLine("expectedUnitRunData.FrameDataDictionary = frameDataDictionary;");
+                  sb.AppendLine("expectedUnitRun.Data = expectedUnitRunData;");
+                  sb.AppendLine("expectedSlotRun.UnitRuns.Add(expectedUnitRun);");
                   unitCount++;
                   k++;
                }
                sb.AppendLine();
                sb.AppendLine("// Setup SlotRunData " + slotRun.FoldingSlot);
-               sb.AppendLine("expectedSlotRun.Data = new SlotRunData();");
-               sb.AppendLine("expectedSlotRun.Data.CompletedUnits = " + slotRun.Data.CompletedUnits + ";");
-               sb.AppendLine("expectedSlotRun.Data.FailedUnits = " + slotRun.Data.FailedUnits + ";");
-               sb.AppendLine("expectedSlotRun.Data.TotalCompletedUnits = " + GetStringOrNull(slotRun.Data.TotalCompletedUnits) + ";");
-               sb.AppendLine("expectedSlotRun.Data.Status = SlotStatus." + slotRun.Data.Status + ";");
+               if (slotRun.Data is Legacy.LegacySlotRunData legacySlotRunData)
+               {
+                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new LegacySlotRunData();");
+                  sb.AppendLine("expectedSlotRunData.CompletedUnits = " + legacySlotRunData.CompletedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.FailedUnits = " + legacySlotRunData.FailedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.TotalCompletedUnits = " + GetStringOrNull(legacySlotRunData.TotalCompletedUnits) + ";");
+                  sb.AppendLine("expectedSlotRunData.Status = LegacySlotStatus." + legacySlotRunData.Status + ";");
+                  sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
+               }
+               else if (slotRun.Data is FahClient.FahClientSlotRunData fahClientSlotRunData)
+               {
+                  sb.AppendLine((j == 0 ? "var " : String.Empty) + "expectedSlotRunData = new FahClientSlotRunData();");
+                  sb.AppendLine("expectedSlotRunData.CompletedUnits = " + fahClientSlotRunData.CompletedUnits + ";");
+                  sb.AppendLine("expectedSlotRunData.FailedUnits = " + fahClientSlotRunData.FailedUnits + ";");
+                  sb.AppendLine("expectedSlotRun.Data = expectedSlotRunData;");
+               }
                j++;
             }
             sb.AppendLine();
             sb.AppendLine("// Setup ClientRunData " + i);
-            sb.AppendLine("expectedRun.Data = new ClientRunData();");
-            var st2 = clientRun.Data.StartTime;
-            sb.AppendLine("expectedRun.Data.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
-            sb.AppendLine("expectedRun.Data.Arguments = " + GetStringOrNull(clientRun.Data.Arguments) + ";");
-            sb.AppendLine("expectedRun.Data.ClientVersion = " + GetStringOrNull(clientRun.Data.ClientVersion) + ";");
-            sb.AppendLine("expectedRun.Data.FoldingID = " + GetStringOrNull(clientRun.Data.FoldingID) + ";");
-            sb.AppendLine("expectedRun.Data.Team = " + clientRun.Data.Team + ";");
-            sb.AppendLine("expectedRun.Data.UserID = " + GetStringOrNull(clientRun.Data.UserID) + ";");
-            sb.AppendLine("expectedRun.Data.MachineID = " + clientRun.Data.MachineID + ";");
+            if (clientRun.Data is Legacy.LegacyClientRunData legacyClientRunData)
+            {
+               sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRunData = new LegacyClientRunData();");
+               var st2 = clientRun.Data.StartTime;
+               sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
+               sb.AppendLine("expectedRunData.Arguments = " + GetStringOrNull(legacyClientRunData.Arguments) + ";");
+               sb.AppendLine("expectedRunData.ClientVersion = " + GetStringOrNull(legacyClientRunData.ClientVersion) + ";");
+               sb.AppendLine("expectedRunData.FoldingID = " + GetStringOrNull(legacyClientRunData.FoldingID) + ";");
+               sb.AppendLine("expectedRunData.Team = " + legacyClientRunData.Team + ";");
+               sb.AppendLine("expectedRunData.UserID = " + GetStringOrNull(legacyClientRunData.UserID) + ";");
+               sb.AppendLine("expectedRunData.MachineID = " + legacyClientRunData.MachineID + ";");
+               sb.AppendLine("expectedRun.Data = expectedRunData;");
+            }
+            else if (clientRun.Data is FahClient.FahClientClientRunData)
+            {
+               sb.AppendLine((i == 0 ? "var " : String.Empty) + "expectedRunData = new FahClientClientRunData();");
+               var st2 = clientRun.Data.StartTime;
+               sb.AppendLine("expectedRunData.StartTime = new DateTime(" + st2.Year + ", " + st2.Month + ", " + st2.Day + ", " + st2.Hour + ", " + st2.Minute + ", " + st2.Second + ", DateTimeKind.Utc);");
+               sb.AppendLine("expectedRun.Data = expectedRunData;");
+            }
             sb.AppendLine();
-            sb.AppendLine("var actualRun = fahLog.ClientRuns.ElementAt(" + (_fahLog.ClientRuns.Count - 1 - i) + ");");
-            sb.AppendLine("FahLogAssert.AreEqual(expectedRun, actualRun, true);");
+            sb.AppendLine((i == 0 ? "var " : String.Empty) + "actualRun = fahLog.ClientRuns.ElementAt(" + i + ");");
+            sb.AppendLine("AssertClientRun.AreEqual(expectedRun, actualRun, true);");
             sb.AppendLine();
-            sb.AppendLine(String.Format("Assert.AreEqual({0}, actualRun.Count(x => x.LineType == LogLineType.Error));", clientRun.Count(x => x.LineType == LogLineType.Error)));
+            sb.AppendLine(String.Format("Assert.AreEqual({0}, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));", LogLineEnumerable.Create(clientRun).Count(x => x.Data is LogLineDataParserError)));
             i++;
          }
 

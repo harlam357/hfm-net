@@ -1,6 +1,6 @@
 /*
- * HFM.NET - Messages Form Class
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,9 +23,9 @@ using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
-using HFM.Core;
 using HFM.Core.Logging;
 using HFM.Forms.Controls;
+using HFM.Preferences;
 
 namespace HFM.Forms
 {
@@ -46,7 +46,6 @@ namespace HFM.Forms
       bool Visible { get; set; }
    }
 
-   [CoverageExclude]
    public partial class MessagesForm : FormWrapper, IMessagesView
    {
       private const int MaxLines = 512;

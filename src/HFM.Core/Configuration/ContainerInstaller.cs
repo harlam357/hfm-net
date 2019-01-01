@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics.CodeAnalysis;
 
 using Castle.Core.Logging;
 using Castle.Facilities.TypedFactory;
@@ -29,9 +29,13 @@ using Castle.Windsor;
 
 namespace HFM.Core.Configuration
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public class ContainerInstaller : IWindsorInstaller
    {
+      public string ApplicationPath { get; set; }
+
+      public string ApplicationDataFolderPath { get; set; }
+
       public void Install(IWindsorContainer container, IConfigurationStore store)
       {
          container.Register(
@@ -44,7 +48,29 @@ namespace HFM.Core.Configuration
          container.Register(
             Component.For<ILogger>()
                .ImplementedBy<Logging.Logger>()
-               .UsingFactoryMethod(() => new Logging.Logger(Application.DataFolderPath)));
+               .UsingFactoryMethod(() => new Logging.Logger(ApplicationDataFolderPath)));
+
+         // IPreferenceSet - Singleton
+         container.Register(
+            Component.For<Preferences.IPreferenceSet>()
+               .ImplementedBy<Preferences.PreferenceSet>()
+               .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
+               .OnCreate((kernel, instance) =>
+               {
+                  var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
+                  instance.PreferenceChanged += (s, e) =>
+                  {
+                     if (e.Preference == Preferences.Preference.MessageLevel)
+                     {
+                        var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
+                        if (newLevel != logger.Level)
+                        {
+                           logger.Level = newLevel;
+                           logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
+                        }
+                     }
+                  };
+               }));
 
          // IDataRetriever - Transient
          container.Register(
@@ -60,8 +86,8 @@ namespace HFM.Core.Configuration
 
          // IUnitInfoDatabase - Singleton
          container.Register(
-            Component.For<IUnitInfoDatabase>()
-               .ImplementedBy<UnitInfoDatabase>());
+            Component.For<Data.SQLite.IUnitInfoDatabase>()
+               .ImplementedBy<Data.SQLite.UnitInfoDatabase>());
 
          // IClientConfiguration - Singleton
          container.Register(
@@ -95,30 +121,25 @@ namespace HFM.Core.Configuration
             Component.For<ILegacyClientFactory>()
                .AsFactory());
 
-         // IClientSettingsManager - Singleton
-         container.Register(
-            Component.For<IClientSettingsManager>()
-               .ImplementedBy<ClientSettingsManager>());
-
          // RetrievalModel - Singleton
          container.Register(
-            Component.For<RetrievalModel>());
+            Component.For<ScheduledTasks.RetrievalModel>());
 
          // IMarkupGenerator - Singleton
          container.Register(
-            Component.For<IMarkupGenerator>()
-               .ImplementedBy<MarkupGenerator>());
+            Component.For<ScheduledTasks.IMarkupGenerator>()
+               .ImplementedBy<ScheduledTasks.MarkupGenerator>());
 
          // IWebsiteDeployer - Singleton
          container.Register(
-            Component.For<IWebsiteDeployer>()
-               .ImplementedBy<WebsiteDeployer>());
+            Component.For<ScheduledTasks.IWebsiteDeployer>()
+               .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
 
          // IQueryParametersContainer - Singleton
          container.Register(
-            Component.For<IQueryParametersContainer>()
-               .ImplementedBy<QueryParametersContainer>()
-                  .OnCreate(instance => ((QueryParametersContainer)instance).Read()));
+            Component.For<Data.IQueryParametersContainer>()
+               .ImplementedBy<Data.QueryParametersContainer>()
+                  .OnCreate(instance => ((Data.QueryParametersContainer)instance).Read()));
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(
@@ -129,9 +150,9 @@ namespace HFM.Core.Configuration
 
          // IXmlStatsDataContainer - Singleton
          container.Register(
-            Component.For<IXmlStatsDataContainer>()
-               .ImplementedBy<XmlStatsDataContainer>()
-                  .OnCreate(instance => ((XmlStatsDataContainer)instance).Read()));
+            Component.For<Data.IXmlStatsDataContainer>()
+               .ImplementedBy<Data.XmlStatsDataContainer>()
+                  .OnCreate(instance => ((Data.XmlStatsDataContainer)instance).Read()));
 
          // IProteinService - Singleton
          container.Register(
@@ -139,31 +160,10 @@ namespace HFM.Core.Configuration
                .ImplementedBy<ProteinService>()
                   .OnCreate(instance => ((ProteinService)instance).Read()));
 
-         // PluginLoader - Transient
-         container.Register(
-            Component.For<Plugins.PluginLoader>()
-               .LifeStyle.Transient);
-
          // IProjectSummaryDownloader - Singleton
          container.Register(
             Component.For<IProjectSummaryDownloader>()
-               .ImplementedBy<ProjectSummaryDownloader>()
-                  .OnCreate(instance => ((ProjectSummaryDownloader)instance).FilePath = Path.GetTempFileName()));
-
-         #region Plugins
-
-         // IPluginManager<Plugins.IFileSerializer<T>> - Singleton
-         container.Register(
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.Protein>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.Protein>>>(),
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ProteinBenchmark>>>(),
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.ClientSettings>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.ClientSettings>>>(),
-            Component.For<Plugins.IFileSerializerPluginManager<List<DataTypes.HistoryEntry>>>()
-               .ImplementedBy<Plugins.FileSerializerPluginManager<List<DataTypes.HistoryEntry>>>());
-
-         #endregion
+               .ImplementedBy<ProjectSummaryDownloader>());
 
          #endregion
       }

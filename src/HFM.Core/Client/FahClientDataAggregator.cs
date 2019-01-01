@@ -42,9 +42,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -54,11 +52,11 @@ namespace HFM.Core
       public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
                                                 SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
       {
-         if (clientRun == null) throw new ArgumentNullException("clientRun");
-         if (unitCollection == null) throw new ArgumentNullException("unitCollection");
-         if (options == null) throw new ArgumentNullException("options");
-         if (slotOptions == null) throw new ArgumentNullException("slotOptions");
-         if (currentUnitInfo == null) throw new ArgumentNullException("currentUnitInfo");
+         if (clientRun == null) throw new ArgumentNullException(nameof(clientRun));
+         if (unitCollection == null) throw new ArgumentNullException(nameof(unitCollection));
+         if (options == null) throw new ArgumentNullException(nameof(options));
+         if (slotOptions == null) throw new ArgumentNullException(nameof(slotOptions));
+         if (currentUnitInfo == null) throw new ArgumentNullException(nameof(currentUnitInfo));
 
          var result = new DataAggregatorResult();
          result.CurrentUnitIndex = -1;
@@ -69,15 +67,10 @@ namespace HFM.Core
             slotRun = clientRun.SlotRuns[slotId];
          }
          result.StartTime = clientRun.Data.StartTime;
-         result.Arguments = clientRun.Data.Arguments;
-         result.ClientVersion = clientRun.Data.ClientVersion;
-         result.UserID = clientRun.Data.UserID;
-         result.MachineID = clientRun.Data.MachineID;
-         result.Status = slotRun != null ? slotRun.Data.Status : SlotStatus.Unknown;
 
          if (Logger.IsDebugEnabled)
          {
-            foreach (var s in clientRun.Where(x => x.LineType == LogLineType.Error))
+            foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
             {
                Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
@@ -92,11 +85,11 @@ namespace HFM.Core
          }
          else if (slotRun != null)
          {
-            result.CurrentLogLines = slotRun.ToList();
+            result.CurrentLogLines = LogLineEnumerable.Create(slotRun).ToList();
          }
          else
          {
-            result.CurrentLogLines = clientRun.ToList();
+            result.CurrentLogLines = LogLineEnumerable.Create(clientRun).ToList();
          }
 
          return result;
@@ -242,8 +235,13 @@ namespace HFM.Core
          return "Unknown";
       }
 
-      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, SlotRun slotRun, ICollection<Unit> unitCollection, Options options,
-                                                 SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
+      private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, 
+                                                 SlotRun slotRun, 
+                                                 ICollection<Unit> unitCollection, 
+                                                 Options options,
+                                                 SlotOptions slotOptions, 
+                                                 UnitInfo currentUnitInfo, 
+                                                 int slotId)
       {
          Debug.Assert(unitCollection != null);
          Debug.Assert(options != null);
@@ -315,7 +313,7 @@ namespace HFM.Core
       {
          if (slotRun != null)
          {
-            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data));
+            var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
             if (unitRun != null)
             {
                return unitRun;
@@ -345,11 +343,12 @@ namespace HFM.Core
          Debug.Assert(unitInfo != null);
          Debug.Assert(unitRun != null);
 
-         unitInfo.LogLines = unitRun.ToList();
+         unitInfo.LogLines = LogLineEnumerable.Create(unitRun).ToList();
+         unitInfo.FrameData = unitRun.Data.FrameDataDictionary;
          unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unitInfo.FramesObserved = unitRun.Data.FramesObserved;
-         unitInfo.CoreVersion = unitRun.Data.CoreVersion;
-         unitInfo.UnitResult = unitRun.Data.WorkUnitResult;
+         unitInfo.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
+         unitInfo.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
          // there is no finished time available from the client API
          // since the unit history database won't write the same
@@ -364,6 +363,24 @@ namespace HFM.Core
             //Logger.Debug(Constants.ClientNameFormat, ClientName, message);
             unitInfo.FinishedTime = finishedTime;
          }
+      }
+
+      private static float ParseCoreVersion(string coreVer)
+      {
+         float value;
+         if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+         {
+            return value;
+         }
+         // Try to parse Core Versions in the 0.#.## format
+         if (coreVer.StartsWith("0."))
+         {
+            if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+            {
+               return value;
+            }
+         }
+         return 0.0f;
       }
 
       private static void UpdateUnitInfoFromFahClientData(UnitInfo unitInfo, Unit queueEntry, Options options, SlotOptions slotOptions)

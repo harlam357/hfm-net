@@ -5,12 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 
-using HFM.Core.DataTypes;
-using HFM.Core.Serializers;
-
 using NUnit.Framework;
 
-namespace HFM.Core.Tests.Serializers
+using HFM.Core.DataTypes;
+
+namespace HFM.Core.Serializers
 {
    [TestFixture]
    public class HistoryEntryCsvSerializerTests

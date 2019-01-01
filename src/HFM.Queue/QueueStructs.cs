@@ -168,14 +168,14 @@ namespace HFM.Queue
       /*** 0 = Empty, Deleted, Finished, or Garbage 
        *   1 = Folding Now or Queued 
        *   2 = Ready for Upload 
-       *   3 = Abandonded (Ignore is found)
+       *   3 = Abandoned (Ignore is found)
        *   4 = Fetching from Server
        ***/
       /* 000 Status */
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
       private byte[] _status;
       /// <summary>
-      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandonded (Ignore if found) / (4) Fetching from Server
+      /// Status (0) Empty / (1) Active or (1) Ready / (2) Ready for Upload / (3) = Abandoned (Ignore if found) / (4) Fetching from Server
       /// </summary>
       [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
       public byte[] Status

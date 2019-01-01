@@ -20,11 +20,11 @@
 using System;
 using System.Collections.Generic;
 
+using HFM.Log;
+
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
-namespace HFM.Core.Tests.DataTypes
+namespace HFM.Core.DataTypes
 {
    [TestFixture]
    public class UnitInfoTests
@@ -36,19 +36,19 @@ namespace HFM.Core.Tests.DataTypes
          Assert.AreEqual(SlotType.Unknown, unitInfo.SlotType);
          Assert.IsTrue(unitInfo.DownloadTime.IsUnknown());
          Assert.IsTrue(unitInfo.DueTime.IsUnknown());
-         Assert.IsTrue(unitInfo.UnitStartTimeStamp.IsZero());
+         Assert.IsTrue(unitInfo.UnitStartTimeStamp == TimeSpan.Zero);
          Assert.IsTrue(unitInfo.FinishedTime.IsUnknown());
          Assert.IsTrue(unitInfo.CoreVersion == 0);
          Assert.IsTrue(unitInfo.ProteinName.Length == 0);
          Assert.IsTrue(unitInfo.ProteinTag.Length == 0);
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfo.UnitResult);
          Assert.IsNull(unitInfo.LogLines);
-         Assert.IsNull(unitInfo.UnitFrames);
+         Assert.IsNull(unitInfo.FrameData);
          Assert.AreEqual(Constants.DefaultCoreID, unitInfo.CoreID);
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_Test1()
+      public void UnitInfo_CurrentFrame_DefaultValueIsNull_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
@@ -57,176 +57,57 @@ namespace HFM.Core.Tests.DataTypes
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_Test2()
+      public void UnitInfo_CurrentFrame_IsSourcedFromFrameDataDictionary_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { FrameID = 0 };
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame };
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
+         unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
-         Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
+         Assert.AreSame(frameDataDictionary[0], unitInfo.CurrentFrame);
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_Test3()
+      public void UnitInfo_CurrentFrame_IsSourcedFromFrameDataWithGreatestID_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = new UnitFrame { FrameID = 0 } };
-         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = new UnitFrame { FrameID = 1 } };
-         var unitFrame5 = new UnitFrame { FrameID = 5 };
-         var logLine5 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame5 };
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1, logLine5 });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+            .With(new WorkUnitFrameData { ID = 0 }, new WorkUnitFrameData { ID = 1 }, new WorkUnitFrameData { ID = 5 });
+         unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
-         Assert.AreSame(unitFrame5, unitInfo.CurrentFrame);
+         Assert.AreSame(frameDataDictionary[5], unitInfo.CurrentFrame);
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_Test4()
+      public void UnitInfo_CurrentFrame_ReturnsNullIfMaximumFrameDataIdIsNotZeroOrGreater_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame { FrameID = -1 };
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame };
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = -1 });
+         unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
          Assert.IsNull(unitInfo.CurrentFrame);
       }
 
       [Test]
-      public void UnitInfo_SetUnitFrameDataFromLogLines_Test1()
-      {
-         // Arrange
-         var unitInfo = new UnitInfo();
-         var unitFrame = new UnitFrame
-         {
-            RawFramesComplete = 0,
-            RawFramesTotal = 100000,
-            FrameID = 0
-         };
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine });
-         // Assert
-         Assert.AreEqual(0, unitInfo.RawFramesComplete);
-         Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
-         Assert.AreSame(unitFrame, unitInfo.CurrentFrame);
-      }
-
-      [Test]
-      public void UnitInfo_SetUnitFrameDataFromLogLines_Test2()
-      {
-         // Arrange
-         var unitInfo = new UnitInfo();
-         var unitFrame0 = new UnitFrame
-         {
-            RawFramesComplete = 0,
-            RawFramesTotal = 100000,
-            FrameID = 0
-         };
-         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame0 };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0 });
-         // Assert 0
-         Assert.AreEqual(0, unitInfo.RawFramesComplete);
-         Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(1, unitInfo.UnitFrames.Count);
-         Assert.AreSame(unitFrame0, unitInfo.CurrentFrame);
-         // no duration - first frame
-         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
-
-         var unitFrame1 = new UnitFrame
-         {
-            RawFramesComplete = 1000,
-            RawFramesTotal = 100000,
-            FrameID = 1,
-            TimeOfFrame = new TimeSpan(0, 5, 0)
-         };
-         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame1 };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1 });
-         // Assert 1
-         Assert.AreEqual(1000, unitInfo.RawFramesComplete);
-         Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(2, unitInfo.UnitFrames.Count);
-         Assert.AreSame(unitFrame1, unitInfo.CurrentFrame);
-         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.FrameDuration);
-
-         var unitFrame2 = new UnitFrame
-         {
-            RawFramesComplete = 2000,
-            RawFramesTotal = 100000,
-            FrameID = 2,
-            TimeOfFrame = new TimeSpan(0, 10, 0)
-         };
-         var logLine2 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame2 };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1, logLine2 });
-         // Assert 2
-         Assert.AreEqual(2000, unitInfo.RawFramesComplete);
-         Assert.AreEqual(100000, unitInfo.RawFramesTotal);
-         Assert.AreEqual(3, unitInfo.UnitFrames.Count);
-         Assert.AreSame(unitFrame2, unitInfo.CurrentFrame);
-         Assert.AreEqual(new TimeSpan(0, 5, 0), unitInfo.CurrentFrame.FrameDuration);
-      }
-
-      [Test]
-      public void UnitInfo_SetUnitFrameDataFromLogLines_Test3()
-      {
-         // this tests GetDelta() rollover functionality
-
-         // Arrange
-         var unitInfo = new UnitInfo();
-         var unitFrame0 = new UnitFrame
-         {
-            RawFramesComplete = 0,
-            RawFramesTotal = 100000,
-            FrameID = 0,
-            TimeOfFrame = new TimeSpan(23, 55, 0),
-            FrameDuration = new TimeSpan(0, 0, 0)
-         };
-         var logLine0 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame0 };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0 });
-         // Assert 0 - no duration - first frame
-         Assert.AreEqual(new TimeSpan(0, 0, 0), unitInfo.CurrentFrame.FrameDuration);
-
-         var unitFrame1 = new UnitFrame
-         {
-            RawFramesComplete = 1000,
-            RawFramesTotal = 100000,
-            FrameID = 1,
-            TimeOfFrame = new TimeSpan(0, 5, 0),
-            FrameDuration = new TimeSpan(0, 0, 0)
-         };
-         var logLine1 = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame1 };
-         // Act
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine0, logLine1 });
-         // Assert 1 - now we get a frame duration
-         Assert.AreEqual(new TimeSpan(0, 10, 0), unitInfo.CurrentFrame.FrameDuration);
-      }
-
-      [Test]
-      public void UnitInfo_GetUnitFrame_Test1()
+      public void UnitInfo_GetFrameData_ReturnsNullIfRequestedIdDoesNotExist_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
          // Act & Assert
-         Assert.IsNull(unitInfo.GetUnitFrame(0));
+         Assert.IsNull(unitInfo.GetFrameData(0));
       }
 
       [Test]
-      public void UnitInfo_GetUnitFrame_Test2()
+      public void UnitInfo_GetFrameData_ReturnsObjectIfRequestedIdExists_Test()
       {
          // Arrange
          var unitInfo = new UnitInfo();
-         var logLine = new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = new UnitFrame { FrameID = 0 } };
-         unitInfo.LogLines = new List<LogLine>(new[] { logLine });
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
+         unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
-         Assert.IsNotNull(unitInfo.GetUnitFrame(0));
-         Assert.IsNull(unitInfo.GetUnitFrame(1));
+         Assert.IsNotNull(unitInfo.GetFrameData(0));
       }
    }
 }

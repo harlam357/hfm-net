@@ -11,11 +11,7 @@ namespace HFM.Forms
 
       IFolderBrowserView GetFolderBrowserView();
 
-      IProgressDialogView GetProgressDialog();
-
       IProgressDialogAsyncView GetProgressDialogAsync();
-
-      IProgressDialogAsyncView GetProjectDownloadDialog();
 
       IQueryView GetQueryDialog();
 

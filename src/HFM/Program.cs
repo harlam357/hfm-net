@@ -39,17 +39,17 @@ namespace HFM
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
 
-         // Must be set as early as possible
-         Core.Application.FolderPath = Application.StartupPath;
-
          try
          {
             // Configure Container
             using (var container = new WindsorContainer())
             {
                container.AddFacility<TypedFactoryFacility>();
-               container.Install(new Preferences.Configuration.ContainerInstaller(),
-                                 new Core.Configuration.ContainerInstaller(),
+               container.Install(new Core.Configuration.ContainerInstaller
+                                 {
+                                    ApplicationPath = Application.StartupPath,
+                                    ApplicationDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM")
+                                 },
                                  new Forms.Configuration.ContainerInstaller());
 
                // Create Object Maps

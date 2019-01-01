@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;HFMCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\HFM.ruleset</CodeAnalysisRuleSet>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;HFMCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\HFM.ruleset</CodeAnalysisRuleSet>
@@ -40,10 +40,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -81,35 +81,48 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Application.Paths.cs" />
     <Compile Include="Arguments.cs" />
+    <Compile Include="BonusCalculationType.cs" />
+    <Compile Include="Client\LogLineCopier.cs" />
+    <Compile Include="DataTypes\Markup\LogLine.cs" />
+    <Compile Include="DataTypes\Markup\Protein.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
+    <Compile Include="Extensions.IProjectInfo.cs" />
+    <Compile Include="Extensions.ToProjectInfo.cs" />
+    <Compile Include="Extensions.WorkUnitResult.cs" />
+    <Compile Include="FtpMode.cs" />
+    <Compile Include="FtpWebRequestAdapter.cs" />
+    <Compile Include="FtpWebResponseAdapter.cs" />
+    <Compile Include="Internal\ProteinExtensions.cs" />
+    <Compile Include="Models\PetaPoco.cs" />
+    <Compile Include="DataTypes\ProjectInfo.cs" />
+    <Compile Include="PpdCalculationType.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
+    <Compile Include="Serializers\IFileSerializer.cs" />
+    <Compile Include="Serializers\IFileSerializerExtensions.cs" />
+    <Compile Include="Serializers\ISerializer.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
-    <Compile Include="DataTypes\PreferenceData.cs" />
-    <Compile Include="FileSystem.cs" />
+    <Compile Include="SlotStatus.cs" />
+    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
+    <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
     <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
-    <Compile Include="DataTypes\Markup\GridData.cs" />
     <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
-    <Compile Include="PetaPoco\PetaPoco.cs" />
-    <Compile Include="Services\PreferenceSetExtensions.cs" />
-    <Compile Include="ProjectSummaryDownloader.cs" />
-    <Compile Include="Serializers\HfmLegacyFileSerializer.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="DataTypes\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />
     <Compile Include="Services\ClientConfiguration.cs" />
-    <Compile Include="Client\ClientSettingsManager.cs" />
     <Compile Include="Client\LegacyDataAggregator.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Services\ProteinService.cs" />
     <Compile Include="Serializers\HfmFileSerializer.cs" />
     <Compile Include="Serializers\HistoryEntryCsvSerializer.cs" />
@@ -121,9 +134,8 @@
     <Compile Include="Client\LegacyDataRetriever.cs" />
     <Compile Include="Client\LegacyClient.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="CoverageExcludeAttribute.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="DataContainer.cs" />
+    <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="DataTypes\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
@@ -137,48 +149,40 @@
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Services\IPreferenceSet.cs" />
     <Compile Include="NetworkOps.cs" />
-    <Compile Include="FileSystemPath.cs" />
-    <Compile Include="Plugins\PluginInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\PluginLoadInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\PluginManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Plugins\FileSerializerPluginManager.cs" />
+    <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkService.cs" />
-    <Compile Include="QueryParametersContainer.cs" />
+    <Compile Include="Data\QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\LegacyClientStatus.cs" />
     <Compile Include="SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\TaskManager.cs" />
-    <Compile Include="Services\UnitInfoDatabase.cs" />
+    <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
+    <Compile Include="Utilities\PreferenceSetExtensions.cs" />
+    <Compile Include="Utilities\StringBuilderExtensions.cs" />
+    <Compile Include="Utilities\Validate.Minutes.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
-    <Compile Include="XmlStatsDataContainer.cs" />
+    <Compile Include="Data\XmlStatsDataContainer.cs" />
+    <Compile Include="WebOperation.cs" />
+    <Compile Include="WebRequestAdapter.cs" />
+    <Compile Include="WebResponseAdapter.cs" />
+    <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
       <Project>{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}</Project>
       <Name>HFM.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Core.Plugins\HFM.Core.Plugins.csproj">
-      <Project>{E1415297-BD33-4508-A491-F3C13E5A5F7F}</Project>
-      <Name>HFM.Core.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
+      <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
+      <Name>HFM.Preferences</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
       <Project>{7500A8CA-521D-4397-892B-27C6917847E1}</Project>
@@ -190,9 +194,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
+    <None Include="Models\Generated\PetaPoco.Core.ttinclude" />
+    <None Include="Models\Generated\PetaPoco.Generator.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +206,16 @@
       <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\Generated\Database.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Database.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

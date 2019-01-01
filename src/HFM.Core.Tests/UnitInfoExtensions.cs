@@ -1,17 +1,19 @@
 ﻿
 using System.Collections.Generic;
 
-using HFM.Core.DataTypes;
+using HFM.Log;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
-   public static class UnitInfoExtensions
+   internal static class UnitInfoExtensions
    {
-      public static void SetUnitFrame(this UnitInfo unitInfo, UnitFrame unitFrame)
+      internal static IDictionary<int, WorkUnitFrameData> With(this IDictionary<int, WorkUnitFrameData> frameDataDictionary, params WorkUnitFrameData[] frameDataCollection)
       {
-         var logLines = unitInfo.LogLines ?? new List<LogLine>();
-         logLines.Add(new LogLine { LineType = LogLineType.WorkUnitFrame, LineData = unitFrame });
-         unitInfo.LogLines = logLines;
+         foreach (var frameData in frameDataCollection)
+         {
+            frameDataDictionary.Add(frameData.ID, frameData);
+         }
+         return frameDataDictionary;
       }
    }
 }

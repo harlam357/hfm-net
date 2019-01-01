@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Legacy Client Settings Model Tests
- * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,9 +23,8 @@ using System.IO;
 using NUnit.Framework;
 
 using HFM.Core;
-using HFM.Forms.Models;
 
-namespace HFM.Forms.Tests.Models
+namespace HFM.Forms.Models
 {
    [TestFixture]
    public class LegacyClientSettingsModelTests
@@ -383,13 +382,13 @@ namespace HFM.Forms.Tests.Models
          string existingPath = model.Path;
 
          model.Path = Path.Combine(existingPath, "FAHlog.txt");
-         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equals(existingPath, model.Path));
 
          model.Path = Path.Combine(existingPath, "unitinfo.txt");
-         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equals(existingPath, model.Path));
 
          model.Path = Path.Combine(existingPath, "queue.dat");
-         Assert.IsTrue(FileSystemPath.Equal(existingPath, model.Path));
+         Assert.IsTrue(FileSystemPath.Equals(existingPath, model.Path));
       }
 
       [Test]

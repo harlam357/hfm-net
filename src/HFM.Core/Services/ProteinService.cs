@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,10 +19,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Cache;
 
-using HFM.Core.DataTypes;
+using harlam357.Core;
+using harlam357.Core.Net;
+
+using HFM.Core.Data;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core
@@ -51,30 +57,20 @@ namespace HFM.Core
       IEnumerable<int> GetProjects();
 
       /// <summary>
-      /// Resets the data that halts redundant service refresh calls.
-      /// </summary>
-      void ResetRefreshParameters();
-
-      /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
-      /// </summary>
-      /// <returns>A collection of objects detailing how the service data was changed</returns>
-      IEnumerable<ProteinLoadInfo> Refresh();
-
-      /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress);
+      IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress);
    }
 
-   [CoverageExclude]
    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
    {
-      private readonly Dictionary<Int32, DateTime> _projectsNotFound;
-      private readonly ProteinDictionary _dictionary;
+      private ProteinDictionary _dictionary;
       private readonly IProjectSummaryDownloader _downloader;
+
+      private readonly Dictionary<int, DateTime> _projectsNotFound;
+      private DateTime? _lastRefreshTime;
 
       internal ProteinService()
          : this(null, null)
@@ -84,13 +80,15 @@ namespace HFM.Core
 
       public ProteinService(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
       {
-         _projectsNotFound = new Dictionary<Int32, DateTime>(); 
          _dictionary = new ProteinDictionary();
          _downloader = downloader;
 
-         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         _projectsNotFound = new Dictionary<int, DateTime>();
+
+         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+         if (!String.IsNullOrEmpty(path))
          {
-            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.ProjectInfoFileName);
+            FileName = Path.Combine(path, Constants.ProjectInfoFileName);
          }
       }
 
@@ -104,9 +102,40 @@ namespace HFM.Core
          get { return _projectsNotFound; }
       }
 
-      public override Plugins.IFileSerializer<List<Protein>> DefaultSerializer
+      internal DateTime? LastRefreshTime
+      {
+         get { return _lastRefreshTime; }
+         set { _lastRefreshTime = value; }
+      }
+
+      public override Serializers.IFileSerializer<List<Protein>> DefaultSerializer
       {
          get { return new TabSerializer(); }
+      }
+
+      private sealed class TabSerializer : Serializers.IFileSerializer<List<Protein>>
+      {
+         private readonly Proteins.TabDelimitedTextSerializer _serializer = new Proteins.TabDelimitedTextSerializer();
+
+         public string FileExtension
+         {
+            get { return "tab"; }
+         }
+
+         public string FileTypeFilter
+         {
+            get { return "Project Info Tab Delimited Files|*.tab"; }
+         }
+
+         public List<Protein> Deserialize(string fileName)
+         {
+            return _serializer.ReadFile(fileName).ToList();
+         }
+
+         public void Serialize(string fileName, List<Protein> value)
+         {
+            _serializer.WriteFile(fileName, value);
+         }
       }
 
       #endregion
@@ -136,18 +165,6 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Resets the data that halts redundant service refresh calls.
-      /// </summary>
-      public void ResetRefreshParameters()
-      {
-         _projectsNotFound.Clear();
-         if (_downloader != null)
-         {
-            _downloader.ResetDownloadParameters();
-         }
-      }
-
-      /// <summary>
       /// Gets the protein with the given project id.
       /// </summary>
       /// <param name="projectId">The project id of the protein to return.</param>
@@ -160,87 +177,104 @@ namespace HFM.Core
             return _dictionary[projectId];
          }
 
-         if (!allowRefresh || projectId == 0 || CheckProjectsNotFound(projectId))
+         if (projectId == 0 || !allowRefresh || !CanRefresh(projectId))
          {
             return null;
          }
 
          if (_downloader != null)
          {
-            Logger.InfoFormat("Project ID {0} triggering project data refresh.", projectId);
+            Logger.Info(String.Format("Project ID {0} triggering project data refresh.", projectId));
 
             try
             {
-               Refresh();
+               Refresh(null);
             }
             catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.Error(ex.Message, ex);
             }
 
             if (_dictionary.ContainsKey(projectId))
             {
-               // remove it from the not found list and return it
-               _projectsNotFound.Remove(projectId);
                return _dictionary[projectId];
             }
 
             // update the last download attempt date
-            _projectsNotFound[projectId] = DateTime.Now;
+            _projectsNotFound[projectId] = DateTime.UtcNow;
          }
 
          return null;
       }
 
       /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
-      /// </summary>
-      /// <returns>A collection of objects detailing how the service data was changed</returns>
-      public IEnumerable<ProteinLoadInfo> Refresh()
-      {
-         _downloader.Download();
-         return Load();
-      }
-
-      /// <summary>
-      /// Refreshs the service data and returns a collection of objects detailing how the service data was changed.
+      /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
       /// </summary>
       /// <param name="progress">The object used to report refresh progress.</param>
       /// <returns>A collection of objects detailing how the service data was changed</returns>
-      public Task<IEnumerable<ProteinLoadInfo>> RefreshAsync(IProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs> progress)
+      public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
       {
-         return Task.Factory.StartNew(() =>
+         IReadOnlyCollection<ProteinDictionaryChange> dictionaryChanges;
+         using (var stream = new MemoryStream())
          {
-            _downloader.DownloadAsync(progress).Wait();
-            return Load();
-         });
-      }
+            Logger.Info("Downloading new project data from Stanford...");
+            _downloader.Download(stream, progress);
+            stream.Position = 0;
 
-      private IEnumerable<ProteinLoadInfo> Load()
-      {
-         IEnumerable<ProteinLoadInfo> loadInfo = _dictionary.Load(_downloader.FilePath).ToList();
-         foreach (var info in loadInfo.Where(info => info.Result != ProteinLoadResult.NoChange))
+            var serializer = new ProjectSummaryJsonDeserializer();
+            var newDictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
+            dictionaryChanges = newDictionary.Changes;
+            _dictionary = newDictionary;
+         }
+
+         foreach (var info in dictionaryChanges.Where(info => info.Result != ProteinDictionaryChangeResult.NoChange))
          {
             Logger.Info(info.ToString());
          }
+
+         var now = DateTime.UtcNow;
+         foreach (var key in _projectsNotFound.Keys.ToList())
+         {
+            if (_dictionary.ContainsKey(key))
+            {
+               _projectsNotFound.Remove(key);
+            }
+            else
+            {
+               _projectsNotFound[key] = now;
+            }
+         }
+         _lastRefreshTime = now;
+
          Write();
-         return loadInfo;
+         return dictionaryChanges;
       }
 
-      private bool CheckProjectsNotFound(int projectId)
+      private bool CanRefresh(int projectId)
       {
+         if (_lastRefreshTime.HasValue)
+         {
+            // if a download was attempted in the last hour, don't execute again
+            TimeSpan lastDownloadDifference = DateTime.UtcNow.Subtract(_lastRefreshTime.Value);
+            if (lastDownloadDifference.TotalHours < 1)
+            {
+               Logger.Debug(String.Format("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes));
+               return false;
+            }
+         }
+
          // if this project has already been looked for previously
          if (_projectsNotFound.ContainsKey(projectId))
          {
             // if it has been less than one day since this project triggered an
             // automatic download attempt just return a blank protein.
-            if (DateTime.Now.Subtract(_projectsNotFound[projectId]).TotalDays < 1)
+            if (DateTime.UtcNow.Subtract(_projectsNotFound[projectId]).TotalDays < 1)
             {
-               return true;
+               return false;
             }
          }
 
-         return false;
+         return true;
       }
 
       #region DataContainer<T>
@@ -264,5 +298,44 @@ namespace HFM.Core
       }
 
       #endregion
+   }
+
+   public interface IProjectSummaryDownloader
+   {
+      /// <summary>
+      /// Downloads the project information.
+      /// </summary>
+      void Download(Stream stream, IProgress<ProgressInfo> progress);
+   }
+
+   public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
+   {
+      private readonly IPreferenceSet _prefs;
+
+      public ProjectSummaryDownloader(IPreferenceSet prefs)
+      {
+         _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
+      }
+
+      /// <summary>
+      /// Downloads the project information.
+      /// </summary>
+      /// <remarks>Access to the Download method is synchronized.</remarks>
+      public void Download(Stream stream, IProgress<ProgressInfo> progress)
+      {
+         IWebOperation httpWebOperation = WebOperation.Create(_prefs.Get<string>(Preference.ProjectDownloadUrl));
+         if (progress != null)
+         {
+            httpWebOperation.ProgressChanged += (sender, e) =>
+            {
+               int progressPercentage = Convert.ToInt32(e.Length / (double)e.TotalLength * 100);
+               string message = String.Format(CultureInfo.CurrentCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
+               progress.Report(new ProgressInfo(progressPercentage, message));
+            };
+         }
+         httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+         httpWebOperation.WebRequest.Proxy = _prefs.GetWebProxy();
+         httpWebOperation.Download(stream);
+      }
    }
 }

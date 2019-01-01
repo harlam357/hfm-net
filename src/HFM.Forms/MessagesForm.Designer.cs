@@ -31,14 +31,14 @@ namespace HFM.Forms
       private void InitializeComponent()
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
-         this.txtMessages = new TextBoxWrapper();
+         this.txtMessages = new System.Windows.Forms.TextBox();
          this.SuspendLayout();
          // 
          // txtMessages
          // 
          this.txtMessages.BackColor = System.Drawing.SystemColors.Window;
          this.txtMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMessages.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.txtMessages.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.txtMessages.Location = new System.Drawing.Point(0, 0);
          this.txtMessages.Multiline = true;
          this.txtMessages.Name = "txtMessages";
@@ -65,6 +65,6 @@ namespace HFM.Forms
 
       #endregion
 
-      private TextBoxWrapper txtMessages;
+      private System.Windows.Forms.TextBox txtMessages;
    }
 }

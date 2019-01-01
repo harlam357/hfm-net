@@ -30,6 +30,8 @@ using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Preferences;
+using HFM.Proteins;
 
 namespace HFM.Core
 {
@@ -154,7 +156,7 @@ namespace HFM.Core
          _messageConnection = messageConnection;
          _slots = new List<SlotModel>();
          _slotsLock = new ReaderWriterLockSlim();
-         _fahLog = FahLog.Create(FahLogType.FahClient);
+         _fahLog = new Log.FahClient.FahClientLog();
          _messages = new MessageReceiver();
 
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
@@ -186,7 +188,12 @@ namespace HFM.Core
             }
 
             var logFragment = (LogFragment)e.TypedMessage;
-            _fahLog.AddRange(logFragment.Value.Split('\n').Where(x => x.Length != 0));
+            string filteredLogFragment = String.Join("\n", logFragment.Value.Split('\n').Where(x => x.Length != 0));
+            using (var textReader = new StringReader(filteredLogFragment))
+            using (var reader = new Log.FahClient.FahClientLogTextReader(textReader))
+            {
+               _fahLog.Read(reader);
+            }
             WriteToLocalFahLogCache(logFragment.Value, createNew);
 
             if (_messages.LogRetrieved)
@@ -200,7 +207,7 @@ namespace HFM.Core
       {
          const int sleep = 100;
          const int timeout = 60 * 1000;
-         string fahLogPath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
+         string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.CachedFahLogFileName());
 
          try
          {
@@ -256,7 +263,7 @@ namespace HFM.Core
             _slots.Clear();
             if (_messages.SlotCollection != null)
             {
-               // itterate through slot collection
+               // iterate through slot collection
                foreach (var slot in _messages.SlotCollection)
                {
                   // add slot model to the collection
@@ -362,19 +369,21 @@ namespace HFM.Core
                // Re-Init Slot Level Members Before Processing
                slotModel.Initialize();
 
-               #region Run the Aggregator
-
+               // Run the Aggregator
                var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                dataAggregator.ClientName = slotModel.Name;
-               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.FirstOrDefault(), _messages.UnitCollection, info, options,
-                                                                          slotModel.SlotOptions, slotModel.UnitInfo, slotModel.SlotId);
+               DataAggregatorResult result = dataAggregator.AggregateData(_fahLog.ClientRuns.LastOrDefault(), 
+                                                                          _messages.UnitCollection, 
+                                                                          info, 
+                                                                          options,
+                                                                          slotModel.SlotOptions, 
+                                                                          slotModel.UnitInfo, 
+                                                                          slotModel.SlotId);
                PopulateRunLevelData(result, info, slotModel);
 
                slotModel.Queue = result.Queue;
                slotModel.CurrentLogLines = result.CurrentLogLines;
                //slotModel.UnitLogLines = result.UnitLogLines;
-
-               #endregion
 
                var parsedUnits = new Dictionary<int, UnitInfoModel>(result.UnitInfos.Count);
                foreach (int key in result.UnitInfos.Keys)
@@ -396,7 +405,7 @@ namespace HFM.Core
 
                SetSlotStatus(slotModel);
 
-               slotModel.UnitInfoModel.ShowPPDTrace(Logger, slotModel.Name, slotModel.Status,
+               slotModel.UnitInfoModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                   Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                   Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
@@ -464,10 +473,10 @@ namespace HFM.Core
          //}
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, result.StartTime);
-            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, result.StartTime);
-            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
+            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, null);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, result.StartTime);
+            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, null);
          }
       }
 

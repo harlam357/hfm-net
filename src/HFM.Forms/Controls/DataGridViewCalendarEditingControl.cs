@@ -21,11 +21,8 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
-using HFM.Core;
-
 namespace HFM.Forms.Controls
 {
-   [CoverageExclude]
    internal class DataGridViewCalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
    {
       private bool _valueChanged;

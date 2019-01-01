@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,10 +25,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-//using Castle.Core.Logging;
-
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
@@ -44,17 +43,8 @@ namespace HFM.Forms.Models
 
       #region Properties
 
-      //private ILogger _logger;
-      //
-      //public ILogger Logger
-      //{
-      //   [CoverageExclude]
-      //   get { return _logger ?? (_logger = NullLogger.Instance); }
-      //   [CoverageExclude]
-      //   set { _logger = value; }
-      //}
-
       private SlotModel _selectedSlot;
+
       public SlotModel SelectedSlot
       {
          get { return _selectedSlot; }
@@ -115,7 +105,6 @@ namespace HFM.Forms.Models
 
       #region Fields
 
-      private readonly IPreferenceSet _prefs;
       private readonly ISynchronizeInvoke _syncObject;
       private readonly IClientConfiguration _clientConfiguration;
       private readonly SlotModelSortableBindingList _slotList;
@@ -153,17 +142,16 @@ namespace HFM.Forms.Models
 
       public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientConfiguration clientConfiguration)
       {
-         _prefs = prefs;
          _syncObject = syncObject;
          _clientConfiguration = clientConfiguration;
          _slotList = new SlotModelSortableBindingList(_syncObject);
-         _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
+         _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
          _slotList.Sorted += (sender, e) =>
                              {
                                 SortColumnName = e.Name;
-                                _prefs.Set(Preference.FormSortColumn, SortColumnName);
+                                prefs.Set(Preference.FormSortColumn, SortColumnName);
                                 SortColumnOrder = e.Direction;
-                                _prefs.Set(Preference.FormSortOrder, SortColumnOrder);
+                                prefs.Set(Preference.FormSortOrder, SortColumnOrder);
                              };
          _bindingSource = new BindingSource();
          _bindingSource.DataSource = _slotList;
@@ -173,12 +161,12 @@ namespace HFM.Forms.Models
          _bindingSource.ListChanged += (s, e) => Debug.WriteLine("BindingSource: " + e.ListChangedType);
 #endif
          // Subscribe to PreferenceSet events
-         _prefs.PreferenceChanged += (s, e) =>
+         prefs.PreferenceChanged += (s, e) =>
                                      {
                                         switch (e.Preference)
                                         {
                                            case Preference.OfflineLast:
-                                              _slotList.OfflineClientsLast = _prefs.Get<bool>(Preference.OfflineLast);
+                                              _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
                                               Sort();
                                               break;
                                            case Preference.PpdCalculation:
@@ -229,11 +217,10 @@ namespace HFM.Forms.Models
          OnBeforeResetBindings(EventArgs.Empty);
          lock (_slotsListLock)
          {
-            // halt binding source updates
+            // halt binding updates
             _bindingSource.RaiseListChangedEvents = false;
-            // see Revision 534 commit comments for the reason
-            // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = false;
+
             // get slots from the dictionary
             var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
             // refresh the underlying binding list
@@ -250,12 +237,11 @@ namespace HFM.Forms.Models
             ResetSelectedSlot();
             // find duplicates
             slots.FindDuplicates();
-            // enable binding source updates
+
+            // enable binding updates
             _bindingSource.RaiseListChangedEvents = true;
-            // see Revision 534 commit comments for the reason
-            // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = true;
-            // reset AFTER RaiseListChangedEvents is enabled
+
             _bindingSource.ResetBindings(false);
          }
          OnAfterResetBindings(EventArgs.Empty);
@@ -268,17 +254,16 @@ namespace HFM.Forms.Models
       {
          lock (_slotsListLock)
          {
+            // halt binding updates
             _bindingSource.RaiseListChangedEvents = false;
-            // see Revision 534 commit comments for the reason
-            // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = false;
+
             // sort the list
             _bindingSource.Sort = null;
             _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-            // enable binding source updates
+            
+            // enable binding updates
             _bindingSource.RaiseListChangedEvents = true;
-            // see Revision 534 commit comments for the reason
-            // _slotList.RaiseListChangedEvents = false is here.
             _slotList.RaiseListChangedEvents = true;
          }
       }
@@ -319,7 +304,6 @@ namespace HFM.Forms.Models
       }
    }
 
-   [CoverageExclude]
    public sealed class IndexChangedEventArgs : EventArgs
    {
       private readonly int _index;

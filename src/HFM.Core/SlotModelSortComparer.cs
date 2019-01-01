@@ -3,8 +3,6 @@ using System.ComponentModel;
 
 using harlam357.Core.ComponentModel;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Core
 {
    public class SlotModelSortComparer : SortComparer<SlotModel>

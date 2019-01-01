@@ -19,8 +19,6 @@
 
 using System.IO;
 
-using HFM.Core.Plugins;
-
 namespace HFM.Core.Serializers
 {
    public class ProtoBufFileSerializer<T> : IFileSerializer<T> where T : class, new()

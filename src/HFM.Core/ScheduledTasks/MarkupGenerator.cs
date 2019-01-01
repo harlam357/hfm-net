@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,11 +30,11 @@ using System.Xml.Xsl;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
+using HFM.Preferences;
 
-namespace HFM.Core
+namespace HFM.Core.ScheduledTasks
 {
    public interface IMarkupGenerator
    {
@@ -69,9 +69,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -242,7 +240,7 @@ namespace HFM.Core
          }
          else
          {
-            string xsltFileName = Path.Combine(Path.Combine(_prefs.ApplicationPath, Constants.XsltFolderName), xslt);
+            string xsltFileName = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.XsltFolderName, xslt);
             if (File.Exists(xsltFileName))
             {
                return xsltFileName;
@@ -338,12 +336,10 @@ namespace HFM.Core
          slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
          slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
          slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
-         slotDetail.GridData = AutoMapper.Mapper.Map<SlotModel, GridData>(slot);
-         slotDetail.CurrentLogLines = slot.CurrentLogLines;
-         slotDetail.Protein = slot.UnitInfoModel.CurrentProtein;
+         slotDetail.SlotData = AutoMapper.Mapper.Map<SlotModel, SlotData>(slot);
          return slotDetail;
       }
-      
+
       #endregion
    }
 }

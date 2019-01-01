@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - User Stats Data Model
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,8 @@ using System.Globalization;
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.Data;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
@@ -33,9 +35,7 @@ namespace HFM.Forms.Models
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 

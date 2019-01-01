@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.IO;
 
 using HFM.Core;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
@@ -38,7 +39,7 @@ namespace HFM.Forms.Models
 
       public void Load(IPreferenceSet prefs)
       {
-         ApplicationPath = prefs.ApplicationPath;
+         ApplicationPath = prefs.Get<string>(Preference.ApplicationPath);
          CssFile = prefs.Get<string>(Preference.CssFile);
          WebOverview = prefs.Get<string>(Preference.WebOverview);
          WebMobileOverview = prefs.Get<string>(Preference.WebMobileOverview);

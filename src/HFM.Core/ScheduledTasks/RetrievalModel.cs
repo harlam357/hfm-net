@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
-namespace HFM.Core
+using HFM.Preferences;
+
+namespace HFM.Core.ScheduledTasks
 {
    public class RetrievalModel
    {
@@ -15,9 +17,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 

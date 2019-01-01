@@ -1,4 +1,4 @@
-﻿$MSBuild = "${Env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+﻿$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
 $NuGetPath = '.\.nuget\NuGet.exe'
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
@@ -48,8 +48,6 @@ Function Build-Solution
     param([string]$Target='Rebuild',
           [string]$Configuration='ScriptedRelease',
           [string]$Platform=$Global:Platform,
-          [string]$DelaySign='true',
-          [string]$AssemblyOriginatorKeyFile="$PSScriptRoot\harlam357public.snk",
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
 
@@ -60,12 +58,10 @@ Function Build-Solution
     Write-Host "Building Solution"
     Write-Host " Target: $Target"
     Write-Host " Platform: $Platform"
-    Write-Host " DelaySign: $DelaySign"
-    Write-Host " AssemblyOriginatorKeyFile: $AssemblyOriginatorKeyFile"
     Write-Host "---------------------------------------------------"
 
     Exec { & $NuGetPath restore $SolutionFileName }
-    Exec { & $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;DelaySign=$DelaySign`;AssemblyOriginatorKeyFile=$AssemblyOriginatorKeyFile`;NoWarn=1591 }
+    Exec { & $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;NoWarn=1591 }
 }
 
 Function Test-Build
@@ -77,14 +73,14 @@ Function Test-Build
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
-    $NUnitPath = 'packages\NUnit.Runners.2.6.4\tools\nunit-console-x86.exe'
-    Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Client.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Core.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Log.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll /framework=net-4.0 /xml=$ArtifactsPath\HFM.Queue.Tests.Results.xml }
+    $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
+    Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Client.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Log.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Queue.Tests.Results.xml }
 }
 
 Function Analyze-Build
@@ -98,7 +94,7 @@ Function Analyze-Build
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host "---------------------------------------------------"
 
-    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
+    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
     Exec { & $FxCopPath /f:$ArtifactsBin\HFM.exe /f:$ArtifactsBin\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:$ArtifactsPath\FxCopReport.xml /gac }
 }
 
@@ -151,33 +147,21 @@ Function Deploy-Build
         "HFM.exe", 
         "HFM.exe.config",
         "HFM.Client.dll",
-        "HFM.Client.xml",
         "HFM.Core.dll",
-        "HFM.Core.DataTypes.dll",
-        "HFM.Core.DataTypes.xml",
-        "HFM.Core.Plugins.dll",
-        "HFM.Core.Plugins.xml",
         "HFM.Forms.dll",
         "HFM.Log.dll",
-        "HFM.Log.xml",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        "HFM.Proteins.xml",
         "HFM.Queue.dll",
-        "HFM.Queue.xml",
-        "HTMLparser.dll",
         "harlam357.Core.dll",
         "harlam357.Windows.Forms.dll",
         "ZedGraph.dll",
-        "ZedGraph.xml",
         "Castle.Core.dll",
         "Castle.Windsor.dll",
         "protobuf-net.dll",
-        "protobuf-net.xml",
         "System.Linq.Dynamic.dll",
         "AutoMapper.dll",
-        "Newtonsoft.Json.dll",
-        "Newtonsoft.Json.xml"
+        "Newtonsoft.Json.dll"
         )
     $AssemblyFiles = Get-ChildItem -Path 'HFM\bin\Release\*' -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
@@ -191,7 +175,6 @@ Function Deploy-Build
     Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\lib\HTMLparser2\HTMLparser License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\src\packages\Castle.Windsor.3.3.0\ASL - Apache Software Foundation License.txt' -Destination "$ArtifactsBin\Documentation\License\Windsor License.txt" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protobuf-net Licence.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
@@ -207,7 +190,6 @@ Function Build-Zip
 {
     param([string]$ArtifactsBin=$Global:ArtifactsBin,
           [string]$ArtifactsPackages=$Global:ArtifactsPackages,
-          [string]$Platform=$Global:Platform,
           [string]$Version=$Global:Version)
 
     Write-Host "---------------------------------------------------"
@@ -219,7 +201,7 @@ Function Build-Zip
     Write-Host "---------------------------------------------------"
 
     Add-Type -assembly "System.IO.Compression.FileSystem"
-    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, "$ArtifactsPackages\HFM $Platform $Version.zip") 
+    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, "$ArtifactsPackages\HFM $Version.zip") 
 }
 
 Function Build-Msi
@@ -243,7 +225,26 @@ Function Build-Msi
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
 
     Exec { & $MSBuild $SetupSolutionFileName /t:$Target /p:Configuration=$Configuration }
-    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$ArtifactsPackages\HFM $Platform $Version.msi" -ErrorAction Stop -Verbose:$localVerbose
+    Deploy-Msi -Configuration $Configuration -ArtifactsPackages $ArtifactsPackages -Version $Version
+}
+
+Function Deploy-Msi
+{
+    [CmdletBinding()]
+    param([string]$Configuration='Release',
+          [string]$ArtifactsPackages=$Global:ArtifactsPackages,
+          [string]$Version=$Global:Version)
+
+    Write-Host "---------------------------------------------------"
+    Write-Host "Deploying Msi Package"
+    Write-Host " Configuration: $Configuration"
+    Write-Host " ArtifactsPackages: $ArtifactsPackages"
+    Write-Host " Version: $Version"
+    Write-Host "---------------------------------------------------"
+
+    $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
+
+    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$ArtifactsPackages\HFM $Version.msi" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Configure-Artifacts
@@ -294,5 +295,5 @@ Function Configure-Platform
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '0.9.8.0'
+Configure-Version -Version '0.9.9.0'
 Configure-Platform -Platform 'Any CPU'

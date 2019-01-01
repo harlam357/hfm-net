@@ -23,7 +23,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
+using HFM.Core.Data;
 using HFM.Core.DataTypes;
+using HFM.Log;
+using HFM.Preferences;
 
 namespace HFM.Core
 {
@@ -124,7 +127,7 @@ namespace HFM.Core
    {
       #region Properties
 
-      public override Plugins.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
+      public override Serializers.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer
       {
          get { return new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>(); }
       }
@@ -154,9 +157,10 @@ namespace HFM.Core
 
       public ProteinBenchmarkService(IPreferenceSet prefs)
       {
-         if (prefs != null && !String.IsNullOrEmpty(prefs.ApplicationDataFolderPath))
+         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+         if (!String.IsNullOrEmpty(path))
          {
-            FileName = System.IO.Path.Combine(prefs.ApplicationDataFolderPath, Constants.BenchmarkCacheFileName);
+            FileName = System.IO.Path.Combine(path, Constants.BenchmarkCacheFileName);
          }
          _cacheLock = new ReaderWriterLockSlim();
       }
@@ -217,10 +221,10 @@ namespace HFM.Core
 
          for (int i = startingFrame; i <= endingFrame; i++)
          {
-            UnitFrame frame = unit.GetUnitFrame(i);
-            if (frame != null)
+            WorkUnitFrameData frameData = unit.GetFrameData(i);
+            if (frameData != null)
             {
-               if (benchmark.SetFrameTime(frame.FrameDuration))
+               if (benchmark.SetFrameDuration(frameData.Duration))
                {
                   result = true;
                }
@@ -254,7 +258,7 @@ namespace HFM.Core
       private static bool Equals(ProteinBenchmark benchmark, UnitInfo unifInfo)
       {
          return benchmark.OwningSlotName == unifInfo.OwningSlotName &&
-                FileSystemPath.Equal(benchmark.OwningClientPath, unifInfo.OwningClientPath) &&
+                FileSystemPath.Equals(benchmark.OwningClientPath, unifInfo.OwningClientPath) &&
                 benchmark.ProjectID == unifInfo.ProjectID;
       }
 
@@ -479,7 +483,7 @@ namespace HFM.Core
          try
          {
             return Data.FindAll(benchmark => benchmark.OwningClientName.Equals(clientName) &&
-                                             FileSystemPath.Equal(benchmark.OwningClientPath, clientPath)).AsReadOnly();
+                                             FileSystemPath.Equals(benchmark.OwningClientPath, clientPath)).AsReadOnly();
          }
          finally
          {

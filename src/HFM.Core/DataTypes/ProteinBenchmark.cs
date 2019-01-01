@@ -124,7 +124,7 @@ namespace HFM.Core.DataTypes
       /// Set Next Frame Time
       /// </summary>
       /// <param name="frameTime">Frame Time</param>
-      public bool SetFrameTime(TimeSpan frameTime)
+      public bool SetFrameDuration(TimeSpan frameTime)
       {
          if (frameTime > TimeSpan.Zero)
          {

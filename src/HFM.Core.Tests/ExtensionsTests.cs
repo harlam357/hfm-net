@@ -24,7 +24,7 @@ using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core.Tests
+namespace HFM.Core
 {
    [TestFixture]
    public class ExtensionsTests
@@ -57,20 +57,6 @@ namespace HFM.Core.Tests
       {
          var dateTime = DateTime.Now;
          Assert.IsFalse(dateTime.IsUnknown());
-      }
-
-      [Test]
-      public void TimeSpanIsZeroTest1()
-      {
-         var timeSpan = TimeSpan.FromMinutes(1);
-         Assert.IsFalse(timeSpan.IsZero());
-      }
-
-      [Test]
-      public void TimeSpanIsZeroTest2()
-      {
-         var timeSpan = TimeSpan.Zero;
-         Assert.IsTrue(timeSpan.IsZero());
       }
 
       #endregion

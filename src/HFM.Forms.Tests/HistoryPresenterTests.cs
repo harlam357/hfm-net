@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,12 +30,14 @@ using Rhino.Mocks.Constraints;
 using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
-using HFM.Core;
+using HFM.Core.Data;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
-using HFM.Core.Plugins;
+using HFM.Core.Serializers;
 using HFM.Forms.Models;
+using HFM.Preferences;
 
-namespace HFM.Forms.Tests
+namespace HFM.Forms
 {
    [TestFixture]
    public class HistoryPresenterTests
@@ -350,18 +352,14 @@ namespace HFM.Forms.Tests
 
          var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
          serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)));
-         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
-         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
-         plugins.Expect(x => x[0]).Return(pluginInfo);
          // Act
          _presenter = CreatePresenter();
-         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.ExportSerializers = new[] { serializer };
          _presenter.ExportClick();
          // Assert
          _viewFactory.VerifyAllExpectations();
          saveFileDialogView.VerifyAllExpectations();
          serializer.VerifyAllExpectations();
-         plugins.VerifyAllExpectations();
       }
 
       [Test]
@@ -381,9 +379,6 @@ namespace HFM.Forms.Tests
          var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
          serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)))
             .Throw(exception);
-         var plugins = MockRepository.GenerateMock<IFileSerializerPluginManager<List<HistoryEntry>>>();
-         var pluginInfo = new PluginInfo<IFileSerializer<List<HistoryEntry>>>("", serializer);
-         plugins.Expect(x => x[0]).Return(pluginInfo);
 
          var logger = MockRepository.GenerateMock<ILogger>();
          logger.Expect(x => x.ErrorFormat(exception, "", new object[0])).IgnoreArguments();
@@ -391,14 +386,13 @@ namespace HFM.Forms.Tests
 
          // Act
          _presenter = CreatePresenter();
-         _presenter.HistoryEntrySerializerPlugins = plugins;
+         _presenter.ExportSerializers = new[] { serializer };
          _presenter.Logger = logger;
          _presenter.ExportClick();
          // Assert
          _viewFactory.VerifyAllExpectations();
          saveFileDialogView.VerifyAllExpectations();
          serializer.VerifyAllExpectations();
-         plugins.VerifyAllExpectations();
          logger.VerifyAllExpectations();
          _messageBoxView.VerifyAllExpectations();
       }

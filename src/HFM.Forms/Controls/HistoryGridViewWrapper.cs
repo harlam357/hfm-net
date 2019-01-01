@@ -17,13 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
-
-using HFM.Core;
 
 namespace HFM.Forms.Controls
 {
-   [CoverageExclude]
+   [ExcludeFromCodeCoverage]
    public partial class HistoryGridViewWrapper : DataGridView
    {
       public HistoryGridViewWrapper()

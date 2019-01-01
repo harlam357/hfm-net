@@ -20,9 +20,7 @@
 using AutoMapper;
 using NUnit.Framework;
 
-using HFM.Core.Configuration;
-
-namespace HFM.Core.Tests.Configuration
+namespace HFM.Core.Configuration
 {
    [TestFixture]
    public class AutoMapperProfileTests

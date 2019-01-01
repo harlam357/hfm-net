@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Preferences - Scheduled Tasks Tab - Binding Model
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,11 +21,12 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Preferences;
+using HFM.Preferences.Data;
 
 namespace HFM.Forms.Models
 {
-   class ScheduledTasksModel : INotifyPropertyChanged
+   internal class ScheduledTasksModel : INotifyPropertyChanged
    {
       public bool Error
       {
@@ -51,7 +52,7 @@ namespace HFM.Forms.Models
          var clientRetrievalTask = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
          SyncTimeMinutes = clientRetrievalTask.Interval;
          SyncOnSchedule = clientRetrievalTask.Enabled;
-         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial;
+         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
          AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
 
          var webGenerationTask = prefs.Get<WebGenerationTask>(Preference.WebGenerationTask);
@@ -79,7 +80,7 @@ namespace HFM.Forms.Models
          {
             Enabled = SyncOnSchedule,
             Interval = SyncTimeMinutes,
-            ProcessingMode = SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel
+            ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
          };
          prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
          prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);

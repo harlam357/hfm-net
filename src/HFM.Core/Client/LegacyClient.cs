@@ -25,7 +25,9 @@ using System.IO;
 using System.Linq;
 
 using HFM.Core.DataTypes;
-using HFM.Log;
+using HFM.Log.Legacy;
+using HFM.Preferences;
+using HFM.Proteins;
 using HFM.Queue;
 
 namespace HFM.Core
@@ -129,16 +131,17 @@ namespace HFM.Core
 
          var dataAggregator = new LegacyDataAggregator { Logger = Logger };
          dataAggregator.ClientName = Settings.Name;
-         string queueFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedQueueFileName());
-         string fahLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedFahLogFileName());
-         string unitInfoLogFilePath = Path.Combine(Prefs.CacheDirectory, Settings.CachedUnitInfoFileName());
+         var path = Prefs.Get<string>(Preference.CacheDirectory);
+         string queueFilePath = Path.Combine(path, Settings.CachedQueueFileName());
+         string fahLogFilePath = Path.Combine(path, Settings.CachedFahLogFileName());
+         string unitInfoLogFilePath = Path.Combine(path, Settings.CachedUnitInfoFileName());
 
          #endregion
 
          #region Run the Aggregator
 
          var queue = ReadQueueFile(queueFilePath);
-         var fahLog = FahLog.Read(File.ReadLines(fahLogFilePath), FahLogType.Legacy);
+         var fahLog = Log.Legacy.LegacyLog.Read(fahLogFilePath);
          var unitInfo = ReadUnitInfoFile(unitInfoLogFilePath);
 
          var result = dataAggregator.AggregateData(fahLog, queue, unitInfo);
@@ -176,7 +179,7 @@ namespace HFM.Core
 
          HandleReturnedStatus(result.Status, _slotModel);
 
-         _slotModel.UnitInfoModel.ShowPPDTrace(Logger, _slotModel.Name, _slotModel.Status,
+         _slotModel.UnitInfoModel.ShowProductionTrace(Logger, _slotModel.Name, _slotModel.Status,
             Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
             Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
@@ -263,10 +266,10 @@ namespace HFM.Core
          //slotModel.TotalCompletedUnits = run.TotalCompletedUnits;
          if (UnitInfoDatabase.Connected)
          {
-            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed, result.StartTime);
-            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Completed);
-            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed, result.StartTime);
-            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.Count(slotModel.Name, CountType.Failed);
+            slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
+            slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, null);
+            slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, result.StartTime);
+            slotModel.TotalFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, null);
          }
       }
 
@@ -362,7 +365,7 @@ namespace HFM.Core
                              BenchmarkAverageFrameTime = GetBenchmarkAverageFrameTimeOrDefault(slot.UnitInfo),
                              TimeOfLastFrame = slot.UnitInfoModel.UnitInfoData.CurrentFrame == null
                                                   ? TimeSpan.Zero
-                                                  : slot.UnitInfoModel.UnitInfoData.CurrentFrame.TimeOfFrame,
+                                                  : slot.UnitInfoModel.UnitInfoData.CurrentFrame.TimeStamp,
                              UnitStartTimeStamp = slot.UnitInfoModel.UnitInfoData.UnitStartTimeStamp,
                              AllowRunningAsync = Prefs.Get<bool>(Preference.AllowRunningAsync)
                           };

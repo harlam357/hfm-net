@@ -19,9 +19,7 @@
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
-namespace HFM.Proteins.Tests
+namespace HFM.Proteins
 {
    [TestFixture]
    public class ProteinTests
@@ -42,34 +40,6 @@ namespace HFM.Proteins.Tests
          Assert.AreEqual("Unassigned Description", protein.Description);
          Assert.AreEqual("Unknown", protein.Contact);
          Assert.AreEqual(0, protein.KFactor);
-      }
-
-      [Test]
-      public void Protein_IsUnknown_Test1()
-      {
-         var protein = new Protein { ProjectNumber = 1 };
-         Assert.IsFalse(protein.IsUnknown);
-      }
-
-      [Test]
-      public void Protein_IsUnknown_Test2()
-      {
-         var protein = new Protein();
-         Assert.IsTrue(protein.IsUnknown);
-      }
-
-      [Test]
-      public void Protein_IsValid_Test1()
-      {
-         var protein = new Protein { ProjectNumber = 1, PreferredDays = 3, MaximumDays = 5, Credit = 500, Frames = 100, KFactor = 26.4 };
-         Assert.IsTrue(protein.IsValid);
-      }
-
-      [Test]
-      public void Protein_IsValid_Test2()
-      {
-         var protein = new Protein();
-         Assert.IsFalse(protein.IsValid);
       }
    }
 }

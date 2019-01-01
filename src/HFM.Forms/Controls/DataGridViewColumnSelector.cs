@@ -30,8 +30,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
 
-using HFM.Core;
-
 namespace HFM.Forms.Controls
 {
    /// <summary>
@@ -39,7 +37,6 @@ namespace HFM.Forms.Controls
    /// the cell origin a popup, containing a list of checkbox and column names, is
    /// shown. 
    /// </summary>
-   [CoverageExclude]
    internal class DataGridViewColumnSelector : IDisposable
    {
       // the DataGridView to which the DataGridViewColumnSelector is attached

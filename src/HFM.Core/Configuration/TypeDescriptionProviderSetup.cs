@@ -1,9 +1,11 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace HFM.Core.Configuration
 {
    public static class TypeDescriptionProviderSetup
    {
-      [CoverageExclude]
+      [ExcludeFromCodeCoverage]
       public static void Execute()
       {
          Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(SlotModel));

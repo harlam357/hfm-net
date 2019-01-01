@@ -28,6 +28,7 @@ using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
 using HFM.Log;
+using HFM.Log.Legacy;
 using HFM.Queue;
 
 namespace HFM.Core
@@ -43,9 +44,7 @@ namespace HFM.Core
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -56,7 +55,7 @@ namespace HFM.Core
       {
          if (Logger.IsDebugEnabled)
          {
-            foreach (var s in fahLog.Where(x => x.LineType == LogLineType.Error))
+            foreach (var s in LogLineEnumerable.Create(fahLog).Where(x => x.Data is LogLineDataParserError))
             {
                Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
             }
@@ -69,12 +68,14 @@ namespace HFM.Core
          }
 
          var result = new DataAggregatorResult();
-         result.StartTime = currentClientRun.Data.StartTime;
-         result.Arguments = currentClientRun.Data.Arguments;
-         result.ClientVersion = currentClientRun.Data.ClientVersion;
-         result.UserID = currentClientRun.Data.UserID;
-         result.MachineID = currentClientRun.Data.MachineID;
-         result.Status = currentClientRun.SlotRuns[0].Data.Status;
+         var currentClientRunData = (LegacyClientRunData)currentClientRun.Data;
+         result.StartTime = currentClientRunData.StartTime;
+         result.Arguments = currentClientRunData.Arguments;
+         result.ClientVersion = currentClientRunData.ClientVersion;
+         result.UserID = currentClientRunData.UserID;
+         result.MachineID = currentClientRunData.MachineID;
+         var currentSlotRunData = (LegacySlotRunData)currentClientRun.SlotRuns[0].Data;
+         result.Status = (SlotStatus)currentSlotRunData.Status;
 
          // Decision Time: If Queue Read fails parse from logs only
          if (queueData != null)
@@ -95,7 +96,7 @@ namespace HFM.Core
 
          if (result.UnitInfos == null || result.UnitInfos[result.CurrentUnitIndex] == null || result.UnitInfos[result.CurrentUnitIndex].LogLines == null)
          {
-            result.CurrentLogLines = currentClientRun.ToList();
+            result.CurrentLogLines = LogLineEnumerable.Create(currentClientRun).ToList();
          }
          else
          {
@@ -141,7 +142,7 @@ namespace HFM.Core
       {
          Debug.Assert(fahLog != null);
 
-         return fahLog.ClientRuns.FirstOrDefault();
+         return fahLog.ClientRuns.LastOrDefault();
       }
 
       private static SlotRun GetCurrentSlotRun(FahLog fahLog)
@@ -165,7 +166,7 @@ namespace HFM.Core
          Debug.Assert(fahLog != null);
 
          var slotRun = GetCurrentSlotRun(fahLog);
-         return slotRun != null ? slotRun.UnitRuns.FirstOrDefault() : null;
+         return slotRun != null ? slotRun.UnitRuns.LastOrDefault() : null;
       }
 
       private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, QueueData q, FahLog fahLog, UnitInfoLogData unitInfo)
@@ -204,7 +205,8 @@ namespace HFM.Core
                   unitRun = GetCurrentUnitRun(fahLog);
 
                   var slotRun = GetCurrentSlotRun(fahLog);
-                  if (slotRun != null && slotRun.Data.Status == SlotStatus.GettingWorkPacket)
+                  var slotRunData = (LegacySlotRunData)slotRun?.Data;
+                  if (slotRun != null && slotRunData != null && ((SlotStatus)slotRunData.Status) == SlotStatus.GettingWorkPacket)
                   {
                      unitRun = null;
                      unitInfoLogData = new UnitInfoLogData();
@@ -228,10 +230,10 @@ namespace HFM.Core
 
       private static UnitRun GetUnitRunForQueueIndex(FahLog fahLog, int queueIndex)
       {
-         foreach (var clientRun in fahLog.ClientRuns)
+         foreach (var clientRun in fahLog.ClientRuns.Reverse())
          {
             var slotRun = clientRun.SlotRuns[0];
-            var unitRun = slotRun.UnitRuns.FirstOrDefault(x => x.QueueIndex == queueIndex);
+            var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex);
             if (unitRun != null)
             {
                return unitRun;
@@ -248,12 +250,12 @@ namespace HFM.Core
 
          var unit = new UnitInfo();
 
-         UnitRunData unitRunData;
+         LegacyUnitRunData unitRunData;
          if (unitRun == null)
          {
             if (matchOverride)
             {
-               unitRunData = new UnitRunData();
+               unitRunData = new LegacyUnitRunData();
             }
             else
             {
@@ -262,45 +264,59 @@ namespace HFM.Core
          }
          else
          {
-            unit.LogLines = unitRun.ToList();
-            unitRunData = unitRun.Data;
+            unit.LogLines = LogLineEnumerable.Create(unitRun).ToList();
+            unit.FrameData = unitRun.Data.FrameDataDictionary;
+            unitRunData = (LegacyUnitRunData)unitRun.Data;
          }
          unit.UnitStartTimeStamp = unitRunData.UnitStartTimeStamp ?? TimeSpan.MinValue;
          unit.FramesObserved = unitRunData.FramesObserved;
-         unit.CoreVersion = unitRunData.CoreVersion;
-         unit.UnitResult = unitRunData.WorkUnitResult;
+         unit.CoreVersion = ParseCoreVersion(unitRunData.CoreVersion);
+         if (unitRunData.ClientCoreCommunicationsError)
+         {
+            unit.UnitResult = WorkUnitResult.ClientCoreError;
+         }
+         else
+         {
+            unit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRunData.WorkUnitResult);
+         }
 
+         var clientRunData = (LegacyClientRunData)clientRun.Data;
          if (queueEntry != null)
          {
             UpdateUnitInfoFromQueueData(unit, queueEntry);
-            SearchFahLogUnitDataProjects(unit, unitRunData);
-            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
+            UpdateUnitInfoFromLogData(unit, clientRunData, unitRunData, unitInfoLogData);
 
-            if (!ProjectsMatch(unit, unitRunData) && !ProjectsMatch(unit, unitInfoLogData) && !matchOverride)
+            if (!ProjectsMatch(unit, unitRunData.ToProjectInfo()) && !ProjectsMatch(unit, unitInfoLogData.ToProjectInfo()) && !matchOverride)
             {
                return null;
             }
          }
          else
          {
-            UpdateUnitInfoFromLogData(unit, clientRun.Data, unitRunData, unitInfoLogData);
+            UpdateUnitInfoFromLogData(unit, clientRunData, unitRunData, unitInfoLogData);
          }
 
          return unit;
       }
 
-      private static void SearchFahLogUnitDataProjects(UnitInfo unit, UnitRunData unitRunData)
+      private static float ParseCoreVersion(string coreVer)
       {
-         Debug.Assert(unit != null);
-         Debug.Assert(unitRunData != null);
+         if (String.IsNullOrWhiteSpace(coreVer)) return 0.0f;
 
-         for (int i = 0; i < unitRunData.ProjectInfoList.Count; i++)
+         float value;
+         if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
          {
-            if (ProjectsMatch(unit, unitRunData.ProjectInfoList[i]))
+            return value;
+         }
+         // Try to parse Core Versions in the 0.#.## format
+         if (coreVer.StartsWith("0."))
+         {
+            if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
             {
-               unitRunData.ProjectInfoIndex = i;
+               return value;
             }
          }
+         return 0.0f;
       }
 
       private static bool ProjectsMatch(UnitInfo unit, IProjectInfo projectInfo)
@@ -326,7 +342,7 @@ namespace HFM.Core
          if ((queueEntryStatus == QueueEntryStatus.Unknown ||
               queueEntryStatus == QueueEntryStatus.Empty ||
               queueEntryStatus == QueueEntryStatus.Garbage ||
-              queueEntryStatus == QueueEntryStatus.Abandonded) == false)
+              queueEntryStatus == QueueEntryStatus.Abandoned) == false)
          {
             /* Tag (Could be read here or through the unitinfo.txt file) */
             unitInfo.ProteinTag = queueEntry.WorkUnitTag;
@@ -359,7 +375,7 @@ namespace HFM.Core
          }
       }
 
-      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, ClientRunData clientRunData, UnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
+      private static void UpdateUnitInfoFromLogData(UnitInfo unitInfo, LegacyClientRunData clientRunData, LegacyUnitRunData unitRunData, UnitInfoLogData unitInfoLogData)
       {
          Debug.Assert(unitInfo != null);
          Debug.Assert(clientRunData != null);

@@ -33,16 +33,13 @@ namespace HFM.Queue
    }
 
    /// <summary>
-   /// Queue Data Class
+   /// Represents the contents of a Folding@Home client v5 or v6 queue.dat file.
    /// </summary>
    [CLSCompliant(false)]
    public class QueueData
    {
       #region Fields
    
-      /// <summary>
-      /// Queue Structure
-      /// </summary>
       private readonly Data _q;
       
       private readonly SystemType _system = SystemType.x86;
@@ -63,10 +60,6 @@ namespace HFM.Queue
 
       #region Constructor
 
-      /// <summary>
-      /// Primary Constructor (Set Queue)
-      /// </summary>
-      /// <param name="q">Queue Structure</param>
       internal QueueData(Data q)
       {
          _q = q;
@@ -199,9 +192,9 @@ namespace HFM.Queue
       #region Entry Accessors
 
       /// <summary>
-      /// Get the QueueEntry at the specified Index.
+      /// Gets the QueueEntry at the specified index.
       /// </summary>
-      /// <param name="index">Queue Entry Index</param>
+      /// <param name="index">The index of the QueueEntry.</param>
       public QueueEntry GetQueueEntry(uint index)
       {
          return new QueueEntry(_q.Entries[index], index, this);

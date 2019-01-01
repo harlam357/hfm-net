@@ -60,10 +60,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\harlam357public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -75,24 +75,31 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Support\DateTimeParse.cs" />
-    <Compile Include="Support\Environment.cs" />
+    <Compile Include="ClientRun.cs" />
+    <Compile Include="FahLogReader.cs" />
+    <Compile Include="Internal\CollectionExtensions.cs" />
+    <Compile Include="Internal\WorkUnitResult.cs" />
+    <Compile Include="Legacy\ClientUserNameAndTeamData.cs" />
+    <Compile Include="LogLine.cs" />
+    <Compile Include="LogLineDataParserError.cs" />
+    <Compile Include="LogLineEnumerable.cs" />
+    <Compile Include="LogLineTimeStampParser.cs" />
+    <Compile Include="LogLineType.cs" />
+    <Compile Include="Legacy\LegacySlotStatus.cs" />
+    <Compile Include="Internal\DateTimeParse.cs" />
+    <Compile Include="Internal\Environment.cs" />
     <Compile Include="FahLog.cs" />
-    <Compile Include="FahLogInterpreter.cs" />
-    <Compile Include="LogLineParser.cs" />
-    <Compile Include="LogLineIdentifier.cs" />
-    <Compile Include="FahLogDataTypes.cs" />
-    <Compile Include="FahLogRegex.cs" />
+    <Compile Include="RunDataAggregator.cs" />
+    <Compile Include="LogLineDataParserDictionary.cs" />
+    <Compile Include="LogLineTypeResolver.cs" />
+    <Compile Include="Internal\FahLogRegex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitInfoLog.cs" />
-    <Compile Include="UnitInfoLogData.cs" />
-    <Compile Include="UnitInfoLogRegex.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Core.DataTypes\HFM.Core.DataTypes.csproj">
-      <Project>{C198DA45-5B5B-4684-914B-97DED3F0BB40}</Project>
-      <Name>HFM.Core.DataTypes</Name>
-    </ProjectReference>
+    <Compile Include="SlotRun.cs" />
+    <Compile Include="UnitRun.cs" />
+    <Compile Include="WorkUnitFrameData.cs" />
+    <Compile Include="Legacy\UnitInfoLog.cs" />
+    <Compile Include="Legacy\UnitInfoLogData.cs" />
+    <Compile Include="WorkUnitProjectData.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -117,8 +124,8 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\harlam357public.snk">
-      <Link>Properties\harlam357public.snk</Link>
+    <None Include="..\harlam357.snk">
+      <Link>Properties\harlam357.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup />

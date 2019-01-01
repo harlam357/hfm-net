@@ -98,142 +98,9 @@
             Companion Controls List
             </summary>
         </member>
-        <member name="T:harlam357.Windows.Forms.IProgressDialogView">
-            <summary>
-            Represents a view interface for a modal dialog that runs a process asynchronously and reports progress.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateProgress(System.Int32)">
-            <summary>
-            Updates the progress bar value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressDialogView.UpdateMessage(System.String)">
-            <summary>
-            Updates the text message value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressDialogView.Process">
-            <summary>
-            Shows the modal dialog and executes the IProgressProcessRunner instance assigned to the ProcessRunner property.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogView.OwnerWindow">
-            <summary>
-            Gets or sets the window that owns this view.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogView.Icon">
-            <summary>
-            Gets or sets the icon for the form.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogView.StartPosition">
-            <summary>
-            Gets or sets the starting position of the form at run time.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogView.ProcessRunner">
-            <summary>
-            Gets or sets the progress process runner that executes when the Process method is called.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogView.Text">
-            <summary>
-            Gets or sets the text associated with this control.
-            </summary>
-        </member>
-        <member name="T:harlam357.Windows.Forms.ProgressDialog">
-            <summary>
-            Progress Process Dialog Class
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.#ctor">
-            <summary>
-            Initializes a new instance of the ProgressDialog class.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateProgress(System.Int32)">
-            <summary>
-            Updates the progress bar value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.UpdateMessage(System.String)">
-            <summary>
-            Updates the text message value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.Process">
-            <summary>
-            Shows the modal dialog and executes the IProgressProcessRunner instance assigned to the ProcessRunner property.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">The ProcessRunner property is null.</exception>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProgressChanged(System.Object,harlam357.Core.ComponentModel.ProgressChangedEventArgs)">
-            <summary>
-            Handles the runner's ProgressChanged event.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.ProcessRunnerProcessFinished(System.Object,System.EventArgs)">
-            <summary>
-            Handles the runner's ProcessFinished event.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.OnFormClosing(System.Windows.Forms.FormClosingEventArgs)">
-            <summary>
-            Raises the <see cref="E:System.Windows.Forms.Form.FormClosing"/> event.
-            </summary>
-            <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> that contains the event data.</param>
-            <remarks>
-            If the runner is processing and runner does not support cancellation then this event will be cancelled.
-            If the runner supports cancellation then the Cancel method will be called and the dialog will be closed when the runner is finished.
-            </remarks>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.Close">
-            <summary>
-            Closes the dialog.
-            </summary>
-        </member>
-        <member name="F:harlam357.Windows.Forms.ProgressDialog.components">
-            <summary>
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialog.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressDialog.OwnerWindow">
-            <summary>
-            Gets or sets the window that owns this view.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressDialog.ProcessRunner">
-            <summary>
-            Gets or sets the progress process runner that executes when the Process method is called.
-            </summary>
-        </member>
         <member name="T:harlam357.Windows.Forms.IProgressDialogAsyncView">
             <summary>
             Represents a view interface for a modal dialog that reports the progress of an asynchronous task.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressDialogAsyncView.UpdateProgress(System.Int32)">
-            <summary>
-            Updates the progress bar value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.IProgressDialogAsyncView.UpdateMessage(System.String)">
-            <summary>
-            Updates the text message value.
             </summary>
         </member>
         <member name="M:harlam357.Windows.Forms.IProgressDialogAsyncView.ShowDialog(System.Windows.Forms.IWin32Window)">
@@ -248,19 +115,9 @@
             Closes the dialog.
             </summary>
         </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogAsyncView.Progress">
+        <member name="P:harlam357.Windows.Forms.IProgressDialogAsyncView.AsyncProcessor">
             <summary>
-            Gets or sets the progress reporting object responsible for notifying the dialog of task progress.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.IProgressDialogAsyncView.CancellationTokenSource">
-            <summary>
-            Gets or sets the object that facilitates task cancellation.
-            </summary>
-        </member>
-        <member name="E:harlam357.Windows.Forms.IProgressDialogAsyncView.Shown">
-            <summary>
-            Occurs whenever the form is first displayed.
+            Gets or sets the asynchronous processor object.
             </summary>
         </member>
         <member name="P:harlam357.Windows.Forms.IProgressDialogAsyncView.Icon">
@@ -288,31 +145,6 @@
             Initializes a new instance of the ProgressDialogAsync class.
             </summary>
         </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialogAsync.UpdateProgress(System.Int32)">
-            <summary>
-            Updates the progress bar value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialogAsync.UpdateMessage(System.String)">
-            <summary>
-            Updates the text message value.
-            </summary>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialogAsync.OnFormClosing(System.Windows.Forms.FormClosingEventArgs)">
-            <summary>
-            Raises the <see cref="E:System.Windows.Forms.Form.FormClosing"/> event.
-            </summary>
-            <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> that contains the event data.</param>
-            <remarks>
-            If the task is processing and task does not support cancellation then this event will be cancelled.
-            If the task supports cancellation then the task will be cancelled and the dialog will be closed when the task is finished.
-            </remarks>
-        </member>
-        <member name="M:harlam357.Windows.Forms.ProgressDialogAsync.Close">
-            <summary>
-            Closes the dialog.
-            </summary>
-        </member>
         <member name="F:harlam357.Windows.Forms.ProgressDialogAsync.components">
             <summary>
             Required designer variable.
@@ -330,14 +162,9 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="P:harlam357.Windows.Forms.ProgressDialogAsync.Progress">
+        <member name="P:harlam357.Windows.Forms.ProgressDialogAsync.AsyncProcessor">
             <summary>
-            Gets or sets the progress reporting object responsible for notifying the dialog of task progress.
-            </summary>
-        </member>
-        <member name="P:harlam357.Windows.Forms.ProgressDialogAsync.CancellationTokenSource">
-            <summary>
-            Gets or sets the object that facilitates task cancellation.
+            Gets or sets the asynchronous processor object.
             </summary>
         </member>
         <member name="T:harlam357.Windows.Forms.RadioPanel">

@@ -21,9 +21,7 @@ using System;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
-namespace HFM.Core.Tests.DataTypes
+namespace HFM.Core.DataTypes
 {
    [TestFixture]
    public class QueryParametersTests

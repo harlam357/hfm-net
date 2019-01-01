@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,10 @@ using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Data;
+using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {

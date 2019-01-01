@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 
@@ -135,7 +136,7 @@ namespace HFM.Client
       /// <summary>
       /// Initializes a new instance of the Connection class.
       /// </summary>
-      [CoverageExclude]
+      [ExcludeFromCodeCoverage]
       public Connection()
          : this(new TcpClientFactory())
       {

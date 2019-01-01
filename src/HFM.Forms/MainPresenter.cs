@@ -1,6 +1,6 @@
 ﻿/*
- * HFM.NET - Main View Presenter
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * HFM.NET
+ * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,12 +36,17 @@ using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
+using harlam357.Core;
+using harlam357.Core.ComponentModel;
 using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
 using HFM.Forms.Models;
+using HFM.Log;
+using HFM.Preferences;
+using HFM.Proteins;
 
 namespace HFM.Forms
 {
@@ -63,9 +68,7 @@ namespace HFM.Forms
 
       public ILogger Logger
       {
-         [CoverageExclude]
          get { return _logger ?? (_logger = NullLogger.Instance); }
-         [CoverageExclude]
          set { _logger = value; }
       }
 
@@ -88,7 +91,7 @@ namespace HFM.Forms
       private readonly IProteinService _proteinService;
 
       private readonly IUpdateLogic _updateLogic;
-      private readonly RetrievalModel _retrievalModel;
+      private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
       private readonly IExternalProcessStarter _processStarter;
 
       private readonly IPreferenceSet _prefs;
@@ -101,7 +104,7 @@ namespace HFM.Forms
       public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                            IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                            IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                           RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
+                           Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
                            IPreferenceSet prefs, IClientSettingsManager settingsManager)
       {
          _gridModel = mainGridModel;
@@ -675,16 +678,12 @@ namespace HFM.Forms
 
       public void FileSaveClick()
       {
-         // no clients, stub out
-         if (_clientConfiguration.Count == 0) return;
-
-         // index 2 is hard coded to legacy serializer
-         if (_settingsManager.FilterIndex == 2)
+         if (_clientConfiguration.Count == 0)
          {
-            _settingsManager.ClearFileName();
+            return;
          }
 
-         if (_settingsManager.FileName.Length == 0)
+         if (String.IsNullOrEmpty(_settingsManager.FileName))
          {
             FileSaveAsClick();
          }
@@ -692,8 +691,7 @@ namespace HFM.Forms
          {
             try
             {
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName,
-                                      _settingsManager.FilterIndex == 2 ? 1 : _settingsManager.FilterIndex);
+               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName);
                _clientConfiguration.IsDirty = false;
             }
             catch (Exception ex)
@@ -707,8 +705,10 @@ namespace HFM.Forms
 
       public void FileSaveAsClick()
       {
-         // no clients, stub out
-         if (_clientConfiguration.Count == 0) return;
+         if (_clientConfiguration.Count == 0)
+         {
+            return;
+         }
 
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
          saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
@@ -779,7 +779,7 @@ namespace HFM.Forms
 
       public void ShowHfmDataFiles()
       {
-         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.ApplicationDataFolderPath));
+         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.Get<string>(Preference.ApplicationDataFolderPath)));
       }
 
       public void ShowHfmGoogleGroup()
@@ -970,7 +970,7 @@ namespace HFM.Forms
          // Check for SelectedSlot, and get out if not found
          if (_gridModel.SelectedSlot == null) return;
 
-         string logFilePath = Path.Combine(_prefs.CacheDirectory, _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+         string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
          if (File.Exists(logFilePath))
          {
             HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
@@ -1187,39 +1187,45 @@ namespace HFM.Forms
 
       #region Tools Menu Handling Methods
 
-      public void ToolsDownloadProjectsClick()
+      public async void ToolsDownloadProjectsClick()
       {
-         _proteinService.ResetRefreshParameters();
-
-         var progress = new TaskSchedulerProgress<harlam357.Core.ComponentModel.ProgressChangedEventArgs>();
-         var projectDownloadView = _viewFactory.GetProjectDownloadDialog();
-         projectDownloadView.Progress = progress;
-
-         Task<IEnumerable<ProteinLoadInfo>> refreshTask = null;
-         projectDownloadView.Shown += (s, args) =>
+         try
          {
-            var uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            refreshTask = _proteinService.RefreshAsync(progress);
-            refreshTask
-               .ContinueWith(t => _messageBoxView.ShowError(projectDownloadView, t.Exception.Flatten().InnerException.Message, Core.Application.NameAndVersion),
-                     CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiTaskScheduler)
-               .ContinueWith(t => projectDownloadView.Close(), uiTaskScheduler);
-         };
-         projectDownloadView.ShowDialog(_view);
-         _viewFactory.Release(projectDownloadView);
-
-         if (refreshTask.Status == TaskStatus.RanToCompletion && refreshTask.Result != null)
-         {
-            var proteinChanges = refreshTask.Result.Where(x => x.Result != ProteinLoadResult.NoChange).ToList();
-            if (proteinChanges.Count > 0)
+            var downloader = new ProjectDownloader(_proteinService);
+            await downloader.ExecuteAsyncWithProgress(true);
+            if (downloader.Result != null)
             {
-               _retrievalModel.RunClientRetrieval();
-               using (var dlg = new ProteinLoadResultsDialog())
+               var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
+               if (proteinChanges.Count > 0)
                {
-                  dlg.DataBind(proteinChanges);
-                  dlg.ShowDialog(_view);
+                  _retrievalModel.RunClientRetrieval();
+                  using (var dlg = new ProteinLoadResultsDialog())
+                  {
+                     dlg.DataBind(proteinChanges);
+                     dlg.ShowDialog(_view);
+                  }
                }
             }
+         }
+         catch (Exception ex)
+         {
+            _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
+         }
+      }
+
+      private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinDictionaryChange>>
+      {
+         private readonly IProteinService _proteinService;
+
+         public ProjectDownloader(IProteinService proteinService)
+         {
+            if (proteinService == null) throw new ArgumentNullException("proteinService");
+            _proteinService = proteinService;
+         }
+
+         protected override async Task<IEnumerable<ProteinDictionaryChange>> OnExecuteAsync(IProgress<ProgressInfo> progress)
+         {
+            return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
          }
       }
 

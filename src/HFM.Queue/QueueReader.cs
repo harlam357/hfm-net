@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 namespace HFM.Queue
 {
    /// <summary>
-   /// Queue Reader Class
+   /// Provides methods to read a Folding@Home client v5 or v6 queue.dat file.
    /// </summary>
    [CLSCompliant(false)]
    public static class QueueReader
@@ -36,40 +36,40 @@ namespace HFM.Queue
       //private const int QueueEntryLength = 712;
 
       /// <summary>
-      /// Read queue.dat file
+      /// Reads a queue.dat file from disk.
       /// </summary>
-      /// <param name="filePath">Path to queue.dat file</param>
+      /// <param name="path">Path to the queue.dat file.</param>
       /// <exception cref="System.ArgumentException">Throws if fileName is null or empty.</exception>
       /// <exception cref="System.IO.IOException">Throw on queue.dat read failure.</exception>
-      /// <exception cref="System.NotSupportedException">Throws if queue.dat version is not supported. Supported versions are between 500 and 699.</exception>
-      public static QueueData ReadQueue(string filePath)
+      /// <exception cref="System.InvalidOperationException">Throws if queue.dat version is not supported. Supported versions are between 500 and 699.</exception>
+      public static QueueData ReadQueue(string path)
       {
-         if (String.IsNullOrEmpty(filePath)) throw new ArgumentException("Argument 'filePath' cannot be a null or empty string.");
+         if (String.IsNullOrEmpty(path)) throw new ArgumentException("Argument 'path' cannot be a null or empty string.", "path");
       
-         Data q = FromBinaryReaderBlock(filePath);
+         Data q = FromBinaryReaderBlock(path);
 
          // at this point we know we've read a file of expected length
          // and no exceptions were thrown in the process
-         var qData = new QueueData(q);
+         var data = new QueueData(q);
 
          // If version is less than 5.xx, don't trust this data
          // this class is not setup to handle legacy clients
          // If version is greater than 6.xx, don't trust this data
          // this class has not been tested with clients beyond 6.xx
-         if (qData.Version < 500 || qData.Version > 699)
+         if (data.Version < 500 || data.Version > 699)
          {
-            throw new NotSupportedException(String.Format(CultureInfo.CurrentCulture,
-               "The version ({0}) of this queue.dat file is not supported.", qData.Version));
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+               "The version ({0}) of this queue.dat file is not supported.", data.Version));
          }
 
-         return qData;
+         return data;
       }
 
-      private static Data FromBinaryReaderBlock(string filePath)
+      private static Data FromBinaryReaderBlock(string path)
       {
-         Debug.Assert(String.IsNullOrEmpty(filePath) == false);
+         Debug.Assert(String.IsNullOrEmpty(path) == false);
 
-         byte[] buff = GetRawData(filePath);
+         byte[] buff = GetRawData(path);
          if (buff.Length == QueueLength)
          {
             // Make sure that the Garbage Collector doesn't move our buffer 
@@ -87,14 +87,14 @@ namespace HFM.Queue
       }
 
       [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-      private static byte[] GetRawData(string filePath)
+      private static byte[] GetRawData(string path)
       {
-         Debug.Assert(String.IsNullOrEmpty(filePath) == false);
+         Debug.Assert(String.IsNullOrEmpty(path) == false);
 
          try
          {
             // .NET types - presents little to no danger if Dispose() is called multiple times
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
             {
                // Read byte array
@@ -103,7 +103,7 @@ namespace HFM.Queue
          }
          catch (Exception ex)
          {
-            throw new IOException(String.Format(CultureInfo.CurrentCulture, "Failed to read {0}.", filePath), ex);
+            throw new IOException(String.Format(CultureInfo.CurrentCulture, "Failed to read {0}.", path), ex);
          }
       }
    }
