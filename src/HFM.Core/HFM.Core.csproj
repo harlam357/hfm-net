@@ -93,6 +93,8 @@
     <Compile Include="Extensions.ToProjectInfo.cs" />
     <Compile Include="Extensions.WorkUnitResult.cs" />
     <Compile Include="FtpMode.cs" />
+    <Compile Include="FtpWebRequestAdapter.cs" />
+    <Compile Include="FtpWebResponseAdapter.cs" />
     <Compile Include="Internal\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="DataTypes\ProjectInfo.cs" />
@@ -164,6 +166,9 @@
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\XmlStatsDataContainer.cs" />
+    <Compile Include="WebOperation.cs" />
+    <Compile Include="WebRequestAdapter.cs" />
+    <Compile Include="WebResponseAdapter.cs" />
     <Compile Include="WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>

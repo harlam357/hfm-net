@@ -110,6 +110,7 @@
     <Compile Include="AboutDialog.Designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationUpdate.cs" />
     <Compile Include="BenchmarksForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -209,6 +210,11 @@
     <Compile Include="PreferencesDialog.Designer.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ProteinCalculatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -230,6 +236,13 @@
     <Compile Include="Services\AutoRun.cs" />
     <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
+    <Compile Include="UpdateChecker.cs" />
+    <Compile Include="UpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateDialog.designer.cs">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdateLogic.cs" />
     <Compile Include="HistoryPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
@@ -245,6 +258,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UpdatePresenter.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="WindowPosition.cs" />
     <Compile Include="ZedGraphManager.cs" />
@@ -290,12 +304,20 @@
     <EmbeddedResource Include="QueryDialog.resx">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UpdateDialog.resx">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357.snk">
       <Link>Properties\harlam357.snk</Link>
     </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\About.png" />
   </ItemGroup>
   <ItemGroup>
