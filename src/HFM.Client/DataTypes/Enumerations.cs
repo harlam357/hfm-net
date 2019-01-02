@@ -118,31 +118,5 @@ namespace HFM.Client.DataTypes
       Low
    }
 
-   /// <summary>
-   /// Operating system types.
-   /// </summary>
-   public enum OperatingSystemType
-   {
-      Unknown,
-      Windows,
-      WindowsXP,
-      WindowsVista,
-      Windows7,
-      Windows8,
-      Windows10,
-      Linux,
-      OSX
-   }
-
-   /// <summary>
-   /// Operating system architecture types.
-   /// </summary>
-   public enum OperatingSystemArchitectureType
-   {
-      Unknown,
-      x86,
-      x64
-   }
-
 #pragma warning restore 1591
 }
