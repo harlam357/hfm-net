@@ -190,9 +190,6 @@ namespace HFM.Client.DataTypes
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
 
-      [MessageProperty("CPU", typeof(CpuTypeConverter))]
-      public CpuType CpuType { get; set; }
-
       [MessageProperty("CPU ID")]
       public string CpuId { get; set; }
 

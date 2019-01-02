@@ -206,33 +206,10 @@ namespace HFM.Core
          }
          else
          {
-            return ToCpuTypeString(info.System.CpuType);
+            return info.System.Cpu;
          }
 
          return String.Empty;
-      }
-
-      private static string ToCpuTypeString(CpuType type)
-      {
-         switch (type)
-         {
-            case CpuType.Core2:
-               return "Core 2";
-            case CpuType.Corei7:
-               return "Core i7";
-            case CpuType.Corei5:
-               return "Core i5";
-            case CpuType.Corei3:
-               return "Core i3";
-            case CpuType.PhenomII:
-               return "Phenom II";
-            case CpuType.Phenom:
-               return "Phenom";
-            case CpuType.Athlon:
-               return "Athlon";
-         }
-
-         return "Unknown";
       }
 
       private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, 

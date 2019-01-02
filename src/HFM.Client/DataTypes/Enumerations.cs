@@ -155,21 +155,6 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// CPU types.
-   /// </summary>
-   public enum CpuType
-   {
-      Unknown,
-      Core2,
-      Corei7,
-      Corei5,
-      Corei3,
-      PhenomII,
-      Phenom,
-      Athlon
-   }
-
-   /// <summary>
    /// GPU manufacturers.
    /// </summary>
    public enum GpuManufacturer
