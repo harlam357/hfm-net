@@ -21,9 +21,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Client.DataTypes;
-
-namespace HFM.Client.Tests.DataTypes
+namespace HFM.Client.DataTypes
 {
    [TestFixture]
    public class ClientInfoTests

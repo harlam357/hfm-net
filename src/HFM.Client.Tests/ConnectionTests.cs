@@ -28,7 +28,7 @@ using Rhino.Mocks;
 
 using HFM.Client.Internal;
 
-namespace HFM.Client.Tests
+namespace HFM.Client
 {
    [TestFixture]
    public class ConnectionTests

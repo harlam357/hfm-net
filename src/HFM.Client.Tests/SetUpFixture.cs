@@ -3,7 +3,7 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Client.Tests
+namespace HFM.Client
 {
    [SetUpFixture]
    public class SetUpFixture

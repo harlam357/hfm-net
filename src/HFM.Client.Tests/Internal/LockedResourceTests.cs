@@ -1,16 +1,13 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Client.Internal;
-
-namespace HFM.Client.Tests
+namespace HFM.Client.Internal
 {
    [TestFixture]
    public class LockedResourceTests
