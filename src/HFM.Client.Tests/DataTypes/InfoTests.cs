@@ -35,7 +35,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 1232 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 1232 --command-port=36330", info.Client.Args);
          Assert.AreEqual("C:/Documents and Settings/user/Application Data/FAHClient/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -47,9 +47,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("win32 Vista", info.Build.Platform);
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
-                         // this string is no longer returned in newer clients
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
-                         // simply detect as Windows
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
@@ -105,7 +103,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --password yyyyy", info.Client.Args);
+         Assert.AreEqual("--password yyyyy", info.Client.Args);
          Assert.AreEqual("/home/s.shelnutt/folding/FAHClient-7.1.24-Ubuntu-10.10-64bit-release/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -173,7 +171,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 1344 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 1344 --command-port=36330", info.Client.Args);
          Assert.AreEqual("C:/Users/adak/AppData/Roaming/FAHClient/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -241,7 +239,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 3388 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 3388 --command-port=36330", info.Client.Args);
          Assert.AreEqual("G:/FAH/Data/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -253,9 +251,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("win32 Vista", info.Build.Platform);
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
-                         // this string is no longer returned in newer clients
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
-                         // simply detect as Windows
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 23 Stepping 7", info.System.CpuId);
@@ -311,7 +307,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 3540 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 3540 --command-port=36330", info.Client.Args);
          Assert.AreEqual("C:/FAH/SMPBeta/FAHClient/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -379,7 +375,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 43012", info.Client.Args);
+         Assert.AreEqual("--lifeline 43012", info.Client.Args);
          Assert.AreEqual("C:/Documents and Settings/All Users/Application Data/FAHClient/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.21", info.Build.Version);
          Assert.AreEqual("Mar 23 2011", info.Build.Date);
@@ -447,7 +443,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009,2010 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 4040 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 4040 --command-port=36330", info.Client.Args);
          Assert.AreEqual("C:/folding/FAH-V7/config.xml", info.Client.Config);
          Assert.AreEqual("7.1.24", info.Build.Version);
          Assert.AreEqual("Apr  6 2011", info.Build.Date);
@@ -515,7 +511,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("http://folding.stanford.edu/", info.Client.Website);
          Assert.AreEqual("(c) 2009-2012 Stanford University", info.Client.Copyright);
          Assert.AreEqual("Joseph Coffland <joseph@cauldrondevelopment.com>", info.Client.Author);
-         Assert.AreEqual(" --lifeline 2600 --command-port=36330", info.Client.Args);
+         Assert.AreEqual("--lifeline 2600 --command-port=36330", info.Client.Args);
          Assert.AreEqual("", info.Client.Config);
          Assert.AreEqual("7.1.43", info.Build.Version);
          Assert.AreEqual("Jan  2 2012", info.Build.Date);
@@ -597,7 +593,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Windows 8 Pro", info.System.OperatingSystem);
          Assert.AreEqual("AMD64", info.System.OperatingSystemArchitecture);
-         Assert.AreEqual("       Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz", info.System.Cpu);
+         Assert.AreEqual("Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 58 Stepping 9", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);

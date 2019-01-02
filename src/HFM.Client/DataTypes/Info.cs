@@ -92,7 +92,7 @@ namespace HFM.Client.DataTypes
 
                   if (innerToken.Values().Count() >= 2)
                   {
-                     innerPropertySetter.SetProperty((string)innerToken[0], (string)innerToken[1]);
+                     innerPropertySetter.SetProperty((string)innerToken[0], ((string)innerToken[1]).Trim());
                   }
                }
             }
