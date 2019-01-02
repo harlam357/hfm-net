@@ -26,6 +26,8 @@ using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Client.Internal;
+
 namespace HFM.Client.Tests
 {
    [TestFixture]

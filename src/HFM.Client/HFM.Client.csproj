@@ -75,17 +75,17 @@
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="Internal\StringBuilderExtensions.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="IMessageConnection.cs" />
-    <Compile Include="LockedResource.cs" />
+    <Compile Include="Internal\LockedResource.cs" />
     <Compile Include="MessageKey.cs" />
     <Compile Include="TypedMessageConnection.cs" />
     <Compile Include="JsonMessageConnection.cs" />
-    <Compile Include="NetworkStreamAdapter.cs" />
+    <Compile Include="Internal\NetworkStreamAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TcpClientAdapter.cs" />
-    <Compile Include="TcpClientFactory.cs" />
+    <Compile Include="Internal\TcpClientAdapter.cs" />
+    <Compile Include="Internal\TcpClientFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357.snk">

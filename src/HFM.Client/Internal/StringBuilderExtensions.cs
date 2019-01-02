@@ -20,7 +20,7 @@
 using System;
 using System.Text;
 
-namespace HFM.Client
+namespace HFM.Client.Internal
 {
    internal static class StringBuilderExtensions
    {

@@ -23,6 +23,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 
+using HFM.Client.Internal;
+
 namespace HFM.Client
 {
    /// <summary>

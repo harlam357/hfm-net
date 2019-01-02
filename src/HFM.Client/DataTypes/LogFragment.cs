@@ -21,6 +21,8 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
+using HFM.Client.Internal;
+
 namespace HFM.Client.DataTypes
 {
    /// <summary>
