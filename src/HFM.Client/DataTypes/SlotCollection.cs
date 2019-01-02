@@ -257,8 +257,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("status")]
       public string Status { get; set; }
 
-      [MessageProperty("status", typeof(SlotStatusConverter))]
-      public FahSlotStatus StatusEnum { get; set; }
+      [MessageProperty("status", typeof(FahClientSlotStatusConverter))]
+      public FahClientSlotStatus StatusEnum { get; set; }
 
       [MessageProperty("description")]
       public string Description { get; set; }

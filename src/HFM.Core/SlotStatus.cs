@@ -6,7 +6,7 @@ namespace HFM.Core
    /// </summary>
    public enum SlotStatus
    {
-      // Matches HFM.Client.DataTypes.FahSlotStatus
+      // Matches HFM.Client.DataTypes.FahClientSlotStatus
       // Matches HFM.Log.LegacySlotStatus
 
       /// <summary>

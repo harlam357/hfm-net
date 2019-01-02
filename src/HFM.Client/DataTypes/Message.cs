@@ -281,8 +281,7 @@ namespace HFM.Client.DataTypes
             }
             catch (Exception ex)
             {
-               var typedMessageObject = _message as ITypedMessageObject;
-               if (typedMessageObject != null)
+               if (_message is ITypedMessageObject typedMessageObject)
                {
                   typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
                }

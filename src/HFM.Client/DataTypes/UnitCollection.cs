@@ -335,8 +335,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("state")]
       public string State { get; set; }
 
-      [MessageProperty("state", typeof(UnitStatusConverter))]
-      public FahUnitStatus StateEnum { get; set; }
+      [MessageProperty("state", typeof(UnitStateConverter))]
+      public UnitState StateEnum { get; set; }
 
       [MessageProperty("error")]
       public string Error { get; set; }

@@ -25,7 +25,7 @@ using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
-   internal sealed class UnitStatusConverter : IConversionProvider
+   internal sealed class UnitStateConverter : IConversionProvider
    {
       public object Convert(object input)
       {
@@ -33,17 +33,17 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "RUNNING":
-               return FahUnitStatus.Running;
+               return UnitState.Running;
             case "DOWNLOAD":
-               return FahUnitStatus.Download;
+               return UnitState.Download;
             case "SEND":
-               return FahUnitStatus.Send;
+               return UnitState.Send;
             case "READY":
-               return FahUnitStatus.Ready;
+               return UnitState.Ready;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse status value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert state value '{0}'.", inputString));
       }
    }
 
@@ -56,10 +56,11 @@ namespace HFM.Client.Converters
          // should be able to do all this with a single regular expression
 
          Exception innerException = null;
+         var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline;
 
          try
          {
-            var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            var regex1 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins (?<Seconds>.+) secs", options);
             Match matchRegex1;
             if ((matchRegex1 = regex1.Match(inputString)).Success)
             {
@@ -68,7 +69,7 @@ namespace HFM.Client.Converters
                                    System.Convert.ToInt32(matchRegex1.Result("${Seconds}"), CultureInfo.InvariantCulture));
             }
 
-            var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            var regex2 = new Regex("(?<Hours>.+) hours (?<Minutes>.+) mins", options);
             Match matchRegex2;
             if ((matchRegex2 = regex2.Match(inputString)).Success)
             {
@@ -77,7 +78,7 @@ namespace HFM.Client.Converters
                                    0);
             }
 
-            var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            var regex3 = new Regex("(?<Minutes>.+) mins (?<Seconds>.+) secs", options);
             Match matchRegex3;
             if ((matchRegex3 = regex3.Match(inputString)).Success)
             {
@@ -86,14 +87,14 @@ namespace HFM.Client.Converters
                                    System.Convert.ToInt32(matchRegex3.Result("${Seconds}"), CultureInfo.InvariantCulture));
             }
 
-            var regex4 = new Regex("(?<Seconds>.+) secs", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            var regex4 = new Regex("(?<Seconds>.+) secs", options);
             Match matchRegex4;
             if ((matchRegex4 = regex4.Match(inputString)).Success)
             {
                return TimeSpan.FromSeconds(System.Convert.ToDouble(matchRegex4.Result("${Seconds}"), CultureInfo.InvariantCulture));
             }
 
-            var regex5 = new Regex("(?<Days>.+) days", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            var regex5 = new Regex("(?<Days>.+) days", options);
             Match matchRegex5;
             if ((matchRegex5 = regex5.Match(inputString)).Success)
             {
@@ -105,8 +106,8 @@ namespace HFM.Client.Converters
             innerException = ex;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse time span value of '{0}'.", inputString), innerException);
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert time span value '{0}'.", inputString), innerException);
       }
    }
 }

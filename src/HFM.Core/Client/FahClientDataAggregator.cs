@@ -126,7 +126,7 @@ namespace HFM.Core
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
 
-            if (unit.StateEnum == FahUnitStatus.Running)
+            if (unit.StateEnum == UnitState.Running)
             {
                cq.CurrentIndex = unit.Id;
             }
@@ -223,7 +223,7 @@ namespace HFM.Core
             if (unitInfo != null)
             {
                result.UnitInfos.Add(unit.Id, unitInfo);
-               if (unit.StateEnum == FahUnitStatus.Running)
+               if (unit.StateEnum == UnitState.Running)
                {
                   result.CurrentUnitIndex = unit.Id;
                }
@@ -234,7 +234,7 @@ namespace HFM.Core
          if (result.CurrentUnitIndex == -1)
          {
             // look for a WU with Ready state
-            var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == FahUnitStatus.Ready);
+            var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == UnitState.Ready);
             if (unit != null)
             {
                result.CurrentUnitIndex = unit.Id;

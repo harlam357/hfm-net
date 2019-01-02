@@ -28,7 +28,7 @@ namespace HFM.Client.Converters
          var inputValue = (int)input;
          if (inputValue == 0)
          {
-            // not an error, but no value
+            // no value
             return null;
          }
 
@@ -40,7 +40,7 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
-         return new TimeSpan(0, 0, (int)input);
+         return TimeSpan.FromSeconds((int)input);
       }
    }
 }

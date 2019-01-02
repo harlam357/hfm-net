@@ -32,7 +32,7 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          if (inputString == "<invalid>")
          {
-            // not an error, but no value
+            // no value
             return null;
          }
 
@@ -51,8 +51,8 @@ namespace HFM.Client.Converters
             return value;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse date time value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert date time value '{0}'.", inputString));
       }
    }
 
@@ -60,18 +60,11 @@ namespace HFM.Client.Converters
    {
       public object Convert(object input)
       {
-         IPAddress value;
-         if (IPAddress.TryParse((string)input, out value))
-         {
-            return value;
-         }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse IP address value of '{0}'.", input));
+         return IPAddress.TryParse((string)input, out IPAddress value) ? value : null;
       }
    }
 
-   internal sealed class SlotStatusConverter : IConversionProvider
+   internal sealed class FahClientSlotStatusConverter : IConversionProvider
    {
       public object Convert(object input)
       {
@@ -79,21 +72,21 @@ namespace HFM.Client.Converters
          switch (inputString)
          {
             case "PAUSED":
-               return FahSlotStatus.Paused;
+               return FahClientSlotStatus.Paused;
             case "RUNNING":
-               return FahSlotStatus.Running;
+               return FahClientSlotStatus.Running;
             case "FINISHING":
-               return FahSlotStatus.Finishing;
+               return FahClientSlotStatus.Finishing;
             case "READY":
-               return FahSlotStatus.Ready;
+               return FahClientSlotStatus.Ready;
             case "STOPPING":
-               return FahSlotStatus.Stopping;
+               return FahClientSlotStatus.Stopping;
             case "FAILED":
-               return FahSlotStatus.Failed;
+               return FahClientSlotStatus.Failed;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse status value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert status value '{0}'.", inputString));
       }
    }
 }

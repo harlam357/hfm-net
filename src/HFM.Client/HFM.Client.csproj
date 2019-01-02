@@ -59,6 +59,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Connection.cs" />
+    <Compile Include="Converters\ConversionProviderException.cs" />
     <Compile Include="Converters\GeneralConverters.cs" />
     <Compile Include="Converters\IConversionProvider.cs" />
     <Compile Include="Converters\InfoConverters.cs" />

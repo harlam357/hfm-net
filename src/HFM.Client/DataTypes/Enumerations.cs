@@ -53,7 +53,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Represents the status of a Folding@Home client slot.
    /// </summary>
-   public enum FahSlotStatus
+   public enum FahClientSlotStatus
    {
       /// <summary>
       /// The status of the slot is unknown.
@@ -86,9 +86,9 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// Folding@Home work unit status.
+   /// Folding@Home work unit state.
    /// </summary>
-   public enum FahUnitStatus
+   public enum UnitState
    {
       Unknown,
       Running,
