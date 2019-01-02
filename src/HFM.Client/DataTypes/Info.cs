@@ -47,19 +47,19 @@ namespace HFM.Client.DataTypes
       /// Folding@Home client information.
       /// </summary>
       [MessageProperty("Folding@home Client")]
-      public ClientInfo Client { get; private set; }
+      public ClientInfo Client { get; }
 
       /// <summary>
       /// Folding@Home client build information.
       /// </summary>
       [MessageProperty("Build")]
-      public BuildInfo Build { get; private set; }
+      public BuildInfo Build { get; }
 
       /// <summary>
       /// Folding@Home client system information.
       /// </summary>
       [MessageProperty("System")]
-      public SystemInfo System { get; private set; }
+      public SystemInfo System { get; }
 
       #endregion
 
