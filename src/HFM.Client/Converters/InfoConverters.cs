@@ -18,10 +18,7 @@
  */
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
-
-using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
@@ -57,9 +54,7 @@ namespace HFM.Client.Converters
                return value / 1048576;   
             }
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse memory value of '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -70,18 +65,14 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          if (inputString == "Not Detected")
          {
-            // not an error, but no value
+            // no value
             return null;
          }
-
-         double value;
-         if (Double.TryParse(inputString, out value))
+         if (Double.TryParse(inputString, out double value))
          {
             return value;
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CUDA version value of '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -98,7 +89,7 @@ namespace HFM.Client.Converters
          {
             return "AMD";
          }
-         return inputString;
+         return null;
       }
    }
 
@@ -119,7 +110,7 @@ namespace HFM.Client.Converters
          {
             return "NVIDIA";
          }
-         return inputString;
+         return null;
       }
    }
 
@@ -129,7 +120,7 @@ namespace HFM.Client.Converters
       {
          if (input == null)
          {
-            // not an error, but no value
+            // no value
             return null;
          }
 
@@ -147,9 +138,7 @@ namespace HFM.Client.Converters
          {
             return inputString.Substring(radeonIndex, inputString.Length - radeonIndex);
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse GPU type value from '{0}'.", inputString));
+         return null;
       }
    }
 }
