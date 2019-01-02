@@ -121,7 +121,7 @@ namespace HFM.Core
             cqe.MachineID = slotId;
             cqe.ServerIP = unit.WorkServer;
             cqe.CpuString = GetCpuString(info, slotOptions);
-            cqe.OsString = ToOperatingSystemString(info.System.OperatingSystemEnum, info.System.OperatingSystemArchitectureEnum);
+            cqe.OsString = ToOperatingSystemString(info.System);
             // Memory Value is in Gigabytes - turn into Megabytes and truncate
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
@@ -145,39 +145,11 @@ namespace HFM.Core
          return cq;
       }
 
-      private static string ToOperatingSystemString(OperatingSystemType type, OperatingSystemArchitectureType arch)
+      private static string ToOperatingSystemString(SystemInfo systemInfo)
       {
-         string osName = "Unknown";
-
-         switch (type)
-         {
-            case OperatingSystemType.Windows:
-               osName = "Windows";
-               break;
-            case OperatingSystemType.WindowsXP:
-               osName = "Windows XP";
-               break;
-            case OperatingSystemType.WindowsVista:
-               osName = "Vista";
-               break;
-            case OperatingSystemType.Windows7:
-               osName = "Windows 7";
-               break;
-            case OperatingSystemType.Windows8:
-               osName = "Windows 8";
-               break;
-            case OperatingSystemType.Windows10:
-               osName = "Windows 10";
-               break;
-            case OperatingSystemType.Linux:
-               osName = "Linux";
-               break;
-            case OperatingSystemType.OSX:
-               osName = "OS X";
-               break;
-         }
-
-         return arch.Equals(OperatingSystemArchitectureType.Unknown) ? osName : String.Format(CultureInfo.InvariantCulture, "{0} {1}", osName, arch);
+         return !String.IsNullOrWhiteSpace(systemInfo.OperatingSystemArchitecture) 
+            ? String.Format(CultureInfo.InvariantCulture, "{0} {1}", systemInfo.OperatingSystem, systemInfo.OperatingSystemArchitecture) 
+            : systemInfo.OperatingSystem;
       }
 
       private static string GetCpuString(Info info, SlotOptions slotOptions)

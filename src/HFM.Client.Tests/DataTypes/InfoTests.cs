@@ -50,9 +50,7 @@ namespace HFM.Client.DataTypes
                          // this string is no longer returned in newer clients
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
                          // simply detect as Windows
-         Assert.AreEqual(OperatingSystemType.Windows, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -120,9 +118,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(64, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Linux 2.6.36-gentoo-r1 x86_64", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.Linux, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 CPU          6300  @ 1.86GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 2", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -190,9 +186,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft Windows 7 Professional", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.Windows7, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM) i7 CPU         940  @ 2.93GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 26 Stepping 4", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -262,9 +256,7 @@ namespace HFM.Client.DataTypes
                          // this string is no longer returned in newer clients
          Assert.AreEqual("Microsoft(R) Windows(R) XP Professional x64 Edition", info.System.OperatingSystem);
                          // simply detect as Windows
-         Assert.AreEqual(OperatingSystemType.Windows, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 23 Stepping 7", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -332,9 +324,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft Windows 7 Professional", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.Windows7, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("AMD Phenom(tm) II X4 945 Processor", info.System.Cpu);
          Assert.AreEqual("AuthenticAMD Family 16 Model 4 Stepping 3", info.System.CpuId);
          Assert.AreEqual("AMD", info.System.CpuManufacturer);
@@ -402,9 +392,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft Windows XP Professional", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.WindowsXP, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("AMD Athlon(tm) Processor 1640B", info.System.Cpu);
          Assert.AreEqual("AuthenticAMD Family 15 Model 127 Stepping 2", info.System.CpuId);
          Assert.AreEqual("AMD", info.System.CpuManufacturer);
@@ -472,9 +460,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft Windows XP Professional", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.WindowsXP, info.System.OperatingSystemEnum);
          Assert.AreEqual(null, info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 23 Stepping 7", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -542,9 +528,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Microsoft Windows XP Service Pack 2", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.WindowsXP, info.System.OperatingSystemEnum);
          Assert.AreEqual("AMD64", info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.x64, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
@@ -612,9 +596,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(32, info.Build.Bits);
          Assert.AreEqual("Release", info.Build.Mode);
          Assert.AreEqual("Windows 8 Pro", info.System.OperatingSystem);
-         Assert.AreEqual(OperatingSystemType.Windows8, info.System.OperatingSystemEnum);
          Assert.AreEqual("AMD64", info.System.OperatingSystemArchitecture);
-         Assert.AreEqual(OperatingSystemArchitectureType.x64, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("       Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 58 Stepping 9", info.System.CpuId);
          Assert.AreEqual("Intel", info.System.CpuManufacturer);
