@@ -161,15 +161,13 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          if (inputString.Contains("GenuineIntel"))
          {
-            return CpuManufacturer.Intel;
+            return "Intel";
          }
          if (inputString.Contains("AuthenticAMD"))
          {
-            return CpuManufacturer.AMD;
+            return "AMD";
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CPU manufacturer value from '{0}'.", inputString));
+         return inputString;
       }
    }
 
@@ -178,17 +176,19 @@ namespace HFM.Client.Converters
       public object Convert(object input)
       {
          var inputString = (string)input;
+         if (inputString.Contains("AMD"))
+         {
+            return "AMD";
+         }
          if (inputString.Contains("ATI"))
          {
-            return GpuManufacturer.ATI;
+            return "ATI";
          }
          if (inputString.Contains("NVIDIA") || inputString.Contains("FERMI"))
          {
-            return GpuManufacturer.Nvidia;
+            return "NVIDIA";
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse GPU manufacturer value from '{0}'.", inputString));
+         return inputString;
       }
    }
 

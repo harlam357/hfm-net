@@ -144,25 +144,5 @@ namespace HFM.Client.DataTypes
       x64
    }
 
-   /// <summary>
-   /// CPU manufacturers.
-   /// </summary>
-   public enum CpuManufacturer
-   {
-      Unknown,
-      Intel,
-      AMD
-   }
-
-   /// <summary>
-   /// GPU manufacturers.
-   /// </summary>
-   public enum GpuManufacturer
-   {
-      Unknown,
-      ATI,
-      Nvidia
-   }
-
 #pragma warning restore 1591
 }

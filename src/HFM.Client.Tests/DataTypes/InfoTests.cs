@@ -27,7 +27,7 @@ namespace HFM.Client.DataTypes
    public class ClientInfoTests
    {
       [Test]
-      public void FillTest1()
+      public void ClientInfo_Fill_Client_v7_1_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_1\\info.txt");
          var info = new Info();
@@ -55,7 +55,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("4.00GiB", info.System.Memory);
          Assert.AreEqual(4.0, info.System.MemoryValue);
@@ -65,28 +65,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("ATI:2 Mobility Radeon HD 3600 Series", info.System.GpuId0);
          Assert.AreEqual("Radeon HD 3600 Series", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.ATI, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("ATI", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
@@ -99,7 +99,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest2()
+      public void ClientInfo_Fill_Client_v7_2_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_2\\info.txt");
          var info = new Info();
@@ -125,7 +125,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 CPU          6300  @ 1.86GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 2", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(2, info.System.CpuCount);
          Assert.AreEqual("1.96GiB", info.System.Memory);
          Assert.AreEqual(1.96, info.System.MemoryValue);
@@ -135,28 +135,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("FERMI:1 GF104 [GeForce GTX 460]", info.System.GpuId0);
          Assert.AreEqual("GeForce GTX 460", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.Nvidia, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("NVIDIA", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("2.1", info.System.Cuda);
          Assert.AreEqual(2.1, info.System.CudaVersion);
          Assert.AreEqual("4000", info.System.CudaDriver);
@@ -169,7 +169,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest3()
+      public void ClientInfo_Fill_Client_v7_3_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_3\\info.txt");
          var info = new Info();
@@ -195,7 +195,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM) i7 CPU         940  @ 2.93GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 26 Stepping 4", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(8, info.System.CpuCount);
          Assert.AreEqual("11.99GiB", info.System.Memory);
          Assert.AreEqual(11.99, info.System.MemoryValue);
@@ -205,28 +205,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(2, info.System.GpuCount);
          Assert.AreEqual("ATI:1 RV530 [Radeon X1600]", info.System.GpuId0);
          Assert.AreEqual("Radeon X1600", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.ATI, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("ATI", info.System.GpuId0Manufacturer);
          Assert.AreEqual("ATI:1 RV530 [Radeon X1600] (Secondary)", info.System.GpuId1);
          Assert.AreEqual("Radeon X1600", info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.ATI, info.System.GpuId1Manufacturer);
+         Assert.AreEqual("ATI", info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
@@ -239,7 +239,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest4()
+      public void ClientInfo_Fill_Client_v7_4_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_4\\info.txt");
          var info = new Info();
@@ -267,7 +267,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 23 Stepping 7", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("8.00GiB", info.System.Memory);
          Assert.AreEqual(8.0, info.System.MemoryValue);
@@ -277,28 +277,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(2, info.System.GpuCount);
          Assert.AreEqual("NVIDIA:1 GT200 [GeForce GTX 260]", info.System.GpuId0);
          Assert.AreEqual("GeForce GTX 260", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.Nvidia, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("NVIDIA", info.System.GpuId0Manufacturer);
          Assert.AreEqual("NVIDIA:1 G92 [GeForce 9800 GTX]", info.System.GpuId1);
          Assert.AreEqual("GeForce 9800 GTX", info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Nvidia, info.System.GpuId1Manufacturer);
+         Assert.AreEqual("NVIDIA", info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("1.3", info.System.Cuda);
          Assert.AreEqual(1.3, info.System.CudaVersion);
          Assert.AreEqual("3020", info.System.CudaDriver);
@@ -311,7 +311,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest5()
+      public void ClientInfo_Fill_Client_v7_5_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_5\\info.txt");
          var info = new Info();
@@ -337,7 +337,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("AMD Phenom(tm) II X4 945 Processor", info.System.Cpu);
          Assert.AreEqual("AuthenticAMD Family 16 Model 4 Stepping 3", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.AMD, info.System.CpuManufacturer);
+         Assert.AreEqual("AMD", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("4.00GiB", info.System.Memory);
          Assert.AreEqual(4.0, info.System.MemoryValue);
@@ -347,28 +347,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("ATI:4 Radeon HD 5870 (Cypress)", info.System.GpuId0);
          Assert.AreEqual("Radeon HD 5870 (Cypress)", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.ATI, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("ATI", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
@@ -381,7 +381,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest6()
+      public void ClientInfo_Fill_Client_v7_6_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_6\\info.txt");
          var info = new Info();
@@ -407,7 +407,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("AMD Athlon(tm) Processor 1640B", info.System.Cpu);
          Assert.AreEqual("AuthenticAMD Family 15 Model 127 Stepping 2", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.AMD, info.System.CpuManufacturer);
+         Assert.AreEqual("AMD", info.System.CpuManufacturer);
          Assert.AreEqual(1, info.System.CpuCount);
          Assert.AreEqual("1.75GiB", info.System.Memory);
          Assert.AreEqual(1.75, info.System.MemoryValue);
@@ -417,28 +417,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("ATI:2 Radeon 3100 Graphics", info.System.GpuId0);
          Assert.AreEqual("Radeon 3100 Graphics", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.ATI, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("ATI", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
@@ -451,7 +451,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest7()
+      public void ClientInfo_Fill_Client_v7_7_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_7\\info.txt");
          var info = new Info();
@@ -477,7 +477,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.Unknown, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 23 Stepping 7", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("3.25GiB", info.System.Memory);
          Assert.AreEqual(3.25, info.System.MemoryValue);
@@ -487,28 +487,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("FERMI:1 GF106 [GeForce 450 GTS]", info.System.GpuId0);
          Assert.AreEqual("GeForce 450 GTS", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.Nvidia, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("NVIDIA", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("2.1", info.System.Cuda);
          Assert.AreEqual(2.1, info.System.CudaVersion);
          Assert.AreEqual("3020", info.System.CudaDriver);
@@ -521,7 +521,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest10()
+      public void ClientInfo_Fill_Client_v7_10_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
          var info = new Info();
@@ -547,7 +547,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.x64, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 15 Stepping 11", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("4.00GiB", info.System.Memory);
          Assert.AreEqual(4.0, info.System.MemoryValue);
@@ -557,28 +557,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(1, info.System.GpuCount);
          Assert.AreEqual("NVIDIA:1 GT200b [GeForce GTX 285]", info.System.GpuId0);
          Assert.AreEqual("GeForce GTX 285", info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.Nvidia, info.System.GpuId0Manufacturer);
+         Assert.AreEqual("NVIDIA", info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("1.3", info.System.Cuda);
          Assert.AreEqual(1.3, info.System.CudaVersion);
          Assert.AreEqual("3010", info.System.CudaDriver);
@@ -591,7 +591,7 @@ namespace HFM.Client.DataTypes
       }
 
       [Test]
-      public void FillTest12()
+      public void ClientInfo_Fill_Client_v7_12_Test()
       {
          string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\info.txt");
          var info = new Info();
@@ -617,7 +617,7 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(OperatingSystemArchitectureType.x64, info.System.OperatingSystemArchitectureEnum);
          Assert.AreEqual("       Intel(R) Core(TM) i5-3450S CPU @ 2.80GHz", info.System.Cpu);
          Assert.AreEqual("GenuineIntel Family 6 Model 58 Stepping 9", info.System.CpuId);
-         Assert.AreEqual(CpuManufacturer.Intel, info.System.CpuManufacturer);
+         Assert.AreEqual("Intel", info.System.CpuManufacturer);
          Assert.AreEqual(4, info.System.CpuCount);
          Assert.AreEqual("3.45GiB", info.System.Memory);
          Assert.AreEqual(3.45, info.System.MemoryValue);
@@ -627,28 +627,28 @@ namespace HFM.Client.DataTypes
          Assert.AreEqual(0, info.System.GpuCount);
          Assert.AreEqual(null, info.System.GpuId0);
          Assert.AreEqual(null, info.System.GpuId0Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId0Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId0Manufacturer);
          Assert.AreEqual(null, info.System.GpuId1);
          Assert.AreEqual(null, info.System.GpuId1Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId1Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId1Manufacturer);
          Assert.AreEqual(null, info.System.GpuId2);
          Assert.AreEqual(null, info.System.GpuId2Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId2Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId2Manufacturer);
          Assert.AreEqual(null, info.System.GpuId3);
          Assert.AreEqual(null, info.System.GpuId3Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId3Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId3Manufacturer);
          Assert.AreEqual(null, info.System.GpuId4);
          Assert.AreEqual(null, info.System.GpuId4Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId4Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId4Manufacturer);
          Assert.AreEqual(null, info.System.GpuId5);
          Assert.AreEqual(null, info.System.GpuId5Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId5Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId5Manufacturer);
          Assert.AreEqual(null, info.System.GpuId6);
          Assert.AreEqual(null, info.System.GpuId6Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId6Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId6Manufacturer);
          Assert.AreEqual(null, info.System.GpuId7);
          Assert.AreEqual(null, info.System.GpuId7Type);
-         Assert.AreEqual(GpuManufacturer.Unknown, info.System.GpuId7Manufacturer);
+         Assert.AreEqual(null, info.System.GpuId7Manufacturer);
          Assert.AreEqual("Not detected", info.System.Cuda);
          Assert.AreEqual(null, info.System.CudaVersion);
          Assert.AreEqual(null, info.System.CudaDriver);
