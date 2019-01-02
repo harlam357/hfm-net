@@ -33,32 +33,41 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Provides the base functionality for creating Folding@Home typed client messages.
    /// </summary>
-   public abstract class TypedMessage : Message, ITypedMessageObject
+   public abstract class TypedMessage : TypedMessageBase
+   {
+      public abstract void Fill(JsonMessage message);
+   }
+
+   /// <summary>
+   /// Provides the base functionality for creating Folding@Home typed client messages.
+   /// </summary>
+   public abstract class TypedMessageBase : Message
    {
       /// <summary>
-      /// Initializes a new instance of the TypedMessage class.
+      /// Initializes a new instance of the <see cref="TypedMessageBase"/> class.
       /// </summary>
-      protected TypedMessage()
+      protected TypedMessageBase()
       {
-         _errors = new List<MessagePropertyConversionError>();
+         _errors = new List<TypedMessagePropertyError>();
       }
-
-      public abstract void Fill(JsonMessage message);
 
       #region ITypedMessageObject Members
 
-      private readonly List<MessagePropertyConversionError> _errors;
+      private readonly List<TypedMessagePropertyError> _errors;
       /// <summary>
-      /// Get a collection of property type conversion errors.
+      /// Gets a collection of property errors.
       /// </summary>
-      public ICollection<MessagePropertyConversionError> Errors
+      public ICollection<TypedMessagePropertyError> Errors
       {
          get { return _errors.AsReadOnly(); }
       }
 
-      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
+      /// <summary>
+      /// Adds a message property error.
+      /// </summary>
+      public void AddError(TypedMessagePropertyError error)
       {
-         _errors.Add(conversionError);
+         _errors.Add(error);
       }
 
       #endregion
@@ -245,10 +254,9 @@ namespace HFM.Client.DataTypes
                }
                catch (Exception ex)
                {
-                  var typedMessageObject = _message as ITypedMessageObject;
-                  if (typedMessageObject != null)
+                  if (_message is TypedMessageBase typedMessage)
                   {
-                     typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+                     typedMessage.AddError(new TypedMessagePropertyError(classProperty.Name, ex.Message));
                   }
                }
             }
@@ -273,9 +281,9 @@ namespace HFM.Client.DataTypes
             }
             catch (Exception ex)
             {
-               if (_message is ITypedMessageObject typedMessageObject)
+               if (_message is TypedMessageBase typedMessage)
                {
-                  typedMessageObject.AddError(new MessagePropertyConversionError(classProperty.Name, ex.Message));
+                  typedMessage.AddError(new TypedMessagePropertyError(classProperty.Name, ex.Message));
                }
             }
          }
@@ -330,7 +338,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home message property conversion error. This class cannot be inherited.
    /// </summary>
-   public sealed class MessagePropertyConversionError
+   public sealed class TypedMessagePropertyError
    {
       /// <summary>
       /// Gets the class property name the conversion failed to populate.
@@ -342,27 +350,10 @@ namespace HFM.Client.DataTypes
       /// </summary>
       public string Message { get; }
 
-      internal MessagePropertyConversionError(string propertyName, string message)
+      internal TypedMessagePropertyError(string propertyName, string message)
       {
          PropertyName = propertyName;
          Message = message;
       }
-   }
-
-   /// <summary>
-   /// Provides functionality to a typed message to add to and return a collection of error messages.
-   /// </summary>
-   public interface ITypedMessageObject
-   {
-      /// <summary>
-      /// Gets a collection of property type conversion errors.
-      /// </summary>
-      ICollection<MessagePropertyConversionError> Errors { get; }
-
-      /// <summary>
-      /// Add a message property conversion error.
-      /// </summary>
-      /// <param name="conversionError">The conversion error.</param>
-      void AddError(MessagePropertyConversionError conversionError);
    }
 }

@@ -235,7 +235,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client slot message.
    /// </summary>
-   public class Slot : ITypedMessageObject
+   public class Slot : TypedMessageBase
    {
       /// <summary>
       /// Initializes a new instance of the Slot class.
@@ -243,10 +243,7 @@ namespace HFM.Client.DataTypes
       public Slot()
       {
          SlotOptions = new SlotOptions();
-         _errors = new List<MessagePropertyConversionError>();
       }
-
-      #region Properties
 
       #pragma warning disable 1591
 
@@ -270,25 +267,5 @@ namespace HFM.Client.DataTypes
       public string Reason { get; set; }
 
       #pragma warning restore 1591
-
-      #endregion
-
-      #region ITypedMessageObject Members
-
-      private readonly List<MessagePropertyConversionError> _errors;
-      /// <summary>
-      /// Gets a collection of property type conversion errors.
-      /// </summary>
-      public ICollection<MessagePropertyConversionError> Errors
-      {
-         get { return _errors.AsReadOnly(); }
-      }
-
-      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
-      {
-         _errors.Add(conversionError);
-      }
-
-      #endregion
    }
 }
