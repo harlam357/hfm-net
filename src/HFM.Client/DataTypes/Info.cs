@@ -106,7 +106,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client information. This class cannot be inherited.
    /// </summary>
-   public sealed class ClientInfo
+   public sealed class ClientInfo : TypedMessageBase
    {
       #region Properties
 
@@ -131,7 +131,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client build information. This class cannot be inherited.
    /// </summary>
-   public sealed class BuildInfo
+   public sealed class BuildInfo : TypedMessageBase
    {
       #region Properties
 
@@ -171,7 +171,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client system information. This class cannot be inherited.
    /// </summary>
-   public sealed class SystemInfo
+   public sealed class SystemInfo : TypedMessageBase
    {
       #region Properties
 
