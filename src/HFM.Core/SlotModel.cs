@@ -294,15 +294,15 @@ namespace HFM.Core
          get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : UnitInfoModel.CurrentProtein.Credit; }
       }
 
-      public int Completed
-      {
-         get 
-         { 
-            return Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All 
-               ? TotalCompletedUnits 
-               : TotalRunCompletedUnits; 
-         }
-      }
+      public int Completed =>
+         Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All 
+            ? TotalCompletedUnits 
+            : TotalRunCompletedUnits;
+
+      public int Failed =>
+         Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
+            ? TotalFailedUnits
+            : TotalRunFailedUnits;
 
       /// <summary>
       /// Gets or sets the number of completed units since the last client start.

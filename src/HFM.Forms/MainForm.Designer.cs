@@ -625,7 +625,7 @@ namespace HFM.Forms
          this.mnuViewToggleCompletedCountStyle.Name = "mnuViewToggleCompletedCountStyle";
          this.mnuViewToggleCompletedCountStyle.ShortcutKeys = System.Windows.Forms.Keys.F10;
          this.mnuViewToggleCompletedCountStyle.Size = new System.Drawing.Size(303, 22);
-         this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed Count Style";
+         this.mnuViewToggleCompletedCountStyle.Text = "Toggle &Completed/Failed Count Style";
          this.mnuViewToggleCompletedCountStyle.Click += new System.EventHandler(this.mnuViewToggleCompletedCountStyle_Click);
          // 
          // mnuViewToggleVersionInformation
