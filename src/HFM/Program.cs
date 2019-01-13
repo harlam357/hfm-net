@@ -40,9 +40,10 @@ namespace HFM
 
          // for manually testing different cultures
          // Dutch-Belgium: nl-BE
+         // German-Germany: de-DE
          // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
-         //System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("nl-BE");
-         //System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("nl-BE");
+         //System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("de-DE");
+         //System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("de-DE");
 
          try
          {
