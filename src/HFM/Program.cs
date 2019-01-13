@@ -18,10 +18,9 @@
  */
 
 using System;
+using Application = System.Windows.Forms.Application;
 
 using AutoMapper;
-
-using Application = System.Windows.Forms.Application;
 
 using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
@@ -38,6 +37,13 @@ namespace HFM
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
+
+         // for manually testing different cultures
+         // Dutch-Belgium: nl-BE
+         // German-Germany: de-DE
+         // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
+         //System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("de-DE");
+         //System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("de-DE");
 
          try
          {

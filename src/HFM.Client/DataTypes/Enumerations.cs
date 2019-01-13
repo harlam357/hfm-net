@@ -53,7 +53,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Represents the status of a Folding@Home client slot.
    /// </summary>
-   public enum FahSlotStatus
+   public enum FahClientSlotStatus
    {
       /// <summary>
       /// The status of the slot is unknown.
@@ -86,9 +86,9 @@ namespace HFM.Client.DataTypes
    }
 
    /// <summary>
-   /// Folding@Home work unit status.
+   /// Folding@Home work unit state.
    /// </summary>
-   public enum FahUnitStatus
+   public enum UnitState
    {
       Unknown,
       Running,
@@ -116,67 +116,6 @@ namespace HFM.Client.DataTypes
       Unknown,
       Idle,
       Low
-   }
-
-   /// <summary>
-   /// Operating system types.
-   /// </summary>
-   public enum OperatingSystemType
-   {
-      Unknown,
-      Windows,
-      WindowsXP,
-      WindowsVista,
-      Windows7,
-      Windows8,
-      Windows10,
-      Linux,
-      OSX
-   }
-
-   /// <summary>
-   /// Operating system architecture types.
-   /// </summary>
-   public enum OperatingSystemArchitectureType
-   {
-      Unknown,
-      x86,
-      x64
-   }
-
-   /// <summary>
-   /// CPU manufacturers.
-   /// </summary>
-   public enum CpuManufacturer
-   {
-      Unknown,
-      Intel,
-      AMD
-   }
-
-   /// <summary>
-   /// CPU types.
-   /// </summary>
-   public enum CpuType
-   {
-      Unknown,
-      Core2,
-      Corei7,
-      Corei5,
-      Corei3,
-      PhenomII,
-      Phenom,
-      Athlon
-   }
-
-   /// <summary>
-   /// GPU manufacturers.
-   /// </summary>
-   public enum GpuManufacturer
-   {
-      Unknown,
-      ATI,
-      Nvidia
    }
 
 #pragma warning restore 1591

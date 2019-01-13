@@ -47,54 +47,69 @@ namespace HFM.Core.DataTypes.Markup
       public string SlotType { get; set; }
 
       [DataMember(Order = 8)]
-      public string TPF { get; set; }
+      public string ClientVersion { get; set; }
 
       [DataMember(Order = 9)]
-      public double PPD { get; set; }
+      public string TPF { get; set; }
 
       [DataMember(Order = 10)]
-      public double UPD { get; set; }
+      public double PPD { get; set; }
 
       [DataMember(Order = 11)]
-      public string ETA { get; set; }
+      public double UPD { get; set; }
 
       [DataMember(Order = 12)]
-      public string Core { get; set; }
+      public string ETA { get; set; }
 
       [DataMember(Order = 13)]
-      public string CoreId { get; set; }
+      public string Core { get; set; }
 
       [DataMember(Order = 14)]
-      public bool ProjectIsDuplicate { get; set; }
+      public string CoreId { get; set; }
 
       [DataMember(Order = 15)]
-      public string ProjectRunCloneGen { get; set; }
+      public bool ProjectIsDuplicate { get; set; }
 
       [DataMember(Order = 16)]
-      public double Credit { get; set; }
+      public string ProjectRunCloneGen { get; set; }
 
       [DataMember(Order = 17)]
-      public int Completed { get; set; }
+      public double Credit { get; set; }
 
       [DataMember(Order = 18)]
-      public int Failed { get; set; }
+      public int Completed { get; set; }
 
       [DataMember(Order = 19)]
-      public bool UsernameOk { get; set; }
+      public int Failed { get; set; }
 
       [DataMember(Order = 20)]
-      public string Username { get; set; }
+      public int TotalRunCompletedUnits { get; set; }
 
       [DataMember(Order = 21)]
-      public string DownloadTime { get; set; }
+      public int TotalCompletedUnits { get; set; }
 
       [DataMember(Order = 22)]
-      public string PreferredDeadline { get; set; }
+      public int TotalRunFailedUnits { get; set; }
 
       [DataMember(Order = 23)]
-      public IList<LogLine> CurrentLogLines { get; set; }
+      public int TotalFailedUnits { get; set; }
 
       [DataMember(Order = 24)]
+      public bool UsernameOk { get; set; }
+
+      [DataMember(Order = 25)]
+      public string Username { get; set; }
+
+      [DataMember(Order = 26)]
+      public string DownloadTime { get; set; }
+
+      [DataMember(Order = 27)]
+      public string PreferredDeadline { get; set; }
+
+      [DataMember(Order = 28)]
+      public IList<LogLine> CurrentLogLines { get; set; }
+
+      [DataMember(Order = 29)]
       public Protein Protein { get; set; }
    }
 }

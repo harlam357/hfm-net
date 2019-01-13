@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 
 using HFM.Client.DataTypes;
+using HFM.Client.Internal;
 
 namespace HFM.Client
 {

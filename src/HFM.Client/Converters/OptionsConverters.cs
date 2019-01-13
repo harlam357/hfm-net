@@ -43,8 +43,8 @@ namespace HFM.Client.Converters
                return FahClientType.BigBeta;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse client-type value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert client-type value '{0}'.", inputString));
       }
    }
 
@@ -55,22 +55,20 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          switch (inputString)
          {
+            case "GPU":
+               return FahClientSubType.GPU;
             //case "normal":
             //   return FahClientSubType.CPU;
             //case "SMP":
             //   return FahClientSubType.CPU;
-            case "GPU":
-               return FahClientSubType.GPU;
             //case "STDCLI": // uniprocessor on Windows
             //   return FahClientSubType.CPU;
             //case "LINUX":  // uniprocessor on Linux
             //   return FahClientSubType.CPU;
+            // Assume CPU if inputString is not "GPU"
             default:
                return FahClientSubType.CPU;
          }
-
-         //throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-         //   "Failed to parse client-subtype value of '{0}'.", inputString));
       }
    }
 
@@ -89,8 +87,8 @@ namespace HFM.Client.Converters
                return MaxPacketSize.Big;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse max-packet-size value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert max-packet-size value '{0}'.", inputString));
       }
    }
 
@@ -107,8 +105,8 @@ namespace HFM.Client.Converters
                return CorePriority.Low;
          }
 
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse core-priority value of '{0}'.", inputString));
+         throw new ConversionProviderException(String.Format(CultureInfo.InvariantCulture,
+            "Failed to convert core-priority value '{0}'.", inputString));
       }
    }
 }

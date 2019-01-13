@@ -10,7 +10,7 @@
     <ProjectGuid>{F71E7E48-B758-4CC1-9FC3-01BD1F367B10}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HFM.Client.Tests</RootNamespace>
+    <RootNamespace>HFM.Client</RootNamespace>
     <AssemblyName>HFM.Client.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -69,7 +69,7 @@
     <Compile Include="DataTypes\SlotCollectionTests.cs" />
     <Compile Include="DataTypes\SlotOptionsTests.cs" />
     <Compile Include="DataTypes\UnitCollectionTests.cs" />
-    <Compile Include="LockedResourceTests.cs" />
+    <Compile Include="Internal\LockedResourceTests.cs" />
     <Compile Include="SetUpFixture.cs" />
     <Compile Include="TypedMessageConnectionTests.cs" />
     <Compile Include="JsonMessageConnectionTests.cs" />

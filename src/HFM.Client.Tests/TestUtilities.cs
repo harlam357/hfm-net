@@ -4,7 +4,7 @@ using System.Text;
 
 using Rhino.Mocks;
 
-namespace HFM.Client.Tests
+namespace HFM.Client
 {
    internal static class TestUtilities
    {

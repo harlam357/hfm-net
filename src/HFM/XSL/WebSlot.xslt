@@ -44,7 +44,7 @@
                      PPD
                   </td>
                   <td class="AltRightCol">
-                     <xsl:value-of select="SlotData/PPD"/> (<xsl:value-of select="SlotData/UPD"/> WUs)
+                     <xsl:value-of select="format-number(SlotData/PPD, NumberFormat)"/> (<xsl:value-of select="format-number(SlotData/UPD, NumberFormat)"/> WUs)
                   </td>
                </tr>
                <tr>

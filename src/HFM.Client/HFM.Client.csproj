@@ -59,6 +59,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Connection.cs" />
+    <Compile Include="Converters\ConversionProviderException.cs" />
     <Compile Include="Converters\GeneralConverters.cs" />
     <Compile Include="Converters\IConversionProvider.cs" />
     <Compile Include="Converters\InfoConverters.cs" />
@@ -66,26 +67,30 @@
     <Compile Include="Converters\SimulationInfoConverters.cs" />
     <Compile Include="Converters\UnitCollectionConverters.cs" />
     <Compile Include="DataTypes\Enumerations.cs" />
+    <Compile Include="DataTypes\JsonMessage.cs" />
     <Compile Include="DataTypes\LogFragment.cs" />
     <Compile Include="DataTypes\Heartbeat.cs" />
     <Compile Include="DataTypes\Info.cs" />
     <Compile Include="DataTypes\Message.cs" />
+    <Compile Include="DataTypes\MessagePropertyAttribute.cs" />
+    <Compile Include="DataTypes\MessagePropertySetter.cs" />
     <Compile Include="DataTypes\Options.cs" />
     <Compile Include="DataTypes\SimulationInfo.cs" />
     <Compile Include="DataTypes\SlotCollection.cs" />
     <Compile Include="DataTypes\SlotOptions.cs" />
+    <Compile Include="DataTypes\TypedMessage.cs" />
     <Compile Include="DataTypes\UnitCollection.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="Internal\StringBuilderExtensions.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="IMessageConnection.cs" />
-    <Compile Include="LockedResource.cs" />
+    <Compile Include="Internal\LockedResource.cs" />
     <Compile Include="MessageKey.cs" />
     <Compile Include="TypedMessageConnection.cs" />
     <Compile Include="JsonMessageConnection.cs" />
-    <Compile Include="NetworkStreamAdapter.cs" />
+    <Compile Include="Internal\NetworkStreamAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TcpClientAdapter.cs" />
-    <Compile Include="TcpClientFactory.cs" />
+    <Compile Include="Internal\TcpClientAdapter.cs" />
+    <Compile Include="Internal\TcpClientFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357.snk">

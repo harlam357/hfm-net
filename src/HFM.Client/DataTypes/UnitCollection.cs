@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -314,14 +312,14 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client unit message.
    /// </summary>
-   public class Unit : ITypedMessageObject, IEquatable<Unit>
+   public class Unit : TypedMessageBase, IEquatable<Unit>
    {
       /// <summary>
       /// Initializes a new instance of the Unit class.
       /// </summary>
       public Unit()
       {
-         _errors = new List<MessagePropertyConversionError>();
+         
       }
 
       #region Properties
@@ -335,8 +333,8 @@ namespace HFM.Client.DataTypes
       [MessageProperty("state")]
       public string State { get; set; }
 
-      [MessageProperty("state", typeof(UnitStatusConverter))]
-      public FahUnitStatus StateEnum { get; set; }
+      [MessageProperty("state", typeof(UnitStateConverter))]
+      public UnitState StateEnum { get; set; }
 
       [MessageProperty("error")]
       public string Error { get; set; }
@@ -442,24 +440,6 @@ namespace HFM.Client.DataTypes
       public string Description { get; set; }
 
       #pragma warning restore 1591
-
-      #endregion
-
-      #region ITypedMessageObject Members
-
-      private readonly List<MessagePropertyConversionError> _errors;
-      /// <summary>
-      /// Gets a collection of property type conversion errors.
-      /// </summary>
-      public ICollection<MessagePropertyConversionError> Errors
-      {
-         get { return _errors.AsReadOnly(); }
-      }
-
-      void ITypedMessageObject.AddError(MessagePropertyConversionError conversionError)
-      {
-         _errors.Add(conversionError);
-      }
 
       #endregion
 

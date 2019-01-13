@@ -1,7 +1,7 @@
 ﻿
 using System.IO;
 
-namespace HFM.Client.Tests
+namespace HFM.Client
 {
    internal static class TestData
    {

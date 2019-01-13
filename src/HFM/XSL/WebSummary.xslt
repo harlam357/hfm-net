@@ -37,7 +37,9 @@
                   <td class="Heading">Download Time</td>
                   <td class="Heading">Deadline</td>
                </tr>
-               <xsl:apply-templates select="Slots/SlotData" />
+               <xsl:apply-templates select="Slots/SlotData">
+                  <xsl:with-param name="NumberFormat" select="NumberFormat" />
+               </xsl:apply-templates>
                <tr>
                   <td class="Plain" colspan="18" align="center">
                   </td>
@@ -77,6 +79,7 @@
       </html>
    </xsl:template>
    <xsl:template match="Slots/SlotData">
+      <xsl:param name="NumberFormat" />
       <tr>
          <td width="5%" class="StatusCol">
             <xsl:attribute name="bgcolor">
@@ -113,7 +116,7 @@
             <xsl:value-of select="TPF"/>
          </td>
          <td width="8%" class="RightCol">
-            <xsl:value-of select="PPD"/> (<xsl:value-of select="UPD"/> WUs)
+            <xsl:value-of select="format-number(PPD, $NumberFormat)"/> (<xsl:value-of select="format-number(UPD, $NumberFormat)"/> WUs)
          </td>
          <td width="8%" class="RightCol">
             <xsl:value-of select="ETA"/>
@@ -137,7 +140,7 @@
             <xsl:value-of select="ProjectRunCloneGen"/>
          </td>
          <td width="3%" class="RightCol">
-            <xsl:value-of select="Credit"/>
+            <xsl:value-of select="format-number(Credit, $NumberFormat)"/>
          </td>
          <td width="3%" class="RightCol">
             <xsl:value-of select="Completed"/>

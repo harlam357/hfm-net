@@ -560,7 +560,7 @@ namespace HFM.Forms
          dgv.Columns.Add("Completed", "Completed");
          dgv.Columns["Completed"].DataPropertyName = "Completed";
          dgv.Columns.Add("Failed", "Failed");
-         dgv.Columns["Failed"].DataPropertyName = "TotalRunFailedUnits";
+         dgv.Columns["Failed"].DataPropertyName = "Failed";
          dgv.Columns.Add("Username", "User Name");
          dgv.Columns["Username"].DataPropertyName = "Username";
          dgv.Columns.Add("DownloadTime", "Download Time");

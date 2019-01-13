@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace HFM.Client
+namespace HFM.Client.Internal
 {
    internal class LockedResource<T> where T : class
    {

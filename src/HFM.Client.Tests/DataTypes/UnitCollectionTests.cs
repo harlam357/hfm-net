@@ -23,9 +23,7 @@ using System.Net;
 
 using NUnit.Framework;
 
-using HFM.Client.DataTypes;
-
-namespace HFM.Client.Tests.DataTypes
+namespace HFM.Client.DataTypes
 {
    [TestFixture]
    public class UnitCollectionTests
@@ -38,7 +36,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(11020, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
@@ -82,7 +80,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(10083, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
@@ -125,7 +123,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(7018, unitCollection[0].Project);
          Assert.AreEqual(2, unitCollection[0].Run);
@@ -169,7 +167,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(7507, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
@@ -206,7 +204,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[1].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[1].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(5788, unitCollection[1].Project);
          Assert.AreEqual(9, unitCollection[1].Run);
@@ -243,7 +241,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(2, unitCollection[2].Id);
          Assert.AreEqual("RUNNING", unitCollection[2].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[2].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[2].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(5796, unitCollection[2].Project);
          Assert.AreEqual(19, unitCollection[2].Run);
@@ -287,7 +285,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(11294, unitCollection[0].Project);
          Assert.AreEqual(7, unitCollection[0].Run);
@@ -324,7 +322,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(1, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[1].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[1].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(7611, unitCollection[1].Project);
          Assert.AreEqual(0, unitCollection[1].Run);
@@ -368,7 +366,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(3, unitCollection[0].Id);
          Assert.AreEqual("SEND", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Send, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Send, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(6507, unitCollection[0].Project);
          Assert.AreEqual(19, unitCollection[0].Run);
@@ -404,7 +402,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(2, unitCollection[1].Id);
          Assert.AreEqual("SEND", unitCollection[1].State);
-         Assert.AreEqual(FahUnitStatus.Send, unitCollection[1].StateEnum);
+         Assert.AreEqual(UnitState.Send, unitCollection[1].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(6513, unitCollection[1].Project);
          Assert.AreEqual(19, unitCollection[1].Run);
@@ -440,7 +438,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(1, unitCollection[2].Id);
          Assert.AreEqual("SEND", unitCollection[2].State);
-         Assert.AreEqual(FahUnitStatus.Send, unitCollection[2].StateEnum);
+         Assert.AreEqual(UnitState.Send, unitCollection[2].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(6522, unitCollection[2].Project);
          Assert.AreEqual(7, unitCollection[2].Run);
@@ -476,7 +474,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, unitCollection[3].Id);
          Assert.AreEqual("SEND", unitCollection[3].State);
-         Assert.AreEqual(FahUnitStatus.Send, unitCollection[3].StateEnum);
+         Assert.AreEqual(UnitState.Send, unitCollection[3].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(6524, unitCollection[3].Project);
          Assert.AreEqual(14, unitCollection[3].Run);
@@ -512,7 +510,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(4, unitCollection[4].Id);
          Assert.AreEqual("RUNNING", unitCollection[4].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[4].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[4].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(7600, unitCollection[4].Project);
          Assert.AreEqual(41, unitCollection[4].Run);
@@ -555,7 +553,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(2, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(11051, unitCollection[0].Project);
          Assert.AreEqual(0, unitCollection[0].Run);
@@ -592,7 +590,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(0, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[1].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[1].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(6801, unitCollection[1].Project);
          Assert.AreEqual(6348, unitCollection[1].Run);
@@ -636,7 +634,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual(null, unitCollection[0].Error);
          Assert.AreEqual(7905, unitCollection[0].Project);
          Assert.AreEqual(47, unitCollection[0].Run);
@@ -680,7 +678,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual("OK", unitCollection[0].Error);
          Assert.AreEqual(7610, unitCollection[0].Project);
          Assert.AreEqual(630, unitCollection[0].Run);
@@ -718,7 +716,7 @@ namespace HFM.Client.Tests.DataTypes
 
          Assert.AreEqual(2, unitCollection[1].Id);
          Assert.AreEqual("RUNNING", unitCollection[1].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[1].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[1].StateEnum);
          Assert.AreEqual("OK", unitCollection[0].Error);
          Assert.AreEqual(5772, unitCollection[1].Project);
          Assert.AreEqual(7, unitCollection[1].Run);
@@ -763,7 +761,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(1, unitCollection[0].Id);
          Assert.AreEqual("RUNNING", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Running, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Running, unitCollection[0].StateEnum);
          Assert.AreEqual("OK", unitCollection[0].Error);
          Assert.AreEqual(7610, unitCollection[0].Project);
          Assert.AreEqual(192, unitCollection[0].Run);
@@ -808,7 +806,7 @@ namespace HFM.Client.Tests.DataTypes
          unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
          Assert.AreEqual(0, unitCollection[0].Id);
          Assert.AreEqual("READY", unitCollection[0].State);
-         Assert.AreEqual(FahUnitStatus.Ready, unitCollection[0].StateEnum);
+         Assert.AreEqual(UnitState.Ready, unitCollection[0].StateEnum);
          Assert.AreEqual("NO_ERROR", unitCollection[0].Error);
          Assert.AreEqual(7006, unitCollection[0].Project);
          Assert.AreEqual(1, unitCollection[0].Run);

@@ -26,7 +26,9 @@ using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace HFM.Client.Tests
+using HFM.Client.Internal;
+
+namespace HFM.Client
 {
    [TestFixture]
    public class ConnectionTests

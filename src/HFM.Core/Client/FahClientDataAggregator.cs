@@ -121,12 +121,12 @@ namespace HFM.Core
             cqe.MachineID = slotId;
             cqe.ServerIP = unit.WorkServer;
             cqe.CpuString = GetCpuString(info, slotOptions);
-            cqe.OsString = ToOperatingSystemString(info.System.OperatingSystemEnum, info.System.OperatingSystemArchitectureEnum);
+            cqe.OsString = ToOperatingSystemString(info.System);
             // Memory Value is in Gigabytes - turn into Megabytes and truncate
             cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
             cq.Add(unit.Id, cqe);
 
-            if (unit.StateEnum == FahUnitStatus.Running)
+            if (unit.StateEnum == UnitState.Running)
             {
                cq.CurrentIndex = unit.Id;
             }
@@ -145,39 +145,11 @@ namespace HFM.Core
          return cq;
       }
 
-      private static string ToOperatingSystemString(OperatingSystemType type, OperatingSystemArchitectureType arch)
+      private static string ToOperatingSystemString(SystemInfo systemInfo)
       {
-         string osName = "Unknown";
-
-         switch (type)
-         {
-            case OperatingSystemType.Windows:
-               osName = "Windows";
-               break;
-            case OperatingSystemType.WindowsXP:
-               osName = "Windows XP";
-               break;
-            case OperatingSystemType.WindowsVista:
-               osName = "Vista";
-               break;
-            case OperatingSystemType.Windows7:
-               osName = "Windows 7";
-               break;
-            case OperatingSystemType.Windows8:
-               osName = "Windows 8";
-               break;
-            case OperatingSystemType.Windows10:
-               osName = "Windows 10";
-               break;
-            case OperatingSystemType.Linux:
-               osName = "Linux";
-               break;
-            case OperatingSystemType.OSX:
-               osName = "OS X";
-               break;
-         }
-
-         return arch.Equals(OperatingSystemArchitectureType.Unknown) ? osName : String.Format(CultureInfo.InvariantCulture, "{0} {1}", osName, arch);
+         return !String.IsNullOrWhiteSpace(systemInfo.OperatingSystemArchitecture) 
+            ? String.Format(CultureInfo.InvariantCulture, "{0} {1}", systemInfo.OperatingSystem, systemInfo.OperatingSystemArchitecture) 
+            : systemInfo.OperatingSystem;
       }
 
       private static string GetCpuString(Info info, SlotOptions slotOptions)
@@ -206,33 +178,10 @@ namespace HFM.Core
          }
          else
          {
-            return ToCpuTypeString(info.System.CpuType);
+            return info.System.Cpu;
          }
 
          return String.Empty;
-      }
-
-      private static string ToCpuTypeString(CpuType type)
-      {
-         switch (type)
-         {
-            case CpuType.Core2:
-               return "Core 2";
-            case CpuType.Corei7:
-               return "Core i7";
-            case CpuType.Corei5:
-               return "Core i5";
-            case CpuType.Corei3:
-               return "Core i3";
-            case CpuType.PhenomII:
-               return "Phenom II";
-            case CpuType.Phenom:
-               return "Phenom";
-            case CpuType.Athlon:
-               return "Athlon";
-         }
-
-         return "Unknown";
       }
 
       private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result, 
@@ -274,7 +223,7 @@ namespace HFM.Core
             if (unitInfo != null)
             {
                result.UnitInfos.Add(unit.Id, unitInfo);
-               if (unit.StateEnum == FahUnitStatus.Running)
+               if (unit.StateEnum == UnitState.Running)
                {
                   result.CurrentUnitIndex = unit.Id;
                }
@@ -285,7 +234,7 @@ namespace HFM.Core
          if (result.CurrentUnitIndex == -1)
          {
             // look for a WU with Ready state
-            var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == FahUnitStatus.Ready);
+            var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == UnitState.Ready);
             if (unit != null)
             {
                result.CurrentUnitIndex = unit.Id;

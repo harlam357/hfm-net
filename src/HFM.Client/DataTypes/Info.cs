@@ -47,19 +47,19 @@ namespace HFM.Client.DataTypes
       /// Folding@Home client information.
       /// </summary>
       [MessageProperty("Folding@home Client")]
-      public ClientInfo Client { get; private set; }
+      public ClientInfo Client { get; }
 
       /// <summary>
       /// Folding@Home client build information.
       /// </summary>
       [MessageProperty("Build")]
-      public BuildInfo Build { get; private set; }
+      public BuildInfo Build { get; }
 
       /// <summary>
       /// Folding@Home client system information.
       /// </summary>
       [MessageProperty("System")]
-      public SystemInfo System { get; private set; }
+      public SystemInfo System { get; }
 
       #endregion
 
@@ -92,7 +92,7 @@ namespace HFM.Client.DataTypes
 
                   if (innerToken.Values().Count() >= 2)
                   {
-                     innerPropertySetter.SetProperty((string)innerToken[0], (string)innerToken[1]);
+                     innerPropertySetter.SetProperty((string)innerToken[0], ((string)innerToken[1]).Trim());
                   }
                }
             }
@@ -106,7 +106,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client information. This class cannot be inherited.
    /// </summary>
-   public sealed class ClientInfo
+   public sealed class ClientInfo : TypedMessageBase
    {
       #region Properties
 
@@ -131,7 +131,7 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client build information. This class cannot be inherited.
    /// </summary>
-   public sealed class BuildInfo
+   public sealed class BuildInfo : TypedMessageBase
    {
       #region Properties
 
@@ -171,33 +171,24 @@ namespace HFM.Client.DataTypes
    /// <summary>
    /// Folding@Home client system information. This class cannot be inherited.
    /// </summary>
-   public sealed class SystemInfo
+   public sealed class SystemInfo : TypedMessageBase
    {
       #region Properties
 
       [MessageProperty("OS")]
       public string OperatingSystem { get; set; }
 
-      [MessageProperty("OS", typeof(OperatingSystemConverter))]
-      public OperatingSystemType OperatingSystemEnum { get; set; }
-
       [MessageProperty("OS Arch")]
       public string OperatingSystemArchitecture { get; set; }
 
-      [MessageProperty("OS Arch", typeof(OperatingSystemArchitectureConverter))]
-      public OperatingSystemArchitectureType OperatingSystemArchitectureEnum { get; set; }
-
       [MessageProperty("CPU")]
       public string Cpu { get; set; }
-
-      [MessageProperty("CPU", typeof(CpuTypeConverter))]
-      public CpuType CpuType { get; set; }
 
       [MessageProperty("CPU ID")]
       public string CpuId { get; set; }
 
       [MessageProperty("CPU ID", typeof(CpuManufacturerConverter))]
-      public CpuManufacturer CpuManufacturer { get; set; }
+      public string CpuManufacturer { get; set; }
 
       [MessageProperty("CPUs")]
       public int CpuCount { get; set; }
@@ -227,7 +218,7 @@ namespace HFM.Client.DataTypes
       public string GpuId0Type { get; set; }
 
       [MessageProperty("GPU 0", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId0Manufacturer { get; set; }
+      public string GpuId0Manufacturer { get; set; }
 
       [MessageProperty("GPU 1")]
       public string GpuId1 { get; set; }
@@ -236,7 +227,7 @@ namespace HFM.Client.DataTypes
       public string GpuId1Type { get; set; }
 
       [MessageProperty("GPU 1", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId1Manufacturer { get; set; }
+      public string GpuId1Manufacturer { get; set; }
 
       [MessageProperty("GPU 2")]
       public string GpuId2 { get; set; }
@@ -245,7 +236,7 @@ namespace HFM.Client.DataTypes
       public string GpuId2Type { get; set; }
 
       [MessageProperty("GPU 2", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId2Manufacturer { get; set; }
+      public string GpuId2Manufacturer { get; set; }
 
       [MessageProperty("GPU 3")]
       public string GpuId3 { get; set; }
@@ -254,7 +245,7 @@ namespace HFM.Client.DataTypes
       public string GpuId3Type { get; set; }
 
       [MessageProperty("GPU 3", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId3Manufacturer { get; set; }
+      public string GpuId3Manufacturer { get; set; }
 
       [MessageProperty("GPU 4")]
       public string GpuId4 { get; set; }
@@ -263,7 +254,7 @@ namespace HFM.Client.DataTypes
       public string GpuId4Type { get; set; }
 
       [MessageProperty("GPU 4", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId4Manufacturer { get; set; }
+      public string GpuId4Manufacturer { get; set; }
 
       [MessageProperty("GPU 5")]
       public string GpuId5 { get; set; }
@@ -272,7 +263,7 @@ namespace HFM.Client.DataTypes
       public string GpuId5Type { get; set; }
 
       [MessageProperty("GPU 5", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId5Manufacturer { get; set; }
+      public string GpuId5Manufacturer { get; set; }
 
       [MessageProperty("GPU 6")]
       public string GpuId6 { get; set; }
@@ -281,7 +272,7 @@ namespace HFM.Client.DataTypes
       public string GpuId6Type { get; set; }
 
       [MessageProperty("GPU 6", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId6Manufacturer { get; set; }
+      public string GpuId6Manufacturer { get; set; }
 
       [MessageProperty("GPU 7")]
       public string GpuId7 { get; set; }
@@ -290,7 +281,7 @@ namespace HFM.Client.DataTypes
       public string GpuId7Type { get; set; }
 
       [MessageProperty("GPU 7", typeof(GpuManufacturerConverter))]
-      public GpuManufacturer GpuId7Manufacturer { get; set; }
+      public string GpuId7Manufacturer { get; set; }
 
       [MessageProperty("CUDA")]
       public string Cuda { get; set; }

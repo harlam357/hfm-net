@@ -22,7 +22,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace HFM.Client.Tests
+namespace HFM.Client
 {
    [TestFixture]
    public class JsonMessageConnectionTests

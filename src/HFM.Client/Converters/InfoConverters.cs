@@ -18,10 +18,7 @@
  */
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
-
-using HFM.Client.DataTypes;
 
 namespace HFM.Client.Converters
 {
@@ -57,78 +54,7 @@ namespace HFM.Client.Converters
                return value / 1048576;   
             }
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse memory value of '{0}'.", inputString));
-      }
-   }
-
-   internal sealed class OperatingSystemConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         var inputString = (string)input;
-         if (inputString.Contains("Windows"))
-         {
-            OperatingSystemType os = OperatingSystemType.Windows;
-
-            #region Detect Specific Windows Version
-
-            if (inputString.Contains("Windows XP"))
-            {
-               os = OperatingSystemType.WindowsXP;
-            }
-            else if (inputString.Contains("Vista"))
-            {
-               os = OperatingSystemType.WindowsVista;
-            }
-            else if (inputString.Contains("Windows 7"))
-            {
-               os = OperatingSystemType.Windows7;
-            }
-            else if (inputString.Contains("Windows 8"))
-            {
-               os = OperatingSystemType.Windows8;
-            }
-            else if (inputString.Contains("Windows 10"))
-            {
-               os = OperatingSystemType.Windows10;
-            }
-
-            #endregion
-
-            return os;
-         }
-         if (inputString.Contains("Linux"))
-         {
-            return OperatingSystemType.Linux;
-         }
-         if (inputString.Contains("OSX"))
-         {
-            return OperatingSystemType.OSX;
-         }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse OS value from '{0}'.", inputString));
-      }
-   }
-
-   internal sealed class OperatingSystemArchitectureConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         var inputString = (string)input;
-         if (inputString == "X86")
-         {
-            return OperatingSystemArchitectureType.x86;
-         }
-         if (inputString == "AMD64")
-         {
-            return OperatingSystemArchitectureType.x64;
-         }
-         
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse OS value from '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -139,18 +65,14 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          if (inputString == "Not Detected")
          {
-            // not an error, but no value
+            // no value
             return null;
          }
-
-         double value;
-         if (Double.TryParse(inputString, out value))
+         if (Double.TryParse(inputString, out double value))
          {
             return value;
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CUDA version value of '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -161,61 +83,13 @@ namespace HFM.Client.Converters
          var inputString = (string)input;
          if (inputString.Contains("GenuineIntel"))
          {
-            return CpuManufacturer.Intel;
+            return "Intel";
          }
          if (inputString.Contains("AuthenticAMD"))
          {
-            return CpuManufacturer.AMD;
+            return "AMD";
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CPU manufacturer value from '{0}'.", inputString));
-      }
-   }
-
-   internal sealed class CpuTypeConverter : IConversionProvider
-   {
-      public object Convert(object input)
-      {
-         var inputString = (string)input;
-         if (inputString.Contains("Core(TM)2"))
-         {
-            return CpuType.Core2;
-         }
-         if (inputString.Contains("Core(TM) i7"))
-         {
-            return CpuType.Corei7;
-         }
-         // assumed, no unit tests
-         if (inputString.Contains("Core(TM) i5"))
-         {
-            return CpuType.Corei5;
-         }
-         // assumed, no unit tests
-         if (inputString.Contains("Core(TM) i3"))
-         {
-            return CpuType.Corei3;
-         }
-         if (inputString.Contains("Core(TM) i3"))
-         {
-            return CpuType.Corei3;
-         }
-         if (inputString.Contains("Phenom(tm) II"))
-         {
-            return CpuType.PhenomII;
-         }
-         // assumed, no unit tests
-         if (inputString.Contains("Phenom(tm)"))
-         {
-            return CpuType.PhenomII;
-         }
-         if (inputString.Contains("Athlon(tm)"))
-         {
-            return CpuType.Athlon;
-         }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse CPU type value from '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -224,17 +98,19 @@ namespace HFM.Client.Converters
       public object Convert(object input)
       {
          var inputString = (string)input;
+         if (inputString.Contains("AMD"))
+         {
+            return "AMD";
+         }
          if (inputString.Contains("ATI"))
          {
-            return GpuManufacturer.ATI;
+            return "ATI";
          }
          if (inputString.Contains("NVIDIA") || inputString.Contains("FERMI"))
          {
-            return GpuManufacturer.Nvidia;
+            return "NVIDIA";
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse GPU manufacturer value from '{0}'.", inputString));
+         return null;
       }
    }
 
@@ -244,7 +120,7 @@ namespace HFM.Client.Converters
       {
          if (input == null)
          {
-            // not an error, but no value
+            // no value
             return null;
          }
 
@@ -262,9 +138,7 @@ namespace HFM.Client.Converters
          {
             return inputString.Substring(radeonIndex, inputString.Length - radeonIndex);
          }
-
-         throw new FormatException(String.Format(CultureInfo.InvariantCulture,
-            "Failed to parse GPU type value from '{0}'.", inputString));
+         return null;
       }
    }
 }

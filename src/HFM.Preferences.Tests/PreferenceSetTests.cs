@@ -75,6 +75,26 @@ namespace HFM.Preferences
       }
 
       [Test]
+      public void PreferenceSet_Load_LoadsDefaultsWhenConfigXmlReadFails_Test()
+      {
+         // Arrange
+         using (var artifacts = new ArtifactFolder())
+         {
+            const string applicationVersion = "1.0.0.0";
+            string configPath = Path.Combine(artifacts.Path, "config.xml");
+            // write a config.xml file that will fail to read
+            File.WriteAllText(configPath, String.Empty);
+            var prefs = Create(artifacts.Path, applicationVersion);
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.IsTrue(File.Exists(configPath));
+            Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+         }
+      }
+
+      [Test]
       public void PreferenceSet_Load_MigratesFromUserSettings_Test()
       {
          // Arrange
