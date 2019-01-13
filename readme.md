@@ -4,6 +4,21 @@
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
+## Version 0.9.10.811
+
+### Release Date: January 12, 2019
+
+* Fix: Don't allow config.xml read errors to stop HFM from loading.  Load default values if this situation occurs.
+* Fix (Issue 300): Web Generation - include ClientVersion, TotalRunCompletedUnits, TotalCompletedUnits, TotalRunFailedUnits, and TotalFailedUnits in SlotData structure in web xml data.
+* Fix: Web Generation - format production (PPD, UPD, Credit) numbers that were not being formatted according to the user preferences.
+
+* Change: UI - failed unit count now toggles between "current run" and "total" just like completed unit count.
+* Change: v7 client interface - allowing CPU and OS values from v7 client to fully flow into the queue viewer.
+          Was previously doing some checks and parsing on this data which required code updates for each new
+          CPU or OS.  This could result in some failed detections when the application isn't updated to detect
+          a new CPU or OS.  That's too much maintenance, so the values reported by the client are now used verbatim.
+
+
 ## Version 0.9.9.789
 
 ### Release Date: January 1, 2019
