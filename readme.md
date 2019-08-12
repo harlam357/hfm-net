@@ -4,6 +4,14 @@
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
+## Version 0.9.11.815
+
+### Release Date: August 11, 2019
+
+* Change: Update for changed F@H psummary API (merged PR 301 by jcoffland)
+          If you've experienced HFM not reporting the correct PPD/Credit for quick return bonus (QRB) projects, then install this update and manually download the project summary.
+
+
 ## Version 0.9.10.811
 
 ### Release Date: January 12, 2019
