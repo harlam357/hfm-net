@@ -75,7 +75,7 @@ namespace HFM.Proteins
                var p = new Protein();
                p.ProjectNumber = GetTokenValue<int>(token, "id");
                p.ServerIP = GetTokenValue<string>(token, "ws");
-               p.WorkUnitName = GetTokenValue<string>(token, "title");
+               p.WorkUnitName = @"p" + p.ProjectNumber;
                p.NumberOfAtoms = GetTokenValue<int>(token, "atoms");
                p.PreferredDays = Math.Round(GetTokenValue<int>(token, "timeout") / secondsToDays, 3, MidpointRounding.AwayFromZero);
                p.MaximumDays = Math.Round(GetTokenValue<int>(token, "deadline") / secondsToDays, 3, MidpointRounding.AwayFromZero);
@@ -84,7 +84,7 @@ namespace HFM.Proteins
                p.Core = GetTokenValue<string>(token, "type");
                p.Description = @"https://apps.foldingathome.org/project.py?p=" + p.ProjectNumber;
                p.Contact = GetTokenValue<string>(token, "contact");
-               p.KFactor = GetTokenValue<double>(token, "bonus");
+               p.KFactor = 0.75;
                collection.Add(p);
             }
          }
