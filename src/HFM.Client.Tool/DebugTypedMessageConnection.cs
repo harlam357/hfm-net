@@ -30,7 +30,7 @@ namespace HFM.Client.Tool
             catch (Exception ex)
             {
                OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Debug buffer write failed: {0}", ex.Message), TraceLevel.Error));
+                  "Debug buffer write failed: {0}", ex.Message)));
             }
          }
       }

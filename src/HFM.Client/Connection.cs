@@ -1,6 +1,6 @@
 ﻿/*
  * HFM.NET - Client Connection Class
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
+ * Copyright (C) 2009-2019 Ryan Harlamert (harlam357)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 using HFM.Client.Internal;
@@ -222,7 +223,7 @@ namespace HFM.Client
                OnConnectedChanged(new ConnectedChangedEventArgs(true)); // maybe use Connected property?
                // send status message
                OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Connected to {0}:{1}", host, port), TraceLevel.Info));
+                  "Connected to {0}:{1}", host, port)));
                // start listening for messages
                // from the network stream
                Update();
@@ -278,18 +279,14 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// </summary>
       public void Close()
       {
-         bool connected = Connected;
          // close the network stream
          _lockedStream.Release();
          // close the connection
          _tcpClient.Close();
-         if (connected != Connected)
-         {
-            // send connected event
-            OnConnectedChanged(new ConnectedChangedEventArgs(false)); // maybe use Connected property?
-            // send status message
-            OnStatusMessage(new StatusMessageEventArgs("Connection closed.", TraceLevel.Info));
-         }
+         // send connected event
+         OnConnectedChanged(new ConnectedChangedEventArgs(false));
+         // send status message
+         OnStatusMessage(new StatusMessageEventArgs("Connection closed."));
       }
 
       /// <summary>
@@ -305,7 +302,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
 
          if (command == null || command.Trim().Length == 0)
          {
-            OnStatusMessage(new StatusMessageEventArgs("No command text given.", TraceLevel.Warning));
+            OnStatusMessage(new StatusMessageEventArgs("No command text given."));
             return;
          }
 
@@ -324,16 +321,26 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
                OnDataSent(new DataEventArgs(command, buffer.Length));
                // send status message
                OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length), TraceLevel.Info));
+                  "Sent command: {0} ({1} bytes)", CleanUpCommandText(command), buffer.Length)));
             }
             catch (Exception ex)
             {
                OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                  "Write failed: {0}", ex.Message), TraceLevel.Error));
+                  "Write failed: {0}", ex.Message), ex));
                Close();
             }
          };
-         _lockedStream.Execute(x => x.BeginWrite(buffer, 0, buffer.Length, callback, null));
+
+         try
+         {
+            _lockedStream.Execute(x => x.BeginWrite(buffer, 0, buffer.Length, callback, null));
+         }
+         catch (IOException ex)
+         {
+            OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+               "Write failed: {0}", ex.Message), ex));
+            Close();
+         }
       }
 
       private static string CleanUpCommandText(string command)
@@ -378,7 +385,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
                if (bytesRead == 0)
                {
                   OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                     "Update failed: {0}", "The underlying socket has been closed."), TraceLevel.Error));
+                     "Update failed: {0}", "The underlying socket has been closed.")));
                   Close();
                   return;
                }
@@ -388,7 +395,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
                //if (!IsCancelBlockingCallSocketError(ex))
                //{
                   OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-                     "Update failed: {0}", ex.Message), TraceLevel.Error));
+                     "Update failed: {0}", ex.Message), ex));
                //}
                Close();
                return;
@@ -407,7 +414,16 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
             _readBuffer.Clear();
             ProcessData(buffer, totalBytesRead);
 
-            _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0));
+            try
+            {
+               _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0));
+            }
+            catch (IOException ex)
+            {
+               OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
+                  "Update failed: {0}", ex.Message), ex));
+               Close();
+            }
          };
 
          _lockedStream.Execute(x => x.BeginRead(_internalBuffer, 0, _internalBuffer.Length, callback, 0));
@@ -428,38 +444,22 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
 
          Debug.WriteLine(e.Status);
 
-         var handler = StatusMessage;
-         if (handler != null)
-         {
-            handler(this, e);
-         }
+         StatusMessage?.Invoke(this, e);
       }
 
       private void OnConnectedChanged(ConnectedChangedEventArgs e)
       {
-         var handler = ConnectedChanged;
-         if (handler != null)
-         {
-            handler(this, e);
-         }
+         ConnectedChanged?.Invoke(this, e);
       }
 
       private void OnDataSent(DataEventArgs e)
       {
-         var handler = DataSent;
-         if (handler != null)
-         {
-            handler(this, e);
-         }
+         DataSent?.Invoke(this, e);
       }
 
       private void OnDataReceived(DataEventArgs e)
       {
-         var handler = DataReceived;
-         if (handler != null)
-         {
-            handler(this, e);
-         }
+         DataReceived?.Invoke(this, e);
       }
 
       #endregion
@@ -513,25 +513,33 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// <summary>
       /// Gets the status message text.
       /// </summary>
-      public string Status { get; private set; }
+      public string Status { get; }
 
       /// <summary>
-      /// Gets the trace level of the status message.
+      /// Gets the Exception included with this message.
       /// </summary>
-      public TraceLevel Level { get; private set; }
+      public Exception Exception { get; }
 
       /// <summary>
       /// Initializes a new instance of the StatusMessageEventArgs class.
       /// </summary>
       /// <param name="status">The status message text.</param>
-      /// <param name="level">The status message trace level.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="status"/> is null.</exception>
-      public StatusMessageEventArgs(string status, TraceLevel level)
+      /// <exception cref="System.ArgumentNullException"><paramref name="status"/> is null.</exception>
+      public StatusMessageEventArgs(string status)
       {
-         if (status == null) throw new ArgumentNullException("status");
+         Status = status ?? throw new ArgumentNullException(nameof(status));
+      }
 
-         Status = status;
-         Level = level;
+      /// <summary>
+      /// Initializes a new instance of the StatusMessageEventArgs class.
+      /// </summary>
+      /// <param name="status">The status message text.</param>
+      /// <param name="exception">The exception to include with this message.</param>
+      /// <exception cref="System.ArgumentNullException"><paramref name="status"/> is null.</exception>
+      public StatusMessageEventArgs(string status, Exception exception)
+      {
+         Status = status ?? throw new ArgumentNullException(nameof(status));
+         Exception = exception;
       }
    }
 
@@ -543,7 +551,7 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// <summary>
       /// Gets the connection status.
       /// </summary>
-      public bool Connected { get; private set; }
+      public bool Connected { get; }
 
       internal ConnectedChangedEventArgs(bool connected)
       {
@@ -559,12 +567,12 @@ Unhandled Exception: System.ObjectDisposedException: The object was used after b
       /// <summary>
       /// Gets the data text value.
       /// </summary>
-      public string Value { get; private set; }
+      public string Value { get; }
 
       /// <summary>
       /// Gets the data length in bytes.
       /// </summary>
-      public int Length { get; private set; }
+      public int Length { get; }
 
       internal DataEventArgs(string value, int length)
       {

@@ -162,6 +162,7 @@ namespace HFM.Core
          _messageConnection.MessageReceived += MessageConnectionMessageReceived;
          _messageConnection.UpdateFinished += MessageConnectionUpdateFinished;
          _messageConnection.ConnectedChanged += MessageConnectionConnectedChanged;
+         _messageConnection.StatusMessage += MessageConnectionStatusMessage;
       }
 
       private void MessageConnectionMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -252,6 +253,14 @@ namespace HFM.Core
             _messages = new MessageReceiver();
             // refresh (clear) the slots
             RefreshSlots();
+         }
+      }
+
+      private void MessageConnectionStatusMessage(object sender, StatusMessageEventArgs e)
+      {
+         if (e.Exception != null)
+         {
+            Logger.Warn(e.Status, e.Exception);
          }
       }
 
