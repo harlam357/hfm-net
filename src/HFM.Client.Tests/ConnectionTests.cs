@@ -342,6 +342,42 @@ namespace HFM.Client
          _stream.VerifyAllExpectations();
       }
 
+      [Test]
+      public void Connection_SendCommand_NetworkStreamWriteBufferThrowsIOException_Test()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            SetupSuccessfulConnectionExpectations(_tcpClient, _stream, false);
+            _stream.Expect(x => x.BeginWrite(null, 0, 0, null, null)).IgnoreArguments().Throw(new IOException("Write failed."));
+            connection.Connect("server", 10000);
+
+            var mre = new ManualResetEvent(false);
+            bool dataSentFired = false;
+            bool statusMessageFired = false;
+            bool connectedChangedFired = false;
+
+            connection.DataSent += (sender, args) => dataSentFired = true;
+            connection.StatusMessage += (sender, args) =>
+            {
+               statusMessageFired = true;
+               mre.Set();
+            };
+            connection.ConnectedChanged += (sender, args) => connectedChangedFired = true;
+
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
+
+            connection.SendCommand("command");
+            mre.WaitOne();
+
+            Assert.IsFalse(dataSentFired);
+            Assert.IsTrue(statusMessageFired);
+            Assert.IsTrue(connectedChangedFired);
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
+
       #region SendCommand - Null, Empty, & Whitespace Tests
 
       [Test]
@@ -585,5 +621,37 @@ namespace HFM.Client
       //   _stream.VerifyAllExpectations();
       //}
 
+      [Test]
+      public void Connection_Update_NetworkStreamBeginReadThrowsIOException_Test()
+      {
+         using (var connection = new Connection(CreateClientFactory()))
+         {
+            var mre = new ManualResetEvent(false);
+            connection.ConnectedChanged += (sender, args) =>
+            {
+               if (!args.Connected) mre.Set();
+            };
+
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Do(
+               new Func<byte[], int, int, AsyncCallback, object, IAsyncResult>(
+                  (buffer, offset, size, callback, state) =>
+                     TestUtilities.DoBeginRead(buffer, offset, size, callback, state, TestData.QueueInfo))).Repeat.Once();
+
+            _stream.Expect(x => x.EndRead(null)).IgnoreArguments().Do(
+               new Func<IAsyncResult, int>(result => Encoding.ASCII.GetBytes(TestData.QueueInfo).Length));
+
+            _stream.Expect(x => x.BeginRead(null, 0, 0, null, null)).IgnoreArguments().Throw(new IOException("Read failed."));
+
+            // as a result the connection is closed, set expectations
+            _stream.Expect(x => x.Dispose());
+            _tcpClient.Expect(x => x.Close()).Do(new Action(() => _tcpClient.Client = null));
+
+            Connect(connection);
+            mre.WaitOne();
+         }
+
+         _tcpClient.VerifyAllExpectations();
+         _stream.VerifyAllExpectations();
+      }
    }
 }
