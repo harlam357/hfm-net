@@ -89,7 +89,7 @@ namespace HFM.Client
          while ((json = GetNextJsonMessage(_readBuffer)) != null)
          {
             OnStatusMessage(new StatusMessageEventArgs(String.Format(CultureInfo.CurrentCulture,
-               "Received message: {0} ({1} bytes)", json.Key, json.Value.Length), TraceLevel.Info));
+               "Received message: {0} ({1} bytes)", json.Key, json.Value.Length)));
             OnMessageReceived(new MessageReceivedEventArgs(json));
          }
          // send update finished event
