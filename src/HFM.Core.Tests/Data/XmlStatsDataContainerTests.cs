@@ -250,7 +250,7 @@ namespace HFM.Core.Data
       {
          // Issue 276
          Assert.AreEqual(DateTime.MinValue, 
-                         XmlStatsDataContainer.GetNextUpdateTime(new DateTime(2020, 1, 1), false));
+                         XmlStatsDataContainer.GetNextUpdateTime(DateTime.MaxValue, false));
       }
    }
 }
