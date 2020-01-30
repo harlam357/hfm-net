@@ -31,7 +31,6 @@ namespace HFM.Core
       public const string QueryCacheFileName = "WuHistoryQuery.dat";
 
       public const string CssFolderName = "CSS";
-      public const string XmlFolderName = "XML";
       public const string XsltFolderName = "XSL";
 
       public const string EOCUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
@@ -49,9 +48,6 @@ namespace HFM.Core
       public const string DefaultCoreID = "Unknown";
 
       // Log Filename Constants
-      public const string FahLogFileName = "FAHlog.txt";
-      public const string UnitInfoFileName = "unitinfo.txt";
-      public const string QueueFileName = "queue.dat";
       public const string FahClientLogFileName = "log.txt";
 
       /// <summary>
@@ -59,22 +55,11 @@ namespace HFM.Core
       /// </summary>
       public const int MinToMillisec = 60000;
 
-      /// <summary>
-      /// UnitInfo Log File Maximum Download Size
-      /// </summary>
-      public const int UnitInfoMax = 1048576; // 1 Megabyte
-
       public const int MaxDecimalPlaces = 5;
-
-      public const int MinOffsetMinutes = -720;
-      public const int MaxOffsetMinutes = 720;
 
       // Default ID Constants
       public const string DefaultUserID = "";
       public const int DefaultMachineID = 0;
-
-      public const int DefaultFahClientPort = 36330;
-      public const int DefaultFtpPort = 21;
 
       public const int MaxDisplayableLogLines = 500;
 

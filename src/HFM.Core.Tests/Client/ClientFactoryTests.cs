@@ -27,115 +27,120 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   [TestFixture]
-   public class ClientFactoryTests
-   {
-      [Test]
-      public void CreateCollectionArgumentNullTest()
-      {
-         var builder = new ClientFactory();
-         Assert.Throws<ArgumentNullException>(() => builder.CreateCollection((null)));
-      }
+    [TestFixture]
+    public class ClientFactoryTests
+    {
+        [Test]
+        public void ClientFactory_CreateCollection_ThrowsWhenSettingsIsNull()
+        {
+            var factory = new ClientFactory();
+            Assert.Throws<ArgumentNullException>(() => factory.CreateCollection(null));
+        }
 
-      [Test]
-      public void CreateCollectionTest()
-      {
-         var legacyClientFactory = MockRepository.GenerateStub<ILegacyClientFactory>();
-         legacyClientFactory.Stub(x => x.Create()).Return(new LegacyClient());
-         var builder = new ClientFactory { LegacyClientFactory = legacyClientFactory };
-         var result1 = new ClientSettings(ClientType.Legacy)
-                       {
-                          LegacyClientSubType = LegacyClientSubType.Path,
-                          Name = "Client 1",
-                          Path = @"\\test\path1\"
-                       };
-         var result2 = new ClientSettings(ClientType.Legacy)
-                       {
-                          LegacyClientSubType = LegacyClientSubType.Http,
-                          Name = "Client 2",
-                          Path = @"\\test\path2\"
-                       };
-         var result3 = new ClientSettings(ClientType.Legacy)
-                       {
-                          LegacyClientSubType = LegacyClientSubType.Ftp
-                       };
-         var instances = builder.CreateCollection(new[] { result1, result2, result3 });
-         Assert.AreEqual(2, instances.Count());
-      }
+        [Test]
+        public void ClientFactory_CreateCollection_CreatesClientsOnlyForValidClientTypes()
+        {
+            // Arrange
+            var factory = new ClientFactory();
+            var client1 = new ClientSettings
+            {
+                Name = "Client 1",
+                Server = "foo"
+            };
+            var client2 = new ClientSettings
+            {
+                Name = "Client 2",
+                Server = "bar"
+            };
+            var client3 = new ClientSettings
+            {
+                ClientType = ClientType.Legacy,
+                Name = "Client 3"
+            };
+            // Act
+            var clients = factory.CreateCollection(new[] { client1, client2, client3 });
+            // Assert
+            Assert.AreEqual(2, clients.Count);
+        }
 
-      [Test]
-      public void CreateArgumentNullTest()
-      {
-         var builder = new ClientFactory();
-         Assert.Throws<ArgumentNullException>(() => builder.Create(null));
-      }
+        [Test]
+        public void ClientFactory_CreateCollection_ThrowsWhenClientSettingsIsNotValid()
+        {
+            // Arrange
+            var factory = new ClientFactory();
+            var client = new ClientSettings
+            {
+                Name = "Client 1",
+                Server = "foo",
+                Port = 0
+            };
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => factory.CreateCollection(new[] { client }));
+        }
 
-      [Test]
-      public void CreateNameEmptyTest()
-      {
-         var builder = new ClientFactory();
-         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy)));
-      }
+        [Test]
+        public void ClientFactory_Create_ThrowsWhenSettingsIsNull()
+        {
+            var factory = new ClientFactory();
+            Assert.Throws<ArgumentNullException>(() => factory.Create(null));
+        }
 
-      [Test]
-      public void CreatePathEmptyTest()
-      {
-         var builder = new ClientFactory();
-         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy) { Name = "Client 1" }));
-      }
+        [Test]
+        public void ClientFactory_Create_ThrowsWhenSettingsNameIsNotValid()
+        {
+            var factory = new ClientFactory();
+            Assert.Throws<ArgumentException>(() => factory.Create(new ClientSettings()));
+        }
 
-      [Test]
-      public void CreateNameFailedCleanupTest()
-      {
-         var builder = new ClientFactory();
-         var invalidChars = System.IO.Path.GetInvalidFileNameChars();
-         Assert.Throws<ArgumentException>(() => builder.Create(new ClientSettings(ClientType.Legacy)
-                                                               {
-                                                                  Name = " " + invalidChars[0] + invalidChars[1] + " ",
-                                                                  Path = @"\\test\path\"
-                                                               }));
-      }
+        [Test]
+        public void ClientFactory_Create_ThrowsWhenSettingsNameContainsInvalidChars()
+        {
+            var factory = new ClientFactory();
+            var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            Assert.Throws<ArgumentException>(() => factory.Create(new ClientSettings
+            {
+                Name = " " + invalidChars[0] + invalidChars[1] + " "
+            }));
+        }
 
-      [Test]
-      public void CreateTest()
-      {
-         var legacyClientFactory = MockRepository.GenerateStub<ILegacyClientFactory>();
-         legacyClientFactory.Stub(x => x.Create()).Return(new LegacyClient());
-         var builder = new ClientFactory { LegacyClientFactory = legacyClientFactory };
-         var settings = new ClientSettings(ClientType.Legacy)
-                        {
-                           Name = "Client{ 1",
-                           Path = @"\\test\path\"
-                        };
-         var instance = builder.Create(settings);
-         Assert.IsNotNull(instance);
-         Assert.AreEqual("Client 1", instance.Settings.Name);
-      }
+        [Test]
+        public void ClientFactory_Create_ThrowsWhenSettingsServerIsNotValid()
+        {
+            var factory = new ClientFactory();
+            Assert.Throws<ArgumentException>(() => factory.Create(new ClientSettings { Name = "Client 1" }));
+        }
 
-      [Test]
-      public void Create_FahClientFactoryNull_Test()
-      {
-         var builder = new ClientFactory();
-         var settings = new ClientSettings(ClientType.FahClient)
-         {
-            Name = "FahClient",
-            Server = "192.168.100.200"
-         };
-         var instance = builder.Create(settings);
-         Assert.IsNull(instance);
-      }
+        [Test]
+        public void ClientFactory_Create_ReturnsNewClientAndSetsSettingsProperty()
+        {
+            // Arrange
+            var factory = new ClientFactory();
+            var settings = new ClientSettings
+            {
+                Name = "FahClient",
+                Server = "192.168.100.200"
+            };
+            // Act
+            var client = factory.Create(settings);
+            // Assert
+            Assert.IsNotNull(client);
+            Assert.AreEqual(settings, client.Settings);
+        }
 
-      [Test]
-      public void Create_LegacyClientFactoryNull_Test()
-      {
-         var builder = new ClientFactory();
-         var settings = new ClientSettings(ClientType.Legacy)
-         {
-            Name = "LegacyClient",
-            Path = @"\\test\path\"
-         };
-         var instance = builder.Create(settings);
-         Assert.IsNull(instance);
-      }
-   }
+        [Test]
+        public void ClientFactory_Create_ReturnsNullWhenFahClientFactoryIsNull()
+        {
+            // Arrange
+            var factory = new ClientFactory { FahClientFactory = null };
+            var settings = new ClientSettings
+            {
+                Name = "FahClient",
+                Server = "192.168.100.200"
+            };
+            // Act
+            var client = factory.Create(settings);
+            // Assert
+            Assert.IsNull(client);
+        }
+    }
 }

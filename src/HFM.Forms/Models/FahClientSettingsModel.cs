@@ -24,6 +24,7 @@ using System.Globalization;
 
 using HFM.Client.DataTypes;
 using HFM.Core;
+using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models
 {
@@ -67,7 +68,7 @@ namespace HFM.Forms.Models
 
       public bool NameError
       {
-         get { return !Validate.ClientName(Name); }
+         get { return !ClientSettings.ValidateName(Name); }
       }
 
       private string _server = String.Empty;
@@ -90,7 +91,7 @@ namespace HFM.Forms.Models
          get { return !Validate.ServerName(Server); }
       }
 
-      private int _port = Constants.DefaultFahClientPort;
+      private int _port = ClientSettings.DefaultPort;
 
       public int Port
       {

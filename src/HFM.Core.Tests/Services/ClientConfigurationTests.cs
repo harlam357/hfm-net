@@ -22,431 +22,319 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   [TestFixture]
-   public class ClientConfigurationTests
-   {
-      private IClientFactory _factory;
-      private ClientConfiguration _clientConfiguration;
+    [TestFixture]
+    public class ClientConfigurationTests
+    {
+        private ClientFactory _factory;
+        private ClientConfiguration _clientConfiguration;
 
-      [SetUp]
-      public void Init()
-      {
-         _factory = MockRepository.GenerateMock<IClientFactory>();
-         _clientConfiguration = new ClientConfiguration(_factory);
-      }
+        [SetUp]
+        public void TestSetUp()
+        {
+            _factory = new ClientFactory();
+            _clientConfiguration = new ClientConfiguration(_factory);
+        }
 
-      [Test]
-      public void ClientDictionary_ArgumentNullException_Test()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => new ClientConfiguration(null));
-      }
+        [Test]
+        public void ClientDictionary_ArgumentNullException_Test()
+        {
+            Assert.Throws(typeof(ArgumentNullException), () => new ClientConfiguration(null));
+        }
 
-      [Test]
-      public void LoadTest1()
-      {
-         // Arrange
-         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
-         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
-         // Act
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Load(settingsCollection);
-         // Assert
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _factory.VerifyAllExpectations();
-      }
+        [Test]
+        public void ClientConfiguration_Load_CreatesAndAddsClientsToTheConfiguration()
+        {
+            // Arrange
+            var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
+            // Act
+            _clientConfiguration.Load(settings);
+            // Assert
+            Assert.AreEqual(1, _clientConfiguration.Count);
+        }
 
-      [Test]
-      public void LoadTest2()
-      {
-         // Arrage
-         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
-         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
-         // Act
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Load(settingsCollection);
-         // Assert
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _factory.VerifyAllExpectations();
-      }
+        [Test]
+        public void ClientConfiguration_Load_SetsIsDirtyPropertyToFalse()
+        {
+            // Arrange
+            _clientConfiguration.Add("test", new FahClient());
+            Assert.IsTrue(_clientConfiguration.IsDirty);
+            var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
+            // Act
+            _clientConfiguration.Load(settings);
+            // Assert
+            Assert.AreEqual(1, _clientConfiguration.Count);
+            Assert.IsFalse(_clientConfiguration.IsDirty);
+        }
 
-      [Test]
-      public void LoadTest3()
-      {
-         // Arrange
-         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
-         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
-         // Act
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Remove("test");
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Load(settingsCollection);
-         // Assert
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _factory.VerifyAllExpectations();
-      }
+        [Test]
+        public void ClientConfiguration_Add_SetsIsDirtyPropertyToTrue()
+        {
+            // Act
+            _clientConfiguration.Add("test", new FahClient());
+            // Assert
+            Assert.IsTrue(_clientConfiguration.IsDirty);
+        }
 
-      [Test]
-      public void LoadTest4()
-      {
-         // Arrange
-         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
-         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { new LegacyClient { Settings = settingsCollection[0] } });
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         // Act
-         _clientConfiguration.Load(settingsCollection);
-         // Assert
-         Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
-         Assert.IsNull(eventArgs.Client);
-         _factory.VerifyAllExpectations();
-      }
+        [Test]
+        public void ClientConfiguration_Remove_SetsIsDirtyPropertyToTrue()
+        {
+            // Arrange
+            var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
+            _clientConfiguration.Load(settings);
+            // Act
+            bool result = _clientConfiguration.Remove("test");
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsTrue(_clientConfiguration.IsDirty);
+        }
 
-      [Test]
-      public void LoadVerifySubscriptionTest1()
-      {
-         // Arrange
-         var settingsCollection = new[] { new ClientSettings(ClientType.Legacy) { Name = "test" } };
-         var client1 = MockRepository.GenerateMock<IClient>();
-         client1.Stub(x => x.Settings).Return(settingsCollection[0]);
-         _factory.Expect(x => x.CreateCollection(settingsCollection)).Return(new[] { client1 });
-         // Act
-         _clientConfiguration.Load(settingsCollection);
-         // Assert
-         _factory.VerifyAllExpectations();
-         client1.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
-         client1.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
-      }
+        [Test]
+        public void ClientConfiguration_Load_RaisesConfigurationChangedEvent()
+        {
+            // Arrange
+            var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
+            ConfigurationChangedEventArgs eventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            // Act
+            _clientConfiguration.Load(settings);
+            // Assert
+            Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+            Assert.IsNull(eventArgs.Client);
+        }
 
-      [Test]
-      public void LoadTestArgumentNullException1()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Load(null));
-      }
+        // TODO: Load() method - test client SlotsChanged and RetrievalFinished subscriptions
 
-      [Test]
-      public void AddTest1()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-      }
+        [Test]
+        public void ClientConfiguration_Load_ThrowsWhenSettingsIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Load(null));
+        }
 
-      [Test]
-      public void AddTest2()
-      {
-         // Arrange
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         // Act
-         _clientConfiguration.Add("test", new LegacyClient());
-         // Assert
-         Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
-         Assert.IsNotNull(eventArgs.Client);
-      }
+        [Test]
+        public void ClientConfiguration_Add_RaisesConfigurationChangedEvent()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "test", Server = "foo" };
+            ConfigurationChangedEventArgs eventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            // Act
+            _clientConfiguration.Add(settings);
+            // Assert
+            Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+            Assert.IsNotNull(eventArgs.Client);
+        }
+        
+        [Test]
+        public void ClientConfiguration_Add_SubscribesToClientEvents()
+        {
+            // Arrange
+            var client = MockRepository.GenerateMock<IClient>();
+            // Act
+            _clientConfiguration.Add("test", client);
+            // Assert
+            client.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
+            client.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
+        }
 
-      [Test]
-      public void AddTest3()
-      {
-         // Arrange
-         var settings = new ClientSettings { Name = "test" };
-         _factory.Expect(x => x.Create(settings)).Return(
-            new FahClient(MockRepository.GenerateStub<IMessageConnection>()));
-         // Act
-         _clientConfiguration.Add(settings);
-         // Assert
-         _factory.VerifyAllExpectations();
-      }
+        [Test]
+        public void ClientConfiguration_ClientSlotsChangedRaisesConfigurationChanged()
+        {
+            // Arrange
+            var client = MockRepository.GenerateMock<IClient>();
+            bool clientInvalidateFired = false;
+            _clientConfiguration.ConfigurationChanged += (sender, args) =>
+            {
+                if (args.ChangedType == ConfigurationChangedType.Invalidate) clientInvalidateFired = true;
+            };
+            _clientConfiguration.Add("test", client);
+            // Act
+            client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
+            // Assert
+            Assert.IsTrue(clientInvalidateFired);
+        }
 
-      [Test]
-      public void AddVerifySubscriptionTest1()
-      {
-         // Arrange
-         var client = MockRepository.GenerateMock<IClient>();
-         // Act
-         _clientConfiguration.Add("test", client);
-         // Assert
-         client.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
-         client.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
-      }
+        [Test]
+        public void ClientConfiguration_ClientRetrievalFinishedRaisesConfigurationChanged()
+        {
+            // Arrange
+            var client = MockRepository.GenerateMock<IClient>();
+            bool clientDataInvalidatedFired = false;
+            _clientConfiguration.ConfigurationChanged += (sender, args) =>
+            {
+                if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
+            };
+            _clientConfiguration.Add("test", client);
+            // Act
+            client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
+            // Assert
+            Assert.IsTrue(clientDataInvalidatedFired);
+        }
 
-      [Test]
-      public void AddVerifySubscriptionTest2()
-      {
-         // Arrange
-         var client = MockRepository.GenerateMock<IClient>();
-         bool clientDataInvalidatedFired = false;
-         _clientConfiguration.DictionaryChanged += (sender, args) =>
-         {
-            if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
-         };
-         _clientConfiguration.Add("test", client);
-         // Act
-         client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
-         // Assert
-         Assert.IsTrue(clientDataInvalidatedFired);
-      }
+        [Test]
+        public void ClientConfiguration_Add_ThrowsWhenKeyIsNullAndClientIsNotNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add(null, new FahClient()));
+        }
 
-      [Test]
-      public void AddVerifySubscriptionTest3()
-      {
-         // Arrange
-         var client = MockRepository.GenerateMock<IClient>();
-         bool clientDataInvalidatedFired = false;
-         _clientConfiguration.DictionaryChanged += (sender, args) =>
-         {
-            if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
-         };
-         _clientConfiguration.Add("test", client);
-         // Act
-         client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
-         // Assert
-         Assert.IsTrue(clientDataInvalidatedFired);
-      }
+        [Test]
+        public void ClientConfiguration_Add_ThrowsWhenKeyIsNotNullAndClientIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add("test", null));
+        }
 
-      [Test]
-      public void AddTestArgumentNullException1()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Add(null, new LegacyClient()));
-      }
+        [Test]
+        public void ClientConfiguration_Add_ThrowsWhenSettingsIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add(null));
+        }
 
-      [Test]
-      public void AddTestArgumentNullException2()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () =>  _clientConfiguration.Add("test", null));
-      }
+        [Test]
+        public void ClientConfiguration_Edit_RaisesEvents()
+        {
+            // Arrange
+            _clientConfiguration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
+            ConfigurationChangedEventArgs changedEventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { changedEventArgs = e; };
+            ClientEditedEventArgs editedEventArgs = null;
+            _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
+            // Act
+            _clientConfiguration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
+            // Assert
+            Assert.AreEqual(1, _clientConfiguration.Count);
+            Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
+            Assert.AreEqual(ConfigurationChangedType.Edit, changedEventArgs.ChangedType);
+            Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
+            Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.DataPath());
+            Assert.AreEqual("test", editedEventArgs.PreviousName);
+            Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
+            Assert.AreEqual("test2", editedEventArgs.NewName);
+            Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
+        }
 
-      [Test]
-      public void AddTestArgumentNullException3()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Add(null));
-      }
+        [Test]
+        public void ClientConfiguration_Edit_ThrowsWhenClientNameAlreadyExistsInConfiguration()
+        {
+            // Arrange
+            _clientConfiguration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "foo" } });
+            _clientConfiguration.Add("other", new FahClient { Settings = new ClientSettings { Name = "other", Server = "bar" } });
+            Assert.AreEqual(2, _clientConfiguration.Count);
+            // Act & Assert
+            Assert.Throws(typeof(ArgumentException), () => _clientConfiguration.Edit("test", new ClientSettings { Name = "other", Server = "bar" }));
+        }
 
-      [Test]
-      public void EditTest1()
-      {
-         // Arrange
-         _clientConfiguration.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         ClientEditedEventArgs editedEventArgs = null;
-         _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
-         // Act
-         _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "test2", Path = "/home/harlam357/FAH/" });
-         // Assert
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
-         Assert.AreEqual(ConfigurationChangedType.Edit, eventArgs.ChangedType);
-         Assert.AreEqual("test2", eventArgs.Client.Settings.Name);
-         Assert.AreEqual("/home/harlam357/FAH/", eventArgs.Client.Settings.Path);
-         Assert.AreEqual("test", editedEventArgs.PreviousName);
-         Assert.AreEqual("/home/harlam357/", editedEventArgs.PreviousPath);
-         Assert.AreEqual("test2", editedEventArgs.NewName);
-         Assert.AreEqual("/home/harlam357/FAH/", editedEventArgs.NewPath);
-      }
+        [Test]
+        public void ClientConfiguration_Edit_ThrowsWhenKeyIsNullAndClientSettingsIsNotNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Edit(null, new ClientSettings()));
+        }
 
-      [Test]
-      public void EditTest2()
-      {
-         // Arrange
-         _clientConfiguration.Add("test", new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { Settings = new ClientSettings { Name = "test", Server = "server", Port = 36330 } });
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         ClientEditedEventArgs editedEventArgs = null;
-         _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
-         // Act
-         _clientConfiguration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
-         // Assert
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
-         Assert.AreEqual(ConfigurationChangedType.Edit, eventArgs.ChangedType);
-         Assert.AreEqual("test2", eventArgs.Client.Settings.Name);
-         Assert.AreEqual("server1-36331", eventArgs.Client.Settings.DataPath());
-         Assert.AreEqual("test", editedEventArgs.PreviousName);
-         Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
-         Assert.AreEqual("test2", editedEventArgs.NewName);
-         Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
-      }
+        [Test]
+        public void ClientConfiguration_Edit_ThrowsWhenKeyIsNotNullAndClientSettingsIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Edit("test", null));
+        }
 
-      [Test]
-      public void EditTestArgumentException1()
-      {
-         // Arrange
-         _clientConfiguration.Add("test", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "test", Path = "/home/harlam357/" } });
-         _clientConfiguration.Add("other", new LegacyClient { Settings = new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/other/" } });
-         Assert.AreEqual(2, _clientConfiguration.Count);
-         // Act
-         Assert.Throws(typeof(ArgumentException), () => _clientConfiguration.Edit("test", new ClientSettings(ClientType.Legacy) { Name = "other", Path = "/home/harlam357/FAH/" }));
-      }
+        [Test]
+        public void ClientConfiguration_Remove_ReturnsFalseWhenKeyDoesNotExist()
+        {
+            Assert.IsFalse(_clientConfiguration.Remove("test"));
+            Assert.IsFalse(_clientConfiguration.IsDirty);
+        }
 
-      [Test]
-      public void EditTestArgumentNullException1()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Edit(null, new ClientSettings()));
-      }
+        [Test]
+        public void ClientConfiguration_Remove_RaisesConfigurationChangedEvent()
+        {
+            // Arrange
+            ConfigurationChangedEventArgs eventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            _clientConfiguration.Add("test", new FahClient());
+            // Act
+            bool result = _clientConfiguration.Remove("test");
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(ConfigurationChangedType.Remove, eventArgs.ChangedType);
+            Assert.IsNotNull(eventArgs.Client);
+        }
 
-      [Test]
-      public void EditTestArgumentNullException2()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => _clientConfiguration.Edit("test", null));
-      }
+        [Test]
+        public void ClientConfiguration_Remove_CallsClientAbortAndFactoryRelease()
+        {
+            // Arrange
+            var client = MockRepository.GeneratePartialMock<FahClient>();
+            var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
+            var configuration = new ClientConfiguration(new ClientFactory { FahClientFactory = fahClientFactory });
+            configuration.Add("test", client);
+            client.Expect(x => x.Abort());
+            fahClientFactory.Expect(x => x.Release(client));
+            // Act
+            configuration.Remove("test");
+            // Assert
+            client.VerifyAllExpectations();
+            fahClientFactory.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void RemoveTest1()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         Assert.IsFalse(_clientConfiguration.Remove("test"));
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-      }
+        [Test]
+        public void ClientConfiguration_Remove_ThrowsWhenKeyIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Remove(null));
+        }
 
-      [Test]
-      public void RemoveTest2()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.Remove("test"));
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-      }
+        [Test]
+        public void ClientConfiguration_Clear_SetsIsDirtyPropertyToFalse()
+        {
+            // Arrange
+            _clientConfiguration.Add("test", new FahClient());
+            // Act
+            _clientConfiguration.Clear();
+            // Assert
+            Assert.IsFalse(_clientConfiguration.IsDirty);
+        }
 
-      [Test]
-      public void RemoveTest3()
-      {
-         // Arrange
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         // Act
-         Assert.IsFalse(_clientConfiguration.Remove("test"));
-         // Assert
-         Assert.IsNull(eventArgs);
-      }
+        [Test]
+        public void ClientConfiguration_Clear_DoesNotRaiseConfigurationChangedWhenConfigurationIsEmpty()
+        {
+            // Arrange
+            ConfigurationChangedEventArgs eventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            // Act
+            _clientConfiguration.Clear();
+            // Assert
+            Assert.IsNull(eventArgs);
+        }
 
-      [Test]
-      public void RemoveTest4()
-      {
-         // Arrange
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         _clientConfiguration.Add("test", new LegacyClient());
-         // Act
-         Assert.IsTrue(_clientConfiguration.Remove("test"));
-         // Assert
-         Assert.AreEqual(ConfigurationChangedType.Remove, eventArgs.ChangedType);
-         Assert.IsNotNull(eventArgs.Client);
-      }
+        [Test]
+        public void ClientConfiguration_Clear_RaisesConfigurationChangedEvent()
+        {
+            // Arrange
+            _clientConfiguration.Add("test", new FahClient());
+            ConfigurationChangedEventArgs eventArgs = null;
+            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            // Act
+            _clientConfiguration.Clear();
+            // Assert
+            Assert.AreEqual(ConfigurationChangedType.Clear, eventArgs.ChangedType);
+            Assert.IsNull(eventArgs.Client);
+        }
 
-      [Test]
-      public void RemoveTest5()
-      {
-         // Arrange
-         var client = MockRepository.GenerateMock<IClient>();
-         _clientConfiguration.Add("test", client);
-         client.Expect(x => x.Abort());
-         _factory.Expect(x => x.Release(client));
-         // Act
-         _clientConfiguration.Remove("test");
-         // Assert
-         client.VerifyAllExpectations();
-         _factory.VerifyAllExpectations();
-      }
-
-      [Test]
-      public void RemoveArgumentNullExceptionTest1()
-      {
-         Assert.Throws(typeof(ArgumentNullException), () => Assert.IsFalse(_clientConfiguration.Remove(null)));
-      }
-
-      [Test]
-      public void ClearTest1()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Clear();
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-      }
-
-      [Test]
-      public void ClearTest2()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Clear();
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-      }
-
-      [Test]
-      public void ClearTest3()
-      {
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Remove("test");
-         Assert.IsTrue(_clientConfiguration.IsDirty);
-         _clientConfiguration.Clear();
-         Assert.IsFalse(_clientConfiguration.IsDirty);
-      }
-
-      [Test]
-      public void ClearTest4()
-      {
-         Assert.AreEqual(0, _clientConfiguration.Count);
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         _clientConfiguration.Clear();
-         Assert.IsNull(eventArgs);
-      }
-
-      [Test]
-      public void ClearTest5()
-      {
-         Assert.AreEqual(0, _clientConfiguration.Count);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         _clientConfiguration.Clear();
-         Assert.AreEqual(ConfigurationChangedType.Clear, eventArgs.ChangedType);
-         Assert.IsNull(eventArgs.Client);
-      }
-
-      [Test]
-      public void ClearTest6()
-      {
-         Assert.AreEqual(0, _clientConfiguration.Count);
-         _clientConfiguration.Add("test", new LegacyClient());
-         Assert.AreEqual(1, _clientConfiguration.Count);
-         _clientConfiguration.Remove("test");
-         Assert.AreEqual(0, _clientConfiguration.Count);
-         ConfigurationChangedEventArgs eventArgs = null;
-         _clientConfiguration.DictionaryChanged += (sender, e) => { eventArgs = e; };
-         _clientConfiguration.Clear();
-         Assert.IsNull(eventArgs);
-      }
-
-      [Test]
-      public void ClearTest7()
-      {
-         // Arrange
-         var client1 = MockRepository.GenerateMock<IClient>();
-         _clientConfiguration.Add("test", client1);
-         client1.Expect(x => x.Abort());
-         var client2 = MockRepository.GenerateMock<IClient>();
-         _clientConfiguration.Add("test2", client2);
-         client2.Expect(x => x.Abort());
-         // Act
-         _clientConfiguration.Clear();
-         // Assert
-         client1.VerifyAllExpectations();
-         client2.VerifyAllExpectations();
-      }
-   }
+        [Test]
+        public void ClientConfiguration_Clear_CallsClientAbortAndFactoryRelease()
+        {
+            // Arrange
+            var client = MockRepository.GeneratePartialMock<FahClient>();
+            var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
+            var configuration = new ClientConfiguration(new ClientFactory { FahClientFactory = fahClientFactory });
+            configuration.Add("test", client);
+            client.Expect(x => x.Abort());
+            fahClientFactory.Expect(x => x.Release(client));
+            // Act
+            configuration.Clear();
+            // Assert
+            client.VerifyAllExpectations();
+            fahClientFactory.VerifyAllExpectations();
+        }
+    }
 }

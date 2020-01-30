@@ -30,7 +30,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -38,7 +37,6 @@ using Castle.Core.Logging;
 
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
-using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
@@ -50,1354 +48,1247 @@ using HFM.Proteins;
 
 namespace HFM.Forms
 {
-   public sealed class MainPresenter
-   {
-      #region Properties
+    public sealed class MainPresenter
+    {
+        #region Properties
 
-      /// <summary>
-      /// Command Line Arguments.
-      /// </summary>
-      public IEnumerable<Argument> Arguments { get; set; }
+        /// <summary>
+        /// Command Line Arguments.
+        /// </summary>
+        public IEnumerable<Argument> Arguments { get; set; }
 
-      /// <summary>
-      /// Holds the state of the window before it is hidden (minimize to tray behaviour)
-      /// </summary>
-      public FormWindowState OriginalWindowState { get; private set; }
+        /// <summary>
+        /// Holds the state of the window before it is hidden (minimize to tray behaviour)
+        /// </summary>
+        public FormWindowState OriginalWindowState { get; private set; }
 
-      private ILogger _logger;
+        private ILogger _logger;
 
-      public ILogger Logger
-      {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
-      }
+        public ILogger Logger
+        {
+            get { return _logger ?? (_logger = NullLogger.Instance); }
+            set { _logger = value; }
+        }
 
-      #endregion
+        #endregion
 
-      #region Fields
+        #region Fields
 
-      private HistoryPresenter _historyPresenter;
-      private readonly MainGridModel _gridModel;
-      private readonly UserStatsDataModel _userStatsDataModel;
+        private HistoryPresenter _historyPresenter;
+        private readonly MainGridModel _gridModel;
+        private readonly UserStatsDataModel _userStatsDataModel;
 
-      private readonly IMainView _view;
-      private readonly IMessagesView _messagesView;
-      private readonly IMessageBoxView _messageBoxView;
+        private readonly IMainView _view;
+        private readonly IMessagesView _messagesView;
+        private readonly IMessageBoxView _messageBoxView;
 
-      private readonly IViewFactory _viewFactory;
-      private readonly IPresenterFactory _presenterFactory;
+        private readonly IViewFactory _viewFactory;
+        private readonly IPresenterFactory _presenterFactory;
 
-      private readonly IClientConfiguration _clientConfiguration;
-      private readonly IProteinService _proteinService;
+        private readonly IClientConfiguration _clientConfiguration;
+        private readonly IProteinService _proteinService;
 
-      private readonly IUpdateLogic _updateLogic;
-      private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
-      private readonly IExternalProcessStarter _processStarter;
+        private readonly IUpdateLogic _updateLogic;
+        private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
+        private readonly IExternalProcessStarter _processStarter;
 
-      private readonly IPreferenceSet _prefs;
-      private readonly IClientSettingsManager _settingsManager;
+        private readonly IPreferenceSet _prefs;
+        private readonly ClientSettingsManager _settingsManager;
 
-      #endregion
+        #endregion
 
-      #region Constructor
+        #region Constructor
 
-      public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
-                           IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                           IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                           Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
-                           IPreferenceSet prefs, IClientSettingsManager settingsManager)
-      {
-         _gridModel = mainGridModel;
-         //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
-         _gridModel.AfterResetBindings += delegate
-                                          {
-                                             //_view.DataGridView.FreezeSelectionChanged = false;
-                                             DisplaySelectedSlotData();
-                                             _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
-                                          };
-         _gridModel.SelectedSlotChanged += (sender, e) =>
-                                           {
-                                              if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
+        public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
+                             IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
+                             IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
+                             Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
+                             IPreferenceSet prefs, ClientSettingsManager settingsManager)
+        {
+            _gridModel = mainGridModel;
+            //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
+            _gridModel.AfterResetBindings += delegate
+                                             {
+                                              //_view.DataGridView.FreezeSelectionChanged = false;
+                                              DisplaySelectedSlotData();
+                                                 _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
+                                             };
+            _gridModel.SelectedSlotChanged += (sender, e) =>
                                               {
-                                                 _view.DataGridView.Rows[e.Index].Selected = true;
-                                                 DisplaySelectedSlotData();
-                                              }
-                                           };
-         _userStatsDataModel = userStatsDataModel;
+                                                  if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
+                                                  {
+                                                      _view.DataGridView.Rows[e.Index].Selected = true;
+                                                      DisplaySelectedSlotData();
+                                                  }
+                                              };
+            _userStatsDataModel = userStatsDataModel;
 
-         // Views
-         _view = view;
-         _messagesView = messagesView;
-         _messageBoxView = messageBoxView;
-         //
-         _viewFactory = viewFactory;
-         _presenterFactory = presenterFactory;
-         // Collections
-         _clientConfiguration = clientConfiguration;
-         _proteinService = proteinService;
-         // Logic Services
-         _updateLogic = updateLogic;
-         _updateLogic.Owner = _view;
-         _retrievalModel = retrievalModel;
-         _processStarter = processStarter;
-         // Data Services
-         _prefs = prefs;
-         _settingsManager = settingsManager;
+            // Views
+            _view = view;
+            _messagesView = messagesView;
+            _messageBoxView = messageBoxView;
+            //
+            _viewFactory = viewFactory;
+            _presenterFactory = presenterFactory;
+            // Collections
+            _clientConfiguration = clientConfiguration;
+            _proteinService = proteinService;
+            // Logic Services
+            _updateLogic = updateLogic;
+            _updateLogic.Owner = _view;
+            _retrievalModel = retrievalModel;
+            _processStarter = processStarter;
+            // Data Services
+            _prefs = prefs;
+            _settingsManager = settingsManager;
 
-         _clientConfiguration.DictionaryChanged += delegate { AutoSaveConfig(); };
-      }
+            _clientConfiguration.ConfigurationChanged += delegate { AutoSaveConfig(); };
+        }
 
-      #endregion
+        #endregion
 
-      #region Initialize
+        #region Initialize
 
-      public void Initialize()
-      {
-         // Restore View Preferences (must be done AFTER DataGridView columns are setup)
-         RestoreViewPreferences();
-         //
-         _view.SetGridDataSource(_gridModel.BindingSource);
-         //
-         _prefs.PreferenceChanged += (s, e) =>
-         {
-            switch (e.Preference)
+        public void Initialize()
+        {
+            // Restore View Preferences (must be done AFTER DataGridView columns are setup)
+            RestoreViewPreferences();
+            //
+            _view.SetGridDataSource(_gridModel.BindingSource);
+            //
+            _prefs.PreferenceChanged += (s, e) =>
             {
-               case Preference.MinimizeTo:
-                  SetViewShowStyle();
-                  break;
-               case Preference.ColorLogFile:
-                  ApplyColorLogFileSetting();
-                  break;
-               case Preference.EocUserId:
-                  _userStatsDataModel.Refresh();
-                  break;
+                switch (e.Preference)
+                {
+                    case Preference.MinimizeTo:
+                        SetViewShowStyle();
+                        break;
+                    case Preference.ColorLogFile:
+                        ApplyColorLogFileSetting();
+                        break;
+                    case Preference.EocUserId:
+                        _userStatsDataModel.Refresh();
+                        break;
+                }
+            };
+        }
+
+        private void RestoreViewPreferences()
+        {
+            // Would like to do this here in lieu of in frmMain_Shown() event.
+            // There is some drawing error that if Minimized here, the first time the
+            // Form is restored from the system tray, the DataGridView is drawn with
+            // a big black box on the right hand side. Like it didn't get initialized
+            // properly when the Form was created.
+            //if (Prefs.RunMinimized)
+            //{
+            //   WindowState = FormWindowState.Minimized;
+            //}
+
+            // Look for start position
+            var location = _prefs.Get<Point>(Preference.FormLocation);
+            if (location.X != 0 && location.Y != 0)
+            {
+                _view.SetManualStartPosition();
+                _view.Location = location;
             }
-         };
-      }
+            // Look for view size
+            var size = _prefs.Get<Size>(Preference.FormSize);
+            if (size.Width != 0 && size.Height != 0)
+            {
+                // make sure values coming from the prefs are at least the minimums - Issue 234
+                if (size.Width < _view.MinimumSize.Width) size.Width = _view.MinimumSize.Width;
+                if (size.Height < _view.MinimumSize.Height) size.Height = _view.MinimumSize.Height;
 
-      private void RestoreViewPreferences()
-      {
-         // Would like to do this here in lieu of in frmMain_Shown() event.
-         // There is some drawing error that if Minimized here, the first time the
-         // Form is restored from the system tray, the DataGridView is drawn with
-         // a big black box on the right hand side. Like it didn't get initialized
-         // properly when the Form was created.
-         //if (Prefs.RunMinimized)
-         //{
-         //   WindowState = FormWindowState.Minimized;
-         //}
-
-         // Look for start position
-         var location = _prefs.Get<Point>(Preference.FormLocation);
-         if (location.X != 0 && location.Y != 0)
-         {
-            _view.SetManualStartPosition();
-            _view.Location = location;
-         }
-         // Look for view size
-         var size = _prefs.Get<Size>(Preference.FormSize);
-         if (size.Width != 0 && size.Height != 0)
-         {
-            // make sure values coming from the prefs are at least the minimums - Issue 234
-            if (size.Width < _view.MinimumSize.Width) size.Width = _view.MinimumSize.Width;
-            if (size.Height < _view.MinimumSize.Height) size.Height = _view.MinimumSize.Height;
+                if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
+                {
+                    size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
+                }
+                _view.Size = size;
+                // make sure split location from the prefs is at least the minimum panel size - Issue 234
+                var formSplitLocation = _prefs.Get<int>(Preference.FormSplitterLocation);
+                if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
+                _view.SplitContainer.SplitterDistance = formSplitLocation;
+            }
 
             if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
             {
-               size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
+                ShowHideLogWindow(false);
             }
-            _view.Size = size;
-            // make sure split location from the prefs is at least the minimum panel size - Issue 234
-            var formSplitLocation = _prefs.Get<int>(Preference.FormSplitterLocation);
-            if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
-            _view.SplitContainer.SplitterDistance = formSplitLocation;
-         }
-
-         if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
-         {
-            ShowHideLogWindow(false);
-         }
-         if (!_prefs.Get<bool>(Preference.QueueWindowVisible))
-         {
-            ShowHideQueue(false);
-         }
-         _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLog);
-
-         _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
-         _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
-
-         try
-         {
-            // Restore the columns' state
-            var columns = _prefs.Get<ICollection<string>>(Preference.FormColumns);
-            if (columns != null)
+            if (!_prefs.Get<bool>(Preference.QueueWindowVisible))
             {
-               var colsList = columns.ToList();
-               colsList.Sort();
-
-               for (int i = 0; i < colsList.Count && i < MainForm.NumberOfDisplayFields; i++)
-               {
-                  string[] tokens = colsList[i].Split(',');
-                  int index = Int32.Parse(tokens[3]);
-                  _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
-                  if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
-                  {
-                     _view.DataGridView.Columns[index].Width = Int32.Parse(tokens[1]);
-                  }
-                  _view.DataGridView.Columns[index].Visible = Boolean.Parse(tokens[2]);
-               }
+                ShowHideQueue(false);
             }
-         }
-         catch (NullReferenceException)
-         {
-            // This happens when the FormColumns setting is empty
-         }
-      }
+            _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLog);
 
-      #endregion
+            _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
+            _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
 
-      #region View Handling Methods
-
-      public void ViewShown()
-      {
-         // Add the Index Changed Handler here after everything is shown
-         _view.DataGridView.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
-         // Then run it once to ensure the last column is set to Fill
-         DataGridViewColumnDisplayIndexChanged();
-         // Add the Splitter Moved Handler here after everything is shown - Issue 8
-         // When the log file window (Panel2) is visible, this event will fire.
-         // Update the split location directly from the split panel control. - Issue 8
-         _view.SplitContainer.SplitterMoved += delegate
-                                               {
-                                                  _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
-                                                  _prefs.Save();
-                                               };
-
-         if (_prefs.Get<bool>(Preference.RunMinimized))
-         {
-            _view.WindowState = FormWindowState.Minimized;
-         }
-
-         Debug.Assert(Arguments != null);
-         var openFile = Arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.OpenFile));
-         if (openFile != null)
-         {
-            if (!String.IsNullOrEmpty(openFile.Data))
-            {
-               LoadConfigFile(openFile.Data);
-            }
-         }
-         else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
-         {
-            var fileName = _prefs.Get<string>(Preference.DefaultConfigFile);
-            if (!String.IsNullOrEmpty(fileName))
-            {
-               LoadConfigFile(fileName);
-            }
-         }
-
-         SetViewShowStyle();
-
-         if (_prefs.Get<bool>(Preference.StartupCheckForUpdate))
-         {
-            _updateLogic.CheckForUpdate();
-         }
-      }
-
-      public void ViewResize()
-      {
-         if (_view.WindowState != FormWindowState.Minimized)
-         {
-            OriginalWindowState = _view.WindowState;
-            // ReApply Sort when restoring from the sys tray - Issue 32
-            if (_view.ShowInTaskbar == false)
-            {
-               _gridModel.Sort();
-            }
-         }
-
-         SetViewShowStyle();
-
-         // When the log file window (panel) is collapsed, get the split location
-         // changes based on the height of Panel1 - Issue 8
-         if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
-         {
-            _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
-         }
-      }
-
-      public bool ViewClosing()
-      {
-         if (!CheckForConfigurationChanges())
-         {
-            return true;
-         }
-
-         SaveColumnSettings();
-
-         // Save location and size data
-         // RestoreBounds remembers normal position if minimized or maximized
-         if (_view.WindowState == FormWindowState.Normal)
-         {
-            _prefs.Set(Preference.FormLocation, _view.Location);
-            _prefs.Set(Preference.FormSize, _view.Size);
-         }
-         else
-         {
-            _prefs.Set(Preference.FormLocation, _view.RestoreBounds.Location);
-            _prefs.Set(Preference.FormSize, _view.RestoreBounds.Size);
-         }
-
-         _prefs.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
-         _prefs.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
-
-         CheckForAndFireUpdateProcess();
-
-         return false;
-      }
-
-      public void SetViewShowStyle()
-      {
-         switch (_prefs.Get<MinimizeToOption>(Preference.MinimizeTo))
-         {
-            case MinimizeToOption.SystemTray:
-               _view.SetNotifyIconVisible(true);
-               _view.ShowInTaskbar = (_view.WindowState != FormWindowState.Minimized);
-               break;
-            case MinimizeToOption.TaskBar:
-               _view.SetNotifyIconVisible(false);
-               _view.ShowInTaskbar = true;
-               break;
-            case MinimizeToOption.Both:
-               _view.SetNotifyIconVisible(true);
-               _view.ShowInTaskbar = true;
-               break;
-         }
-      }
-
-      private void CheckForAndFireUpdateProcess()
-      {
-         if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
-         {
-            Logger.InfoFormat("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
             try
             {
-               Process.Start(_updateLogic.UpdateFilePath);
+                // Restore the columns' state
+                var columns = _prefs.Get<ICollection<string>>(Preference.FormColumns);
+                if (columns != null)
+                {
+                    var colsList = columns.ToList();
+                    colsList.Sort();
+
+                    for (int i = 0; i < colsList.Count && i < MainForm.NumberOfDisplayFields; i++)
+                    {
+                        string[] tokens = colsList[i].Split(',');
+                        int index = Int32.Parse(tokens[3]);
+                        _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+                        if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
+                        {
+                            _view.DataGridView.Columns[index].Width = Int32.Parse(tokens[1]);
+                        }
+                        _view.DataGridView.Columns[index].Visible = Boolean.Parse(tokens[2]);
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               string message = String.Format(CultureInfo.CurrentCulture,
-                                              "Update process failed to start with the following error:{0}{0}{1}",
-                                              Environment.NewLine, ex.Message);
-               _messageBoxView.ShowError(_view, message, _view.Text);
+                // This happens when the FormColumns setting is empty
             }
-         }
-      }
+        }
 
-      #endregion
+        #endregion
 
-      #region Data Grid View Handling Methods
+        #region View Handling Methods
 
-      private void DisplaySelectedSlotData()
-      {
-         if (_gridModel.SelectedSlot != null)
-         {
-            _view.SetClientMenuItemsVisible(_gridModel.ClientFilesMenuItemVisible,
-                                            _gridModel.CachedLogMenuItemVisible,
-                                            _gridModel.ClientFilesMenuItemVisible ||
-                                            _gridModel.CachedLogMenuItemVisible);
+        public void ViewShown()
+        {
+            // Add the Index Changed Handler here after everything is shown
+            _view.DataGridView.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
+            // Then run it once to ensure the last column is set to Fill
+            DataGridViewColumnDisplayIndexChanged();
+            // Add the Splitter Moved Handler here after everything is shown - Issue 8
+            // When the log file window (Panel2) is visible, this event will fire.
+            // Update the split location directly from the split panel control. - Issue 8
+            _view.SplitContainer.SplitterMoved += delegate
+                                                  {
+                                                      _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
+                                                      _prefs.Save();
+                                                  };
 
-            _view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
-
-            _view.SetQueue(_gridModel.SelectedSlot.Queue,
-                           _gridModel.SelectedSlot.UnitInfo.SlotType,
-                           _gridModel.SelectedSlot.Settings.UtcOffsetIsZero);
-
-            // if we've got a good queue read, let queueControl_QueueIndexChanged()
-            // handle populating the log lines.
-            if (_gridModel.SelectedSlot.Queue != null) return;
-
-            // otherwise, load up the CurrentLogLines
-            SetLogLines(_gridModel.SelectedSlot, _gridModel.SelectedSlot.CurrentLogLines);
-         }
-         else
-         {
-            ClearLogAndQueueViewer();
-         }
-      }
-
-      public void QueueIndexChanged(int index)
-      {
-         if (index == -1)
-         {
-            _view.LogFileViewer.SetNoLogLines();
-            return;
-         }
-
-         if (_gridModel.SelectedSlot != null)
-         {
-            // Check the UnitLogLines array against the requested Queue Index - Issue 171
-            try
+            if (_prefs.Get<bool>(Preference.RunMinimized))
             {
-               var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
-               // show the current log even if not the current unit index - 2/17/12
-               if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
-               {
-                  logLines = _gridModel.SelectedSlot.CurrentLogLines;
-               }
-
-               SetLogLines(_gridModel.SelectedSlot, logLines);
+                _view.WindowState = FormWindowState.Minimized;
             }
-            catch (ArgumentOutOfRangeException ex)
+
+            Debug.Assert(Arguments != null);
+            var openFile = Arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.OpenFile));
+            if (openFile != null)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _view.LogFileViewer.SetNoLogLines();
+                if (!String.IsNullOrEmpty(openFile.Data))
+                {
+                    LoadConfigFile(openFile.Data);
+                }
             }
-         }
-         else
-         {
-            ClearLogAndQueueViewer();
-         }
-      }
-
-      private void ClearLogAndQueueViewer()
-      {
-         // clear the log text
-         _view.LogFileViewer.SetNoLogLines();
-         // clear the queue control
-         _view.SetQueue(null);
-      }
-
-      private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
-      {
-         /*** Checked LogLine Count ***/
-         if (logLines != null && logLines.Count > 0)
-         {
-            // Different Client... Load LogLines
-            if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
+            else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-               //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.Name));
+                var fileName = _prefs.Get<string>(Preference.DefaultConfigFile);
+                if (!String.IsNullOrEmpty(fileName))
+                {
+                    LoadConfigFile(fileName);
+                }
             }
-            // Textbox has text lines
-            else if (_view.LogFileViewer.Lines.Length > 0)
+
+            SetViewShowStyle();
+
+            if (_prefs.Get<bool>(Preference.StartupCheckForUpdate))
             {
-               string lastLogLine = String.Empty;
-
-               try // to get the last LogLine from the instance
-               {
-                  lastLogLine = logLines[logLines.Count - 1].ToString();
-               }
-               catch (ArgumentOutOfRangeException ex)
-               {
-                  // even though i've checked the count above, it could have changed in between then
-                  // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                  Logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
-               }
-
-               // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
-               // Otherwise, the log has not changed, don't update and perform the log "flicker".
-               if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
-               {
-                  _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-                  //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
-               }
+                _updateLogic.CheckForUpdate();
             }
-            // Nothing in the Textbox... Load LogLines
+        }
+
+        public void ViewResize()
+        {
+            if (_view.WindowState != FormWindowState.Minimized)
+            {
+                OriginalWindowState = _view.WindowState;
+                // ReApply Sort when restoring from the sys tray - Issue 32
+                if (_view.ShowInTaskbar == false)
+                {
+                    _gridModel.Sort();
+                }
+            }
+
+            SetViewShowStyle();
+
+            // When the log file window (panel) is collapsed, get the split location
+            // changes based on the height of Panel1 - Issue 8
+            if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
+            {
+                _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
+            }
+        }
+
+        public bool ViewClosing()
+        {
+            if (!CheckForConfigurationChanges())
+            {
+                return true;
+            }
+
+            SaveColumnSettings();
+
+            // Save location and size data
+            // RestoreBounds remembers normal position if minimized or maximized
+            if (_view.WindowState == FormWindowState.Normal)
+            {
+                _prefs.Set(Preference.FormLocation, _view.Location);
+                _prefs.Set(Preference.FormSize, _view.Size);
+            }
             else
             {
-               _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+                _prefs.Set(Preference.FormLocation, _view.RestoreBounds.Location);
+                _prefs.Set(Preference.FormSize, _view.RestoreBounds.Size);
             }
-         }
-         else
-         {
+
+            _prefs.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
+            _prefs.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
+
+            CheckForAndFireUpdateProcess();
+
+            return false;
+        }
+
+        public void SetViewShowStyle()
+        {
+            switch (_prefs.Get<MinimizeToOption>(Preference.MinimizeTo))
+            {
+                case MinimizeToOption.SystemTray:
+                    _view.SetNotifyIconVisible(true);
+                    _view.ShowInTaskbar = (_view.WindowState != FormWindowState.Minimized);
+                    break;
+                case MinimizeToOption.TaskBar:
+                    _view.SetNotifyIconVisible(false);
+                    _view.ShowInTaskbar = true;
+                    break;
+                case MinimizeToOption.Both:
+                    _view.SetNotifyIconVisible(true);
+                    _view.ShowInTaskbar = true;
+                    break;
+            }
+        }
+
+        private void CheckForAndFireUpdateProcess()
+        {
+            if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
+            {
+                Logger.InfoFormat("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
+                try
+                {
+                    Process.Start(_updateLogic.UpdateFilePath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    string message = String.Format(CultureInfo.CurrentCulture,
+                                                   "Update process failed to start with the following error:{0}{0}{1}",
+                                                   Environment.NewLine, ex.Message);
+                    _messageBoxView.ShowError(_view, message, _view.Text);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Data Grid View Handling Methods
+
+        private void DisplaySelectedSlotData()
+        {
+            if (_gridModel.SelectedSlot != null)
+            {
+                // TODO: StatusLabelLeftText for v7 client
+                //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
+
+                _view.SetQueue(_gridModel.SelectedSlot.Queue,
+                               _gridModel.SelectedSlot.UnitInfo.SlotType);
+
+                // if we've got a good queue read, let queueControl_QueueIndexChanged()
+                // handle populating the log lines.
+                if (_gridModel.SelectedSlot.Queue != null) return;
+
+                // otherwise, load up the CurrentLogLines
+                SetLogLines(_gridModel.SelectedSlot, _gridModel.SelectedSlot.CurrentLogLines);
+            }
+            else
+            {
+                ClearLogAndQueueViewer();
+            }
+        }
+
+        public void QueueIndexChanged(int index)
+        {
+            if (index == -1)
+            {
+                _view.LogFileViewer.SetNoLogLines();
+                return;
+            }
+
+            if (_gridModel.SelectedSlot != null)
+            {
+                // Check the UnitLogLines array against the requested Queue Index - Issue 171
+                try
+                {
+                    var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
+                    // show the current log even if not the current unit index - 2/17/12
+                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
+                    {
+                        logLines = _gridModel.SelectedSlot.CurrentLogLines;
+                    }
+
+                    SetLogLines(_gridModel.SelectedSlot, logLines);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    _view.LogFileViewer.SetNoLogLines();
+                }
+            }
+            else
+            {
+                ClearLogAndQueueViewer();
+            }
+        }
+
+        private void ClearLogAndQueueViewer()
+        {
+            // clear the log text
             _view.LogFileViewer.SetNoLogLines();
-         }
+            // clear the queue control
+            _view.SetQueue(null);
+        }
 
-         if (_prefs.Get<bool>(Preference.FollowLog))
-         {
-            _view.LogFileViewer.ScrollToBottom();
-         }
-      }
+        private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
+        {
+            /*** Checked LogLine Count ***/
+            if (logLines != null && logLines.Count > 0)
+            {
+                // Different Client... Load LogLines
+                if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
+                {
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
 
-      private void DataGridViewColumnDisplayIndexChanged()
-      {
-         if (_view.DataGridView.Columns.Count == MainForm.NumberOfDisplayFields)
-         {
+                    //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.Name));
+                }
+                // Textbox has text lines
+                else if (_view.LogFileViewer.Lines.Length > 0)
+                {
+                    string lastLogLine = String.Empty;
+
+                    try // to get the last LogLine from the instance
+                    {
+                        lastLogLine = logLines[logLines.Count - 1].ToString();
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        // even though i've checked the count above, it could have changed in between then
+                        // and now... and if the count is 0 it will yield this exception.  Log It!!!
+                        Logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
+                    }
+
+                    // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
+                    // Otherwise, the log has not changed, don't update and perform the log "flicker".
+                    if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
+                    {
+                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+
+                        //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
+                    }
+                }
+                // Nothing in the Textbox... Load LogLines
+                else
+                {
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+                }
+            }
+            else
+            {
+                _view.LogFileViewer.SetNoLogLines();
+            }
+
+            if (_prefs.Get<bool>(Preference.FollowLog))
+            {
+                _view.LogFileViewer.ScrollToBottom();
+            }
+        }
+
+        private void DataGridViewColumnDisplayIndexChanged()
+        {
+            if (_view.DataGridView.Columns.Count == MainForm.NumberOfDisplayFields)
+            {
+                foreach (DataGridViewColumn column in _view.DataGridView.Columns)
+                {
+                    if (column.DisplayIndex < _view.DataGridView.Columns.Count - 1)
+                    {
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    }
+                    else
+                    {
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    }
+                }
+
+                SaveColumnSettings(); // Save Column Settings - Issue 73
+                _prefs.Save();
+            }
+        }
+
+        private void SaveColumnSettings()
+        {
+            // Save column state data
+            // including order, column width and whether or not the column is visible
+            var columns = new List<string>();
+            int i = 0;
+
             foreach (DataGridViewColumn column in _view.DataGridView.Columns)
             {
-               if (column.DisplayIndex < _view.DataGridView.Columns.Count - 1)
-               {
-                  column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-               }
-               else
-               {
-                  column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-               }
+                columns.Add(String.Format(CultureInfo.InvariantCulture,
+                                        "{0},{1},{2},{3}",
+                                        column.DisplayIndex.ToString("D2"),
+                                        column.Width,
+                                        column.Visible,
+                                        i++));
             }
 
-            SaveColumnSettings(); // Save Column Settings - Issue 73
-            _prefs.Save();
-         }
-      }
+            _prefs.Set(Preference.FormColumns, columns);
+        }
 
-      private void SaveColumnSettings()
-      {
-         // Save column state data
-         // including order, column width and whether or not the column is visible
-         var columns = new List<string>();
-         int i = 0;
+        public void DataGridViewSorted()
+        {
+            _gridModel.ResetSelectedSlot();
+        }
 
-         foreach (DataGridViewColumn column in _view.DataGridView.Columns)
-         {
-            columns.Add(String.Format(CultureInfo.InvariantCulture,
-                                    "{0},{1},{2},{3}",
-                                    column.DisplayIndex.ToString("D2"),
-                                    column.Width,
-                                    column.Visible,
-                                    i++));
-         }
-
-         _prefs.Set(Preference.FormColumns, columns);
-      }
-
-      public void DataGridViewSorted()
-      {
-         _gridModel.ResetSelectedSlot();
-      }
-
-      public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
-      {
-         DataGridView.HitTestInfo hti = _view.DataGridView.HitTest(coordX, coordY);
-         if (button == MouseButtons.Right)
-         {
-            if (hti.Type == DataGridViewHitTestType.Cell)
+        public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
+        {
+            DataGridView.HitTestInfo hti = _view.DataGridView.HitTest(coordX, coordY);
+            if (button == MouseButtons.Right)
             {
-               if (_view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
-               {
-                  _view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
-               }
+                if (hti.Type == DataGridViewHitTestType.Cell)
+                {
+                    if (_view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
+                    {
+                        _view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
+                    }
 
-               // Check for SelectedSlot, and get out if not found
-               if (_gridModel.SelectedSlot == null) return;
+                    // Check for SelectedSlot, and get out if not found
+                    if (_gridModel.SelectedSlot == null) return;
 
-               _view.SetGridContextMenuItemsVisible(_gridModel.ClientFilesMenuItemVisible,
-                                                    _gridModel.CachedLogMenuItemVisible,
-                                                    _gridModel.ClientFilesMenuItemVisible ||
-                                                    _gridModel.CachedLogMenuItemVisible,
-                                                    _gridModel.FahClientMenuItemsVisible);
-
-               _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
+                    _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
+                }
             }
-         }
-         if (button == MouseButtons.Left && clicks == 2)
-         {
-            if (hti.Type == DataGridViewHitTestType.Cell)
+            if (button == MouseButtons.Left && clicks == 2)
             {
-               // Check for SelectedSlot, and get out if not found
-               if (_gridModel.SelectedSlot == null) return;
+                if (hti.Type == DataGridViewHitTestType.Cell)
+                {
+                    // Check for SelectedSlot, and get out if not found
+                    if (_gridModel.SelectedSlot == null) return;
 
-               if (_gridModel.SelectedSlot.Settings.LegacyClientSubType.Equals(LegacyClientSubType.Path))
-               {
-                  HandleProcessStartResult(_processStarter.ShowFileExplorer(_gridModel.SelectedSlot.Settings.Path));
-               }
+                    // TODO: What to do on double left click on v7 client?
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        #endregion
 
-      #region File Handling Methods
+        #region File Handling Methods
 
-      public void FileNewClick()
-      {
-         if (CheckForConfigurationChanges())
-         {
-            ClearConfiguration();
-         }
-      }
-
-      public void FileOpenClick()
-      {
-         if (CheckForConfigurationChanges())
-         {
-            var openFileDialogView = _viewFactory.GetOpenFileDialogView();
-            openFileDialogView.DefaultExt = _settingsManager.FileExtension;
-            openFileDialogView.Filter = _settingsManager.FileTypeFilters;
-            openFileDialogView.FileName = _settingsManager.FileName;
-            openFileDialogView.RestoreDirectory = true;
-            if (openFileDialogView.ShowDialog() == DialogResult.OK)
+        public void FileNewClick()
+        {
+            if (CheckForConfigurationChanges())
             {
-               ClearConfiguration();
-               LoadConfigFile(openFileDialogView.FileName, openFileDialogView.FilterIndex);
+                ClearConfiguration();
             }
-            _viewFactory.Release(openFileDialogView);
-         }
-      }
+        }
 
-      private void ClearConfiguration()
-      {
-         // clear the clients and UI
-         _settingsManager.ClearFileName();
-         _clientConfiguration.Clear();
-      }
+        public void FileOpenClick()
+        {
+            if (CheckForConfigurationChanges())
+            {
+                var openFileDialogView = _viewFactory.GetOpenFileDialogView();
+                openFileDialogView.DefaultExt = _settingsManager.FileExtension;
+                openFileDialogView.Filter = _settingsManager.FileTypeFilters;
+                openFileDialogView.FileName = _settingsManager.FileName;
+                openFileDialogView.RestoreDirectory = true;
+                if (openFileDialogView.ShowDialog() == DialogResult.OK)
+                {
+                    ClearConfiguration();
+                    LoadConfigFile(openFileDialogView.FileName, openFileDialogView.FilterIndex);
+                }
+                _viewFactory.Release(openFileDialogView);
+            }
+        }
 
-      private void LoadConfigFile(string filePath, int filterIndex = 1)
-      {
-         Debug.Assert(filePath != null);
+        private void ClearConfiguration()
+        {
+            // clear the clients and UI
+            _settingsManager.ClearFileName();
+            _clientConfiguration.Clear();
+        }
 
-         try
-         {
-            // Read the config file
-            _clientConfiguration.Load(_settingsManager.Read(filePath, filterIndex));
+        private void LoadConfigFile(string filePath, int filterIndex = 1)
+        {
+            Debug.Assert(filePath != null);
 
+            try
+            {
+                // Read the config file
+                _clientConfiguration.Load(_settingsManager.Read(filePath, filterIndex));
+
+                if (_clientConfiguration.Count == 0)
+                {
+                    _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                   "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+            }
+        }
+
+        private void AutoSaveConfig()
+        {
+            if (_prefs.Get<bool>(Preference.AutoSaveConfig) &&
+                _clientConfiguration.IsDirty)
+            {
+                FileSaveClick();
+            }
+        }
+
+        public void FileSaveClick()
+        {
             if (_clientConfiguration.Count == 0)
             {
-               _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+                return;
             }
-         }
-         catch (Exception ex)
-         {
-            Logger.ErrorFormat(ex, "{0}", ex.Message);
-            _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-               "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
-         }
-      }
 
-      private void AutoSaveConfig()
-      {
-         if (_prefs.Get<bool>(Preference.AutoSaveConfig) &&
-             _clientConfiguration.IsDirty)
-         {
-            FileSaveClick();
-         }
-      }
-
-      public void FileSaveClick()
-      {
-         if (_clientConfiguration.Count == 0)
-         {
-            return;
-         }
-
-         if (String.IsNullOrEmpty(_settingsManager.FileName))
-         {
-            FileSaveAsClick();
-         }
-         else
-         {
-            try
+            if (String.IsNullOrEmpty(_settingsManager.FileName))
             {
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName);
-               _clientConfiguration.IsDirty = false;
+                FileSaveAsClick();
             }
-            catch (Exception ex)
+            else
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                try
+                {
+                    _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName, _settingsManager.FilterIndex);
+                    _clientConfiguration.IsDirty = false;
+                }
+                catch (Exception ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                       "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                }
             }
-         }
-      }
+        }
 
-      public void FileSaveAsClick()
-      {
-         if (_clientConfiguration.Count == 0)
-         {
-            return;
-         }
-
-         var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
-         saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
-         saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
-         if (saveFileDialogView.ShowDialog() == DialogResult.OK)
-         {
-            try
+        public void FileSaveAsClick()
+        {
+            if (_clientConfiguration.Count == 0)
             {
-               // Issue 75
-               _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
-               _clientConfiguration.IsDirty = false;
+                return;
             }
-            catch (Exception ex)
+
+            var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
+            saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
+            saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
+            if (saveFileDialogView.ShowDialog() == DialogResult.OK)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                  "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                try
+                {
+                    // Issue 75
+                    _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
+                    _clientConfiguration.IsDirty = false;
+                }
+                catch (Exception ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                       "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                }
             }
-         }
-         _viewFactory.Release(saveFileDialogView);
-      }
+            _viewFactory.Release(saveFileDialogView);
+        }
 
-      private bool CheckForConfigurationChanges()
-      {
-         if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
-         {
-            DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view,
-               String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
-               _view.Text);
-
-            switch (result)
+        private bool CheckForConfigurationChanges()
+        {
+            if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
             {
-               case DialogResult.Yes:
-                  FileSaveClick();
-                  return !_clientConfiguration.IsDirty;
-               case DialogResult.No:
-                  return true;
-               case DialogResult.Cancel:
-                  return false;
+                DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view,
+                   String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
+                   _view.Text);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        FileSaveClick();
+                        return !_clientConfiguration.IsDirty;
+                    case DialogResult.No:
+                        return true;
+                    case DialogResult.Cancel:
+                        return false;
+                }
+                return false;
             }
-            return false;
-         }
 
-         return true;
-      }
+            return true;
+        }
 
-      #endregion
+        #endregion
 
-      #region Edit Menu Handling Methods
+        #region Edit Menu Handling Methods
 
-      public void EditPreferencesClick()
-      {
-         var prefDialog = _viewFactory.GetPreferencesDialog();
-         prefDialog.ShowDialog(_view);
-         _viewFactory.Release(prefDialog);
+        public void EditPreferencesClick()
+        {
+            var prefDialog = _viewFactory.GetPreferencesDialog();
+            prefDialog.ShowDialog(_view);
+            _viewFactory.Release(prefDialog);
 
-         _view.DataGridView.Invalidate();
-      }
+            _view.DataGridView.Invalidate();
+        }
 
-      #endregion
+        #endregion
 
-      #region Help Menu Handling Methods
+        #region Help Menu Handling Methods
 
-      public void ShowHfmLogFile()
-      {
-         HandleProcessStartResult(_processStarter.ShowHfmLogFile());
-      }
+        public void ShowHfmLogFile()
+        {
+            HandleProcessStartResult(_processStarter.ShowHfmLogFile());
+        }
 
-      public void ShowHfmDataFiles()
-      {
-         HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.Get<string>(Preference.ApplicationDataFolderPath)));
-      }
+        public void ShowHfmDataFiles()
+        {
+            HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.Get<string>(Preference.ApplicationDataFolderPath)));
+        }
 
-      public void ShowHfmGoogleGroup()
-      {
-         HandleProcessStartResult(_processStarter.ShowHfmGoogleGroup());
-      }
+        public void ShowHfmGoogleGroup()
+        {
+            HandleProcessStartResult(_processStarter.ShowHfmGoogleGroup());
+        }
 
-      public void CheckForUpdateClick()
-      {
-         // if already in progress, stub out...
-         if (_updateLogic.CheckInProgress) return;
+        public void CheckForUpdateClick()
+        {
+            // if already in progress, stub out...
+            if (_updateLogic.CheckInProgress) return;
 
-         _updateLogic.CheckForUpdate(true);
-      }
+            _updateLogic.CheckForUpdate(true);
+        }
 
-      #endregion
+        #endregion
 
-      #region Clients Menu Handling Methods
+        #region Clients Menu Handling Methods
 
-      internal void ClientsAddClick()
-      {
-         var dialog = _presenterFactory.GetFahClientSetupPresenter();
-         dialog.SettingsModel = new FahClientSettingsModel();
-         while (dialog.ShowDialog(_view) == DialogResult.OK)
-         {
-            var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-            //if (_clientDictionary.ContainsKey(settings.Name))
-            //{
-            //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
-            //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
-            //   continue;
-            //}
-            // perform the add
-            try
+        internal void ClientsAddClick()
+        {
+            var dialog = _presenterFactory.GetFahClientSetupPresenter();
+            dialog.SettingsModel = new FahClientSettingsModel();
+            while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
-               _clientConfiguration.Add(settings);
-               break;
+                var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                //if (_clientDictionary.ContainsKey(settings.Name))
+                //{
+                //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
+                //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
+                //   continue;
+                //}
+                // perform the add
+                try
+                {
+                    _clientConfiguration.Add(settings);
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                }
             }
-            catch (ArgumentException ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-            }
-         }
-         _presenterFactory.Release(dialog);
-      }
+            _presenterFactory.Release(dialog);
+        }
 
-      internal void ClientsAddLegacyClick()
-      {
-         var dialog = _presenterFactory.GetLegacyClientSetupPresenter();
-         dialog.SettingsModel = new LegacyClientSettingsModel();
-         while (dialog.ShowDialog(_view) == DialogResult.OK)
-         {
-            var settings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-            // perform the add
-            try
-            {
-               _clientConfiguration.Add(settings);
-               break;
-            }
-            catch (ArgumentException ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
-            }
-         }
-         _presenterFactory.Release(dialog);
-      }
+        public void ClientsEditClick()
+        {
+            // Check for SelectedSlot, and get out if not found
+            if (_gridModel.SelectedSlot == null) return;
 
-      public void ClientsEditClick()
-      {
-         // Check for SelectedSlot, and get out if not found
-         if (_gridModel.SelectedSlot == null) return;
-
-         if (_gridModel.SelectedSlot.Settings.IsFahClient())
-         {
             EditFahClient();
-         }
-         else if (_gridModel.SelectedSlot.Settings.IsLegacy())
-         {
-            EditLegacyClient();
-         }
-         else
-         {
-            // no External support yet
-            throw new InvalidOperationException("Client type is not supported.");
-         }
-      }
+        }
 
-      private void EditFahClient()
-      {
-         Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
-         ClientSettings originalSettings = client.Settings;
-         Debug.Assert(originalSettings.IsFahClient());
+        private void EditFahClient()
+        {
+            Debug.Assert(_gridModel.SelectedSlot != null);
+            IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
+            ClientSettings originalSettings = client.Settings;
+            Debug.Assert(originalSettings.IsFahClient());
 
-         var dialog = _presenterFactory.GetFahClientSetupPresenter();
-         dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
-         while (dialog.ShowDialog(_view) == DialogResult.OK)
-         {
-            var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-            // perform the edit
+            var dialog = _presenterFactory.GetFahClientSetupPresenter();
+            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+            while (dialog.ShowDialog(_view) == DialogResult.OK)
+            {
+                var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                // perform the edit
+                try
+                {
+                    _clientConfiguration.Edit(originalSettings.Name, newSettings);
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                }
+            }
+            _presenterFactory.Release(dialog);
+        }
+
+        public void ClientsDeleteClick()
+        {
+            // Check for SelectedSlot, and get out if not found
+            if (_gridModel.SelectedSlot == null) return;
+
+            _clientConfiguration.Remove(_gridModel.SelectedSlot.Settings.Name);
+        }
+
+        public void ClientsRefreshSelectedClick()
+        {
+            // Check for SelectedSlot, and get out if not found
+            if (_gridModel.SelectedSlot == null) return;
+
+            var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
+            Task.Factory.StartNew(client.Retrieve);
+        }
+
+        public void ClientsRefreshAllClick()
+        {
+            _retrievalModel.RunClientRetrieval();
+        }
+
+        public void ClientsViewCachedLogClick()
+        {
+            // Check for SelectedSlot, and get out if not found
+            if (_gridModel.SelectedSlot == null) return;
+
+            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+            if (File.Exists(logFilePath))
+            {
+                HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
+            }
+            else
+            {
+                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.",
+                                               _gridModel.SelectedSlot.Settings.Name);
+                _messageBoxView.ShowInformation(_view, message, _view.Text);
+            }
+        }
+
+        #endregion
+
+        #region Grid Context Menu Handling Methods
+
+        internal void ClientsFoldSlotClick()
+        {
+            if (_gridModel.SelectedSlot == null) return;
+
+            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            {
+                client.Fold(_gridModel.SelectedSlot.SlotId);
+            }
+        }
+
+        internal void ClientsPauseSlotClick()
+        {
+            if (_gridModel.SelectedSlot == null) return;
+
+            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            {
+                client.Pause(_gridModel.SelectedSlot.SlotId);
+            }
+        }
+
+        internal void ClientsFinishSlotClick()
+        {
+            if (_gridModel.SelectedSlot == null) return;
+
+            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            {
+                client.Finish(_gridModel.SelectedSlot.SlotId);
+            }
+        }
+
+        #endregion
+
+        #region View Menu Handling Methods
+
+        public void ViewMessagesClick()
+        {
+            if (_messagesView.Visible)
+            {
+                _messagesView.Close();
+            }
+            else
+            {
+                // Restore state data
+                var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
+                var size = _prefs.Get<Size>(Preference.MessagesFormSize);
+                location = WindowPosition.Normalize(location, size);
+
+                if (location.X != 0 && location.Y != 0)
+                {
+                    _messagesView.SetManualStartPosition();
+                    _messagesView.SetLocation(location.X, location.Y);
+                }
+
+                if (size.Width != 0 && size.Height != 0)
+                {
+                    _messagesView.SetSize(size.Width, size.Height);
+                }
+
+                _messagesView.Show();
+                _messagesView.ScrollToEnd();
+            }
+        }
+
+        public void ShowHideLogWindow()
+        {
+            ShowHideLogWindow(!_view.LogFileViewer.Visible);
+        }
+
+        private void ShowHideLogWindow(bool show)
+        {
+            if (!show)
+            {
+                _view.LogFileViewer.Visible = false;
+                _view.SplitContainer.Panel2Collapsed = true;
+                _prefs.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height - _prefs.Get<int>(Preference.FormLogWindowHeight));
+            }
+            else
+            {
+                _view.LogFileViewer.Visible = true;
+                _view.DisableViewResizeEvent();  // disable Form resize event for this operation
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
+                _view.EnableViewResizeEvent();   // re-enable
+                _view.SplitContainer.Panel2Collapsed = false;
+            }
+        }
+
+        public void ShowHideQueue()
+        {
+            ShowHideQueue(!_view.QueueControlVisible);
+        }
+
+        private void ShowHideQueue(bool show)
+        {
+            if (!show)
+            {
+                _view.QueueControlVisible = false;
+                _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
+                _view.SplitContainer2.SplitterDistance = 27;
+            }
+            else
+            {
+                _view.QueueControlVisible = true;
+                _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
+                _view.SplitContainer2.SplitterDistance = 289;
+            }
+        }
+
+        public void ViewToggleDateTimeClick()
+        {
+            var style = _prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+            _prefs.Set(Preference.TimeFormatting, style == TimeFormatting.None
+                                    ? TimeFormatting.Format1
+                                    : TimeFormatting.None);
+            _prefs.Save();
+            _view.DataGridView.Invalidate();
+        }
+
+        public void ViewToggleCompletedCountStyleClick()
+        {
+            var style = _prefs.Get<UnitTotalsType>(Preference.UnitTotals);
+            _prefs.Set(Preference.UnitTotals, style == UnitTotalsType.All
+                                    ? UnitTotalsType.ClientStart
+                                    : UnitTotalsType.All);
+            _prefs.Save();
+            _view.DataGridView.Invalidate();
+        }
+
+        public void ViewToggleVersionInformationClick()
+        {
+            _prefs.Set(Preference.DisplayVersions, !_prefs.Get<bool>(Preference.DisplayVersions));
+            _prefs.Save();
+            _view.DataGridView.Invalidate();
+        }
+
+        public void ViewCycleBonusCalculationClick()
+        {
+            var calculationType = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+            int typeIndex = 0;
+            // None is always LAST entry
+            if (calculationType != BonusCalculationType.None)
+            {
+                typeIndex = (int)calculationType;
+                typeIndex++;
+            }
+
+            calculationType = (BonusCalculationType)typeIndex;
+            _prefs.Set(Preference.BonusCalculation, calculationType);
+            _prefs.Save();
+
+            string calculationTypeString = (from item in OptionsModel.BonusCalculationList
+                                            where ((BonusCalculationType)item.ValueMember) == calculationType
+                                            select item.DisplayMember).First();
+            _view.ShowNotifyToolTip(calculationTypeString);
+            _view.DataGridView.Invalidate();
+        }
+
+        public void ViewCycleCalculationClick()
+        {
+            var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+            int typeIndex = 0;
+            // EffectiveRate is always LAST entry
+            if (calculationType != PpdCalculationType.EffectiveRate)
+            {
+                typeIndex = (int)calculationType;
+                typeIndex++;
+            }
+
+            calculationType = (PpdCalculationType)typeIndex;
+            _prefs.Set(Preference.PpdCalculation, calculationType);
+            _prefs.Save();
+
+            string calculationTypeString = (from item in OptionsModel.PpdCalculationList
+                                            where ((PpdCalculationType)item.ValueMember) == calculationType
+                                            select item.DisplayMember).First();
+            _view.ShowNotifyToolTip(calculationTypeString);
+            _view.DataGridView.Invalidate();
+        }
+
+        internal void ViewToggleFollowLogFile()
+        {
+            _prefs.Set(Preference.FollowLog, !_prefs.Get<bool>(Preference.FollowLog));
+        }
+
+        #endregion
+
+        #region Tools Menu Handling Methods
+
+        public async void ToolsDownloadProjectsClick()
+        {
             try
             {
-               _clientConfiguration.Edit(originalSettings.Name, newSettings);
-               break;
+                var downloader = new ProjectDownloader(_proteinService);
+                await downloader.ExecuteAsyncWithProgress(true);
+                if (downloader.Result != null)
+                {
+                    var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
+                    if (proteinChanges.Count > 0)
+                    {
+                        _retrievalModel.RunClientRetrieval();
+                        using (var dlg = new ProteinLoadResultsDialog())
+                        {
+                            dlg.DataBind(proteinChanges);
+                            dlg.ShowDialog(_view);
+                        }
+                    }
+                }
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
             }
-         }
-         _presenterFactory.Release(dialog);
-      }
+        }
 
-      private void EditLegacyClient()
-      {
-         Debug.Assert(_gridModel.SelectedSlot != null);
-         IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
-         ClientSettings originalSettings = client.Settings;
-         Debug.Assert(originalSettings.IsLegacy());
+        private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinDictionaryChange>>
+        {
+            private readonly IProteinService _proteinService;
 
-         var dialog = _presenterFactory.GetLegacyClientSetupPresenter();
-         dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, LegacyClientSettingsModel>(originalSettings);
-         while (dialog.ShowDialog(_view) == DialogResult.OK)
-         {
-            var newSettings = AutoMapper.Mapper.Map<LegacyClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-            // perform the edit
-            try
+            public ProjectDownloader(IProteinService proteinService)
             {
-               _clientConfiguration.Edit(originalSettings.Name, newSettings);
-               break;
+                if (proteinService == null) throw new ArgumentNullException("proteinService");
+                _proteinService = proteinService;
             }
-            catch (ArgumentException ex)
+
+            protected override async Task<IEnumerable<ProteinDictionaryChange>> OnExecuteAsync(IProgress<ProgressInfo> progress)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-               _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
             }
-         }
-         _presenterFactory.Release(dialog);
-      }
+        }
 
-      public void ClientsDeleteClick()
-      {
-         // Check for SelectedSlot, and get out if not found
-         if (_gridModel.SelectedSlot == null) return;
+        public void ToolsBenchmarksClick()
+        {
+            int projectId = 0;
 
-         _clientConfiguration.Remove(_gridModel.SelectedSlot.Settings.Name);
-      }
+            // Check for SelectedSlot, and if found... load its ProjectID.
+            if (_gridModel.SelectedSlot != null)
+            {
+                projectId = _gridModel.SelectedSlot.UnitInfo.ProjectID;
+            }
 
-      public void ClientsMergeClick()
-      {
-         //var settings = new ClientInstanceSettings { ExternalInstance = true };
-         //var newHost = InstanceProvider.GetInstance<ILegacyClientSetupPresenter>();
-         //newHost.SettingsModel = new LegacyClientSettingsModel(settings);
-         //while (newHost.ShowDialog(_view).Equals(DialogResult.OK))
-         //{
-         //   try
-         //   {
-         //      Add(newHost.SettingsModel.Settings);
-         //      break;
-         //   }
-         //   catch (InvalidOperationException ex)
-         //   {
-         //      HfmTrace.WriteToHfmConsole(ex);
-         //      _messageBoxView.ShowError(_view, ex.Message, _view.Text);
-         //   }
-         //}
-      }
+            var benchmarksView = _viewFactory.GetBenchmarksForm();
+            benchmarksView.Closed += (s, e) => _viewFactory.Release(benchmarksView);
+            benchmarksView.ProjectId = projectId;
 
-      public void ClientsRefreshSelectedClick()
-      {
-         // Check for SelectedSlot, and get out if not found
-         if (_gridModel.SelectedSlot == null) return;
-
-         var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
-         Task.Factory.StartNew(client.Retrieve);
-      }
-
-      public void ClientsRefreshAllClick()
-      {
-         _retrievalModel.RunClientRetrieval();
-      }
-
-      public void ClientsViewCachedLogClick()
-      {
-         // Check for SelectedSlot, and get out if not found
-         if (_gridModel.SelectedSlot == null) return;
-
-         string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
-         if (File.Exists(logFilePath))
-         {
-            HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
-         }
-         else
-         {
-            string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.",
-                                           _gridModel.SelectedSlot.Settings.Name);
-            _messageBoxView.ShowInformation(_view, message, _view.Text);
-         }
-      }
-
-      public void ClientsViewClientFilesClick()
-      {
-         // Check for SelectedSlot, and get out if not found);
-         if (_gridModel.SelectedSlot == null) return;
-         Debug.Assert(_gridModel.SelectedSlot.Settings.IsLegacy());
-
-         if (_gridModel.SelectedSlot.Settings.LegacyClientSubType.Equals(LegacyClientSubType.Path))
-         {
-            HandleProcessStartResult(_processStarter.ShowFileExplorer(_gridModel.SelectedSlot.Settings.DataPath()));
-         }
-      }
-
-      #endregion
-
-      #region Grid Context Menu Handling Methods
-
-      internal void ClientsFoldSlotClick()
-      {
-         if (_gridModel.SelectedSlot == null) return;
-
-         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
-         {
-            client.Fold(_gridModel.SelectedSlot.SlotId);
-         }
-      }
-
-      internal void ClientsPauseSlotClick()
-      {
-         if (_gridModel.SelectedSlot == null) return;
-
-         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
-         {
-            client.Pause(_gridModel.SelectedSlot.SlotId);
-         }
-      }
-
-      internal void ClientsFinishSlotClick()
-      {
-         if (_gridModel.SelectedSlot == null) return;
-
-         for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
-         {
-            client.Finish(_gridModel.SelectedSlot.SlotId);
-         }
-      }
-
-      #endregion
-
-      #region View Menu Handling Methods
-
-      public void ViewMessagesClick()
-      {
-         if (_messagesView.Visible)
-         {
-            _messagesView.Close();
-         }
-         else
-         {
             // Restore state data
-            var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
-            var size = _prefs.Get<Size>(Preference.MessagesFormSize);
-            location = WindowPosition.Normalize(location, size);
+            var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
+            var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
 
             if (location.X != 0 && location.Y != 0)
             {
-               _messagesView.SetManualStartPosition();
-               _messagesView.SetLocation(location.X, location.Y);
+                benchmarksView.Location = location;
+            }
+            else
+            {
+                benchmarksView.Location = new Point(_view.Location.X + 50, _view.Location.Y + 50);
             }
 
             if (size.Width != 0 && size.Height != 0)
             {
-               _messagesView.SetSize(size.Width, size.Height);
+                benchmarksView.Size = size;
             }
 
-            _messagesView.Show();
-            _messagesView.ScrollToEnd();
-         }
-      }
+            benchmarksView.Show();
+        }
 
-      public void ShowHideLogWindow()
-      {
-         ShowHideLogWindow(!_view.LogFileViewer.Visible);
-      }
+        public void ToolsHistoryClick()
+        {
+            Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
 
-      private void ShowHideLogWindow(bool show)
-      {
-         if (!show)
-         {
-            _view.LogFileViewer.Visible = false;
-            _view.SplitContainer.Panel2Collapsed = true;
-            _prefs.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
-            _view.Size = new Size(_view.Size.Width, _view.Size.Height - _prefs.Get<int>(Preference.FormLogWindowHeight));
-         }
-         else
-         {
-            _view.LogFileViewer.Visible = true;
-            _view.DisableViewResizeEvent();  // disable Form resize event for this operation
-            _view.Size = new Size(_view.Size.Width, _view.Size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
-            _view.EnableViewResizeEvent();   // re-enable
-            _view.SplitContainer.Panel2Collapsed = false;
-         }
-      }
-
-      public void ShowHideQueue()
-      {
-         ShowHideQueue(!_view.QueueControlVisible);
-      }
-
-      private void ShowHideQueue(bool show)
-      {
-         if (!show)
-         {
-            _view.QueueControlVisible = false;
-            _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
-            _view.SplitContainer2.SplitterDistance = 27;
-         }
-         else
-         {
-            _view.QueueControlVisible = true;
-            _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
-            _view.SplitContainer2.SplitterDistance = 289;
-         }
-      }
-
-      public void ViewToggleDateTimeClick()
-      {
-         var style = _prefs.Get<TimeFormatting>(Preference.TimeFormatting);
-         _prefs.Set(Preference.TimeFormatting, style == TimeFormatting.None
-                                 ? TimeFormatting.Format1
-                                 : TimeFormatting.None);
-         _prefs.Save();
-         _view.DataGridView.Invalidate();
-      }
-
-      public void ViewToggleCompletedCountStyleClick()
-      {
-         var style = _prefs.Get<UnitTotalsType>(Preference.UnitTotals);
-         _prefs.Set(Preference.UnitTotals, style == UnitTotalsType.All
-                                 ? UnitTotalsType.ClientStart
-                                 : UnitTotalsType.All);
-         _prefs.Save();
-         _view.DataGridView.Invalidate();
-      }
-
-      public void ViewToggleVersionInformationClick()
-      {
-         _prefs.Set(Preference.DisplayVersions, !_prefs.Get<bool>(Preference.DisplayVersions));
-         _prefs.Save();
-         _view.DataGridView.Invalidate();
-      }
-
-      public void ViewCycleBonusCalculationClick()
-      {
-         var calculationType = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
-         int typeIndex = 0;
-         // None is always LAST entry
-         if (calculationType != BonusCalculationType.None)
-         {
-            typeIndex = (int)calculationType;
-            typeIndex++;
-         }
-
-         calculationType = (BonusCalculationType)typeIndex;
-         _prefs.Set(Preference.BonusCalculation, calculationType);
-         _prefs.Save();
-
-         string calculationTypeString = (from item in OptionsModel.BonusCalculationList
-                                         where ((BonusCalculationType)item.ValueMember) == calculationType
-                                         select item.DisplayMember).First();
-         _view.ShowNotifyToolTip(calculationTypeString);
-         _view.DataGridView.Invalidate();
-      }
-
-      public void ViewCycleCalculationClick()
-      {
-         var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
-         int typeIndex = 0;
-         // EffectiveRate is always LAST entry
-         if (calculationType != PpdCalculationType.EffectiveRate)
-         {
-            typeIndex = (int)calculationType;
-            typeIndex++;
-         }
-
-         calculationType = (PpdCalculationType)typeIndex;
-         _prefs.Set(Preference.PpdCalculation, calculationType);
-         _prefs.Save();
-
-         string calculationTypeString = (from item in OptionsModel.PpdCalculationList
-                                         where ((PpdCalculationType)item.ValueMember) == calculationType
-                                         select item.DisplayMember).First();
-         _view.ShowNotifyToolTip(calculationTypeString);
-         _view.DataGridView.Invalidate();
-      }
-
-      internal void ViewToggleFollowLogFile()
-      {
-         _prefs.Set(Preference.FollowLog, !_prefs.Get<bool>(Preference.FollowLog));
-      }
-
-      #endregion
-
-      #region Tools Menu Handling Methods
-
-      public async void ToolsDownloadProjectsClick()
-      {
-         try
-         {
-            var downloader = new ProjectDownloader(_proteinService);
-            await downloader.ExecuteAsyncWithProgress(true);
-            if (downloader.Result != null)
+            if (_historyPresenter == null)
             {
-               var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
-               if (proteinChanges.Count > 0)
-               {
-                  _retrievalModel.RunClientRetrieval();
-                  using (var dlg = new ProteinLoadResultsDialog())
-                  {
-                     dlg.DataBind(proteinChanges);
-                     dlg.ShowDialog(_view);
-                  }
-               }
+                _historyPresenter = _presenterFactory.GetHistoryPresenter();
+                _historyPresenter.Initialize();
+                _historyPresenter.PresenterClosed += (sender, args) =>
+                {
+                    _presenterFactory.Release(_historyPresenter);
+                    _historyPresenter = null;
+                };
             }
-         }
-         catch (Exception ex)
-         {
-            _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
-         }
-      }
 
-      private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinDictionaryChange>>
-      {
-         private readonly IProteinService _proteinService;
-
-         public ProjectDownloader(IProteinService proteinService)
-         {
-            if (proteinService == null) throw new ArgumentNullException("proteinService");
-            _proteinService = proteinService;
-         }
-
-         protected override async Task<IEnumerable<ProteinDictionaryChange>> OnExecuteAsync(IProgress<ProgressInfo> progress)
-         {
-            return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
-         }
-      }
-
-      public void ToolsBenchmarksClick()
-      {
-         int projectId = 0;
-
-         // Check for SelectedSlot, and if found... load its ProjectID.
-         if (_gridModel.SelectedSlot != null)
-         {
-            projectId = _gridModel.SelectedSlot.UnitInfo.ProjectID;
-         }
-
-         var benchmarksView = _viewFactory.GetBenchmarksForm();
-         benchmarksView.Closed += (s, e) => _viewFactory.Release(benchmarksView);
-         benchmarksView.ProjectId = projectId;
-
-         // Restore state data
-         var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
-         var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
-
-         if (location.X != 0 && location.Y != 0)
-         {
-            benchmarksView.Location = location;
-         }
-         else
-         {
-            benchmarksView.Location = new Point(_view.Location.X + 50, _view.Location.Y + 50);
-         }
-
-         if (size.Width != 0 && size.Height != 0)
-         {
-            benchmarksView.Size = size;
-         }
-
-         benchmarksView.Show();
-      }
-
-      public void ToolsHistoryClick()
-      {
-         Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
-
-         if (_historyPresenter == null)
-         {
-            _historyPresenter = _presenterFactory.GetHistoryPresenter();
-            _historyPresenter.Initialize();
-            _historyPresenter.PresenterClosed += (sender, args) =>
+            if (_historyPresenter != null)
             {
-               _presenterFactory.Release(_historyPresenter);
-               _historyPresenter = null;
-            };
-         }
+                _historyPresenter.Show();
+            }
+        }
 
-         if (_historyPresenter != null)
-         {
-            _historyPresenter.Show();
-         }
-      }
+        internal void ToolsPointsCalculatorClick()
+        {
+            var calculatorForm = _viewFactory.GetProteinCalculatorForm();
+            calculatorForm.Closed += (s, e) => _viewFactory.Release(calculatorForm);
+            calculatorForm.Show(_view);
+        }
 
-      internal void ToolsPointsCalculatorClick()
-      {
-         var calculatorForm = _viewFactory.GetProteinCalculatorForm();
-         calculatorForm.Closed += (s, e) => _viewFactory.Release(calculatorForm);
-         calculatorForm.Show(_view);
-      }
+        #endregion
 
-      #endregion
+        #region Web Menu Handling Methods
 
-      #region Web Menu Handling Methods
+        public void ShowEocUserPage()
+        {
+            HandleProcessStartResult(_processStarter.ShowEocUserPage());
+        }
 
-      public void ShowEocUserPage()
-      {
-         HandleProcessStartResult(_processStarter.ShowEocUserPage());
-      }
+        public void ShowStanfordUserPage()
+        {
+            HandleProcessStartResult(_processStarter.ShowStanfordUserPage());
+        }
 
-      public void ShowStanfordUserPage()
-      {
-         HandleProcessStartResult(_processStarter.ShowStanfordUserPage());
-      }
+        public void ShowEocTeamPage()
+        {
+            HandleProcessStartResult(_processStarter.ShowEocTeamPage());
+        }
 
-      public void ShowEocTeamPage()
-      {
-         HandleProcessStartResult(_processStarter.ShowEocTeamPage());
-      }
+        public void RefreshUserStatsData()
+        {
+            _userStatsDataModel.Refresh();
+        }
 
-      public void RefreshUserStatsData()
-      {
-         _userStatsDataModel.Refresh();
-      }
+        public void ShowHfmGitHub()
+        {
+            HandleProcessStartResult(_processStarter.ShowHfmGitHub());
+        }
 
-      public void ShowHfmGitHub()
-      {
-         HandleProcessStartResult(_processStarter.ShowHfmGitHub());
-      }
+        #endregion
 
-      #endregion
+        #region System Tray Icon Handling Methods
 
-      #region System Tray Icon Handling Methods
+        public void NotifyIconDoubleClick()
+        {
+            if (_view.WindowState == FormWindowState.Minimized)
+            {
+                _view.WindowState = OriginalWindowState;
+            }
+            else
+            {
+                OriginalWindowState = _view.WindowState;
+                _view.WindowState = FormWindowState.Minimized;
+            }
+        }
 
-      public void NotifyIconDoubleClick()
-      {
-         if (_view.WindowState == FormWindowState.Minimized)
-         {
-            _view.WindowState = OriginalWindowState;
-         }
-         else
-         {
-            OriginalWindowState = _view.WindowState;
-            _view.WindowState = FormWindowState.Minimized;
-         }
-      }
+        public void NotifyIconRestoreClick()
+        {
+            if (_view.WindowState == FormWindowState.Minimized)
+            {
+                _view.WindowState = OriginalWindowState;
+            }
+            else if (_view.WindowState == FormWindowState.Maximized)
+            {
+                _view.WindowState = FormWindowState.Normal;
+            }
+        }
 
-      public void NotifyIconRestoreClick()
-      {
-         if (_view.WindowState == FormWindowState.Minimized)
-         {
-            _view.WindowState = OriginalWindowState;
-         }
-         else if (_view.WindowState == FormWindowState.Maximized)
-         {
-            _view.WindowState = FormWindowState.Normal;
-         }
-      }
+        public void NotifyIconMinimizeClick()
+        {
+            if (_view.WindowState != FormWindowState.Minimized)
+            {
+                OriginalWindowState = _view.WindowState;
+                _view.WindowState = FormWindowState.Minimized;
+            }
+        }
 
-      public void NotifyIconMinimizeClick()
-      {
-         if (_view.WindowState != FormWindowState.Minimized)
-         {
-            OriginalWindowState = _view.WindowState;
-            _view.WindowState = FormWindowState.Minimized;
-         }
-      }
+        public void NotifyIconMaximizeClick()
+        {
+            if (_view.WindowState != FormWindowState.Maximized)
+            {
+                _view.WindowState = FormWindowState.Maximized;
+                OriginalWindowState = _view.WindowState;
+            }
+        }
 
-      public void NotifyIconMaximizeClick()
-      {
-         if (_view.WindowState != FormWindowState.Maximized)
-         {
-            _view.WindowState = FormWindowState.Maximized;
-            OriginalWindowState = _view.WindowState;
-         }
-      }
+        #endregion
 
-      #endregion
+        #region Other Handling Methods
 
-      #region Other Handling Methods
+        private void ApplyColorLogFileSetting()
+        {
+            _view.LogFileViewer.HighlightLines(_prefs.Get<bool>(Preference.ColorLogFile));
+        }
 
-      private void ApplyColorLogFileSetting()
-      {
-         _view.LogFileViewer.HighlightLines(_prefs.Get<bool>(Preference.ColorLogFile));
-      }
+        private void HandleProcessStartResult(string message)
+        {
+            if (message != null)
+            {
+                _messageBoxView.ShowError(_view, message, _view.Text);
+            }
+        }
 
-      private void HandleProcessStartResult(string message)
-      {
-         if (message != null)
-         {
-            _messageBoxView.ShowError(_view, message, _view.Text);
-         }
-      }
+        public void SetUserStatsDataViewStyle(bool showTeamStats)
+        {
+            _userStatsDataModel.SetViewStyle(showTeamStats);
+        }
 
-      public void SetUserStatsDataViewStyle(bool showTeamStats)
-      {
-         _userStatsDataModel.SetViewStyle(showTeamStats);
-      }
+        #endregion
 
-      #endregion
-
-      /// <summary>
-      /// Finds the SlotModel by key (Name).
-      /// </summary>
-      public SlotModel FindSlotModel(string key)
-      {
-         return _clientConfiguration.Slots.FirstOrDefault(slot => slot.Name == key);
-      }
-   }
+        /// <summary>
+        /// Finds the SlotModel by key (Name).
+        /// </summary>
+        public SlotModel FindSlotModel(string key)
+        {
+            return _clientConfiguration.Slots.FirstOrDefault(slot => slot.Name == key);
+        }
+    }
 }

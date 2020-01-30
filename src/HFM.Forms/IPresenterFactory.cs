@@ -5,8 +5,6 @@ namespace HFM.Forms
    {
       IFahClientSetupPresenter GetFahClientSetupPresenter();
 
-      ILegacyClientSetupPresenter GetLegacyClientSetupPresenter();
-
       HistoryPresenter GetHistoryPresenter();
 
       void Release(object presenter);

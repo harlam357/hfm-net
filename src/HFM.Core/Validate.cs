@@ -28,10 +28,6 @@ namespace HFM.Core
    {
       #region Constants
 
-      private const string ValidNameFirst = "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
-      private const string ValidNameMiddle = "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\] \\.]";
-      private const string ValidNameLast = "[a-zA-Z0-9\\+=\\-_\\$&^\\[\\]]";
-
       private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
 
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
@@ -49,58 +45,6 @@ namespace HFM.Core
       #endregion
 
       #region Methods
-
-      /// <summary>
-      /// Validate Client Name
-      /// </summary>
-      public static bool ClientName(string name)
-      {
-         if (name == null) return false;
-
-         var rValidName = new Regex(String.Format(CultureInfo.InvariantCulture,
-            "^{0}{1}+{2}$", ValidNameFirst, ValidNameMiddle, ValidNameLast), RegexOptions.Singleline);
-         return rValidName.IsMatch(name);
-      }
-
-      /// <summary>
-      /// Clean Client Name
-      /// </summary>
-      public static string CleanClientName(string name)
-      {
-         if (name == null) return null;
-
-         var rValidFirst = new Regex(ValidNameFirst, RegexOptions.Singleline);
-         var rValidMiddle = new Regex(ValidNameMiddle, RegexOptions.Singleline);
-         var rValidLast = new Regex(ValidNameLast, RegexOptions.Singleline);
-
-         var sbldr = new StringBuilder(name.Length);
-         for (int i = 0; i < name.Length; i++)
-         {
-            if (i == 0)
-            {
-               if (rValidFirst.IsMatch(name[i].ToString()))
-               {
-                  sbldr.Append(name[i]);
-               }
-            }
-            else if (i == name.Length - 1)
-            {
-               if (rValidLast.IsMatch(name[i].ToString()))
-               {
-                  sbldr.Append(name[i]);
-               }
-            }
-            else
-            {
-               if (rValidMiddle.IsMatch(name[i].ToString()))
-               {
-                  sbldr.Append(name[i]);
-               }
-            }
-         }
-
-         return sbldr.ToString();
-      }
 
       /// <summary>
       /// Validate File Name

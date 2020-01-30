@@ -428,7 +428,7 @@ namespace HFM.Core
          if (newName == null) throw new ArgumentNullException("newName");
          
          // Core library - should have a valid client name 
-         Debug.Assert(Validate.ClientName(newName));
+         Debug.Assert(ClientSettings.ValidateName(newName));
 
          // GetBenchmarks() BEFORE entering write lock 
          // because it uses a read lock

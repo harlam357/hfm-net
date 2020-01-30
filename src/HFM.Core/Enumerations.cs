@@ -27,19 +27,7 @@ namespace HFM.Core
    public enum ClientType
    {
       FahClient,
-      Legacy,
-      External //?
-   }
-
-   /// <summary>
-   /// Legacy Client Sub Types
-   /// </summary>
-   public enum LegacyClientSubType
-   {
-      None,
-      Path,
-      Ftp,
-      Http
+      Legacy
    }
 
    // ReSharper disable InconsistentNaming

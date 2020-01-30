@@ -68,8 +68,6 @@ namespace HFM.Forms
          InitializeComponent();
 
          SetupDataGridViewColumns(SlotsDataGridView);
-         ClientTimeOffsetUpDown.Minimum = Constants.MinOffsetMinutes;
-         ClientTimeOffsetUpDown.Maximum = Constants.MaxOffsetMinutes;
       }
 
       private static void SetupDataGridViewColumns(DataGridView dgv)

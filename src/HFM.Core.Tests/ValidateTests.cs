@@ -27,62 +27,6 @@ namespace HFM.Core
    public class ValidateTests
    {
       [Test]
-      public void InstanceNameTest()
-      {
-         Assert.IsTrue(Validate.ClientName("+a+"));
-         Assert.IsTrue(Validate.ClientName("=a="));
-         Assert.IsTrue(Validate.ClientName("-a-"));
-         Assert.IsTrue(Validate.ClientName("_a_"));
-         Assert.IsTrue(Validate.ClientName("$a$"));
-         Assert.IsTrue(Validate.ClientName("&a&"));
-         Assert.IsTrue(Validate.ClientName("^a^"));
-         Assert.IsTrue(Validate.ClientName("[a["));
-         Assert.IsTrue(Validate.ClientName("]a]"));
-
-         Assert.IsFalse(Validate.ClientName("}a}"));
-         Assert.IsFalse(Validate.ClientName("\\a\\"));
-         Assert.IsFalse(Validate.ClientName("|a|"));
-         Assert.IsFalse(Validate.ClientName(";a;"));
-         Assert.IsFalse(Validate.ClientName(":a:"));
-         Assert.IsFalse(Validate.ClientName("\'a\'"));
-         Assert.IsFalse(Validate.ClientName("\"a\""));
-         Assert.IsFalse(Validate.ClientName(",a,"));
-         Assert.IsFalse(Validate.ClientName("<a<"));
-         Assert.IsFalse(Validate.ClientName(">a>"));
-         Assert.IsFalse(Validate.ClientName("/a/"));
-         Assert.IsFalse(Validate.ClientName("?a?"));
-         Assert.IsFalse(Validate.ClientName("`a`"));
-         Assert.IsFalse(Validate.ClientName("~a~"));
-         Assert.IsFalse(Validate.ClientName("!a!"));
-         Assert.IsFalse(Validate.ClientName("@a@"));
-         Assert.IsFalse(Validate.ClientName("#a#"));
-         Assert.IsFalse(Validate.ClientName("%a%"));
-         Assert.IsFalse(Validate.ClientName("*a*"));
-         Assert.IsFalse(Validate.ClientName("(a("));
-         Assert.IsFalse(Validate.ClientName(")a)"));
-
-         Assert.IsFalse(Validate.ClientName(String.Empty));
-         Assert.IsFalse(Validate.ClientName(null));
-      }
-      
-      [Test]
-      public void CleanInstanceNameTest()
-      {
-         string str = Validate.CleanClientName("+a}");
-         Assert.AreEqual("+a", str);
-         str = Validate.CleanClientName("}a+");
-         Assert.AreEqual("a+", str);
-         str = Validate.CleanClientName("=a\\");
-         Assert.AreEqual("=a", str);
-         str = Validate.CleanClientName("\\a=");
-         Assert.AreEqual("a=", str);
-         str = Validate.CleanClientName(String.Empty);
-         Assert.AreEqual(String.Empty, str);
-         str = Validate.CleanClientName(null);
-         Assert.AreEqual(null, str);
-      }
-
-      [Test]
       public void FileName()
       {
          Assert.IsFalse(Validate.FileName(null));

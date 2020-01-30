@@ -178,13 +178,6 @@
     <Compile Include="HistoryForm.Designer.cs">
       <DependentUpon>HistoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LegacyClientSetupDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LegacyClientSetupDialog.Designer.cs">
-      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LegacyClientSetupPresenter.cs" />
     <Compile Include="MainPresenter.cs" />
     <Compile Include="MessagesForm.cs">
       <SubType>Form</SubType>
@@ -193,7 +186,6 @@
       <DependentUpon>MessagesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\FahClientSettingsModel.cs" />
-    <Compile Include="Models\LegacyClientSettingsModel.cs" />
     <Compile Include="Models\MainGridModel.cs" />
     <Compile Include="Models\ProteinCalculatorModel.cs" />
     <Compile Include="Models\UserStatsDataModel.cs" />
@@ -281,9 +273,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HistoryForm.resx">
       <DependentUpon>HistoryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LegacyClientSetupDialog.resx">
-      <DependentUpon>LegacyClientSetupDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MessagesForm.resx">
       <DependentUpon>MessagesForm.cs</DependentUpon>

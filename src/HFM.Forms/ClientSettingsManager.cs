@@ -27,54 +27,7 @@ using HFM.Core.Serializers;
 
 namespace HFM.Forms
 {
-   public interface IClientSettingsManager
-   {
-      /// <summary>
-      /// Client Configuration Filename
-      /// </summary>
-      string FileName { get; }
-
-      /// <summary>
-      /// Current Plugin Index
-      /// </summary>
-      int FilterIndex { get; }
-
-      /// <summary>
-      /// Current Config File Extension or the Default File Extension
-      /// </summary>
-      string FileExtension { get; }
-
-      string FileTypeFilters { get; }
-
-      /// <summary>
-      /// Clear the Configuration Filename
-      /// </summary>
-      void ClearFileName();
-
-      /// <summary>
-      /// Reads a collection of client settings from a file.
-      /// </summary>
-      /// <param name="filePath">Path to config file.</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
-      IEnumerable<ClientSettings> Read(string filePath, int filterIndex);
-
-      /// <summary>
-      /// Writes a collection of client settings to a file.
-      /// </summary>
-      /// <param name="settingsCollection">Settings collection.</param>
-      /// <param name="filePath">Path to config file.</param>
-      void Write(IEnumerable<ClientSettings> settingsCollection, string filePath);
-
-      /// <summary>
-      /// Writes a collection of client settings to a file.
-      /// </summary>
-      /// <param name="settingsCollection">Settings collection.</param>
-      /// <param name="filePath">Path to config file.</param>
-      /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
-      void Write(IEnumerable<ClientSettings> settingsCollection, string filePath, int filterIndex);
-   }
-
-   public sealed class ClientSettingsManager : IClientSettingsManager
+   public class ClientSettingsManager
    {
       /// <summary>
       /// Current File Name
@@ -143,53 +96,43 @@ namespace HFM.Forms
       /// <summary>
       /// Reads a collection of client settings from a file.
       /// </summary>
-      /// <param name="filePath">Path to config file.</param>
+      /// <param name="path">Path to config file.</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
-      public IEnumerable<ClientSettings> Read(string filePath, int filterIndex)
+      public virtual IEnumerable<ClientSettings> Read(string path, int filterIndex)
       {
-         if (filePath == null) throw new ArgumentNullException("filePath");
-         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException("filterIndex");
+         if (path == null) throw new ArgumentNullException(nameof(path));
+         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException(nameof(filterIndex));
 
          var serializer = _serializers[filterIndex - 1];
-         List<ClientSettings> settings = serializer.Deserialize(filePath);
+         List<ClientSettings> settings = serializer.Deserialize(path);
 
          if (settings.Count != 0)
          {
             // update the serializer index only if something was loaded
             FilterIndex = filterIndex;
-            FileName = filePath;
+            FileName = path;
          }
 
-         return settings.AsReadOnly();
+         return settings;
       }
 
       /// <summary>
       /// Writes a collection of client settings to a file.
       /// </summary>
-      /// <param name="settingsCollection">Settings collection.</param>
-      /// <param name="filePath">Path to config file.</param>
-      public void Write(IEnumerable<ClientSettings> settingsCollection, string filePath)
-      {
-         Write(settingsCollection, filePath, FilterIndex);
-      }
-
-      /// <summary>
-      /// Writes a collection of client settings to a file.
-      /// </summary>
-      /// <param name="settingsCollection">Settings collection.</param>
-      /// <param name="filePath">Path to config file.</param>
+      /// <param name="settings">Settings collection.</param>
+      /// <param name="path">Path to config file.</param>
       /// <param name="filterIndex">Dialog file type filter index (1 based).</param>
-      public void Write(IEnumerable<ClientSettings> settingsCollection, string filePath, int filterIndex)
+      public virtual void Write(IEnumerable<ClientSettings> settings, string path, int filterIndex)
       {
-         if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
-         if (filePath == null) throw new ArgumentNullException("filePath");
-         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException("filterIndex");
+         if (settings == null) throw new ArgumentNullException(nameof(settings));
+         if (path == null) throw new ArgumentNullException(nameof(path));
+         if (filterIndex < 1 || filterIndex > _serializers.Count) throw new ArgumentOutOfRangeException(nameof(filterIndex));
 
          var serializer = _serializers[filterIndex - 1];
-         serializer.Serialize(filePath, settingsCollection.ToList());
+         serializer.Serialize(path, settings.ToList());
 
          FilterIndex = filterIndex;
-         FileName = filePath;
+         FileName = path;
       }
    }
 }
