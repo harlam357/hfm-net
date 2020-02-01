@@ -17,15 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * The reason for this class is to provide a buffer for the
- * queue.dat data coming from v6 and below clients as well as a
- * buffer for the data (presumably different) coming from v7 clients.
- * 
- * This class also provides a concrete type that can be serialized
- * to binary or xml formats.
- */
-
 using System;
 
 namespace HFM.Core.DataTypes

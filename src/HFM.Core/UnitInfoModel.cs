@@ -350,13 +350,7 @@ namespace HFM.Core
                 return FinishedTime.Subtract(DownloadTime);
             }
 
-            // Issue 156 - ETA must be a positive TimeSpan
-            // Issue 134 - Since fixing Issue 156 it appears that once most
-            // bigadv units finish their last frame they would be assigned a
-            // Zero Unit Time since their ETA values would have been zero and they
-            // had not yet written the FinishedTime to the queue.dat file.
-            // In light of this I've added the AllFramesAreCompleted property.
-            // Now, if ETA is Zero and AllFramesAreCompleted == false, the Unit Time
+            // If ETA is Zero and AllFramesAreCompleted == false, the Unit Time
             // will be Zero.  Otherwise, it will be given a value of the
             // (UnitRetrievalTime plus ETA) minus the DownloadTime.
             TimeSpan eta = GetEta(frameTime);
