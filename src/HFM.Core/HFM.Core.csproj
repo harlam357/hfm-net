@@ -138,7 +138,7 @@
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />
-    <Compile Include="DataTypes\UnitInfo.cs" />
+    <Compile Include="WorkUnits\UnitInfo.cs" />
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
@@ -151,7 +151,7 @@
     <Compile Include="SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\TaskManager.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
-    <Compile Include="UnitInfoModel.cs" />
+    <Compile Include="WorkUnits\UnitInfoModel.cs" />
     <Compile Include="Utilities\PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="ScheduledTasks\Interval.cs" />

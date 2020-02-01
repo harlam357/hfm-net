@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -27,9 +26,8 @@ using Rhino.Mocks;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Proteins;
-using static HFM.Core.WorkUnits.ProteinExtensions;
 
-namespace HFM.Core
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
    public class UnitInfoModelTests

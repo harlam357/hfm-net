@@ -30,6 +30,7 @@ using ZedGraph;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Preferences;
 using HFM.Proteins;
