@@ -24,6 +24,7 @@ using System.Globalization;
 
 using HFM.Client.DataTypes;
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Models

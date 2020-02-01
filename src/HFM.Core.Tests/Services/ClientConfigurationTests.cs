@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core

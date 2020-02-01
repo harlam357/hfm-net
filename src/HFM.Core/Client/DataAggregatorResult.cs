@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using HFM.Core.DataTypes;
 using HFM.Log;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    internal sealed class DataAggregatorResult
    {

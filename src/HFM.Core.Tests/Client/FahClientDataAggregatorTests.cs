@@ -26,10 +26,11 @@ using NUnit.Framework;
 using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Log.FahClient;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    [TestFixture]
    public class FahClientDataAggregatorTests

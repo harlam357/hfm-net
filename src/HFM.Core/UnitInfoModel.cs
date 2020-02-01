@@ -24,8 +24,9 @@ using System.Text;
 using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Proteins;
-using static HFM.Core.Internal.ProteinExtensions;
+using static HFM.Core.WorkUnits.ProteinExtensions;
 
 namespace HFM.Core
 {

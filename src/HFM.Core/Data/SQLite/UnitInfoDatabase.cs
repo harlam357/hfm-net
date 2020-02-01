@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
 

@@ -27,9 +27,10 @@ using Castle.Core.Logging;
 
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     internal class FahClientDataAggregator
     {

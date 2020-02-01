@@ -19,6 +19,8 @@
 
 using System;
 
+using HFM.Core.WorkUnits;
+
 namespace HFM.Core.DataTypes
 {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿
 using HFM.Proteins;
 
-namespace HFM.Core.Internal
+namespace HFM.Core.WorkUnits
 {
    internal static class ProteinExtensions
    {

@@ -89,15 +89,12 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
-    <Compile Include="Extensions.IProjectInfo.cs" />
-    <Compile Include="Extensions.ToProjectInfo.cs" />
-    <Compile Include="Extensions.WorkUnitResult.cs" />
     <Compile Include="FtpMode.cs" />
     <Compile Include="FtpWebRequestAdapter.cs" />
     <Compile Include="FtpWebResponseAdapter.cs" />
-    <Compile Include="Internal\ProteinExtensions.cs" />
+    <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
-    <Compile Include="DataTypes\ProjectInfo.cs" />
+    <Compile Include="WorkUnits\ProjectInfo.cs" />
     <Compile Include="PpdCalculationType.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Serializers\IFileSerializer.cs" />
@@ -134,7 +131,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
-    <Compile Include="DataTypes\ClientSettings.cs" />
+    <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />
     <Compile Include="DataTypes\HistoryEntry.cs" />
@@ -164,7 +161,7 @@
     <Compile Include="WebOperation.cs" />
     <Compile Include="WebRequestAdapter.cs" />
     <Compile Include="WebResponseAdapter.cs" />
-    <Compile Include="WorkUnitResult.cs" />
+    <Compile Include="WorkUnits\WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
@@ -206,7 +203,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Internal\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

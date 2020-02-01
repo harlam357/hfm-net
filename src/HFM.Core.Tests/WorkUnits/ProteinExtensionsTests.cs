@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 using HFM.Proteins;
 
-namespace HFM.Core.Internal
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
    public class ProteinExtensionsTests

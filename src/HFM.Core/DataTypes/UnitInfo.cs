@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
 namespace HFM.Core.DataTypes

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
 using NUnit.Framework;

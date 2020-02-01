@@ -26,10 +26,11 @@ using Rhino.Mocks;
 using HFM.Client;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    [TestFixture]
    public class FahClientTests

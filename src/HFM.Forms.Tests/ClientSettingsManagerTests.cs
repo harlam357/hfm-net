@@ -23,6 +23,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms

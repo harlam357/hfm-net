@@ -4,9 +4,9 @@ using System.Reflection;
 
 using HFM.Log;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
-   // TODO: Implement in DataAggregator classes
+   // TODO: LogLineCopier is not used
    internal static class LogLineCopier
    {
       internal static LogLine Copy(LogLine other)

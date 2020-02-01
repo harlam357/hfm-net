@@ -1,6 +1,6 @@
 ﻿
 using System;
-
+using HFM.Core.Client;
 using NUnit.Framework;
 
 namespace HFM.Core.DataTypes

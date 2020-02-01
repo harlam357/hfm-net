@@ -27,7 +27,7 @@ using Rhino.Mocks;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Proteins;
-using static HFM.Core.Internal.ProteinExtensions;
+using static HFM.Core.WorkUnits.ProteinExtensions;
 
 namespace HFM.Core
 {

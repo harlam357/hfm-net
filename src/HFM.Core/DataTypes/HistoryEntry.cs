@@ -19,6 +19,7 @@
 
 using System;
 
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
 namespace HFM.Core.DataTypes

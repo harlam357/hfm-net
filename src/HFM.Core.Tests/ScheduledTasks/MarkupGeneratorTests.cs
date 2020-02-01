@@ -27,6 +27,7 @@ using AutoMapper;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.Client;
 using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
 using HFM.Log;

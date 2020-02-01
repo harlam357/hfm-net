@@ -25,7 +25,9 @@ using System.Globalization;
 using System.Linq;
 
 using HFM.Client.DataTypes;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Core
 {

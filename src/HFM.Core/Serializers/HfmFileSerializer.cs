@@ -29,6 +29,7 @@ using Castle.Core.Logging;
 using harlam357.Core.Security;
 using harlam357.Core.Security.Cryptography;
 
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core.Serializers

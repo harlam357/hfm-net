@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 using Castle.Core.Logging;
@@ -26,6 +25,8 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+
+using HFM.Core.Client;
 
 namespace HFM.Core.Configuration
 {

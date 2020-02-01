@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
