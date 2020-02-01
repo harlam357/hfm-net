@@ -1,4 +1,4 @@
-﻿$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+﻿$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
 $NuGetPath = '.\.nuget\NuGet.exe'
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
@@ -152,7 +152,7 @@ Function Deploy-Build
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        "HFM.Queue.dll",
+        #"HFM.Queue.dll",
         "harlam357.Core.dll",
         "harlam357.Windows.Forms.dll",
         "ZedGraph.dll",
@@ -172,7 +172,7 @@ Function Deploy-Build
     # Tools Assemblies
     Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
+    #Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
