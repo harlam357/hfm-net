@@ -92,14 +92,14 @@ namespace HFM.Core.Serializers
 
       private void Encrypt(IEnumerable<ClientSettings> value)
       {
-         var symetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
-            if (settings.Password.Length == 0) continue;
+            if (String.IsNullOrWhiteSpace(settings.Password)) continue;
 
             try
             {
-               settings.Password = symetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
+               settings.Password = symmetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
             }
             catch (CryptographicException)
             {
@@ -110,14 +110,14 @@ namespace HFM.Core.Serializers
 
       private void Decrypt(IEnumerable<ClientSettings> value)
       {
-         var symetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
          foreach (var settings in value)
          {
-            if (settings.Password.Length == 0) continue;
+            if (String.IsNullOrWhiteSpace(settings.Password)) continue;
 
             try
             {
-               settings.Password = symetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
+               settings.Password = symmetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
             }
             catch (FormatException)
             {

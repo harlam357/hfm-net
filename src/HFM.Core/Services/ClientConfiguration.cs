@@ -29,18 +29,18 @@ namespace HFM.Core
 {
    public interface IClientConfiguration
    {
-      event EventHandler<ConfigurationChangedEventArgs> DictionaryChanged;
+      event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
       event EventHandler<ClientEditedEventArgs> ClientEdited;
 
       bool IsDirty { get; set; }
 
       /// <summary>
-      /// Clears the dictionary and loads a collection of ClientSettings objects.
+      /// Clears the configuration and loads a collection of ClientSettings objects.
       /// </summary>
-      /// <remarks>This method will clear the dictionary, per implementaiton of the Clear() method, and raise the DictionaryChanged event if items were loaded.</remarks>
-      /// <param name="settingsCollection"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of ClientSettings objects.</param>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="settingsCollection"/> is null.</exception>
-      void Load(IEnumerable<ClientSettings> settingsCollection);
+      /// <remarks>This method will clear the configuration, per implementation of the Clear() method, and raise the ConfigurationChanged event if items were loaded.</remarks>
+      /// <param name="settings"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of ClientSettings objects.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="settings"/> is null.</exception>
+      void Load(IEnumerable<ClientSettings> settings);
 
       /// <summary>
       /// Gets an enumerable collection of all slots.
@@ -68,7 +68,7 @@ namespace HFM.Core
       /// <summary>
       /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </summary>
-      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
       /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to add.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="settings"/> is null.</exception>
       /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/> or the settings are not valid.</exception>
@@ -77,7 +77,7 @@ namespace HFM.Core
       /// <summary>
       /// Edits an <see cref="T:HFM.Core.IClient"/> element with the provided key and in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </summary>
-      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
       /// <param name="key">The string to use as the key of the element to edit.</param>
       /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to edit.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="settings"/> is null.</exception>
@@ -90,7 +90,7 @@ namespace HFM.Core
       /// <returns>
       /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </returns>
-      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event when successful.</remarks>
+      /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event when successful.</remarks>
       /// <param name="key">The key of the element to remove.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.</exception>
       bool Remove(string key);
@@ -98,7 +98,7 @@ namespace HFM.Core
       /// <summary>
       /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </summary>
-      /// <remarks>Sets the IsDirty property to false and raises the DictionaryChanged event if values existed before this call.</remarks>
+      /// <remarks>Sets the IsDirty property to false and raises the ConfigurationChanged event if values existed before this call.</remarks>
       void Clear();
    }
 
@@ -106,11 +106,11 @@ namespace HFM.Core
    {
       #region Events
 
-      public event EventHandler<ConfigurationChangedEventArgs> DictionaryChanged;
+      public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
       private void OnDictionaryChanged(ConfigurationChangedEventArgs e)
       {
-         var handler = DictionaryChanged;
+         var handler = ConfigurationChanged;
          if (handler != null)
          {
             handler(this, e);
@@ -136,15 +136,13 @@ namespace HFM.Core
 
       #endregion
 
-      private readonly IClientFactory _factory;
+      private readonly ClientFactory _factory;
       private readonly Dictionary<string, IClient> _clientDictionary;
       private readonly ReaderWriterLockSlim _syncLock;
 
-      public ClientConfiguration(IClientFactory factory)
+      public ClientConfiguration(ClientFactory factory)
       {
-         if (factory == null) throw new ArgumentNullException("factory");
-
-         _factory = factory;
+          _factory = factory ?? throw new ArgumentNullException(nameof(factory));
          _clientDictionary = new Dictionary<string, IClient>();
          _syncLock = new ReaderWriterLockSlim();
       }
@@ -154,9 +152,9 @@ namespace HFM.Core
          OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
       }
 
-      public void Load(IEnumerable<ClientSettings> settingsCollection)
+      public void Load(IEnumerable<ClientSettings> settings)
       {
-         if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
+         if (settings == null) throw new ArgumentNullException(nameof(settings));
 
          Clear();
 
@@ -166,7 +164,7 @@ namespace HFM.Core
          try
          {
             // add each instance to the collection
-            foreach (var client in _factory.CreateCollection(settingsCollection))
+            foreach (var client in _factory.CreateCollection(settings))
             {
                if (client != null)
                {
@@ -206,7 +204,7 @@ namespace HFM.Core
 
       public void Add(ClientSettings settings)
       {
-         if (settings == null) throw new ArgumentNullException("settings");
+         if (settings == null) throw new ArgumentNullException(nameof(settings));
 
          // cacheLock handled in Add(string, IClient)
          Add(settings.Name, _factory.Create(settings));
@@ -214,8 +212,8 @@ namespace HFM.Core
 
       public void Edit(string key, ClientSettings settings)
       {
-         if (key == null) throw new ArgumentNullException("key");
-         if (settings == null) throw new ArgumentNullException("settings");
+         if (key == null) throw new ArgumentNullException(nameof(key));
+         if (settings == null) throw new ArgumentNullException(nameof(settings));
 
          // Edit is only called after a client setup dialog
          // has returned.  At this point the client name
@@ -246,7 +244,7 @@ namespace HFM.Core
             client.RetrievalFinished -= OnInvalidate;
             // update the settings
             client.Settings = settings;
-            // if the key changed the client object needs removed and readded with the correct key
+            // if the key changed the client object needs removed and re-added with the correct key
             if (keyChanged)
             {
                _clientDictionary.Remove(key);
@@ -255,15 +253,7 @@ namespace HFM.Core
             client.SlotsChanged += OnInvalidate;
             client.RetrievalFinished += OnInvalidate;
 
-            if (settings.IsFahClient() || settings.IsLegacy())
-            {
-               e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.DataPath());
-            }
-            else
-            {
-               // no External support yet
-               throw new InvalidOperationException("Client type is not supported.");
-            }
+            e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.DataPath());
          }
          finally
          {
@@ -278,15 +268,15 @@ namespace HFM.Core
       /// <summary>
       /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
       /// </summary>
-      /// <remarks>Sets the IsDirty property to true and raises the DictionaryChanged event.</remarks>
+      /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
       /// <param name="key">The string to use as the key of the element to add.</param>
       /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
       /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
       internal void Add(string key, IClient value)
       {
-         if (key == null) throw new ArgumentNullException("key");
-         if (value == null) throw new ArgumentNullException("value");
+         if (key == null) throw new ArgumentNullException(nameof(key));
+         if (value == null) throw new ArgumentNullException(nameof(value));
 
          _syncLock.EnterWriteLock();
          try
@@ -319,7 +309,7 @@ namespace HFM.Core
 
       public bool Remove(string key)
       {
-         if (key == null) throw new ArgumentNullException("key");
+         if (key == null) throw new ArgumentNullException(nameof(key));
 
          bool result;
          IClient client = null;
@@ -391,6 +381,8 @@ namespace HFM.Core
                client.SlotsChanged -= OnInvalidate;
                client.RetrievalFinished -= OnInvalidate;
                client.Abort();
+               // Release from the Factory
+               _factory.Release(client);
             }
             _clientDictionary.Clear();
          }

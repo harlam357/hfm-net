@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfClientSettings xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/HFM.Core.DataTypes">
+  <ClientSettings>
+    <ClientType>FahClient</ClientType>
+    <LegacyClientSubType>None</LegacyClientSubType>
+    <Name>Client1</Name>
+    <Server>192.168.100.250</Server>
+    <Port>36330</Port>
+    <Username></Username>
+    <Password>0rwT9JW9tDv/4OiSz5SFcg==</Password>
+    <FahLogFileName>FAHlog.txt</FahLogFileName>
+    <UnitInfoFileName>unitinfo.txt</UnitInfoFileName>
+    <QueueFileName>queue.dat</QueueFileName>
+    <Path></Path>
+    <FtpMode>Passive</FtpMode>
+    <UtcOffsetIsZero>false</UtcOffsetIsZero>
+    <ClientTimeOffset>0</ClientTimeOffset>
+  </ClientSettings>
+</ArrayOfClientSettings>

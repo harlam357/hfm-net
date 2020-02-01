@@ -106,14 +106,16 @@
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
-    <Compile Include="LegacyClientSetupPresenterTests.cs" />
     <Compile Include="Models\HistoryPresenterModelTests.cs" />
-    <Compile Include="Models\LegacyClientSettingsModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AutoRunTests.cs" />
     <Compile Include="SetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
+      <Project>{b1bb2af4-5c2f-42a7-80b4-7291d3e4bc39}</Project>
+      <Name>HFM.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>

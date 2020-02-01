@@ -19,7 +19,7 @@
 
 using System;
 using System.IO;
-
+using System.Linq;
 using NUnit.Framework;
 
 using HFM.Core;
@@ -27,44 +27,66 @@ using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
-   [TestFixture]
-   public class ClientSettingsManagerTests
-   {
-      [Test]
-      public void ClientSettingsManager_Defaults_Test()
-      {
-         var configurationManager = new ClientSettingsManager();
-         Assert.AreEqual(String.Empty, configurationManager.FileName);
-         Assert.AreEqual(1, configurationManager.FilterIndex);
-         Assert.AreEqual("hfmx", configurationManager.FileExtension);
-         Assert.AreEqual("HFM Configuration Files|*.hfmx", configurationManager.FileTypeFilters);
-      }
-      
-      [Test]
-      public void ClientSettingsManager_Read_Test()
-      {
-         var configurationManager = new ClientSettingsManager();
-         configurationManager.Read("..\\..\\TestFiles\\TestClientSettings.hfmx", 1);
-         Assert.AreEqual("..\\..\\TestFiles\\TestClientSettings.hfmx", configurationManager.FileName);
-         Assert.AreEqual(1, configurationManager.FilterIndex);
-         Assert.AreEqual(".hfmx", configurationManager.FileExtension);
-      }
-      
-      [Test]
-      public void ClientSettingsManager_Write_Test()
-      {
-         var instance1 = new LegacyClient();
-         instance1.Settings = new ClientSettings(ClientType.Legacy) { Name = "test" };
+    [TestFixture]
+    public class ClientSettingsManagerTests
+    {
+        [Test]
+        public void ClientSettingsManager_VerifyDefaultState()
+        {
+            // Act
+            var manager = new ClientSettingsManager();
+            // Assert
+            Assert.AreEqual(String.Empty, manager.FileName);
+            Assert.AreEqual(1, manager.FilterIndex);
+            Assert.AreEqual("hfmx", manager.FileExtension);
+            Assert.AreEqual("HFM Configuration Files|*.hfmx", manager.FileTypeFilters);
+        }
 
-         const string testFile = "..\\..\\TestFiles\\new.ext";
+        [Test]
+        public void ClientSettingsManager_Read_ReturnsClientSettingsCollectionAndSetsManagerState()
+        {
+            // Arrange
+            var manager = new ClientSettingsManager();
+            // Act
+            var settings = manager.Read("..\\..\\TestFiles\\TestClientSettings.hfmx", 1);
+            // Assert
+            Assert.IsNotNull(settings);
+            Assert.AreEqual(1, settings.Count());
+            Assert.AreEqual("..\\..\\TestFiles\\TestClientSettings.hfmx", manager.FileName);
+            Assert.AreEqual(1, manager.FilterIndex);
+            Assert.AreEqual(".hfmx", manager.FileExtension);
+        }
 
-         var configurationManager = new ClientSettingsManager();
-         configurationManager.Write(new[] { instance1.Settings }, testFile);
-         Assert.AreEqual("..\\..\\TestFiles\\new.ext", configurationManager.FileName);
-         Assert.AreEqual(1, configurationManager.FilterIndex);
-         Assert.AreEqual(".ext", configurationManager.FileExtension);
-
-         File.Delete(testFile);
-      }
-   }
+        [Test]
+        public void ClientSettingsManager_Write_WritesTheClientSettingsToDisk()
+        {
+            // Arrange
+            const string testFile = "..\\..\\TestFiles\\new.ext";
+            
+            var client = new FahClient();
+            client.Settings = new ClientSettings { Name = "test" };
+            // TODO: Implement ArtifactFolder
+            var manager = new ClientSettingsManager();
+            // Act
+            try
+            {
+                manager.Write(new[] { client.Settings }, testFile, 1);
+                // Assert
+                Assert.AreEqual("..\\..\\TestFiles\\new.ext", manager.FileName);
+                Assert.AreEqual(1, manager.FilterIndex);
+                Assert.AreEqual(".ext", manager.FileExtension);
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(testFile);
+                }
+                catch (Exception)
+                {
+                    // do nothing
+                }
+            }
+        }
+    }
 }

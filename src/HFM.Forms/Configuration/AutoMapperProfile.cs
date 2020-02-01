@@ -32,24 +32,10 @@ namespace HFM.Forms.Configuration
    {
       public AutoMapperProfile()
       {
-         // legacy settings model
-         CreateMap<ClientSettings, LegacyClientSettingsModel>()
-            .ForMember(dest => dest.CredentialsErrorMessage, opt => opt.Ignore());
-         CreateMap<LegacyClientSettingsModel, ClientSettings>()
-            .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.Legacy));
-         // fahclient settings model
+         // client settings model
          CreateMap<ClientSettings, FahClientSettingsModel>();
          CreateMap<FahClientSettingsModel, ClientSettings>()
-            .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.FahClient))
-            .ForMember(dest => dest.LegacyClientSubType, opt => opt.UseValue(LegacyClientSubType.None))
-            .ForMember(dest => dest.Username, opt => opt.Ignore())
-            .ForMember(dest => dest.FahLogFileName, opt => opt.Ignore())
-            .ForMember(dest => dest.UnitInfoFileName, opt => opt.Ignore())
-            .ForMember(dest => dest.QueueFileName, opt => opt.Ignore())
-            .ForMember(dest => dest.Path, opt => opt.Ignore())
-            .ForMember(dest => dest.FtpMode, opt => opt.Ignore())
-            .ForMember(dest => dest.UtcOffsetIsZero, opt => opt.Ignore())
-            .ForMember(dest => dest.ClientTimeOffset, opt => opt.Ignore());
+             .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.FahClient));
          // user stats model
          CreateMap<XmlStatsData, UserStatsDataModel>()
             .DisableCtorValidation()

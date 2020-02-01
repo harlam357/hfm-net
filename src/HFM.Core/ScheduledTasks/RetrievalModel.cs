@@ -74,7 +74,7 @@ namespace HFM.Core.ScheduledTasks
             }
          };
 
-         _clientConfiguration.DictionaryChanged += (s, e) =>
+         _clientConfiguration.ConfigurationChanged += (s, e) =>
          {
             if (e.ChangedType == ConfigurationChangedType.Remove ||
                 e.ChangedType == ConfigurationChangedType.Clear)

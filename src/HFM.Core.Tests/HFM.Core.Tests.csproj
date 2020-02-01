@@ -108,7 +108,9 @@
     </Compile>
     <Compile Include="Client\ClientFactoryTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
+    <Compile Include="DataTypes\ClientSettingsTests.cs" />
     <Compile Include="Internal\ProteinExtensionsTests.cs" />
+    <Compile Include="Serializers\HfmFileSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
@@ -116,8 +118,6 @@
     <Compile Include="Services\ClientConfigurationTests.cs" />
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
-    <Compile Include="Client\LegacyClientTests.cs" />
-    <Compile Include="Client\LegacyDataAggregatorTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="ScheduledTasks\MarkupGeneratorTests.cs" />
     <Compile Include="NetworkOpsTests.cs" />
@@ -129,7 +129,6 @@
     <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="Services\ProteinServiceTests.cs" />
     <Compile Include="Data\QueryParameterContainerTests.cs" />
-    <Compile Include="Client\LegacyClientStatusTests.cs" />
     <Compile Include="ScheduledTasks\TaskManagerTests.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabaseReadOnlyTests.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabaseTests.cs" />
@@ -159,10 +158,6 @@
       <Project>{7500a8ca-521d-4397-892b-27c6917847e1}</Project>
       <Name>HFM.Proteins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
-      <Project>{44ac27f2-833d-4bf2-9e17-c35d38c7bd67}</Project>
-      <Name>HFM.Queue</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357.snk">
@@ -170,6 +165,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\BenchmarkCache.dat" />
+    <None Include="TestFiles\TestClientSettings.hfmx" />
     <None Include="TestFiles\TestData.db3" />
     <None Include="TestFiles\TestData2.db3" />
     <None Include="TestFiles\TestData_1.db3" />

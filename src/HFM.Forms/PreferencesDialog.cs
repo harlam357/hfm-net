@@ -32,7 +32,6 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
 using HFM.Preferences;
@@ -598,8 +597,8 @@ namespace HFM.Forms
 
          #region Report Selections
          grpReportSelections.BindEnabled(_reportingModel, "ReportingEnabled");
-         chkClientEuePause.BindChecked(_reportingModel, "ReportEuePause");
-         chkClientHung.BindChecked(_reportingModel, "ReportHung");
+         //chkClientEuePause.BindChecked(_reportingModel, "ReportEuePause");
+         //chkClientHung.BindChecked(_reportingModel, "ReportHung");
          #endregion
       }
 

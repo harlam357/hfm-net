@@ -85,10 +85,6 @@ namespace HFM.Forms
 
       void SetNotifyIconVisible(bool visible);
 
-      void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator);
-
-      void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator2, bool fahClientMenu);
-
       void ShowGridContextMenuStrip(Point screenLocation);
 
       void DisableViewResizeEvent();
@@ -101,7 +97,7 @@ namespace HFM.Forms
 
       void SetQueue(QueueDictionary queue);
 
-      void SetQueue(QueueDictionary queue, SlotType slotType, bool utcOffsetIsZero);
+      void SetQueue(QueueDictionary queue, SlotType slotType);
 
       void RefreshControlsWithTotalsData(SlotTotals totals);
 
@@ -373,19 +369,6 @@ namespace HFM.Forms
 
       #region Data Grid View Handlers
 
-      public void SetClientMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator)
-      {
-         if (InvokeRequired)
-         {
-            Invoke(new Action<bool, bool, bool>(SetClientMenuItemsVisible), filesMenu, cachedLog, seperator);
-            return;
-         }
-
-         mnuClientsViewClientFiles.Visible = filesMenu;
-         mnuClientsViewCachedLog.Visible = cachedLog;
-         mnuClientsSep4.Visible = seperator;
-      }
-
       private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
       {
          _presenter.QueueIndexChanged(e.Index);
@@ -399,17 +382,6 @@ namespace HFM.Forms
       private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
       {
          _presenter.DataGridViewMouseDown(e.X, e.Y, e.Button, e.Clicks);
-      }
-
-      public void SetGridContextMenuItemsVisible(bool filesMenu, bool cachedLog, bool seperator2, bool fahClientMenu)
-      {
-         mnuContextClientsViewClientFiles.Visible = filesMenu;
-         mnuContextClientsViewCachedLog.Visible = cachedLog;
-         mnuContextClientsSep2.Visible = seperator2;
-         mnuContextClientsFoldSlot.Visible = fahClientMenu;
-         mnuContextClientsPauseSlot.Visible = fahClientMenu;
-         mnuContextClientsFinishSlot.Visible = fahClientMenu;
-         mnuContextClientsSep3.Visible = fahClientMenu;
       }
 
       public void ShowGridContextMenuStrip(Point screenLocation)
@@ -485,16 +457,6 @@ namespace HFM.Forms
          about.ShowDialog(this);
       }
 
-      private void mnuHelpContents_Click(object sender, EventArgs e)
-      {
-         //Help.ShowHelp(this, helpProvider.HelpNamespace);
-      }
-
-      private void mnuHelpIndex_Click(object sender, EventArgs e)
-      {
-         //Help.ShowHelpIndex(this, helpProvider.HelpNamespace);
-      }
-
       #endregion
 
       #region Clients Menu Click Handlers
@@ -502,11 +464,6 @@ namespace HFM.Forms
       private void mnuClientsAdd_Click(object sender, EventArgs e)
       {
          _presenter.ClientsAddClick();
-      }
-
-      private void mnuClientsAddLegacy_Click(object sender, EventArgs e)
-      {
-         _presenter.ClientsAddLegacyClick();
       }
 
       private void mnuClientsEdit_Click(object sender, EventArgs e)
@@ -517,11 +474,6 @@ namespace HFM.Forms
       private void mnuClientsDelete_Click(object sender, EventArgs e)
       {
          _presenter.ClientsDeleteClick();
-      }
-
-      private void mnuClientsMerge_Click(object sender, EventArgs e)
-      {
-         _presenter.ClientsMergeClick();
       }
 
       private void mnuClientsRefreshSelected_Click(object sender, EventArgs e)
@@ -537,11 +489,6 @@ namespace HFM.Forms
       private void mnuClientsViewCachedLog_Click(object sender, EventArgs e)
       {
          _presenter.ClientsViewCachedLogClick();
-      }
-
-      private void mnuClientsViewClientFiles_Click(object sender, EventArgs e)
-      {
-         _presenter.ClientsViewClientFilesClick();
       }
 
       #endregion
@@ -636,15 +583,15 @@ namespace HFM.Forms
          queueControl.SetQueue(queue);
       }
 
-      public void SetQueue(QueueDictionary queue, SlotType slotType, bool utcOffsetIsZero)
+      public void SetQueue(QueueDictionary queue, SlotType slotType)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<QueueDictionary, SlotType, bool>(SetQueue), queue, slotType, utcOffsetIsZero);
+            Invoke(new Action<QueueDictionary, SlotType>(SetQueue), queue, slotType);
             return;
          }
 
-         queueControl.SetQueue(queue, slotType, utcOffsetIsZero);
+         queueControl.SetQueue(queue, slotType);
       }
 
       #endregion

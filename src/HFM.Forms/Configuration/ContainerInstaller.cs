@@ -52,13 +52,6 @@ namespace HFM.Forms.Configuration
                   .Named("FahClientSetupPresenter")
                      .LifeStyle.Transient);
 
-         // ILegacyClientSetupPresenter - Transient
-         container.Register(
-            Component.For<ILegacyClientSetupPresenter>()
-               .ImplementedBy<LegacyClientSetupPresenter>()
-                  .Named("LegacyClientSetupPresenter")
-                     .LifeStyle.Transient);
-
          // HistoryPresenterModel - Transient
          container.Register(
             Component.For<HistoryPresenter>()
@@ -87,12 +80,6 @@ namespace HFM.Forms.Configuration
          container.Register(
             Component.For<IFahClientSetupView>()
                .ImplementedBy<FahClientSetupDialog>()
-               .LifeStyle.Transient);
-
-         // ILegacyClientSetupView - Transient
-         container.Register(
-            Component.For<ILegacyClientSetupView>()
-               .ImplementedBy<LegacyClientSetupDialog>()
                .LifeStyle.Transient);
 
          // Singleton Views
@@ -160,10 +147,9 @@ namespace HFM.Forms.Configuration
 
          #endregion
 
-         // IClientSettingsManager - Singleton
+         // ClientSettingsManager - Singleton
          container.Register(
-            Component.For<IClientSettingsManager>()
-               .ImplementedBy<ClientSettingsManager>());
+            Component.For<ClientSettingsManager>());
       }
 
       #endregion

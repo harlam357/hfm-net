@@ -27,19 +27,8 @@ namespace HFM.Core
    public enum ClientType
    {
       FahClient,
-      Legacy,
-      External //?
-   }
-
-   /// <summary>
-   /// Legacy Client Sub Types
-   /// </summary>
-   public enum LegacyClientSubType
-   {
-      None,
-      Path,
-      Ftp,
-      Http
+      [Obsolete("Do not use Legacy.")]
+      Legacy
    }
 
    // ReSharper disable InconsistentNaming
@@ -50,10 +39,8 @@ namespace HFM.Core
    public enum SlotType
    {
       Unknown = 0,
-      [Obsolete("Use CPU.")]
-      Uniprocessor = 1,
-      CPU = 2,
-      GPU = 3
+      CPU = 1,
+      GPU = 2
    }
 
    // ReSharper restore InconsistentNaming

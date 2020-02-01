@@ -72,12 +72,6 @@ namespace HFM.Core.Configuration
                   };
                }));
 
-         // IDataRetriever - Transient
-         container.Register(
-            Component.For<IDataRetriever>()
-               .ImplementedBy<LegacyDataRetriever>()
-                  .LifeStyle.Transient);
-
          // INetworkOps - Transient
          container.Register(
             Component.For<INetworkOps>()
@@ -96,10 +90,9 @@ namespace HFM.Core.Configuration
                   .OnCreate((kernel, instance) => instance.SubscribeToEvents(
                      kernel.Resolve<IProteinBenchmarkService>())));
 
-         // IClientFactory - Singleton
+         // ClientFactory - Singleton
          container.Register(
-            Component.For<IClientFactory>()
-               .ImplementedBy<ClientFactory>());
+            Component.For<ClientFactory>());
 
          // HFM.Core.FahClient - Transient
          container.Register(
@@ -113,13 +106,6 @@ namespace HFM.Core.Configuration
             Component.For<HFM.Client.IMessageConnection>()
                .ImplementedBy<HFM.Client.TypedMessageConnection>()
                   .LifeStyle.Transient);
-
-         // LegacyClient - Transient
-         container.Register(
-            Component.For<LegacyClient>()
-               .LifeStyle.Transient,
-            Component.For<ILegacyClientFactory>()
-               .AsFactory());
 
          // RetrievalModel - Singleton
          container.Register(

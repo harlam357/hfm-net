@@ -9,7 +9,7 @@ namespace HFM.Core
       {
          configuration.ClientEdited += (s, e) => UpdateBenchmarkData(benchmarkService, e);
 
-         configuration.DictionaryChanged += (s, e) =>
+         configuration.ConfigurationChanged += (s, e) =>
          {
             switch (e.ChangedType)
             {

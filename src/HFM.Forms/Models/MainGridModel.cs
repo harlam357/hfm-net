@@ -58,34 +58,6 @@ namespace HFM.Forms.Models
          }
       }
 
-      /// <summary>
-      /// Gets a value that specifies if the UI menu item 'View Client Files' is visible.
-      /// </summary>
-      public bool ClientFilesMenuItemVisible
-      {
-         get { return SelectedSlot != null && SelectedSlot.Settings.LegacyClientSubType == LegacyClientSubType.Path; }
-      }
-
-      /// <summary>
-      /// Gets a value that specifies if the UI menu item 'View Cached Log File' is visible.
-      /// </summary>
-      public bool CachedLogMenuItemVisible
-      {
-         get
-         {
-            return SelectedSlot != null && (SelectedSlot.Settings.ClientType == ClientType.Legacy ||
-                                            SelectedSlot.Settings.ClientType == ClientType.FahClient);
-         }
-      }
-
-      /// <summary>
-      /// Gets a value that specifies if the UI menu items 'xxx' are visible.
-      /// </summary>
-      public bool FahClientMenuItemsVisible
-      {
-         get { return SelectedSlot != null && SelectedSlot.Settings.ClientType == ClientType.FahClient; }
-      }
-
       private string _sortColumnName;
       /// <summary>
       /// Holds current Sort Column Name
@@ -179,7 +151,7 @@ namespace HFM.Forms.Models
                                      };
 
          // Subscribe to ClientDictionary events
-         _clientConfiguration.DictionaryChanged += (sender, args) => ResetBindings();
+         _clientConfiguration.ConfigurationChanged += (sender, args) => ResetBindings();
       }
 
       private readonly object _resetBindingsLock = new object();

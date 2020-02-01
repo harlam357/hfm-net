@@ -19,199 +19,68 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-
-using Castle.Core.Logging;
 
 using HFM.Core.DataTypes;
 
 namespace HFM.Core
 {
-   public interface IClientFactory
-   {
-      IEnumerable<IClient> CreateCollection(IEnumerable<ClientSettings> settingsCollection);
+    public interface IFahClientFactory
+    {
+        FahClient Create();
 
-      IClient Create(ClientSettings settings);
+        void Release(FahClient fahClient);
+    }
 
-      void Release(IClient client);
-   }
+    internal class BasicFahClientFactory : IFahClientFactory
+    {
+        public FahClient Create()
+        {
+            return new FahClient();
+        }
 
-   public class ClientFactory : IClientFactory
-   {
-      private ILogger _logger;
+        public void Release(FahClient fahClient)
+        {
+            
+        }
+    }
 
-      public ILogger Logger
-      {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
-      }
+    public class ClientFactory
+    {
+        public IFahClientFactory FahClientFactory { get; set; } = new BasicFahClientFactory();
 
-      public IFahClientFactory FahClientFactory { get; set; }
+        public ICollection<IClient> CreateCollection(IEnumerable<ClientSettings> settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
-      public ILegacyClientFactory LegacyClientFactory { get; set; }
+            return settings.Select(Create).Where(client => client != null).ToList();
+        }
 
-      public IEnumerable<IClient> CreateCollection(IEnumerable<ClientSettings> settingsCollection)
-      {
-         if (settingsCollection == null) throw new ArgumentNullException("settingsCollection");
+        public IClient Create(ClientSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
-         return settingsCollection.Select(CreateWrapper).Where(client => client != null).ToList().AsReadOnly();
-      }
+            // special consideration for obsolete ClientType values that may appear in hfmx configuration files
+            if (!settings.IsFahClient()) return null;
 
-      private IClient CreateWrapper(ClientSettings settings)
-      {
-         try
-         {
-            return Create(settings);
-         }
-         catch (ArgumentException ex)
-         {
-            Logger.ErrorFormat(ex, "{0}", ex.Message);
-            return null;
-         }
-      }
-      
-      public IClient Create(ClientSettings settings)
-      {
-         if (settings == null) throw new ArgumentNullException("settings");
-         
-         if (String.IsNullOrEmpty(settings.Name))
-         {
-            throw new ArgumentException("Failed to create client.  No name given.");
-         }
+            if (!ClientSettings.ValidateName(settings.Name)) throw new ArgumentException($"Client name {settings.Name} is not valid.", nameof(settings));
+            if (String.IsNullOrWhiteSpace(settings.Server)) throw new ArgumentException("Client server (host) name is empty.", nameof(settings));
+            if (!Validate.ServerPort(settings.Port)) throw new ArgumentException($"Client server (host) port {settings.Port} is not valid.", nameof(settings));
 
-         if (settings.IsFahClient() && String.IsNullOrEmpty(settings.Server))
-         {
-            throw new ArgumentException("Failed to create client.  No server given.");
-         }
-         
-         if (settings.IsLegacy() && String.IsNullOrEmpty(settings.Path))
-         {
-            throw new ArgumentException("Failed to create client.  No path given.");
-         }
-      
-         string preCleanName = settings.Name;
-         ICollection<string> cleanupWarnings = CleanupSettings(settings);
-         if (!Validate.ClientName(settings.Name))
-         {
-            throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-               "Failed to create client.  Client name '{0}' is not valid after cleaning.", preCleanName));
-         }
-         
-         if (cleanupWarnings.Count != 0)
-         {
-            Logger.Warn("------------------------");
-            Logger.Warn("Client Settings Warnings");
-            Logger.Warn("------------------------");
-            Logger.WarnFormat("Client Name: {0}", settings.Name);
-
-            foreach (var error in cleanupWarnings)
+            IClient client = FahClientFactory?.Create();
+            if (client != null)
             {
-               Logger.Warn(error);
+                client.Settings = settings;
             }
-         }
+            return client;
+        }
 
-         IClient client;
-         if (settings.IsFahClient())
-         {
-            client = FahClientFactory != null ? FahClientFactory.Create() : null;
-         }
-         else if (settings.IsLegacy())
-         {
-            client = LegacyClientFactory != null ? LegacyClientFactory.Create() : null;
-         }
-         else
-         {
-            // no External support yet
-            throw new InvalidOperationException("Client type is not supported.");
-         }
-
-         if (client != null)
-         {
-            client.Settings = settings;
-         }
-         return client;
-      }
-
-      private static ICollection<string> CleanupSettings(ClientSettings settings)
-      {
-         var warnings = new List<string>();
-
-         #region General Settings (common to FahClient and Legacy)
-
-         if (!Validate.ClientName(settings.Name))
-         {
-            // remove illegal characters
-            warnings.Add(String.Format(CultureInfo.InvariantCulture,
-               "Client Name '{0}' contained invalid characters and was cleaned.", settings.Name));
-            settings.Name = Validate.CleanClientName(settings.Name);
-         }
-
-         if (settings.ClientTimeOffset < Constants.MinOffsetMinutes ||
-             settings.ClientTimeOffset > Constants.MaxOffsetMinutes)
-         {
-            warnings.Add("Client time offset is out of range, defaulting to 0.");
-            settings.ClientTimeOffset = 0;
-         }
-
-         #endregion
-
-         if (settings.IsLegacy())
-         {
-            #region Legacy Settings
-
-            if (String.IsNullOrEmpty(settings.FahLogFileName))
+        public void Release(IClient client)
+        {
+            if (client is FahClient fahClient)
             {
-               warnings.Add("No remote FAHlog.txt filename, loading default.");
-               settings.FahLogFileName = Constants.FahLogFileName;
+                FahClientFactory?.Release(fahClient);
             }
-
-            if (String.IsNullOrEmpty(settings.UnitInfoFileName))
-            {
-               warnings.Add("No remote unitinfo.txt filename, loading default.");
-               settings.UnitInfoFileName = Constants.UnitInfoFileName;
-            }
-
-            if (String.IsNullOrEmpty(settings.QueueFileName))
-            {
-               warnings.Add("No remote queue.dat filename, loading default.");
-               settings.QueueFileName = Constants.QueueFileName;
-            }
-
-            #endregion
-         }
-         else if (settings.IsFahClient())
-         {
-            if (!Validate.ServerPort(settings.Port))
-            {
-               warnings.Add("Server port is invalid, loading default.");
-               settings.Port = Constants.DefaultFahClientPort;
-            }
-         }
-         
-         return warnings.AsReadOnly();
-      }
-
-      public void Release(IClient client)
-      {
-         var fahClient = client as FahClient;
-         if (fahClient != null)
-         {
-            if (FahClientFactory != null)
-            {
-               FahClientFactory.Release(fahClient);
-            }
-            return;
-         }
-
-         var legacyClient = client as LegacyClient;
-         if (legacyClient != null)
-         {
-            if (LegacyClientFactory != null)
-            {
-               LegacyClientFactory.Release(legacyClient);
-            }
-         }
-      }
-   }
+        }
+    }
 }
