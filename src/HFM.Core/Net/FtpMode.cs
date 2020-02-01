@@ -1,5 +1,5 @@
 ﻿
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    public enum FtpMode
    {

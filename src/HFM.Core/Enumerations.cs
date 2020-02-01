@@ -17,20 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 namespace HFM.Core
 {
-   /// <summary>
-   /// Client Types
-   /// </summary>
-   public enum ClientType
-   {
-      FahClient,
-      [Obsolete("Do not use Legacy.")]
-      Legacy
-   }
-
    // ReSharper disable InconsistentNaming
 
    /// <summary>
@@ -44,18 +32,6 @@ namespace HFM.Core
    }
 
    // ReSharper restore InconsistentNaming
-
-   public enum ProcessingMode
-   {
-      Parallel,
-      Serial
-   }
-
-   public enum WebDeploymentType
-   {
-      Path,
-      Ftp
-   }
 
    public enum MinimizeToOption
    {

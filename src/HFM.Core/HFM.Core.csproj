@@ -89,7 +89,7 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
-    <Compile Include="FtpMode.cs" />
+    <Compile Include="Net\FtpMode.cs" />
     <Compile Include="Net\FtpWebRequestAdapter.cs" />
     <Compile Include="Net\FtpWebResponseAdapter.cs" />
     <Compile Include="Internal\StopwatchExtensions.cs" />

@@ -3,6 +3,8 @@ using System.Linq;
 
 using NUnit.Framework;
 
+using HFM.Core.DataTypes;
+
 namespace HFM.Core.Client
 {
     [TestFixture]

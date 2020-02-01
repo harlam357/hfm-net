@@ -26,6 +26,16 @@ using System.Text.RegularExpressions;
 // TODO: Figure out how to move this to Client namespace and maintain compatibility with existing hfmx files
 namespace HFM.Core.DataTypes
 {
+    /// <summary>
+    /// Client Types
+    /// </summary>
+    public enum ClientType
+    {
+        FahClient,
+        [Obsolete("Do not use Legacy.")]
+        Legacy
+    }
+
     [DataContract]
     public class ClientSettings
     {
