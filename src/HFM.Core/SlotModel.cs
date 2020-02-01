@@ -351,7 +351,6 @@ namespace HFM.Core
             get
             {
                 return Status == SlotStatus.Running ||
-                       Status == SlotStatus.RunningAsync ||
                        Status == SlotStatus.RunningNoFrameTimes ||
                        Status == SlotStatus.Finishing;
             }

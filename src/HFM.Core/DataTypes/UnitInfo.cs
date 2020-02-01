@@ -140,9 +140,8 @@ namespace HFM.Core.DataTypes
       public DateTime DueTime { get; set; }
 
       /// <summary>
-      /// Unit Start Time Stamp (Time Stamp from First Parseable Line in LogLines)
+      /// Unit Start Time Stamp
       /// </summary>
-      /// <remarks>Used to Determine Status when a LogLine Time Stamp is not available - See LegacyClient.HandleReturnedStatus</remarks>
       public TimeSpan UnitStartTimeStamp { get; set; }
 
       /// <summary>

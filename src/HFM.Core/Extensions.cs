@@ -92,25 +92,17 @@ namespace HFM.Core
             {
                 case SlotStatus.Running:
                     return Color.Green;
-                case SlotStatus.RunningAsync:
-                    return Color.Blue;
                 case SlotStatus.RunningNoFrameTimes:
                     return Color.Yellow;
-                case SlotStatus.Finishing: // v7 specific
+                case SlotStatus.Finishing:
                     return Color.Khaki;
-                case SlotStatus.Ready:     // v7 specific
+                case SlotStatus.Ready:
                     return Color.DarkCyan;
-                case SlotStatus.Stopping:  // v7 specific
-                case SlotStatus.Failed:    // v7 specific
-                case SlotStatus.Stopped:
-                case SlotStatus.EuePause:
-                case SlotStatus.Hung:
+                case SlotStatus.Stopping:
+                case SlotStatus.Failed:
                     return Color.DarkRed;
                 case SlotStatus.Paused:
                     return Color.Orange;
-                case SlotStatus.SendingWorkPacket:
-                case SlotStatus.GettingWorkPacket:
-                    return Color.Purple;
                 case SlotStatus.Offline:
                     return Color.Gray;
                 default:

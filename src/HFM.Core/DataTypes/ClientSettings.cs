@@ -34,7 +34,7 @@ namespace HFM.Core.DataTypes
         }
 
         /// <summary>
-        /// Client Type (FahClient, Legacy, or External)
+        /// Client Type
         /// </summary>
         [DataMember(Order = 1)]
         public ClientType ClientType { get; set; }

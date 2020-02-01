@@ -158,10 +158,6 @@
       <Project>{7500a8ca-521d-4397-892b-27c6917847e1}</Project>
       <Name>HFM.Proteins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HFM.Queue\HFM.Queue.csproj">
-      <Project>{44ac27f2-833d-4bf2-9e17-c35d38c7bd67}</Project>
-      <Name>HFM.Queue</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\harlam357.snk">
