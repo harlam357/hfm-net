@@ -25,9 +25,9 @@ using System.Linq;
 using System.Net.Cache;
 
 using harlam357.Core;
-using harlam357.Core.Net;
 
 using HFM.Core.Data;
+using HFM.Core.Net;
 using HFM.Preferences;
 using HFM.Proteins;
 

@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    /// <summary>
    /// Represents an object that provides a response from a Uniform Resource Identifier (URI).

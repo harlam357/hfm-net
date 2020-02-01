@@ -22,7 +22,7 @@ using System.IO;
 using System.Net;
 using System.Net.Cache;
 
-using HFM.Core;
+using HFM.Core.Net;
 
 namespace HFM.Forms
 {

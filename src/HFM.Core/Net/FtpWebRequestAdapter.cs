@@ -21,7 +21,7 @@ using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    /// <summary>
    /// Represents an object that implements a File Transfer Protocol (FTP) client.

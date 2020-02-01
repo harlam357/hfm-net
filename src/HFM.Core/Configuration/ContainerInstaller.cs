@@ -27,6 +27,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 using HFM.Core.Client;
+using HFM.Core.Net;
 
 namespace HFM.Core.Configuration
 {

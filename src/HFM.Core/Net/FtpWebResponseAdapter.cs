@@ -20,7 +20,7 @@
 using System;
 using System.Net;
 
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    /// <summary>
    /// Represents an object that encapsulates a File Transfer Protocol (FTP) server's response to a request.

@@ -24,7 +24,7 @@ using System.Net.Cache;
 using System.Net.Security;
 using System.Security.Principal;
 
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    /// <summary>
    /// Represents an object that makes a request to a Uniform Resource Identifier (URI).

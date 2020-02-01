@@ -90,8 +90,8 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
     <Compile Include="FtpMode.cs" />
-    <Compile Include="FtpWebRequestAdapter.cs" />
-    <Compile Include="FtpWebResponseAdapter.cs" />
+    <Compile Include="Net\FtpWebRequestAdapter.cs" />
+    <Compile Include="Net\FtpWebResponseAdapter.cs" />
     <Compile Include="Internal\StopwatchExtensions.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
@@ -144,7 +144,7 @@
     <Compile Include="DataTypes\XmlStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="NetworkOps.cs" />
+    <Compile Include="Net\NetworkOps.cs" />
     <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProteinBenchmarkService.cs" />
@@ -160,9 +160,9 @@
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\XmlStatsDataContainer.cs" />
-    <Compile Include="WebOperation.cs" />
-    <Compile Include="WebRequestAdapter.cs" />
-    <Compile Include="WebResponseAdapter.cs" />
+    <Compile Include="Net\WebOperation.cs" />
+    <Compile Include="Net\WebRequestAdapter.cs" />
+    <Compile Include="Net\WebResponseAdapter.cs" />
     <Compile Include="WorkUnits\WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>

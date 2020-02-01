@@ -23,7 +23,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 
-namespace HFM.Core
+namespace HFM.Core.Net
 {
    /// <summary>
    /// Specifies the current state of the operation.

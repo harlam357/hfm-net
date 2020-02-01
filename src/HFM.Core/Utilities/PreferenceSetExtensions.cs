@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 
+using HFM.Core.Net;
 using HFM.Preferences;
 
 namespace HFM.Core

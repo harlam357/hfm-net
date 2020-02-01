@@ -25,7 +25,7 @@ using System.Windows.Forms;
 
 using harlam357.Core.Security;
 
-using HFM.Core;
+using HFM.Core.Net;
 
 namespace HFM.Forms
 {

@@ -32,6 +32,7 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Net;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
 using HFM.Preferences;
