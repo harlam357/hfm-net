@@ -30,6 +30,7 @@ using System.Xml.Xsl;
 
 using Castle.Core.Logging;
 
+using HFM.Core.DataTypes;
 using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
 using HFM.Preferences;
@@ -301,7 +302,7 @@ namespace HFM.Core.ScheduledTasks
          slotSummary.HfmVersion = Application.VersionWithRevision;
          slotSummary.NumberFormat = _prefs.GetPpdFormatString();
          slotSummary.UpdateDateTime = updateDateTime;
-         slotSummary.SlotTotals = slots.GetSlotTotals();
+         slotSummary.SlotTotals = SlotTotals.Create(slots);
          slotSummary.Slots = SortSlots(slots).Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
          return slotSummary;
       }
@@ -331,7 +332,7 @@ namespace HFM.Core.ScheduledTasks
          slotDetail.NumberFormat = _prefs.GetPpdFormatString();
          slotDetail.UpdateDateTime = updateDateTime;
          slotDetail.LogFileAvailable = _prefs.Get<bool>(Preference.WebGenCopyFAHlog);
-         slotDetail.LogFileName = slot.Settings.CachedFahLogFileName();
+         slotDetail.LogFileName = slot.Settings.ClientLogFileName;
          slotDetail.TotalRunCompletedUnits = slot.TotalRunCompletedUnits;
          slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
          slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;

@@ -239,7 +239,7 @@ namespace HFM.Core
 
             client = _clientDictionary[key];
             string existingName = client.Settings.Name;
-            string existingPath = client.Settings.DataPath();
+            string existingPath = client.Settings.ClientPath;
 
             client.SlotsChanged -= OnInvalidate;
             client.RetrievalFinished -= OnInvalidate;
@@ -254,7 +254,7 @@ namespace HFM.Core
             client.SlotsChanged += OnInvalidate;
             client.RetrievalFinished += OnInvalidate;
 
-            e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.DataPath());
+            e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.ClientPath);
          }
          finally
          {

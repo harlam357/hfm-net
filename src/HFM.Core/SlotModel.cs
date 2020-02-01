@@ -451,7 +451,7 @@ namespace HFM.Core
         private void UpdateTimeOfLastProgress(UnitInfoModel parsedUnitInfo)
         {
             // Matches the Current Project and Raw Download Time
-            if (UnitInfoModel.UnitInfoData.IsSameUnitAs(parsedUnitInfo.UnitInfoData))
+            if (UnitInfoModel.UnitInfoData.EqualsProjectAndDownloadTime(parsedUnitInfo.UnitInfoData))
             {
                 // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
                 if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&

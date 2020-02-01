@@ -58,129 +58,11 @@ namespace HFM.Core
 
         #endregion
 
-        #region SlotStatus
-
-        /// <summary>
-        /// Gets Status Html Color String
-        /// </summary>
-        public static string GetHtmlColor(this SlotStatus status)
-        {
-            return ColorTranslator.ToHtml(status.GetStatusColor());
-        }
-
-        /// <summary>
-        /// Gets Status Html Font Color String
-        /// </summary>
-        public static string GetHtmlFontColor(this SlotStatus status)
-        {
-            switch (status)
-            {
-                case SlotStatus.RunningNoFrameTimes:
-                case SlotStatus.Paused:
-                case SlotStatus.Finishing:
-                case SlotStatus.Offline:
-                    return ColorTranslator.ToHtml(Color.Black);
-                default:
-                    return ColorTranslator.ToHtml(Color.White);
-            }
-        }
-
-        /// <summary>
-        /// Gets Status Color Object
-        /// </summary>
-        public static Color GetStatusColor(this SlotStatus status)
-        {
-            switch (status)
-            {
-                case SlotStatus.Running:
-                    return Color.Green;
-                case SlotStatus.RunningNoFrameTimes:
-                    return Color.Yellow;
-                case SlotStatus.Finishing:
-                    return Color.Khaki;
-                case SlotStatus.Ready:
-                    return Color.DarkCyan;
-                case SlotStatus.Stopping:
-                case SlotStatus.Failed:
-                    return Color.DarkRed;
-                case SlotStatus.Paused:
-                    return Color.Orange;
-                case SlotStatus.Offline:
-                    return Color.Gray;
-                default:
-                    return Color.Gray;
-            }
-        }
-
-        #endregion
-
         #region SlotName
 
         internal static string AppendSlotId(this string name, int slotId)
         {
             return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
-        }
-
-        #endregion
-
-        #region ClientSettings
-
-        public static bool IsFahClient(this ClientSettings settings)
-        {
-            return settings != null && settings.ClientType == ClientType.FahClient;
-        }
-
-        /// <summary>
-        /// Used to supply a "path" value to the benchmarks and unit info database.
-        /// </summary>
-        public static string DataPath(this ClientSettings settings)
-        {
-            if (settings == null) return String.Empty;
-
-            return String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Server, settings.Port);
-        }
-
-        public static string CachedFahLogFileName(this ClientSettings settings)
-        {
-            return settings == null ? String.Empty : String.Format(CultureInfo.InvariantCulture, "{0}-{1}", settings.Name, Constants.FahClientLogFileName);
-        }
-
-        #endregion
-
-        #region SlotTotals
-
-        /// <summary>
-        /// Get the totals for all slots.
-        /// </summary>
-        /// <returns>The totals for all slots.</returns>
-        public static SlotTotals GetSlotTotals(this IEnumerable<SlotModel> slots)
-        {
-            var totals = new SlotTotals();
-
-            // If no slots return initialized totals.
-            if (slots == null)
-            {
-                return totals;
-            }
-
-            totals.TotalSlots = slots.Count();
-
-            foreach (SlotModel slot in slots)
-            {
-                totals.PPD += slot.PPD;
-                totals.UPD += slot.UPD;
-                totals.TotalRunCompletedUnits += slot.TotalRunCompletedUnits;
-                totals.TotalRunFailedUnits += slot.TotalRunFailedUnits;
-                totals.TotalCompletedUnits += slot.TotalCompletedUnits;
-                totals.TotalFailedUnits += slot.TotalFailedUnits;
-
-                if (slot.ProductionValuesOk)
-                {
-                    totals.WorkingSlots++;
-                }
-            }
-
-            return totals;
         }
 
         #endregion
@@ -341,43 +223,6 @@ namespace HFM.Core
 
         #endregion
 
-        #region BonusCalculationType
-
-        public static bool IsEnabled(this BonusCalculationType type)
-        {
-            return type.Equals(BonusCalculationType.DownloadTime) ||
-                   type.Equals(BonusCalculationType.FrameTime);
-        }
-
-        #endregion
-
-        #region UnitInfo
-
-        internal static bool IsSameUnitAs(this UnitInfo unit1, UnitInfo unit2)
-        {
-            if (unit1 == null) throw new ArgumentNullException("unit1");
-
-            if (unit2 == null)
-            {
-                return false;
-            }
-
-            // if the Projects are known
-            if (!unit1.ProjectIsUnknown() && !unit2.ProjectIsUnknown())
-            {
-                // equals the Project and Download Time
-                if (unit1.EqualsProject(unit2) &&
-                    unit1.DownloadTime.Equals(unit2.DownloadTime))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        #endregion
-
         #region DeepClone
 
         public static QueryParameters DeepClone(this QueryParameters value)
@@ -410,10 +255,5 @@ namespace HFM.Core
         }
 
         #endregion
-
-        public static string GetExecTime(this Stopwatch sw)
-        {
-            return String.Format("{0:#,##0} ms", sw.ElapsedMilliseconds);
-        }
     }
 }

@@ -68,7 +68,7 @@ namespace HFM.Core.Client
             get { return _settings; }
             set
             {
-                Debug.Assert(value.IsFahClient());
+                Debug.Assert(value.ClientType == ClientType.FahClient);
 
                 // settings already exist
                 if (_settings != null)
@@ -207,7 +207,7 @@ namespace HFM.Core.Client
         {
             const int sleep = 100;
             const int timeout = 60 * 1000;
-            string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.CachedFahLogFileName());
+            string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.ClientLogFileName);
 
             try
             {
@@ -403,7 +403,7 @@ namespace HFM.Core.Client
                     }
 
                     // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-                    UpdateBenchmarkData(slotModel.UnitInfoModel, parsedUnits.Values, result.CurrentUnitIndex);
+                    UpdateBenchmarkData(slotModel.UnitInfoModel, parsedUnits.Values);
 
                     // Update the UnitInfoLogic if we have a current unit index
                     if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
@@ -440,7 +440,7 @@ namespace HFM.Core.Client
             // update the data
             unitInfo.UnitRetrievalTime = LastRetrievalTime;
             unitInfo.OwningClientName = Settings.Name;
-            unitInfo.OwningClientPath = Settings.DataPath();
+            unitInfo.OwningClientPath = Settings.ClientPath;
             unitInfo.OwningSlotId = slotModel.SlotId;
             if (unitInfo.SlotType == SlotType.Unknown)
             {
@@ -474,11 +474,6 @@ namespace HFM.Core.Client
             {
                 slotModel.ClientVersion = info.Build.Version;
             }
-            //if (run != null)
-            //{
-            //   slotModel.TotalRunCompletedUnits = run.CompletedUnits;
-            //   slotModel.TotalRunFailedUnits = run.FailedUnits;
-            //}
             if (UnitInfoDatabase.Connected)
             {
                 slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
@@ -488,11 +483,11 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits, int currentUnitIndex)
+        internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits)
         {
             foreach (var unitInfoModel in parsedUnits.Where(x => x != null))
             {
-                if (currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoModel.UnitInfoData))
+                if (currentUnitInfo.UnitInfoData.EqualsProjectAndDownloadTime(unitInfoModel.UnitInfoData))
                 {
                     // found the current unit
                     // current frame has already been recorded, increment to the next frame
@@ -505,11 +500,6 @@ namespace HFM.Core.Client
                 {
                     UpdateUnitInfoDatabase(unitInfoModel);
                 }
-                //// used when there is no currentUnitInfo
-                //else if (unitInfoLogic.UnitInfoData.QueueIndex == currentUnitIndex)
-                //{
-                //   BenchmarkCollection.UpdateData(unitInfoLogic.UnitInfoData, 0, unitInfoLogic.FramesComplete);
-                //}
             }
         }
 

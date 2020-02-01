@@ -209,7 +209,7 @@ namespace HFM.Core
             Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
             Assert.AreEqual(ConfigurationChangedType.Edit, changedEventArgs.ChangedType);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
-            Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.DataPath());
+            Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
             Assert.AreEqual("test", editedEventArgs.PreviousName);
             Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
             Assert.AreEqual("test2", editedEventArgs.NewName);

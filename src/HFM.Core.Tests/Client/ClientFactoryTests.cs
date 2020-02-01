@@ -21,6 +21,8 @@ using System;
 
 using NUnit.Framework;
 
+using HFM.Core.DataTypes;
+
 namespace HFM.Core.Client
 {
     [TestFixture]

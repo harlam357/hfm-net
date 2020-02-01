@@ -104,7 +104,7 @@ namespace HFM.Forms.Models
       public SlotTotals SlotTotals
       {
          // use SlotCollection, it's provides synchronized access to the slot list
-         get { return SlotCollection.GetSlotTotals(); }
+         get { return SlotTotals.Create(SlotCollection); }
       }
 
       public object BindingSource

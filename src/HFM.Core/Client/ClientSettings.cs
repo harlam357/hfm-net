@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace HFM.Core.Client
+// TODO: Figure out how to move this to Client namespace and maintain compatibility with existing hfmx files
+namespace HFM.Core.DataTypes
 {
     [DataContract]
     public class ClientSettings
@@ -62,6 +63,10 @@ namespace HFM.Core.Client
         /// </summary>
         [DataMember(Order = 5)]
         public string Password { get; set; }
+
+        public string ClientLogFileName => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Name, Constants.FahClientLogFileName);
+
+        public string ClientPath => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Server, Port);
 
         /// <summary>
         /// The default Folding@Home client port.

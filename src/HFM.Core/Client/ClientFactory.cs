@@ -61,7 +61,7 @@ namespace HFM.Core.Client
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             // special consideration for obsolete ClientType values that may appear in hfmx configuration files
-            if (!settings.IsFahClient()) return null;
+            if (settings.ClientType != ClientType.FahClient) return null;
 
             if (!ClientSettings.ValidateName(settings.Name)) throw new ArgumentException($"Client name {settings.Name} is not valid.", nameof(settings));
             if (String.IsNullOrWhiteSpace(settings.Server)) throw new ArgumentException("Client server (host) name is empty.", nameof(settings));

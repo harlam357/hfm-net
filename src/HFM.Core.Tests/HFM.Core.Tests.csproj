@@ -109,6 +109,7 @@
     <Compile Include="Client\ClientFactoryTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
+    <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifierTests.cs" />

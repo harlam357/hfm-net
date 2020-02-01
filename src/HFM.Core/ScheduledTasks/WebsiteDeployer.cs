@@ -104,10 +104,10 @@ namespace HFM.Core.ScheduledTasks
                {
                   foreach (var slot in slots)
                   {
-                     string cachedFahlogPath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), slot.Settings.CachedFahLogFileName());
+                     string cachedFahlogPath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), slot.Settings.ClientLogFileName);
                      if (File.Exists(cachedFahlogPath))
                      {
-                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, slot.Settings.CachedFahLogFileName()), true);
+                        File.Copy(cachedFahlogPath, Path.Combine(webRoot, slot.Settings.ClientLogFileName), true);
                      }
                   }
                }
@@ -147,7 +147,7 @@ namespace HFM.Core.ScheduledTasks
                                     ? _prefs.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                                     : -1;
 
-               var logPaths = slots.Select(x => Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), x.Settings.CachedFahLogFileName())).Distinct();
+               var logPaths = slots.Select(x => Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), x.Settings.ClientLogFileName)).Distinct();
                foreach (var cachedFahlogPath in logPaths)
                {
                   if (File.Exists(cachedFahlogPath))

@@ -825,7 +825,7 @@ namespace HFM.Forms
             Debug.Assert(_gridModel.SelectedSlot != null);
             IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
             ClientSettings originalSettings = client.Settings;
-            Debug.Assert(originalSettings.IsFahClient());
+            Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var dialog = _presenterFactory.GetFahClientSetupPresenter();
             dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
@@ -874,7 +874,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (_gridModel.SelectedSlot == null) return;
 
-            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.ClientLogFileName);
             if (File.Exists(logFilePath))
             {
                 HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));

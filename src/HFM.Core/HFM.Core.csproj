@@ -92,6 +92,8 @@
     <Compile Include="FtpMode.cs" />
     <Compile Include="FtpWebRequestAdapter.cs" />
     <Compile Include="FtpWebResponseAdapter.cs" />
+    <Compile Include="Internal\StopwatchExtensions.cs" />
+    <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="WorkUnits\ProjectInfo.cs" />
@@ -202,9 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Internal\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

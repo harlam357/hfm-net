@@ -86,7 +86,7 @@ namespace HFM.Core.Client
          Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData));
 
          // act
-         fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits, 0);
+         fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits);
 
          // assert after act
          Assert.AreEqual(true, benchmarkCollection.Contains(benchmarkClient));
