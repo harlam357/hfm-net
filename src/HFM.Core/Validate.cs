@@ -90,14 +90,6 @@ namespace HFM.Core
       }
 
       /// <summary>
-      /// Validate Server Port Number
-      /// </summary>
-      public static bool ServerPort(int value)
-      {
-         return value > 0 && value < UInt16.MaxValue;
-      }
-
-      /// <summary>
       /// Validate Ftp Path
       /// </summary>
       public static bool FtpPath(string value)

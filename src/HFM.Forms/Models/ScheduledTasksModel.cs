@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.Net;
 using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 using HFM.Preferences.Data;
@@ -342,7 +343,7 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !Validate.ServerPort(WebGenPort);
+                  return !TcpPort.Validate(WebGenPort);
                default:
                   return false;
             }

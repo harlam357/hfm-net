@@ -25,6 +25,7 @@ using System.Globalization;
 using HFM.Client.DataTypes;
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Core.Net;
 
 namespace HFM.Forms.Models
 {
@@ -108,7 +109,7 @@ namespace HFM.Forms.Models
 
       public bool PortError
       {
-         get { return !Validate.ServerPort(Port); }
+         get { return !TcpPort.Validate(Port); }
       }
 
       private string _password = String.Empty;

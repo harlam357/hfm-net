@@ -93,6 +93,7 @@
     <Compile Include="Net\FtpWebRequestAdapter.cs" />
     <Compile Include="Net\FtpWebResponseAdapter.cs" />
     <Compile Include="Internal\StopwatchExtensions.cs" />
+    <Compile Include="Net\TcpPort.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />

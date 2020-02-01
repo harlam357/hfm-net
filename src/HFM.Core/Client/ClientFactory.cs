@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using HFM.Core.DataTypes;
+using HFM.Core.Net;
 
 namespace HFM.Core.Client
 {
@@ -65,7 +66,7 @@ namespace HFM.Core.Client
 
             if (!ClientSettings.ValidateName(settings.Name)) throw new ArgumentException($"Client name {settings.Name} is not valid.", nameof(settings));
             if (String.IsNullOrWhiteSpace(settings.Server)) throw new ArgumentException("Client server (host) name is empty.", nameof(settings));
-            if (!Validate.ServerPort(settings.Port)) throw new ArgumentException($"Client server (host) port {settings.Port} is not valid.", nameof(settings));
+            if (!TcpPort.Validate(settings.Port)) throw new ArgumentException($"Client server (host) port {settings.Port} is not valid.", nameof(settings));
 
             IClient client = FahClientFactory?.Create();
             if (client != null)
