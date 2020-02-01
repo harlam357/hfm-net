@@ -48,7 +48,7 @@ namespace HFM.Client.DataTypes
 
    // ReSharper restore InconsistentNaming
 
-   // See HFM.Core.SlotStatus for the global enumeration covering Legacy and v7 clients
+   // Matches HFM.Core.SlotStatus
 
    /// <summary>
    /// Represents the status of a Folding@Home client slot.

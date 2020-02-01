@@ -53,8 +53,8 @@ namespace HFM.Forms.Models
          ServerUsername = prefs.Get<string>(Preference.EmailReportingServerUsername);
          ServerPassword = prefs.Get<string>(Preference.EmailReportingServerPassword);
          ReportingEnabled = prefs.Get<bool>(Preference.EmailReportingEnabled);
-         ReportEuePause = prefs.Get<bool>(Preference.ReportEuePause);
-         ReportHung = prefs.Get<bool>(Preference.ReportHung);
+         //ReportEuePause = prefs.Get<bool>(Preference.ReportEuePause);
+         //ReportHung = prefs.Get<bool>(Preference.ReportHung);
       }
 
       public void Update(IPreferenceSet prefs)
@@ -67,8 +67,8 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.EmailReportingServerUsername, ServerUsername);
          prefs.Set(Preference.EmailReportingServerPassword, ServerPassword);
          prefs.Set(Preference.EmailReportingEnabled, ReportingEnabled);
-         prefs.Set(Preference.ReportEuePause, ReportEuePause);
-         prefs.Set(Preference.ReportHung, ReportHung);
+         //prefs.Set(Preference.ReportEuePause, ReportEuePause);
+         //prefs.Set(Preference.ReportHung, ReportHung);
       }
 
       #region Email Settings
@@ -291,39 +291,39 @@ namespace HFM.Forms.Models
       
       #endregion
 
-      #region Report Selections
-
-      private bool _reportEuePause;
-
-      public bool ReportEuePause
-      {
-         get { return _reportEuePause; }
-         set
-         {
-            if (ReportEuePause != value)
-            {
-               _reportEuePause = value;
-               OnPropertyChanged("ReportEuePause");
-            }
-         }
-      }
-
-      private bool _reportHung;
-
-      public bool ReportHung
-      {
-         get { return _reportHung; }
-         set
-         {
-            if (ReportHung != value)
-            {
-               _reportHung = value;
-               OnPropertyChanged("ReportHung");
-            }
-         }
-      }
-      
-      #endregion
+      //#region Report Selections
+      //
+      //private bool _reportEuePause;
+      //
+      //public bool ReportEuePause
+      //{
+      //   get { return _reportEuePause; }
+      //   set
+      //   {
+      //      if (ReportEuePause != value)
+      //      {
+      //         _reportEuePause = value;
+      //         OnPropertyChanged("ReportEuePause");
+      //      }
+      //   }
+      //}
+      //
+      //private bool _reportHung;
+      //
+      //public bool ReportHung
+      //{
+      //   get { return _reportHung; }
+      //   set
+      //   {
+      //      if (ReportHung != value)
+      //      {
+      //         _reportHung = value;
+      //         OnPropertyChanged("ReportHung");
+      //      }
+      //   }
+      //}
+      //
+      //#endregion
    
       #region INotifyPropertyChanged Members
 
