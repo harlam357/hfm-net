@@ -43,20 +43,11 @@ namespace HFM.Forms.Controls
             NextAttempt,
             Credit,
             BeginDate,
-            EndDate,
-            SpeedFactor,
-            PerfFraction,
-            MegaFlops,
             Server,
-            AvgDownload,
-            AvgUpload,
             CpuType,
             OS,
             Memory,
-            Benchmark,
             SmpCores,
-            CoresToUse,
-            UserId,
             MachineId
         }
         // ReSharper restore UnusedMember.Local
@@ -149,27 +140,11 @@ namespace HFM.Forms.Controls
                 {
                     txtBeginDate.Text = String.Format("{0} {1}", item.BeginTimeLocal.ToShortDateString(), item.BeginTimeLocal.ToShortTimeString());
                 }
-                if (item.EndTimeUtc.Equals(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)))
-                {
-                    txtEndDate.Text = "(Not Completed)";
-                }
-                else
-                {
-                    txtEndDate.Text = String.Format("{0} {1}", item.EndTimeLocal.ToShortDateString(), item.EndTimeLocal.ToShortTimeString());
-                }
-                txtSpeedFactor.Text = String.Format(CultureInfo.CurrentCulture, "{0} x min speed", item.SpeedFactor);
-                txtPerformanceFraction.Text = String.Format(CultureInfo.CurrentCulture, "{0} (u={1})", _queue.PerformanceFraction, _queue.PerformanceFractionUnitWeight);
-                txtMegaFlops.Text = String.Format(CultureInfo.CurrentCulture, "{0:f}", item.MegaFlops);
                 txtServer.Text = item.ServerIP;
-                txtAverageDownloadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.DownloadRateAverage, _queue.DownloadRateUnitWeight);
-                txtAverageUploadRate.Text = String.Format(CultureInfo.CurrentCulture, "{0} KB/s (u={1})", _queue.UploadRateAverage, _queue.UploadRateUnitWeight);
                 txtCpuType.Text = item.CpuString;
                 txtOsType.Text = item.OsString;
                 txtMemory.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
-                txtBenchmark.Text = item.Benchmark.ToString(CultureInfo.CurrentCulture);
                 txtSmpCores.Text = item.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
-                txtCoresToUse.Text = item.UseCores.ToString(CultureInfo.CurrentCulture);
-                txtUserID.Text = item.UserID;
                 txtMachineID.Text = item.MachineID.ToString(CultureInfo.CurrentCulture);
 
                 OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
@@ -199,111 +174,49 @@ namespace HFM.Forms.Controls
             NextAttemptTextBox.Visible = visible;
             txtCredit.Visible = visible;
             txtBeginDate.Visible = visible;
-            txtEndDate.Visible = visible;
-            txtSpeedFactor.Visible = visible;
-            txtPerformanceFraction.Visible = visible;
-            txtMegaFlops.Visible = visible;
             txtServer.Visible = visible;
-            txtAverageDownloadRate.Visible = visible;
-            txtAverageUploadRate.Visible = visible;
             txtCpuType.Visible = visible;
             txtOsType.Visible = visible;
             txtMemory.Visible = visible;
-            txtBenchmark.Visible = visible;
             txtSmpCores.Visible = visible;
-            txtCoresToUse.Visible = visible;
-            txtUserID.Visible = visible;
             txtMachineID.Visible = visible;
 
             if (visible == false)
             {
-                tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                 tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
-                tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
             }
             else
             {
-                SetControlsForClientType(_queue.ClientType);
-
                 switch (_slotType)
                 {
                     case SlotType.Unknown:
-                        //case SlotType.Uniprocessor:
                         lblCpuType.Text = "CPU Type:";
-                        txtBenchmark.Visible = _queue.ClientType.Equals(ClientType.Legacy);
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = _queue.ClientType.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
                         txtSmpCores.Visible = false;
                         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
-                        txtCoresToUse.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                         break;
                     case SlotType.GPU:
-                        lblCpuType.Text = _queue.ClientType.Equals(ClientType.Legacy) ? "CPU Type:" : "GPU Type:";
-                        txtBenchmark.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
+                        lblCpuType.Text = "GPU Type:";
                         txtSmpCores.Visible = false;
                         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
-                        txtCoresToUse.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = 0;
                         break;
                     case SlotType.CPU:
                         lblCpuType.Text = "CPU Type:";
-                        txtBenchmark.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.Benchmark].Height = 0;
                         txtSmpCores.Visible = true;
                         tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
-                        txtCoresToUse.Visible = _queue.ClientType.Equals(ClientType.Legacy);
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CoresToUse].Height = _queue.ClientType.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
                         break;
                 }
             }
-        }
-
-        private void SetControlsForClientType(ClientType type)
-        {
-            bool legacyVisible = type.Equals(ClientType.Legacy);
-            int legacyHeight = type.Equals(ClientType.Legacy) ? DefaultRowHeight : 0;
-
-            txtEndDate.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.EndDate].Height = legacyHeight;
-            txtSpeedFactor.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.SpeedFactor].Height = legacyHeight;
-            txtPerformanceFraction.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.PerfFraction].Height = legacyHeight;
-            txtMegaFlops.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.MegaFlops].Height = legacyHeight;
-            txtAverageDownloadRate.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgDownload].Height = legacyHeight;
-            txtAverageUploadRate.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.AvgUpload].Height = legacyHeight;
-            txtUserID.Visible = legacyVisible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.UserId].Height = legacyHeight;
-
-            bool visible = type.Equals(ClientType.FahClient);
-            int height = type.Equals(ClientType.FahClient) ? DefaultRowHeight : 0;
-
-            WaitingOnTextBox.Visible = visible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.WaitingOn].Height = height;
-            AttemptsTextBox.Visible = visible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.Attempts].Height = height;
-            NextAttemptTextBox.Visible = visible;
-            tableLayoutPanel1.RowStyles[(int)QueueControlRows.NextAttempt].Height = height;
         }
     }
 
     [ExcludeFromCodeCoverage]
     public class QueueIndexChangedEventArgs : EventArgs
     {
-        private readonly int _index;
-
-        public int Index
-        {
-            get { return _index; }
-        }
+        public int Index { get; }
 
         public QueueIndexChangedEventArgs(int index)
         {
-            _index = index;
+            Index = index;
         }
     }
 }

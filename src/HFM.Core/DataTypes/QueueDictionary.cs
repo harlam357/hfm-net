@@ -21,58 +21,19 @@ using System.Collections.Generic;
 
 namespace HFM.Core.DataTypes
 {
-   public sealed class QueueDictionary : Dictionary<int, QueueUnitItem>
-   {
-      #region queue.dat Properties
+    public sealed class QueueDictionary : Dictionary<int, QueueUnitItem>
+    {
+        /// <summary>
+        /// Current index number
+        /// </summary>
+        public int CurrentIndex { get; set; }
 
-      /// <summary>
-      /// Client type that generated this queue
-      /// </summary>
-      public ClientType ClientType { get; set; }
-
-      /// <summary>
-      /// Current index number
-      /// </summary>
-      public int CurrentIndex { get; set; }
-
-      /// <summary>
-      /// Performance fraction
-      /// </summary>
-      public float PerformanceFraction { get; set; }
-
-      /// <summary>
-      /// Performance fraction unit weight
-      /// </summary>
-      public int PerformanceFractionUnitWeight { get; set; }
-
-      /// <summary>
-      /// Download rate sliding average
-      /// </summary>
-      public float DownloadRateAverage { get; set; }
-
-      /// <summary>
-      /// Download rate unit weight
-      /// </summary>
-      public int DownloadRateUnitWeight { get; set; }
-
-      /// <summary>
-      /// Upload rate sliding average
-      /// </summary>
-      public float UploadRateAverage { get; set; }
-
-      /// <summary>
-      /// Upload rate unit weight
-      /// </summary>
-      public int UploadRateUnitWeight { get; set; }
-
-      #endregion
-      
-      /// <summary>
-      /// Gets the item at the current index.
-      /// </summary>
-      public QueueUnitItem Current
-      {
-         get { return this[CurrentIndex]; }
-      }
-   }
+        /// <summary>
+        /// Gets the item at the current index.
+        /// </summary>
+        public QueueUnitItem Current
+        {
+            get { return this[CurrentIndex]; }
+        }
+    }
 }
