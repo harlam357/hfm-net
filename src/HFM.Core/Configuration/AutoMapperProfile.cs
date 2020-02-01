@@ -22,6 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration
 {

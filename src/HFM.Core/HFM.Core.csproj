@@ -120,8 +120,8 @@
     <Compile Include="Services\ClientConfiguration.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Services\ProteinService.cs" />
-    <Compile Include="Serializers\HfmFileSerializer.cs" />
-    <Compile Include="Serializers\HistoryEntryCsvSerializer.cs" />
+    <Compile Include="Client\ClientSettingsFileSerializer.cs" />
+    <Compile Include="WorkUnits\HistoryEntryCsvFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="Serializers\XmlFileSerializer.cs" />
     <Compile Include="DataTypes\Markup\SlotData.cs" />
@@ -134,7 +134,7 @@
     <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />
-    <Compile Include="DataTypes\HistoryEntry.cs" />
+    <Compile Include="WorkUnits\HistoryEntry.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />
@@ -153,8 +153,8 @@
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="UnitInfoModel.cs" />
     <Compile Include="Utilities\PreferenceSetExtensions.cs" />
-    <Compile Include="Utilities\StringBuilderExtensions.cs" />
-    <Compile Include="Utilities\Validate.Minutes.cs" />
+    <Compile Include="Client\StringBuilderExtensions.cs" />
+    <Compile Include="ScheduledTasks\Interval.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\XmlStatsDataContainer.cs" />

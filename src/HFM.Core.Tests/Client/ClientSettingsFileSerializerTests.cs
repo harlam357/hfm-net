@@ -3,16 +3,16 @@ using System.Linq;
 
 using NUnit.Framework;
 
-namespace HFM.Core.Serializers
+namespace HFM.Core.Client
 {
     [TestFixture]
-    public class HfmFileSerializerTests
+    public class ClientSettingsFileSerializerTests
     {
         [Test]
-        public void HfmFileSerializer_Deserialize_FromFile()
+        public void ClientSettingsFileSerializer_Deserialize_FromFile()
         {
             // Arrange
-            var serializer = new HfmFileSerializer();
+            var serializer = new ClientSettingsFileSerializer();
             // Act
             var settings = serializer.Deserialize("..\\..\\TestFiles\\TestClientSettings.hfmx");
             // Assert

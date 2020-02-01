@@ -29,11 +29,11 @@ using System.Windows.Forms;
 using Castle.Core.Logging;
 using Castle.Windsor;
 
-using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Data.SQLite;
+using HFM.Core.ScheduledTasks;
 using HFM.Forms;
 using HFM.Forms.Models;
 using HFM.Preferences;
@@ -229,14 +229,14 @@ namespace HFM
          const int defaultInterval = 15;
          // ClientRetrievalTask.Interval
          var clientRetrievalTask = prefs.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
-         if (!Validate.Minutes(clientRetrievalTask.Interval))
+         if (!Interval.Validate(clientRetrievalTask.Interval))
          {
             clientRetrievalTask.Interval = defaultInterval;
             prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
          }
          // WebGenerationTask.Interval
          var webGenerationTask = prefs.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
-         if (!Validate.Minutes(webGenerationTask.Interval))
+         if (!Interval.Validate(webGenerationTask.Interval))
          {
             webGenerationTask.Interval = defaultInterval;
             prefs.Set(Preference.WebGenerationTask, webGenerationTask);

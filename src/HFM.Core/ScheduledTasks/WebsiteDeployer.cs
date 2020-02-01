@@ -24,7 +24,6 @@ using System.Linq;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
 using HFM.Preferences;
 
 namespace HFM.Core.ScheduledTasks

@@ -1,6 +1,8 @@
 ﻿
 using System.Diagnostics.CodeAnalysis;
 
+using HFM.Core.WorkUnits;
+
 namespace HFM.Core.Configuration
 {
    public static class TypeDescriptionProviderSetup
@@ -9,7 +11,7 @@ namespace HFM.Core.Configuration
       public static void Execute()
       {
          Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(SlotModel));
-         Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(DataTypes.HistoryEntry));
+         Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(HistoryEntry));
       }
    }
 }

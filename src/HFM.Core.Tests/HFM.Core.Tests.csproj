@@ -110,7 +110,7 @@
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
-    <Compile Include="Serializers\HfmFileSerializerTests.cs" />
+    <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="DataTypes\UnitInfoTests.cs" />
@@ -125,7 +125,7 @@
     <Compile Include="Utilities\FileSystemPathTests.cs" />
     <Compile Include="ApplicationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serializers\HistoryEntryCsvSerializerTests.cs" />
+    <Compile Include="WorkUnits\HistoryEntryCsvSerializerTests.cs" />
     <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="Services\ProteinServiceTests.cs" />
     <Compile Include="Data\QueryParameterContainerTests.cs" />
@@ -175,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

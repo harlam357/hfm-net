@@ -22,11 +22,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Serializers;
 
-namespace HFM.Core.Serializers
+namespace HFM.Core.WorkUnits
 {
-   public class HistoryEntryCsvSerializer : IFileSerializer<List<HistoryEntry>>
+   public class HistoryEntryCsvFileSerializer : IFileSerializer<List<HistoryEntry>>
    {
       public string FileExtension
       {

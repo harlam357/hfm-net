@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 using HFM.Preferences.Data;
 
@@ -136,7 +137,7 @@ namespace HFM.Forms.Models
          get
          {
             if (SyncOnSchedule == false) return false;
-            return !Validate.Minutes(SyncTimeMinutes);
+            return !Interval.Validate(SyncTimeMinutes);
          }
       }
 
@@ -233,7 +234,7 @@ namespace HFM.Forms.Models
          get
          {
             if (GenerateIntervalEnabled == false) return false;
-            return !Validate.Minutes(GenerateInterval);
+            return !Interval.Validate(GenerateInterval);
          }
       }
 

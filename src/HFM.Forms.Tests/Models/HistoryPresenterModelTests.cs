@@ -25,6 +25,7 @@ using Rhino.Mocks;
 using HFM.Core;
 using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Forms.Models
 {

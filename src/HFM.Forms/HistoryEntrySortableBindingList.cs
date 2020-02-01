@@ -24,6 +24,7 @@ using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Forms
 {

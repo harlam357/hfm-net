@@ -131,8 +131,8 @@ namespace HFM.Forms
             _cssSampleBrowser.TabStop = false;
          }
 
-         txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.Validate.MinMinutes, Core.Validate.MaxMinutes);
-         txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.Validate.MinMinutes, Core.Validate.MaxMinutes);
+         txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.ScheduledTasks.Interval.MinInterval, Core.ScheduledTasks.Interval.MaxInterval);
+         txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.ScheduledTasks.Interval.MinInterval, Core.ScheduledTasks.Interval.MaxInterval);
 
          _scheduledTasksModel = new ScheduledTasksModel(prefs);
          _startupAndExternalModel = new StartupAndExternalModel(prefs);

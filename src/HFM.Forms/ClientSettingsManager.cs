@@ -79,7 +79,7 @@ namespace HFM.Forms
       {
          _serializers = new List<IFileSerializer<List<ClientSettings>>>
          {
-            new HfmFileSerializer()
+            new ClientSettingsFileSerializer()
          };
 
          ClearFileName();

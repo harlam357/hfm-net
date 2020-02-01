@@ -7,20 +7,18 @@ using System.Threading;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
-namespace HFM.Core.Serializers
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
-   public class HistoryEntryCsvSerializerTests
+   public class HistoryEntryCsvFileSerializerTests
    {
       [Test]
-      public void HistoryEntryCsvSerializer_Serialize_UsingCurrentCulture_Test()
+      public void HistoryEntryCsvFileSerializer_Serialize_UsingCurrentCulture_Test()
       {
          // Arrange
          var value = new List<HistoryEntry>();
          value.Add(new HistoryEntry());
-         var serializer = new HistoryEntryCsvSerializer();
+         var serializer = new HistoryEntryCsvFileSerializer();
          string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,DownloadDateTime,CompletionDateTime,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
          expected += Environment.NewLine;
          expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
@@ -37,13 +35,13 @@ namespace HFM.Core.Serializers
       }
 
       [Test]
-      public void HistoryEntryCsvSerializer_Serialize_UsingCzechCulture_Test()
+      public void HistoryEntryCsvFileSerializer_Serialize_UsingCzechCulture_Test()
       {
          // Arrange
          Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
          var value = new List<HistoryEntry>();
          value.Add(new HistoryEntry());
-         var serializer = new HistoryEntryCsvSerializer();
+         var serializer = new HistoryEntryCsvFileSerializer();
          string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,DownloadDateTime,CompletionDateTime,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
          expected += Environment.NewLine;
          expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";

@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    internal static class StringBuilderExtensions
    {
