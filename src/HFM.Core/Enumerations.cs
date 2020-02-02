@@ -33,19 +33,6 @@ namespace HFM.Core
 
    // ReSharper restore InconsistentNaming
 
-   public enum MinimizeToOption
-   {
-      SystemTray,
-      TaskBar,
-      Both
-   }
-
-   public enum StatsType
-   {
-      User,
-      Team
-   }
-
    public enum TimeFormatting
    {
       None,

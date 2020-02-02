@@ -185,6 +185,7 @@
     <Compile Include="MessagesForm.Designer.cs">
       <DependentUpon>MessagesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MinimizeToOption.cs" />
     <Compile Include="Models\FahClientSettingsModel.cs" />
     <Compile Include="Models\MainGridModel.cs" />
     <Compile Include="Models\ProteinCalculatorModel.cs" />
