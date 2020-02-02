@@ -45,7 +45,6 @@ namespace HFM.Forms.Models
          CalculateBonus = prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
          EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
          DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
-         DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
          ShowXmlStats = prefs.Get<bool>(Preference.EnableUserStats);
          MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          FormShowStyle = prefs.Get<MinimizeToOption>(Preference.MinimizeTo);
@@ -61,7 +60,6 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.BonusCalculation, CalculateBonus);
          prefs.Set(Preference.DisplayEtaAsDate, EtaDate);
          prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-         prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
          prefs.Set(Preference.EnableUserStats, ShowXmlStats);
          prefs.Set(Preference.MessageLevel, (int)MessageLevel);
          prefs.Set(Preference.MinimizeTo, FormShowStyle);
@@ -185,21 +183,6 @@ namespace HFM.Forms.Models
             {
                _duplicateProjectCheck = value;
                OnPropertyChanged("DuplicateProjectCheck");
-            }
-         }
-      }
-
-      private bool _duplicateUserIdCheck;
-
-      public bool DuplicateUserIdCheck
-      {
-         get { return _duplicateUserIdCheck; }
-         set
-         {
-            if (DuplicateUserIdCheck != value)
-            {
-               _duplicateUserIdCheck = value;
-               OnPropertyChanged("DuplicateUserIdCheck");
             }
          }
       }

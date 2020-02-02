@@ -91,14 +91,6 @@ namespace HFM.Forms
                   return;
                }
             }
-            else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
-            {
-               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck) && slotModel.UserIdIsDuplicate)
-               {
-                  toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
-                  return;
-               }
-            }
             // ReSharper restore PossibleNullReferenceException
          }
 
@@ -127,19 +119,6 @@ namespace HFM.Forms
             if (dataGridView1.Columns["Status"].Index == e.ColumnIndex)
             {
                PaintGridCell(PaintCell.Status, e);
-            }
-            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
-            {
-               #region Duplicate User and Machine ID Custom Paint
-               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck))
-               {
-                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-                  if (slotModel != null && slotModel.UserIdIsDuplicate)
-                  {
-                     PaintGridCell(PaintCell.Warning, e);
-                  }
-               }
-               #endregion
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {

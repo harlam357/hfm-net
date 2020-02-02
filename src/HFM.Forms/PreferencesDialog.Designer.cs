@@ -125,7 +125,6 @@ namespace HFM.Forms
             this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper6 = new System.Windows.Forms.Label();
             this.ShowUserStatsCheckBox = new System.Windows.Forms.CheckBox();
-            this.DuplicateUserCheckBox = new System.Windows.Forms.CheckBox();
             this.DuplicateProjectCheckBox = new System.Windows.Forms.CheckBox();
             this.chkEtaAsDate = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -1022,7 +1021,6 @@ namespace HFM.Forms
             this.grpInteractiveOptions.Controls.Add(this.BonusCalculationComboBox);
             this.grpInteractiveOptions.Controls.Add(this.labelWrapper6);
             this.grpInteractiveOptions.Controls.Add(this.ShowUserStatsCheckBox);
-            this.grpInteractiveOptions.Controls.Add(this.DuplicateUserCheckBox);
             this.grpInteractiveOptions.Controls.Add(this.DuplicateProjectCheckBox);
             this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
             this.grpInteractiveOptions.Controls.Add(this.label2);
@@ -1066,16 +1064,6 @@ namespace HFM.Forms
             this.ShowUserStatsCheckBox.TabIndex = 12;
             this.ShowUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
             this.ShowUserStatsCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // DuplicateUserCheckBox
-            // 
-            this.DuplicateUserCheckBox.AutoSize = true;
-            this.DuplicateUserCheckBox.Location = new System.Drawing.Point(10, 124);
-            this.DuplicateUserCheckBox.Name = "DuplicateUserCheckBox";
-            this.DuplicateUserCheckBox.Size = new System.Drawing.Size(190, 17);
-            this.DuplicateUserCheckBox.TabIndex = 11;
-            this.DuplicateUserCheckBox.Text = "Duplicate User/Machine ID Check";
-            this.DuplicateUserCheckBox.UseVisualStyleBackColor = true;
             // 
             // DuplicateProjectCheckBox
             // 
@@ -2225,7 +2213,6 @@ namespace HFM.Forms
       private System.Windows.Forms.Label WebSiteServerLabel;
       private System.Windows.Forms.Label WebSitePasswordLabel;
       private System.Windows.Forms.Label WebSiteUsernameLabel;
-      private System.Windows.Forms.CheckBox DuplicateUserCheckBox;
       private System.Windows.Forms.CheckBox DuplicateProjectCheckBox;
       private RadioPanel WebGenTypePanel;
       private ValidatingTextBox WebSitePasswordTextBox;

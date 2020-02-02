@@ -50,6 +50,7 @@ namespace HFM.Preferences
       ClientRetrievalTaskEnabled,
       ClientRetrievalTaskInterval,
       ClientRetrievalTask,
+      [Obsolete("Do not use DuplicateUserIdCheck.")]
       DuplicateUserIdCheck,
       DuplicateProjectCheck,
       AllowRunningAsync,
@@ -100,7 +101,9 @@ namespace HFM.Preferences
       EmailReportingServerPort,
       EmailReportingServerUsername,
       EmailReportingServerPassword,
+      [Obsolete("Do not use ReportEuePause.")]
       ReportEuePause,
+      [Obsolete("Do not use ReportHung.")]
       ReportHung,
       EocUserId,
       StanfordId,

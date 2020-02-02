@@ -445,7 +445,7 @@ namespace HFM.Forms
             var dlg = new ColorDialog();
             if (dlg.ShowDialog(this).Equals(DialogResult.OK))
             {
-                Color addColor = dlg.Color.FindNearestKnown();
+                Color addColor = FindNearestKnown(dlg.Color);
                 if (_graphColors.Contains(addColor))
                 {
                     _messageBoxView.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
@@ -457,6 +457,33 @@ namespace HFM.Forms
                 UpdateGraphColorsBinding();
                 lstColors.SelectedIndex = _graphColors.Count - 1;
             }
+        }
+
+        private static Color FindNearestKnown(Color c)
+        {
+            var best = new ColorName { Name = null };
+
+            foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
+            {
+                Color known = Color.FromName(colorName);
+                int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
+
+                if (best.Name == null || dist < best.Distance)
+                {
+                    best.Color = known;
+                    best.Name = colorName;
+                    best.Distance = dist;
+                }
+            }
+
+            return best.Color;
+        }
+
+        private struct ColorName
+        {
+            public Color Color;
+            public string Name;
+            public int Distance;
         }
 
         private void btnDeleteColor_Click(object sender, EventArgs e)

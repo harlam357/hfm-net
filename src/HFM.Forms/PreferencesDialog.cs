@@ -530,7 +530,6 @@ namespace HFM.Forms
          chkColorLog.BindChecked(_optionsModel, "ColorLogFile");
          chkAutoSave.BindChecked(_optionsModel, "AutoSaveConfig");
          DuplicateProjectCheckBox.BindChecked(_optionsModel, "DuplicateProjectCheck");
-         DuplicateUserCheckBox.BindChecked(_optionsModel, "DuplicateUserIdCheck");
          ShowUserStatsCheckBox.BindChecked(_optionsModel, "ShowXmlStats");
 
          PpdCalculationComboBox.DataSource = OptionsModel.PpdCalculationList;
