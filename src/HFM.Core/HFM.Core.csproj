@@ -155,7 +155,7 @@
     <Compile Include="ScheduledTasks\TaskManager.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="WorkUnits\UnitInfoModel.cs" />
-    <Compile Include="Utilities\PreferenceSetExtensions.cs" />
+    <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="ScheduledTasks\Interval.cs" />
     <Compile Include="Validate.cs" />
