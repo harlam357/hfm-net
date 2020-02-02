@@ -28,6 +28,7 @@ using Castle.Windsor;
 
 using HFM.Core.Client;
 using HFM.Core.Net;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration
 {

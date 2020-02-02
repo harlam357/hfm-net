@@ -29,7 +29,7 @@ using harlam357.Core;
 using HFM.Preferences;
 using HFM.Proteins;
 
-namespace HFM.Core
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
    public class ProteinServiceTests

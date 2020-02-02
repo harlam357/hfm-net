@@ -21,7 +21,7 @@ using System;
 
 using NUnit.Framework;
 
-namespace HFM.Core
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
    public class ProteinBenchmarkSlotIdentifierTests

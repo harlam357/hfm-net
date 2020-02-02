@@ -23,10 +23,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    public interface IClientConfiguration
    {

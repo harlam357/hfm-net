@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
 
+using HFM.Core.WorkUnits;
+
 namespace HFM.Core.Data.SQLite
 {
    public sealed partial class UnitInfoDatabase

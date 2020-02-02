@@ -103,7 +103,7 @@
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />
     <Compile Include="Serializers\ISerializer.cs" />
-    <Compile Include="Services\ClientConfigurationExtensions.cs" />
+    <Compile Include="Configuration\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
@@ -120,9 +120,9 @@
     <Compile Include="Client\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />
-    <Compile Include="Services\ClientConfiguration.cs" />
+    <Compile Include="Client\ClientConfiguration.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Services\ProteinService.cs" />
+    <Compile Include="WorkUnits\ProteinService.cs" />
     <Compile Include="Client\ClientSettingsFileSerializer.cs" />
     <Compile Include="WorkUnits\HistoryEntryCsvFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
@@ -133,7 +133,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
-    <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="Net\NetworkOps.cs" />
     <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ProteinBenchmarkService.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />
     <Compile Include="Data\QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\SlotModelSortComparer.cs" />
@@ -205,6 +205,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

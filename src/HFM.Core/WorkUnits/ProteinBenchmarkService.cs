@@ -22,15 +22,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-
-using HFM.Core.Client;
 using HFM.Core.Data;
 using HFM.Core.DataTypes;
-using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
 
-namespace HFM.Core
+namespace HFM.Core.WorkUnits
 {
    public interface IProteinBenchmarkService
    {

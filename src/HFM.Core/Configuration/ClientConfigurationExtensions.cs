@@ -1,7 +1,9 @@
 ﻿
 using System.Threading.Tasks;
+using HFM.Core.Client;
+using HFM.Core.WorkUnits;
 
-namespace HFM.Core
+namespace HFM.Core.Configuration
 {
    internal static class ClientConfigurationExtensions
    {

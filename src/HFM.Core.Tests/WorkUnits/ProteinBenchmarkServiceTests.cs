@@ -27,7 +27,7 @@ using NUnit.Framework;
 using HFM.Core.DataTypes;
 using HFM.Core.Serializers;
 
-namespace HFM.Core
+namespace HFM.Core.WorkUnits
 {
    [TestFixture]
    public class ProteinBenchmarkServiceTests
