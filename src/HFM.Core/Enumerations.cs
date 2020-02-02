@@ -21,16 +21,6 @@ namespace HFM.Core
 {
    // ReSharper disable InconsistentNaming
 
-   /// <summary>
-   /// Folding Slot Type
-   /// </summary>
-   public enum SlotType
-   {
-      Unknown = 0,
-      CPU = 1,
-      GPU = 2
-   }
-
    // ReSharper restore InconsistentNaming
 
    public enum TimeFormatting

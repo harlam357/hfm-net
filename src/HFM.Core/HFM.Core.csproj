@@ -94,6 +94,7 @@
     <Compile Include="Net\FtpWebResponseAdapter.cs" />
     <Compile Include="Internal\StopwatchExtensions.cs" />
     <Compile Include="Net\TcpPort.cs" />
+    <Compile Include="Client\SlotType.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
