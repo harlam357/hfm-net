@@ -209,7 +209,7 @@ namespace HFM.Forms.Models
             // reset selected slot
             ResetSelectedSlot();
             // find duplicates
-            slots.FindDuplicates();
+            SlotModel.FindDuplicateProjects(slots);
 
             // enable binding updates
             _bindingSource.RaiseListChangedEvents = true;

@@ -67,32 +67,6 @@ namespace HFM.Core
 
         #endregion
 
-        #region FindDuplicates
-
-        /// <summary>
-        /// Find Clients with Duplicate User IDs or Project (R/C/G).
-        /// </summary>
-        public static void FindDuplicates(this IEnumerable<SlotModel> slots)
-        {
-            FindDuplicateProjects(slots);
-        }
-
-        private static void FindDuplicateProjects(IEnumerable<SlotModel> slots)
-        {
-            var duplicates = (from x in slots
-                              group x by x.UnitInfoModel.UnitInfoData.ToShortProjectString() into g
-                              let count = g.Count()
-                              where count > 1 && g.First().UnitInfoModel.UnitInfoData.ProjectIsUnknown() == false
-                              select g.Key);
-
-            foreach (SlotModel slot in slots)
-            {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ToShortProjectString());
-            }
-        }
-
-        #endregion
-
         #region SlotType
 
         public static SlotType ToSlotType(this SlotOptions value)

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
@@ -380,11 +381,6 @@ namespace HFM.Core.Client
         #region Grid Data Warnings
 
         /// <summary>
-        /// User ID is a Duplicate of another Client's User ID
-        /// </summary>
-        public bool UserIdIsDuplicate { get; set; }
-
-        /// <summary>
         /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
         /// </summary>
         public bool ProjectIsDuplicate { get; set; }
@@ -454,5 +450,21 @@ namespace HFM.Core.Client
         }
 
         #endregion
+
+        /// <summary>
+        /// Find slots with duplicate projects.
+        /// </summary>
+        public static void FindDuplicateProjects(ICollection<SlotModel> slots)
+        {
+            var duplicates = slots.GroupBy(x => x.UnitInfoModel.UnitInfoData.ToShortProjectString())
+                .Where(g => g.Count() > 1 && g.First().UnitInfoModel.UnitInfoData.ProjectIsKnown())
+                .Select(g => g.Key)
+                .ToList();
+
+            foreach (var slot in slots)
+            {
+                slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ToShortProjectString());
+            }
+        }
     }
 }
