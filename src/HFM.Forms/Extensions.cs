@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms

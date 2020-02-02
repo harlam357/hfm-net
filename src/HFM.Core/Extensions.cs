@@ -74,23 +74,7 @@ namespace HFM.Core
         /// </summary>
         public static void FindDuplicates(this IEnumerable<SlotModel> slots)
         {
-            // Issue 19
-            FindDuplicateUserId(slots);
             FindDuplicateProjects(slots);
-        }
-
-        private static void FindDuplicateUserId(IEnumerable<SlotModel> slots)
-        {
-            var duplicates = (from x in slots
-                              group x by x.UserAndMachineId into g
-                              let count = g.Count()
-                              where count > 1 && g.First().UserIdUnknown == false
-                              select g.Key);
-
-            foreach (SlotModel slot in slots)
-            {
-                slot.UserIdIsDuplicate = duplicates.Contains(slot.UserAndMachineId);
-            }
         }
 
         private static void FindDuplicateProjects(IEnumerable<SlotModel> slots)

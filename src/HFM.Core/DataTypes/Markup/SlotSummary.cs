@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using HFM.Core.Client;
+
 namespace HFM.Core.DataTypes.Markup
 {
    [DataContract(Namespace = "")]

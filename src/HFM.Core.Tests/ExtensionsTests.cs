@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core
@@ -67,12 +67,12 @@ namespace HFM.Core
       [Test]
       public void DuplicateTestWithDuplicates()
       {
-         var instance1 = new SlotModel { UserId = "1" };
+         var instance1 = new SlotModel();
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
          instance1.UnitInfoModel = logic1;
 
-         var instance2 = new SlotModel { UserId = "1" };
+         var instance2 = new SlotModel();
          var unitInfo2 = new UnitInfo { ProjectID = 1 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
          instance2.UnitInfoModel = logic2;
@@ -88,12 +88,12 @@ namespace HFM.Core
       [Test]
       public void DuplicateTestNoDuplicates()
       {
-         var instance1 = new SlotModel { UserId = "1" };
+         var instance1 = new SlotModel();
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
          instance1.UnitInfoModel = logic1;
 
-         var instance2 = new SlotModel { UserId = "2" };
+         var instance2 = new SlotModel();
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
          instance2.UnitInfoModel = logic2;
@@ -109,17 +109,17 @@ namespace HFM.Core
       [Test]
       public void DuplicateTestMixed()
       {
-         var instance1 = new SlotModel { UserId = "1" };
+         var instance1 = new SlotModel();
          var unitInfo1 = new UnitInfo { ProjectID = 1 };
          var logic1 = CreateUnitInfoLogic(unitInfo1);
          instance1.UnitInfoModel = logic1;
 
-         var instance2 = new SlotModel { UserId = "1" };
+         var instance2 = new SlotModel();
          var unitInfo2 = new UnitInfo { ProjectID = 2 };
          var logic2 = CreateUnitInfoLogic(unitInfo2);
          instance2.UnitInfoModel = logic2;
 
-         var instance3 = new SlotModel { UserId = "2" };
+         var instance3 = new SlotModel();
          var unitInfo3 = new UnitInfo { ProjectID = 1 };
          var logic3 = CreateUnitInfoLogic(unitInfo3);
          instance3.UnitInfoModel = logic3;

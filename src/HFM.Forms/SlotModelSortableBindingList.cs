@@ -24,6 +24,7 @@ using System.ComponentModel;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Client;
 
 namespace HFM.Forms
 {

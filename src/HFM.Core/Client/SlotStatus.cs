@@ -1,7 +1,7 @@
 ﻿
 using System.Drawing;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     /// <summary>
     /// Represents the status of a Folding@Home client slot.

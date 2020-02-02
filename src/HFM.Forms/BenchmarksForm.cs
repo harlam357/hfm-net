@@ -29,6 +29,7 @@ using harlam357.Windows.Forms;
 using ZedGraph;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;

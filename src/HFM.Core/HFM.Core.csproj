@@ -105,7 +105,7 @@
     <Compile Include="Serializers\ISerializer.cs" />
     <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
-    <Compile Include="SlotStatus.cs" />
+    <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="DataTypes\SlotTotals.cs" />
+    <Compile Include="Client\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />
     <Compile Include="Services\ClientConfiguration.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Serializers\XmlFileSerializer.cs" />
     <Compile Include="DataTypes\Markup\SlotData.cs" />
     <Compile Include="DataTypes\Markup\SlotDetail.cs" />
-    <Compile Include="SlotModel.cs" />
+    <Compile Include="Client\SlotModel.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
@@ -151,7 +151,7 @@
     <Compile Include="Services\ProteinBenchmarkService.cs" />
     <Compile Include="Data\QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
-    <Compile Include="SlotModelSortComparer.cs" />
+    <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\TaskManager.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="WorkUnits\UnitInfoModel.cs" />

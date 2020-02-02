@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Proteins;

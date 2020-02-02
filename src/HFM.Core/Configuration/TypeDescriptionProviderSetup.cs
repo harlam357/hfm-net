@@ -1,6 +1,7 @@
 ﻿
 using System.Diagnostics.CodeAnalysis;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration

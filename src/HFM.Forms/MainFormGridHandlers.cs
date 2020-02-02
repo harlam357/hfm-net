@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 using HFM.Forms.Controls;
 using HFM.Preferences;

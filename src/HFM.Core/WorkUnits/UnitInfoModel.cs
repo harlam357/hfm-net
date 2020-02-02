@@ -20,8 +20,10 @@
 using System;
 using System.Globalization;
 using System.Text;
+
 using Castle.Core.Logging;
 
+using HFM.Core.Client;
 using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
