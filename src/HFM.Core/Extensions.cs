@@ -190,21 +190,6 @@ namespace HFM.Core
 
         #endregion
 
-        internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector, bool ignoreDuplicateKeys)
-        {
-            var dictionary = new Dictionary<TKey, TValue>();
-            foreach (var value in source)
-            {
-                var key = keySelector(value);
-                if (ignoreDuplicateKeys && dictionary.ContainsKey(key))
-                {
-                    continue;
-                }
-                dictionary.Add(key, value);
-            }
-            return dictionary;
-        }
-
         #region ProteinBenchmark
 
         internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)
