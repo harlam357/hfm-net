@@ -28,6 +28,7 @@ using Castle.Windsor;
 
 using HFM.Core.Client;
 using HFM.Core.Net;
+using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration
@@ -137,11 +138,15 @@ namespace HFM.Core.Configuration
                   .OnCreate(instance => ((ProteinBenchmarkService)instance).Read())
                   .OnDestroy(instance => ((ProteinBenchmarkService)instance).Write()));
 
-         // IXmlStatsDataContainer - Singleton
+         // IEocStatsService - Singleton
          container.Register(
-            Component.For<Data.IXmlStatsDataContainer>()
-               .ImplementedBy<Data.XmlStatsDataContainer>()
-                  .OnCreate(instance => ((Data.XmlStatsDataContainer)instance).Read()));
+             Component.For<IEocStatsService>()
+                 .ImplementedBy<EocStatsService>());
+
+         // EocStatsDataContainer - Singleton
+         container.Register(
+            Component.For<Data.EocStatsDataContainer>()
+                  .OnCreate(instance => instance.Read()));
 
          // IProteinService - Singleton
          container.Register(

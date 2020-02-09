@@ -27,7 +27,7 @@ namespace HFM.Core.Data
    {
       private T _data;
 
-      protected internal T Data
+      public T Data
       {
          get { return _data; }
          set { _data = value ?? new T(); }

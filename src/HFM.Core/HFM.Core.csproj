@@ -95,6 +95,7 @@
     <Compile Include="Internal\StopwatchExtensions.cs" />
     <Compile Include="Net\TcpPort.cs" />
     <Compile Include="Client\SlotType.cs" />
+    <Compile Include="Services\EocStatsService.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />
     <Compile Include="WorkUnits\UnitInfo.cs" />
-    <Compile Include="DataTypes\XmlStatsData.cs" />
+    <Compile Include="Services\EocStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Net\NetworkOps.cs" />
@@ -161,7 +162,7 @@
     <Compile Include="ScheduledTasks\Interval.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
-    <Compile Include="Data\XmlStatsDataContainer.cs" />
+    <Compile Include="Data\EocStatsDataContainer.cs" />
     <Compile Include="Net\WebOperation.cs" />
     <Compile Include="Net\WebRequestAdapter.cs" />
     <Compile Include="Net\WebResponseAdapter.cs" />
@@ -206,9 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

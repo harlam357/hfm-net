@@ -21,9 +21,8 @@ using System.Diagnostics.CodeAnalysis;
 
 using AutoMapper;
 
-using HFM.Core;
-using HFM.Core.Client;
 using HFM.Core.DataTypes;
+using HFM.Core.Services;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Configuration
@@ -38,7 +37,7 @@ namespace HFM.Forms.Configuration
          CreateMap<FahClientSettingsModel, ClientSettings>()
              .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.FahClient));
          // user stats model
-         CreateMap<XmlStatsData, UserStatsDataModel>()
+         CreateMap<EocStatsData, UserStatsDataModel>()
             .DisableCtorValidation()
             .ForMember(dest => dest.Logger, opt => opt.Ignore())
             .ForMember(dest => dest.ControlsVisible, opt => opt.Ignore());

@@ -110,6 +110,7 @@
     <Compile Include="Client\SlotModelTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
+    <Compile Include="Services\EocStatsDataTests.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="DataTypes\QueryParametersTests.cs" />
     <Compile Include="WorkUnits\UnitInfoTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
-    <Compile Include="Services\ClientConfigurationTests.cs" />
+    <Compile Include="Client\ClientConfigurationTests.cs" />
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
@@ -137,7 +138,7 @@
     <Compile Include="UnitInfoExtensions.cs" />
     <Compile Include="WorkUnits\UnitInfoModelTests.cs" />
     <Compile Include="ValidateTests.cs" />
-    <Compile Include="Data\XmlStatsDataContainerTests.cs" />
+    <Compile Include="Data\EocStatsDataContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">

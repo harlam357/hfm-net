@@ -5,7 +5,7 @@ namespace HFM.Core.ScheduledTasks
    {
       public static bool Validate(int interval)
       {
-         if ((interval > MaxInterval) || (interval < MinInterval))
+         if (interval > MaxInterval || interval < MinInterval)
          {
             return false;
          }

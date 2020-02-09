@@ -229,7 +229,7 @@ namespace HFM.Forms
       {
          statusUserTeamRank.DataBindings.Add("Text", userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserProjectRank.DataBindings.Add("Text", userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
-         statusUser24hr.DataBindings.Add("Text", userStatsDataModel, "TwentyFourHourAvgerage", false, DataSourceUpdateMode.OnPropertyChanged);
+         statusUser24hr.DataBindings.Add("Text", userStatsDataModel, "TwentyFourHourAverage", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserToday.DataBindings.Add("Text", userStatsDataModel, "PointsToday", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserWeek.DataBindings.Add("Text", userStatsDataModel, "PointsWeek", false, DataSourceUpdateMode.OnPropertyChanged);
          statusUserTotal.DataBindings.Add("Text", userStatsDataModel, "PointsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -253,7 +253,7 @@ namespace HFM.Forms
       {
          statusUserTeamRank.Text = userStatsDataModel.Rank;
          statusUserProjectRank.Text = userStatsDataModel.OverallRank;
-         statusUser24hr.Text = userStatsDataModel.TwentyFourHourAvgerage;
+         statusUser24hr.Text = userStatsDataModel.TwentyFourHourAverage;
          statusUserToday.Text = userStatsDataModel.PointsToday;
          statusUserWeek.Text = userStatsDataModel.PointsWeek;
          statusUserTotal.Text = userStatsDataModel.PointsTotal;

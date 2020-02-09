@@ -19,12 +19,14 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 
 using Castle.Core.Logging;
 
 using HFM.Core;
 using HFM.Core.Data;
+using HFM.Core.Services;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -48,14 +50,18 @@ namespace HFM.Forms.Models
         private readonly System.Timers.Timer _updateTimer;
 
         private readonly IPreferenceSet _prefs;
-        private readonly IXmlStatsDataContainer _dataContainer;
+        private readonly IEocStatsService _eocStatsService;
+        private readonly EocStatsDataContainer _dataContainer;
 
-        public UserStatsDataModel(IPreferenceSet prefs, IXmlStatsDataContainer dataContainer)
+        public UserStatsDataModel(IPreferenceSet prefs, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
         {
             _updateTimer = new System.Timers.Timer();
             _updateTimer.Elapsed += UpdateTimerElapsed;
 
             _prefs = prefs;
+            _eocStatsService = eocStatsService;
+            _dataContainer = dataContainer;
+
             _prefs.PreferenceChanged += (s, e) =>
                                         {
                                             if (e.Preference == Preference.EnableUserStats)
@@ -63,7 +69,7 @@ namespace HFM.Forms.Models
                                                 ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
                                                 if (ControlsVisible)
                                                 {
-                                                    _dataContainer.GetEocXmlData(false);
+                                                    RefreshEocStatsData(false);
                                                     StartTimer();
                                                 }
                                                 else
@@ -72,65 +78,63 @@ namespace HFM.Forms.Models
                                                 }
                                             }
                                         };
-            _dataContainer = dataContainer;
-            _dataContainer.XmlStatsDataChanged += delegate
-                                                  {
-                                                      AutoMapper.Mapper.Map(_dataContainer.XmlStatsData, this);
-                                                      OnPropertyChanged(null);
-                                                  };
 
             // apply data container to the model
             ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
             if (ControlsVisible)
             {
-                DateTime nextUpdateTime = _dataContainer.GetNextUpdateTime();
-                if (nextUpdateTime < DateTime.UtcNow)
+                if (TimeForNextUpdate())
                 {
-                    _dataContainer.GetEocXmlData(false);
+                    RefreshEocStatsData(false);
                 }
                 StartTimer();
             }
-            AutoMapper.Mapper.Map(_dataContainer.XmlStatsData, this);
+            AutoMapper.Mapper.Map(_dataContainer.Data, this);
         }
 
         private void UpdateTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             StopTimer();
-            _dataContainer.GetEocXmlData(false);
+            RefreshEocStatsData(false);
             StartTimer();
+        }
+
+        private bool TimeForNextUpdate()
+        {
+            var utcNow = DateTime.UtcNow;
+            var isDaylightSavingsTime = DateTime.Now.IsDaylightSavingTime();
+
+            DateTime nextUpdateTime = EocStatsData.GetNextUpdateTime(_dataContainer.Data.LastUpdated, utcNow, isDaylightSavingsTime);
+
+            Logger.DebugFormat("Current Time: {0} (UTC)", utcNow);
+            Logger.DebugFormat("Next EOC Stats Update Time: {0} (UTC)", nextUpdateTime);
+
+            return utcNow >= nextUpdateTime;
         }
 
         private void StartTimer()
         {
-            DateTime nextUpdateTime = _dataContainer.GetNextUpdateTime();
-            if (nextUpdateTime < DateTime.UtcNow)
+            var utcNow = DateTime.UtcNow;
+            var isDaylightSavingsTime = DateTime.Now.IsDaylightSavingTime();
+
+            DateTime nextUpdateTime = EocStatsData.GetNextUpdateTime(_dataContainer.Data.LastUpdated, utcNow, isDaylightSavingsTime);
+
+            TimeSpan timeUntilNextUpdate = nextUpdateTime.Subtract(utcNow);
+            // add a random number of minutes to the interval to allow time for the update to finish on the EOC servers.
+            // this also provides for some staggering between all HFM instances so the EOC servers aren't bombarded all at the same time.
+            timeUntilNextUpdate = timeUntilNextUpdate.Add(TimeSpan.FromMinutes(GetRandomMinutes()));
+
+            double interval = timeUntilNextUpdate.TotalMilliseconds;
+            // sanity check - Timer.Interval must be positive and less than Int32.MaxValue.
+            // Otherwise an exception is thrown when calling Start() on the timer.
+            if (interval > TimeSpan.FromMinutes(1).TotalMilliseconds && interval < Int32.MaxValue)
             {
-                // if a recent update interval cannot be determined then default to 3 hours from now.
-                _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
+                _updateTimer.Interval = interval;
             }
             else
             {
-                // get the length of time from now until the next update STARTS
-                TimeSpan nextUpdateInterval = nextUpdateTime.Subtract(DateTime.UtcNow);
-                // now ADD a random number of minutes (15 to 30) to the interval to
-                // allow time for the update to finish and also some staggering
-                // between all HFM instances so the EOC servers aren't bombarded
-                // all at the same time.
-                nextUpdateInterval = nextUpdateInterval.Add(TimeSpan.FromMinutes(GetRandomMinutes()));
-
-                double interval = nextUpdateInterval.TotalMilliseconds;
-                // Check the value before setting it in the timer.  The value must be positive and less than Int32.MaxValue.
-                // Otherwise an exception is thrown when calling Start() on the timer.
-                // Issue 276 - http://www.tech-archive.net/Archive/DotNet/microsoft.public.dotnet.framework/2006-10/msg00228.html
-                if (interval > TimeSpan.FromMinutes(1).TotalMilliseconds && interval < Int32.MaxValue)
-                {
-                    _updateTimer.Interval = interval;
-                }
-                else
-                {
-                    // if a recent update interval cannot be determined then default to 3 hours from now.
-                    _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
-                }
+                // GetNextUpdateTime should provide reasonable value but if that fails for some reason fall back to a three hour interval
+                _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
             }
 
             Logger.InfoFormat("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
@@ -158,12 +162,53 @@ namespace HFM.Forms.Models
 
         public void Refresh()
         {
-            _dataContainer.GetEocXmlData(true);
+            RefreshEocStatsData(true);
         }
 
         private static string BuildLabel(string labelName, object value)
         {
             return String.Format(CultureInfo.CurrentCulture, String.Concat(labelName, ": ", Constants.EocStatsFormat), value);
+        }
+
+        /// <summary>
+        /// Get Overall User Data from EOC XML
+        /// </summary>
+        /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
+        private void RefreshEocStatsData(bool forceRefresh)
+        {
+            // if Forced or Time For an Update
+            if (forceRefresh || TimeForNextUpdate())
+            {
+                var sw = Stopwatch.StartNew();
+
+                try
+                {
+                    var newStatsData = _eocStatsService.GetStatsData();
+
+                    // if Forced, set Last Updated and Serialize or
+                    // if the new data is not equal to the previous data, we updated... otherwise, if the update
+                    // status is current we should assume the data is current but did not change - Issue 67
+                    if (forceRefresh || !_dataContainer.Data.Equals(newStatsData) || newStatsData.Status == "Current")
+                    {
+                        _dataContainer.Data = newStatsData;
+                        _dataContainer.Write();
+
+                        AutoMapper.Mapper.Map(_dataContainer.Data, this);
+                        OnPropertyChanged(null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                }
+                finally
+                {
+                    // TODO: Consolidate with StopwatchExtensions.GetExecTime()
+                    Logger.InfoFormat("EOC Stats Updated in {0}", $"{sw.ElapsedMilliseconds:#,##0} ms");
+                }
+            }
+
+            Logger.InfoFormat("Last EOC Stats Update: {0} (UTC)", _dataContainer.Data.LastUpdated);
         }
 
         #region Data Properties
@@ -229,41 +274,41 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string TwentyFourHourAvgerage
+        public string TwentyFourHourAverage
         {
-            get { return BuildLabel("24hr", ShowTeamStats ? TeamTwentyFourHourAvgerage : UserTwentyFourHourAvgerage); }
+            get { return BuildLabel("24hr", ShowTeamStats ? TeamTwentyFourHourAverage : UserTwentyFourHourAverage); }
         }
 
-        private long _teamTwentyFourHourAvgerage;
+        private long _teamTwentyFourHourAverage;
         /// <summary>
         /// Team 24 Hour Points Average
         /// </summary>
-        public long TeamTwentyFourHourAvgerage
+        public long TeamTwentyFourHourAverage
         {
-            get { return _teamTwentyFourHourAvgerage; }
+            get { return _teamTwentyFourHourAverage; }
             set
             {
-                if (_teamTwentyFourHourAvgerage != value)
+                if (_teamTwentyFourHourAverage != value)
                 {
-                    _teamTwentyFourHourAvgerage = value;
-                    OnPropertyChanged("TwentyFourHourAvgerage");
+                    _teamTwentyFourHourAverage = value;
+                    OnPropertyChanged("TwentyFourHourAverage");
                 }
             }
         }
 
-        private long _userTwentyFourHourAvgerage;
+        private long _userTwentyFourHourAverage;
         /// <summary>
         /// User 24 Hour Points Average
         /// </summary>
-        public long UserTwentyFourHourAvgerage
+        public long UserTwentyFourHourAverage
         {
-            get { return _userTwentyFourHourAvgerage; }
+            get { return _userTwentyFourHourAverage; }
             set
             {
-                if (_userTwentyFourHourAvgerage != value)
+                if (_userTwentyFourHourAverage != value)
                 {
-                    _userTwentyFourHourAvgerage = value;
-                    OnPropertyChanged("TwentyFourHourAvgerage");
+                    _userTwentyFourHourAverage = value;
+                    OnPropertyChanged("TwentyFourHourAverage");
                 }
             }
         }
