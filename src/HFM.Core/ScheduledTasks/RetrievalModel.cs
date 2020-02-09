@@ -35,7 +35,7 @@ namespace HFM.Core.ScheduledTasks
         private readonly IClientConfiguration _clientConfiguration;
         private readonly Lazy<IMarkupGenerator> _markupGenerator;
         private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
-        private readonly TaskManager _taskManager;
+        private readonly AggregateScheduledTask _aggregateScheduledTask;
 
         public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration,
                               Lazy<IMarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
@@ -44,8 +44,8 @@ namespace HFM.Core.ScheduledTasks
             _clientConfiguration = clientConfiguration;
             _markupGenerator = markupGenerator;
             _websiteDeployer = websiteDeployer;
-            _taskManager = new TaskManager();
-            _taskManager.Changed += (s, e) => ReportAction(e);
+            _aggregateScheduledTask = new AggregateScheduledTask();
+            _aggregateScheduledTask.Changed += (s, e) => ReportAction(e);
 
             _prefs.PreferenceChanged += (s, e) =>
             {
@@ -56,26 +56,26 @@ namespace HFM.Core.ScheduledTasks
                         {
                             if (_clientConfiguration.Count != 0)
                             {
-                                _taskManager.Restart(ClientTaskKey, ClientInterval);
+                                _aggregateScheduledTask.Restart(ClientTaskKey, ClientInterval);
                             }
                         }
                         else
                         {
-                            _taskManager.Stop(ClientTaskKey);
+                            _aggregateScheduledTask.Stop(ClientTaskKey);
                         }
                         break;
                     case Preference.WebGenerationTask:
                         if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
-                         _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
+                            _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
                         {
                             if (_clientConfiguration.Count != 0)
                             {
-                                _taskManager.Restart(WebTaskKey, WebInterval);
+                                _aggregateScheduledTask.Restart(WebTaskKey, WebInterval);
                             }
                         }
                         else
                         {
-                            _taskManager.Stop(WebTaskKey);
+                            _aggregateScheduledTask.Stop(WebTaskKey);
                         }
                         break;
                 }
@@ -84,14 +84,14 @@ namespace HFM.Core.ScheduledTasks
             _clientConfiguration.ConfigurationChanged += (s, e) =>
             {
                 if (e.ChangedType == ConfigurationChangedType.Remove ||
-                 e.ChangedType == ConfigurationChangedType.Clear)
+                    e.ChangedType == ConfigurationChangedType.Clear)
                 {
-                 // Disable timers if no hosts
-                 if (_taskManager.Enabled && _clientConfiguration.Count == 0)
+                    // Disable timers if no hosts
+                    if (_aggregateScheduledTask.Enabled && _clientConfiguration.Count == 0)
                     {
                         Logger.Info("No clients... stopping all scheduled tasks");
-                     //_taskManager.Stop();
-                     _taskManager.Cancel();
+                        //_aggregateScheduledTask.Stop();
+                        _aggregateScheduledTask.Cancel();
                     }
                 }
                 else if (e.ChangedType == ConfigurationChangedType.Add)
@@ -99,24 +99,24 @@ namespace HFM.Core.ScheduledTasks
                     var clientTaskEnabled = _prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled);
                     if (e.Client == null)
                     {
-                     // no client specified - retrieve all
-                     _taskManager.Run(ClientTaskKey, ClientInterval, clientTaskEnabled);
+                        // no client specified - retrieve all
+                        _aggregateScheduledTask.Run(ClientTaskKey, ClientInterval, clientTaskEnabled);
                     }
                     else if (clientTaskEnabled)
                     {
-                        _taskManager.Start(ClientTaskKey, ClientInterval);
+                        _aggregateScheduledTask.Start(ClientTaskKey, ClientInterval);
                     }
 
                     if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
-                     _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
+                        _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
                     {
-                        _taskManager.Start(WebTaskKey, WebInterval);
+                        _aggregateScheduledTask.Start(WebTaskKey, WebInterval);
                     }
                 }
             };
 
-            _taskManager.Add(ClientTaskKey, ClientRetrievalAction, ClientInterval);
-            _taskManager.Add(WebTaskKey, WebGenerationAction, WebInterval);
+            _aggregateScheduledTask.Add(ClientTaskKey, ClientRetrievalAction, ClientInterval);
+            _aggregateScheduledTask.Add(WebTaskKey, WebGenerationAction, WebInterval);
         }
 
         private void ReportAction(ScheduledTaskChangedEventArgs e)
@@ -131,6 +131,8 @@ namespace HFM.Core.ScheduledTasks
                     break;
                 case ScheduledTaskChangedAction.Running:
                     Logger.InfoFormat("{0} task running", e.Key);
+                    break;
+                case ScheduledTaskChangedAction.Canceled:
                     break;
                 case ScheduledTaskChangedAction.Finished:
                     Logger.InfoFormat("{0} task finished: {1:#,##0} ms", e.Key, e.Interval);
@@ -153,12 +155,12 @@ namespace HFM.Core.ScheduledTasks
 
         public void RunClientRetrieval()
         {
-            _taskManager.Run(ClientTaskKey, false);
+            _aggregateScheduledTask.Run(ClientTaskKey, false);
         }
 
         //public void RunWebGeneration()
         //{
-        //   _taskManager.Run(WebTaskKey, false);
+        //   _aggregateScheduledTask.Run(WebTaskKey, false);
         //}
 
         private void ClientRetrievalAction(CancellationToken ct)
@@ -194,7 +196,7 @@ namespace HFM.Core.ScheduledTasks
                 _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval))
             {
                 ct.ThrowIfCancellationRequested();
-                _taskManager.Run(WebTaskKey, false);
+                _aggregateScheduledTask.Run(WebTaskKey, false);
             }
         }
 

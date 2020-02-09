@@ -95,6 +95,7 @@
     <Compile Include="Internal\StopwatchExtensions.cs" />
     <Compile Include="Net\TcpPort.cs" />
     <Compile Include="Client\SlotType.cs" />
+    <Compile Include="ScheduledTasks\ScheduledTask.cs" />
     <Compile Include="Services\EocStatsService.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="WorkUnits\ProteinExtensions.cs" />
@@ -154,7 +155,7 @@
     <Compile Include="Data\QueryParametersContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\SlotModelSortComparer.cs" />
-    <Compile Include="ScheduledTasks\TaskManager.cs" />
+    <Compile Include="ScheduledTasks\AggregateScheduledTask.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
     <Compile Include="WorkUnits\UnitInfoModel.cs" />
     <Compile Include="PreferenceSetExtensions.cs" />
