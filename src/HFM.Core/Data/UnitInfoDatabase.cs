@@ -506,13 +506,17 @@ namespace HFM.Core.Data
             }
             PetaPoco.Sql where = WhereBuilder.Execute(parameters);
 
-            var countSql = PetaPoco.Sql.Builder.Select("ID", "InstanceName", "DownloadDateTime", "CompletionDateTime", "Result", "COUNT(*)")
+            var countSql = PetaPoco.Sql.Builder.Select("COUNT(*)")
                .From("WuHistory")
                .Append(where);
 
-            using (var table = Select(countSql.SQL, countSql.Arguments))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return (long)table.Rows[0][5];
+                connection.Open();
+                using (var database = new PetaPoco.Database(connection))
+                {
+                    return database.ExecuteScalar<long>(countSql);
+                }
             }
         }
 
@@ -632,7 +636,6 @@ namespace HFM.Core.Data
                     return null;
                 }
 
-                // reset
                 bool appendAnd = false;
 
                 PetaPoco.Sql sql = PetaPoco.Sql.Builder.Append("WHERE ");
