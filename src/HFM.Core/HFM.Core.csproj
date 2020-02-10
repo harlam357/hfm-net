@@ -145,7 +145,7 @@
     <Compile Include="WorkUnits\WorkUnitHistoryRow.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
-    <Compile Include="Data\QueryParameters.cs" />
+    <Compile Include="Data\WorkUnitHistoryQuery.cs" />
     <Compile Include="WorkUnits\WorkUnit.cs" />
     <Compile Include="Services\EocStatsData.cs" />
     <Compile Include="Enumerations.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />
-    <Compile Include="Data\QueryParametersDataContainer.cs" />
+    <Compile Include="Data\WorkUnitHistoryQueryDataContainer.cs" />
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\AggregateScheduledTask.cs" />

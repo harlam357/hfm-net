@@ -41,7 +41,7 @@ namespace HFM.Forms
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
-      private readonly QueryParametersDataContainer _queryContainer;
+      private readonly WorkUnitHistoryQueryDataContainer _queryContainer;
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
@@ -59,7 +59,7 @@ namespace HFM.Forms
       public event EventHandler PresenterClosed;
       
       public HistoryPresenter(IPreferenceSet prefs, 
-                              QueryParametersDataContainer queryContainer, 
+                              WorkUnitHistoryQueryDataContainer queryContainer, 
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
@@ -174,7 +174,7 @@ namespace HFM.Forms
       public void NewQueryClick()
       {
          var queryView = _viewFactory.GetQueryDialog();
-         var query = new QueryParameters { Name = "* New Query *" };
+         var query = new WorkUnitHistoryQuery { Name = "* New Query *" };
          query.Fields.Add(new QueryField());
          queryView.Query = query;
          
@@ -204,7 +204,7 @@ namespace HFM.Forms
       public void EditQueryClick()
       {
          var queryView = _viewFactory.GetQueryDialog();
-         queryView.Query = _model.SelectedQuery.DeepClone();
+         queryView.Query = _model.SelectedWorkUnitHistoryQuery.DeepClone();
 
          bool showDialog = true;
          while (showDialog)
@@ -236,7 +236,7 @@ namespace HFM.Forms
          {
             try
             {
-               _model.RemoveQuery(_model.SelectedQuery);
+               _model.RemoveQuery(_model.SelectedWorkUnitHistoryQuery);
             }
             catch (ArgumentException ex)
             {

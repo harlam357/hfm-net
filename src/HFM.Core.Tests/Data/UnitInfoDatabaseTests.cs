@@ -140,7 +140,7 @@ namespace HFM.Core.Data
                                  _database.Insert(workUnitModel);
                               });
 
-         Assert.AreEqual(100, _database.Fetch(QueryParameters.SelectAll, BonusCalculationType.None).Count);
+         Assert.AreEqual(100, _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None).Count);
       }
 
       #region Connected
@@ -237,13 +237,13 @@ namespace HFM.Core.Data
 
          _database.Insert(workUnitModel);
 
-         var rows = _database.Fetch(new QueryParameters(), BonusCalculationType.None);
+         var rows = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          verifyAction(rows);
 
          // test code to ensure this unit is NOT written again
          _database.Insert(workUnitModel);
          // verify
-         rows = _database.Fetch(new QueryParameters(), BonusCalculationType.None);
+         rows = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(1, rows.Count);
       }
 
@@ -568,10 +568,10 @@ namespace HFM.Core.Data
       public void Delete_Test()
       {
          _database.Initialize(_testDataFileCopy);
-         var entries = _database.Fetch(new QueryParameters(), BonusCalculationType.None);
+         var entries = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(44, entries.Count);
          Assert.AreEqual(1, _database.Delete(entries[14]));
-         entries = _database.Fetch(new QueryParameters(), BonusCalculationType.None);
+         entries = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(43, entries.Count);
       }
       

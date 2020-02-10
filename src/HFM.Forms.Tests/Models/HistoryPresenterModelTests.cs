@@ -24,7 +24,6 @@ using Rhino.Mocks;
 
 using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Forms.Models
@@ -47,11 +46,11 @@ namespace HFM.Forms.Models
       public void HistoryPresenterModel_AddQuery_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
          // Act
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
-         _model.AddQuery(parameters);
+         _model.AddQuery(query);
          // Assert
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
       }
@@ -59,33 +58,33 @@ namespace HFM.Forms.Models
       [Test]
       public void HistoryPresenterModel_AddQuery_SelectAll_Test()
       {
-         var parameters = new QueryParameters();
-         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
+         var query = new WorkUnitHistoryQuery();
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(query));
       }
 
       [Test]
       public void HistoryPresenterModel_AddQuery_NameAlreadyExists_Test()
       {
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
 
-         _model.AddQuery(parameters);
-         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
+         _model.AddQuery(query);
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(query));
       }
 
       [Test]
       public void HistoryPresenterModel_AddQuery_NoQueryFields_Test()
       {
-         var parameters = new QueryParameters { Name = "Test" };
-         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(query));
       }
 
       [Test]
       public void HistoryPresenterModel_AddQuery_NoQueryFieldValue_Test()
       {
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField());
-         Assert.Throws<ArgumentException>(() => _model.AddQuery(parameters));
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField());
+         Assert.Throws<ArgumentException>(() => _model.AddQuery(query));
       }
 
       [Test]
@@ -94,18 +93,18 @@ namespace HFM.Forms.Models
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
 
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         var parameters2 = new QueryParameters { Name = "Test2" };
+         var parameters2 = new WorkUnitHistoryQuery { Name = "Test2" };
          parameters2.Fields.Add(new QueryField { Value = 6606 });
          // Act
          _model.ReplaceQuery(parameters2);
          // Assert
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         Assert.AreEqual("Test2", _model.SelectedQuery.Name);
+         Assert.AreEqual("Test2", _model.SelectedWorkUnitHistoryQuery.Name);
       }
 
       [Test]
@@ -114,17 +113,17 @@ namespace HFM.Forms.Models
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
 
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         var parameters2 = new QueryParameters { Name = "Test2" };
+         var parameters2 = new WorkUnitHistoryQuery { Name = "Test2" };
          parameters2.Fields.Add(new QueryField { Value = 6606 });
          _model.AddQuery(parameters2);
          Assert.AreEqual(3, _model.QueryBindingSource.Count);
 
-         var parameters3 = new QueryParameters { Name = "Test2" };
+         var parameters3 = new WorkUnitHistoryQuery { Name = "Test2" };
          parameters3.Fields.Add(new QueryField { Value = 6606 });
          // Act
          _model.QueryBindingSource.Position = 1;
@@ -137,15 +136,15 @@ namespace HFM.Forms.Models
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
 
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
          // Act
-         _model.RemoveQuery(new QueryParameters { Name = "DoesNotExist" }); // this is forgiving
+         _model.RemoveQuery(new WorkUnitHistoryQuery { Name = "DoesNotExist" }); // this is forgiving
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         _model.RemoveQuery(parameters);
+         _model.RemoveQuery(query);
          // Assert
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
       }
@@ -153,7 +152,7 @@ namespace HFM.Forms.Models
       [Test]
       public void HistoryPresenterModel_RemoveQuery_Failed_Test()
       {
-         Assert.Throws<ArgumentException>(() => _model.RemoveQuery(new QueryParameters()));
+         Assert.Throws<ArgumentException>(() => _model.RemoveQuery(new WorkUnitHistoryQuery()));
       }
 
       [Test]
@@ -162,9 +161,9 @@ namespace HFM.Forms.Models
          // Arrange
          Assert.AreEqual(1, _model.QueryBindingSource.Count);
 
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
          _database.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitHistoryRow>());
@@ -178,7 +177,7 @@ namespace HFM.Forms.Models
       public void HistoryPresenterModel_FetchSelectedQuery_Test()
       {
          // Arrange
-         _database.Expect(x => x.Fetch(_model.SelectedQuery, _model.BonusCalculation));
+         _database.Expect(x => x.Fetch(_model.SelectedWorkUnitHistoryQuery, _model.BonusCalculation));
          // Act
          _model.FetchSelectedQuery();
          // Assert

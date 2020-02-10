@@ -28,7 +28,6 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -38,7 +37,7 @@ namespace HFM.Forms.Models
     {
         private readonly IUnitInfoDatabase _database;
 
-        private readonly List<QueryParameters> _queryList;
+        private readonly List<WorkUnitHistoryQuery> _queryList;
         private readonly BindingSource _queryBindingSource;
         public BindingSource QueryBindingSource
         {
@@ -60,8 +59,8 @@ namespace HFM.Forms.Models
 
             Debug.Assert(_database.Connected);
 
-            _queryList = new List<QueryParameters>();
-            _queryList.Add(new QueryParameters());
+            _queryList = new List<WorkUnitHistoryQuery>();
+            _queryList.Add(new WorkUnitHistoryQuery());
             _queryList.Sort();
             _queryBindingSource = new BindingSource();
             _queryBindingSource.DataSource = _queryList;
@@ -84,7 +83,7 @@ namespace HFM.Forms.Models
             _page = new PetaPoco.Page<WorkUnitHistoryRow> { Items = new List<WorkUnitHistoryRow>() };
         }
 
-        public void Load(IPreferenceSet prefs, QueryParametersDataContainer queryContainer)
+        public void Load(IPreferenceSet prefs, WorkUnitHistoryQueryDataContainer queryContainer)
         {
             _bonusCalculation = prefs.Get<BonusCalculationType>(Preference.HistoryBonusCalculation);
             _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
@@ -95,11 +94,11 @@ namespace HFM.Forms.Models
             FormColumns = prefs.Get<ICollection<string>>(Preference.HistoryFormColumns);
 
             _queryList.Clear();
-            _queryList.Add(new QueryParameters());
+            _queryList.Add(new WorkUnitHistoryQuery());
             foreach (var query in queryContainer.Data)
             {
                 // don't load Select All twice
-                if (query.Name != QueryParameters.SelectAll.Name)
+                if (query.Name != WorkUnitHistoryQuery.SelectAll.Name)
                 {
                     _queryList.Add(query);
                 }
@@ -108,7 +107,7 @@ namespace HFM.Forms.Models
             ResetBindings(true);
         }
 
-        public void Update(IPreferenceSet prefs, QueryParametersDataContainer queryContainer)
+        public void Update(IPreferenceSet prefs, WorkUnitHistoryQueryDataContainer queryContainer)
         {
             prefs.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
             prefs.Set(Preference.ShowEntriesValue, _showEntriesValue);
@@ -120,78 +119,78 @@ namespace HFM.Forms.Models
             prefs.Save();
 
             queryContainer.Data.Clear();
-            queryContainer.Data.AddRange(_queryList.Where(x => x.Name != QueryParameters.SelectAll.Name));
+            queryContainer.Data.AddRange(_queryList.Where(x => x.Name != WorkUnitHistoryQuery.SelectAll.Name));
             queryContainer.Write();
         }
 
-        public void AddQuery(QueryParameters parameters)
+        public void AddQuery(WorkUnitHistoryQuery query)
         {
-            CheckQueryParametersForAddOrReplace(parameters);
+            CheckQueryParametersForAddOrReplace(query);
 
-            if (_queryList.FirstOrDefault(x => x.Name == parameters.Name) != null)
+            if (_queryList.FirstOrDefault(x => x.Name == query.Name) != null)
             {
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-                   "A query with name '{0}' already exists.", parameters.Name));
+                   "A query with name '{0}' already exists.", query.Name));
             }
 
-            _queryList.Add(parameters);
+            _queryList.Add(query);
             _queryList.Sort();
             _queryBindingSource.ResetBindings(false);
-            _queryBindingSource.Position = _queryBindingSource.IndexOf(parameters);
+            _queryBindingSource.Position = _queryBindingSource.IndexOf(query);
         }
 
-        public void ReplaceQuery(QueryParameters parameters)
+        public void ReplaceQuery(WorkUnitHistoryQuery query)
         {
-            if (SelectedQuery.Name == QueryParameters.SelectAll.Name)
+            if (SelectedWorkUnitHistoryQuery.Name == WorkUnitHistoryQuery.SelectAll.Name)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot replace the '{0}' query.", QueryParameters.SelectAll));
+                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot replace the '{0}' query.", WorkUnitHistoryQuery.SelectAll));
             }
 
-            CheckQueryParametersForAddOrReplace(parameters);
+            CheckQueryParametersForAddOrReplace(query);
 
-            var existing = _queryList.FirstOrDefault(x => x.Name == parameters.Name);
-            if (existing != null && existing.Name != SelectedQuery.Name)
+            var existing = _queryList.FirstOrDefault(x => x.Name == query.Name);
+            if (existing != null && existing.Name != SelectedWorkUnitHistoryQuery.Name)
             {
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-                   "A query with name '{0}' already exists.", parameters.Name));
+                   "A query with name '{0}' already exists.", query.Name));
             }
 
-            _queryList.Remove(SelectedQuery);
-            _queryList.Add(parameters);
+            _queryList.Remove(SelectedWorkUnitHistoryQuery);
+            _queryList.Add(query);
             _queryList.Sort();
             _queryBindingSource.ResetBindings(false);
-            _queryBindingSource.Position = _queryBindingSource.IndexOf(parameters);
+            _queryBindingSource.Position = _queryBindingSource.IndexOf(query);
         }
 
-        private static void CheckQueryParametersForAddOrReplace(QueryParameters parameters)
+        private static void CheckQueryParametersForAddOrReplace(WorkUnitHistoryQuery query)
         {
-            if (parameters.Name == QueryParameters.SelectAll.Name)
+            if (query.Name == WorkUnitHistoryQuery.SelectAll.Name)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", QueryParameters.SelectAll));
+                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", WorkUnitHistoryQuery.SelectAll));
             }
 
-            if (parameters.Fields.Count == 0)
+            if (query.Fields.Count == 0)
             {
                 throw new ArgumentException("No query fields defined.");
             }
 
-            for (int i = 0; i < parameters.Fields.Count; i++)
+            for (int i = 0; i < query.Fields.Count; i++)
             {
-                if (parameters.Fields[i].Value == null)
+                if (query.Fields[i].Value == null)
                 {
                     throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Field index {0} must have a query value.", (i + 1)));
                 }
             }
         }
 
-        public void RemoveQuery(QueryParameters parameters)
+        public void RemoveQuery(WorkUnitHistoryQuery query)
         {
-            if (parameters.Name == QueryParameters.SelectAll.Name)
+            if (query.Name == WorkUnitHistoryQuery.SelectAll.Name)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", QueryParameters.SelectAll));
+                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", WorkUnitHistoryQuery.SelectAll));
             }
 
-            _queryList.Remove(parameters);
+            _queryList.Remove(query);
             _queryBindingSource.ResetBindings(false);
         }
 
@@ -207,11 +206,11 @@ namespace HFM.Forms.Models
 
         public void ResetBindings(bool executeQuery)
         {
-            Debug.Assert(SelectedQuery != null);
+            Debug.Assert(SelectedWorkUnitHistoryQuery != null);
 
             if (executeQuery)
             {
-                _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedQuery, BonusCalculation);
+                _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitHistoryQuery, BonusCalculation);
             }
             if (_page == null)
             {
@@ -253,18 +252,18 @@ namespace HFM.Forms.Models
 
         public IList<WorkUnitHistoryRow> FetchSelectedQuery()
         {
-            return _database.Fetch(SelectedQuery, BonusCalculation);
+            return _database.Fetch(SelectedWorkUnitHistoryQuery, BonusCalculation);
         }
 
         #region Properties
 
-        public QueryParameters SelectedQuery
+        public WorkUnitHistoryQuery SelectedWorkUnitHistoryQuery
         {
             get
             {
                 if (_queryBindingSource.Current != null)
                 {
-                    return (QueryParameters)_queryBindingSource.Current;
+                    return (WorkUnitHistoryQuery)_queryBindingSource.Current;
                 }
                 return null;
             }
@@ -284,7 +283,7 @@ namespace HFM.Forms.Models
 
         public bool EditAndDeleteButtonsEnabled
         {
-            get { return SelectedQuery.Name != QueryParameters.SelectAll.Name; }
+            get { return SelectedWorkUnitHistoryQuery.Name != WorkUnitHistoryQuery.SelectAll.Name; }
         }
 
         private BonusCalculationType _bonusCalculation;

@@ -20,23 +20,22 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Core.DataTypes;
 using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    public sealed class QueryParametersDataContainer : DataContainer<List<QueryParameters>>
+    public sealed class WorkUnitHistoryQueryDataContainer : DataContainer<List<WorkUnitHistoryQuery>>
     {
         public const string DefaultFileName = "WuHistoryQuery.dat";
 
-        public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<QueryParameters>>();
+        public override Serializers.IFileSerializer<List<WorkUnitHistoryQuery>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<WorkUnitHistoryQuery>>();
 
-        public QueryParametersDataContainer() : this(null)
+        public WorkUnitHistoryQueryDataContainer() : this(null)
         {
 
         }
 
-        public QueryParametersDataContainer(IPreferenceSet prefs)
+        public WorkUnitHistoryQueryDataContainer(IPreferenceSet prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

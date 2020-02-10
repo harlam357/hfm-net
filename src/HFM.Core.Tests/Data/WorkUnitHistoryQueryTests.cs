@@ -24,20 +24,20 @@ using NUnit.Framework;
 namespace HFM.Core.Data
 {
    [TestFixture]
-   public class QueryParametersTests
+   public class WorkUnitHistoryQueryTests
    {
       [Test]
       public void CreateTest()
       {
-         var param = new QueryParameters();
-         Assert.AreEqual(QueryParameters.SelectAll.Name, param.Name);
+         var param = new WorkUnitHistoryQuery();
+         Assert.AreEqual(WorkUnitHistoryQuery.SelectAll.Name, param.Name);
          Assert.AreEqual(0, param.Fields.Count);
       }
 
       [Test]
       public void DeepCopyTest()
       {
-         var param = new QueryParameters();
+         var param = new WorkUnitHistoryQuery();
          param.Name = "Test";
          param.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = "Test Instance" });
          param.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThan, Value = new DateTime(2000, 1, 1) });
@@ -56,63 +56,63 @@ namespace HFM.Core.Data
       [Test]
       public void CompareTest1()
       {
-         var param1 = new QueryParameters();
-         var param2 = new QueryParameters();
+         var param1 = new WorkUnitHistoryQuery();
+         var param2 = new WorkUnitHistoryQuery();
          Assert.AreEqual(0, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest2()
       {
-         var param1 = new QueryParameters { Name = "Name" };
-         var param2 = new QueryParameters();
+         var param1 = new WorkUnitHistoryQuery { Name = "Name" };
+         var param2 = new WorkUnitHistoryQuery();
          Assert.AreEqual(1, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest3()
       {
-         var param1 = new QueryParameters();
-         var param2 = new QueryParameters { Name = "Name" };
+         var param1 = new WorkUnitHistoryQuery();
+         var param2 = new WorkUnitHistoryQuery { Name = "Name" };
          Assert.AreEqual(-1, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest4()
       {
-         var param1 = new QueryParameters { Name = null };
-         var param2 = new QueryParameters();
+         var param1 = new WorkUnitHistoryQuery { Name = null };
+         var param2 = new WorkUnitHistoryQuery();
          Assert.AreEqual(-1, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest5()
       {
-         var param1 = new QueryParameters { Name = null };
-         var param2 = new QueryParameters { Name = null };
+         var param1 = new WorkUnitHistoryQuery { Name = null };
+         var param2 = new WorkUnitHistoryQuery { Name = null };
          Assert.AreEqual(0, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest6()
       {
-         var param1 = new QueryParameters { Name = "A" };
-         var param2 = new QueryParameters { Name = "B" };
+         var param1 = new WorkUnitHistoryQuery { Name = "A" };
+         var param2 = new WorkUnitHistoryQuery { Name = "B" };
          Assert.AreEqual(-1, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest7()
       {
-         var param1 = new QueryParameters { Name = "B" };
-         var param2 = new QueryParameters { Name = "A" };
+         var param1 = new WorkUnitHistoryQuery { Name = "B" };
+         var param2 = new WorkUnitHistoryQuery { Name = "A" };
          Assert.AreEqual(1, param1.CompareTo(param2));
       }
 
       [Test]
       public void CompareTest8()
       {
-         var param1 = new QueryParameters();
+         var param1 = new WorkUnitHistoryQuery();
          Assert.AreEqual(1, param1.CompareTo(null));
       }
 

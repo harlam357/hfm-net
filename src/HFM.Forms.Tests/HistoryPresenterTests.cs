@@ -31,7 +31,6 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Core.Serializers;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
@@ -43,7 +42,7 @@ namespace HFM.Forms
    public class HistoryPresenterTests
    {
       private IPreferenceSet _prefs;
-      private QueryParametersDataContainer _queryContainer;
+      private WorkUnitHistoryQueryDataContainer _queryContainer;
       private IHistoryView _view;
       private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
@@ -57,7 +56,7 @@ namespace HFM.Forms
       public void Init()
       {
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         _queryContainer = new QueryParametersDataContainer();
+         _queryContainer = new WorkUnitHistoryQueryDataContainer();
          _view = MockRepository.GenerateMock<IHistoryView>();
          _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
@@ -157,9 +156,9 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         queryView.Stub(x => x.Query).Return(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         queryView.Stub(x => x.Query).Return(query);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
@@ -190,7 +189,7 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         queryView.Stub(x => x.Query).Return(new QueryParameters());
+         queryView.Stub(x => x.Query).Return(new WorkUnitHistoryQuery());
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
@@ -206,13 +205,13 @@ namespace HFM.Forms
       public void HistoryPresenter_EditQueryClick_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
 
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var parameters2 = new QueryParameters { Name = "Test2" };
+         var parameters2 = new WorkUnitHistoryQuery { Name = "Test2" };
          parameters2.Fields.Add(new QueryField { Value = 6606 });
          queryView.Stub(x => x.Query).Return(parameters2);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
@@ -222,7 +221,7 @@ namespace HFM.Forms
          _presenter.EditQueryClick();
          // Assert
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         Assert.AreEqual("Test2", _model.SelectedQuery.Name);
+         Assert.AreEqual("Test2", _model.SelectedWorkUnitHistoryQuery.Name);
          queryView.VerifyAllExpectations();
          _viewFactory.VerifyAllExpectations();
       }
@@ -248,7 +247,6 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         //queryView.Stub(x => x.Query).Return(new QueryParameters());
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
@@ -264,9 +262,9 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          // Act
@@ -282,9 +280,9 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_No_Test()
       {
          // Arrange
-         var parameters = new QueryParameters { Name = "Test" };
-         parameters.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(parameters);
+         var query = new WorkUnitHistoryQuery { Name = "Test" };
+         query.Fields.Add(new QueryField { Value = 6606 });
+         _model.AddQuery(query);
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
          // Act

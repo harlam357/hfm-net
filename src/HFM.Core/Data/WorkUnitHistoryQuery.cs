@@ -75,18 +75,18 @@ namespace HFM.Core.Data
    }
 
    [DataContract]
-   public class QueryParameters : IComparable<QueryParameters>, IEquatable<QueryParameters>
+   public class WorkUnitHistoryQuery : IComparable<WorkUnitHistoryQuery>, IEquatable<WorkUnitHistoryQuery>
    {
-      private static readonly QueryParameters SelectAllValue = new QueryParameters();
+      private static readonly WorkUnitHistoryQuery SelectAllValue = new WorkUnitHistoryQuery();
 
-      public static QueryParameters SelectAll
+      public static WorkUnitHistoryQuery SelectAll
       {
          get { return SelectAllValue; }
       }
 
       private const string SelectAllName = "*** SELECT ALL ***";
 
-      public QueryParameters()
+      public WorkUnitHistoryQuery()
       {
          Name = SelectAllName;
       }
@@ -101,21 +101,12 @@ namespace HFM.Core.Data
          get { return _fields; }
       }
 
-      /// <summary>
-      /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
-      /// </summary>
-      /// <returns>
-      /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
-      /// </returns>
-      /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
-      /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
-      /// <filterpriority>2</filterpriority>
       public override bool Equals(object obj)
       {
          if (ReferenceEquals(null, obj)) return false;
          if (ReferenceEquals(this, obj)) return true;
-         if (obj.GetType() != typeof(QueryParameters)) return false;
-         return Equals((QueryParameters)obj);
+         if (obj.GetType() != typeof(WorkUnitHistoryQuery)) return false;
+         return Equals((WorkUnitHistoryQuery)obj);
       }
 
       /// <summary>
@@ -130,17 +121,17 @@ namespace HFM.Core.Data
          return (Name != null ? Name.GetHashCode() : 0);
       }
 
-      public static bool operator == (QueryParameters left, QueryParameters right)
+      public static bool operator == (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
       {
          return Equals(left, right);
       }
 
-      public static bool operator != (QueryParameters left, QueryParameters right)
+      public static bool operator != (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
       {
          return !Equals(left, right);
       }
 
-      #region IEquatable<QueryParameters> Members
+      #region IEquatable<WorkUnitHistoryQuery> Members
 
       /// <summary>
       /// Indicates whether the current object is equal to another object of the same type.
@@ -149,7 +140,7 @@ namespace HFM.Core.Data
       /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
       /// </returns>
       /// <param name="other">An object to compare with this object.</param>
-      public bool Equals(QueryParameters other)
+      public bool Equals(WorkUnitHistoryQuery other)
       {
          //if (ReferenceEquals(null, other)) return false;
          //if (ReferenceEquals(this, other)) return true;
@@ -158,19 +149,19 @@ namespace HFM.Core.Data
 
       #endregion
 
-      public static bool operator < (QueryParameters left, QueryParameters right)
+      public static bool operator < (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
       {
          return left == null ? right != null : left.CompareTo(right) < 0;
       }
 
-      public static bool operator > (QueryParameters left, QueryParameters right)
+      public static bool operator > (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
       {
          return right == null ? left != null : right.CompareTo(left) < 0;
       }
 
-      #region IComparable<QueryParameters> Members
+      #region IComparable<WorkUnitHistoryQuery> Members
 
-      public int CompareTo(QueryParameters other)
+      public int CompareTo(WorkUnitHistoryQuery other)
       {
          if (ReferenceEquals(null, other)) return 1;
          if (ReferenceEquals(this, other)) return 0;
@@ -213,7 +204,7 @@ namespace HFM.Core.Data
 
       #endregion
 
-      public QueryParameters DeepClone()
+      public WorkUnitHistoryQuery DeepClone()
       {
           return ProtoBuf.Serializer.DeepClone(this);
       }

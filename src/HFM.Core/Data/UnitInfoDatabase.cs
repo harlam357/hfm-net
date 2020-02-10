@@ -61,9 +61,9 @@ namespace HFM.Core.Data
 
         int Delete(WorkUnitHistoryRow row);
 
-        IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation);
+        IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation);
 
-        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation);
+        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -322,9 +322,9 @@ namespace HFM.Core.Data
             return rows.Count != 0;
         }
 
-        private static QueryParameters BuildUnitKeyQueryParameters(WorkUnit workUnit)
+        private static WorkUnitHistoryQuery BuildUnitKeyQueryParameters(WorkUnit workUnit)
         {
-            var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", workUnit.ToProjectString()) };
+            var parameters = new WorkUnitHistoryQuery { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", workUnit.ToProjectString()) };
             parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = workUnit.ProjectID });
             parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = workUnit.ProjectRun });
             parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = workUnit.ProjectClone });
@@ -354,7 +354,7 @@ namespace HFM.Core.Data
 
         #region Fetch
 
-        public IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
+        public IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -367,7 +367,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private IList<WorkUnitHistoryRow> FetchInternal(QueryParameters parameters, BonusCalculationType bonusCalculation)
+        private IList<WorkUnitHistoryRow> FetchInternal(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
@@ -385,7 +385,7 @@ namespace HFM.Core.Data
             }
         }
 
-        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
+        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -398,7 +398,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
+        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
@@ -461,7 +461,7 @@ namespace HFM.Core.Data
 
         private long Count(string clientName, bool completed, DateTime? clientStartTime)
         {
-            var parameters = new QueryParameters();
+            var parameters = new WorkUnitHistoryQuery();
             parameters.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = clientName });
             parameters.Fields.Add(new QueryField
             {
@@ -603,7 +603,7 @@ namespace HFM.Core.Data
 
         private static class WhereBuilder
         {
-            public static PetaPoco.Sql Execute(QueryParameters parameters)
+            public static PetaPoco.Sql Execute(WorkUnitHistoryQuery parameters)
             {
                 if (parameters.Fields.Count == 0)
                 {

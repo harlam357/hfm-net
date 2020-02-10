@@ -23,7 +23,6 @@ using System.Threading;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
@@ -90,9 +89,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_Equal_Test(int expected, QueryParameters parameters)
+      public void Fetch_Equal_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchEqualCases =
@@ -124,9 +123,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchNotEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_NotEqual_Test(int expected, QueryParameters parameters)
+      public void Fetch_NotEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchNotEqualCases =
@@ -158,9 +157,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchGreaterThanCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_GreaterThan_Test(int expected, QueryParameters parameters)
+      public void Fetch_GreaterThan_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchGreaterThanCases =
@@ -192,9 +191,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchGreaterThanOrEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_GreaterThanOrEqual_Test(int expected, QueryParameters parameters)
+      public void Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchGreaterThanOrEqualCases =
@@ -226,9 +225,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLessThanCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_LessThan_Test(int expected, QueryParameters parameters)
+      public void Fetch_LessThan_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchLessThanCases =
@@ -260,9 +259,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLessThanOrEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_LessThanOrEqual_Test(int expected, QueryParameters parameters)
+      public void Fetch_LessThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchLessThanOrEqualCases =
@@ -294,9 +293,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLikeCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_Like_Test(int expected, QueryParameters parameters)
+      public void Fetch_Like_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchLikeCases =
@@ -328,9 +327,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchNotLikeCases")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_NotLike_Test(int expected, QueryParameters parameters)
+      public void Fetch_NotLike_Test(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData(expected, parameters);
+         FetchTestData(expected, query);
       }
 
       private static object[] FetchNotLikeCases =
@@ -404,9 +403,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchEqualCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_Equal_Test2(int expected, QueryParameters parameters)
+      public void Fetch_Equal_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchEqualCases2 =
@@ -438,9 +437,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchNotEqualCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_NotEqual_Test2(int expected, QueryParameters parameters)
+      public void Fetch_NotEqual_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchNotEqualCases2 =
@@ -472,9 +471,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchGreaterThanCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_GreaterThan_Test2(int expected, QueryParameters parameters)
+      public void Fetch_GreaterThan_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchGreaterThanCases2 =
@@ -506,9 +505,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchGreaterThanOrEqualCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_GreaterThanOrEqual_Test2(int expected, QueryParameters parameters)
+      public void Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchGreaterThanOrEqualCases2 =
@@ -540,9 +539,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLessThanCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_LessThan_Test2(int expected, QueryParameters parameters)
+      public void Fetch_LessThan_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchLessThanCases2 =
@@ -574,9 +573,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLessThanOrEqualCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_LessThanOrEqual_Test2(int expected, QueryParameters parameters)
+      public void Fetch_LessThanOrEqual_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchLessThanOrEqualCases2 =
@@ -608,9 +607,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchLikeCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_Like_Test2(int expected, QueryParameters parameters)
+      public void Fetch_Like_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchLikeCases2 =
@@ -642,9 +641,9 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchNotLikeCases2")]
       [Category("HFM.Core.UnitInfoDatabase.Fetch")]
-      public void Fetch_NotLike_Test2(int expected, QueryParameters parameters)
+      public void Fetch_NotLike_Test2(int expected, WorkUnitHistoryQuery query)
       {
-         FetchTestData2(expected, parameters);
+         FetchTestData2(expected, query);
       }
 
       private static object[] FetchNotLikeCases2 =
@@ -707,30 +706,30 @@ namespace HFM.Core.Data
          }));
       }
 
-      private static QueryParameters BuildParameters(params QueryField[] fields)
+      private static WorkUnitHistoryQuery BuildParameters(params QueryField[] fields)
       {
-         var parameters = new QueryParameters();
-         parameters.Fields.AddRange(fields);
-         return parameters;
+         var query = new WorkUnitHistoryQuery();
+         query.Fields.AddRange(fields);
+         return query;
       }
 
-      private void FetchTestData(int count, QueryParameters parameters)
+      private void FetchTestData(int count, WorkUnitHistoryQuery query)
       {
          _database.Initialize(_testDataFileCopy);
-         FetchInternal(count, parameters, BonusCalculationType.DownloadTime);
+         FetchInternal(count, query, BonusCalculationType.DownloadTime);
       }
 
-      private void FetchTestData2(int count, QueryParameters parameters)
+      private void FetchTestData2(int count, WorkUnitHistoryQuery query)
       {
          _database.Initialize(_testData2FileCopy);
-         FetchInternal(count, parameters, BonusCalculationType.FrameTime);
+         FetchInternal(count, query, BonusCalculationType.FrameTime);
       }
 
-      private void FetchInternal(int count, QueryParameters parameters, BonusCalculationType bonusCalculation)
+      private void FetchInternal(int count, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
       {
-         var entries = _database.Fetch(parameters, bonusCalculation);
+         var entries = _database.Fetch(query, bonusCalculation);
 //#if DEBUG
-//         //Debug.WriteLine(parameters.Fields[0].Name);
+//         //Debug.WriteLine(query.Fields[0].Name);
 //         foreach (var entry in entries)
 //         {
 //            Debug.WriteLine(entry.ID);
@@ -754,73 +753,73 @@ namespace HFM.Core.Data
       [Test]
       [TestCaseSource("FetchEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_Equal_Test(int expected, QueryParameters parameters)
+      public void Page_Equal_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchNotEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_NotEqual_Test(int expected, QueryParameters parameters)
+      public void Page_NotEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchGreaterThanCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_GreaterThan_Test(int expected, QueryParameters parameters)
+      public void Page_GreaterThan_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchGreaterThanOrEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_GreaterThanOrEqual_Test(int expected, QueryParameters parameters)
+      public void Page_GreaterThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchLessThanCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_LessThan_Test(int expected, QueryParameters parameters)
+      public void Page_LessThan_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchLessThanOrEqualCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_LessThanOrEqual_Test(int expected, QueryParameters parameters)
+      public void Page_LessThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchLikeCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_Like_Test(int expected, QueryParameters parameters)
+      public void Page_Like_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
       [Test]
       [TestCaseSource("FetchNotLikeCases")]
       [Category("HFM.Core.UnitInfoDatabase.Page")]
-      public void Page_NotLike_Test(int expected, QueryParameters parameters)
+      public void Page_NotLike_Test(int expected, WorkUnitHistoryQuery query)
       {
-         PageTestData(expected, parameters);
+         PageTestData(expected, query);
       }
 
-      private void PageTestData(long totalItems, QueryParameters parameters)
+      private void PageTestData(long totalItems, WorkUnitHistoryQuery query)
       {
          const long itemsPerPage = 10;
 
          _database.Initialize(_testDataFileCopy);
-         var page = _database.Page(1, itemsPerPage, parameters, BonusCalculationType.DownloadTime);
+         var page = _database.Page(1, itemsPerPage, query, BonusCalculationType.DownloadTime);
          int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
          Assert.AreEqual(totalItems, page.TotalItems);
          Assert.AreEqual(expectedPages, page.TotalPages);

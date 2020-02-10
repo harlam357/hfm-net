@@ -30,7 +30,7 @@ namespace HFM.Forms
 {
    public interface IQueryView : IWin32Window
    {
-      QueryParameters Query { get; set; }
+      WorkUnitHistoryQuery Query { get; set; }
       
       bool Visible { get; set; }
 
@@ -41,7 +41,7 @@ namespace HFM.Forms
 
    public partial class QueryDialog : Form, IQueryView
    {
-      private QueryParameters _query;
+      private WorkUnitHistoryQuery _workUnitHistoryQuery;
       private BindingList<QueryField> _queryFieldList;
 
       public QueryDialog()
@@ -50,19 +50,19 @@ namespace HFM.Forms
          SetupDataGridViewColumns();
          dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
 
-         Query = new QueryParameters();
+         Query = new WorkUnitHistoryQuery();
       }
 
       #region IQueryView Members
 
-      public QueryParameters Query
+      public WorkUnitHistoryQuery Query
       {
-         get { return _query; }
+         get { return _workUnitHistoryQuery; }
          set
          {
-            _query = value;
-            _queryFieldList = new BindingList<QueryField>(_query.Fields);
-            BindNameTextBox(_query);
+            _workUnitHistoryQuery = value;
+            _queryFieldList = new BindingList<QueryField>(_workUnitHistoryQuery.Fields);
+            BindNameTextBox(_workUnitHistoryQuery);
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = _queryFieldList;
          }
@@ -70,7 +70,7 @@ namespace HFM.Forms
 
       #endregion
 
-      public void BindNameTextBox(QueryParameters parameters)
+      public void BindNameTextBox(WorkUnitHistoryQuery parameters)
       {
          txtName.DataBindings.Clear();
          txtName.DataBindings.Add("Text", parameters, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -213,7 +213,7 @@ namespace HFM.Forms
 
       private void btnAdd_Click(object sender, EventArgs e)
       {
-         _query.Fields.Add(new QueryField());
+         _workUnitHistoryQuery.Fields.Add(new QueryField());
          RefreshDisplay();
       }
 
@@ -222,7 +222,7 @@ namespace HFM.Forms
          Debug.Assert(dataGridView1.SelectedCells.Count == 1);
          foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
          {
-            _query.Fields.RemoveAt(cell.OwningRow.Index);
+            _workUnitHistoryQuery.Fields.RemoveAt(cell.OwningRow.Index);
          }
          RefreshDisplay();
       }

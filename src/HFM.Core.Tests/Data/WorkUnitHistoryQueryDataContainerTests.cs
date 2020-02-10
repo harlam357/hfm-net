@@ -22,20 +22,18 @@ using System.IO;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Core.Data
 {
     [TestFixture]
-    public class QueryParametersDataContainerTests
+    public class WorkUnitHistoryQueryDataContainerTests
     {
         [Test]
-        public void QueryParametersDataContainer_Read_FromDisk()
+        public void WorkUnitHistoryQueryDataContainer_Read_FromDisk()
         {
             // Arrange
-            var container = new QueryParametersDataContainer
+            var container = new WorkUnitHistoryQueryDataContainer
             {
-                FilePath = Path.Combine("..\\..\\TestFiles", QueryParametersDataContainer.DefaultFileName),
+                FilePath = Path.Combine("..\\..\\TestFiles", WorkUnitHistoryQueryDataContainer.DefaultFileName),
             };
             // Act
             container.Read();
@@ -44,11 +42,11 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void QueryParametersDataContainer_Write_ToDisk()
+        public void WorkUnitHistoryQueryDataContainer_Write_ToDisk()
         {
             // Arrange
             // TODO: Implement ArtifactFolder
-            var container = new QueryParametersDataContainer
+            var container = new WorkUnitHistoryQueryDataContainer
             {
                 FilePath = "TestQueryParametersBinary.dat", Data = CreateTestQueryParameters(),
             };
@@ -61,12 +59,12 @@ namespace HFM.Core.Data
             ValidateTestQueryParameters(container.Data);
         }
 
-        private static List<QueryParameters> CreateTestQueryParameters()
+        private static List<WorkUnitHistoryQuery> CreateTestQueryParameters()
         {
-            var list = new List<QueryParameters>();
+            var list = new List<WorkUnitHistoryQuery>();
             for (int i = 0; i < 5; i++)
             {
-                var queryParameters = new QueryParameters { Name = "Test" + i };
+                var queryParameters = new WorkUnitHistoryQuery { Name = "Test" + i };
                 queryParameters.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = "Test" + i });
                 list.Add(queryParameters);
             }
@@ -74,15 +72,15 @@ namespace HFM.Core.Data
             return list;
         }
 
-        private static void ValidateTestQueryParameters(IList<QueryParameters> list)
+        private static void ValidateTestQueryParameters(IList<WorkUnitHistoryQuery> list)
         {
             for (int i = 0; i < 5; i++)
             {
-                QueryParameters queryParameters = list[i];
-                Assert.AreEqual("Test" + i, queryParameters.Name);
-                Assert.AreEqual(QueryFieldName.Name, queryParameters.Fields[0].Name);
-                Assert.AreEqual(QueryFieldType.Equal, queryParameters.Fields[0].Type);
-                Assert.AreEqual("Test" + i, queryParameters.Fields[0].Value);
+                WorkUnitHistoryQuery workUnitHistoryQuery = list[i];
+                Assert.AreEqual("Test" + i, workUnitHistoryQuery.Name);
+                Assert.AreEqual(QueryFieldName.Name, workUnitHistoryQuery.Fields[0].Name);
+                Assert.AreEqual(QueryFieldType.Equal, workUnitHistoryQuery.Fields[0].Type);
+                Assert.AreEqual("Test" + i, workUnitHistoryQuery.Fields[0].Value);
             }
         }
     }
