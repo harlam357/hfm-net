@@ -48,7 +48,7 @@ namespace HFM.Core.Data
       public void FixtureInit()
       {
          SetupTestDataFileCopies();
-         _database = new UnitInfoDatabase(null, _proteinService);
+         _database = new UnitInfoDatabase(null, _proteinService, null);
       }
 
       private void SetupTestDataFileCopies()

@@ -78,7 +78,7 @@ namespace HFM.Core.Data
             File.Delete(TestScratchFile);
          }
 
-         _database = new UnitInfoDatabase(null, _proteinService);
+         _database = new UnitInfoDatabase(null, _proteinService, null);
       }
 
       private void SetupTestDataFileCopies()

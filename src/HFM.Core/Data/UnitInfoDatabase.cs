@@ -84,8 +84,6 @@ namespace HFM.Core.Data
             get { return @"Data Source=" + DatabaseFilePath + (ForceDateTimesToUtc ? ";DateTimeKind=Utc" : String.Empty); }
         }
 
-        //private const string DbProvider = "System.Data.SQLite";
-
         private string _databaseFilePath;
         /// <summary>
         /// Get or Set the Database File Path
@@ -119,12 +117,6 @@ namespace HFM.Core.Data
         public const string DefaultFileName = "WuHistory.db3";
 
         #region Constructor
-
-        public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService)
-           : this(prefs, proteinService, null)
-        {
-
-        }
 
         public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
         {
