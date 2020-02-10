@@ -56,7 +56,7 @@ namespace HFM.Core.Data
         /// </summary>
         bool Connected { get; }
 
-        void Upgrade();
+        void Initialize();
 
         bool Insert(WorkUnitModel workUnitModel);
 
@@ -77,26 +77,9 @@ namespace HFM.Core.Data
     {
         #region Fields
 
-        public bool ForceDateTimesToUtc { get; set; }
+        private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
-        private string ConnectionString
-        {
-            get { return @"Data Source=" + DatabaseFilePath + (ForceDateTimesToUtc ? ";DateTimeKind=Utc" : String.Empty); }
-        }
-
-        private string _databaseFilePath;
-        /// <summary>
-        /// Get or Set the Database File Path
-        /// </summary>
-        public string DatabaseFilePath
-        {
-            get { return _databaseFilePath; }
-            set
-            {
-                _databaseFilePath = value;
-                CheckConnection();
-            }
-        }
+        public string FilePath { get; private set; }
 
         /// <summary>
         /// Flag that notes if the Database is safe to call
@@ -127,11 +110,10 @@ namespace HFM.Core.Data
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
 
-            ForceDateTimesToUtc = true;
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))
             {
-                DatabaseFilePath = System.IO.Path.Combine(path, DefaultFileName);
+                FilePath = System.IO.Path.Combine(path, DefaultFileName);
             }
         }
 
@@ -139,11 +121,14 @@ namespace HFM.Core.Data
 
         #region Methods
 
-        /// <summary>
-        /// Check the Database Connection
-        /// </summary>
-        private void CheckConnection()
+        public void Initialize()
         {
+            Initialize(FilePath);
+        }
+
+        public void Initialize(string filePath)
+        {
+            FilePath = filePath;
             try
             {
                 bool exists = TableExists(SqlTable.WuHistory);
@@ -158,6 +143,7 @@ namespace HFM.Core.Data
                 {
                     Debug.Assert(table != null);
                 }
+                Upgrade();
                 Connected = true;
             }
             catch (Exception ex)
@@ -170,7 +156,7 @@ namespace HFM.Core.Data
 
         #region Upgrade
 
-        public void Upgrade()
+        private void Upgrade()
         {
             string dbVersionString = "0.0.0.0";
             if (TableExists(SqlTable.Version))
@@ -279,7 +265,7 @@ namespace HFM.Core.Data
 
             // The Insert operation does not setup a WuHistory table if
             // it does not exist.  This was already handled when the
-            // the DatabaseFilePath was set.
+            // the FilePath was set.
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
             // ensure this unit is not written twice
