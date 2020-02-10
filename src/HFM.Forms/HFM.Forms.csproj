@@ -165,7 +165,7 @@
     <Compile Include="MainFormGridHandlers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HistoryEntrySortableBindingList.cs" />
+    <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>
     </Compile>

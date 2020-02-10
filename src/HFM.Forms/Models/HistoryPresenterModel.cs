@@ -46,14 +46,14 @@ namespace HFM.Forms.Models
             get { return _queryBindingSource; }
         }
 
-        private readonly HistoryEntrySortableBindingList _historyList;
+        private readonly WorkUnitHistoryRowSortableBindingList _workUnitHistoryList;
         private readonly BindingSource _historyBindingSource;
         public BindingSource HistoryBindingSource
         {
             get { return _historyBindingSource; }
         }
 
-        private PetaPoco.Page<HistoryEntry> _page;
+        private PetaPoco.Page<WorkUnitHistoryRow> _page;
 
         public HistoryPresenterModel(IUnitInfoDatabase database)
         {
@@ -73,16 +73,16 @@ namespace HFM.Forms.Models
                                                           ResetBindings(true);
                                                       };
 
-            _historyList = new HistoryEntrySortableBindingList();
-            _historyList.Sorted += (s, e) =>
+            _workUnitHistoryList = new WorkUnitHistoryRowSortableBindingList();
+            _workUnitHistoryList.Sorted += (s, e) =>
             {
                 SortColumnName = e.Name;
                 SortOrder = e.Direction;
             };
             _historyBindingSource = new BindingSource();
-            _historyBindingSource.DataSource = _historyList;
+            _historyBindingSource.DataSource = _workUnitHistoryList;
 
-            _page = new PetaPoco.Page<HistoryEntry> { Items = new List<HistoryEntry>() };
+            _page = new PetaPoco.Page<WorkUnitHistoryRow> { Items = new List<WorkUnitHistoryRow>() };
         }
 
         public void Load(IPreferenceSet prefs, QueryParametersDataContainer queryContainer)
@@ -196,11 +196,11 @@ namespace HFM.Forms.Models
             _queryBindingSource.ResetBindings(false);
         }
 
-        public void DeleteHistoryEntry(HistoryEntry entry)
+        public void DeleteHistoryEntry(WorkUnitHistoryRow row)
         {
-            if (_database.Delete(entry) != 0)
+            if (_database.Delete(row) != 0)
             {
-                _page.Items.Remove(entry);
+                _page.Items.Remove(row);
                 _page.TotalItems--;
                 ResetBindings(false);
             }
@@ -221,7 +221,7 @@ namespace HFM.Forms.Models
 
             // halt binding source updates
             _historyBindingSource.RaiseListChangedEvents = false;
-            _historyList.RaiseListChangedEvents = false;
+            _workUnitHistoryList.RaiseListChangedEvents = false;
             // refresh the underlying binding list
             RefreshHistoryList(_page.Items);
             // sort the list
@@ -232,7 +232,7 @@ namespace HFM.Forms.Models
             }
             // enable binding source updates
             _historyBindingSource.RaiseListChangedEvents = true;
-            _historyList.RaiseListChangedEvents = true;
+            _workUnitHistoryList.RaiseListChangedEvents = true;
             // reset AFTER RaiseListChangedEvents is enabled
             _historyBindingSource.ResetBindings(false);
 
@@ -240,7 +240,7 @@ namespace HFM.Forms.Models
             OnPropertyChanged("CurrentPage");
         }
 
-        private void RefreshHistoryList(IEnumerable<HistoryEntry> historyEntries)
+        private void RefreshHistoryList(IEnumerable<WorkUnitHistoryRow> historyEntries)
         {
             _historyBindingSource.Clear();
             if (historyEntries != null)
@@ -252,7 +252,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public IList<HistoryEntry> FetchSelectedQuery()
+        public IList<WorkUnitHistoryRow> FetchSelectedQuery()
         {
             return _database.Fetch(SelectedQuery, BonusCalculation);
         }
@@ -271,13 +271,13 @@ namespace HFM.Forms.Models
             }
         }
 
-        public HistoryEntry SelectedHistoryEntry
+        public WorkUnitHistoryRow SelectedWorkUnitHistoryRow
         {
             get
             {
                 if (_historyBindingSource.Current != null)
                 {
-                    return (HistoryEntry)_historyBindingSource.Current;
+                    return (WorkUnitHistoryRow)_historyBindingSource.Current;
                 }
                 return null;
             }

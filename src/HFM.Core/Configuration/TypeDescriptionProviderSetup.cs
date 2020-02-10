@@ -12,7 +12,7 @@ namespace HFM.Core.Configuration
       public static void Execute()
       {
          Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(SlotModel));
-         Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(HistoryEntry));
+         Hyper.ComponentModel.HyperTypeDescriptionProvider.Add(typeof(WorkUnitHistoryRow));
       }
    }
 }

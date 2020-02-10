@@ -26,35 +26,29 @@ using HFM.Core.Serializers;
 
 namespace HFM.Core.WorkUnits
 {
-   public class HistoryEntryCsvFileSerializer : IFileSerializer<List<HistoryEntry>>
-   {
-      public string FileExtension
-      {
-         get { return "csv"; }
-      }
+    public class WorkUnitHistoryRowCsvFileSerializer : IFileSerializer<List<WorkUnitHistoryRow>>
+    {
+        public string FileExtension => "csv";
 
-      public string FileTypeFilter
-      {
-         get { return "Comma Separated Value Files|*.csv"; }
-      }
+        public string FileTypeFilter => "Comma Separated Value Files|*.csv";
 
-      public List<HistoryEntry> Deserialize(string path)
-      {
-         throw new NotSupportedException("History entry csv deserialization is not supported.");
-      }
+        public List<WorkUnitHistoryRow> Deserialize(string path)
+        {
+            throw new NotSupportedException("History entry csv deserialization is not supported.");
+        }
 
-      public void Serialize(string path, List<HistoryEntry> value)
-      {
-         using (var writer = new StreamWriter(path, false))
-         {
-            Serialize(writer, value);
-         }
-      }
+        public void Serialize(string path, List<WorkUnitHistoryRow> value)
+        {
+            using (var writer = new StreamWriter(path, false))
+            {
+                Serialize(writer, value);
+            }
+        }
 
-      internal void Serialize(TextWriter writer, List<HistoryEntry> value)
-      {
-         string line = String.Join(",", new[]
-         {
+        internal void Serialize(TextWriter writer, List<WorkUnitHistoryRow> value)
+        {
+            string line = String.Join(",", new[]
+            {
             "DatabaseID",
             "ProjectID",
             "ProjectRun",
@@ -84,11 +78,11 @@ namespace HFM.Core.WorkUnits
             "PPD",
             "Credit"
          });
-         writer.WriteLine(line);
-         foreach (var h in value)
-         {
-            line = String.Join(",", new object[]
+            writer.WriteLine(line);
+            foreach (var h in value)
             {
+                line = String.Join(",", new object[]
+                {
                h.ID,
                h.ProjectID,
                h.ProjectRun,
@@ -117,9 +111,9 @@ namespace HFM.Core.WorkUnits
                h.SlotType,
                h.PPD.ToString(CultureInfo.InvariantCulture),
                h.Credit.ToString(CultureInfo.InvariantCulture)
-            });
-            writer.WriteLine(line);
-         }
-      }
-   }
+                });
+                writer.WriteLine(line);
+            }
+        }
+    }
 }

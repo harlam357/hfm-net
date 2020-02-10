@@ -126,13 +126,13 @@ namespace HFM.Forms
          _model.Update(_prefs, _queryContainer);
       }
 
-      internal IList<IFileSerializer<List<HistoryEntry>>> ExportSerializers { get; set; }
+      internal IList<IFileSerializer<List<WorkUnitHistoryRow>>> ExportSerializers { get; set; }
 
       internal void ExportClick()
       {
-         var serializers = ExportSerializers ?? new List <IFileSerializer<List<HistoryEntry>>>
+         var serializers = ExportSerializers ?? new List <IFileSerializer<List<WorkUnitHistoryRow>>>
          {
-            new HistoryEntryCsvFileSerializer()
+            new WorkUnitHistoryRowCsvFileSerializer()
          };
 
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
@@ -250,7 +250,7 @@ namespace HFM.Forms
       
       public void DeleteWorkUnitClick()
       {
-         var entry = _model.SelectedHistoryEntry;
+         var entry = _model.SelectedWorkUnitHistoryRow;
          if (entry == null)
          {
             _messageBoxView.ShowInformation(_view, "No work unit selected.", Core.Application.NameAndVersion);
@@ -296,11 +296,11 @@ namespace HFM.Forms
          long updateArg = 0;
          if (type == ProteinUpdateType.Project)
          {
-            updateArg = _model.SelectedHistoryEntry.ProjectID;
+            updateArg = _model.SelectedWorkUnitHistoryRow.ProjectID;
          }
          else if (type == ProteinUpdateType.Id)
          {
-            updateArg = _model.SelectedHistoryEntry.ID;
+            updateArg = _model.SelectedWorkUnitHistoryRow.ID;
          }
 
          try

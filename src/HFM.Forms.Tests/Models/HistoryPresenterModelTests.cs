@@ -167,7 +167,7 @@ namespace HFM.Forms.Models
          _model.AddQuery(parameters);
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         _database.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<HistoryEntry>());
+         _database.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitHistoryRow>());
          // Act
          _model.ResetBindings(true);
          // Assert

@@ -314,7 +314,7 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteWorkUnitClick_Test()
       {
          // Arrange
-         _model.HistoryBindingSource.Add(new HistoryEntry { ID = 1 });
+         _model.HistoryBindingSource.Add(new WorkUnitHistoryRow { ID = 1 });
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          _database.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
@@ -342,7 +342,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Test()
       {
          // Arrange
-         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new HistoryEntry[0]);
+         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
@@ -351,8 +351,8 @@ namespace HFM.Forms
          _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
          _viewFactory.Expect(x => x.Release(saveFileDialogView));
 
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)));
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitHistoryRow>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitHistoryRow>)));
          // Act
          _presenter = CreatePresenter();
          _presenter.ExportSerializers = new[] { serializer };
@@ -367,7 +367,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Exception_Test()
       {
          // Arrange
-         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new HistoryEntry[0]);
+         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
@@ -377,8 +377,8 @@ namespace HFM.Forms
          _viewFactory.Expect(x => x.Release(saveFileDialogView));
 
          var exception = new IOException();
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<HistoryEntry>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<HistoryEntry>)))
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitHistoryRow>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitHistoryRow>)))
             .Throw(exception);
 
          var logger = MockRepository.GenerateMock<ILogger>();

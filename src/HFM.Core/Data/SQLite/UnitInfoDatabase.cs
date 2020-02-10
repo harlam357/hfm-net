@@ -60,15 +60,15 @@ namespace HFM.Core.Data.SQLite
 
         bool Insert(UnitInfoModel unitInfoModel);
 
-        int Delete(HistoryEntry entry);
+        int Delete(WorkUnitHistoryRow row);
 
-        IList<HistoryEntry> Fetch(QueryParameters parameters);
+        IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters);
 
-        IList<HistoryEntry> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation);
+        IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation);
 
-        PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters);
+        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters);
 
-        PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation);
+        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation);
 
         DataTable Select(string sql, params object[] args);
 
@@ -307,7 +307,7 @@ namespace HFM.Core.Data.SQLite
                 return false;
             }
 
-            var entry = AutoMapper.Mapper.Map<HistoryEntry>(unitInfoModel.UnitInfoData);
+            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(unitInfoModel.UnitInfoData);
             // cannot map these two properties from a UnitInfo instance
             // they only live at the UnitInfoLogic level
             entry.FramesCompleted = unitInfoModel.FramesComplete;
@@ -371,7 +371,7 @@ namespace HFM.Core.Data.SQLite
 
         #region Delete
 
-        public int Delete(HistoryEntry entry)
+        public int Delete(WorkUnitHistoryRow row)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -379,7 +379,7 @@ namespace HFM.Core.Data.SQLite
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Delete(entry);
+                    return database.Delete(row);
                 }
             }
         }
@@ -388,12 +388,12 @@ namespace HFM.Core.Data.SQLite
 
         #region Fetch
 
-        public IList<HistoryEntry> Fetch(QueryParameters parameters)
+        public IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters)
         {
             return Fetch(parameters, BonusCalculationType.DownloadTime);
         }
 
-        public IList<HistoryEntry> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
+        public IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -406,7 +406,7 @@ namespace HFM.Core.Data.SQLite
             }
         }
 
-        private IList<HistoryEntry> FetchInternal(QueryParameters parameters, BonusCalculationType bonusCalculation)
+        private IList<WorkUnitHistoryRow> FetchInternal(QueryParameters parameters, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
@@ -418,18 +418,18 @@ namespace HFM.Core.Data.SQLite
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    List<HistoryEntry> query = database.Fetch<HistoryEntry>(select);
+                    List<WorkUnitHistoryRow> query = database.Fetch<WorkUnitHistoryRow>(select);
                     return query;
                 }
             }
         }
 
-        public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters)
+        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters)
         {
             return Page(page, itemsPerPage, parameters, BonusCalculationType.DownloadTime);
         }
 
-        public PetaPoco.Page<HistoryEntry> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
+        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -442,7 +442,7 @@ namespace HFM.Core.Data.SQLite
             }
         }
 
-        private PetaPoco.Page<HistoryEntry> PageInternal(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
+        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
@@ -454,7 +454,7 @@ namespace HFM.Core.Data.SQLite
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    PetaPoco.Page<HistoryEntry> query = database.Page<HistoryEntry>(page, itemsPerPage, select);
+                    PetaPoco.Page<WorkUnitHistoryRow> query = database.Page<WorkUnitHistoryRow>(page, itemsPerPage, select);
                     Debug.Assert(query != null);
                     return query;
                 }

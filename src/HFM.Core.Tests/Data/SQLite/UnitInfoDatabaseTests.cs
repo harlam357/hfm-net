@@ -239,7 +239,7 @@ namespace HFM.Core.Data.SQLite
          InsertTestInternal(BuildUnitInfo4(), BuildProtein4(), BuildUnitInfo4VerifyAction());
       }
 
-      private void InsertTestInternal(UnitInfo unitInfo, Protein protein, Action<IList<HistoryEntry>> verifyAction)
+      private void InsertTestInternal(UnitInfo unitInfo, Protein protein, Action<IList<WorkUnitHistoryRow>> verifyAction)
       {
          _database.DatabaseFilePath = TestScratchFile;
 
@@ -309,35 +309,35 @@ namespace HFM.Core.Data.SQLite
                 };
       }
 
-      private static Action<IList<HistoryEntry>> BuildUnitInfo1VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo1VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            HistoryEntry entry = rows[0];
-            Assert.AreEqual(2669, entry.ProjectID);
-            Assert.AreEqual(1, entry.ProjectRun);
-            Assert.AreEqual(2, entry.ProjectClone);
-            Assert.AreEqual(3, entry.ProjectGen);
-            Assert.AreEqual("Owner", entry.Name);
-            Assert.AreEqual("Path", entry.Path);
-            Assert.AreEqual("harlam357", entry.Username);
-            Assert.AreEqual(32, entry.Team);
-            Assert.AreEqual(2.09f, entry.CoreVersion);
-            Assert.AreEqual(100, entry.FramesCompleted);
-            Assert.AreEqual(TimeSpan.FromSeconds(600), entry.FrameTime);
-            Assert.AreEqual((int)WorkUnitResult.FinishedUnit, entry.ResultValue);
-            Assert.AreEqual(new DateTime(2010, 1, 1), entry.DownloadDateTime);
-            Assert.AreEqual(new DateTime(2010, 1, 2), entry.CompletionDateTime);
-            Assert.AreEqual("TestUnit1", entry.WorkUnitName);
-            Assert.AreEqual(1.0, entry.KFactor);
-            Assert.AreEqual("GRO-A3", entry.Core);
-            Assert.AreEqual(100, entry.Frames);
-            Assert.AreEqual(1000, entry.Atoms);
-            Assert.AreEqual(100.0, entry.BaseCredit);
-            Assert.AreEqual(3.0, entry.PreferredDays);
-            Assert.AreEqual(5.0, entry.MaximumDays);
-            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
+            WorkUnitHistoryRow row = rows[0];
+            Assert.AreEqual(2669, row.ProjectID);
+            Assert.AreEqual(1, row.ProjectRun);
+            Assert.AreEqual(2, row.ProjectClone);
+            Assert.AreEqual(3, row.ProjectGen);
+            Assert.AreEqual("Owner", row.Name);
+            Assert.AreEqual("Path", row.Path);
+            Assert.AreEqual("harlam357", row.Username);
+            Assert.AreEqual(32, row.Team);
+            Assert.AreEqual(2.09f, row.CoreVersion);
+            Assert.AreEqual(100, row.FramesCompleted);
+            Assert.AreEqual(TimeSpan.FromSeconds(600), row.FrameTime);
+            Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
+            Assert.AreEqual(new DateTime(2010, 1, 1), row.DownloadDateTime);
+            Assert.AreEqual(new DateTime(2010, 1, 2), row.CompletionDateTime);
+            Assert.AreEqual("TestUnit1", row.WorkUnitName);
+            Assert.AreEqual(1.0, row.KFactor);
+            Assert.AreEqual("GRO-A3", row.Core);
+            Assert.AreEqual(100, row.Frames);
+            Assert.AreEqual(1000, row.Atoms);
+            Assert.AreEqual(100.0, row.BaseCredit);
+            Assert.AreEqual(3.0, row.PreferredDays);
+            Assert.AreEqual(5.0, row.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
          };
       }
 
@@ -386,35 +386,35 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<HistoryEntry>> BuildUnitInfo2VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo2VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            HistoryEntry entry = rows[0];
-            Assert.AreEqual(6900, entry.ProjectID);
-            Assert.AreEqual(4, entry.ProjectRun);
-            Assert.AreEqual(5, entry.ProjectClone);
-            Assert.AreEqual(6, entry.ProjectGen);
-            Assert.AreEqual("Owner's", entry.Name);
-            Assert.AreEqual("The Path's", entry.Path);
-            Assert.AreEqual("harlam357's", entry.Username);
-            Assert.AreEqual(100, entry.Team);
-            Assert.AreEqual(2.27f, entry.CoreVersion);
-            Assert.AreEqual(56, entry.FramesCompleted);
-            Assert.AreEqual(TimeSpan.FromSeconds(1000), entry.FrameTime);
-            Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, entry.ResultValue);
-            Assert.AreEqual(new DateTime(2009, 5, 5), entry.DownloadDateTime);
-            Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
-            Assert.AreEqual("TestUnit2", entry.WorkUnitName);
-            Assert.AreEqual(2.0, entry.KFactor);
-            Assert.AreEqual("GRO-A4", entry.Core);
-            Assert.AreEqual(200, entry.Frames);
-            Assert.AreEqual(2000, entry.Atoms);
-            Assert.AreEqual(200.0, entry.BaseCredit);
-            Assert.AreEqual(6.0, entry.PreferredDays);
-            Assert.AreEqual(10.0, entry.MaximumDays);
-            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
+            WorkUnitHistoryRow row = rows[0];
+            Assert.AreEqual(6900, row.ProjectID);
+            Assert.AreEqual(4, row.ProjectRun);
+            Assert.AreEqual(5, row.ProjectClone);
+            Assert.AreEqual(6, row.ProjectGen);
+            Assert.AreEqual("Owner's", row.Name);
+            Assert.AreEqual("The Path's", row.Path);
+            Assert.AreEqual("harlam357's", row.Username);
+            Assert.AreEqual(100, row.Team);
+            Assert.AreEqual(2.27f, row.CoreVersion);
+            Assert.AreEqual(56, row.FramesCompleted);
+            Assert.AreEqual(TimeSpan.FromSeconds(1000), row.FrameTime);
+            Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
+            Assert.AreEqual(new DateTime(2009, 5, 5), row.DownloadDateTime);
+            Assert.AreEqual(DateTime.MinValue, row.CompletionDateTime);
+            Assert.AreEqual("TestUnit2", row.WorkUnitName);
+            Assert.AreEqual(2.0, row.KFactor);
+            Assert.AreEqual("GRO-A4", row.Core);
+            Assert.AreEqual(200, row.Frames);
+            Assert.AreEqual(2000, row.Atoms);
+            Assert.AreEqual(200.0, row.BaseCredit);
+            Assert.AreEqual(6.0, row.PreferredDays);
+            Assert.AreEqual(10.0, row.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
          };
       }
 
@@ -463,35 +463,35 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<HistoryEntry>> BuildUnitInfo3VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo3VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            HistoryEntry entry = rows[0];
-            Assert.AreEqual(2670, entry.ProjectID);
-            Assert.AreEqual(2, entry.ProjectRun);
-            Assert.AreEqual(3, entry.ProjectClone);
-            Assert.AreEqual(4, entry.ProjectGen);
-            Assert.AreEqual("Owner", entry.Name);
-            Assert.AreEqual("Path", entry.Path);
-            Assert.AreEqual("harlam357", entry.Username);
-            Assert.AreEqual(32, entry.Team);
-            Assert.AreEqual(2.09f, entry.CoreVersion);
-            Assert.AreEqual(100, entry.FramesCompleted);
-            Assert.AreEqual(TimeSpan.Zero, entry.FrameTime);
-            Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, entry.ResultValue);
-            Assert.AreEqual(new DateTime(2010, 2, 2), entry.DownloadDateTime);
-            Assert.AreEqual(DateTime.MinValue, entry.CompletionDateTime);
-            Assert.AreEqual("TestUnit3", entry.WorkUnitName);
-            Assert.AreEqual(3.0, entry.KFactor);
-            Assert.AreEqual("GRO-A5", entry.Core);
-            Assert.AreEqual(300, entry.Frames);
-            Assert.AreEqual(3000, entry.Atoms);
-            Assert.AreEqual(300.0, entry.BaseCredit);
-            Assert.AreEqual(7.0, entry.PreferredDays);
-            Assert.AreEqual(12.0, entry.MaximumDays);
-            Assert.AreEqual(SlotType.CPU.ToString(), entry.SlotType);
+            WorkUnitHistoryRow row = rows[0];
+            Assert.AreEqual(2670, row.ProjectID);
+            Assert.AreEqual(2, row.ProjectRun);
+            Assert.AreEqual(3, row.ProjectClone);
+            Assert.AreEqual(4, row.ProjectGen);
+            Assert.AreEqual("Owner", row.Name);
+            Assert.AreEqual("Path", row.Path);
+            Assert.AreEqual("harlam357", row.Username);
+            Assert.AreEqual(32, row.Team);
+            Assert.AreEqual(2.09f, row.CoreVersion);
+            Assert.AreEqual(100, row.FramesCompleted);
+            Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
+            Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
+            Assert.AreEqual(new DateTime(2010, 2, 2), row.DownloadDateTime);
+            Assert.AreEqual(DateTime.MinValue, row.CompletionDateTime);
+            Assert.AreEqual("TestUnit3", row.WorkUnitName);
+            Assert.AreEqual(3.0, row.KFactor);
+            Assert.AreEqual("GRO-A5", row.Core);
+            Assert.AreEqual(300, row.Frames);
+            Assert.AreEqual(3000, row.Atoms);
+            Assert.AreEqual(300.0, row.BaseCredit);
+            Assert.AreEqual(7.0, row.PreferredDays);
+            Assert.AreEqual(12.0, row.MaximumDays);
+            Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
          };
       }
 
@@ -540,35 +540,35 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<HistoryEntry>> BuildUnitInfo4VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo4VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            HistoryEntry entry = rows[0];
-            Assert.AreEqual(6903, entry.ProjectID);
-            Assert.AreEqual(2, entry.ProjectRun);
-            Assert.AreEqual(3, entry.ProjectClone);
-            Assert.AreEqual(4, entry.ProjectGen);
-            Assert.AreEqual("Owner2 Slot 02", entry.Name);
-            Assert.AreEqual("Path2", entry.Path);
-            Assert.AreEqual("harlam357", entry.Username);
-            Assert.AreEqual(32, entry.Team);
-            Assert.AreEqual(2.27f, entry.CoreVersion);
-            Assert.AreEqual(100, entry.FramesCompleted);
-            Assert.AreEqual(TimeSpan.Zero, entry.FrameTime);
-            Assert.AreEqual((int)WorkUnitResult.FinishedUnit, entry.ResultValue);
-            Assert.AreEqual(new DateTime(2012, 1, 2), entry.DownloadDateTime);
-            Assert.AreEqual(new DateTime(2012, 1, 5), entry.CompletionDateTime);
-            Assert.AreEqual("TestUnit4", entry.WorkUnitName);
-            Assert.AreEqual(4.0, entry.KFactor);
-            Assert.AreEqual("OPENMMGPU", entry.Core);
-            Assert.AreEqual(400, entry.Frames);
-            Assert.AreEqual(4000, entry.Atoms);
-            Assert.AreEqual(400.0, entry.BaseCredit);
-            Assert.AreEqual(2.0, entry.PreferredDays);
-            Assert.AreEqual(5.0, entry.MaximumDays);
-            Assert.AreEqual(SlotType.GPU.ToString(), entry.SlotType);
+            WorkUnitHistoryRow row = rows[0];
+            Assert.AreEqual(6903, row.ProjectID);
+            Assert.AreEqual(2, row.ProjectRun);
+            Assert.AreEqual(3, row.ProjectClone);
+            Assert.AreEqual(4, row.ProjectGen);
+            Assert.AreEqual("Owner2 Slot 02", row.Name);
+            Assert.AreEqual("Path2", row.Path);
+            Assert.AreEqual("harlam357", row.Username);
+            Assert.AreEqual(32, row.Team);
+            Assert.AreEqual(2.27f, row.CoreVersion);
+            Assert.AreEqual(100, row.FramesCompleted);
+            Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
+            Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
+            Assert.AreEqual(new DateTime(2012, 1, 2), row.DownloadDateTime);
+            Assert.AreEqual(new DateTime(2012, 1, 5), row.CompletionDateTime);
+            Assert.AreEqual("TestUnit4", row.WorkUnitName);
+            Assert.AreEqual(4.0, row.KFactor);
+            Assert.AreEqual("OPENMMGPU", row.Core);
+            Assert.AreEqual(400, row.Frames);
+            Assert.AreEqual(4000, row.Atoms);
+            Assert.AreEqual(400.0, row.BaseCredit);
+            Assert.AreEqual(2.0, row.PreferredDays);
+            Assert.AreEqual(5.0, row.MaximumDays);
+            Assert.AreEqual(SlotType.GPU.ToString(), row.SlotType);
          };
       }
 
@@ -593,7 +593,7 @@ namespace HFM.Core.Data.SQLite
       {
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         Assert.AreEqual(0, _database.Delete(new HistoryEntry { ID = 100 }));
+         Assert.AreEqual(0, _database.Delete(new WorkUnitHistoryRow { ID = 100 }));
       }
 
       #endregion
