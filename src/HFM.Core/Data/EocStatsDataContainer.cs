@@ -30,6 +30,11 @@ namespace HFM.Core.Data
 
         public override Serializers.IFileSerializer<EocStatsData> DefaultSerializer => new Serializers.ProtoBufFileSerializer<EocStatsData>();
 
+        public EocStatsDataContainer() : this(null)
+        {
+
+        }
+
         public EocStatsDataContainer(IPreferenceSet prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);

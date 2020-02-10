@@ -125,11 +125,10 @@ namespace HFM.Core.Configuration
             Component.For<ScheduledTasks.IWebsiteDeployer>()
                .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
 
-         // IQueryParametersContainer - Singleton
+         // QueryParametersDataContainer - Singleton
          container.Register(
-            Component.For<Data.IQueryParametersContainer>()
-               .ImplementedBy<Data.QueryParametersContainer>()
-                  .OnCreate(instance => ((Data.QueryParametersContainer)instance).Read()));
+            Component.For<Data.QueryParametersDataContainer>()
+                  .OnCreate(instance => instance.Read()));
 
          // IProteinBenchmarkCollection - Singleton
          container.Register(

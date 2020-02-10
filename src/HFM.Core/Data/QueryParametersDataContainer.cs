@@ -19,58 +19,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using HFM.Core.DataTypes;
 using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    public interface IQueryParametersContainer
-    {
-        ICollection<QueryParameters> Get();
-
-        void Update(IEnumerable<QueryParameters> collection);
-    }
-
-    public sealed class QueryParametersContainer : DataContainer<List<QueryParameters>>, IQueryParametersContainer
+    public sealed class QueryParametersDataContainer : DataContainer<List<QueryParameters>>
     {
         public const string DefaultFileName = "WuHistoryQuery.dat";
 
-        public QueryParametersContainer()
-           : this(null)
+        public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<QueryParameters>>();
+
+        public QueryParametersDataContainer() : this(null)
         {
 
         }
 
-        public QueryParametersContainer(IPreferenceSet prefs)
+        public QueryParametersDataContainer(IPreferenceSet prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))
             {
                 FilePath = System.IO.Path.Combine(path, DefaultFileName);
             }
-        }
-
-        #region Properties
-
-        public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer
-        {
-            get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
-        }
-
-        #endregion
-
-        public ICollection<QueryParameters> Get()
-        {
-            return Data.ToList();
-        }
-
-        public void Update(IEnumerable<QueryParameters> collection)
-        {
-            Data.Clear();
-            Data.AddRange(collection);
-            Write();
         }
     }
 }

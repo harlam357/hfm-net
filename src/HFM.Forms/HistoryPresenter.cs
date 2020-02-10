@@ -44,7 +44,7 @@ namespace HFM.Forms
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
-      private readonly IQueryParametersContainer _queryContainer;
+      private readonly QueryParametersDataContainer _queryContainer;
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
@@ -62,7 +62,7 @@ namespace HFM.Forms
       public event EventHandler PresenterClosed;
       
       public HistoryPresenter(IPreferenceSet prefs, 
-                              IQueryParametersContainer queryContainer, 
+                              QueryParametersDataContainer queryContainer, 
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 

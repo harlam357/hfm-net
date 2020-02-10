@@ -131,7 +131,7 @@
     <Compile Include="WorkUnits\HistoryEntryCsvSerializerTests.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="WorkUnits\ProteinServiceTests.cs" />
-    <Compile Include="Data\QueryParameterContainerTests.cs" />
+    <Compile Include="Data\QueryParametersDataContainerTests.cs" />
     <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabaseReadOnlyTests.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabaseTests.cs" />

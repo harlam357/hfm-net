@@ -44,7 +44,7 @@ namespace HFM.Forms
    public class HistoryPresenterTests
    {
       private IPreferenceSet _prefs;
-      private IQueryParametersContainer _queryContainer;
+      private QueryParametersDataContainer _queryContainer;
       private IHistoryView _view;
       private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
@@ -58,7 +58,7 @@ namespace HFM.Forms
       public void Init()
       {
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         _queryContainer = MockRepository.GenerateStub<IQueryParametersContainer>();
+         _queryContainer = new QueryParametersDataContainer();
          _view = MockRepository.GenerateMock<IHistoryView>();
          _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
