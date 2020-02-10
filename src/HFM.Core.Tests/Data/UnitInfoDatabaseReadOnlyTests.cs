@@ -823,7 +823,7 @@ namespace HFM.Core.Data
 
          _database.DatabaseFilePath = _testDataFileCopy;
          _database.Upgrade();
-         var page = _database.Page(1, itemsPerPage, parameters);
+         var page = _database.Page(1, itemsPerPage, parameters, BonusCalculationType.DownloadTime);
          int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
          Assert.AreEqual(totalItems, page.TotalItems);
          Assert.AreEqual(expectedPages, page.TotalPages);

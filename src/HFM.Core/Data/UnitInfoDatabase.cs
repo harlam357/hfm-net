@@ -62,17 +62,9 @@ namespace HFM.Core.Data
 
         int Delete(WorkUnitHistoryRow row);
 
-        IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters);
-
         IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation);
 
-        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters);
-
         PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation);
-
-        DataTable Select(string sql, params object[] args);
-
-        int Execute(string sql, params object[] args);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -352,7 +344,7 @@ namespace HFM.Core.Data
 
         private bool WorkUnitExists(WorkUnit workUnit)
         {
-            var rows = Fetch(BuildUnitKeyQueryParameters(workUnit));
+            var rows = Fetch(BuildUnitKeyQueryParameters(workUnit), BonusCalculationType.None);
             return rows.Count != 0;
         }
 
@@ -388,11 +380,6 @@ namespace HFM.Core.Data
 
         #region Fetch
 
-        public IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters)
-        {
-            return Fetch(parameters, BonusCalculationType.DownloadTime);
-        }
-
         public IList<WorkUnitHistoryRow> Fetch(QueryParameters parameters, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
@@ -422,11 +409,6 @@ namespace HFM.Core.Data
                     return query;
                 }
             }
-        }
-
-        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters)
-        {
-            return Page(page, itemsPerPage, parameters, BonusCalculationType.DownloadTime);
         }
 
         public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, QueryParameters parameters, BonusCalculationType bonusCalculation)
@@ -466,7 +448,7 @@ namespace HFM.Core.Data
         #region Select
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public DataTable Select(string sql, params object[] args)
+        private DataTable Select(string sql, params object[] args)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
