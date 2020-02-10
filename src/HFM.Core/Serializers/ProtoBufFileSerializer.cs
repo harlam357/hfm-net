@@ -23,15 +23,9 @@ namespace HFM.Core.Serializers
 {
    public class ProtoBufFileSerializer<T> : IFileSerializer<T> where T : class, new()
    {
-      public virtual string FileExtension
-      {
-         get { return "dat"; }
-      }
+      public string FileExtension => "dat";
 
-      public virtual string FileTypeFilter
-      {
-         get { return "HFM Data Files|*.dat"; }
-      }
+      public string FileTypeFilter => "HFM Data Files|*.dat";
 
       public T Deserialize(string path)
       {

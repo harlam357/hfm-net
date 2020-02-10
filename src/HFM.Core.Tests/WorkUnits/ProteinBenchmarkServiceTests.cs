@@ -65,7 +65,7 @@ namespace HFM.Core.WorkUnits
         public void WriteAndReadXmlTest()
         {
             var data1 = CreateTestList();
-            var serializer = new XmlFileSerializer<List<ProteinBenchmark>>();
+            var serializer = new DataContractFileSerializer<List<ProteinBenchmark>>();
             serializer.Serialize("TestProteinBenchmark.xml", data1);
 
             var data2 = serializer.Deserialize("TestProteinBenchmark.xml");

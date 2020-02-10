@@ -279,12 +279,12 @@ namespace HFM.Core.ScheduledTasks
 
          DateTime updateDateTime = DateTime.Now;
          var slotSummary = CreateSlotSummary(slots, updateDateTime);
-         var serializer = new XmlFileSerializer<SlotSummary>();
+         var serializer = new DataContractFileSerializer<SlotSummary>();
          string filePath = Path.Combine(folderPath, "SlotSummary.xml");
          fileList.Add(filePath);
          serializer.Serialize(filePath, slotSummary);
 
-         var slotDetailSerializer = new XmlFileSerializer<SlotDetail>();
+         var slotDetailSerializer = new DataContractFileSerializer<SlotDetail>();
          foreach (var slot in slots)
          {
             var slotDetail = CreateSlotDetail(slot, updateDateTime);

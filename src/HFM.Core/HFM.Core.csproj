@@ -130,7 +130,7 @@
     <Compile Include="Client\ClientSettingsFileSerializer.cs" />
     <Compile Include="WorkUnits\HistoryEntryCsvFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
-    <Compile Include="Serializers\XmlFileSerializer.cs" />
+    <Compile Include="Serializers\DataContractFileSerializer.cs" />
     <Compile Include="DataTypes\Markup\SlotData.cs" />
     <Compile Include="DataTypes\Markup\SlotDetail.cs" />
     <Compile Include="Client\SlotModel.cs" />
