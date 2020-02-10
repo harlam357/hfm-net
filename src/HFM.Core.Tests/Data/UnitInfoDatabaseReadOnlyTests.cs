@@ -26,7 +26,7 @@ using NUnit.Framework;
 using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
    [TestFixture]
    public class UnitInfoDatabaseReadOnlyTests

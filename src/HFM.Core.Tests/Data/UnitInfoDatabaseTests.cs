@@ -38,7 +38,7 @@ using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
    [TestFixture]
    public class UnitInfoDatabaseTests

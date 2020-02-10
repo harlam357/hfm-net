@@ -33,7 +33,7 @@ using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
     public enum SqlTable
     {

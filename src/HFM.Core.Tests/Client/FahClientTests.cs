@@ -24,7 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Client;
-using HFM.Core.Data.SQLite;
+using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;

@@ -32,7 +32,7 @@ using Castle.Windsor;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.Data.SQLite;
+using HFM.Core.Data;
 using HFM.Core.ScheduledTasks;
 using HFM.Core.WorkUnits;
 using HFM.Forms;

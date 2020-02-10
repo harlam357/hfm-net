@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
-using HFM.Core.Data.SQLite;
+using HFM.Core.Data;
 
 namespace HFM.Forms
 {

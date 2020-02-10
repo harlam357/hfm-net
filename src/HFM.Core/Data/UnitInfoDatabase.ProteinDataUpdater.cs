@@ -11,7 +11,7 @@ using harlam357.Core.ComponentModel;
 
 using HFM.Core.WorkUnits;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
    public sealed partial class UnitInfoDatabase
    {

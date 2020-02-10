@@ -10,7 +10,7 @@ using Castle.Core.Logging;
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
    public sealed partial class UnitInfoDatabase
    {

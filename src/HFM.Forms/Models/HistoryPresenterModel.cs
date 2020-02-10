@@ -28,7 +28,6 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;

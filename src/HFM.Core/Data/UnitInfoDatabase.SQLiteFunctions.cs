@@ -5,10 +5,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-using HFM.Core.DataTypes;
 using HFM.Proteins;
 
-namespace HFM.Core.Data.SQLite
+namespace HFM.Core.Data
 {
    public partial class UnitInfoDatabase
    {

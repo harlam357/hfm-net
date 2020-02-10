@@ -84,8 +84,8 @@ namespace HFM.Core.Configuration
 
          // IUnitInfoDatabase - Singleton
          container.Register(
-            Component.For<Data.SQLite.IUnitInfoDatabase>()
-               .ImplementedBy<Data.SQLite.UnitInfoDatabase>());
+            Component.For<Data.IUnitInfoDatabase>()
+               .ImplementedBy<Data.UnitInfoDatabase>());
 
          // IClientConfiguration - Singleton
          container.Register(

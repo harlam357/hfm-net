@@ -21,18 +21,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Castle.Core.Logging;
 
-using harlam357.Core.Threading.Tasks;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.Data.SQLite;
 using HFM.Core.DataTypes;
 using HFM.Core.Serializers;
 using HFM.Core.WorkUnits;
