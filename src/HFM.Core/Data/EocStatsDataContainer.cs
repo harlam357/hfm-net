@@ -26,14 +26,16 @@ namespace HFM.Core.Data
 {
     public class EocStatsDataContainer : DataContainer<EocStatsData>
     {
+        public const string DefaultFileName = "UserStatsCache.dat";
+
         public override Serializers.IFileSerializer<EocStatsData> DefaultSerializer => new Serializers.ProtoBufFileSerializer<EocStatsData>();
 
         public EocStatsDataContainer(IPreferenceSet prefs)
         {
-            var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
+            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))
             {
-                FileName = System.IO.Path.Combine(path, Constants.UserStatsCacheFileName);
+                FilePath = System.IO.Path.Combine(path, DefaultFileName);
             }
         }
     }

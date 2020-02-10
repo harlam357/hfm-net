@@ -35,9 +35,9 @@ namespace HFM.Core.Serializers
          get { return "Xml Files|*.xml"; }
       }
 
-      public T Deserialize(string fileName)
+      public T Deserialize(string path)
       {
-         using (var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+         using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
          {
             var serializer = new DataContractSerializer(typeof(T));
             return (T)serializer.ReadObject(fileStream);
@@ -45,9 +45,9 @@ namespace HFM.Core.Serializers
       }
 
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-      public void Serialize(string fileName, T value)
+      public void Serialize(string path, T value)
       {
-         using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+         using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
          using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
          {
             var serializer = new DataContractSerializer(typeof(T));

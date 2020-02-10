@@ -38,14 +38,14 @@ namespace HFM.Core.WorkUnits
          get { return "Comma Separated Value Files|*.csv"; }
       }
 
-      public List<HistoryEntry> Deserialize(string fileName)
+      public List<HistoryEntry> Deserialize(string path)
       {
          throw new NotSupportedException("History entry csv deserialization is not supported.");
       }
 
-      public void Serialize(string fileName, List<HistoryEntry> value)
+      public void Serialize(string path, List<HistoryEntry> value)
       {
-         using (var writer = new StreamWriter(fileName, false))
+         using (var writer = new StreamWriter(path, false))
          {
             Serialize(writer, value);
          }

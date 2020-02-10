@@ -62,9 +62,9 @@ namespace HFM.Core.Client
          get { return "HFM Configuration Files|*.hfmx"; }
       }
 
-      public List<ClientSettings> Deserialize(string fileName)
+      public List<ClientSettings> Deserialize(string path)
       {
-         using (var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+         using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
          {
             var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
             var value = (List<ClientSettings>)serializer.ReadObject(fileStream);
@@ -74,13 +74,13 @@ namespace HFM.Core.Client
       }
 
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-      public void Serialize(string fileName, List<ClientSettings> value)
+      public void Serialize(string path, List<ClientSettings> value)
       {
          // copy the values before encrypting, otherwise the ClientSettings
          // objects will retain the encrypted value from here on out...
          var valueCopy = ProtoBuf.Serializer.DeepClone(value);
 
-         using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+         using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
          using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
          {
             var serializer = new DataContractSerializer(typeof(List<ClientSettings>));

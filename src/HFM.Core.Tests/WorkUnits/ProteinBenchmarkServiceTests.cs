@@ -37,7 +37,7 @@ namespace HFM.Core.WorkUnits
       {
          var container = new ProteinBenchmarkService
          {
-            FileName = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
+            FilePath = Path.Combine("..\\..\\TestFiles", Constants.BenchmarkCacheFileName),
          };
 
          container.Read();
@@ -49,7 +49,7 @@ namespace HFM.Core.WorkUnits
       {
          var collection = new ProteinBenchmarkService
          {
-            FileName = "TestProteinBenchmark.dat",
+            FilePath = "TestProteinBenchmark.dat",
          };
 
          collection.Data = CreateTestList();

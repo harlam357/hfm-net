@@ -37,7 +37,7 @@ namespace HFM.Core.Data
             // Arrange
             var container = new EocStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
             {
-                FileName = Path.Combine("..\\..\\TestFiles", Constants.UserStatsCacheFileName),
+                FilePath = Path.Combine("..\\..\\TestFiles", EocStatsDataContainer.DefaultFileName),
             };
             // Act
             container.Read();
@@ -75,7 +75,7 @@ namespace HFM.Core.Data
             // TODO: Implement ArtifactFolder
             var container = new EocStatsDataContainer(MockRepository.GenerateStub<IPreferenceSet>())
             {
-                FileName = "TestUserStatsBinary.dat",
+                FilePath = "TestUserStatsBinary.dat",
             };
 
             container.Data = CreateTestStatsData();

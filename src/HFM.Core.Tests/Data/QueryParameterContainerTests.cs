@@ -34,7 +34,7 @@ namespace HFM.Core.Data
       {
          var container = new QueryParametersContainer
          {
-            FileName = Path.Combine("..\\..\\TestFiles", Constants.QueryCacheFileName),
+            FilePath = Path.Combine("..\\..\\TestFiles", Constants.QueryCacheFileName),
          };
 
          container.Read();
@@ -46,7 +46,7 @@ namespace HFM.Core.Data
       {
          var container = new QueryParametersContainer
          {
-            FileName = "TestQueryParametersBinary.dat",
+            FilePath = "TestQueryParametersBinary.dat",
          };
 
          container.Data = CreateTestList();

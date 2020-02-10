@@ -26,49 +26,51 @@ using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-   public interface IQueryParametersContainer
-   {
-      ICollection<QueryParameters> Get();
+    public interface IQueryParametersContainer
+    {
+        ICollection<QueryParameters> Get();
 
-      void Update(IEnumerable<QueryParameters> collection);
-   }
+        void Update(IEnumerable<QueryParameters> collection);
+    }
 
-   public sealed class QueryParametersContainer : DataContainer<List<QueryParameters>>, IQueryParametersContainer
-   {
-      public QueryParametersContainer()
-         : this(null)
-      {
-         
-      }
+    public sealed class QueryParametersContainer : DataContainer<List<QueryParameters>>, IQueryParametersContainer
+    {
+        public const string DefaultFileName = "WuHistoryQuery.dat";
 
-      public QueryParametersContainer(IPreferenceSet prefs)
-      {
-         var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
-         if (!String.IsNullOrEmpty(path))
-         {
-            FileName = System.IO.Path.Combine(path, Constants.QueryCacheFileName);
-         }
-      }
+        public QueryParametersContainer()
+           : this(null)
+        {
 
-      #region Properties
+        }
 
-      public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer
-      {
-         get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
-      }
+        public QueryParametersContainer(IPreferenceSet prefs)
+        {
+            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
+            if (!String.IsNullOrEmpty(path))
+            {
+                FilePath = System.IO.Path.Combine(path, DefaultFileName);
+            }
+        }
 
-      #endregion
+        #region Properties
 
-      public ICollection<QueryParameters> Get()
-      {
-         return Data.ToList();
-      }
+        public override Serializers.IFileSerializer<List<QueryParameters>> DefaultSerializer
+        {
+            get { return new Serializers.ProtoBufFileSerializer<List<QueryParameters>>(); }
+        }
 
-      public void Update(IEnumerable<QueryParameters> collection)
-      {
-         Data.Clear();
-         Data.AddRange(collection);
-         Write();
-      }
-   }
+        #endregion
+
+        public ICollection<QueryParameters> Get()
+        {
+            return Data.ToList();
+        }
+
+        public void Update(IEnumerable<QueryParameters> collection)
+        {
+            Data.Clear();
+            Data.AddRange(collection);
+            Write();
+        }
+    }
 }

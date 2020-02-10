@@ -27,8 +27,6 @@ namespace HFM.Core
       public const string SqLiteFilename = "WuHistory.db3";
       public const string ProjectInfoFileName = "ProjectInfo.tab";
       public const string BenchmarkCacheFileName = "BenchmarkCache.dat";
-      public const string UserStatsCacheFileName = "UserStatsCache.dat";
-      public const string QueryCacheFileName = "WuHistoryQuery.dat";
 
       public const string CssFolderName = "CSS";
       public const string XsltFolderName = "XSL";

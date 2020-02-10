@@ -29,19 +29,19 @@ namespace HFM.Core.Data
 
       public T Data
       {
-         get { return _data; }
-         set { _data = value ?? new T(); }
+         get => _data;
+         set => _data = value ?? new T();
       }
 
       private ILogger _logger;
 
       public ILogger Logger
       {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
+         get => _logger ?? (_logger = NullLogger.Instance);
+         set => _logger = value;
       }
 
-      public string FileName { get; set; }
+      public string FilePath { get; set; }
 
       public abstract Serializers.IFileSerializer<T> DefaultSerializer { get; }
 
@@ -65,7 +65,7 @@ namespace HFM.Core.Data
          {
             try
             {
-               data = DefaultSerializer.Deserialize(FileName);
+               data = DefaultSerializer.Deserialize(FilePath);
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ namespace HFM.Core.Data
          {
             try
             {
-               DefaultSerializer.Serialize(FileName, Data);
+               DefaultSerializer.Serialize(FilePath, Data);
             }
             catch (Exception ex)
             {

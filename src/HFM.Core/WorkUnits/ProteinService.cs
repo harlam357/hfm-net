@@ -86,7 +86,7 @@ namespace HFM.Core.WorkUnits
          var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
          if (!String.IsNullOrEmpty(path))
          {
-            FileName = Path.Combine(path, Constants.ProjectInfoFileName);
+            FilePath = Path.Combine(path, Constants.ProjectInfoFileName);
          }
       }
 
@@ -125,14 +125,14 @@ namespace HFM.Core.WorkUnits
             get { return "Project Info Tab Delimited Files|*.tab"; }
          }
 
-         public List<Protein> Deserialize(string fileName)
+         public List<Protein> Deserialize(string path)
          {
-            return _serializer.ReadFile(fileName).ToList();
+            return _serializer.ReadFile(path).ToList();
          }
 
-         public void Serialize(string fileName, List<Protein> value)
+         public void Serialize(string path, List<Protein> value)
          {
-            _serializer.WriteFile(fileName, value);
+            _serializer.WriteFile(path, value);
          }
       }
 

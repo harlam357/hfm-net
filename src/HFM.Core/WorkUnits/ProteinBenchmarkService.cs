@@ -159,7 +159,7 @@ namespace HFM.Core.WorkUnits
          var path = prefs != null ? prefs.Get<string>(Preference.ApplicationDataFolderPath) : null;
          if (!String.IsNullOrEmpty(path))
          {
-            FileName = System.IO.Path.Combine(path, Constants.BenchmarkCacheFileName);
+            FilePath = System.IO.Path.Combine(path, Constants.BenchmarkCacheFileName);
          }
          _cacheLock = new ReaderWriterLockSlim();
       }
