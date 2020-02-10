@@ -23,7 +23,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms

@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
+using HFM.Core.Data;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms.Controls

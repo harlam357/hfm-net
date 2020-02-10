@@ -25,7 +25,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Preferences;

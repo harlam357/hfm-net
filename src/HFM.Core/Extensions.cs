@@ -18,11 +18,7 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 
 using HFM.Client.DataTypes;
 using HFM.Core.Client;
@@ -177,15 +173,6 @@ namespace HFM.Core
                 default:
                     return SlotType.Unknown;
             }
-        }
-
-        #endregion
-
-        #region DeepClone
-
-        public static QueryParameters DeepClone(this QueryParameters value)
-        {
-            return ProtoBuf.Serializer.DeepClone(value);
         }
 
         #endregion
