@@ -65,30 +65,29 @@ namespace HFM.Core.Client
 
         #region Root Data Types
 
-        private UnitInfoModel _unitInfoModel;
+        private WorkUnitModel _workUnitModel;
         /// <summary>
         /// Class member containing info specific to the current work unit
         /// </summary>
-        public UnitInfoModel UnitInfoModel
+        public WorkUnitModel WorkUnitModel
         {
-            get { return _unitInfoModel; }
+            get { return _workUnitModel; }
             set
             {
-                if (_unitInfoModel != null)
+                if (_workUnitModel != null)
                 {
                     UpdateTimeOfLastProgress(value);
                 }
-                _unitInfoModel = value;
+                _workUnitModel = value;
                 _workUnit = null;
             }
         }
 
-        // ReSharper disable UnaccessedField.Local
         private WorkUnit _workUnit;
-        // ReSharper restore UnaccessedField.Local
+
         public WorkUnit WorkUnit
         {
-            get { return _workUnit ?? UnitInfoModel.WorkUnitData; }
+            get { return _workUnit ?? WorkUnitModel.Data; }
             set { _workUnit = value; }
         }
 
@@ -103,7 +102,7 @@ namespace HFM.Core.Client
 
         public SlotModel()
         {
-            _unitInfoModel = new UnitInfoModel();
+            _workUnitModel = new WorkUnitModel();
 
             Initialize();
             TimeOfLastUnitStart = DateTime.MinValue;
@@ -169,7 +168,7 @@ namespace HFM.Core.Client
         /// </summary>
         public int PercentComplete
         {
-            get { return ProductionValuesOk || Status == SlotStatus.Paused ? UnitInfoModel.PercentComplete : 0; }
+            get { return ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0; }
         }
 
         public string Name
@@ -205,7 +204,7 @@ namespace HFM.Core.Client
 
         public bool IsUsingBenchmarkFrameTime
         {
-            get { return ProductionValuesOk && UnitInfoModel.IsUsingBenchmarkFrameTime(CalculationType); }
+            get { return ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(CalculationType); }
         }
 
         /// <summary>
@@ -213,7 +212,7 @@ namespace HFM.Core.Client
         /// </summary>
         public TimeSpan TPF
         {
-            get { return ProductionValuesOk ? UnitInfoModel.GetFrameTime(CalculationType) : TimeSpan.Zero; }
+            get { return ProductionValuesOk ? WorkUnitModel.GetFrameTime(CalculationType) : TimeSpan.Zero; }
         }
 
         /// <summary>
@@ -221,7 +220,7 @@ namespace HFM.Core.Client
         /// </summary>
         public double PPD
         {
-            get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetPPD(Status, CalculationType, CalculateBonus), DecimalPlaces) : 0; }
+            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, CalculationType, CalculateBonus), DecimalPlaces) : 0; }
         }
 
         /// <summary>
@@ -229,7 +228,7 @@ namespace HFM.Core.Client
         /// </summary>
         public double UPD
         {
-            get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetUPD(CalculationType), 3) : 0; }
+            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(CalculationType), 3) : 0; }
         }
 
         /// <summary>
@@ -237,7 +236,7 @@ namespace HFM.Core.Client
         /// </summary>
         public TimeSpan ETA
         {
-            get { return ProductionValuesOk ? UnitInfoModel.GetEta(CalculationType) : TimeSpan.Zero; }
+            get { return ProductionValuesOk ? WorkUnitModel.GetEta(CalculationType) : TimeSpan.Zero; }
         }
 
         /// <summary>
@@ -245,7 +244,7 @@ namespace HFM.Core.Client
         /// </summary>
         public DateTime ETADate
         {
-            get { return ProductionValuesOk ? UnitInfoModel.GetEtaDate(CalculationType) : DateTime.MinValue; }
+            get { return ProductionValuesOk ? WorkUnitModel.GetEtaDate(CalculationType) : DateTime.MinValue; }
         }
 
         public string Core
@@ -254,9 +253,9 @@ namespace HFM.Core.Client
             {
                 if (ShowVersions && Math.Abs(WorkUnit.CoreVersion) > Single.Epsilon)
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoModel.CurrentProtein.Core, WorkUnit.CoreVersion);
+                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnit.CoreVersion);
                 }
-                return UnitInfoModel.CurrentProtein.Core;
+                return WorkUnitModel.CurrentProtein.Core;
             }
         }
 
@@ -272,7 +271,7 @@ namespace HFM.Core.Client
 
         public double Credit
         {
-            get { return ProductionValuesOk ? Math.Round(UnitInfoModel.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : UnitInfoModel.CurrentProtein.Credit; }
+            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit; }
         }
 
         public int Completed =>
@@ -315,12 +314,12 @@ namespace HFM.Core.Client
 
         public DateTime DownloadTime
         {
-            get { return UnitInfoModel.DownloadTime; }
+            get { return WorkUnitModel.DownloadTime; }
         }
 
         public DateTime PreferredDeadline
         {
-            get { return UnitInfoModel.PreferredDeadline; }
+            get { return WorkUnitModel.PreferredDeadline; }
         }
 
         /// <summary>
@@ -421,21 +420,21 @@ namespace HFM.Core.Client
         /// <summary>
         /// Update Time of Last Frame Progress based on Current and Parsed WorkUnit
         /// </summary>
-        private void UpdateTimeOfLastProgress(UnitInfoModel parsedUnitInfo)
+        private void UpdateTimeOfLastProgress(WorkUnitModel parsedWorkUnit)
         {
             // Matches the Current Project and Raw Download Time
-            if (UnitInfoModel.WorkUnitData.EqualsProjectAndDownloadTime(parsedUnitInfo.WorkUnitData))
+            if (WorkUnitModel.Data.EqualsProjectAndDownloadTime(parsedWorkUnit.Data))
             {
                 // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
-                if (parsedUnitInfo.WorkUnitData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    UnitInfoModel.WorkUnitData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    parsedUnitInfo.WorkUnitData.UnitStartTimeStamp.Equals(UnitInfoModel.WorkUnitData.UnitStartTimeStamp) == false)
+                if (parsedWorkUnit.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                    WorkUnitModel.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                    parsedWorkUnit.Data.UnitStartTimeStamp.Equals(WorkUnitModel.Data.UnitStartTimeStamp) == false)
                 {
                     TimeOfLastUnitStart = DateTime.Now;
                 }
 
                 // If the Frames Complete is greater than the UnitInfoLogic Frames Complete
-                if (parsedUnitInfo.FramesComplete > UnitInfoModel.FramesComplete)
+                if (parsedWorkUnit.FramesComplete > WorkUnitModel.FramesComplete)
                 {
                     // Update the Time Of Last Frame Progress
                     TimeOfLastFrameProgress = DateTime.Now;
@@ -456,14 +455,14 @@ namespace HFM.Core.Client
         /// </summary>
         public static void FindDuplicateProjects(ICollection<SlotModel> slots)
         {
-            var duplicates = slots.GroupBy(x => x.UnitInfoModel.WorkUnitData.ToShortProjectString())
-                .Where(g => g.Count() > 1 && g.First().UnitInfoModel.WorkUnitData.ProjectIsKnown())
+            var duplicates = slots.GroupBy(x => x.WorkUnitModel.Data.ToShortProjectString())
+                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.Data.ProjectIsKnown())
                 .Select(g => g.Key)
                 .ToList();
 
             foreach (var slot in slots)
             {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.WorkUnitData.ToShortProjectString());
+                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.Data.ToShortProjectString());
             }
         }
     }

@@ -31,7 +31,7 @@ using HFM.Proteins;
 namespace HFM.Core.WorkUnits
 {
    [TestFixture]
-   public class UnitInfoModelTests
+   public class WorkUnitModelTests
    {
       private IProteinBenchmarkService _benchmarkService;
 
@@ -47,7 +47,7 @@ namespace HFM.Core.WorkUnits
       public void DownloadTimeTest1()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
          
@@ -59,7 +59,7 @@ namespace HFM.Core.WorkUnits
       public void DownloadTimeTest2()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 60;
          
@@ -72,7 +72,7 @@ namespace HFM.Core.WorkUnits
       public void DownloadTimeTest3()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = 0;
          
@@ -84,7 +84,7 @@ namespace HFM.Core.WorkUnits
       public void DownloadTimeTest4()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = -60;
 
@@ -97,7 +97,7 @@ namespace HFM.Core.WorkUnits
       public void DownloadTimeTest5()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -113,7 +113,7 @@ namespace HFM.Core.WorkUnits
       public void DueTimeTest1()
       {
          var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -125,7 +125,7 @@ namespace HFM.Core.WorkUnits
       public void DueTimeTest2()
       {
          var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 60;
 
@@ -138,7 +138,7 @@ namespace HFM.Core.WorkUnits
       public void DueTimeTest3()
       {
          var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -150,7 +150,7 @@ namespace HFM.Core.WorkUnits
       public void DueTimeTest4()
       {
          var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = -60;
 
@@ -163,7 +163,7 @@ namespace HFM.Core.WorkUnits
       public void DueTimeTest5()
       {
          var unitInfo = new WorkUnit { DueTime = DateTime.MinValue };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -179,7 +179,7 @@ namespace HFM.Core.WorkUnits
       public void FinishedTimeTest1()
       {
          var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -191,7 +191,7 @@ namespace HFM.Core.WorkUnits
       public void FinishedTimeTest2()
       {
          var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 60;
 
@@ -204,7 +204,7 @@ namespace HFM.Core.WorkUnits
       public void FinishedTimeTest3()
       {
          var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -215,7 +215,7 @@ namespace HFM.Core.WorkUnits
       public void FinishedTimeTest4()
       {
          var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = -60;
 
@@ -227,7 +227,7 @@ namespace HFM.Core.WorkUnits
       public void FinishedTimeTest5()
       {
          var unitInfo = new WorkUnit { FinishedTime = DateTime.MinValue };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -243,7 +243,7 @@ namespace HFM.Core.WorkUnits
       {
          var protein = new Protein { ProjectNumber = 1, PreferredDays = 3 };
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };         
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
          
@@ -255,7 +255,7 @@ namespace HFM.Core.WorkUnits
       public void PreferredDeadlineTest2()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5)) };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -268,7 +268,7 @@ namespace HFM.Core.WorkUnits
       public void PreferredDeadlineTest3()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -281,7 +281,7 @@ namespace HFM.Core.WorkUnits
          // daylight savings time test (in DST => Standard Time)
          var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
          var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -295,7 +295,7 @@ namespace HFM.Core.WorkUnits
          // daylight savings time test (in Standard Time => DST)
          var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
          var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -312,7 +312,7 @@ namespace HFM.Core.WorkUnits
       {
          var protein = new Protein { ProjectNumber = 1, MaximumDays = 6 };
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -324,7 +324,7 @@ namespace HFM.Core.WorkUnits
       public void FinalDeadlineTest2()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -335,7 +335,7 @@ namespace HFM.Core.WorkUnits
       public void FinalDeadlineTest3()
       {
          var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
-         var unitInfoLogic = CreateUnitInfoModel(new Protein(), unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(new Protein(), unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -348,7 +348,7 @@ namespace HFM.Core.WorkUnits
          // daylight savings time test (in DST => Standard Time)
          var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
          var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -362,7 +362,7 @@ namespace HFM.Core.WorkUnits
          // daylight savings time test (in Standard Time => DST)
          var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
          var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -378,7 +378,7 @@ namespace HFM.Core.WorkUnits
       public void CurrentProteinTest1()
       {
          var protein = new Protein { ProjectNumber = 2669 };
-         var unitInfoLogic = CreateUnitInfoModel(protein, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(protein, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -388,7 +388,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void CurrentProteinTest2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -406,7 +406,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 1 });
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -420,7 +420,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = -1 });
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -434,7 +434,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 101 });
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -444,7 +444,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void FramesCompleteTest4()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -458,7 +458,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 5 });
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -473,7 +473,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 5 });
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -496,7 +496,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -508,7 +508,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void PerUnitDownloadTest2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -527,7 +527,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -543,7 +543,7 @@ namespace HFM.Core.WorkUnits
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(CreateFrameData(TimeSpan.Zero, -1));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -564,7 +564,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -576,7 +576,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void PerAllSectionsTest2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -597,7 +597,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -609,7 +609,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void PerThreeSectionsTest2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -630,7 +630,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -642,7 +642,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void PerLastSectionTest2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -662,7 +662,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
          
@@ -681,7 +681,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -700,7 +700,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(new TimeSpan(0, 6, 10), 3),
                   CreateFrameData(new TimeSpan(0, 6, 20), 4));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -720,7 +720,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = true;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -732,7 +732,7 @@ namespace HFM.Core.WorkUnits
       public void TimePerSectionTest5()
       {
          _benchmarkService.Stub(x => x.GetBenchmark(null)).IgnoreArguments().Return(new ProteinBenchmark { FrameTimes = { new ProteinFrameTime { Duration = TimeSpan.FromMinutes(10) } } });
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
          Assert.AreEqual(TimeSpan.FromMinutes(10), unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
@@ -742,7 +742,7 @@ namespace HFM.Core.WorkUnits
       public void TimePerSectionTest6()
       {
          _benchmarkService = null;
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
          Assert.AreEqual(TimeSpan.Zero, unitInfoLogic.GetFrameTime(PpdCalculationType.LastFrame));
@@ -764,7 +764,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -785,7 +785,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -805,7 +805,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(protein, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(protein, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -824,7 +824,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -847,7 +847,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(5), 2),
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -865,7 +865,7 @@ namespace HFM.Core.WorkUnits
                   CreateFrameData(TimeSpan.FromMinutes(6), 3));
          unitInfo.FrameData = frameDataDictionary;
          unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -882,7 +882,7 @@ namespace HFM.Core.WorkUnits
          var unitInfo = new WorkUnit();
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(CreateFrameData(TimeSpan.Zero, 100));
          unitInfo.FrameData = frameDataDictionary;
-         var unitInfoLogic = CreateUnitInfoModel(null, unitInfo);
+         var unitInfoLogic = CreateWorkUnitModel(null, unitInfo);
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -892,7 +892,7 @@ namespace HFM.Core.WorkUnits
       [Test]
       public void AllFramesCompleted2()
       {
-         var unitInfoLogic = CreateUnitInfoModel(null, new WorkUnit());
+         var unitInfoLogic = CreateWorkUnitModel(null, new WorkUnit());
          unitInfoLogic.UtcOffsetIsZero = false;
          unitInfoLogic.ClientTimeOffset = 0;
 
@@ -903,12 +903,12 @@ namespace HFM.Core.WorkUnits
 
       #region Helpers
       
-      private UnitInfoModel CreateUnitInfoModel(Protein protein, WorkUnit workUnit)
+      private WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit)
       {
-         return new UnitInfoModel(_benchmarkService)
+         return new WorkUnitModel(_benchmarkService)
                 {
                    CurrentProtein = protein,
-                   WorkUnitData = workUnit
+                   Data = workUnit
                 };
       }
       

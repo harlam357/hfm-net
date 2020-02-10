@@ -158,7 +158,7 @@
     <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\AggregateScheduledTask.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
-    <Compile Include="WorkUnits\UnitInfoModel.cs" />
+    <Compile Include="WorkUnits\WorkUnitModel.cs" />
     <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="ScheduledTasks\Interval.cs" />

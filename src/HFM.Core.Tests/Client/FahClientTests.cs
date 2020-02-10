@@ -25,7 +25,6 @@ using Rhino.Mocks;
 
 using HFM.Client;
 using HFM.Core.Data.SQLite;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
@@ -49,49 +48,48 @@ namespace HFM.Core.Client
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
          var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, UnitInfoDatabase = database };
 
-         var unitInfo1 = new WorkUnit();
-         unitInfo1.OwningClientName = "Owner";
-         unitInfo1.OwningClientPath = "Path";
-         unitInfo1.OwningSlotId = 0;
-         unitInfo1.ProjectID = 2669;
-         unitInfo1.ProjectRun = 1;
-         unitInfo1.ProjectClone = 2;
-         unitInfo1.ProjectGen = 3;
-         unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
-         unitInfo1.QueueIndex = 0;
-         var currentUnitInfo = new UnitInfoModel { CurrentProtein = new Protein(), WorkUnitData = unitInfo1 };
+         var workUnit = new WorkUnit();
+         workUnit.OwningClientName = "Owner";
+         workUnit.OwningClientPath = "Path";
+         workUnit.OwningSlotId = 0;
+         workUnit.ProjectID = 2669;
+         workUnit.ProjectRun = 1;
+         workUnit.ProjectClone = 2;
+         workUnit.ProjectGen = 3;
+         workUnit.FinishedTime = new DateTime(2010, 1, 1);
+         workUnit.QueueIndex = 0;
+         var currentWorkUnit = new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnit };
 
-         var unitInfo1Clone = unitInfo1.DeepClone();
-         unitInfo1Clone.FramesObserved = 4;
+         var workUnitCopy = workUnit.DeepClone();
+         workUnitCopy.FramesObserved = 4;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
                   new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
                   new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
                   new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
-         unitInfo1Clone.FrameData = frameDataDictionary;
-         unitInfo1Clone.UnitResult = WorkUnitResult.FinishedUnit;
-         var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), WorkUnitData = unitInfo1Clone };
+         workUnitCopy.FrameData = frameDataDictionary;
+         workUnitCopy.UnitResult = WorkUnitResult.FinishedUnit;
 
-         var parsedUnits = new[] { unitInfoLogic1 };
+         var parsedUnits = new[] { new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnitCopy } };
 
-         // arrange
+         // Arrange
          database.Stub(x => x.Connected).Return(true);
          database.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
          var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
 
-         // assert before act
+         // Assert before act
          Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));
          Assert.AreEqual(false, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.WorkUnitData));
+         Assert.IsNull(benchmarkCollection.GetBenchmark(currentWorkUnit.Data));
 
-         // act
-         fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits);
+         // Act
+         fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
 
-         // assert after act
+         // Assert after act
          Assert.AreEqual(true, benchmarkCollection.Contains(benchmarkClient));
          Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.WorkUnitData).AverageFrameTime);
+         Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentWorkUnit.Data).AverageFrameTime);
 
          database.VerifyAllExpectations();
       }

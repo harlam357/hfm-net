@@ -165,19 +165,19 @@ namespace HFM.Forms
             var benchmarkInfoLines = new List<string>(projectInfoLines);
             foreach (ProteinBenchmark benchmark in list)
             {
-                UnitInfoModel unitInfoModel = null;
+                WorkUnitModel workUnitModel = null;
                 SlotStatus status = SlotStatus.Unknown;
 
                 var slotModel = _clientConfiguration.Slots.FirstOrDefault(x =>
                    x.Name == benchmark.OwningSlotName &&
                    x.Settings.ClientPath == benchmark.OwningClientPath &&
-                   x.UnitInfoModel.WorkUnitData.ProjectID == benchmark.ProjectID);
+                   x.WorkUnitModel.Data.ProjectID == benchmark.ProjectID);
                 if (slotModel != null && slotModel.ProductionValuesOk)
                 {
-                    unitInfoModel = slotModel.UnitInfoModel;
+                    workUnitModel = slotModel.WorkUnitModel;
                     status = slotModel.Status;
                 }
-                PopulateBenchmarkInformation(protein, benchmark, unitInfoModel, status, _prefs.GetPpdFormatString(), benchmarkInfoLines);
+                PopulateBenchmarkInformation(protein, benchmark, workUnitModel, status, _prefs.GetPpdFormatString(), benchmarkInfoLines);
             }
 
             UpdateBenchmarkText(benchmarkInfoLines);
@@ -276,7 +276,7 @@ namespace HFM.Forms
             return (ZedGraphControl)tabControl1.TabPages["tabGraphPPD" + index].Controls["zgPpd" + index];
         }
 
-        private void PopulateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, UnitInfoModel unitInfoModel, SlotStatus status, string ppdFormatString, ICollection<string> lines)
+        private void PopulateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, WorkUnitModel workUnitModel, SlotStatus status, string ppdFormatString, ICollection<string> lines)
         {
             if (protein == null)
             {
@@ -296,16 +296,16 @@ namespace HFM.Forms
             lines.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
                benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled)));
 
-            if (unitInfoModel != null)
+            if (workUnitModel != null)
             {
                 lines.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   unitInfoModel.GetFrameTime(PpdCalculationType.LastFrame), unitInfoModel.GetPPD(status, PpdCalculationType.LastFrame, calculateBonus)));
+                   workUnitModel.GetFrameTime(PpdCalculationType.LastFrame), workUnitModel.GetPPD(status, PpdCalculationType.LastFrame, calculateBonus)));
                 lines.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   unitInfoModel.GetFrameTime(PpdCalculationType.LastThreeFrames), unitInfoModel.GetPPD(status, PpdCalculationType.LastThreeFrames, calculateBonus)));
+                   workUnitModel.GetFrameTime(PpdCalculationType.LastThreeFrames), workUnitModel.GetPPD(status, PpdCalculationType.LastThreeFrames, calculateBonus)));
                 lines.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   unitInfoModel.GetFrameTime(PpdCalculationType.AllFrames), unitInfoModel.GetPPD(status, PpdCalculationType.AllFrames, calculateBonus)));
+                   workUnitModel.GetFrameTime(PpdCalculationType.AllFrames), workUnitModel.GetPPD(status, PpdCalculationType.AllFrames, calculateBonus)));
                 lines.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   unitInfoModel.GetFrameTime(PpdCalculationType.EffectiveRate), unitInfoModel.GetPPD(status, PpdCalculationType.EffectiveRate, calculateBonus)));
+                   workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate), workUnitModel.GetPPD(status, PpdCalculationType.EffectiveRate, calculateBonus)));
             }
 
             lines.Add(String.Empty);

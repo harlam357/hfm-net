@@ -28,23 +28,16 @@ using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
 {
-    public sealed class UnitInfoModel
+    public sealed class WorkUnitModel
     {
-        #region Fields
-
-        /// <summary>
-        /// Protein Collection Interface
-        /// </summary>
         private readonly IProteinBenchmarkService _benchmarkService;
 
         private WorkUnit _workUnit = new WorkUnit();
-        /// <summary>
-        /// Unit Info Data Class
-        /// </summary>
-        public WorkUnit WorkUnitData
+        
+        public WorkUnit Data
         {
-            get { return _workUnit; }
-            set { _workUnit = value ?? new WorkUnit(); }
+            get => _workUnit;
+            set => _workUnit = value ?? new WorkUnit();
         }
 
         private Protein _currentProtein = new Protein();
@@ -53,55 +46,40 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public Protein CurrentProtein
         {
-            get { return _currentProtein; }
-            set { _currentProtein = value ?? new Protein(); }
+            get => _currentProtein;
+            set => _currentProtein = value ?? new Protein();
         }
 
         public double ClientTimeOffset { get; set; }
 
         public bool UtcOffsetIsZero { get; set; }
 
-        #endregion
-
-        #region Constructors
-
-        internal UnitInfoModel()
+        internal WorkUnitModel()
         {
 
         }
 
-        public UnitInfoModel(IProteinBenchmarkService benchmarkService)
+        public WorkUnitModel(IProteinBenchmarkService benchmarkService)
         {
             _benchmarkService = benchmarkService;
         }
-
-        #endregion
 
         #region Unit Level Members
 
         /// <summary>
         /// Date/time the unit was downloaded
         /// </summary>
-        public DateTime DownloadTime
-        {
-            get { return GetTime(_workUnit.DownloadTime); }
-        }
+        public DateTime DownloadTime => GetTime(_workUnit.DownloadTime);
 
         /// <summary>
         /// Date/time the unit is due (preferred deadline)
         /// </summary>
-        public DateTime DueTime
-        {
-            get { return GetTime(_workUnit.DueTime); }
-        }
+        public DateTime DueTime => GetTime(_workUnit.DueTime);
 
         /// <summary>
         /// Date/time the unit finished
         /// </summary>
-        public DateTime FinishedTime
-        {
-            get { return GetTime(_workUnit.FinishedTime); }
-        }
+        public DateTime FinishedTime => GetTime(_workUnit.FinishedTime);
 
         private DateTime GetTime(DateTime dateTime)
         {
@@ -209,14 +187,8 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        public int PercentComplete
-        {
-            get
-            {
-                // Report even if CurrentProtein.IsUnknown - 11/22/09
-                return FramesComplete * 100 / CurrentProtein.Frames;
-            }
-        }
+        // Report even if CurrentProtein.IsUnknown - 11/22/09
+        public int PercentComplete => FramesComplete * 100 / CurrentProtein.Frames;
 
         #endregion
 
@@ -276,7 +248,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = _benchmarkService?.GetBenchmark(WorkUnitData);
+            var benchmark = _benchmarkService?.GetBenchmark(Data);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 
@@ -333,10 +305,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Specifies if All Frames have been Completed
         /// </summary>
-        public bool AllFramesCompleted
-        {
-            get { return CurrentProtein.Frames == FramesComplete; }
-        }
+        public bool AllFramesCompleted => CurrentProtein.Frames == FramesComplete;
 
         private TimeSpan GetUnitTimeByDownloadTime(TimeSpan frameTime)
         {
@@ -443,7 +412,7 @@ namespace HFM.Core.WorkUnits
             var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);
             TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
             var bonusByFrameValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByFrameTime);
-            logger.Debug(CreateProductionDebugOutput(WorkUnitData.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
+            logger.Debug(CreateProductionDebugOutput(Data.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
                                                            unitTimeByDownloadTime, bonusByDownloadValues,
                                                            unitTimeByFrameTime, bonusByFrameValues));
         }

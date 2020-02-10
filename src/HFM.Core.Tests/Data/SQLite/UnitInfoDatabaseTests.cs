@@ -133,11 +133,11 @@ namespace HFM.Core.Data.SQLite
                               {
                                  Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
  
-                                 var unitInfoLogic = new UnitInfoModel(benchmarkService);
-                                 unitInfoLogic.CurrentProtein = BuildProtein1();
-                                 unitInfoLogic.WorkUnitData = BuildWorkUnit1(i);
+                                 var WorkUnitModel = new WorkUnitModel(benchmarkService);
+                                 WorkUnitModel.CurrentProtein = BuildProtein1();
+                                 WorkUnitModel.Data = BuildWorkUnit1(i);
 
-                                 _database.Insert(unitInfoLogic);
+                                 _database.Insert(WorkUnitModel);
                               });
 
          Assert.AreEqual(100, _database.Fetch(QueryParameters.SelectAll).Count);
@@ -243,17 +243,17 @@ namespace HFM.Core.Data.SQLite
       {
          _database.DatabaseFilePath = TestScratchFile;
 
-         var unitInfoLogic = new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
-         unitInfoLogic.CurrentProtein = protein;
-         unitInfoLogic.WorkUnitData = workUnit;
+         var workUnitModel = new WorkUnitModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
+         workUnitModel.CurrentProtein = protein;
+         workUnitModel.Data = workUnit;
 
-         _database.Insert(unitInfoLogic);
+         _database.Insert(workUnitModel);
 
          var rows = _database.Fetch(new QueryParameters());
          verifyAction(rows);
 
          // test code to ensure this unit is NOT written again
-         _database.Insert(unitInfoLogic);
+         _database.Insert(workUnitModel);
          // verify
          rows = _database.Fetch(new QueryParameters());
          Assert.AreEqual(1, rows.Count);
@@ -266,32 +266,32 @@ namespace HFM.Core.Data.SQLite
 
       private static WorkUnit BuildWorkUnit1(int run)
       {
-         var unitInfo = new WorkUnit();
+         var workUnit = new WorkUnit();
 
-         unitInfo.ProjectID = 2669;
-         unitInfo.ProjectRun = run;
-         unitInfo.ProjectClone = 2;
-         unitInfo.ProjectGen = 3;
-         unitInfo.OwningClientName = "Owner";
-         unitInfo.OwningClientPath = "Path";
+         workUnit.ProjectID = 2669;
+         workUnit.ProjectRun = run;
+         workUnit.ProjectClone = 2;
+         workUnit.ProjectGen = 3;
+         workUnit.OwningClientName = "Owner";
+         workUnit.OwningClientPath = "Path";
          //workUnit.OwningSlotId = 
-         unitInfo.FoldingID = "harlam357";
-         unitInfo.Team = 32;
-         unitInfo.CoreVersion = 2.09f;
-         unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+         workUnit.FoldingID = "harlam357";
+         workUnit.Team = 32;
+         workUnit.CoreVersion = 2.09f;
+         workUnit.UnitResult = WorkUnitResult.FinishedUnit;
 
          // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
-         unitInfo.DownloadTime = new DateTime(2010, 1, 1, 0 ,0 ,0, DateTimeKind.Utc);
-         unitInfo.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+         workUnit.DownloadTime = new DateTime(2010, 1, 1, 0 ,0 ,0, DateTimeKind.Utc);
+         workUnit.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
 
-         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         unitInfo.FramesObserved = 1;
+         // these values effect the value reported when WorkUnitModel.GetRawTime() is called
+         workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-         unitInfo.FrameData = frameDataDictionary;
-         return unitInfo;
+         workUnit.FrameData = frameDataDictionary;
+         return workUnit;
       }
 
       private static Protein BuildProtein1()
@@ -343,32 +343,32 @@ namespace HFM.Core.Data.SQLite
 
       private static WorkUnit BuildWorkUnit2()
       {
-         var unitInfo = new WorkUnit();
+         var workUnit = new WorkUnit();
 
-         unitInfo.ProjectID = 6900;
-         unitInfo.ProjectRun = 4;
-         unitInfo.ProjectClone = 5;
-         unitInfo.ProjectGen = 6;
-         unitInfo.OwningClientName = "Owner's";
-         unitInfo.OwningClientPath = "The Path's";
+         workUnit.ProjectID = 6900;
+         workUnit.ProjectRun = 4;
+         workUnit.ProjectClone = 5;
+         workUnit.ProjectGen = 6;
+         workUnit.OwningClientName = "Owner's";
+         workUnit.OwningClientPath = "The Path's";
          //workUnit.OwningSlotId = 
-         unitInfo.FoldingID = "harlam357's";
-         unitInfo.Team = 100;
-         unitInfo.CoreVersion = 2.27f;
-         unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+         workUnit.FoldingID = "harlam357's";
+         workUnit.Team = 100;
+         workUnit.CoreVersion = 2.27f;
+         workUnit.UnitResult = WorkUnitResult.EarlyUnitEnd;
 
          // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
-         unitInfo.DownloadTime = new DateTime(2009, 5, 5);
-         unitInfo.FinishedTime = DateTime.MinValue;
+         workUnit.DownloadTime = new DateTime(2009, 5, 5);
+         workUnit.FinishedTime = DateTime.MinValue;
 
-         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         unitInfo.FramesObserved = 1;
+         // these values effect the value reported when WorkUnitModel.GetRawTime() is called
+         workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 56, Duration = TimeSpan.FromSeconds(1000) });
-         unitInfo.FrameData = frameDataDictionary;
-         return unitInfo;
+         workUnit.FrameData = frameDataDictionary;
+         return workUnit;
       }
 
       private static Protein BuildProtein2()
@@ -420,32 +420,32 @@ namespace HFM.Core.Data.SQLite
 
       private static WorkUnit BuildWorkUnit3()
       {
-         var unitInfo = new WorkUnit();
+         var workUnit = new WorkUnit();
 
-         unitInfo.ProjectID = 2670;
-         unitInfo.ProjectRun = 2;
-         unitInfo.ProjectClone = 3;
-         unitInfo.ProjectGen = 4;
-         unitInfo.OwningClientName = "Owner";
-         unitInfo.OwningClientPath = "Path";
+         workUnit.ProjectID = 2670;
+         workUnit.ProjectRun = 2;
+         workUnit.ProjectClone = 3;
+         workUnit.ProjectGen = 4;
+         workUnit.OwningClientName = "Owner";
+         workUnit.OwningClientPath = "Path";
          //workUnit.OwningSlotId = 
-         unitInfo.FoldingID = "harlam357";
-         unitInfo.Team = 32;
-         unitInfo.CoreVersion = 2.09f;
-         unitInfo.UnitResult = WorkUnitResult.EarlyUnitEnd;
+         workUnit.FoldingID = "harlam357";
+         workUnit.Team = 32;
+         workUnit.CoreVersion = 2.09f;
+         workUnit.UnitResult = WorkUnitResult.EarlyUnitEnd;
 
          // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
-         unitInfo.DownloadTime = new DateTime(2010, 2, 2);
-         unitInfo.FinishedTime = DateTime.MinValue;
+         workUnit.DownloadTime = new DateTime(2010, 2, 2);
+         workUnit.FinishedTime = DateTime.MinValue;
 
-         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
+         // these values effect the value reported when WorkUnitModel.GetRawTime() is called
          //workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-         unitInfo.FrameData = frameDataDictionary;
-         return unitInfo;
+         workUnit.FrameData = frameDataDictionary;
+         return workUnit;
       }
 
       private static Protein BuildProtein3()
@@ -497,32 +497,32 @@ namespace HFM.Core.Data.SQLite
 
       private static WorkUnit BuildWorkUnit4()
       {
-         var unitInfo = new WorkUnit();
+         var workUnit = new WorkUnit();
 
-         unitInfo.ProjectID = 6903;
-         unitInfo.ProjectRun = 2;
-         unitInfo.ProjectClone = 3;
-         unitInfo.ProjectGen = 4;
-         unitInfo.OwningClientName = "Owner2";
-         unitInfo.OwningClientPath = "Path2";
-         unitInfo.OwningSlotId = 2;
-         unitInfo.FoldingID = "harlam357";
-         unitInfo.Team = 32;
-         unitInfo.CoreVersion = 2.27f;
-         unitInfo.UnitResult = WorkUnitResult.FinishedUnit;
+         workUnit.ProjectID = 6903;
+         workUnit.ProjectRun = 2;
+         workUnit.ProjectClone = 3;
+         workUnit.ProjectGen = 4;
+         workUnit.OwningClientName = "Owner2";
+         workUnit.OwningClientPath = "Path2";
+         workUnit.OwningSlotId = 2;
+         workUnit.FoldingID = "harlam357";
+         workUnit.Team = 32;
+         workUnit.CoreVersion = 2.27f;
+         workUnit.UnitResult = WorkUnitResult.FinishedUnit;
 
          // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
-         unitInfo.DownloadTime = new DateTime(2012, 1, 2);
-         unitInfo.FinishedTime = new DateTime(2012, 1, 5);
+         workUnit.DownloadTime = new DateTime(2012, 1, 2);
+         workUnit.FinishedTime = new DateTime(2012, 1, 5);
 
-         // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
+         // these values effect the value reported when WorkUnitModel.GetRawTime() is called
          //workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-         unitInfo.FrameData = frameDataDictionary;
-         return unitInfo;
+         workUnit.FrameData = frameDataDictionary;
+         return workUnit;
       }
 
       private static Protein BuildProtein4()

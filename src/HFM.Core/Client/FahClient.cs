@@ -393,27 +393,27 @@ namespace HFM.Core.Client
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 
-                    var parsedUnits = new Dictionary<int, UnitInfoModel>(result.WorkUnits.Count);
+                    var parsedUnits = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
                     foreach (int key in result.WorkUnits.Keys)
                     {
                         if (result.WorkUnits[key] != null)
                         {
-                            parsedUnits[key] = BuildUnitInfoLogic(slotModel, result.WorkUnits[key]);
+                            parsedUnits[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
                         }
                     }
 
-                    // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-                    UpdateBenchmarkData(slotModel.UnitInfoModel, parsedUnits.Values);
+                    // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
+                    UpdateBenchmarkData(slotModel.WorkUnitModel, parsedUnits.Values);
 
-                    // Update the UnitInfoLogic if we have a current unit index
+                    // Update the WorkUnitModel if we have a current unit index
                     if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
                     {
-                        slotModel.UnitInfoModel = parsedUnits[result.CurrentUnitIndex];
+                        slotModel.WorkUnitModel = parsedUnits[result.CurrentUnitIndex];
                     }
 
                     SetSlotStatus(slotModel);
 
-                    slotModel.UnitInfoModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
+                    slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                        Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
                        Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
 
@@ -430,7 +430,7 @@ namespace HFM.Core.Client
             Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
         }
 
-        private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, WorkUnit workUnit)
+        private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
         {
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnit != null);
@@ -450,11 +450,11 @@ namespace HFM.Core.Client
                     workUnit.SlotType = workUnit.CoreID.ToSlotType();
                 }
             }
-            // build unit info logic
-            var unitInfoLogic = new UnitInfoModel(BenchmarkService);
-            unitInfoLogic.CurrentProtein = protein;
-            unitInfoLogic.WorkUnitData = workUnit;
-            return unitInfoLogic;
+            
+            var workUnitModel = new WorkUnitModel(BenchmarkService);
+            workUnitModel.CurrentProtein = protein;
+            workUnitModel.Data = workUnit;
+            return workUnitModel;
         }
 
         private static void SetSlotStatus(SlotModel slotModel)
@@ -483,22 +483,22 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits)
+        internal void UpdateBenchmarkData(WorkUnitModel currentWorkUnit, IEnumerable<WorkUnitModel> parsedUnits)
         {
-            foreach (var unitInfoModel in parsedUnits.Where(x => x != null))
+            foreach (var model in parsedUnits.Where(x => x != null))
             {
-                if (currentUnitInfo.WorkUnitData.EqualsProjectAndDownloadTime(unitInfoModel.WorkUnitData))
+                if (currentWorkUnit.Data.EqualsProjectAndDownloadTime(model.Data))
                 {
                     // found the current unit
                     // current frame has already been recorded, increment to the next frame
-                    int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
+                    int previousFramesComplete = currentWorkUnit.FramesComplete + 1;
                     // Update benchmarks
-                    BenchmarkService.UpdateData(unitInfoModel.WorkUnitData, previousFramesComplete, unitInfoModel.FramesComplete);
+                    BenchmarkService.UpdateData(model.Data, previousFramesComplete, model.FramesComplete);
                 }
                 // Update history database
-                if (unitInfoModel.WorkUnitData.UnitResult != WorkUnitResult.Unknown)
+                if (model.Data.UnitResult != WorkUnitResult.Unknown)
                 {
-                    UpdateUnitInfoDatabase(unitInfoModel);
+                    UpdateUnitInfoDatabase(model);
                 }
             }
         }

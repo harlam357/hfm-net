@@ -168,19 +168,19 @@ namespace HFM.Core.Client
 
       protected abstract void RetrieveInternal();
 
-      protected void UpdateUnitInfoDatabase(UnitInfoModel unitInfoModel)
+      protected void UpdateUnitInfoDatabase(WorkUnitModel workUnitModel)
       {
          // Update history database
          if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
          {
             try
             {
-               if (UnitInfoDatabase.Insert(unitInfoModel))
+               if (UnitInfoDatabase.Insert(workUnitModel))
                {
                   if (Logger.IsDebugEnabled)
                   {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.WorkUnitData.ToProjectString());
-                     Logger.DebugFormat(Constants.ClientNameFormat, unitInfoModel.WorkUnitData.OwningSlotName, message);
+                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", workUnitModel.Data.ToProjectString());
+                     Logger.DebugFormat(Constants.ClientNameFormat, workUnitModel.Data.OwningSlotName, message);
                   }
                }
             }

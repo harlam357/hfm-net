@@ -58,7 +58,7 @@ namespace HFM.Core.Data.SQLite
 
         void Upgrade();
 
-        bool Insert(UnitInfoModel unitInfoModel);
+        bool Insert(WorkUnitModel workUnitModel);
 
         int Delete(WorkUnitHistoryRow row);
 
@@ -288,10 +288,10 @@ namespace HFM.Core.Data.SQLite
 
         #region Insert
 
-        public bool Insert(UnitInfoModel unitInfoModel)
+        public bool Insert(WorkUnitModel workUnitModel)
         {
             // if the work unit is not valid simply return
-            if (!ValidateUnitInfo(unitInfoModel.WorkUnitData))
+            if (!ValidateWorkUnit(workUnitModel.Data))
             {
                 return false;
             }
@@ -302,25 +302,25 @@ namespace HFM.Core.Data.SQLite
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
             // ensure this unit is not written twice
-            if (UnitInfoExists(unitInfoModel.WorkUnitData))
+            if (WorkUnitExists(workUnitModel.Data))
             {
                 return false;
             }
 
-            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(unitInfoModel.WorkUnitData);
+            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(workUnitModel.Data);
             // cannot map these two properties from a WorkUnit instance
-            // they only live at the UnitInfoLogic level
-            entry.FramesCompleted = unitInfoModel.FramesComplete;
-            entry.FrameTimeValue = unitInfoModel.GetRawTime(PpdCalculationType.AllFrames);
+            // they only live at the WorkUnitModel level
+            entry.FramesCompleted = workUnitModel.FramesComplete;
+            entry.FrameTimeValue = workUnitModel.GetRawTime(PpdCalculationType.AllFrames);
             // copy protein values for insert
-            entry.WorkUnitName = unitInfoModel.CurrentProtein.WorkUnitName;
-            entry.KFactor = unitInfoModel.CurrentProtein.KFactor;
-            entry.Core = unitInfoModel.CurrentProtein.Core;
-            entry.Frames = unitInfoModel.CurrentProtein.Frames;
-            entry.Atoms = unitInfoModel.CurrentProtein.NumberOfAtoms;
-            entry.BaseCredit = unitInfoModel.CurrentProtein.Credit;
-            entry.PreferredDays = unitInfoModel.CurrentProtein.PreferredDays;
-            entry.MaximumDays = unitInfoModel.CurrentProtein.MaximumDays;
+            entry.WorkUnitName = workUnitModel.CurrentProtein.WorkUnitName;
+            entry.KFactor = workUnitModel.CurrentProtein.KFactor;
+            entry.Core = workUnitModel.CurrentProtein.Core;
+            entry.Frames = workUnitModel.CurrentProtein.Frames;
+            entry.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
+            entry.BaseCredit = workUnitModel.CurrentProtein.Credit;
+            entry.PreferredDays = workUnitModel.CurrentProtein.PreferredDays;
+            entry.MaximumDays = workUnitModel.CurrentProtein.MaximumDays;
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -333,7 +333,7 @@ namespace HFM.Core.Data.SQLite
             return true;
         }
 
-        private static bool ValidateUnitInfo(WorkUnit workUnit)
+        private static bool ValidateWorkUnit(WorkUnit workUnit)
         {
             // if Project and Download Time are valid
             if (!workUnit.ProjectIsUnknown() && workUnit.DownloadTime != DateTime.MinValue)
@@ -350,7 +350,7 @@ namespace HFM.Core.Data.SQLite
             return false;
         }
 
-        private bool UnitInfoExists(WorkUnit workUnit)
+        private bool WorkUnitExists(WorkUnit workUnit)
         {
             var rows = Fetch(BuildUnitKeyQueryParameters(workUnit));
             return rows.Count != 0;

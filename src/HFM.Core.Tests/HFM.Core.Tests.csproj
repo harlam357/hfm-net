@@ -136,7 +136,7 @@
     <Compile Include="Data\SQLite\UnitInfoDatabaseReadOnlyTests.cs" />
     <Compile Include="Data\SQLite\UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoExtensions.cs" />
-    <Compile Include="WorkUnits\UnitInfoModelTests.cs" />
+    <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
     <Compile Include="ValidateTests.cs" />
     <Compile Include="Data\EocStatsDataContainerTests.cs" />
   </ItemGroup>
