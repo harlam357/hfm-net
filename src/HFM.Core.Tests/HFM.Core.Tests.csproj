@@ -133,8 +133,8 @@
     <Compile Include="WorkUnits\ProteinServiceTests.cs" />
     <Compile Include="Data\QueryParametersDataContainerTests.cs" />
     <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabaseReadOnlyTests.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabaseTests.cs" />
+    <Compile Include="Data\UnitInfoDatabaseReadOnlyTests.cs" />
+    <Compile Include="Data\UnitInfoDatabaseTests.cs" />
     <Compile Include="UnitInfoExtensions.cs" />
     <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
     <Compile Include="ValidateTests.cs" />
@@ -180,6 +180,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Data\SQLite\" />
     <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

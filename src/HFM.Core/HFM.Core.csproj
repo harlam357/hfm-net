@@ -86,9 +86,9 @@
     <Compile Include="Client\LogLineCopier.cs" />
     <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
+    <Compile Include="Data\UnitInfoDatabase.DuplicateDeleter.cs" />
+    <Compile Include="Data\UnitInfoDatabase.ProteinDataUpdater.cs" />
+    <Compile Include="Data\UnitInfoDatabase.SQLiteFunctions.cs" />
     <Compile Include="Net\FtpMode.cs" />
     <Compile Include="Net\FtpWebRequestAdapter.cs" />
     <Compile Include="Net\FtpWebResponseAdapter.cs" />
@@ -157,7 +157,7 @@
     <Compile Include="DataTypes\Markup\SlotSummary.cs" />
     <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="ScheduledTasks\AggregateScheduledTask.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
+    <Compile Include="Data\UnitInfoDatabase.cs" />
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
     <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
@@ -209,6 +209,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\SQLite\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
