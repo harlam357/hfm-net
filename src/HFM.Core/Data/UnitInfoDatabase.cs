@@ -117,7 +117,7 @@ namespace HFM.Core.Data
         #endregion
 
         public const string DefaultFileName = "WuHistory.db3";
-        
+
         #region Constructor
 
         public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService)
@@ -620,18 +620,6 @@ namespace HFM.Core.Data
             }
         }
 
-        internal void DropTable(SqlTable sqlTable)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Open();
-                using (var command = SqlTableCommandDictionary[sqlTable].GetDropTableCommand(connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
         internal string GetDatabaseVersion()
         {
             if (!TableExists(SqlTable.Version))
@@ -688,27 +676,21 @@ namespace HFM.Core.Data
                     format = "datetime([{0}]) {1} datetime(@0)";
                 }
                 sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
-                         ColumnNameOverides.ContainsKey(queryField.Name) ? ColumnNameOverides[queryField.Name] : queryField.Name.ToString(),
+                         ColumnNameOverrides.ContainsKey(queryField.Name) ? ColumnNameOverrides[queryField.Name] : queryField.Name.ToString(),
                          queryField.Operator), queryField.Value);
                 return sql;
             }
 
-            private static readonly Dictionary<QueryFieldName, string> ColumnNameOverides = new Dictionary<QueryFieldName, string>
-         {
-            { QueryFieldName.Name, "InstanceName" },
-            { QueryFieldName.Path, "InstancePath" },
-            { QueryFieldName.Credit, "CalcCredit" },
-         };
+            private static readonly Dictionary<QueryFieldName, string> ColumnNameOverrides = new Dictionary<QueryFieldName, string>
+            {
+                { QueryFieldName.Name, "InstanceName" },
+                { QueryFieldName.Path, "InstancePath" },
+                { QueryFieldName.Credit, "CalcCredit" },
+            };
         }
 
         private abstract class SqlTableCommands
         {
-            #region SQL Strings
-
-            private const string DropTableSql = "DROP TABLE [{0}];";
-
-            #endregion
-
             public abstract string TableName { get; }
 
             public virtual string SelectSql
@@ -717,15 +699,6 @@ namespace HFM.Core.Data
             }
 
             public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
-
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-            public DbCommand GetDropTableCommand(SQLiteConnection connection)
-            {
-                return new SQLiteCommand(connection)
-                {
-                    CommandText = String.Format(CultureInfo.InvariantCulture, DropTableSql, TableName)
-                };
-            }
         }
 
         private sealed class WuHistorySqlTableCommands : SqlTableCommands
@@ -844,9 +817,7 @@ namespace HFM.Core.Data
             }
         }
 
-        // ReSharper disable InconsistentNaming
         private sealed class SQLiteColumnAdder : IDisposable
-        // ReSharper restore InconsistentNaming
         {
             private readonly string _tableName;
             private readonly SQLiteConnection _connection;
@@ -904,11 +875,6 @@ namespace HFM.Core.Data
                 string message = String.Format(CultureInfo.CurrentCulture, "Data type {0} is not valid.", dataType);
                 throw new ArgumentException(message, "dataType");
             }
-
-            //public void Execute()
-            //{
-            //   Execute(true);
-            //}
 
             public void Execute(bool useTransaction)
             {

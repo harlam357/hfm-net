@@ -143,15 +143,6 @@ namespace HFM.Core.Data
          Assert.AreEqual(100, _database.Fetch(QueryParameters.SelectAll, BonusCalculationType.None).Count);
       }
 
-      [Test]
-      public void TableExists_DropTable_Test()
-      {
-         _database.DatabaseFilePath = _testDataFileCopy;
-         Assert.AreEqual(true, _database.TableExists(SqlTable.WuHistory));
-         _database.DropTable(SqlTable.WuHistory);
-         Assert.AreEqual(false, _database.TableExists(SqlTable.WuHistory));
-      }
-
       #region Connected
 
       [Test]
