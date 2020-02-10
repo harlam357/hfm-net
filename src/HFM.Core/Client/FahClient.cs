@@ -385,7 +385,7 @@ namespace HFM.Core.Client
                                                                                info,
                                                                                options,
                                                                                slotModel.SlotOptions,
-                                                                               slotModel.UnitInfo,
+                                                                               slotModel.WorkUnit,
                                                                                slotModel.SlotId);
                     PopulateRunLevelData(result, info, slotModel);
 
@@ -393,12 +393,12 @@ namespace HFM.Core.Client
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 
-                    var parsedUnits = new Dictionary<int, UnitInfoModel>(result.UnitInfos.Count);
-                    foreach (int key in result.UnitInfos.Keys)
+                    var parsedUnits = new Dictionary<int, UnitInfoModel>(result.WorkUnits.Count);
+                    foreach (int key in result.WorkUnits.Keys)
                     {
-                        if (result.UnitInfos[key] != null)
+                        if (result.WorkUnits[key] != null)
                         {
-                            parsedUnits[key] = BuildUnitInfoLogic(slotModel, result.UnitInfos[key]);
+                            parsedUnits[key] = BuildUnitInfoLogic(slotModel, result.WorkUnits[key]);
                         }
                     }
 
@@ -430,30 +430,30 @@ namespace HFM.Core.Client
             Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
         }
 
-        private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)
+        private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, WorkUnit workUnit)
         {
             Debug.Assert(slotModel != null);
-            Debug.Assert(unitInfo != null);
+            Debug.Assert(workUnit != null);
 
-            Protein protein = ProteinService.Get(unitInfo.ProjectID, true) ?? new Protein();
+            Protein protein = ProteinService.Get(workUnit.ProjectID, true) ?? new Protein();
 
             // update the data
-            unitInfo.UnitRetrievalTime = LastRetrievalTime;
-            unitInfo.OwningClientName = Settings.Name;
-            unitInfo.OwningClientPath = Settings.ClientPath;
-            unitInfo.OwningSlotId = slotModel.SlotId;
-            if (unitInfo.SlotType == SlotType.Unknown)
+            workUnit.UnitRetrievalTime = LastRetrievalTime;
+            workUnit.OwningClientName = Settings.Name;
+            workUnit.OwningClientPath = Settings.ClientPath;
+            workUnit.OwningSlotId = slotModel.SlotId;
+            if (workUnit.SlotType == SlotType.Unknown)
             {
-                unitInfo.SlotType = protein.Core.ToSlotType();
-                if (unitInfo.SlotType == SlotType.Unknown)
+                workUnit.SlotType = protein.Core.ToSlotType();
+                if (workUnit.SlotType == SlotType.Unknown)
                 {
-                    unitInfo.SlotType = unitInfo.CoreID.ToSlotType();
+                    workUnit.SlotType = workUnit.CoreID.ToSlotType();
                 }
             }
             // build unit info logic
             var unitInfoLogic = new UnitInfoModel(BenchmarkService);
             unitInfoLogic.CurrentProtein = protein;
-            unitInfoLogic.UnitInfoData = unitInfo;
+            unitInfoLogic.WorkUnitData = workUnit;
             return unitInfoLogic;
         }
 
@@ -487,16 +487,16 @@ namespace HFM.Core.Client
         {
             foreach (var unitInfoModel in parsedUnits.Where(x => x != null))
             {
-                if (currentUnitInfo.UnitInfoData.EqualsProjectAndDownloadTime(unitInfoModel.UnitInfoData))
+                if (currentUnitInfo.WorkUnitData.EqualsProjectAndDownloadTime(unitInfoModel.WorkUnitData))
                 {
                     // found the current unit
                     // current frame has already been recorded, increment to the next frame
                     int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
                     // Update benchmarks
-                    BenchmarkService.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
+                    BenchmarkService.UpdateData(unitInfoModel.WorkUnitData, previousFramesComplete, unitInfoModel.FramesComplete);
                 }
                 // Update history database
-                if (unitInfoModel.UnitInfoData.UnitResult != WorkUnitResult.Unknown)
+                if (unitInfoModel.WorkUnitData.UnitResult != WorkUnitResult.Unknown)
                 {
                     UpdateUnitInfoDatabase(unitInfoModel);
                 }

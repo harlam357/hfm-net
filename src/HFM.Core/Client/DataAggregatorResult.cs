@@ -31,6 +31,6 @@ namespace HFM.Core.Client
 
       public QueueDictionary Queue { get; set; }
 
-      public IDictionary<int, UnitInfo> UnitInfos { get; set; }
+      public IDictionary<int, WorkUnit> WorkUnits { get; set; }
    }
 }

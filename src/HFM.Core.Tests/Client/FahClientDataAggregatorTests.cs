@@ -69,9 +69,9 @@ namespace HFM.Core.Client
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
-         Assert.AreEqual(1, result.UnitInfos.Count);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+         Assert.AreEqual(1, result.WorkUnits.Count);
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
          #region Check Data Aggregator
 
@@ -84,15 +84,15 @@ namespace HFM.Core.Client
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
-         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
+            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion
 
-         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
+         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -155,9 +155,9 @@ namespace HFM.Core.Client
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
-         Assert.AreEqual(1, result.UnitInfos.Count);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+         Assert.AreEqual(1, result.WorkUnits.Count);
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
          #region Check Data Aggregator
 
@@ -170,15 +170,15 @@ namespace HFM.Core.Client
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsTrue(result.UnitInfos.All(x => x.Value.LogLines == null));
-         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
+         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
          {
             Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
          }
 
          #endregion
 
-         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
+         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -231,9 +231,9 @@ namespace HFM.Core.Client
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
-         Assert.AreEqual(1, result.UnitInfos.Count);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+         Assert.AreEqual(1, result.WorkUnits.Count);
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
          #region Check Data Aggregator
 
@@ -246,15 +246,15 @@ namespace HFM.Core.Client
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
-         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
+            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion
 
-         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
+         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);
@@ -311,9 +311,9 @@ namespace HFM.Core.Client
          var slotOptions = new SlotOptions();
          slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new UnitInfo(), slotId);
-         Assert.AreEqual(1, result.UnitInfos.Count);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value == null));
+         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+         Assert.AreEqual(1, result.WorkUnits.Count);
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
          #region Check Data Aggregator
 
@@ -326,15 +326,15 @@ namespace HFM.Core.Client
          Assert.AreEqual(0, result.MachineID);
          Assert.AreEqual(SlotStatus.Unknown, result.Status);
          Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.UnitInfos.Any(x => x.Value.LogLines == null));
-         if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex))
+         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
          {
-            Assert.AreEqual(result.CurrentLogLines, result.UnitInfos[result.CurrentUnitIndex].LogLines);
+            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
          }
 
          #endregion
 
-         var unitInfoData = result.UnitInfos[result.CurrentUnitIndex];
+         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
          Assert.AreEqual(null, unitInfoData.OwningSlotName);

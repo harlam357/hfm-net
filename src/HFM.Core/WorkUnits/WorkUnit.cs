@@ -27,11 +27,11 @@ using HFM.Log;
 
 namespace HFM.Core.WorkUnits
 {
-    public class UnitInfo : IProjectInfo
+    public class WorkUnit : IProjectInfo
     {
         #region Constructor
 
-        public UnitInfo()
+        public WorkUnit()
         {
             UnitRetrievalTime = DateTime.MinValue;
             FoldingID = Constants.DefaultFoldingID;
@@ -53,9 +53,9 @@ namespace HFM.Core.WorkUnits
         #endregion
 
         // TODO: Rename to Copy()
-        public UnitInfo DeepClone()
+        public WorkUnit DeepClone()
         {
-            var u = new UnitInfo
+            var u = new WorkUnit
             {
                 OwningClientName = OwningClientName,
                 OwningClientPath = OwningClientPath,
@@ -111,7 +111,7 @@ namespace HFM.Core.WorkUnits
         public int OwningSlotId { get; set; }
 
         /// <summary>
-        /// Local time the logs used to generate this UnitInfo were retrieved
+        /// Local time the logs used to generate this WorkUnit were retrieved
         /// </summary>
         public DateTime UnitRetrievalTime { get; set; }
 
@@ -260,7 +260,7 @@ namespace HFM.Core.WorkUnits
             return FrameData != null && FrameData.ContainsKey(frameId) ? FrameData[frameId] : null;
         }
 
-        internal bool EqualsProjectAndDownloadTime(UnitInfo other)
+        internal bool EqualsProjectAndDownloadTime(WorkUnit other)
         {
             if (other == null)
             {

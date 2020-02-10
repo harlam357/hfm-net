@@ -36,14 +36,14 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         ICollection<ProteinBenchmarkSlotIdentifier> SlotIdentifiers { get; }
 
-        void UpdateData(UnitInfo unit, int startingFrame, int endingFrame);
+        void UpdateData(WorkUnit workUnit, int startingFrame, int endingFrame);
 
         /// <summary>
-        /// Gets the ProteinBenchmark based on the UnitInfo owner and project data.
+        /// Gets the ProteinBenchmark based on the WorkUnit owner and project data.
         /// </summary>
-        /// <param name="unitInfo">The UnitInfo containing owner and project data.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="unitInfo"/> is null.</exception>
-        ProteinBenchmark GetBenchmark(UnitInfo unitInfo);
+        /// <param name="workUnit">The WorkUnit containing owner and project data.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="workUnit"/> is null.</exception>
+        ProteinBenchmark GetBenchmark(WorkUnit workUnit);
 
         /// <summary>
         /// Removes all the elements from the ProteinBenchmarkCollection that match the slot identifier.
@@ -168,19 +168,19 @@ namespace HFM.Core.WorkUnits
 
         #region UpdateData
 
-        public void UpdateData(UnitInfo unit, int startingFrame, int endingFrame)
+        public void UpdateData(WorkUnit workUnit, int startingFrame, int endingFrame)
         {
-            Debug.Assert(unit != null);
+            Debug.Assert(workUnit != null);
 
             // project is not known, don't add to benchmark data
-            if (unit.ProjectIsUnknown()) return;
+            if (workUnit.ProjectIsUnknown()) return;
 
             // no progress has been made so stub out
             if (startingFrame > endingFrame) return;
 
             // GetBenchmark() BEFORE entering write lock 
             // because it uses a read lock
-            ProteinBenchmark findBenchmark = GetBenchmark(unit);
+            ProteinBenchmark findBenchmark = GetBenchmark(workUnit);
             // write lock
             _cacheLock.EnterWriteLock();
             try
@@ -189,20 +189,20 @@ namespace HFM.Core.WorkUnits
                 {
                     var newBenchmark = new ProteinBenchmark
                     {
-                        OwningClientName = unit.OwningClientName,
-                        OwningClientPath = unit.OwningClientPath,
-                        OwningSlotId = unit.OwningSlotId,
-                        ProjectID = unit.ProjectID
+                        OwningClientName = workUnit.OwningClientName,
+                        OwningClientPath = workUnit.OwningClientPath,
+                        OwningSlotId = workUnit.OwningSlotId,
+                        ProjectID = workUnit.ProjectID
                     };
 
-                    if (UpdateFrames(unit, startingFrame, endingFrame, newBenchmark))
+                    if (UpdateFrames(workUnit, startingFrame, endingFrame, newBenchmark))
                     {
                         Data.Add(newBenchmark);
                     }
                 }
                 else
                 {
-                    UpdateFrames(unit, startingFrame, endingFrame, findBenchmark);
+                    UpdateFrames(workUnit, startingFrame, endingFrame, findBenchmark);
                 }
                 Write();
             }
@@ -212,13 +212,13 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        private bool UpdateFrames(UnitInfo unit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
+        private bool UpdateFrames(WorkUnit workUnit, int startingFrame, int endingFrame, ProteinBenchmark benchmark)
         {
             bool result = false;
 
             for (int i = startingFrame; i <= endingFrame; i++)
             {
-                WorkUnitFrameData frameData = unit.GetFrameData(i);
+                WorkUnitFrameData frameData = workUnit.GetFrameData(i);
                 if (frameData != null)
                 {
                     if (benchmark.SetFrameDuration(frameData.Duration))
@@ -228,7 +228,7 @@ namespace HFM.Core.WorkUnits
                 }
                 else
                 {
-                    Logger.DebugFormat("({0}) FrameID '{1}' not found for Project {2}", unit.OwningSlotName, i, unit.ProjectID);
+                    Logger.DebugFormat("({0}) FrameID '{1}' not found for Project {2}", workUnit.OwningSlotName, i, workUnit.ProjectID);
                 }
             }
 
@@ -237,14 +237,14 @@ namespace HFM.Core.WorkUnits
 
         #endregion
 
-        public ProteinBenchmark GetBenchmark(UnitInfo unitInfo)
+        public ProteinBenchmark GetBenchmark(WorkUnit workUnit)
         {
-            if (unitInfo == null) throw new ArgumentNullException(nameof(unitInfo));
+            if (workUnit == null) throw new ArgumentNullException(nameof(workUnit));
 
             _cacheLock.EnterReadLock();
             try
             {
-                return Data.Find(benchmark => Equals(benchmark, unitInfo));
+                return Data.Find(benchmark => Equals(benchmark, workUnit));
             }
             finally
             {
@@ -252,11 +252,11 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        private static bool Equals(ProteinBenchmark benchmark, UnitInfo unitInfo)
+        private static bool Equals(ProteinBenchmark benchmark, WorkUnit workUnit)
         {
-            return benchmark.OwningSlotName == unitInfo.OwningSlotName &&
-                   FileSystemPath.Equals(benchmark.OwningClientPath, unitInfo.OwningClientPath) &&
-                   benchmark.ProjectID == unitInfo.ProjectID;
+            return benchmark.OwningSlotName == workUnit.OwningSlotName &&
+                   FileSystemPath.Equals(benchmark.OwningClientPath, workUnit.OwningClientPath) &&
+                   benchmark.ProjectID == workUnit.ProjectID;
         }
 
         public void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier)

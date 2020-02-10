@@ -135,7 +135,7 @@ namespace HFM.Core.Data.SQLite
  
                                  var unitInfoLogic = new UnitInfoModel(benchmarkService);
                                  unitInfoLogic.CurrentProtein = BuildProtein1();
-                                 unitInfoLogic.UnitInfoData = BuildUnitInfo1(i);
+                                 unitInfoLogic.WorkUnitData = BuildWorkUnit1(i);
 
                                  _database.Insert(unitInfoLogic);
                               });
@@ -211,41 +211,41 @@ namespace HFM.Core.Data.SQLite
       [Test]
       public void Insert_Test1()
       {
-         InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
+         InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
       }
 
       [Test]
       public void Insert_Test1_CzechCulture()
       {
          Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-         InsertTestInternal(BuildUnitInfo1(), BuildProtein1(), BuildUnitInfo1VerifyAction());
+         InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
       }
 
       [Test]
       public void Insert_Test2()
       {
-         InsertTestInternal(BuildUnitInfo2(), BuildProtein2(), BuildUnitInfo2VerifyAction());
+         InsertTestInternal(BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
       }
 
       [Test]
       public void Insert_Test3()
       {
-         InsertTestInternal(BuildUnitInfo3(), BuildProtein3(), BuildUnitInfo3VerifyAction());
+         InsertTestInternal(BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
       }
 
       [Test]
       public void Insert_Test4()
       {
-         InsertTestInternal(BuildUnitInfo4(), BuildProtein4(), BuildUnitInfo4VerifyAction());
+         InsertTestInternal(BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
       }
 
-      private void InsertTestInternal(UnitInfo unitInfo, Protein protein, Action<IList<WorkUnitHistoryRow>> verifyAction)
+      private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitHistoryRow>> verifyAction)
       {
          _database.DatabaseFilePath = TestScratchFile;
 
          var unitInfoLogic = new UnitInfoModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
          unitInfoLogic.CurrentProtein = protein;
-         unitInfoLogic.UnitInfoData = unitInfo;
+         unitInfoLogic.WorkUnitData = workUnit;
 
          _database.Insert(unitInfoLogic);
 
@@ -259,14 +259,14 @@ namespace HFM.Core.Data.SQLite
          Assert.AreEqual(1, rows.Count);
       }
 
-      private static UnitInfo BuildUnitInfo1()
+      private static WorkUnit BuildWorkUnit1()
       {
-         return BuildUnitInfo1(1);
+         return BuildWorkUnit1(1);
       }
 
-      private static UnitInfo BuildUnitInfo1(int run)
+      private static WorkUnit BuildWorkUnit1(int run)
       {
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
 
          unitInfo.ProjectID = 2669;
          unitInfo.ProjectRun = run;
@@ -274,7 +274,7 @@ namespace HFM.Core.Data.SQLite
          unitInfo.ProjectGen = 3;
          unitInfo.OwningClientName = "Owner";
          unitInfo.OwningClientPath = "Path";
-         //unitInfo.OwningSlotId = 
+         //workUnit.OwningSlotId = 
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = 2.09f;
@@ -309,7 +309,7 @@ namespace HFM.Core.Data.SQLite
                 };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo1VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit1VerifyAction()
       {
          return rows =>
          {
@@ -341,9 +341,9 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static UnitInfo BuildUnitInfo2()
+      private static WorkUnit BuildWorkUnit2()
       {
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
 
          unitInfo.ProjectID = 6900;
          unitInfo.ProjectRun = 4;
@@ -351,7 +351,7 @@ namespace HFM.Core.Data.SQLite
          unitInfo.ProjectGen = 6;
          unitInfo.OwningClientName = "Owner's";
          unitInfo.OwningClientPath = "The Path's";
-         //unitInfo.OwningSlotId = 
+         //workUnit.OwningSlotId = 
          unitInfo.FoldingID = "harlam357's";
          unitInfo.Team = 100;
          unitInfo.CoreVersion = 2.27f;
@@ -386,7 +386,7 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo2VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit2VerifyAction()
       {
          return rows =>
          {
@@ -418,9 +418,9 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static UnitInfo BuildUnitInfo3()
+      private static WorkUnit BuildWorkUnit3()
       {
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
 
          unitInfo.ProjectID = 2670;
          unitInfo.ProjectRun = 2;
@@ -428,7 +428,7 @@ namespace HFM.Core.Data.SQLite
          unitInfo.ProjectGen = 4;
          unitInfo.OwningClientName = "Owner";
          unitInfo.OwningClientPath = "Path";
-         //unitInfo.OwningSlotId = 
+         //workUnit.OwningSlotId = 
          unitInfo.FoldingID = "harlam357";
          unitInfo.Team = 32;
          unitInfo.CoreVersion = 2.09f;
@@ -441,7 +441,7 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = DateTime.MinValue;
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         //unitInfo.FramesObserved = 1;
+         //workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
          unitInfo.FrameData = frameDataDictionary;
@@ -463,7 +463,7 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo3VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit3VerifyAction()
       {
          return rows =>
          {
@@ -495,9 +495,9 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static UnitInfo BuildUnitInfo4()
+      private static WorkUnit BuildWorkUnit4()
       {
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
 
          unitInfo.ProjectID = 6903;
          unitInfo.ProjectRun = 2;
@@ -518,7 +518,7 @@ namespace HFM.Core.Data.SQLite
          unitInfo.FinishedTime = new DateTime(2012, 1, 5);
 
          // these values effect the value reported when UnitInfoLogic.GetRawTime() is called
-         //unitInfo.FramesObserved = 1;
+         //workUnit.FramesObserved = 1;
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
          unitInfo.FrameData = frameDataDictionary;
@@ -540,7 +540,7 @@ namespace HFM.Core.Data.SQLite
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildUnitInfo4VerifyAction()
+      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit4VerifyAction()
       {
          return rows =>
          {

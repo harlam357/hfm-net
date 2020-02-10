@@ -37,14 +37,14 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         private readonly IProteinBenchmarkService _benchmarkService;
 
-        private UnitInfo _unitInfo = new UnitInfo();
+        private WorkUnit _workUnit = new WorkUnit();
         /// <summary>
         /// Unit Info Data Class
         /// </summary>
-        public UnitInfo UnitInfoData
+        public WorkUnit WorkUnitData
         {
-            get { return _unitInfo; }
-            set { _unitInfo = value ?? new UnitInfo(); }
+            get { return _workUnit; }
+            set { _workUnit = value ?? new WorkUnit(); }
         }
 
         private Protein _currentProtein = new Protein();
@@ -84,7 +84,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public DateTime DownloadTime
         {
-            get { return GetTime(_unitInfo.DownloadTime); }
+            get { return GetTime(_workUnit.DownloadTime); }
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public DateTime DueTime
         {
-            get { return GetTime(_unitInfo.DueTime); }
+            get { return GetTime(_workUnit.DueTime); }
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public DateTime FinishedTime
         {
-            get { return GetTime(_unitInfo.FinishedTime); }
+            get { return GetTime(_workUnit.FinishedTime); }
         }
 
         private DateTime GetTime(DateTime dateTime)
@@ -120,7 +120,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_unitInfo.DownloadTime.IsUnknown()) return _unitInfo.DownloadTime;
+                if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
 
                 return CurrentProtein.IsUnknown()
                           ? DueTime
@@ -135,7 +135,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_unitInfo.DownloadTime.IsUnknown()) return _unitInfo.DownloadTime;
+                if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
 
                 return CurrentProtein.IsUnknown()
                           ? DateTime.MinValue
@@ -186,15 +186,15 @@ namespace HFM.Core.WorkUnits
                 //
                 // Fix for GPU3 units reporting only 99 Frames Completed
                 // to the Work Unit History Database - Issue 253
-                if (_unitInfo.CurrentFrame != null)
+                if (_workUnit.CurrentFrame != null)
                 {
                     // Make sure CurrentFrame.FrameID is 0 or greater
-                    if (_unitInfo.CurrentFrame.ID >= 0)
+                    if (_workUnit.CurrentFrame.ID >= 0)
                     {
                         // but not greater than the CurrentProtein.Frames
-                        if (_unitInfo.CurrentFrame.ID <= CurrentProtein.Frames)
+                        if (_workUnit.CurrentFrame.ID <= CurrentProtein.Frames)
                         {
-                            return _unitInfo.CurrentFrame.ID;
+                            return _workUnit.CurrentFrame.ID;
                         }
 
                         // if it is, just return the protein frame count
@@ -230,11 +230,11 @@ namespace HFM.Core.WorkUnits
             switch (calculationType)
             {
                 case PpdCalculationType.LastFrame:
-                    return _unitInfo.FramesObserved > 1 ? Convert.ToInt32(_unitInfo.CurrentFrame.Duration.TotalSeconds) : 0;
+                    return _workUnit.FramesObserved > 1 ? Convert.ToInt32(_workUnit.CurrentFrame.Duration.TotalSeconds) : 0;
                 case PpdCalculationType.LastThreeFrames:
-                    return _unitInfo.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
+                    return _workUnit.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
                 case PpdCalculationType.AllFrames:
-                    return _unitInfo.FramesObserved > 0 ? GetDurationInSeconds(_unitInfo.FramesObserved) : 0;
+                    return _workUnit.FramesObserved > 0 ? GetDurationInSeconds(_workUnit.FramesObserved) : 0;
                 case PpdCalculationType.EffectiveRate:
                     return GetRawTimePerUnitDownload();
             }
@@ -250,14 +250,14 @@ namespace HFM.Core.WorkUnits
             // attempt to validate that an object would be assigned to CurrentFrame.
             // if this is truly what we're trying to validate, it would make more sense
             // to simply check CurrentFrame for null - 2/7/11
-            if (_unitInfo.CurrentFrame == null) return 0;
+            if (_workUnit.CurrentFrame == null) return 0;
 
             // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.IsUnknown() || _unitInfo.CurrentFrame.ID <= 0) { return 0; }
+            if (DownloadTime.IsUnknown() || _workUnit.CurrentFrame.ID <= 0) { return 0; }
 
             // Issue 92
-            TimeSpan timeSinceUnitDownload = _unitInfo.UnitRetrievalTime.Subtract(DownloadTime);
-            return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _unitInfo.CurrentFrame.ID);
+            TimeSpan timeSinceUnitDownload = _workUnit.UnitRetrievalTime.Subtract(DownloadTime);
+            return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _workUnit.CurrentFrame.ID);
         }
 
         public bool IsUsingBenchmarkFrameTime(PpdCalculationType calculationType)
@@ -276,7 +276,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = _benchmarkService?.GetBenchmark(UnitInfoData);
+            var benchmark = _benchmarkService?.GetBenchmark(WorkUnitData);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 
@@ -327,7 +327,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public DateTime GetEtaDate(PpdCalculationType calculationType)
         {
-            return _unitInfo.UnitRetrievalTime.Add(GetEta(calculationType));
+            return _workUnit.UnitRetrievalTime.Add(GetEta(calculationType));
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.Zero;
             }
 
-            return _unitInfo.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
+            return _workUnit.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
         }
 
         private TimeSpan GetUnitTimeByFrameTime(TimeSpan frameTime)
@@ -443,7 +443,7 @@ namespace HFM.Core.WorkUnits
             var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);
             TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
             var bonusByFrameValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByFrameTime);
-            logger.Debug(CreateProductionDebugOutput(UnitInfoData.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
+            logger.Debug(CreateProductionDebugOutput(WorkUnitData.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
                                                            unitTimeByDownloadTime, bonusByDownloadValues,
                                                            unitTimeByFrameTime, bonusByFrameValues));
         }
@@ -488,7 +488,7 @@ namespace HFM.Core.WorkUnits
         {
             // the numberOfFrames must be 1 or greater
             // if CurrentFrame is null then no frames have been captured yet
-            if (numberOfFrames < 1 || _unitInfo.CurrentFrame == null)
+            if (numberOfFrames < 1 || _workUnit.CurrentFrame == null)
             {
                 return 0;
             }
@@ -502,11 +502,11 @@ namespace HFM.Core.WorkUnits
             TimeSpan totalTime = TimeSpan.Zero;
             int countFrames = 0;
 
-            int frameId = _unitInfo.CurrentFrame.ID;
+            int frameId = _workUnit.CurrentFrame.ID;
             for (int i = 0; i < numberOfFrames; i++)
             {
                 // Issue 199
-                var frameData = _unitInfo.GetFrameData(frameId);
+                var frameData = _workUnit.GetFrameData(frameId);
                 if (frameData != null && frameData.Duration > TimeSpan.Zero)
                 {
                     totalTime = totalTime.Add(frameData.Duration);

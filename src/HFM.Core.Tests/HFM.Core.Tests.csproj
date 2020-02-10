@@ -116,7 +116,7 @@
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="DataTypes\QueryParametersTests.cs" />
-    <Compile Include="WorkUnits\UnitInfoTests.cs" />
+    <Compile Include="WorkUnits\WorkUnitTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Client\ClientConfigurationTests.cs" />
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />

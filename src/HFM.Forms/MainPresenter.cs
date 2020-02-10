@@ -407,7 +407,7 @@ namespace HFM.Forms
                 //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
 
                 _view.SetQueue(_gridModel.SelectedSlot.Queue,
-                               _gridModel.SelectedSlot.UnitInfo.SlotType);
+                               _gridModel.SelectedSlot.WorkUnit.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
@@ -1129,7 +1129,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and if found... load its ProjectID.
             if (_gridModel.SelectedSlot != null)
             {
-                projectId = _gridModel.SelectedSlot.UnitInfo.ProjectID;
+                projectId = _gridModel.SelectedSlot.WorkUnit.ProjectID;
             }
 
             var benchmarksView = _viewFactory.GetBenchmarksForm();

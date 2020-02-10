@@ -49,7 +49,7 @@ namespace HFM.Core.Client
          var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
          var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, UnitInfoDatabase = database };
 
-         var unitInfo1 = new UnitInfo();
+         var unitInfo1 = new WorkUnit();
          unitInfo1.OwningClientName = "Owner";
          unitInfo1.OwningClientPath = "Path";
          unitInfo1.OwningSlotId = 0;
@@ -59,7 +59,7 @@ namespace HFM.Core.Client
          unitInfo1.ProjectGen = 3;
          unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
          unitInfo1.QueueIndex = 0;
-         var currentUnitInfo = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
+         var currentUnitInfo = new UnitInfoModel { CurrentProtein = new Protein(), WorkUnitData = unitInfo1 };
 
          var unitInfo1Clone = unitInfo1.DeepClone();
          unitInfo1Clone.FramesObserved = 4;
@@ -70,7 +70,7 @@ namespace HFM.Core.Client
                   new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
          unitInfo1Clone.FrameData = frameDataDictionary;
          unitInfo1Clone.UnitResult = WorkUnitResult.FinishedUnit;
-         var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
+         var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), WorkUnitData = unitInfo1Clone };
 
          var parsedUnits = new[] { unitInfoLogic1 };
 
@@ -83,7 +83,7 @@ namespace HFM.Core.Client
          // assert before act
          Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));
          Assert.AreEqual(false, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData));
+         Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.WorkUnitData));
 
          // act
          fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits);
@@ -91,7 +91,7 @@ namespace HFM.Core.Client
          // assert after act
          Assert.AreEqual(true, benchmarkCollection.Contains(benchmarkClient));
          Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData).AverageFrameTime);
+         Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.WorkUnitData).AverageFrameTime);
 
          database.VerifyAllExpectations();
       }

@@ -145,7 +145,7 @@
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="DataTypes\QueryParameters.cs" />
-    <Compile Include="WorkUnits\UnitInfo.cs" />
+    <Compile Include="WorkUnits\WorkUnit.cs" />
     <Compile Include="Services\EocStatsData.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />

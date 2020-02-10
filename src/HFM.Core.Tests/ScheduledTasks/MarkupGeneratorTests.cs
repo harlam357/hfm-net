@@ -163,7 +163,7 @@ namespace HFM.Core.ScheduledTasks
             new LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
          };
          slot.CurrentLogLines = logLines;
-         slot.UnitInfo.LogLines = logLines;
+         slot.WorkUnit.LogLines = logLines;
          slots.Add(slot);
 
          // setup slot

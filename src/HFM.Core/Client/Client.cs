@@ -179,8 +179,8 @@ namespace HFM.Core.Client
                {
                   if (Logger.IsDebugEnabled)
                   {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.UnitInfoData.ToProjectString());
-                     Logger.DebugFormat(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
+                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.WorkUnitData.ToProjectString());
+                     Logger.DebugFormat(Constants.ClientNameFormat, unitInfoModel.WorkUnitData.OwningSlotName, message);
                   }
                }
             }

@@ -291,7 +291,7 @@ namespace HFM.Core.Data.SQLite
         public bool Insert(UnitInfoModel unitInfoModel)
         {
             // if the work unit is not valid simply return
-            if (!ValidateUnitInfo(unitInfoModel.UnitInfoData))
+            if (!ValidateUnitInfo(unitInfoModel.WorkUnitData))
             {
                 return false;
             }
@@ -302,13 +302,13 @@ namespace HFM.Core.Data.SQLite
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
             // ensure this unit is not written twice
-            if (UnitInfoExists(unitInfoModel.UnitInfoData))
+            if (UnitInfoExists(unitInfoModel.WorkUnitData))
             {
                 return false;
             }
 
-            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(unitInfoModel.UnitInfoData);
-            // cannot map these two properties from a UnitInfo instance
+            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(unitInfoModel.WorkUnitData);
+            // cannot map these two properties from a WorkUnit instance
             // they only live at the UnitInfoLogic level
             entry.FramesCompleted = unitInfoModel.FramesComplete;
             entry.FrameTimeValue = unitInfoModel.GetRawTime(PpdCalculationType.AllFrames);
@@ -333,37 +333,37 @@ namespace HFM.Core.Data.SQLite
             return true;
         }
 
-        private static bool ValidateUnitInfo(UnitInfo unitInfo)
+        private static bool ValidateUnitInfo(WorkUnit workUnit)
         {
             // if Project and Download Time are valid
-            if (!unitInfo.ProjectIsUnknown() && unitInfo.DownloadTime != DateTime.MinValue)
+            if (!workUnit.ProjectIsUnknown() && workUnit.DownloadTime != DateTime.MinValue)
             {
                 // if UnitResult is FinishedUnit
-                if (unitInfo.UnitResult == WorkUnitResult.FinishedUnit)
+                if (workUnit.UnitResult == WorkUnitResult.FinishedUnit)
                 {
                     // the Finished Time must be valid
-                    return unitInfo.FinishedTime != DateTime.MinValue;
+                    return workUnit.FinishedTime != DateTime.MinValue;
                 }
                 // otherwise, the UnitResult must be a Terminating error result
-                return unitInfo.UnitResult.IsTerminating();
+                return workUnit.UnitResult.IsTerminating();
             }
             return false;
         }
 
-        private bool UnitInfoExists(UnitInfo unitInfo)
+        private bool UnitInfoExists(WorkUnit workUnit)
         {
-            var rows = Fetch(BuildUnitKeyQueryParameters(unitInfo));
+            var rows = Fetch(BuildUnitKeyQueryParameters(workUnit));
             return rows.Count != 0;
         }
 
-        private static QueryParameters BuildUnitKeyQueryParameters(UnitInfo unitInfo)
+        private static QueryParameters BuildUnitKeyQueryParameters(WorkUnit workUnit)
         {
-            var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", unitInfo.ToProjectString()) };
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = unitInfo.ProjectID });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = unitInfo.ProjectRun });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = unitInfo.ProjectClone });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = unitInfo.ProjectGen });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = unitInfo.DownloadTime });
+            var parameters = new QueryParameters { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", workUnit.ToProjectString()) };
+            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = workUnit.ProjectID });
+            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = workUnit.ProjectRun });
+            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = workUnit.ProjectClone });
+            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = workUnit.ProjectGen });
+            parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = workUnit.DownloadTime });
             return parameters;
         }
 

@@ -79,17 +79,17 @@ namespace HFM.Core.Client
                     UpdateTimeOfLastProgress(value);
                 }
                 _unitInfoModel = value;
-                _unitInfo = null;
+                _workUnit = null;
             }
         }
 
         // ReSharper disable UnaccessedField.Local
-        private UnitInfo _unitInfo;
+        private WorkUnit _workUnit;
         // ReSharper restore UnaccessedField.Local
-        public UnitInfo UnitInfo
+        public WorkUnit WorkUnit
         {
-            get { return _unitInfo ?? UnitInfoModel.UnitInfoData; }
-            set { _unitInfo = value; }
+            get { return _workUnit ?? UnitInfoModel.WorkUnitData; }
+            set { _workUnit = value; }
         }
 
         public ClientSettings Settings { get; set; }
@@ -189,7 +189,7 @@ namespace HFM.Core.Client
         {
             get
             {
-                string slotType = UnitInfo.SlotType.ToString();
+                string slotType = WorkUnit.SlotType.ToString();
                 if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
                 {
                     return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
@@ -252,9 +252,9 @@ namespace HFM.Core.Client
         {
             get
             {
-                if (ShowVersions && Math.Abs(UnitInfo.CoreVersion) > Single.Epsilon)
+                if (ShowVersions && Math.Abs(WorkUnit.CoreVersion) > Single.Epsilon)
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoModel.CurrentProtein.Core, UnitInfo.CoreVersion);
+                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", UnitInfoModel.CurrentProtein.Core, WorkUnit.CoreVersion);
                 }
                 return UnitInfoModel.CurrentProtein.Core;
             }
@@ -262,12 +262,12 @@ namespace HFM.Core.Client
 
         public string CoreId
         {
-            get { return UnitInfo.CoreID; }
+            get { return WorkUnit.CoreID; }
         }
 
         public string ProjectRunCloneGen
         {
-            get { return UnitInfo.ToShortProjectString(); }
+            get { return WorkUnit.ToShortProjectString(); }
         }
 
         public double Credit
@@ -310,7 +310,7 @@ namespace HFM.Core.Client
         /// </summary>
         public string Username
         {
-            get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", UnitInfo.FoldingID, UnitInfo.Team); }
+            get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team); }
         }
 
         public DateTime DownloadTime
@@ -390,7 +390,7 @@ namespace HFM.Core.Client
             get
             {
                 // if these are the default assigned values, don't check the prefs and just return true
-                if (UnitInfo.FoldingID == Constants.DefaultFoldingID && UnitInfo.Team == Constants.DefaultTeam)
+                if (WorkUnit.FoldingID == Constants.DefaultFoldingID && WorkUnit.Team == Constants.DefaultTeam)
                 {
                     return true;
                 }
@@ -399,8 +399,8 @@ namespace HFM.Core.Client
                 {
                     return true;
                 }
-                return UnitInfo.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
-                       UnitInfo.Team == Prefs.Get<int>(Preference.TeamId);
+                return WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
+                       WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
             }
         }
 
@@ -419,17 +419,17 @@ namespace HFM.Core.Client
         public DateTime TimeOfLastFrameProgress { get; set; } // should be init to DateTime.MinValue
 
         /// <summary>
-        /// Update Time of Last Frame Progress based on Current and Parsed UnitInfo
+        /// Update Time of Last Frame Progress based on Current and Parsed WorkUnit
         /// </summary>
         private void UpdateTimeOfLastProgress(UnitInfoModel parsedUnitInfo)
         {
             // Matches the Current Project and Raw Download Time
-            if (UnitInfoModel.UnitInfoData.EqualsProjectAndDownloadTime(parsedUnitInfo.UnitInfoData))
+            if (UnitInfoModel.WorkUnitData.EqualsProjectAndDownloadTime(parsedUnitInfo.WorkUnitData))
             {
                 // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
-                if (parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    UnitInfoModel.UnitInfoData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    parsedUnitInfo.UnitInfoData.UnitStartTimeStamp.Equals(UnitInfoModel.UnitInfoData.UnitStartTimeStamp) == false)
+                if (parsedUnitInfo.WorkUnitData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                    UnitInfoModel.WorkUnitData.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
+                    parsedUnitInfo.WorkUnitData.UnitStartTimeStamp.Equals(UnitInfoModel.WorkUnitData.UnitStartTimeStamp) == false)
                 {
                     TimeOfLastUnitStart = DateTime.Now;
                 }
@@ -441,7 +441,7 @@ namespace HFM.Core.Client
                     TimeOfLastFrameProgress = DateTime.Now;
                 }
             }
-            else // Different UnitInfo - Update the Time Of Last 
+            else // Different WorkUnit - Update the Time Of Last 
                  // Unit Start and Clear Frame Progress Value
             {
                 TimeOfLastUnitStart = DateTime.Now;
@@ -456,14 +456,14 @@ namespace HFM.Core.Client
         /// </summary>
         public static void FindDuplicateProjects(ICollection<SlotModel> slots)
         {
-            var duplicates = slots.GroupBy(x => x.UnitInfoModel.UnitInfoData.ToShortProjectString())
-                .Where(g => g.Count() > 1 && g.First().UnitInfoModel.UnitInfoData.ProjectIsKnown())
+            var duplicates = slots.GroupBy(x => x.UnitInfoModel.WorkUnitData.ToShortProjectString())
+                .Where(g => g.Count() > 1 && g.First().UnitInfoModel.WorkUnitData.ProjectIsKnown())
                 .Select(g => g.Key)
                 .ToList();
 
             foreach (var slot in slots)
             {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.UnitInfoData.ToShortProjectString());
+                slot.ProjectIsDuplicate = duplicates.Contains(slot.UnitInfoModel.WorkUnitData.ToShortProjectString());
             }
         }
     }

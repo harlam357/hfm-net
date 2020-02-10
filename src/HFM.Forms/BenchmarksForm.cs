@@ -171,7 +171,7 @@ namespace HFM.Forms
                 var slotModel = _clientConfiguration.Slots.FirstOrDefault(x =>
                    x.Name == benchmark.OwningSlotName &&
                    x.Settings.ClientPath == benchmark.OwningClientPath &&
-                   x.UnitInfoModel.UnitInfoData.ProjectID == benchmark.ProjectID);
+                   x.UnitInfoModel.WorkUnitData.ProjectID == benchmark.ProjectID);
                 if (slotModel != null && slotModel.ProductionValuesOk)
                 {
                     unitInfoModel = slotModel.UnitInfoModel;

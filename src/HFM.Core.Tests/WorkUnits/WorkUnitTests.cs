@@ -31,9 +31,9 @@ namespace HFM.Core.WorkUnits
    public class UnitInfoTests
    {
       [Test]
-      public void UnitInfo_DefaultPropertyValues_Test()
+      public void WorkUnit_DefaultPropertyValues_Test()
       {
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          Assert.AreEqual(SlotType.Unknown, unitInfo.SlotType);
          Assert.IsTrue(unitInfo.DownloadTime.IsUnknown());
          Assert.IsTrue(unitInfo.DueTime.IsUnknown());
@@ -49,19 +49,19 @@ namespace HFM.Core.WorkUnits
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_DefaultValueIsNull_Test()
+      public void WorkUnit_CurrentFrame_DefaultValueIsNull_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          // Act & Assert
          Assert.IsNull(unitInfo.CurrentFrame);
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_IsSourcedFromFrameDataDictionary_Test()
+      public void WorkUnit_CurrentFrame_IsSourcedFromFrameDataDictionary_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
          unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
@@ -69,10 +69,10 @@ namespace HFM.Core.WorkUnits
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_IsSourcedFromFrameDataWithGreatestID_Test()
+      public void WorkUnit_CurrentFrame_IsSourcedFromFrameDataWithGreatestID_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
             .With(new WorkUnitFrameData { ID = 0 }, new WorkUnitFrameData { ID = 1 }, new WorkUnitFrameData { ID = 5 });
          unitInfo.FrameData = frameDataDictionary;
@@ -81,10 +81,10 @@ namespace HFM.Core.WorkUnits
       }
 
       [Test]
-      public void UnitInfo_CurrentFrame_ReturnsNullIfMaximumFrameDataIdIsNotZeroOrGreater_Test()
+      public void WorkUnit_CurrentFrame_ReturnsNullIfMaximumFrameDataIdIsNotZeroOrGreater_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = -1 });
          unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
@@ -92,19 +92,19 @@ namespace HFM.Core.WorkUnits
       }
 
       [Test]
-      public void UnitInfo_GetFrameData_ReturnsNullIfRequestedIdDoesNotExist_Test()
+      public void WorkUnit_GetFrameData_ReturnsNullIfRequestedIdDoesNotExist_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          // Act & Assert
          Assert.IsNull(unitInfo.GetFrameData(0));
       }
 
       [Test]
-      public void UnitInfo_GetFrameData_ReturnsObjectIfRequestedIdExists_Test()
+      public void WorkUnit_GetFrameData_ReturnsObjectIfRequestedIdExists_Test()
       {
          // Arrange
-         var unitInfo = new UnitInfo();
+         var unitInfo = new WorkUnit();
          var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
          unitInfo.FrameData = frameDataDictionary;
          // Act & Assert
