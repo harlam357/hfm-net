@@ -45,7 +45,7 @@ namespace HFM.Core.ScheduledTasks
             _markupGenerator = markupGenerator;
             _websiteDeployer = websiteDeployer;
             _aggregateScheduledTask = new AggregateScheduledTask();
-            _aggregateScheduledTask.Changed += (s, e) => ReportAction(e);
+            _aggregateScheduledTask.Changed += TaskChanged;
 
             _prefs.PreferenceChanged += (s, e) =>
             {
@@ -115,30 +115,25 @@ namespace HFM.Core.ScheduledTasks
                 }
             };
 
-            _aggregateScheduledTask.Add(ClientTaskKey, ClientRetrievalAction, ClientInterval);
-            _aggregateScheduledTask.Add(WebTaskKey, WebGenerationAction, WebInterval);
+            _aggregateScheduledTask.Add(new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval));
+            _aggregateScheduledTask.Add(new DelegateScheduledTask(WebTaskKey, WebGenerationAction, WebInterval));
         }
 
-        private void ReportAction(ScheduledTaskChangedEventArgs e)
+        private void TaskChanged(object sender, ScheduledTaskChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case ScheduledTaskChangedAction.Started:
-                    Logger.InfoFormat("{0} task scheduled: {1} minutes", e.Key, (int)(e.Interval / Constants.MinToMillisec));
+                    Logger.Info(e.ToString(i => $"{(int)(i.GetValueOrDefault() / Constants.MinToMillisec)} minutes"));
                     break;
-                case ScheduledTaskChangedAction.Stopped:
-                    Logger.InfoFormat("{0} task stopped", e.Key);
-                    break;
-                case ScheduledTaskChangedAction.Running:
-                    Logger.InfoFormat("{0} task running", e.Key);
-                    break;
-                case ScheduledTaskChangedAction.Canceled:
-                    break;
-                case ScheduledTaskChangedAction.Finished:
-                    Logger.InfoFormat("{0} task finished: {1:#,##0} ms", e.Key, e.Interval);
+                case ScheduledTaskChangedAction.Faulted:
+                    Logger.Error(e.ToString());
                     break;
                 case ScheduledTaskChangedAction.AlreadyInProgress:
-                    Logger.WarnFormat("{0} task already in progress", e.Key);
+                    Logger.Warn(e.ToString());
+                    break;
+                default:
+                    Logger.Info(e.ToString());
                     break;
             }
         }

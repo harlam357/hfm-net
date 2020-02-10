@@ -149,17 +149,16 @@ namespace HFM.Core.ScheduledTasks
 
         public IEnumerable<ScheduledTask> InnerScheduledTasks => _tasks.Values;
         
-        public ScheduledTask Add(string key, Action<CancellationToken> action, double interval)
+        public void Add(ScheduledTask scheduledTask)
         {
+            string key = scheduledTask.Key;
             if (_tasks.ContainsKey(key))
             {
                 _tasks[key].Stop();
                 _tasks[key].Changed -= OnTaskChanged;
             }
-            var task = new ScheduledTask(key, action, interval);
-            task.Changed += OnTaskChanged;
-            _tasks[key] = task;
-            return task;
+            scheduledTask.Changed += OnTaskChanged;
+            _tasks[key] = scheduledTask;
         }
     }
 }

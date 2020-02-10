@@ -12,40 +12,83 @@ namespace HFM.Core.ScheduledTasks
         Stopped,
         Running,
         Canceled,
+        Faulted,
         Finished,
         AlreadyInProgress
     }
 
     public sealed class ScheduledTaskChangedEventArgs : EventArgs
     {
-        public string Key { get; }
+        public ScheduledTask Source { get; }
 
         public ScheduledTaskChangedAction Action { get; }
 
         public double? Interval { get; }
 
-        public ScheduledTaskChangedEventArgs(string key, ScheduledTaskChangedAction action, double? interval)
+        public ScheduledTaskChangedEventArgs(ScheduledTask source, ScheduledTaskChangedAction action, double? interval)
         {
-            Key = key;
+            Source = source;
             Action = action;
             Interval = interval;
         }
+
+        public override string ToString()
+        {
+            return ToString(i => $"{i:#,##0} ms");
+        }
+
+        public string ToString(Func<double?, string> formatInterval)
+        {
+            string key = Source.Key;
+            switch (Action)
+            {
+                case ScheduledTaskChangedAction.Started:
+                    return $"{key} task scheduled: {formatInterval(Interval)}";
+                case ScheduledTaskChangedAction.Stopped:
+                    return $"{key} task stopped";
+                case ScheduledTaskChangedAction.Running:
+                    return $"{key} task running";
+                case ScheduledTaskChangedAction.Canceled:
+                    return $"{key} task canceled";
+                case ScheduledTaskChangedAction.Faulted:
+                    return $"{key} task faulted: {Source.Exception}";
+                case ScheduledTaskChangedAction.Finished:
+                    return $"{key} task finished: {Interval:#,##0} ms";
+                case ScheduledTaskChangedAction.AlreadyInProgress:
+                    return $"{key} task already in progress";
+                default:
+                    return base.ToString();
+            }
+        }
     }
 
-    public class ScheduledTask
+    public class DelegateScheduledTask : ScheduledTask
+    {
+        public Action<CancellationToken> Action { get; }
+
+        public DelegateScheduledTask(string key, Action<CancellationToken> action, double interval) : base(key, interval)
+        {
+            Action = action;
+        }
+
+        protected override void OnRun(CancellationToken ct)
+        {
+            Action(ct);
+        }
+    }
+    
+    public abstract class ScheduledTask
     {
         private readonly System.Timers.Timer _timer;
 
-        public ScheduledTask(Action<CancellationToken> action, double interval)
-            : this(null, action, interval)
+        protected ScheduledTask(string key) : this(key, 100.0)
         {
 
         }
 
-        public ScheduledTask(string key, Action<CancellationToken> action, double interval)
+        protected ScheduledTask(string key, double interval)
         {
             Key = key;
-            Action = action;
             _timer = new System.Timers.Timer();
             _timer.Interval = interval;
             _timer.Elapsed += (s, e) => Run();
@@ -53,14 +96,12 @@ namespace HFM.Core.ScheduledTasks
 
         public event EventHandler<ScheduledTaskChangedEventArgs> Changed;
 
-        private void OnTaskChanged(ScheduledTaskChangedAction action, double? interval = null)
+        protected virtual void OnTaskChanged(ScheduledTaskChangedAction action, double? interval = null)
         {
-            Changed?.Invoke(this, new ScheduledTaskChangedEventArgs(Key, action, interval));
+            Changed?.Invoke(this, new ScheduledTaskChangedEventArgs(this, action, interval));
         }
 
         public string Key { get; }
-
-        public Action<CancellationToken> Action { get; }
 
         public double Interval
         {
@@ -71,6 +112,8 @@ namespace HFM.Core.ScheduledTasks
         public bool Enabled { get; private set; }
 
         public bool InProgress => InnerTask != null && InnerTask.Status < TaskStatus.RanToCompletion;
+
+        public Exception Exception { get; private set; }
 
         internal Task InnerTask { get; private set; }
 
@@ -98,9 +141,14 @@ namespace HFM.Core.ScheduledTasks
             var lastCts = Interlocked.Exchange(ref _cts, new CancellationTokenSource());
             lastCts?.Dispose();
 
-            InnerTask = Task.Run(() => Action(_cts.Token), _cts.Token);
+            InnerTask = Task.Run(() => OnRun(_cts.Token), _cts.Token);
             InnerTask.ContinueWith(t =>
             {
+                if (t.Status == TaskStatus.Faulted)
+                {
+                    Exception = t.Exception?.InnerException;
+                    OnTaskChanged(ScheduledTaskChangedAction.Faulted);
+                }
                 _cts.Token.ThrowIfCancellationRequested();
                 OnTaskChanged(ScheduledTaskChangedAction.Finished, sw.ElapsedMilliseconds);
                 if (Enabled)
@@ -110,6 +158,8 @@ namespace HFM.Core.ScheduledTasks
                 }
             }, _cts.Token);
         }
+
+        protected abstract void OnRun(CancellationToken ct);
 
         public void Start()
         {

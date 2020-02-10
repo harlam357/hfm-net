@@ -19,14 +19,12 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 
 using Castle.Core.Logging;
 
 using HFM.Core;
-using HFM.Core.Data;
-using HFM.Core.Services;
+using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -41,26 +39,16 @@ namespace HFM.Forms.Models
     {
         private ILogger _logger;
 
-        public ILogger Logger
-        {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
-        }
-
-        private readonly System.Timers.Timer _updateTimer;
+        public ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
 
         private readonly IPreferenceSet _prefs;
-        private readonly IEocStatsService _eocStatsService;
-        private readonly EocStatsDataContainer _dataContainer;
+        private readonly EocStatsScheduledTask _scheduledTask;
 
-        public UserStatsDataModel(IPreferenceSet prefs, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
+        public UserStatsDataModel(ILogger logger, IPreferenceSet prefs, EocStatsScheduledTask scheduledTask)
         {
-            _updateTimer = new System.Timers.Timer();
-            _updateTimer.Elapsed += UpdateTimerElapsed;
-
+            _logger = logger;
             _prefs = prefs;
-            _eocStatsService = eocStatsService;
-            _dataContainer = dataContainer;
+            _scheduledTask = scheduledTask;
 
             _prefs.PreferenceChanged += (s, e) =>
                                         {
@@ -69,146 +57,36 @@ namespace HFM.Forms.Models
                                                 ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
                                                 if (ControlsVisible)
                                                 {
-                                                    RefreshEocStatsData(false);
-                                                    StartTimer();
-                                                }
-                                                else
-                                                {
-                                                    StopTimer();
+                                                    RefreshFromData();
                                                 }
                                             }
                                         };
 
-            // apply data container to the model
             ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
-            if (ControlsVisible)
-            {
-                if (TimeForNextUpdate())
-                {
-                    RefreshEocStatsData(false);
-                }
-                StartTimer();
-            }
-            AutoMapper.Mapper.Map(_dataContainer.Data, this);
-        }
-
-        private void UpdateTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            StopTimer();
-            RefreshEocStatsData(false);
-            StartTimer();
-        }
-
-        private bool TimeForNextUpdate()
-        {
-            var utcNow = DateTime.UtcNow;
-            var isDaylightSavingsTime = DateTime.Now.IsDaylightSavingTime();
-
-            DateTime nextUpdateTime = EocStatsData.GetNextUpdateTime(_dataContainer.Data.LastUpdated, utcNow, isDaylightSavingsTime);
-
-            Logger.DebugFormat("Current Time: {0} (UTC)", utcNow);
-            Logger.DebugFormat("Next EOC Stats Update Time: {0} (UTC)", nextUpdateTime);
-
-            return utcNow >= nextUpdateTime;
-        }
-
-        private void StartTimer()
-        {
-            var utcNow = DateTime.UtcNow;
-            var isDaylightSavingsTime = DateTime.Now.IsDaylightSavingTime();
-
-            DateTime nextUpdateTime = EocStatsData.GetNextUpdateTime(_dataContainer.Data.LastUpdated, utcNow, isDaylightSavingsTime);
-
-            TimeSpan timeUntilNextUpdate = nextUpdateTime.Subtract(utcNow);
-            // add a random number of minutes to the interval to allow time for the update to finish on the EOC servers.
-            // this also provides for some staggering between all HFM instances so the EOC servers aren't bombarded all at the same time.
-            timeUntilNextUpdate = timeUntilNextUpdate.Add(TimeSpan.FromMinutes(GetRandomMinutes()));
-
-            double interval = timeUntilNextUpdate.TotalMilliseconds;
-            // sanity check - Timer.Interval must be positive and less than Int32.MaxValue.
-            // Otherwise an exception is thrown when calling Start() on the timer.
-            if (interval > TimeSpan.FromMinutes(1).TotalMilliseconds && interval < Int32.MaxValue)
-            {
-                _updateTimer.Interval = interval;
-            }
-            else
-            {
-                // GetNextUpdateTime should provide reasonable value but if that fails for some reason fall back to a three hour interval
-                _updateTimer.Interval = TimeSpan.FromHours(3).TotalMilliseconds;
-            }
-
-            Logger.InfoFormat("Starting EOC Stats Update Timer Loop: {0} Minutes", Convert.ToInt32(TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalMinutes));
-            _updateTimer.Start();
-        }
-
-        private static double GetRandomMinutes()
-        {
-            var r = new Random(DateTime.Now.Second);
-            return r.Next(15, 30);
-        }
-
-        private void StopTimer()
-        {
-            Logger.Info("Stopping EOC Stats Timer Loop");
-            _updateTimer.Stop();
+            RefreshFromData();
         }
 
         public void SetViewStyle(bool showTeamStats)
         {
             _prefs.Set(Preference.UserStatsType, showTeamStats ? StatsType.Team : StatsType.User);
-            // all properties
             OnPropertyChanged(null);
         }
 
         public void Refresh()
         {
-            RefreshEocStatsData(true);
+            _scheduledTask.Run(false);
+            RefreshFromData();
+        }
+
+        private void RefreshFromData()
+        {
+            AutoMapper.Mapper.Map(_scheduledTask.DataContainer.Data, this);
+            OnPropertyChanged(null);
         }
 
         private static string BuildLabel(string labelName, object value)
         {
             return String.Format(CultureInfo.CurrentCulture, String.Concat(labelName, ": ", Constants.EocStatsFormat), value);
-        }
-
-        /// <summary>
-        /// Get Overall User Data from EOC XML
-        /// </summary>
-        /// <param name="forceRefresh">Force Refresh or allow to check for next update time</param>
-        private void RefreshEocStatsData(bool forceRefresh)
-        {
-            // if Forced or Time For an Update
-            if (forceRefresh || TimeForNextUpdate())
-            {
-                var sw = Stopwatch.StartNew();
-
-                try
-                {
-                    var newStatsData = _eocStatsService.GetStatsData();
-
-                    // if Forced, set Last Updated and Serialize or
-                    // if the new data is not equal to the previous data, we updated... otherwise, if the update
-                    // status is current we should assume the data is current but did not change - Issue 67
-                    if (forceRefresh || !_dataContainer.Data.Equals(newStatsData) || newStatsData.Status == "Current")
-                    {
-                        _dataContainer.Data = newStatsData;
-                        _dataContainer.Write();
-
-                        AutoMapper.Mapper.Map(_dataContainer.Data, this);
-                        OnPropertyChanged(null);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
-                }
-                finally
-                {
-                    // TODO: Consolidate with StopwatchExtensions.GetExecTime()
-                    Logger.InfoFormat("EOC Stats Updated in {0}", $"{sw.ElapsedMilliseconds:#,##0} ms");
-                }
-            }
-
-            Logger.InfoFormat("Last EOC Stats Update: {0} (UTC)", _dataContainer.Data.LastUpdated);
         }
 
         #region Data Properties

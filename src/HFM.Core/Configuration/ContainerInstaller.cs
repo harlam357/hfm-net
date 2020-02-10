@@ -148,6 +148,10 @@ namespace HFM.Core.Configuration
             Component.For<Data.EocStatsDataContainer>()
                   .OnCreate(instance => instance.Read()));
 
+         // EocStatsScheduledTask - Singleton
+         container.Register(
+             Component.For<ScheduledTasks.EocStatsScheduledTask>());
+
          // IProteinService - Singleton
          container.Register(
             Component.For<IProteinService>()
