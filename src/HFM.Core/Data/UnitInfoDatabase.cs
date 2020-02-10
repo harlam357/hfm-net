@@ -103,7 +103,8 @@ namespace HFM.Core.Data
         /// </summary>
         public bool Connected { get; private set; }
 
-        private readonly ILogger _logger = NullLogger.Instance;
+        private ILogger _logger;
+        private ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
 
         private readonly IProteinService _proteinService;
         private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
@@ -121,11 +122,7 @@ namespace HFM.Core.Data
         public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
         {
             _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
-
-            if (logger != null)
-            {
-                _logger = logger;
-            }
+            _logger = logger;
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
@@ -165,7 +162,7 @@ namespace HFM.Core.Data
             }
             catch (Exception ex)
             {
-                _logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.ErrorFormat(ex, "{0}", ex.Message);
 
                 Connected = false;
             }
@@ -189,7 +186,7 @@ namespace HFM.Core.Data
                 CreateTable(SqlTable.Version);
             }
             int dbVersion = Application.ParseVersion(dbVersionString);
-            _logger.InfoFormat("WU History database v{0}", dbVersionString);
+            Logger.InfoFormat("WU History database v{0}", dbVersionString);
 
             UpgradeToVersion092(dbVersion);
         }
@@ -206,9 +203,9 @@ namespace HFM.Core.Data
                     {
                         try
                         {
-                            _logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersionString);
+                            Logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersionString);
                             // delete duplicates
-                            var duplicateDeleter = new DuplicateDeleter(connection, _logger);
+                            var duplicateDeleter = new DuplicateDeleter(connection, Logger);
                             duplicateDeleter.ExecuteAsyncWithProgress(true).Wait();
                             // add columns to WuHistory table
                             AddProteinColumns(connection);
@@ -259,7 +256,7 @@ namespace HFM.Core.Data
         {
             Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
-            _logger.InfoFormat("Setting database version to: v{0}", version);
+            Logger.InfoFormat("Setting database version to: v{0}", version);
             using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
             {
                 var param = new SQLiteParameter("Version", DbType.String) { Value = version };
@@ -381,7 +378,7 @@ namespace HFM.Core.Data
             }
             finally
             {
-                _logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
+                Logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
             }
         }
 
@@ -412,7 +409,7 @@ namespace HFM.Core.Data
             }
             finally
             {
-                _logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
+                Logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
             }
         }
 
