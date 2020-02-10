@@ -473,27 +473,6 @@ namespace HFM.Core.Data
 
         #endregion
 
-        #region Execute
-
-        public int Execute(string sql, params object[] args)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Open();
-                return Execute(connection, sql, args);
-            }
-        }
-
-        private static int Execute(SQLiteConnection connection, string sql, params object[] args)
-        {
-            using (var database = new PetaPoco.Database(connection))
-            {
-                return database.Execute(sql, args);
-            }
-        }
-
-        #endregion
-
         #region Count
 
         public long CountCompleted(string clientName, DateTime? clientStartTime)

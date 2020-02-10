@@ -21,11 +21,8 @@ namespace HFM.Core.Data
 
          public DuplicateDeleter(SQLiteConnection connection, ILogger logger)
          {
-            if (connection == null) throw new ArgumentNullException("connection");
-            if (logger == null) throw new ArgumentNullException("logger");
-
-            _connection = connection;
-            _logger = logger;
+             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
          }
 
          protected override async Task OnExecuteAsync(IProgress<ProgressInfo> progress)
@@ -53,7 +50,11 @@ namespace HFM.Core.Data
                      .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
                             row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-                  int result = Execute(_connection, deleteSql.SQL, deleteSql.Arguments);
+                  int result;
+                  using (var database = new PetaPoco.Database(_connection))
+                  {
+                      result = database.Execute(deleteSql);
+                  }
                   if (result != 0)
                   {
                      _logger.DebugFormat("Deleted rows: {0}", result);
@@ -65,10 +66,7 @@ namespace HFM.Core.Data
                   if (progressPercentage != lastProgress)
                   {
                      string message = String.Format(CultureInfo.CurrentCulture, "Deleting duplicate {0} of {1}.", count, table.Rows.Count);
-                     if (progress != null)
-                     {
-                        progress.Report(new ProgressInfo(progressPercentage, message));
-                     }
+                     progress?.Report(new ProgressInfo(progressPercentage, message));
                      lastProgress = progressPercentage;
                   }
                }

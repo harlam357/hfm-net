@@ -92,11 +92,8 @@ namespace HFM.Core.Data
 
          protected ProteinDataUpdaterBase(SQLiteConnection connection, IProteinService proteinService)
          {
-            if (connection == null) throw new ArgumentNullException("connection");
-            if (proteinService == null) throw new ArgumentNullException("proteinService");
-
-            _connection = connection;
-            _proteinService = proteinService;
+             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
          }
 
          public ProteinUpdateType UpdateType { get; set; }
@@ -105,78 +102,90 @@ namespace HFM.Core.Data
 
          protected void ExecuteInternal(CancellationToken cancellationToken, IProgress<ProgressInfo> progress)
          {
-            const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
+             const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
 
-            if (UpdateType == ProteinUpdateType.All ||
-                UpdateType == ProteinUpdateType.Unknown)
-            {
-               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
-               if (UpdateType == ProteinUpdateType.Unknown)
-               {
-                  selectSql = selectSql.Where(workUnitNameUnknown);
-               }
-               selectSql = selectSql.GroupBy("ProjectID");
+             switch (UpdateType)
+             {
+                 case ProteinUpdateType.All:
+                 case ProteinUpdateType.Unknown:
+                 {
+                     var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
+                     if (UpdateType == ProteinUpdateType.Unknown)
+                     {
+                         selectSql = selectSql.Where(workUnitNameUnknown);
+                     }
+                     selectSql = selectSql.GroupBy("ProjectID");
 
-               using (var table = Select(_connection, selectSql.SQL))
-               {
-                  int count = 0;
-                  int lastProgress = 0;
-                  foreach (DataRow row in table.Rows)
-                  {
-                     cancellationToken.ThrowIfCancellationRequested();
+                     using (var table = Select(_connection, selectSql.SQL))
+                     {
+                         int count = 0;
+                         int lastProgress = 0;
+                         foreach (DataRow row in table.Rows)
+                         {
+                             cancellationToken.ThrowIfCancellationRequested();
 
-                     var projectId = row.Field<int>("ProjectID");
+                             var projectId = row.Field<int>("ProjectID");
+                             var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                             if (updateSql != null)
+                             {
+                                 if (UpdateType == ProteinUpdateType.Unknown)
+                                 {
+                                     updateSql = updateSql.Where(workUnitNameUnknown);
+                                 }
+                                 using (var database = new PetaPoco.Database(_connection))
+                                 {
+                                     database.Execute(updateSql);
+                                 }
+                             }
+                             count++;
+
+                             int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                             if (progressPercentage != lastProgress)
+                             {
+                                 string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
+                                 progress?.Report(new ProgressInfo(progressPercentage, message));
+                                 lastProgress = progressPercentage;
+                             }
+                         }
+                     }
+                     break;
+                 }
+                 case ProteinUpdateType.Project:
+                 {
+                     int projectId = (int)UpdateArg;
                      var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                      if (updateSql != null)
                      {
-                        if (UpdateType == ProteinUpdateType.Unknown)
-                        {
-                           updateSql = updateSql.Where(workUnitNameUnknown);
-                        }
-                        Execute(_connection, updateSql.SQL, updateSql.Arguments);
+                         using (var database = new PetaPoco.Database(_connection))
+                         {
+                             database.Execute(updateSql);
+                         }
                      }
-                     count++;
+                     break;
+                 }
+                 case ProteinUpdateType.Id:
+                 {
+                     long id = UpdateArg;
+                     var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
 
-                     int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-                     if (progressPercentage != lastProgress)
+                     using (var table = Select(_connection, selectSql.SQL, selectSql.Arguments))
                      {
-                        string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                        if (progress != null)
-                        {
-                           progress.Report(new ProgressInfo(progressPercentage, message));
-                        }
-                        lastProgress = progressPercentage;
+                         if (table.Rows.Count != 0)
+                         {
+                             var projectId = table.Rows[0].Field<int>("ProjectID");
+                             var updateSql = GetUpdateSql(projectId, "ID", id);
+                             if (updateSql != null)
+                             {
+                                 using (var database = new PetaPoco.Database(_connection))
+                                 {
+                                     database.Execute(updateSql);
+                                 }
+                             }
+                         }
                      }
-                  }
-               }
-            }
-            else if (UpdateType == ProteinUpdateType.Project)
-            {
-               int projectId = (int)UpdateArg;
-               var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-               if (updateSql != null)
-               {
-                  Execute(_connection, updateSql.SQL, updateSql.Arguments);
-               }
-            }
-            else if (UpdateType == ProteinUpdateType.Id)
-            {
-               long id = UpdateArg;
-               var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
-
-               using (var table = Select(_connection, selectSql.SQL, selectSql.Arguments))
-               {
-                  if (table.Rows.Count != 0)
-                  {
-                     var projectId = table.Rows[0].Field<int>("ProjectID");
-                     var updateSql = GetUpdateSql(projectId, "ID", id);
-                     if (updateSql != null)
-                     {
-                        Execute(_connection, updateSql.SQL, updateSql.Arguments);
-                     }
-                  }
-               }
-            }
+                     break;
+                 }
+             }
          }
 
          private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
