@@ -7,7 +7,7 @@ using System.Threading;
 
 using NUnit.Framework;
 
-namespace HFM.Core.WorkUnits
+namespace HFM.Core.Data
 {
     [TestFixture]
     public class WorkUnitHistoryRowCsvFileSerializerTests

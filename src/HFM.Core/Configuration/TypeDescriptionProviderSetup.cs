@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 using HFM.Core.Client;
-using HFM.Core.WorkUnits;
+using HFM.Core.Data;
 
 namespace HFM.Core.Configuration
 {

@@ -24,7 +24,7 @@ using System.IO;
 
 using HFM.Core.Serializers;
 
-namespace HFM.Core.WorkUnits
+namespace HFM.Core.Data
 {
     public class WorkUnitHistoryRowCsvFileSerializer : IFileSerializer<List<WorkUnitHistoryRow>>
     {

@@ -129,7 +129,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="WorkUnits\ProteinService.cs" />
     <Compile Include="Client\ClientSettingsFileSerializer.cs" />
-    <Compile Include="WorkUnits\WorkUnitHistoryRowCsvFileSerializer.cs" />
+    <Compile Include="Data\WorkUnitHistoryRowCsvFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
     <Compile Include="Serializers\DataContractFileSerializer.cs" />
     <Compile Include="DataTypes\Markup\SlotData.cs" />
@@ -142,7 +142,7 @@
     <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />
-    <Compile Include="WorkUnits\WorkUnitHistoryRow.cs" />
+    <Compile Include="Data\WorkUnitHistoryRow.cs" />
     <Compile Include="DataTypes\ProteinBenchmark.cs" />
     <Compile Include="DataTypes\ProteinFrameTime.cs" />
     <Compile Include="Data\WorkUnitHistoryQuery.cs" />

@@ -18,8 +18,9 @@
  */
 
 using System;
+using HFM.Core.WorkUnits;
 
-namespace HFM.Core.WorkUnits
+namespace HFM.Core.Data
 {
     [PetaPoco.TableName("WuHistory")]
     [PetaPoco.PrimaryKey("ID")]
