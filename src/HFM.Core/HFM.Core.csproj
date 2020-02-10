@@ -86,6 +86,7 @@
     <Compile Include="Client\LogLineCopier.cs" />
     <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
+    <Compile Include="Data\SQLiteAddColumnCommand.cs" />
     <Compile Include="Data\UnitInfoDatabase.DuplicateDeleter.cs" />
     <Compile Include="Data\UnitInfoDatabase.ProteinDataUpdater.cs" />
     <Compile Include="Data\UnitInfoDatabase.SQLiteFunctions.cs" />

@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
@@ -215,7 +214,7 @@ namespace HFM.Core.Data
 
         private static void AddProteinColumns(SQLiteConnection connection)
         {
-            using (var adder = new SQLiteColumnAdder(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
+            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
             {
                 adder.AddColumn("WorkUnitName", "VARCHAR(30)");
                 adder.AddColumn("KFactor", "FLOAT");
@@ -225,7 +224,7 @@ namespace HFM.Core.Data
                 adder.AddColumn("Credit", "FLOAT");
                 adder.AddColumn("PreferredDays", "FLOAT");
                 adder.AddColumn("MaximumDays", "FLOAT");
-                adder.Execute(false);
+                adder.Execute();
             }
         }
 
@@ -692,7 +691,7 @@ namespace HFM.Core.Data
 
             private static string SetDefaultValue(string columnDef)
             {
-                return String.Format(CultureInfo.InvariantCulture, columnDef, SQLiteColumnAdder.GetDefaultValue(columnDef));
+                return String.Format(CultureInfo.InvariantCulture, columnDef, SQLiteAddColumnCommand.GetDefaultValue(columnDef));
             }
 
             private const string WuHistoryTableSelect = "SELECT * FROM (SELECT [ID], " +
@@ -771,98 +770,6 @@ namespace HFM.Core.Data
                     CommandText = String.Format(CultureInfo.InvariantCulture,
                                                VersionTableCreateSql, VersionTableName)
                 };
-            }
-        }
-
-        private sealed class SQLiteColumnAdder : IDisposable
-        {
-            private readonly string _tableName;
-            private readonly SQLiteConnection _connection;
-
-            public SQLiteColumnAdder(string tableName, SQLiteConnection connection)
-            {
-                _tableName = tableName;
-                _connection = connection;
-
-                Debug.Assert(_connection.State == ConnectionState.Open);
-            }
-
-            private readonly List<DbCommand> _commands = new List<DbCommand>();
-            private EnumerableRowCollection<DataRow> _rows;
-
-            public void AddColumn(string name, string dataType)
-            {
-                if (name == null) throw new ArgumentNullException("name");
-                if (dataType == null) throw new ArgumentNullException("dataType");
-
-                if (_rows == null)
-                {
-                    using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", _connection))
-                    using (var table = new DataTable())
-                    {
-                        adapter.Fill(table);
-                        _rows = table.AsEnumerable();
-                    }
-                }
-
-                bool columnExists = _rows.Any(row => row.Field<string>(1) == name);
-                if (!columnExists)
-                {
-                    string commandText = String.Format(CultureInfo.InvariantCulture,
-                       "ALTER TABLE [{0}] ADD COLUMN [{1}] {2} DEFAULT {3} NOT NULL", _tableName, name, dataType, GetDefaultValue(dataType));
-                    _commands.Add(new SQLiteCommand(_connection) { CommandText = commandText });
-                }
-            }
-
-            public static object GetDefaultValue(string dataType)
-            {
-                if (dataType.Contains("VARCHAR"))
-                {
-                    return "''";
-                }
-                if (dataType.Contains("INT"))
-                {
-                    return 0;
-                }
-                if (dataType.Contains("FLOAT"))
-                {
-                    return 0.0f;
-                }
-
-                string message = String.Format(CultureInfo.CurrentCulture, "Data type {0} is not valid.", dataType);
-                throw new ArgumentException(message, "dataType");
-            }
-
-            public void Execute(bool useTransaction)
-            {
-                if (useTransaction)
-                {
-                    using (var transaction = _connection.BeginTransaction())
-                    {
-                        ExecuteInternal();
-                        transaction.Commit();
-                    }
-                }
-                else
-                {
-                    ExecuteInternal();
-                }
-            }
-
-            private void ExecuteInternal()
-            {
-                foreach (var command in _commands)
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            public void Dispose()
-            {
-                foreach (var command in _commands)
-                {
-                    command.Dispose();
-                }
             }
         }
 
