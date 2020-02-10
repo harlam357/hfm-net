@@ -39,7 +39,6 @@ namespace HFM.Forms.Configuration
          // user stats model
          CreateMap<EocStatsData, UserStatsDataModel>()
             .DisableCtorValidation()
-            .ForMember(dest => dest.Logger, opt => opt.Ignore())
             .ForMember(dest => dest.ControlsVisible, opt => opt.Ignore());
       }
    }
