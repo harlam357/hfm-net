@@ -43,7 +43,7 @@ namespace HFM.Core.WorkUnits
          // Act
          var service = new ProteinService(prefs, null);
          // Assert
-         Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, Constants.ProjectInfoFileName), service.FilePath);
+         Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, ProteinService.DefaultFileName), service.FilePath);
       }
 
       [Test]
