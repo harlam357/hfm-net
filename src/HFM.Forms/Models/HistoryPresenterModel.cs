@@ -169,14 +169,14 @@ namespace HFM.Forms.Models
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", WorkUnitHistoryQuery.SelectAll));
             }
 
-            if (query.Fields.Count == 0)
+            if (query.Parameters.Count == 0)
             {
                 throw new ArgumentException("No query fields defined.");
             }
 
-            for (int i = 0; i < query.Fields.Count; i++)
+            for (int i = 0; i < query.Parameters.Count; i++)
             {
-                if (query.Fields[i].Value == null)
+                if (query.Parameters[i].Value == null)
                 {
                     throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Field index {0} must have a query value.", (i + 1)));
                 }

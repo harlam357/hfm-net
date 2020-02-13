@@ -240,7 +240,7 @@ namespace HFM.Forms
          // Add Column Selector
          new DataGridViewColumnSelector(dataGridView1);
 
-         string[] names = QueryField.GetColumnNames();
+         string[] names = WorkUnitHistoryQueryParameter.GetColumnNames();
 
          dataGridView1.AutoGenerateColumns = false;
          // ReSharper disable PossibleNullReferenceException

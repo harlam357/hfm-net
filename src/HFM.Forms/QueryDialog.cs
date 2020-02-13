@@ -42,7 +42,7 @@ namespace HFM.Forms
    public partial class QueryDialog : Form, IQueryView
    {
       private WorkUnitHistoryQuery _workUnitHistoryQuery;
-      private BindingList<QueryField> _queryFieldList;
+      private BindingList<WorkUnitHistoryQueryParameter> _parametersList;
 
       public QueryDialog()
       {
@@ -61,10 +61,10 @@ namespace HFM.Forms
          set
          {
             _workUnitHistoryQuery = value;
-            _queryFieldList = new BindingList<QueryField>(_workUnitHistoryQuery.Fields);
+            _parametersList = new BindingList<WorkUnitHistoryQueryParameter>(_workUnitHistoryQuery.Parameters);
             BindNameTextBox(_workUnitHistoryQuery);
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _queryFieldList;
+            dataGridView1.DataSource = _parametersList;
          }
       }
 
@@ -144,7 +144,7 @@ namespace HFM.Forms
          }
          else
          {
-            string[] names = QueryField.GetColumnNames();
+            string[] names = WorkUnitHistoryQueryParameter.GetColumnNames();
             columnChoices.Add(new ListItem(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
             columnChoices.Add(new ListItem(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
             columnChoices.Add(new ListItem(names[(int)QueryFieldName.Name], QueryFieldName.Name));
@@ -213,7 +213,7 @@ namespace HFM.Forms
 
       private void btnAdd_Click(object sender, EventArgs e)
       {
-         _workUnitHistoryQuery.Fields.Add(new QueryField());
+         _workUnitHistoryQuery.Parameters.Add(new WorkUnitHistoryQueryParameter());
          RefreshDisplay();
       }
 
@@ -222,14 +222,14 @@ namespace HFM.Forms
          Debug.Assert(dataGridView1.SelectedCells.Count == 1);
          foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
          {
-            _workUnitHistoryQuery.Fields.RemoveAt(cell.OwningRow.Index);
+            _workUnitHistoryQuery.Parameters.RemoveAt(cell.OwningRow.Index);
          }
          RefreshDisplay();
       }
 
       private void RefreshDisplay()
       {
-         _queryFieldList.ResetBindings();
+         _parametersList.ResetBindings();
       }
 
       private void btnOK_Click(object sender, EventArgs e)

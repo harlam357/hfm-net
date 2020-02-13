@@ -32,7 +32,6 @@ using harlam357.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Serializers;
-using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Preferences;
 
@@ -156,8 +155,8 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var query = new WorkUnitHistoryQuery { Name = "Test" };
-         query.Fields.Add(new QueryField { Value = 6606 });
+         var query = new WorkUnitHistoryQuery("Test")
+             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 });
          queryView.Stub(x => x.Query).Return(query);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
@@ -205,15 +204,14 @@ namespace HFM.Forms
       public void HistoryPresenter_EditQueryClick_Test()
       {
          // Arrange
-         var query = new WorkUnitHistoryQuery { Name = "Test" };
-         query.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(query);
+         _model.AddQuery(new WorkUnitHistoryQuery("Test")
+             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
 
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var parameters2 = new WorkUnitHistoryQuery { Name = "Test2" };
-         parameters2.Fields.Add(new QueryField { Value = 6606 });
-         queryView.Stub(x => x.Query).Return(parameters2);
+         var query = new WorkUnitHistoryQuery("Test2")
+            .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 });
+         queryView.Stub(x => x.Query).Return(query);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
          _presenter = CreatePresenter();
@@ -262,9 +260,8 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_Test()
       {
          // Arrange
-         var query = new WorkUnitHistoryQuery { Name = "Test" };
-         query.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(query);
+         _model.AddQuery(new WorkUnitHistoryQuery("Test")
+             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          // Act
@@ -280,9 +277,8 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_No_Test()
       {
          // Arrange
-         var query = new WorkUnitHistoryQuery { Name = "Test" };
-         query.Fields.Add(new QueryField { Value = 6606 });
-         _model.AddQuery(query);
+         _model.AddQuery(new WorkUnitHistoryQuery("Test")
+             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
          // Act

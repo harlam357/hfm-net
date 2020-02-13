@@ -28,11 +28,8 @@ using Castle.Core.Logging;
 
 using harlam357.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Core.Serializers;
-using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Preferences;
 
@@ -174,8 +171,8 @@ namespace HFM.Forms
       public void NewQueryClick()
       {
          var queryView = _viewFactory.GetQueryDialog();
-         var query = new WorkUnitHistoryQuery { Name = "* New Query *" };
-         query.Fields.Add(new QueryField());
+         var query = new WorkUnitHistoryQuery("* New Query *")
+             .AddParameter(new WorkUnitHistoryQueryParameter());
          queryView.Query = query;
          
          bool showDialog = true;

@@ -23,202 +23,197 @@ using NUnit.Framework;
 
 namespace HFM.Core.Data
 {
-   [TestFixture]
-   public class WorkUnitHistoryQueryTests
-   {
-      [Test]
-      public void CreateTest()
-      {
-         var param = new WorkUnitHistoryQuery();
-         Assert.AreEqual(WorkUnitHistoryQuery.SelectAll.Name, param.Name);
-         Assert.AreEqual(0, param.Fields.Count);
-      }
+    [TestFixture]
+    public class WorkUnitHistoryQueryTests
+    {
+        [Test]
+        public void WorkUnitHistoryQuery_Create_Test()
+        {
+            var param = new WorkUnitHistoryQuery();
+            Assert.AreEqual(WorkUnitHistoryQuery.SelectAll.Name, param.Name);
+            Assert.AreEqual(0, param.Parameters.Count);
+        }
 
-      [Test]
-      public void DeepCopyTest()
-      {
-         var param = new WorkUnitHistoryQuery();
-         param.Name = "Test";
-         param.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = "Test Instance" });
-         param.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.GreaterThan, Value = new DateTime(2000, 1, 1) });
+        [Test]
+        public void WorkUnitHistoryQuery_DeepClone_Test()
+        {
+            var param = new WorkUnitHistoryQuery("Test")
+                .AddParameter(QueryFieldName.Name, QueryFieldType.Equal, "Test Instance")
+                .AddParameter(QueryFieldName.DownloadDateTime, QueryFieldType.GreaterThan, new DateTime(2000, 1, 1));
 
-         var copy = param.DeepClone();
-         Assert.AreNotSame(param, copy);
-         Assert.AreEqual(param.Name, copy.Name);
-         for (int i = 0; i < param.Fields.Count; i++)
-         {
-            Assert.AreEqual(param.Fields[i].Name, copy.Fields[i].Name);
-            Assert.AreEqual(param.Fields[i].Type, copy.Fields[i].Type);
-            Assert.AreEqual(param.Fields[i].Value, copy.Fields[i].Value);
-         }
-      }
+            var copy = param.DeepClone();
+            Assert.AreNotSame(param, copy);
+            Assert.AreEqual(param.Name, copy.Name);
+            for (int i = 0; i < param.Parameters.Count; i++)
+            {
+                Assert.AreEqual(param.Parameters[i].Name, copy.Parameters[i].Name);
+                Assert.AreEqual(param.Parameters[i].Type, copy.Parameters[i].Type);
+                Assert.AreEqual(param.Parameters[i].Value, copy.Parameters[i].Value);
+            }
+        }
 
-      [Test]
-      public void CompareTest1()
-      {
-         var param1 = new WorkUnitHistoryQuery();
-         var param2 = new WorkUnitHistoryQuery();
-         Assert.AreEqual(0, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test1()
+        {
+            var param1 = new WorkUnitHistoryQuery();
+            var param2 = new WorkUnitHistoryQuery();
+            Assert.AreEqual(0, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest2()
-      {
-         var param1 = new WorkUnitHistoryQuery { Name = "Name" };
-         var param2 = new WorkUnitHistoryQuery();
-         Assert.AreEqual(1, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test2()
+        {
+            var param1 = new WorkUnitHistoryQuery { Name = "Name" };
+            var param2 = new WorkUnitHistoryQuery();
+            Assert.AreEqual(1, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest3()
-      {
-         var param1 = new WorkUnitHistoryQuery();
-         var param2 = new WorkUnitHistoryQuery { Name = "Name" };
-         Assert.AreEqual(-1, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test3()
+        {
+            var param1 = new WorkUnitHistoryQuery();
+            var param2 = new WorkUnitHistoryQuery { Name = "Name" };
+            Assert.AreEqual(-1, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest4()
-      {
-         var param1 = new WorkUnitHistoryQuery { Name = null };
-         var param2 = new WorkUnitHistoryQuery();
-         Assert.AreEqual(-1, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test4()
+        {
+            var param1 = new WorkUnitHistoryQuery { Name = null };
+            var param2 = new WorkUnitHistoryQuery();
+            Assert.AreEqual(-1, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest5()
-      {
-         var param1 = new WorkUnitHistoryQuery { Name = null };
-         var param2 = new WorkUnitHistoryQuery { Name = null };
-         Assert.AreEqual(0, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test5()
+        {
+            var param1 = new WorkUnitHistoryQuery { Name = null };
+            var param2 = new WorkUnitHistoryQuery { Name = null };
+            Assert.AreEqual(0, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest6()
-      {
-         var param1 = new WorkUnitHistoryQuery { Name = "A" };
-         var param2 = new WorkUnitHistoryQuery { Name = "B" };
-         Assert.AreEqual(-1, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test6()
+        {
+            var param1 = new WorkUnitHistoryQuery { Name = "A" };
+            var param2 = new WorkUnitHistoryQuery { Name = "B" };
+            Assert.AreEqual(-1, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest7()
-      {
-         var param1 = new WorkUnitHistoryQuery { Name = "B" };
-         var param2 = new WorkUnitHistoryQuery { Name = "A" };
-         Assert.AreEqual(1, param1.CompareTo(param2));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test7()
+        {
+            var param1 = new WorkUnitHistoryQuery { Name = "B" };
+            var param2 = new WorkUnitHistoryQuery { Name = "A" };
+            Assert.AreEqual(1, param1.CompareTo(param2));
+        }
 
-      [Test]
-      public void CompareTest8()
-      {
-         var param1 = new WorkUnitHistoryQuery();
-         Assert.AreEqual(1, param1.CompareTo(null));
-      }
+        [Test]
+        public void WorkUnitHistoryQuery_Compare_Test8()
+        {
+            var param1 = new WorkUnitHistoryQuery();
+            Assert.AreEqual(1, param1.CompareTo(null));
+        }
 
-      #region Query Field
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Create_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter();
+            Assert.AreEqual(QueryFieldName.ProjectID, field.Name);
+            Assert.AreEqual(QueryFieldType.Equal, field.Type);
+        }
 
-      [Test]
-      public void QueryFieldCreateTest()
-      {
-         var field = new QueryField();
-         Assert.AreEqual(QueryFieldName.ProjectID, field.Name);
-         Assert.AreEqual(QueryFieldType.Equal, field.Type);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Value_Test1()
+        {
+            var field = new WorkUnitHistoryQueryParameter();
+            field.Value = "Value";
+            Assert.AreEqual("Value", field.Value);
+            field.Value = null;
+            Assert.IsNull(field.Value);
+        }
 
-      [Test]
-      public void QueryFieldValueTest1()
-      {
-         var field = new QueryField();
-         field.Value = "Value";
-         Assert.AreEqual("Value", field.Value);
-         field.Value = null;
-         Assert.IsNull(field.Value);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Value_Test2()
+        {
+            var field = new WorkUnitHistoryQueryParameter();
+            field.Value = new DateTime(2000, 1, 1);
+            Assert.AreEqual(new DateTime(2000, 1, 1), field.Value);
+            field.Value = null;
+            Assert.IsNull(field.Value);
+        }
 
-      [Test]
-      public void QueryFieldValueTest2()
-      {
-         var field = new QueryField();
-         field.Value = new DateTime(2000, 1, 1);
-         Assert.AreEqual(new DateTime(2000, 1, 1), field.Value);
-         field.Value = null;
-         Assert.IsNull(field.Value);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Value_Test3()
+        {
+            var field = new WorkUnitHistoryQueryParameter();
+            field.Value = 6900;
+            Assert.AreEqual("6900", field.Value);
+            field.Value = null;
+            Assert.IsNull(field.Value);
+        }
 
-      [Test]
-      public void QueryFieldValueTest3()
-      {
-         var field = new QueryField();
-         field.Value = 6900;
-         Assert.AreEqual("6900", field.Value);
-         field.Value = null;
-         Assert.IsNull(field.Value);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_Default_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter();
+            Assert.AreEqual("=", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_Default_Test()
-      {
-         var field = new QueryField();
-         Assert.AreEqual("=", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_Equal_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.Equal };
+            Assert.AreEqual("=", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_Equal_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.Equal };
-         Assert.AreEqual("=", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_GreaterThan_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.GreaterThan };
+            Assert.AreEqual(">", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_GreaterThan_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.GreaterThan };
-         Assert.AreEqual(">", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_GreaterThanOrEqual_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.GreaterThanOrEqual };
+            Assert.AreEqual(">=", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_GreaterThanOrEqual_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.GreaterThanOrEqual };
-         Assert.AreEqual(">=", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_LessThan_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.LessThan };
+            Assert.AreEqual("<", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_LessThan_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.LessThan };
-         Assert.AreEqual("<", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_LessThanOrEqual_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.LessThanOrEqual };
+            Assert.AreEqual("<=", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_LessThanOrEqual_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.LessThanOrEqual };
-         Assert.AreEqual("<=", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_Like_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.Like };
+            Assert.AreEqual("LIKE", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_Like_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.Like };
-         Assert.AreEqual("LIKE", field.Operator);
-      }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_NotLike_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.NotLike };
+            Assert.AreEqual("NOT LIKE", field.Operator);
+        }
 
-      [Test]
-      public void QueryField_Operator_NotLike_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.NotLike };
-         Assert.AreEqual("NOT LIKE", field.Operator);
-      }
-
-      [Test]
-      public void QueryField_Operator_NotEqual_Test()
-      {
-         var field = new QueryField { Type = QueryFieldType.NotEqual };
-         Assert.AreEqual("!=", field.Operator);
-      }
-
-      #endregion
-   }
+        [Test]
+        public void WorkUnitHistoryQueryParameter_Operator_NotEqual_Test()
+        {
+            var field = new WorkUnitHistoryQueryParameter { Type = QueryFieldType.NotEqual };
+            Assert.AreEqual("!=", field.Operator);
+        }
+    }
 }

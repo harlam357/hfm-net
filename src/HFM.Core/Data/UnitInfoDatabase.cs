@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -61,9 +60,9 @@ namespace HFM.Core.Data
 
         int Delete(WorkUnitHistoryRow row);
 
-        IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation);
+        IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation);
 
-        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation);
+        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -318,19 +317,18 @@ namespace HFM.Core.Data
 
         private bool WorkUnitExists(WorkUnit workUnit)
         {
-            var rows = Fetch(BuildUnitKeyQueryParameters(workUnit), BonusCalculationType.None);
+            var rows = Fetch(CreateWorkUnitQuery(workUnit), BonusCalculationType.None);
             return rows.Count != 0;
         }
 
-        private static WorkUnitHistoryQuery BuildUnitKeyQueryParameters(WorkUnit workUnit)
+        private static WorkUnitHistoryQuery CreateWorkUnitQuery(WorkUnit workUnit)
         {
-            var parameters = new WorkUnitHistoryQuery { Name = String.Format(CultureInfo.InvariantCulture, "Query for existing {0}", workUnit.ToProjectString()) };
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectID, Type = QueryFieldType.Equal, Value = workUnit.ProjectID });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectRun, Type = QueryFieldType.Equal, Value = workUnit.ProjectRun });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectClone, Type = QueryFieldType.Equal, Value = workUnit.ProjectClone });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.ProjectGen, Type = QueryFieldType.Equal, Value = workUnit.ProjectGen });
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.DownloadDateTime, Type = QueryFieldType.Equal, Value = workUnit.DownloadTime });
-            return parameters;
+            return new WorkUnitHistoryQuery($"Query for existing {workUnit.ToProjectString()}")
+                .AddParameter(QueryFieldName.ProjectID, QueryFieldType.Equal, workUnit.ProjectID)
+                .AddParameter(QueryFieldName.ProjectRun, QueryFieldType.Equal, workUnit.ProjectRun)
+                .AddParameter(QueryFieldName.ProjectClone, QueryFieldType.Equal, workUnit.ProjectClone)
+                .AddParameter(QueryFieldName.ProjectGen, QueryFieldType.Equal, workUnit.ProjectGen)
+                .AddParameter(QueryFieldName.DownloadDateTime, QueryFieldType.Equal, workUnit.DownloadTime);
         }
 
         #endregion
@@ -354,65 +352,62 @@ namespace HFM.Core.Data
 
         #region Fetch
 
-        public IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
+        public IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                return FetchInternal(parameters, bonusCalculation);
+                return FetchInternal(query, bonusCalculation);
             }
             finally
             {
-                Logger.DebugFormat("Database Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
+                Logger.DebugFormat("Database Fetch ({0}) completed in {1}", query, sw.GetExecTime());
             }
         }
 
-        private IList<WorkUnitHistoryRow> FetchInternal(WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
+        private IList<WorkUnitHistoryRow> FetchInternal(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
             var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
-            select.Append(WhereBuilder.Execute(parameters));
+            select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    List<WorkUnitHistoryRow> query = database.Fetch<WorkUnitHistoryRow>(select);
-                    return query;
+                    return database.Fetch<WorkUnitHistoryRow>(select);
                 }
             }
         }
 
-        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
+        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                return PageInternal(page, itemsPerPage, parameters, bonusCalculation);
+                return PageInternal(page, itemsPerPage, query, bonusCalculation);
             }
             finally
             {
-                Logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", parameters, sw.GetExecTime());
+                Logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", query, sw.GetExecTime());
             }
         }
 
-        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, WorkUnitHistoryQuery parameters, BonusCalculationType bonusCalculation)
+        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
             Debug.Assert(TableExists(SqlTable.WuHistory));
 
             var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
-            select.Append(WhereBuilder.Execute(parameters));
+            select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    PetaPoco.Page<WorkUnitHistoryRow> query = database.Page<WorkUnitHistoryRow>(page, itemsPerPage, select);
-                    Debug.Assert(query != null);
-                    return query;
+                    return database.Page<WorkUnitHistoryRow>(page, itemsPerPage, select);
                 }
             }
         }
@@ -461,28 +456,19 @@ namespace HFM.Core.Data
 
         private long Count(string clientName, bool completed, DateTime? clientStartTime)
         {
-            var parameters = new WorkUnitHistoryQuery();
-            parameters.Fields.Add(new QueryField { Name = QueryFieldName.Name, Type = QueryFieldType.Equal, Value = clientName });
-            parameters.Fields.Add(new QueryField
-            {
-                Name = QueryFieldName.Result,
-                Type = completed ? QueryFieldType.Equal : QueryFieldType.NotEqual,
-                Value = (int)WorkUnitResult.FinishedUnit
-            });
+            var query = new WorkUnitHistoryQuery()
+                .AddParameter(QueryFieldName.Name, QueryFieldType.Equal, clientName)
+                .AddParameter(QueryFieldName.Result, completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, (int) WorkUnitResult.FinishedUnit);
+
             if (clientStartTime.HasValue)
             {
-                parameters.Fields.Add(new QueryField
-                {
-                    Name = completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
-                    Type = QueryFieldType.GreaterThan,
-                    Value = clientStartTime.Value
-                });
+                query.AddParameter(completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
+                    QueryFieldType.GreaterThan, clientStartTime.Value);
             }
-            PetaPoco.Sql where = WhereBuilder.Execute(parameters);
 
             var countSql = PetaPoco.Sql.Builder.Select("COUNT(*)")
                .From("WuHistory")
-               .Append(where);
+               .Append(query);
 
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -600,50 +586,6 @@ namespace HFM.Core.Data
         #endregion
 
         #region Private Helper Classes
-
-        private static class WhereBuilder
-        {
-            public static PetaPoco.Sql Execute(WorkUnitHistoryQuery parameters)
-            {
-                if (parameters.Fields.Count == 0)
-                {
-                    return null;
-                }
-
-                bool appendAnd = false;
-
-                PetaPoco.Sql sql = PetaPoco.Sql.Builder.Append("WHERE ");
-                foreach (var field in parameters.Fields)
-                {
-                    sql = sql.Append(appendAnd ? "AND " : String.Empty);
-                    sql = BuildWhereCondition(sql, field);
-                    appendAnd = true;
-                }
-
-                return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;
-            }
-
-            private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, QueryField queryField)
-            {
-                string format = "[{0}] {1} @0";
-                if (queryField.Name.Equals(QueryFieldName.DownloadDateTime) ||
-                    queryField.Name.Equals(QueryFieldName.CompletionDateTime))
-                {
-                    format = "datetime([{0}]) {1} datetime(@0)";
-                }
-                sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
-                         ColumnNameOverrides.ContainsKey(queryField.Name) ? ColumnNameOverrides[queryField.Name] : queryField.Name.ToString(),
-                         queryField.Operator), queryField.Value);
-                return sql;
-            }
-
-            private static readonly Dictionary<QueryFieldName, string> ColumnNameOverrides = new Dictionary<QueryFieldName, string>
-            {
-                { QueryFieldName.Name, "InstanceName" },
-                { QueryFieldName.Path, "InstancePath" },
-                { QueryFieldName.Credit, "CalcCredit" },
-            };
-        }
 
         private abstract class SqlTableCommands
         {

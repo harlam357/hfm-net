@@ -25,310 +25,375 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.Data
 {
-   // ReSharper disable InconsistentNaming
+    // ReSharper disable InconsistentNaming
 
-   /// <summary>
-   /// Represents the fields in the work unit database.
-   /// </summary>
-   public enum QueryFieldName
-   {
-      ID = -1,
-      ProjectID = 0,
-      ProjectRun,
-      ProjectClone,
-      ProjectGen,
-      Name,
-      Path,
-      Username,
-      Team,
-      CoreVersion,
-      FramesCompleted,
-      FrameTime,
-      Result,
-      DownloadDateTime,
-      CompletionDateTime,
-      WorkUnitName,
-      KFactor,
-      Core,
-      Frames,
-      Atoms,
-      SlotType,
-      PPD,
-      Credit
-   }
+    /// <summary>
+    /// Represents the fields in the work unit database.
+    /// </summary>
+    public enum QueryFieldName
+    {
+        ID = -1,
+        ProjectID = 0,
+        ProjectRun,
+        ProjectClone,
+        ProjectGen,
+        Name,
+        Path,
+        Username,
+        Team,
+        CoreVersion,
+        FramesCompleted,
+        FrameTime,
+        Result,
+        DownloadDateTime,
+        CompletionDateTime,
+        WorkUnitName,
+        KFactor,
+        Core,
+        Frames,
+        Atoms,
+        SlotType,
+        PPD,
+        Credit
+    }
 
-   // ReSharper restore InconsistentNaming
+    // ReSharper restore InconsistentNaming
 
-   /// <summary>
-   /// Represents the query operators for the work unit database.
-   /// </summary>
-   public enum QueryFieldType
-   {
-      Equal,
-      GreaterThan,
-      GreaterThanOrEqual,
-      LessThan,
-      LessThanOrEqual,
-      Like,
-      NotLike,
-      NotEqual
-   }
+    /// <summary>
+    /// Represents the query operators for the work unit database.
+    /// </summary>
+    public enum QueryFieldType
+    {
+        Equal,
+        GreaterThan,
+        GreaterThanOrEqual,
+        LessThan,
+        LessThanOrEqual,
+        Like,
+        NotLike,
+        NotEqual
+    }
 
-   [DataContract]
-   public class WorkUnitHistoryQuery : IComparable<WorkUnitHistoryQuery>, IEquatable<WorkUnitHistoryQuery>
-   {
-      private static readonly WorkUnitHistoryQuery SelectAllValue = new WorkUnitHistoryQuery();
+    [DataContract]
+    public class WorkUnitHistoryQuery : IComparable<WorkUnitHistoryQuery>, IEquatable<WorkUnitHistoryQuery>
+    {
+        private static readonly WorkUnitHistoryQuery SelectAllValue = new WorkUnitHistoryQuery();
 
-      public static WorkUnitHistoryQuery SelectAll
-      {
-         get { return SelectAllValue; }
-      }
+        public static WorkUnitHistoryQuery SelectAll
+        {
+            get { return SelectAllValue; }
+        }
 
-      private const string SelectAllName = "*** SELECT ALL ***";
+        private const string SelectAllName = "*** SELECT ALL ***";
 
-      public WorkUnitHistoryQuery()
-      {
-         Name = SelectAllName;
-      }
+        public WorkUnitHistoryQuery()
+        {
+            Name = SelectAllName;
+        }
 
-      [DataMember(Order = 1)]
-      public string Name { get; set; }
-      [DataMember(Order = 2)]
-      private readonly List<QueryField> _fields = new List<QueryField>();
+        public WorkUnitHistoryQuery(string name)
+        {
+            Name = name;
+        }
 
-      public List<QueryField> Fields
-      {
-         get { return _fields; }
-      }
+        [DataMember(Order = 1)]
+        public string Name { get; set; }
+        [DataMember(Order = 2)]
+        private readonly List<WorkUnitHistoryQueryParameter> _parameters = new List<WorkUnitHistoryQueryParameter>();
 
-      public override bool Equals(object obj)
-      {
-         if (ReferenceEquals(null, obj)) return false;
-         if (ReferenceEquals(this, obj)) return true;
-         if (obj.GetType() != typeof(WorkUnitHistoryQuery)) return false;
-         return Equals((WorkUnitHistoryQuery)obj);
-      }
+        public List<WorkUnitHistoryQueryParameter> Parameters
+        {
+            get { return _parameters; }
+        }
 
-      /// <summary>
-      /// Serves as a hash function for a particular type. 
-      /// </summary>
-      /// <returns>
-      /// A hash code for the current <see cref="T:System.Object"/>.
-      /// </returns>
-      /// <filterpriority>2</filterpriority>
-      public override int GetHashCode()
-      {
-         return (Name != null ? Name.GetHashCode() : 0);
-      }
+        public WorkUnitHistoryQuery AddParameter(QueryFieldName name, QueryFieldType operation, object value)
+        {
+            return AddParameter(new WorkUnitHistoryQueryParameter(name, operation, value));
+        }
 
-      public static bool operator == (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
-      {
-         return Equals(left, right);
-      }
+        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryQueryParameter parameter)
+        {
+            Parameters.Add(parameter);
+            return this;
+        }
 
-      public static bool operator != (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
-      {
-         return !Equals(left, right);
-      }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof(WorkUnitHistoryQuery)) return false;
+            return Equals((WorkUnitHistoryQuery)obj);
+        }
 
-      #region IEquatable<WorkUnitHistoryQuery> Members
+        public override int GetHashCode()
+        {
+            return (Name != null ? Name.GetHashCode() : 0);
+        }
 
-      /// <summary>
-      /// Indicates whether the current object is equal to another object of the same type.
-      /// </summary>
-      /// <returns>
-      /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-      /// </returns>
-      /// <param name="other">An object to compare with this object.</param>
-      public bool Equals(WorkUnitHistoryQuery other)
-      {
-         //if (ReferenceEquals(null, other)) return false;
-         //if (ReferenceEquals(this, other)) return true;
-         return CompareTo(other) == 0;
-      }
+        public static bool operator ==(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        {
+            return Equals(left, right);
+        }
 
-      #endregion
+        public static bool operator !=(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        {
+            return !Equals(left, right);
+        }
 
-      public static bool operator < (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
-      {
-         return left == null ? right != null : left.CompareTo(right) < 0;
-      }
+        #region IEquatable<WorkUnitHistoryQuery> Members
 
-      public static bool operator > (WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
-      {
-         return right == null ? left != null : right.CompareTo(left) < 0;
-      }
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(WorkUnitHistoryQuery other)
+        {
+            //if (ReferenceEquals(null, other)) return false;
+            //if (ReferenceEquals(this, other)) return true;
+            return CompareTo(other) == 0;
+        }
 
-      #region IComparable<WorkUnitHistoryQuery> Members
+        #endregion
 
-      public int CompareTo(WorkUnitHistoryQuery other)
-      {
-         if (ReferenceEquals(null, other)) return 1;
-         if (ReferenceEquals(this, other)) return 0;
+        public static bool operator <(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        {
+            return left == null ? right != null : left.CompareTo(right) < 0;
+        }
 
-         // other not null, check this Name
-         if (Name == null)
-         {
-            // if null, check other.Name
-            if (other.Name == null)
+        public static bool operator >(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        {
+            return right == null ? left != null : right.CompareTo(left) < 0;
+        }
+
+        #region IComparable<WorkUnitHistoryQuery> Members
+
+        public int CompareTo(WorkUnitHistoryQuery other)
+        {
+            if (ReferenceEquals(null, other)) return 1;
+            if (ReferenceEquals(this, other)) return 0;
+
+            // other not null, check this Name
+            if (Name == null)
             {
-               // if other.Name is null, equal
-               return 0;
+                // if null, check other.Name
+                if (other.Name == null)
+                {
+                    // if other.Name is null, equal
+                    return 0;
+                }
+
+                // other.Name NOT null, this is less
+                return -1;
             }
 
-            // other.Name NOT null, this is less
-            return -1;
-         }
+            if (Name == SelectAllName)
+            {
+                if (other.Name == SelectAllName)
+                {
+                    // both SelectAll, equal
+                    return 0;
+                }
 
-         if (Name == SelectAllName)
-         {
+                // Name is SelectAll, this is less
+                return -1;
+            }
+
             if (other.Name == SelectAllName)
             {
-               // both SelectAll, equal
-               return 0;
+                // other.Name is SelectAll, this is greater
+                return 1;
             }
 
-            // Name is SelectAll, this is less
-            return -1;
-         }
+            // finally, just compare
+            return Name.CompareTo(other.Name);
+        }
 
-         if (other.Name == SelectAllName)
-         {
-            // other.Name is SelectAll, this is greater
-            return 1;
-         }
+        #endregion
 
-         // finally, just compare
-         return Name.CompareTo(other.Name);
-      }
+        public WorkUnitHistoryQuery DeepClone()
+        {
+            return ProtoBuf.Serializer.DeepClone(this);
+        }
 
-      #endregion
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
 
-      public WorkUnitHistoryQuery DeepClone()
-      {
-          return ProtoBuf.Serializer.DeepClone(this);
-      }
+    internal static class WorkUnitHistoryQueryExtensions
+    {
+        internal static PetaPoco.Sql Append(this PetaPoco.Sql sql, WorkUnitHistoryQuery query)
+        {
+            return sql.Append(query.ToSql());
+        }
 
-      public override string ToString()
-      {
-         return Name;
-      }
-   }
-
-   [DataContract]
-   public class QueryField
-   {
-      public QueryField()
-      {
-         Name = QueryFieldName.ProjectID;
-         Type = QueryFieldType.Equal;
-      }
-
-      [DataMember(Order = 1)]
-      public QueryFieldName Name { get; set; }
-      [DataMember(Order = 2)]
-      [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
-      public QueryFieldType Type { get; set; }
-
-      public object Value
-      {
-         get
-         {
-            if (_dateTimeValue.HasValue)
+        internal static PetaPoco.Sql ToSql(this WorkUnitHistoryQuery query)
+        {
+            if (query.Parameters.Count == 0)
             {
-               return _dateTimeValue.Value;
+                return null;
             }
-            return _stringValue;
-         }
-         set
-         {
-            if (value == null)
+
+            bool appendAnd = false;
+
+            PetaPoco.Sql sql = PetaPoco.Sql.Builder.Append("WHERE ");
+            foreach (var field in query.Parameters)
             {
-               _dateTimeValue = null;
-               _stringValue = null;
+                sql = sql.Append(appendAnd ? "AND " : String.Empty);
+                sql = BuildWhereCondition(sql, field);
+                appendAnd = true;
             }
-            else if (value is DateTime)
+
+            return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;
+        }
+
+        private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitHistoryQueryParameter parameter)
+        {
+            string format = "[{0}] {1} @0";
+            if (parameter.Name.Equals(QueryFieldName.DownloadDateTime) ||
+                parameter.Name.Equals(QueryFieldName.CompletionDateTime))
             {
-               _dateTimeValue = (DateTime)value;
-               _stringValue = null;
+                format = "datetime([{0}]) {1} datetime(@0)";
             }
-            else
+            sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
+                ColumnNameOverrides.ContainsKey(parameter.Name) ? ColumnNameOverrides[parameter.Name] : parameter.Name.ToString(),
+                parameter.Operator), parameter.Value);
+            return sql;
+        }
+
+        private static readonly Dictionary<QueryFieldName, string> ColumnNameOverrides = new Dictionary<QueryFieldName, string>
+        {
+            { QueryFieldName.Name, "InstanceName" },
+            { QueryFieldName.Path, "InstancePath" },
+            { QueryFieldName.Credit, "CalcCredit" },
+        };
+    }
+
+    [DataContract]
+    public class WorkUnitHistoryQueryParameter
+    {
+        public WorkUnitHistoryQueryParameter()
+        {
+            Name = QueryFieldName.ProjectID;
+            Type = QueryFieldType.Equal;
+        }
+
+        public WorkUnitHistoryQueryParameter(QueryFieldName name, QueryFieldType operation, object value)
+        {
+            Name = name;
+            Type = operation;
+            Value = value;
+        }
+
+        [DataMember(Order = 1)]
+        public QueryFieldName Name { get; set; }
+        [DataMember(Order = 2)]
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
+        public QueryFieldType Type { get; set; }
+
+        public object Value
+        {
+            get
             {
-               _dateTimeValue = null;
-               _stringValue = value.ToString();
-            }
-         }
-      }
-
-      [DataMember(Order = 3)]
-      private DateTime? _dateTimeValue;
-      [DataMember(Order = 4)]
-      private string _stringValue;
-
-      public string Operator
-      {
-         get { return GetOperator(Type); }
-      }
-
-      private static string GetOperator(QueryFieldType type)
-      {
-         switch (type)
-         {
-            case QueryFieldType.Equal:
-               return "=";
-            case QueryFieldType.GreaterThan:
-               return ">";
-            case QueryFieldType.GreaterThanOrEqual:
-               return ">=";
-            case QueryFieldType.LessThan:
-               return "<";
-            case QueryFieldType.LessThanOrEqual:
-               return "<=";
-            case QueryFieldType.Like:
-               return "LIKE";
-            case QueryFieldType.NotLike:
-               return "NOT LIKE";
-            case QueryFieldType.NotEqual:
-               return "!=";
-            default:
-               throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                  "Query Field Type '{0}' is not implemented.", type));
-         }
-      }
-
-      public override String ToString()
-      {
-         return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Name, Operator, Value);
-      }
-
-      public static string[] GetColumnNames()
-      {
-         // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
-         return new[]
+                if (_dateTimeValue.HasValue)
                 {
-                   "ProjectID",
-                   "Run",
-                   "Clone",
-                   "Gen",
-                   "Name",
-                   "Path",
-                   "Username",
-                   "Team",
-                   "Core Version",
-                   "Frames Completed",
-                   "Frame Time (Seconds)",
-                   "Unit Result",
-                   "Download Date (UTC)",
-                   "Completion Date (UTC)",
-                   "Work Unit Name",
-                   "KFactor",
-                   "Core Name",
-                   "Total Frames",
-                   "Atoms",
-                   "Slot Type",
-                   "PPD",
-                   "Credit"
-                };
-      }
-   }
+                    return _dateTimeValue.Value;
+                }
+                return _stringValue;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _dateTimeValue = null;
+                    _stringValue = null;
+                }
+                else if (value is DateTime)
+                {
+                    _dateTimeValue = (DateTime)value;
+                    _stringValue = null;
+                }
+                else
+                {
+                    _dateTimeValue = null;
+                    _stringValue = value.ToString();
+                }
+            }
+        }
+
+        [DataMember(Order = 3)]
+        private DateTime? _dateTimeValue;
+        [DataMember(Order = 4)]
+        private string _stringValue;
+
+        public string Operator
+        {
+            get { return GetOperator(Type); }
+        }
+
+        private static string GetOperator(QueryFieldType type)
+        {
+            switch (type)
+            {
+                case QueryFieldType.Equal:
+                    return "=";
+                case QueryFieldType.GreaterThan:
+                    return ">";
+                case QueryFieldType.GreaterThanOrEqual:
+                    return ">=";
+                case QueryFieldType.LessThan:
+                    return "<";
+                case QueryFieldType.LessThanOrEqual:
+                    return "<=";
+                case QueryFieldType.Like:
+                    return "LIKE";
+                case QueryFieldType.NotLike:
+                    return "NOT LIKE";
+                case QueryFieldType.NotEqual:
+                    return "!=";
+                default:
+                    throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+                       "Query Field Type '{0}' is not implemented.", type));
+            }
+        }
+
+        public override string ToString()
+        {
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Name, Operator, Value);
+        }
+
+        public static string[] GetColumnNames()
+        {
+            // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
+            return new[]
+            {
+                "ProjectID",
+                "Run",
+                "Clone",
+                "Gen",
+                "Name",
+                "Path",
+                "Username",
+                "Team",
+                "Core Version",
+                "Frames Completed",
+                "Frame Time (Seconds)",
+                "Unit Result",
+                "Download Date (UTC)",
+                "Completion Date (UTC)",
+                "Work Unit Name",
+                "KFactor",
+                "Core Name",
+                "Total Frames",
+                "Atoms",
+                "Slot Type",
+                "PPD",
+                "Credit"
+            };
+        }
+    }
 }
