@@ -324,11 +324,11 @@ namespace HFM.Core.Data
         private static WorkUnitHistoryQuery CreateWorkUnitQuery(WorkUnit workUnit)
         {
             return new WorkUnitHistoryQuery($"Query for existing {workUnit.ToProjectString()}")
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectID, QueryFieldType.Equal, workUnit.ProjectID)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectRun, QueryFieldType.Equal, workUnit.ProjectRun)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectClone, QueryFieldType.Equal, workUnit.ProjectClone)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectGen, QueryFieldType.Equal, workUnit.ProjectGen)
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, QueryFieldType.Equal, workUnit.DownloadTime);
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectID)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectRun)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectClone)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectGen)
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Equal, workUnit.DownloadTime);
         }
 
         #endregion
@@ -457,13 +457,13 @@ namespace HFM.Core.Data
         private long Count(string clientName, bool completed, DateTime? clientStartTime)
         {
             var query = new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.Name, QueryFieldType.Equal, clientName)
-                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, (int) WorkUnitResult.FinishedUnit);
+                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, clientName)
+                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? WorkUnitHistoryQueryOperator.Equal : WorkUnitHistoryQueryOperator.NotEqual, (int) WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {
                 query.AddParameter(completed ? WorkUnitHistoryRowColumn.CompletionDateTime : WorkUnitHistoryRowColumn.DownloadDateTime,
-                    QueryFieldType.GreaterThan, clientStartTime.Value);
+                    WorkUnitHistoryQueryOperator.GreaterThan, clientStartTime.Value);
             }
 
             var countSql = PetaPoco.Sql.Builder.Select("COUNT(*)")

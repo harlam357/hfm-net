@@ -177,25 +177,25 @@ namespace HFM.Forms
          var columnChoices = new List<ListItem>();
          if (Core.Application.IsRunningOnMono)
          {
-            columnChoices.Add(new ListItem(QueryFieldType.Equal.ToString(), QueryFieldType.Equal));
-            columnChoices.Add(new ListItem(QueryFieldType.NotEqual.ToString(), QueryFieldType.NotEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.GreaterThan.ToString(), QueryFieldType.GreaterThan));
-            columnChoices.Add(new ListItem(QueryFieldType.GreaterThanOrEqual.ToString(), QueryFieldType.GreaterThanOrEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.LessThan.ToString(), QueryFieldType.LessThan));
-            columnChoices.Add(new ListItem(QueryFieldType.LessThanOrEqual.ToString(), QueryFieldType.LessThanOrEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.Like.ToString(), QueryFieldType.Like));
-            columnChoices.Add(new ListItem(QueryFieldType.NotLike.ToString(), QueryFieldType.NotLike));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.Equal.ToString(), WorkUnitHistoryQueryOperator.Equal));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.NotEqual.ToString(), WorkUnitHistoryQueryOperator.NotEqual));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.GreaterThan.ToString(), WorkUnitHistoryQueryOperator.GreaterThan));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.GreaterThanOrEqual.ToString(), WorkUnitHistoryQueryOperator.GreaterThanOrEqual));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.LessThan.ToString(), WorkUnitHistoryQueryOperator.LessThan));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.LessThanOrEqual.ToString(), WorkUnitHistoryQueryOperator.LessThanOrEqual));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.Like.ToString(), WorkUnitHistoryQueryOperator.Like));
+            columnChoices.Add(new ListItem(WorkUnitHistoryQueryOperator.NotLike.ToString(), WorkUnitHistoryQueryOperator.NotLike));
          }
          else
          {
-            columnChoices.Add(new ListItem("Equal", QueryFieldType.Equal));
-            columnChoices.Add(new ListItem("Not Equal", QueryFieldType.NotEqual));
-            columnChoices.Add(new ListItem("Greater Than", QueryFieldType.GreaterThan));
-            columnChoices.Add(new ListItem("Greater Than Or Equal", QueryFieldType.GreaterThanOrEqual));
-            columnChoices.Add(new ListItem("Less Than", QueryFieldType.LessThan));
-            columnChoices.Add(new ListItem("Less Than Or Equal", QueryFieldType.LessThanOrEqual));
-            columnChoices.Add(new ListItem("Like", QueryFieldType.Like));
-            columnChoices.Add(new ListItem("Not Like", QueryFieldType.NotLike));
+            columnChoices.Add(new ListItem("Equal", WorkUnitHistoryQueryOperator.Equal));
+            columnChoices.Add(new ListItem("Not Equal", WorkUnitHistoryQueryOperator.NotEqual));
+            columnChoices.Add(new ListItem("Greater Than", WorkUnitHistoryQueryOperator.GreaterThan));
+            columnChoices.Add(new ListItem("Greater Than Or Equal", WorkUnitHistoryQueryOperator.GreaterThanOrEqual));
+            columnChoices.Add(new ListItem("Less Than", WorkUnitHistoryQueryOperator.LessThan));
+            columnChoices.Add(new ListItem("Less Than Or Equal", WorkUnitHistoryQueryOperator.LessThanOrEqual));
+            columnChoices.Add(new ListItem("Like", WorkUnitHistoryQueryOperator.Like));
+            columnChoices.Add(new ListItem("Not Like", WorkUnitHistoryQueryOperator.NotLike));
          }
 
          return columnChoices;

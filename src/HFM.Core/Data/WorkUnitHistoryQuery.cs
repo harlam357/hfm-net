@@ -26,9 +26,9 @@ using System.Runtime.Serialization;
 namespace HFM.Core.Data
 {
     /// <summary>
-    /// Represents the query operators for the work unit database.
+    /// Represents the operators for a work unit history query.
     /// </summary>
-    public enum QueryFieldType
+    public enum WorkUnitHistoryQueryOperator
     {
         Equal,
         GreaterThan,
@@ -72,7 +72,7 @@ namespace HFM.Core.Data
             get { return _parameters; }
         }
 
-        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn name, QueryFieldType operation, object value)
+        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn name, WorkUnitHistoryQueryOperator operation, object value)
         {
             return AddParameter(new WorkUnitHistoryQueryParameter(name, operation, value));
         }
@@ -245,10 +245,10 @@ namespace HFM.Core.Data
         public WorkUnitHistoryQueryParameter()
         {
             Column = WorkUnitHistoryRowColumn.ProjectID;
-            Type = QueryFieldType.Equal;
+            Type = WorkUnitHistoryQueryOperator.Equal;
         }
 
-        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, QueryFieldType operation, object value)
+        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator operation, object value)
         {
             Column = column;
             Type = operation;
@@ -259,7 +259,7 @@ namespace HFM.Core.Data
         public WorkUnitHistoryRowColumn Column { get; set; }
         [DataMember(Order = 2)]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
-        public QueryFieldType Type { get; set; }
+        public WorkUnitHistoryQueryOperator Type { get; set; }
 
         public object Value
         {
@@ -301,25 +301,25 @@ namespace HFM.Core.Data
             get { return GetOperator(Type); }
         }
 
-        private static string GetOperator(QueryFieldType type)
+        private static string GetOperator(WorkUnitHistoryQueryOperator type)
         {
             switch (type)
             {
-                case QueryFieldType.Equal:
+                case WorkUnitHistoryQueryOperator.Equal:
                     return "=";
-                case QueryFieldType.GreaterThan:
+                case WorkUnitHistoryQueryOperator.GreaterThan:
                     return ">";
-                case QueryFieldType.GreaterThanOrEqual:
+                case WorkUnitHistoryQueryOperator.GreaterThanOrEqual:
                     return ">=";
-                case QueryFieldType.LessThan:
+                case WorkUnitHistoryQueryOperator.LessThan:
                     return "<";
-                case QueryFieldType.LessThanOrEqual:
+                case WorkUnitHistoryQueryOperator.LessThanOrEqual:
                     return "<=";
-                case QueryFieldType.Like:
+                case WorkUnitHistoryQueryOperator.Like:
                     return "LIKE";
-                case QueryFieldType.NotLike:
+                case WorkUnitHistoryQueryOperator.NotLike:
                     return "NOT LIKE";
-                case QueryFieldType.NotEqual:
+                case WorkUnitHistoryQueryOperator.NotEqual:
                     return "!=";
                 default:
                     throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
