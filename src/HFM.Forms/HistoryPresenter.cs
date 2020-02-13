@@ -261,25 +261,25 @@ namespace HFM.Forms
 
       public async void RefreshAllProjectDataClick()
       {
-         await RefreshProjectData(ProteinUpdateType.All);
+         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.All);
       }
 
       public async void RefreshUnknownProjectDataClick()
       {
-         await RefreshProjectData(ProteinUpdateType.Unknown);
+         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Unknown);
       }
 
       public async void RefreshDataByProjectClick()
       {
-         await RefreshProjectData(ProteinUpdateType.Project);
+         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Project);
       }
 
       public async void RefreshDataByIdClick()
       {
-         await RefreshProjectData(ProteinUpdateType.Id);
+         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Id);
       }
 
-      private async Task RefreshProjectData(ProteinUpdateType type)
+      private async Task RefreshProjectData(WorkUnitHistoryProteinUpdateScope scope)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
          if (result == DialogResult.No)
@@ -287,19 +287,19 @@ namespace HFM.Forms
             return;
          }
 
-         long updateArg = 0;
-         if (type == ProteinUpdateType.Project)
+         long arg = 0;
+         if (scope == WorkUnitHistoryProteinUpdateScope.Project)
          {
-            updateArg = _model.SelectedWorkUnitHistoryRow.ProjectID;
+            arg = _model.SelectedWorkUnitHistoryRow.ProjectID;
          }
-         else if (type == ProteinUpdateType.Id)
+         else if (scope == WorkUnitHistoryProteinUpdateScope.Id)
          {
-            updateArg = _model.SelectedWorkUnitHistoryRow.ID;
+            arg = _model.SelectedWorkUnitHistoryRow.ID;
          }
 
          try
          {
-            bool updated = await _database.UpdateProteinDataAsync(type, updateArg).ConfigureAwait(false);
+            bool updated = await _database.UpdateProteinDataAsync(scope, arg).ConfigureAwait(false);
             if (updated)
             {
                _model.ResetBindings(true);

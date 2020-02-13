@@ -33,13 +33,13 @@ using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    public enum SqlTable
+    internal enum WorkUnitHistoryDatabaseTable
     {
         WuHistory,
         Version
     }
 
-    public enum ProteinUpdateType
+    public enum WorkUnitHistoryProteinUpdateScope
     {
         All,
         Unknown,
@@ -68,7 +68,7 @@ namespace HFM.Core.Data
 
         long CountFailed(string clientName, DateTime? clientStartTime);
 
-        Task<bool> UpdateProteinDataAsync(ProteinUpdateType type, long updateArg);
+        Task<bool> UpdateProteinDataAsync(WorkUnitHistoryProteinUpdateScope scope, long arg);
     }
 
     public sealed partial class UnitInfoDatabase : IUnitInfoDatabase
@@ -88,11 +88,13 @@ namespace HFM.Core.Data
         private ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
 
         private readonly IProteinService _proteinService;
-        private static readonly Dictionary<SqlTable, SqlTableCommands> SqlTableCommandDictionary = new Dictionary<SqlTable, SqlTableCommands>
-                                                                                                 {
-                                                                                                    { SqlTable.WuHistory, new WuHistorySqlTableCommands() },
-                                                                                                    { SqlTable.Version, new VersionSqlTableCommands() }
-                                                                                                 };
+
+        private static readonly Dictionary<WorkUnitHistoryDatabaseTable, SqlTableCommands> SqlTableCommandDictionary =
+            new Dictionary<WorkUnitHistoryDatabaseTable, SqlTableCommands>
+            {
+                { WorkUnitHistoryDatabaseTable.WuHistory, new WuHistorySqlTableCommands() },
+                { WorkUnitHistoryDatabaseTable.Version, new VersionSqlTableCommands() }
+            };
 
         #endregion
 
@@ -129,11 +131,11 @@ namespace HFM.Core.Data
             FilePath = filePath;
             try
             {
-                bool exists = TableExists(SqlTable.WuHistory);
+                bool exists = TableExists(WorkUnitHistoryDatabaseTable.WuHistory);
                 if (!exists)
                 {
-                    CreateTable(SqlTable.WuHistory);
-                    CreateTable(SqlTable.Version);
+                    CreateTable(WorkUnitHistoryDatabaseTable.WuHistory);
+                    CreateTable(WorkUnitHistoryDatabaseTable.Version);
                     SetDatabaseVersion(Application.Version);
                 }
                 // verify the connection by performing a db operation
@@ -157,7 +159,7 @@ namespace HFM.Core.Data
         private void Upgrade()
         {
             string dbVersionString = "0.0.0.0";
-            if (TableExists(SqlTable.Version))
+            if (TableExists(WorkUnitHistoryDatabaseTable.Version))
             {
                 string versionFromTable = GetDatabaseVersion();
                 if (!String.IsNullOrEmpty(versionFromTable))
@@ -167,7 +169,7 @@ namespace HFM.Core.Data
             }
             else
             {
-                CreateTable(SqlTable.Version);
+                CreateTable(WorkUnitHistoryDatabaseTable.Version);
             }
             int dbVersion = Application.ParseVersion(dbVersionString);
             Logger.InfoFormat("WU History database v{0}", dbVersionString);
@@ -213,7 +215,7 @@ namespace HFM.Core.Data
 
         private static void AddProteinColumns(SQLiteConnection connection)
         {
-            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[SqlTable.WuHistory].TableName, connection))
+            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].TableName, connection))
             {
                 adder.AddColumn("WorkUnitName", "VARCHAR(30)");
                 adder.AddColumn("KFactor", "FLOAT");
@@ -264,7 +266,7 @@ namespace HFM.Core.Data
             // The Insert operation does not setup a WuHistory table if
             // it does not exist.  This was already handled when the
             // the FilePath was set.
-            Debug.Assert(TableExists(SqlTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
 
             // ensure this unit is not written twice
             if (WorkUnitExists(workUnitModel.Data))
@@ -337,7 +339,7 @@ namespace HFM.Core.Data
 
         public int Delete(WorkUnitHistoryRow row)
         {
-            Debug.Assert(TableExists(SqlTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -367,9 +369,9 @@ namespace HFM.Core.Data
 
         private IList<WorkUnitHistoryRow> FetchInternal(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
-            Debug.Assert(TableExists(SqlTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -397,9 +399,9 @@ namespace HFM.Core.Data
 
         private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
         {
-            Debug.Assert(TableExists(SqlTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[SqlTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -482,7 +484,7 @@ namespace HFM.Core.Data
 
         #endregion
 
-        public async Task<bool> UpdateProteinDataAsync(ProteinUpdateType type, long updateArg)
+        public async Task<bool> UpdateProteinDataAsync(WorkUnitHistoryProteinUpdateScope scope, long arg)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -493,8 +495,8 @@ namespace HFM.Core.Data
                     {
                         // update the WuHistory table with protein info
                         var proteinDataUpdater = new ProteinDataUpdaterWithCancellation(connection, _proteinService);
-                        proteinDataUpdater.UpdateType = type;
-                        proteinDataUpdater.UpdateArg = updateArg;
+                        proteinDataUpdater.Scope = scope;
+                        proteinDataUpdater.Arg = arg;
                         await proteinDataUpdater.ExecuteAsyncWithProgress(true, this).ConfigureAwait(false);
                         if (proteinDataUpdater.IsCanceled)
                         {
@@ -539,24 +541,24 @@ namespace HFM.Core.Data
 
         #region Table Helpers
 
-        internal bool TableExists(SqlTable sqlTable)
+        internal bool TableExists(WorkUnitHistoryDatabaseTable databaseTable)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[sqlTable].TableName, null }))
+                using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[databaseTable].TableName, null }))
                 {
                     return table.Rows.Count != 0;
                 }
             }
         }
 
-        internal void CreateTable(SqlTable sqlTable)
+        internal void CreateTable(WorkUnitHistoryDatabaseTable databaseTable)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                using (var command = SqlTableCommandDictionary[sqlTable].GetCreateTableCommand(connection))
+                using (var command = SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
                 {
                     command.ExecuteNonQuery();
                 }
@@ -565,7 +567,7 @@ namespace HFM.Core.Data
 
         internal string GetDatabaseVersion()
         {
-            if (!TableExists(SqlTable.Version))
+            if (!TableExists(WorkUnitHistoryDatabaseTable.Version))
             {
                 return null;
             }

@@ -96,21 +96,21 @@ namespace HFM.Core.Data
             _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
          }
 
-         public ProteinUpdateType UpdateType { get; set; }
+         public WorkUnitHistoryProteinUpdateScope Scope { get; set; }
 
-         public long UpdateArg { get; set; }
+         public long Arg { get; set; }
 
          protected void ExecuteInternal(CancellationToken cancellationToken, IProgress<ProgressInfo> progress)
          {
              const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
 
-             switch (UpdateType)
+             switch (Scope)
              {
-                 case ProteinUpdateType.All:
-                 case ProteinUpdateType.Unknown:
+                 case WorkUnitHistoryProteinUpdateScope.All:
+                 case WorkUnitHistoryProteinUpdateScope.Unknown:
                  {
                      var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
-                     if (UpdateType == ProteinUpdateType.Unknown)
+                     if (Scope == WorkUnitHistoryProteinUpdateScope.Unknown)
                      {
                          selectSql = selectSql.Where(workUnitNameUnknown);
                      }
@@ -128,7 +128,7 @@ namespace HFM.Core.Data
                              var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                              if (updateSql != null)
                              {
-                                 if (UpdateType == ProteinUpdateType.Unknown)
+                                 if (Scope == WorkUnitHistoryProteinUpdateScope.Unknown)
                                  {
                                      updateSql = updateSql.Where(workUnitNameUnknown);
                                  }
@@ -150,9 +150,9 @@ namespace HFM.Core.Data
                      }
                      break;
                  }
-                 case ProteinUpdateType.Project:
+                 case WorkUnitHistoryProteinUpdateScope.Project:
                  {
-                     int projectId = (int)UpdateArg;
+                     int projectId = (int)Arg;
                      var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                      if (updateSql != null)
                      {
@@ -163,9 +163,9 @@ namespace HFM.Core.Data
                      }
                      break;
                  }
-                 case ProteinUpdateType.Id:
+                 case WorkUnitHistoryProteinUpdateScope.Id:
                  {
-                     long id = UpdateArg;
+                     long id = Arg;
                      var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
 
                      using (var table = Select(_connection, selectSql.SQL, selectSql.Arguments))
