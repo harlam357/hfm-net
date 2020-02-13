@@ -45,10 +45,7 @@ namespace HFM.Core.Data
     {
         private static readonly WorkUnitHistoryQuery SelectAllValue = new WorkUnitHistoryQuery();
 
-        public static WorkUnitHistoryQuery SelectAll
-        {
-            get { return SelectAllValue; }
-        }
+        public static WorkUnitHistoryQuery SelectAll => SelectAllValue;
 
         private const string SelectAllName = "*** SELECT ALL ***";
 
@@ -67,14 +64,11 @@ namespace HFM.Core.Data
         [DataMember(Order = 2)]
         private readonly List<WorkUnitHistoryQueryParameter> _parameters = new List<WorkUnitHistoryQueryParameter>();
 
-        public List<WorkUnitHistoryQueryParameter> Parameters
-        {
-            get { return _parameters; }
-        }
+        public List<WorkUnitHistoryQueryParameter> Parameters => _parameters;
 
-        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn name, WorkUnitHistoryQueryOperator operation, object value)
+        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator queryOperator, object value)
         {
-            return AddParameter(new WorkUnitHistoryQueryParameter(name, operation, value));
+            return AddParameter(new WorkUnitHistoryQueryParameter(column, queryOperator, value));
         }
 
         public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryQueryParameter parameter)
@@ -227,7 +221,7 @@ namespace HFM.Core.Data
             }
             sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
                 ColumnNameOverrides.ContainsKey(parameter.Column) ? ColumnNameOverrides[parameter.Column] : parameter.Column.ToString(),
-                parameter.Operator), parameter.Value);
+                parameter.OperatorString), parameter.Value);
             return sql;
         }
 
@@ -245,13 +239,13 @@ namespace HFM.Core.Data
         public WorkUnitHistoryQueryParameter()
         {
             Column = WorkUnitHistoryRowColumn.ProjectID;
-            Type = WorkUnitHistoryQueryOperator.Equal;
+            Operator = WorkUnitHistoryQueryOperator.Equal;
         }
 
-        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator operation, object value)
+        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator queryOperator, object value)
         {
             Column = column;
-            Type = operation;
+            Operator = queryOperator;
             Value = value;
         }
 
@@ -259,7 +253,7 @@ namespace HFM.Core.Data
         public WorkUnitHistoryRowColumn Column { get; set; }
         [DataMember(Order = 2)]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
-        public WorkUnitHistoryQueryOperator Type { get; set; }
+        public WorkUnitHistoryQueryOperator Operator { get; set; }
 
         public object Value
         {
@@ -278,9 +272,9 @@ namespace HFM.Core.Data
                     _dateTimeValue = null;
                     _stringValue = null;
                 }
-                else if (value is DateTime)
+                else if (value is DateTime dateTime)
                 {
-                    _dateTimeValue = (DateTime)value;
+                    _dateTimeValue = dateTime;
                     _stringValue = null;
                 }
                 else
@@ -296,10 +290,7 @@ namespace HFM.Core.Data
         [DataMember(Order = 4)]
         private string _stringValue;
 
-        public string Operator
-        {
-            get { return GetOperator(Type); }
-        }
+        internal string OperatorString => GetOperator(Operator);
 
         private static string GetOperator(WorkUnitHistoryQueryOperator type)
         {
@@ -329,7 +320,7 @@ namespace HFM.Core.Data
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, Operator, Value);
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, OperatorString, Value);
         }
 
         public static string[] GetColumnNames()

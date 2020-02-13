@@ -47,7 +47,7 @@ namespace HFM.Core.Data
             for (int i = 0; i < query.Parameters.Count; i++)
             {
                 Assert.AreEqual(query.Parameters[i].Column, copy.Parameters[i].Column);
-                Assert.AreEqual(query.Parameters[i].Type, copy.Parameters[i].Type);
+                Assert.AreEqual(query.Parameters[i].Operator, copy.Parameters[i].Operator);
                 Assert.AreEqual(query.Parameters[i].Value, copy.Parameters[i].Value);
             }
         }
@@ -120,7 +120,7 @@ namespace HFM.Core.Data
         {
             var parameter = new WorkUnitHistoryQueryParameter();
             Assert.AreEqual(WorkUnitHistoryRowColumn.ProjectID, parameter.Column);
-            Assert.AreEqual(WorkUnitHistoryQueryOperator.Equal, parameter.Type);
+            Assert.AreEqual(WorkUnitHistoryQueryOperator.Equal, parameter.Operator);
         }
 
         [Test]
@@ -157,63 +157,63 @@ namespace HFM.Core.Data
         public void WorkUnitHistoryQueryParameter_Operator_Default_Test()
         {
             var parameter = new WorkUnitHistoryQueryParameter();
-            Assert.AreEqual("=", parameter.Operator);
+            Assert.AreEqual("=", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_Equal_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.Equal };
-            Assert.AreEqual("=", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.Equal };
+            Assert.AreEqual("=", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_GreaterThan_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.GreaterThan };
-            Assert.AreEqual(">", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.GreaterThan };
+            Assert.AreEqual(">", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_GreaterThanOrEqual_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.GreaterThanOrEqual };
-            Assert.AreEqual(">=", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.GreaterThanOrEqual };
+            Assert.AreEqual(">=", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_LessThan_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.LessThan };
-            Assert.AreEqual("<", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.LessThan };
+            Assert.AreEqual("<", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_LessThanOrEqual_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.LessThanOrEqual };
-            Assert.AreEqual("<=", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.LessThanOrEqual };
+            Assert.AreEqual("<=", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_Like_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.Like };
-            Assert.AreEqual("LIKE", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.Like };
+            Assert.AreEqual("LIKE", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_NotLike_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.NotLike };
-            Assert.AreEqual("NOT LIKE", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.NotLike };
+            Assert.AreEqual("NOT LIKE", parameter.OperatorString);
         }
 
         [Test]
         public void WorkUnitHistoryQueryParameter_Operator_NotEqual_Test()
         {
-            var parameter = new WorkUnitHistoryQueryParameter { Type = WorkUnitHistoryQueryOperator.NotEqual };
-            Assert.AreEqual("!=", parameter.Operator);
+            var parameter = new WorkUnitHistoryQueryParameter { Operator = WorkUnitHistoryQueryOperator.NotEqual };
+            Assert.AreEqual("!=", parameter.OperatorString);
         }
     }
 }
