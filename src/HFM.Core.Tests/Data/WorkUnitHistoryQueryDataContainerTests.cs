@@ -77,7 +77,7 @@ namespace HFM.Core.Data
             {
                 WorkUnitHistoryQuery workUnitHistoryQuery = list[i];
                 Assert.AreEqual("Test" + i, workUnitHistoryQuery.Name);
-                Assert.AreEqual(WorkUnitHistoryRowColumn.Name, workUnitHistoryQuery.Parameters[0].Name);
+                Assert.AreEqual(WorkUnitHistoryRowColumn.Name, workUnitHistoryQuery.Parameters[0].Column);
                 Assert.AreEqual(QueryFieldType.Equal, workUnitHistoryQuery.Parameters[0].Type);
                 Assert.AreEqual("Test" + i, workUnitHistoryQuery.Parameters[0].Value);
             }

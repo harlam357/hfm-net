@@ -254,13 +254,13 @@ namespace HFM.Core.Data
         private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitHistoryQueryParameter parameter)
         {
             string format = "[{0}] {1} @0";
-            if (parameter.Name.Equals(WorkUnitHistoryRowColumn.DownloadDateTime) ||
-                parameter.Name.Equals(WorkUnitHistoryRowColumn.CompletionDateTime))
+            if (parameter.Column.Equals(WorkUnitHistoryRowColumn.DownloadDateTime) ||
+                parameter.Column.Equals(WorkUnitHistoryRowColumn.CompletionDateTime))
             {
                 format = "datetime([{0}]) {1} datetime(@0)";
             }
             sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
-                ColumnNameOverrides.ContainsKey(parameter.Name) ? ColumnNameOverrides[parameter.Name] : parameter.Name.ToString(),
+                ColumnNameOverrides.ContainsKey(parameter.Column) ? ColumnNameOverrides[parameter.Column] : parameter.Column.ToString(),
                 parameter.Operator), parameter.Value);
             return sql;
         }
@@ -278,19 +278,19 @@ namespace HFM.Core.Data
     {
         public WorkUnitHistoryQueryParameter()
         {
-            Name = WorkUnitHistoryRowColumn.ProjectID;
+            Column = WorkUnitHistoryRowColumn.ProjectID;
             Type = QueryFieldType.Equal;
         }
 
-        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn name, QueryFieldType operation, object value)
+        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, QueryFieldType operation, object value)
         {
-            Name = name;
+            Column = column;
             Type = operation;
             Value = value;
         }
 
         [DataMember(Order = 1)]
-        public WorkUnitHistoryRowColumn Name { get; set; }
+        public WorkUnitHistoryRowColumn Column { get; set; }
         [DataMember(Order = 2)]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public QueryFieldType Type { get; set; }
@@ -363,7 +363,7 @@ namespace HFM.Core.Data
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Name, Operator, Value);
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, Operator, Value);
         }
 
         public static string[] GetColumnNames()

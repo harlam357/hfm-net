@@ -46,7 +46,7 @@ namespace HFM.Core.Data
             Assert.AreEqual(param.Name, copy.Name);
             for (int i = 0; i < param.Parameters.Count; i++)
             {
-                Assert.AreEqual(param.Parameters[i].Name, copy.Parameters[i].Name);
+                Assert.AreEqual(param.Parameters[i].Column, copy.Parameters[i].Column);
                 Assert.AreEqual(param.Parameters[i].Type, copy.Parameters[i].Type);
                 Assert.AreEqual(param.Parameters[i].Value, copy.Parameters[i].Value);
             }
@@ -119,7 +119,7 @@ namespace HFM.Core.Data
         public void WorkUnitHistoryQueryParameter_Create_Test()
         {
             var field = new WorkUnitHistoryQueryParameter();
-            Assert.AreEqual(WorkUnitHistoryRowColumn.ProjectID, field.Name);
+            Assert.AreEqual(WorkUnitHistoryRowColumn.ProjectID, field.Column);
             Assert.AreEqual(QueryFieldType.Equal, field.Type);
         }
 
