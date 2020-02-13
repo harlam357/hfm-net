@@ -83,7 +83,7 @@ namespace HFM.Core.Data
         public void Fetch_All_Test()
         {
             // Select All
-            FetchTestData(44, BuildQuery());
+            FetchTestData(44, WorkUnitHistoryQuery.SelectAll);
         }
 
         [Test]
@@ -361,35 +361,21 @@ namespace HFM.Core.Data
         [Test]
         public void Fetch_Complex_Test1()
         {
-            FetchTestData(33, BuildQuery(new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.DownloadDateTime,
-                Operator = WorkUnitHistoryQueryOperator.GreaterThan,
-                Value = new DateTime(2010, 8, 8)
-            },
-            new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.DownloadDateTime,
-                Operator = WorkUnitHistoryQueryOperator.LessThan,
-                Value = new DateTime(2010, 8, 22)
-            }));
+            FetchTestData(33, new WorkUnitHistoryQuery()
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan,
+                    new DateTime(2010, 8, 8))
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan,
+                    new DateTime(2010, 8, 22)));
         }
 
         [Test]
         public void Fetch_Complex_Test2()
         {
-            FetchTestData(3, BuildQuery(new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.Atoms,
-                Operator = WorkUnitHistoryQueryOperator.GreaterThan,
-                Value = 5000
-            },
-            new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.Atoms,
-                Operator = WorkUnitHistoryQueryOperator.LessThanOrEqual,
-                Value = 7000
-            }));
+            FetchTestData(3, new WorkUnitHistoryQuery()
+                .AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThan,
+                    5000)
+                .AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThanOrEqual,
+                    7000));
         }
 
         [Test]
@@ -397,7 +383,7 @@ namespace HFM.Core.Data
         public void Fetch_All_Test2()
         {
             // Select All
-            FetchTestData2(253, BuildQuery());
+            FetchTestData2(253, WorkUnitHistoryQuery.SelectAll);
         }
 
         [Test]
@@ -675,42 +661,21 @@ namespace HFM.Core.Data
         [Test]
         public void Fetch_Complex_Test3()
         {
-            FetchTestData2(52, BuildQuery(new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.DownloadDateTime,
-                Operator = WorkUnitHistoryQueryOperator.GreaterThan,
-                Value = new DateTime(2012, 5, 29)
-            },
-            new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.DownloadDateTime,
-                Operator = WorkUnitHistoryQueryOperator.LessThan,
-                Value = new DateTime(2012, 11, 1)
-            }));
+            FetchTestData2(52, new WorkUnitHistoryQuery()
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan,
+                    new DateTime(2012, 5, 29))
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan,
+                    new DateTime(2012, 11, 1)));
         }
 
         [Test]
         public void Fetch_Complex_Test4()
         {
-            FetchTestData2(77, BuildQuery(new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.Name,
-                Operator = WorkUnitHistoryQueryOperator.GreaterThanOrEqual,
-                Value = "Ubuntu VM SMP - Media Server"
-            },
-            new WorkUnitHistoryQueryParameter
-            {
-                Column = WorkUnitHistoryRowColumn.Name,
-                Operator = WorkUnitHistoryQueryOperator.LessThanOrEqual,
-                Value = "n"
-            }));
-        }
-
-        private static WorkUnitHistoryQuery BuildQuery(params WorkUnitHistoryQueryParameter[] fields)
-        {
-            var query = new WorkUnitHistoryQuery();
-            query.Parameters.AddRange(fields);
-            return query;
+            FetchTestData2(77, new WorkUnitHistoryQuery()
+                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThanOrEqual,
+                    "Ubuntu VM SMP - Media Server")
+                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThanOrEqual,
+                    "n"));
         }
 
         private void FetchTestData(int count, WorkUnitHistoryQuery query)
@@ -747,7 +712,7 @@ namespace HFM.Core.Data
         public void Page_All_Test1()
         {
             // Select All
-            PageTestData(44, BuildQuery());
+            PageTestData(44, WorkUnitHistoryQuery.SelectAll);
         }
 
         [Test]
