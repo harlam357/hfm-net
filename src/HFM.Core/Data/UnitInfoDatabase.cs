@@ -324,11 +324,11 @@ namespace HFM.Core.Data
         private static WorkUnitHistoryQuery CreateWorkUnitQuery(WorkUnit workUnit)
         {
             return new WorkUnitHistoryQuery($"Query for existing {workUnit.ToProjectString()}")
-                .AddParameter(QueryFieldName.ProjectID, QueryFieldType.Equal, workUnit.ProjectID)
-                .AddParameter(QueryFieldName.ProjectRun, QueryFieldType.Equal, workUnit.ProjectRun)
-                .AddParameter(QueryFieldName.ProjectClone, QueryFieldType.Equal, workUnit.ProjectClone)
-                .AddParameter(QueryFieldName.ProjectGen, QueryFieldType.Equal, workUnit.ProjectGen)
-                .AddParameter(QueryFieldName.DownloadDateTime, QueryFieldType.Equal, workUnit.DownloadTime);
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectID, QueryFieldType.Equal, workUnit.ProjectID)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectRun, QueryFieldType.Equal, workUnit.ProjectRun)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectClone, QueryFieldType.Equal, workUnit.ProjectClone)
+                .AddParameter(WorkUnitHistoryRowColumn.ProjectGen, QueryFieldType.Equal, workUnit.ProjectGen)
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, QueryFieldType.Equal, workUnit.DownloadTime);
         }
 
         #endregion
@@ -457,12 +457,12 @@ namespace HFM.Core.Data
         private long Count(string clientName, bool completed, DateTime? clientStartTime)
         {
             var query = new WorkUnitHistoryQuery()
-                .AddParameter(QueryFieldName.Name, QueryFieldType.Equal, clientName)
-                .AddParameter(QueryFieldName.Result, completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, (int) WorkUnitResult.FinishedUnit);
+                .AddParameter(WorkUnitHistoryRowColumn.Name, QueryFieldType.Equal, clientName)
+                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? QueryFieldType.Equal : QueryFieldType.NotEqual, (int) WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {
-                query.AddParameter(completed ? QueryFieldName.CompletionDateTime : QueryFieldName.DownloadDateTime,
+                query.AddParameter(completed ? WorkUnitHistoryRowColumn.CompletionDateTime : WorkUnitHistoryRowColumn.DownloadDateTime,
                     QueryFieldType.GreaterThan, clientStartTime.Value);
             }
 

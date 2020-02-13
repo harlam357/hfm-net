@@ -28,9 +28,9 @@ namespace HFM.Core.Data
     // ReSharper disable InconsistentNaming
 
     /// <summary>
-    /// Represents the fields in the work unit database.
+    /// Represents the columns returned by a work unit history database query.
     /// </summary>
-    public enum QueryFieldName
+    public enum WorkUnitHistoryRowColumn
     {
         ID = -1,
         ProjectID = 0,
@@ -106,7 +106,7 @@ namespace HFM.Core.Data
             get { return _parameters; }
         }
 
-        public WorkUnitHistoryQuery AddParameter(QueryFieldName name, QueryFieldType operation, object value)
+        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn name, QueryFieldType operation, object value)
         {
             return AddParameter(new WorkUnitHistoryQueryParameter(name, operation, value));
         }
@@ -254,8 +254,8 @@ namespace HFM.Core.Data
         private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitHistoryQueryParameter parameter)
         {
             string format = "[{0}] {1} @0";
-            if (parameter.Name.Equals(QueryFieldName.DownloadDateTime) ||
-                parameter.Name.Equals(QueryFieldName.CompletionDateTime))
+            if (parameter.Name.Equals(WorkUnitHistoryRowColumn.DownloadDateTime) ||
+                parameter.Name.Equals(WorkUnitHistoryRowColumn.CompletionDateTime))
             {
                 format = "datetime([{0}]) {1} datetime(@0)";
             }
@@ -265,11 +265,11 @@ namespace HFM.Core.Data
             return sql;
         }
 
-        private static readonly Dictionary<QueryFieldName, string> ColumnNameOverrides = new Dictionary<QueryFieldName, string>
+        private static readonly Dictionary<WorkUnitHistoryRowColumn, string> ColumnNameOverrides = new Dictionary<WorkUnitHistoryRowColumn, string>
         {
-            { QueryFieldName.Name, "InstanceName" },
-            { QueryFieldName.Path, "InstancePath" },
-            { QueryFieldName.Credit, "CalcCredit" },
+            { WorkUnitHistoryRowColumn.Name, "InstanceName" },
+            { WorkUnitHistoryRowColumn.Path, "InstancePath" },
+            { WorkUnitHistoryRowColumn.Credit, "CalcCredit" },
         };
     }
 
@@ -278,11 +278,11 @@ namespace HFM.Core.Data
     {
         public WorkUnitHistoryQueryParameter()
         {
-            Name = QueryFieldName.ProjectID;
+            Name = WorkUnitHistoryRowColumn.ProjectID;
             Type = QueryFieldType.Equal;
         }
 
-        public WorkUnitHistoryQueryParameter(QueryFieldName name, QueryFieldType operation, object value)
+        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn name, QueryFieldType operation, object value)
         {
             Name = name;
             Type = operation;
@@ -290,7 +290,7 @@ namespace HFM.Core.Data
         }
 
         [DataMember(Order = 1)]
-        public QueryFieldName Name { get; set; }
+        public WorkUnitHistoryRowColumn Name { get; set; }
         [DataMember(Order = 2)]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public QueryFieldType Type { get; set; }
@@ -368,7 +368,7 @@ namespace HFM.Core.Data
 
         public static string[] GetColumnNames()
         {
-            // Indexes Must Match QueryFieldName enum defined in Enumerations.cs
+            // Indexes Must Match WorkUnitHistoryRowColumn enum defined in Enumerations.cs
             return new[]
             {
                 "ProjectID",

@@ -38,8 +38,8 @@ namespace HFM.Core.Data
         public void WorkUnitHistoryQuery_DeepClone_Test()
         {
             var param = new WorkUnitHistoryQuery("Test")
-                .AddParameter(QueryFieldName.Name, QueryFieldType.Equal, "Test Instance")
-                .AddParameter(QueryFieldName.DownloadDateTime, QueryFieldType.GreaterThan, new DateTime(2000, 1, 1));
+                .AddParameter(WorkUnitHistoryRowColumn.Name, QueryFieldType.Equal, "Test Instance")
+                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, QueryFieldType.GreaterThan, new DateTime(2000, 1, 1));
 
             var copy = param.DeepClone();
             Assert.AreNotSame(param, copy);
@@ -119,7 +119,7 @@ namespace HFM.Core.Data
         public void WorkUnitHistoryQueryParameter_Create_Test()
         {
             var field = new WorkUnitHistoryQueryParameter();
-            Assert.AreEqual(QueryFieldName.ProjectID, field.Name);
+            Assert.AreEqual(WorkUnitHistoryRowColumn.ProjectID, field.Name);
             Assert.AreEqual(QueryFieldType.Equal, field.Type);
         }
 

@@ -65,7 +65,7 @@ namespace HFM.Core.Data
             for (int i = 0; i < 5; i++)
             {
                 list.Add(new WorkUnitHistoryQuery("Test" + i)
-                    .AddParameter(QueryFieldName.Name, QueryFieldType.Equal, "Test" + i));
+                    .AddParameter(WorkUnitHistoryRowColumn.Name, QueryFieldType.Equal, "Test" + i));
             }
 
             return list;
@@ -77,7 +77,7 @@ namespace HFM.Core.Data
             {
                 WorkUnitHistoryQuery workUnitHistoryQuery = list[i];
                 Assert.AreEqual("Test" + i, workUnitHistoryQuery.Name);
-                Assert.AreEqual(QueryFieldName.Name, workUnitHistoryQuery.Parameters[0].Name);
+                Assert.AreEqual(WorkUnitHistoryRowColumn.Name, workUnitHistoryQuery.Parameters[0].Name);
                 Assert.AreEqual(QueryFieldType.Equal, workUnitHistoryQuery.Parameters[0].Type);
                 Assert.AreEqual("Test" + i, workUnitHistoryQuery.Parameters[0].Value);
             }
