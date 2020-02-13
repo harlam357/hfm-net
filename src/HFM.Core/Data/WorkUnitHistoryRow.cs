@@ -18,10 +18,41 @@
  */
 
 using System;
+
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
 {
+    /// <summary>
+    /// Represents the columns returned by a work unit history database query.
+    /// </summary>
+    public enum WorkUnitHistoryRowColumn
+    {
+        ID = -1,
+        ProjectID = 0,
+        ProjectRun,
+        ProjectClone,
+        ProjectGen,
+        Name,
+        Path,
+        Username,
+        Team,
+        CoreVersion,
+        FramesCompleted,
+        FrameTime,
+        Result,
+        DownloadDateTime,
+        CompletionDateTime,
+        WorkUnitName,
+        KFactor,
+        Core,
+        Frames,
+        Atoms,
+        SlotType,
+        PPD,
+        Credit
+    }
+
     [PetaPoco.TableName("WuHistory")]
     [PetaPoco.PrimaryKey("ID")]
     public class WorkUnitHistoryRow
