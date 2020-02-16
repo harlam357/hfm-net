@@ -88,8 +88,9 @@ namespace HFM
                     return;
                 }
 
+                var appDataPath = prefs.Get<string>(Preference.ApplicationDataFolderPath);
                 var mainView = container.Resolve<IMainView>();
-                if (!InitializeMainView(container, arguments, mainView))
+                if (!InitializeMainView(appDataPath, container, arguments, mainView))
                 {
                     return;
                 }
@@ -208,8 +209,8 @@ namespace HFM
                 ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
                 return false;
             }
-           // set logging level from prefs
-           ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
+            // set logging level from prefs
+            ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
             return true;
         }
 
@@ -294,7 +295,7 @@ namespace HFM
             return true;
         }
 
-        private static bool InitializeMainView(IWindsorContainer container, ICollection<Argument> arguments, IMainView mainView)
+        private static bool InitializeMainView(string appDataPath, IWindsorContainer container, ICollection<Argument> arguments, IMainView mainView)
         {
             var mainPresenter = container.Resolve<MainPresenter>();
             mainPresenter.Arguments = arguments;
@@ -312,7 +313,7 @@ namespace HFM
             var repository = container.Resolve<IWorkUnitRepository>();
             try
             {
-                repository.Initialize();
+                repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
                 mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)

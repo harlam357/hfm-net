@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Castle.Core.Logging;
 
 using HFM.Core.WorkUnits;
-using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
@@ -46,7 +45,7 @@ namespace HFM.Core.Data
         /// </summary>
         bool Connected { get; }
 
-        void Initialize();
+        void Initialize(string filePath);
 
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         bool Insert(WorkUnitModel workUnitModel);
@@ -95,29 +94,18 @@ namespace HFM.Core.Data
 
         #region Constructor
 
-        public WorkUnitRepository(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
+        public WorkUnitRepository(IProteinService proteinService, ILogger logger)
         {
             _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
             _logger = logger;
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
-
-            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
-            if (!String.IsNullOrEmpty(path))
-            {
-                FilePath = System.IO.Path.Combine(path, DefaultFileName);
-            }
         }
 
         #endregion
 
         #region Methods
-
-        public void Initialize()
-        {
-            Initialize(FilePath);
-        }
 
         public void Initialize(string filePath)
         {
