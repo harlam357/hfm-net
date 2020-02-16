@@ -9,7 +9,7 @@ using HFM.Proteins;
 
 namespace HFM.Core.Data
 {
-   public partial class UnitInfoDatabase
+   public partial class WorkUnitRepository
    {
       [SQLiteFunction(Name = "ToSlotType", Arguments = 1, FuncType = FunctionType.Scalar)]
       private sealed class ToSlotType : SQLiteFunction

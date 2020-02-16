@@ -82,10 +82,10 @@ namespace HFM.Core.Configuration
                .ImplementedBy<NetworkOps>()
                   .LifeStyle.Transient);
 
-         // IUnitInfoDatabase - Singleton
+         // IWorkUnitRepository - Singleton
          container.Register(
-            Component.For<Data.IUnitInfoDatabase>()
-               .ImplementedBy<Data.UnitInfoDatabase>());
+            Component.For<Data.IWorkUnitRepository>()
+               .ImplementedBy<Data.WorkUnitRepository>());
 
          // IClientConfiguration - Singleton
          container.Register(

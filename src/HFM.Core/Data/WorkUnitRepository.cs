@@ -47,7 +47,7 @@ namespace HFM.Core.Data
         Id
     }
 
-    public interface IUnitInfoDatabase : IDisposable
+    public interface IWorkUnitRepository : IDisposable
     {
         /// <summary>
         /// Flag that notes if the Database is safe to call.
@@ -56,6 +56,7 @@ namespace HFM.Core.Data
 
         void Initialize();
 
+        // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         bool Insert(WorkUnitModel workUnitModel);
 
         int Delete(WorkUnitHistoryRow row);
@@ -71,7 +72,7 @@ namespace HFM.Core.Data
         Task<bool> UpdateProteinDataAsync(WorkUnitHistoryProteinUpdateScope scope, long arg);
     }
 
-    public sealed partial class UnitInfoDatabase : IUnitInfoDatabase
+    public partial class WorkUnitRepository : IWorkUnitRepository
     {
         #region Fields
 
@@ -102,7 +103,7 @@ namespace HFM.Core.Data
 
         #region Constructor
 
-        public UnitInfoDatabase(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
+        public WorkUnitRepository(IPreferenceSet prefs, IProteinService proteinService, ILogger logger)
         {
             _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
             _logger = logger;

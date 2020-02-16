@@ -28,14 +28,13 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
     public sealed class HistoryPresenterModel : INotifyPropertyChanged
     {
-        private readonly IUnitInfoDatabase _database;
+        private readonly IWorkUnitRepository _repository;
 
         private readonly List<WorkUnitHistoryQuery> _queryList;
         private readonly BindingSource _queryBindingSource;
@@ -53,11 +52,11 @@ namespace HFM.Forms.Models
 
         private PetaPoco.Page<WorkUnitHistoryRow> _page;
 
-        public HistoryPresenterModel(IUnitInfoDatabase database)
+        public HistoryPresenterModel(IWorkUnitRepository repository)
         {
-            _database = database ?? throw new ArgumentNullException(nameof(database));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-            Debug.Assert(_database.Connected);
+            Debug.Assert(_repository.Connected);
 
             _queryList = new List<WorkUnitHistoryQuery>();
             _queryList.Add(new WorkUnitHistoryQuery());
@@ -66,7 +65,7 @@ namespace HFM.Forms.Models
             _queryBindingSource.DataSource = _queryList;
             _queryBindingSource.CurrentItemChanged += (s, e) =>
                                                       {
-                                                          OnPropertyChanged("EditAndDeleteButtonsEnabled");
+                                                          OnPropertyChanged(nameof(EditAndDeleteButtonsEnabled));
                                                           _currentPage = 1;
                                                           ResetBindings(true);
                                                       };
@@ -196,7 +195,7 @@ namespace HFM.Forms.Models
 
         public void DeleteHistoryEntry(WorkUnitHistoryRow row)
         {
-            if (_database.Delete(row) != 0)
+            if (_repository.Delete(row) != 0)
             {
                 _page.Items.Remove(row);
                 _page.TotalItems--;
@@ -210,7 +209,7 @@ namespace HFM.Forms.Models
 
             if (executeQuery)
             {
-                _page = _database.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitHistoryQuery, BonusCalculation);
+                _page = _repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitHistoryQuery, BonusCalculation);
             }
             if (_page == null)
             {
@@ -234,8 +233,8 @@ namespace HFM.Forms.Models
             // reset AFTER RaiseListChangedEvents is enabled
             _historyBindingSource.ResetBindings(false);
 
-            OnPropertyChanged("TotalEntries");
-            OnPropertyChanged("CurrentPage");
+            OnPropertyChanged(nameof(TotalEntries));
+            OnPropertyChanged(nameof(CurrentPage));
         }
 
         private void RefreshHistoryList(IEnumerable<WorkUnitHistoryRow> historyEntries)
@@ -252,7 +251,7 @@ namespace HFM.Forms.Models
 
         public IList<WorkUnitHistoryRow> FetchSelectedQuery()
         {
-            return _database.Fetch(SelectedWorkUnitHistoryQuery, BonusCalculation);
+            return _repository.Fetch(SelectedWorkUnitHistoryQuery, BonusCalculation);
         }
 
         #region Properties
@@ -366,18 +365,11 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        #region INotifyPropertyChanged Members
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        #endregion
     }
 }

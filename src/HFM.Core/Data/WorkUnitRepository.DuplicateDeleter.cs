@@ -12,7 +12,7 @@ using harlam357.Core.ComponentModel;
 
 namespace HFM.Core.Data
 {
-   public sealed partial class UnitInfoDatabase
+   public partial class WorkUnitRepository
    {
       private sealed class DuplicateDeleter : AsyncProcessorBase
       {

@@ -30,15 +30,15 @@ namespace HFM.Forms.Models
    [TestFixture]
    public class HistoryPresenterModelTests
    {
-      private IUnitInfoDatabase _database;
+      private IWorkUnitRepository _repository;
       private HistoryPresenterModel _model;
 
       [SetUp]
       public void Init()
       {
-         _database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         _database.Stub(x => x.Connected).Return(true);
-         _model = new HistoryPresenterModel(_database);
+         _repository = MockRepository.GenerateMock<IWorkUnitRepository>();
+         _repository.Stub(x => x.Connected).Return(true);
+         _model = new HistoryPresenterModel(_repository);
       }
 
       [Test]
@@ -161,22 +161,22 @@ namespace HFM.Forms.Models
              .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         _database.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitHistoryRow>());
+         _repository.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitHistoryRow>());
          // Act
          _model.ResetBindings(true);
          // Assert
-         _database.VerifyAllExpectations();
+         _repository.VerifyAllExpectations();
       }
 
       [Test]
       public void HistoryPresenterModel_FetchSelectedQuery_Test()
       {
          // Arrange
-         _database.Expect(x => x.Fetch(_model.SelectedWorkUnitHistoryQuery, _model.BonusCalculation));
+         _repository.Expect(x => x.Fetch(_model.SelectedWorkUnitHistoryQuery, _model.BonusCalculation));
          // Act
          _model.FetchSelectedQuery();
          // Assert
-         _database.VerifyAllExpectations();
+         _repository.VerifyAllExpectations();
       }
    }
 }

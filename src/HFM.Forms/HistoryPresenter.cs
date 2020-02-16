@@ -42,7 +42,7 @@ namespace HFM.Forms
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
-      private readonly IUnitInfoDatabase _database;
+      private readonly IWorkUnitRepository _repository;
       private readonly HistoryPresenterModel _model;
 
       private ILogger _logger;
@@ -60,7 +60,7 @@ namespace HFM.Forms
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
-                              IUnitInfoDatabase database,
+                              IWorkUnitRepository repository,
                               HistoryPresenterModel model)
       {
          _prefs = prefs;
@@ -68,7 +68,7 @@ namespace HFM.Forms
          _view = view;
          _viewFactory = viewFactory;
          _messageBoxView = messageBoxView;
-         _database = database;
+         _repository = repository;
          _model = model;
       }
       
@@ -299,7 +299,7 @@ namespace HFM.Forms
 
          try
          {
-            bool updated = await _database.UpdateProteinDataAsync(scope, arg).ConfigureAwait(false);
+            bool updated = await _repository.UpdateProteinDataAsync(scope, arg).ConfigureAwait(false);
             if (updated)
             {
                _model.ResetBindings(true);

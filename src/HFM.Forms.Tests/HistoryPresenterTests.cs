@@ -46,7 +46,7 @@ namespace HFM.Forms
       private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
 
-      private IUnitInfoDatabase _database;
+      private IWorkUnitRepository _repository;
       private HistoryPresenterModel _model;
 
       private HistoryPresenter _presenter;
@@ -60,14 +60,14 @@ namespace HFM.Forms
          _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
 
-         _database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         _database.Stub(x => x.Connected).Return(true);
-         _model = new HistoryPresenterModel(_database);
+         _repository = MockRepository.GenerateMock<IWorkUnitRepository>();
+         _repository.Stub(x => x.Connected).Return(true);
+         _model = new HistoryPresenterModel(_repository);
       }
 
       private HistoryPresenter CreatePresenter()
       {
-         return new HistoryPresenter(_prefs, _queryContainer, _view, _viewFactory, _messageBoxView, _database, _model);
+         return new HistoryPresenter(_prefs, _queryContainer, _view, _viewFactory, _messageBoxView, _repository, _model);
       }
 
       [Test]
@@ -310,13 +310,13 @@ namespace HFM.Forms
          _model.HistoryBindingSource.Add(new WorkUnitHistoryRow { ID = 1 });
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-         _database.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
+         _repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
          // Act
          _presenter = CreatePresenter();
          _presenter.DeleteWorkUnitClick();
          // Assert
          _messageBoxView.VerifyAllExpectations();
-         _database.VerifyAllExpectations();
+         _repository.VerifyAllExpectations();
       }
 
       [Test]
@@ -335,7 +335,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Test()
       {
          // Arrange
-         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
+         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
@@ -360,7 +360,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Exception_Test()
       {
          // Arrange
-         _database.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
+         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");

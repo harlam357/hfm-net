@@ -33,7 +33,6 @@ using Rhino.Mocks;
 
 using HFM.Core.Client;
 using HFM.Core.Configuration;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
@@ -57,7 +56,7 @@ namespace HFM.Core.Data
       
       private const string TestScratchFile = "UnitInfoTest.db3";
 
-      private UnitInfoDatabase _database;
+      private WorkUnitRepository _repository;
       private readonly IProteinService _proteinService = CreateProteinService();
 
       #region Setup and TearDown
@@ -78,7 +77,7 @@ namespace HFM.Core.Data
             File.Delete(TestScratchFile);
          }
 
-         _database = new UnitInfoDatabase(null, _proteinService, null);
+         _repository = new WorkUnitRepository(null, _proteinService, null);
       }
 
       private void SetupTestDataFileCopies()
@@ -102,9 +101,9 @@ namespace HFM.Core.Data
       [TearDown]
       public void Destroy()
       {
-         if (_database != null)
+         if (_repository != null)
          {
-            _database.Dispose();
+            _repository.Dispose();
          }
       }
 
@@ -126,7 +125,7 @@ namespace HFM.Core.Data
       [Test]
       public void MultiThread_Test()
       {
-         _database.Initialize(TestScratchFile);
+         _repository.Initialize(TestScratchFile);
          var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
          
          Parallel.For(0, 100, i =>
@@ -137,10 +136,10 @@ namespace HFM.Core.Data
                                  workUnitModel.CurrentProtein = BuildProtein1();
                                  workUnitModel.Data = BuildWorkUnit1(i);
 
-                                 _database.Insert(workUnitModel);
+                                 _repository.Insert(workUnitModel);
                               });
 
-         Assert.AreEqual(100, _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None).Count);
+         Assert.AreEqual(100, _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None).Count);
       }
 
       #region Connected
@@ -148,10 +147,10 @@ namespace HFM.Core.Data
       [Test]
       public void Connected_Test1()
       {
-         _database.Initialize(TestScratchFile);
+         _repository.Initialize(TestScratchFile);
          VerifyWuHistoryTableSchema(TestScratchFile);
-         Assert.AreEqual(Application.Version, _database.GetDatabaseVersion());
-         Assert.AreEqual(true, _database.Connected);
+         Assert.AreEqual(Application.Version, _repository.GetDatabaseVersion());
+         Assert.AreEqual(true, _repository.Connected);
       }
 
       #endregion
@@ -163,10 +162,10 @@ namespace HFM.Core.Data
       {
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         _database.Initialize(_testDataFileCopy);
+         _repository.Initialize(_testDataFileCopy);
          VerifyWuHistoryTableSchema(_testDataFileCopy);
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_database.GetDatabaseVersion()));
+         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_repository.GetDatabaseVersion()));
       }
 
       [Test]
@@ -174,10 +173,10 @@ namespace HFM.Core.Data
       {
          VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
-         _database.Initialize(_testDataFileUpgradedCopy);
+         _repository.Initialize(_testDataFileUpgradedCopy);
          VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
          Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
-         Assert.IsTrue(Application.ParseVersion("0.9.2") <= Application.ParseVersion(_database.GetDatabaseVersion()));
+         Assert.IsTrue(Application.ParseVersion("0.9.2") <= Application.ParseVersion(_repository.GetDatabaseVersion()));
       }
 
       [Test]
@@ -185,11 +184,11 @@ namespace HFM.Core.Data
       {
          Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
          Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
-         _database.Initialize(_testData2FileCopy);
+         _repository.Initialize(_testData2FileCopy);
          VerifyWuHistoryTableSchema(_testData2FileCopy);
          // 32 duplicates deleted
          Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
-         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_database.GetDatabaseVersion()));
+         Assert.AreEqual(Application.ParseVersion("0.9.2"), Application.ParseVersion(_repository.GetDatabaseVersion()));
       }
 
       #endregion
@@ -229,21 +228,21 @@ namespace HFM.Core.Data
 
       private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitHistoryRow>> verifyAction)
       {
-         _database.Initialize(TestScratchFile);
+         _repository.Initialize(TestScratchFile);
 
          var workUnitModel = new WorkUnitModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
          workUnitModel.CurrentProtein = protein;
          workUnitModel.Data = workUnit;
 
-         _database.Insert(workUnitModel);
+         _repository.Insert(workUnitModel);
 
-         var rows = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         var rows = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          verifyAction(rows);
 
          // test code to ensure this unit is NOT written again
-         _database.Insert(workUnitModel);
+         _repository.Insert(workUnitModel);
          // verify
-         rows = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         rows = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(1, rows.Count);
       }
 
@@ -567,19 +566,19 @@ namespace HFM.Core.Data
       [Test]
       public void Delete_Test()
       {
-         _database.Initialize(_testDataFileCopy);
-         var entries = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         _repository.Initialize(_testDataFileCopy);
+         var entries = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(44, entries.Count);
-         Assert.AreEqual(1, _database.Delete(entries[14]));
-         entries = _database.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         Assert.AreEqual(1, _repository.Delete(entries[14]));
+         entries = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(43, entries.Count);
       }
       
       [Test]
       public void Delete_NotExist_Test()
       {
-         _database.Initialize(_testDataFileCopy);
-         Assert.AreEqual(0, _database.Delete(new WorkUnitHistoryRow { ID = 100 }));
+         _repository.Initialize(_testDataFileCopy);
+         Assert.AreEqual(0, _repository.Delete(new WorkUnitHistoryRow { ID = 100 }));
       }
 
       #endregion

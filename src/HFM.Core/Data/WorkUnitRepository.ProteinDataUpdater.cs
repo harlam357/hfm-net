@@ -13,7 +13,7 @@ using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
 {
-   public sealed partial class UnitInfoDatabase
+   public partial class WorkUnitRepository
    {
       private sealed class ProteinDataUpdater : ProteinDataUpdaterBase, IAsyncProcessor
       {

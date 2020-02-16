@@ -474,12 +474,12 @@ namespace HFM.Core.Client
             {
                 slotModel.ClientVersion = info.Build.Version;
             }
-            if (UnitInfoDatabase.Connected)
+            if (WorkUnitRepository.Connected)
             {
-                slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
-                slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, null);
-                slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, result.StartTime);
-                slotModel.TotalFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, null);
+                slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, result.StartTime);
+                slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
+                slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, result.StartTime);
+                slotModel.TotalFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, null);
             }
         }
 
@@ -498,7 +498,7 @@ namespace HFM.Core.Client
                 // Update history database
                 if (model.Data.UnitResult != WorkUnitResult.Unknown)
                 {
-                    UpdateUnitInfoDatabase(model);
+                    InsertCompletedWorkUnit(model);
                 }
             }
         }

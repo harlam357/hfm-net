@@ -42,7 +42,7 @@ namespace HFM.Forms
       {
          var openForms = Application.OpenForms.OfType<Form>().ToList();
 
-         if (state is UnitInfoDatabase)
+         if (state is WorkUnitRepository)
          {
             var historyView = openForms.Find(x => x is IHistoryView);
             if (historyView != null)

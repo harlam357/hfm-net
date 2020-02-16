@@ -45,8 +45,8 @@ namespace HFM.Core.Client
       {
          // setup
          var benchmarkCollection = new ProteinBenchmarkService();
-         var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, UnitInfoDatabase = database };
+         var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
+         var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, WorkUnitRepository = repository };
 
          var workUnit = new WorkUnit();
          workUnit.OwningClientName = "Owner";
@@ -73,8 +73,8 @@ namespace HFM.Core.Client
          var parsedUnits = new[] { new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnitCopy } };
 
          // Arrange
-         database.Stub(x => x.Connected).Return(true);
-         database.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
+         repository.Stub(x => x.Connected).Return(true);
+         repository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
          var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
 
@@ -91,7 +91,7 @@ namespace HFM.Core.Client
          Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
          Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentWorkUnit.Data).AverageFrameTime);
 
-         database.VerifyAllExpectations();
+         repository.VerifyAllExpectations();
       }
    }
 }

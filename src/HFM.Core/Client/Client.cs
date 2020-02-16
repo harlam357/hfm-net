@@ -108,7 +108,7 @@ namespace HFM.Core.Client
 
       public IProteinBenchmarkService BenchmarkService { get; set; }
 
-      public IUnitInfoDatabase UnitInfoDatabase { get; set; }
+      public IWorkUnitRepository WorkUnitRepository { get; set; }
 
       private ILogger _logger;
 
@@ -168,14 +168,14 @@ namespace HFM.Core.Client
 
       protected abstract void RetrieveInternal();
 
-      protected void UpdateUnitInfoDatabase(WorkUnitModel workUnitModel)
+      protected void InsertCompletedWorkUnit(WorkUnitModel workUnitModel)
       {
          // Update history database
-         if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+         if (WorkUnitRepository != null && WorkUnitRepository.Connected)
          {
             try
             {
-               if (UnitInfoDatabase.Insert(workUnitModel))
+               if (WorkUnitRepository.Insert(workUnitModel))
                {
                   if (Logger.IsDebugEnabled)
                   {

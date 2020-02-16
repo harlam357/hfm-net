@@ -309,11 +309,11 @@ namespace HFM
             }
 
             mainView.WorkUnitHistoryMenuEnabled = false;
-            var database = container.Resolve<IUnitInfoDatabase>();
+            var repository = container.Resolve<IWorkUnitRepository>();
             try
             {
-                database.Initialize();
-                mainView.WorkUnitHistoryMenuEnabled = database.Connected;
+                repository.Initialize();
+                mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)
             {
