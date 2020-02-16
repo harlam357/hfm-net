@@ -348,7 +348,7 @@ namespace HFM.Core.Data
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
          workUnit.DownloadTime = new DateTime(2009, 5, 5);
-         workUnit.FinishedTime = DateTime.MinValue;
+         workUnit.FinishedTime = new DateTime(2009, 5, 6);
 
          // these values effect the value reported when WorkUnitModel.GetRawTime() is called
          workUnit.FramesObserved = 1;
@@ -392,7 +392,7 @@ namespace HFM.Core.Data
             Assert.AreEqual(TimeSpan.FromSeconds(1000), row.FrameTime);
             Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
             Assert.AreEqual(new DateTime(2009, 5, 5), row.DownloadDateTime);
-            Assert.AreEqual(DateTime.MinValue, row.CompletionDateTime);
+            Assert.AreEqual(new DateTime(2009, 5, 6), row.CompletionDateTime);
             Assert.AreEqual("TestUnit2", row.WorkUnitName);
             Assert.AreEqual(2.0, row.KFactor);
             Assert.AreEqual("GRO-A4", row.Core);
@@ -425,7 +425,7 @@ namespace HFM.Core.Data
          // connection string option to Utc will force SQLite to handle all DateTime 
          // values as Utc regardless of the DateTimeKind specified in the value.
          workUnit.DownloadTime = new DateTime(2010, 2, 2);
-         workUnit.FinishedTime = DateTime.MinValue;
+         workUnit.FinishedTime = new DateTime(2010, 2, 3);
 
          // these values effect the value reported when WorkUnitModel.GetRawTime() is called
          //workUnit.FramesObserved = 1;
@@ -469,7 +469,7 @@ namespace HFM.Core.Data
             Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
             Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
             Assert.AreEqual(new DateTime(2010, 2, 2), row.DownloadDateTime);
-            Assert.AreEqual(DateTime.MinValue, row.CompletionDateTime);
+            Assert.AreEqual(new DateTime(2010, 2, 3), row.CompletionDateTime);
             Assert.AreEqual("TestUnit3", row.WorkUnitName);
             Assert.AreEqual(3.0, row.KFactor);
             Assert.AreEqual("GRO-A5", row.Core);

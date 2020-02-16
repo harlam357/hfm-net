@@ -27,7 +27,7 @@ using HFM.Core.WorkUnits;
 
 namespace HFM.Core
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         #region DateTime/TimeSpan
 

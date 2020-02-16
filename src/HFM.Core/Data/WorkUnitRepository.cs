@@ -258,18 +258,12 @@ namespace HFM.Core.Data
 
         public bool Insert(WorkUnitModel workUnitModel)
         {
-            // if the work unit is not valid simply return
             if (!ValidateWorkUnit(workUnitModel.Data))
             {
                 return false;
             }
 
-            // The Insert operation does not setup a WuHistory table if
-            // it does not exist.  This was already handled when the
-            // the FilePath was set.
-            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
-
-            // ensure this unit is not written twice
+            // ensure the given work unit is not written more than once
             if (WorkUnitExists(workUnitModel.Data))
             {
                 return false;
@@ -303,19 +297,9 @@ namespace HFM.Core.Data
 
         private static bool ValidateWorkUnit(WorkUnit workUnit)
         {
-            // if Project and Download Time are valid
-            if (!workUnit.ProjectIsUnknown() && workUnit.DownloadTime != DateTime.MinValue)
-            {
-                // if UnitResult is FinishedUnit
-                if (workUnit.UnitResult == WorkUnitResult.FinishedUnit)
-                {
-                    // the Finished Time must be valid
-                    return workUnit.FinishedTime != DateTime.MinValue;
-                }
-                // otherwise, the UnitResult must be a Terminating error result
-                return workUnit.UnitResult.IsTerminating();
-            }
-            return false;
+            return workUnit.ProjectIsKnown() &&
+                   workUnit.DownloadTime.IsKnown() &&
+                   workUnit.FinishedTime.IsKnown();
         }
 
         private bool WorkUnitExists(WorkUnit workUnit)
@@ -461,7 +445,7 @@ namespace HFM.Core.Data
         {
             var query = new WorkUnitHistoryQuery()
                 .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, clientName)
-                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? WorkUnitHistoryQueryOperator.Equal : WorkUnitHistoryQueryOperator.NotEqual, (int) WorkUnitResult.FinishedUnit);
+                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? WorkUnitHistoryQueryOperator.Equal : WorkUnitHistoryQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {

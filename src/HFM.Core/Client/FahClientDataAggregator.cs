@@ -220,7 +220,7 @@ namespace HFM.Core.Client
                     Logger.WarnFormat(Constants.ClientNameFormat, ClientName, message);
                 }
 
-                WorkUnit workUnit = BuildUnitInfo(unit, options, slotOptions, unitRun);
+                WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);
                 if (workUnit != null)
                 {
                     result.WorkUnits.Add(unit.Id, workUnit);
@@ -253,7 +253,7 @@ namespace HFM.Core.Client
                     // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
                     WorkUnit currentClone = currentWorkUnit.DeepClone();
 
-                    UpdateUnitInfoFromLogData(currentClone, unitRun);
+                    PopulateWorkUnitFromLogData(currentClone, unitRun);
                     result.WorkUnits.Add(currentClone.QueueIndex, currentClone);
                 }
             }
@@ -261,34 +261,25 @@ namespace HFM.Core.Client
 
         private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
         {
-            if (slotRun != null)
-            {
-                var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
-                if (unitRun != null)
-                {
-                    return unitRun;
-                }
-            }
-            return null;
+            return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
         }
 
-        private WorkUnit BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
+        private static WorkUnit BuildWorkUnit(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
         {
             Debug.Assert(queueEntry != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
-            var unit = new WorkUnit();
-            UpdateUnitInfoFromFahClientData(unit, queueEntry, options, slotOptions);
+            var workUnit = new WorkUnit();
+            PopulateWorkUnitFromFahClientData(workUnit, queueEntry, options, slotOptions);
             if (unitRun != null)
             {
-                UpdateUnitInfoFromLogData(unit, unitRun);
+                PopulateWorkUnitFromLogData(workUnit, unitRun);
             }
-
-            return unit;
+            return workUnit;
         }
 
-        private void UpdateUnitInfoFromLogData(WorkUnit workUnit, UnitRun unitRun)
+        private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)
         {
             Debug.Assert(workUnit != null);
             Debug.Assert(unitRun != null);
@@ -305,14 +296,22 @@ namespace HFM.Core.Client
             // result twice, the first time this hits use the local UTC
             // value for the finished time... not as good as what was
             // available with v6.
-            if (workUnit.UnitResult.IsTerminating())
+            if (IsTerminating(workUnit))
             {
-                var finishedTime = DateTime.UtcNow;
-                //string message = String.Format(CultureInfo.CurrentCulture,
-                //   "Setting Finished Time {0} for {1}.", finishedTime, workUnit.ToProjectInfo());
-                //Logger.Debug(Constants.ClientNameFormat, ClientName, message);
-                workUnit.FinishedTime = finishedTime;
+               workUnit.FinishedTime = DateTime.UtcNow;
             }
+        }
+
+        private static bool IsTerminating(WorkUnit workUnit)
+        {
+            return workUnit.UnitResult.IsTerminating() ||
+                   IsUnknownEnumTerminating(workUnit);
+        }
+
+        private static bool IsUnknownEnumTerminating(WorkUnit workUnit)
+        {
+            return workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
+                   workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
         }
 
         private static float ParseCoreVersion(string coreVer)
@@ -333,7 +332,7 @@ namespace HFM.Core.Client
             return 0.0f;
         }
 
-        private static void UpdateUnitInfoFromFahClientData(WorkUnit workUnit, Unit queueEntry, Options options, SlotOptions slotOptions)
+        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit queueEntry, Options options, SlotOptions slotOptions)
         {
             Debug.Assert(workUnit != null);
             Debug.Assert(queueEntry != null);

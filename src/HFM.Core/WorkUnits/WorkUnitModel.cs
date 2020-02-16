@@ -155,39 +155,14 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                // *** Use the Current Frame ID *** - 2/12/11
-                // the log parsing API has already validated the reported
-                // frame percentage is within 10% tolerance of the raw
-                // completed and total steps.
-                //
-                // See HFM.Log.LogLineParser.CheckForCompletedFrame()
-                //
-                // Fix for GPU3 units reporting only 99 Frames Completed
-                // to the Work Unit History Database - Issue 253
-                if (_workUnit.CurrentFrame != null)
-                {
-                    // Make sure CurrentFrame.FrameID is 0 or greater
-                    if (_workUnit.CurrentFrame.ID >= 0)
-                    {
-                        // but not greater than the CurrentProtein.Frames
-                        if (_workUnit.CurrentFrame.ID <= CurrentProtein.Frames)
-                        {
-                            return _workUnit.CurrentFrame.ID;
-                        }
-
-                        // if it is, just return the protein frame count
-                        return CurrentProtein.Frames;
-                    }
-                }
-
-                return 0;
+                if (_workUnit.CurrentFrame == null || _workUnit.CurrentFrame.ID < 0) return 0;
+                return _workUnit.CurrentFrame.ID <= CurrentProtein.Frames ? _workUnit.CurrentFrame.ID : CurrentProtein.Frames;
             }
         }
 
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        // Report even if CurrentProtein.IsUnknown - 11/22/09
         public int PercentComplete => FramesComplete * 100 / CurrentProtein.Frames;
 
         #endregion
