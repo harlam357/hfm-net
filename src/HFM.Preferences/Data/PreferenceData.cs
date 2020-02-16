@@ -19,7 +19,7 @@ namespace HFM.Preferences.Data
          //BonusCalculation = null;
          LogFileViewer = "notepad.exe";
          FileExplorer = "explorer.exe";
-         ProjectDownloadUrl = "http://assign.stanford.edu/api/project/summary";
+         ProjectDownloadUrl = "https://assign.stanford.edu/api/project/summary";
          AllowRunningAsync = true;
          DuplicateUserIdCheck = true;
          DuplicateProjectCheck = true;

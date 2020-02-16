@@ -118,6 +118,7 @@ namespace HFM.Core
                 case "GROGPU2":
                 case "GROGPU2-MT":
                 case "OPENMM_21":
+                case "OPENMM_22":
                 case "OPENMMGPU":
                 case "OPENMM_OPENCL":
                 case "ATI-DEV":
