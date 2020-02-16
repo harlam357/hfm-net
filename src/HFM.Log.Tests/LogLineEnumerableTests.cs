@@ -54,7 +54,7 @@ namespace HFM.Log
          // Act
          var enumerable = LogLineEnumerable.Create(unitRun);
          // Assert
-         Assert.AreEqual(34, enumerable.Count());
+         Assert.AreEqual(150, enumerable.Count());
       }
    }
 }

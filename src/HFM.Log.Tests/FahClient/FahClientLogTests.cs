@@ -1659,21 +1659,7 @@ namespace HFM.Log.FahClient
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
          // Setup SlotRun 1 - UnitRun 7
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2316, 2408);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 14, 35);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 36;
-         expectedUnitRunData.ProjectID = 10495;
-         expectedUnitRunData.ProjectRun = 25;
-         expectedUnitRunData.ProjectClone = 17;
-         expectedUnitRunData.ProjectGen = 67;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 8
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2409, 2436);
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2316, 2436);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 37, 49);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1686,22 +1672,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 9
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2437, 2569);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 37, 54);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 53;
-         expectedUnitRunData.ProjectID = 10493;
-         expectedUnitRunData.ProjectRun = 3;
-         expectedUnitRunData.ProjectClone = 24;
-         expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 10
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2570, 2597);
+         // Setup SlotRun 1 - UnitRun 8
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2437, 2597);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 23, 26);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1714,7 +1686,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 11
+         // Setup SlotRun 1 - UnitRun 9
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2598, 2860);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 23, 32);
@@ -1728,7 +1700,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 12
+         // Setup SlotRun 1 - UnitRun 10
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 2821, 3125);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 21, 22);
@@ -1742,7 +1714,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 13
+         // Setup SlotRun 1 - UnitRun 11
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3085, 3329);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 20, 13);
@@ -1756,22 +1728,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 14
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3292, 3356);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 21, 31);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 16;
-         expectedUnitRunData.ProjectID = 10495;
-         expectedUnitRunData.ProjectRun = 38;
-         expectedUnitRunData.ProjectClone = 4;
-         expectedUnitRunData.ProjectGen = 88;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 15
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3357, 3384);
+         // Setup SlotRun 1 - UnitRun 12
+         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3292, 3384);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 57, 19);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1784,7 +1742,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 16
+         // Setup SlotRun 1 - UnitRun 13
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3385, 3752);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 57, 25);
@@ -1798,7 +1756,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 17
+         // Setup SlotRun 1 - UnitRun 14
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3712, 4035);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 59, 8);
@@ -1812,22 +1770,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 18
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3997, 4089);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 1, 6);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 16;
-         expectedUnitRunData.ProjectID = 11410;
-         expectedUnitRunData.ProjectRun = 4;
-         expectedUnitRunData.ProjectClone = 15;
-         expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 19
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4090, 4117);
+         // Setup SlotRun 1 - UnitRun 15
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3997, 4117);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 22, 23);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1840,7 +1784,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 20
+         // Setup SlotRun 1 - UnitRun 16
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4118, 4522);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 22, 29);
@@ -1854,7 +1798,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 21
+         // Setup SlotRun 1 - UnitRun 17
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4482, 4910);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 24, 30);
@@ -1868,7 +1812,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 22
+         // Setup SlotRun 1 - UnitRun 18
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4870, 5183);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 26, 12);
@@ -1882,7 +1826,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 23
+         // Setup SlotRun 1 - UnitRun 19
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5143, 5455);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 24, 55);
@@ -1896,22 +1840,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 24
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5415, 5536);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 22, 30);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 41;
-         expectedUnitRunData.ProjectID = 11403;
-         expectedUnitRunData.ProjectRun = 8;
-         expectedUnitRunData.ProjectClone = 10;
-         expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 25
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5537, 5565);
+         // Setup SlotRun 1 - UnitRun 20
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5415, 5565);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 51, 20);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1924,22 +1854,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 26
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5562, 5743);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 51, 33);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 53;
-         expectedUnitRunData.ProjectID = 11402;
-         expectedUnitRunData.ProjectRun = 4;
-         expectedUnitRunData.ProjectClone = 4;
-         expectedUnitRunData.ProjectGen = 1;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 27
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5744, 5771);
+         // Setup SlotRun 1 - UnitRun 21
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5562, 5771);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 3, 23);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -1952,7 +1868,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 28
+         // Setup SlotRun 1 - UnitRun 22
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 5772, 6113);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 3, 29);
@@ -1966,7 +1882,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 29
+         // Setup SlotRun 1 - UnitRun 23
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6075, 6551);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 5, 11);
@@ -1980,7 +1896,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 30
+         // Setup SlotRun 1 - UnitRun 24
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6511, 6937);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 1, 34);
@@ -1994,22 +1910,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 31
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6897, 6958);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 2, 43);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 11;
-         expectedUnitRunData.ProjectID = 10495;
-         expectedUnitRunData.ProjectRun = 22;
-         expectedUnitRunData.ProjectClone = 11;
-         expectedUnitRunData.ProjectGen = 65;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 32
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6959, 6986);
+         // Setup SlotRun 1 - UnitRun 25
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6897, 6986);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 40);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -2022,7 +1924,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 33
+         // Setup SlotRun 1 - UnitRun 26
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6987, 7417);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 45);
@@ -2036,7 +1938,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 34
+         // Setup SlotRun 1 - UnitRun 27
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7376, 7767);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 28, 31);
@@ -2050,7 +1952,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 35
+         // Setup SlotRun 1 - UnitRun 28
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 7727, 8058);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 29, 45);
@@ -2064,7 +1966,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 36
+         // Setup SlotRun 1 - UnitRun 29
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8021, 8468);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 31, 15);
@@ -2078,7 +1980,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 37
+         // Setup SlotRun 1 - UnitRun 30
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8430, 8512);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 27, 24);
@@ -2092,7 +1994,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 38
+         // Setup SlotRun 1 - UnitRun 31
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8506, 8827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 50, 30);
@@ -2106,7 +2008,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 39
+         // Setup SlotRun 1 - UnitRun 32
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8786, 9081);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 55, 33);
@@ -2120,7 +2022,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 40
+         // Setup SlotRun 1 - UnitRun 33
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9041, 9365);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 7, 39);
@@ -2134,7 +2036,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 41
+         // Setup SlotRun 1 - UnitRun 34
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9327, 9690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 19, 56);
@@ -2148,7 +2050,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 42
+         // Setup SlotRun 1 - UnitRun 35
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9650, 9928);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 18, 18);
@@ -2162,7 +2064,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 43
+         // Setup SlotRun 1 - UnitRun 36
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9893, 10116);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 8, 13);
@@ -2176,7 +2078,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 44
+         // Setup SlotRun 1 - UnitRun 37
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10079, 10384);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 57, 46);
@@ -2190,22 +2092,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 45
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10346, 10385);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 55, 17);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 12;
-         expectedUnitRunData.ProjectClone = 0;
-         expectedUnitRunData.ProjectGen = 75;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 46
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10386, 10767);
+         // Setup SlotRun 1 - UnitRun 38
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10346, 10767);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 55, 31);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -2218,7 +2106,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 47
+         // Setup SlotRun 1 - UnitRun 39
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 10727, 10947);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 41, 55);
@@ -2232,7 +2120,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 48
+         // Setup SlotRun 1 - UnitRun 40
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 10909, 11465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 8, 10);
@@ -2246,7 +2134,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 49
+         // Setup SlotRun 1 - UnitRun 41
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11424, 11639);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 14, 3);
@@ -2260,22 +2148,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 50
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11603, 11681);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 15, 11);
-         expectedUnitRunData.CoreVersion = null;
-         expectedUnitRunData.FramesObserved = 33;
-         expectedUnitRunData.ProjectID = 9201;
-         expectedUnitRunData.ProjectRun = 11;
-         expectedUnitRunData.ProjectClone = 79;
-         expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 51
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11682, 11712);
+         // Setup SlotRun 1 - UnitRun 42
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11603, 11712);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 36);
          expectedUnitRunData.CoreVersion = null;
@@ -2288,22 +2162,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 52
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11705, 11732);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 41);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 10494;
-         expectedUnitRunData.ProjectRun = 11;
-         expectedUnitRunData.ProjectClone = 31;
-         expectedUnitRunData.ProjectGen = 8;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 53
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11733, 12288);
+         // Setup SlotRun 1 - UnitRun 43
+         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11705, 12288);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 9, 51);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -2316,7 +2176,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 54
+         // Setup SlotRun 1 - UnitRun 44
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12245, 12511);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 8, 21);
@@ -2330,36 +2190,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 55
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12473, 12697);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 7, 0);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 47;
-         expectedUnitRunData.ProjectID = 11403;
-         expectedUnitRunData.ProjectRun = 7;
-         expectedUnitRunData.ProjectClone = 44;
-         expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 56
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12752, 12866);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 2, 18);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 8;
-         expectedUnitRunData.ProjectID = 11403;
-         expectedUnitRunData.ProjectRun = 7;
-         expectedUnitRunData.ProjectClone = 44;
-         expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 57
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12867, 12894);
+         // Setup SlotRun 1 - UnitRun 45
+         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12473, 12894);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 28, 57);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -2372,21 +2204,21 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 58
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12895, 13177);
+         // Setup SlotRun 1 - UnitRun 46
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12895, 13205);
          expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 29, 4);
+         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 36);
          expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 101;
+         expectedUnitRunData.FramesObserved = 0;
          expectedUnitRunData.ProjectID = 11402;
          expectedUnitRunData.ProjectRun = 11;
          expectedUnitRunData.ProjectClone = 33;
          expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 59
+         // Setup SlotRun 1 - UnitRun 47
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13173, 13488);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 45);
@@ -2400,21 +2232,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 60
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13178, 13205);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 36);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 11402;
-         expectedUnitRunData.ProjectRun = 11;
-         expectedUnitRunData.ProjectClone = 33;
-         expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 61
+         // Setup SlotRun 1 - UnitRun 48
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 13450, 13747);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 53, 8);
@@ -2428,22 +2246,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 62
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13688, 13722);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 28, 18);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 11400;
-         expectedUnitRunData.ProjectRun = 30;
-         expectedUnitRunData.ProjectClone = 13;
-         expectedUnitRunData.ProjectGen = 2;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 63
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13723, 14009);
+         // Setup SlotRun 1 - UnitRun 49
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13688, 14009);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 28, 21);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -2456,7 +2260,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 64
+         // Setup SlotRun 1 - UnitRun 50
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13970, 14320);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 20, 43);
@@ -2470,7 +2274,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 65
+         // Setup SlotRun 1 - UnitRun 51
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14279, 14810);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 16, 32);
@@ -2484,7 +2288,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 66
+         // Setup SlotRun 1 - UnitRun 52
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14772, 14951);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 8, 36);
@@ -2498,7 +2302,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 67
+         // Setup SlotRun 1 - UnitRun 53
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14913, 15092);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 9, 45);
@@ -2512,7 +2316,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 68
+         // Setup SlotRun 1 - UnitRun 54
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15053, 15248);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 10, 50);
@@ -2526,7 +2330,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 69
+         // Setup SlotRun 1 - UnitRun 55
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15193, 15370);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 11, 54);
@@ -2540,7 +2344,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 70
+         // Setup SlotRun 1 - UnitRun 56
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15332, 15525);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 12, 47);
@@ -2554,7 +2358,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 71
+         // Setup SlotRun 1 - UnitRun 57
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15472, 15650);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 13, 55);
@@ -2568,7 +2372,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 72
+         // Setup SlotRun 1 - UnitRun 58
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15612, 15789);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 14, 45);
@@ -2582,7 +2386,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 73
+         // Setup SlotRun 1 - UnitRun 59
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 15761, 15927);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 15, 58);
@@ -2596,7 +2400,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 74
+         // Setup SlotRun 1 - UnitRun 60
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 15901, 16067);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 17, 14);
@@ -2610,7 +2414,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 75
+         // Setup SlotRun 1 - UnitRun 61
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16041, 16209);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 18, 33);
@@ -2624,7 +2428,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 76
+         // Setup SlotRun 1 - UnitRun 62
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16171, 16349);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 19, 28);
@@ -2638,7 +2442,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 77
+         // Setup SlotRun 1 - UnitRun 63
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16310, 16502);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 20, 35);
@@ -2652,7 +2456,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 78
+         // Setup SlotRun 1 - UnitRun 64
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16449, 16643);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 21, 42);
@@ -2666,7 +2470,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 79
+         // Setup SlotRun 1 - UnitRun 65
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16589, 16764);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 22, 34);
@@ -2680,7 +2484,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 80
+         // Setup SlotRun 1 - UnitRun 66
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 16738, 16906);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 23, 31);
@@ -2694,7 +2498,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 81
+         // Setup SlotRun 1 - UnitRun 67
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 16868, 17044);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 24, 39);
@@ -2708,7 +2512,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 82
+         // Setup SlotRun 1 - UnitRun 68
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17018, 17185);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 25, 55);
@@ -2722,7 +2526,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 83
+         // Setup SlotRun 1 - UnitRun 69
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17158, 17326);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 27, 7);
@@ -2736,7 +2540,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 84
+         // Setup SlotRun 1 - UnitRun 70
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17298, 17465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 28, 25);
@@ -2750,7 +2554,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 85
+         // Setup SlotRun 1 - UnitRun 71
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17439, 17625);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 29, 33);
@@ -2764,22 +2568,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 86
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17569, 17603);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 30, 25);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 11501;
-         expectedUnitRunData.ProjectRun = 0;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 10;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 1 - UnitRun 87
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17604, 17764);
+         // Setup SlotRun 1 - UnitRun 72
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17569, 17764);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 30, 30);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -2792,7 +2582,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 88
+         // Setup SlotRun 1 - UnitRun 73
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 17737, 17923);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 31, 45);
@@ -2806,7 +2596,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 89
+         // Setup SlotRun 1 - UnitRun 74
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 17867, 18043);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 32, 58);
@@ -2820,7 +2610,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 90
+         // Setup SlotRun 1 - UnitRun 75
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18017, 18186);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 33, 55);
@@ -2834,7 +2624,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 91
+         // Setup SlotRun 1 - UnitRun 76
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18147, 18323);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 34, 47);
@@ -2848,7 +2638,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 92
+         // Setup SlotRun 1 - UnitRun 77
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18296, 18465);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 35, 59);
@@ -2862,7 +2652,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 93
+         // Setup SlotRun 1 - UnitRun 78
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18426, 18605);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 37, 13);
@@ -2876,7 +2666,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 94
+         // Setup SlotRun 1 - UnitRun 79
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18567, 18762);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 38, 23);
@@ -2890,7 +2680,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 95
+         // Setup SlotRun 1 - UnitRun 80
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18707, 18885);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 39, 31);
@@ -2904,7 +2694,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 96
+         // Setup SlotRun 1 - UnitRun 81
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 18846, 18995);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 40, 25);
@@ -2918,7 +2708,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 97
+         // Setup SlotRun 1 - UnitRun 82
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 18996, 19178);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 41, 38);
@@ -2932,7 +2722,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 98
+         // Setup SlotRun 1 - UnitRun 83
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19123, 19318);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 42, 47);
@@ -2946,7 +2736,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 99
+         // Setup SlotRun 1 - UnitRun 84
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19262, 19440);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 43, 38);
@@ -2960,7 +2750,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 100
+         // Setup SlotRun 1 - UnitRun 85
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19402, 19581);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 44, 32);
@@ -2974,7 +2764,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 101
+         // Setup SlotRun 1 - UnitRun 86
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19542, 19721);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 45, 45);
@@ -2988,7 +2778,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 102
+         // Setup SlotRun 1 - UnitRun 87
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19681, 19857);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 46, 47);
@@ -3002,7 +2792,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 103
+         // Setup SlotRun 1 - UnitRun 88
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 19831, 20000);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 48, 0);
@@ -3016,7 +2806,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 104
+         // Setup SlotRun 1 - UnitRun 89
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 19961, 20140);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 49, 5);
@@ -3030,7 +2820,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 105
+         // Setup SlotRun 1 - UnitRun 90
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20101, 20279);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 50, 5);
@@ -3044,7 +2834,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 106
+         // Setup SlotRun 1 - UnitRun 91
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20240, 20419);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 51, 10);
@@ -3058,7 +2848,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 107
+         // Setup SlotRun 1 - UnitRun 92
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20380, 20574);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 52, 16);
@@ -3072,7 +2862,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 108
+         // Setup SlotRun 1 - UnitRun 93
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20520, 20714);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 53, 23);
@@ -3086,7 +2876,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 109
+         // Setup SlotRun 1 - UnitRun 94
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20659, 20837);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 54, 15);
@@ -3100,7 +2890,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 110
+         // Setup SlotRun 1 - UnitRun 95
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 20799, 20977);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 55, 9);
@@ -3114,7 +2904,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 111
+         // Setup SlotRun 1 - UnitRun 96
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 20939, 21133);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 56, 21);
@@ -3128,7 +2918,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 112
+         // Setup SlotRun 1 - UnitRun 97
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21078, 21257);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 57, 32);
@@ -3142,7 +2932,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 113
+         // Setup SlotRun 1 - UnitRun 98
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21218, 21396);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 58, 24);
@@ -3156,7 +2946,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 114
+         // Setup SlotRun 1 - UnitRun 99
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21358, 21566);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 59, 26);
@@ -3170,7 +2960,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 115
+         // Setup SlotRun 1 - UnitRun 100
          expectedUnitRun = new UnitRun(expectedSlotRun, 4, 21512, 21723);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 40);
@@ -3184,7 +2974,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 116
+         // Setup SlotRun 1 - UnitRun 101
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 21696, 22021);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 7, 1);
@@ -3198,7 +2988,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 117
+         // Setup SlotRun 1 - UnitRun 102
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 21963, 22162);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 8, 6);
@@ -3212,7 +3002,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 118
+         // Setup SlotRun 1 - UnitRun 103
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22139, 22429);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 14, 28);
@@ -3226,7 +3016,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 119
+         // Setup SlotRun 1 - UnitRun 104
          expectedUnitRun = new UnitRun(expectedSlotRun, 3, 22417, 22715);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 20, 54);
@@ -3240,7 +3030,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 120
+         // Setup SlotRun 1 - UnitRun 105
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22676, 22847);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 22, 0);
@@ -3254,7 +3044,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 1 - UnitRun 121
+         // Setup SlotRun 1 - UnitRun 106
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 22888, 22954);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.CoreVersion = null;
@@ -3278,76 +3068,20 @@ namespace HFM.Log.FahClient
          expectedRun.SlotRuns.Add(2, expectedSlotRun);
 
          // Setup SlotRun 2 - UnitRun 0
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 113, 128);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 47, 2);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 10496;
-         expectedUnitRunData.ProjectRun = 83;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 1
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 129, 146);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 47, 11);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 10496;
-         expectedUnitRunData.ProjectRun = 83;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 2
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 197, 212);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 48, 11);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 10496;
-         expectedUnitRunData.ProjectRun = 83;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 3
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 213, 228);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 49, 11);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 10496;
-         expectedUnitRunData.ProjectRun = 83;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 7;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 4
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 283, 296);
+         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 113, 296);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 50, 34);
-         expectedUnitRunData.CoreVersion = null;
+         expectedUnitRunData.CoreVersion = "0.0.14";
          expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 0;
-         expectedUnitRunData.ProjectRun = 0;
-         expectedUnitRunData.ProjectClone = 0;
-         expectedUnitRunData.ProjectGen = 0;
+         expectedUnitRunData.ProjectID = 10496;
+         expectedUnitRunData.ProjectRun = 83;
+         expectedUnitRunData.ProjectClone = 1;
+         expectedUnitRunData.ProjectGen = 7;
          expectedUnitRunData.WorkUnitResult = WorkUnitResult.BAD_WORK_UNIT;
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 5
+         // Setup SlotRun 2 - UnitRun 1
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 293, 599);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 50, 39);
@@ -3361,7 +3095,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 6
+         // Setup SlotRun 2 - UnitRun 2
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 558, 827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 15, 50);
@@ -3375,7 +3109,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 7
+         // Setup SlotRun 2 - UnitRun 3
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 791, 1097);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 47, 24);
@@ -3389,22 +3123,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 8
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1060, 1098);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 47, 7);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9704;
-         expectedUnitRunData.ProjectRun = 8;
-         expectedUnitRunData.ProjectClone = 7;
-         expectedUnitRunData.ProjectGen = 247;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 9
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1099, 1405);
+         // Setup SlotRun 2 - UnitRun 4
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1060, 1405);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 47, 26);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -3417,7 +3137,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 10
+         // Setup SlotRun 2 - UnitRun 5
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 1367, 1690);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 12, 22);
@@ -3431,7 +3151,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 11
+         // Setup SlotRun 2 - UnitRun 6
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1650, 1976);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 37, 54);
@@ -3445,7 +3165,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 12
+         // Setup SlotRun 2 - UnitRun 7
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1939, 2294);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 37, 41);
@@ -3459,7 +3179,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 13
+         // Setup SlotRun 2 - UnitRun 8
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 2256, 2744);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 36, 45);
@@ -3473,7 +3193,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 14
+         // Setup SlotRun 2 - UnitRun 9
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2703, 3057);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 33, 58);
@@ -3487,7 +3207,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 15
+         // Setup SlotRun 2 - UnitRun 10
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3017, 3478);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 36, 7);
@@ -3501,7 +3221,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 16
+         // Setup SlotRun 2 - UnitRun 11
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 3438, 3700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 45, 57);
@@ -3515,7 +3235,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 17
+         // Setup SlotRun 2 - UnitRun 12
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3662, 3983);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 42, 51);
@@ -3529,7 +3249,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 18
+         // Setup SlotRun 2 - UnitRun 13
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3945, 4281);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 44, 39);
@@ -3543,22 +3263,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 19
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4241, 4364);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 41, 11);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 46;
-         expectedUnitRunData.ProjectID = 11400;
-         expectedUnitRunData.ProjectRun = 11;
-         expectedUnitRunData.ProjectClone = 5;
-         expectedUnitRunData.ProjectGen = 0;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 20
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4365, 4392);
+         // Setup SlotRun 2 - UnitRun 14
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4241, 4392);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 54, 52);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -3571,7 +3277,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 21
+         // Setup SlotRun 2 - UnitRun 15
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4393, 4700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 54, 56);
@@ -3585,7 +3291,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 22
+         // Setup SlotRun 2 - UnitRun 16
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 4626, 4671);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 51, 53);
@@ -3599,22 +3305,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 23
-         expectedUnitRun = new UnitRun(expectedSlotRun, 3, 4672, 4741);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 52, 2);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 16;
-         expectedUnitRunData.ProjectID = 10493;
-         expectedUnitRunData.ProjectRun = 2;
-         expectedUnitRunData.ProjectClone = 19;
-         expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 24
-         expectedUnitRun = new UnitRun(expectedSlotRun, 3, 4742, 4769);
+         // Setup SlotRun 2 - UnitRun 17
+         expectedUnitRun = new UnitRun(expectedSlotRun, 3, 4672, 4769);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 12, 29);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -3627,7 +3319,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 25
+         // Setup SlotRun 2 - UnitRun 18
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4770, 5094);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 12, 35);
@@ -3641,7 +3333,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 26
+         // Setup SlotRun 2 - UnitRun 19
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5053, 5370);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 21, 56);
@@ -3655,7 +3347,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 27
+         // Setup SlotRun 2 - UnitRun 20
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 5333, 5720);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 21, 54);
@@ -3669,7 +3361,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 28
+         // Setup SlotRun 2 - UnitRun 21
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5680, 5987);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 31, 23);
@@ -3683,7 +3375,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 29
+         // Setup SlotRun 2 - UnitRun 22
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5947, 6252);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 27, 56);
@@ -3697,7 +3389,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 30
+         // Setup SlotRun 2 - UnitRun 23
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 6212, 6434);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 29, 44);
@@ -3711,7 +3403,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 31
+         // Setup SlotRun 2 - UnitRun 24
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6397, 6659);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 29, 19);
@@ -3725,22 +3417,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 32
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6621, 6708);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 14, 26);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 31;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 16;
-         expectedUnitRunData.ProjectClone = 0;
-         expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 33
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6709, 6736);
+         // Setup SlotRun 2 - UnitRun 25
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6621, 6736);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 4, 32);
          expectedUnitRunData.CoreVersion = "0.0.14";
@@ -3753,7 +3431,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 34
+         // Setup SlotRun 2 - UnitRun 26
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6737, 7077);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 4, 40);
@@ -3767,7 +3445,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 35
+         // Setup SlotRun 2 - UnitRun 27
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7040, 7266);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 4, 15);
@@ -3781,7 +3459,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 36
+         // Setup SlotRun 2 - UnitRun 28
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7226, 7522);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 50, 30);
@@ -3795,7 +3473,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 37
+         // Setup SlotRun 2 - UnitRun 29
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 7486, 7673);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 50, 15);
@@ -3809,7 +3487,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 38
+         // Setup SlotRun 2 - UnitRun 30
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7674, 7949);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 2, 44);
@@ -3823,7 +3501,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 39
+         // Setup SlotRun 2 - UnitRun 31
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7909, 8223);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 48, 48);
@@ -3837,7 +3515,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 40
+         // Setup SlotRun 2 - UnitRun 32
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8183, 8409);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 58, 24);
@@ -3851,7 +3529,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 41
+         // Setup SlotRun 2 - UnitRun 33
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8369, 8700);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 54, 32);
@@ -3865,7 +3543,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 42
+         // Setup SlotRun 2 - UnitRun 34
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 8663, 9029);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(2, 53, 52);
@@ -3879,7 +3557,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 43
+         // Setup SlotRun 2 - UnitRun 35
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8989, 9309);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(11, 48, 23);
@@ -3893,7 +3571,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 44
+         // Setup SlotRun 2 - UnitRun 36
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 9269, 9571);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 47, 22);
@@ -3907,7 +3585,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 45
+         // Setup SlotRun 2 - UnitRun 37
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 9531, 9880);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 57, 14);
@@ -3921,7 +3599,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 46
+         // Setup SlotRun 2 - UnitRun 38
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 9835, 10279);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 54, 1);
@@ -3935,7 +3613,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 47
+         // Setup SlotRun 2 - UnitRun 39
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 10241, 10570);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 52, 57);
@@ -3949,7 +3627,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 48
+         // Setup SlotRun 2 - UnitRun 40
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 10530, 11051);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 38, 34);
@@ -3963,7 +3641,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 49
+         // Setup SlotRun 2 - UnitRun 41
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 11015, 11215);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 37, 27);
@@ -3977,7 +3655,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 50
+         // Setup SlotRun 2 - UnitRun 42
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11178, 11798);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 26, 51);
@@ -3991,7 +3669,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 51
+         // Setup SlotRun 2 - UnitRun 43
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 11760, 11973);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 32, 4);
@@ -4005,7 +3683,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 52
+         // Setup SlotRun 2 - UnitRun 44
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 11935, 12164);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 22, 8);
@@ -4019,7 +3697,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 53
+         // Setup SlotRun 2 - UnitRun 45
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12127, 12221);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 21, 46);
@@ -4033,7 +3711,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 54
+         // Setup SlotRun 2 - UnitRun 46
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 12215, 12584);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 7, 3);
@@ -4047,22 +3725,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 55
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12546, 12698);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 6, 17);
-         expectedUnitRunData.CoreVersion = "0.0.14";
-         expectedUnitRunData.FramesObserved = 70;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 3;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 11;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 56
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12775, 12986);
+         // Setup SlotRun 2 - UnitRun 47
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 12546, 12986);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 2, 35);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -4075,7 +3739,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 57
+         // Setup SlotRun 2 - UnitRun 48
          expectedUnitRun = new UnitRun(expectedSlotRun, 2, 12946, 13288);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 56, 30);
@@ -4089,7 +3753,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 58
+         // Setup SlotRun 2 - UnitRun 49
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 13251, 13580);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 42, 59);
@@ -4103,7 +3767,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 59
+         // Setup SlotRun 2 - UnitRun 50
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 13540, 13935);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 33, 19);
@@ -4117,22 +3781,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 60
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 13895, 14141);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 22, 16);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 71;
-         expectedUnitRunData.ProjectID = 10494;
-         expectedUnitRunData.ProjectRun = 1;
-         expectedUnitRunData.ProjectClone = 38;
-         expectedUnitRunData.ProjectGen = 5;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 61
-         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 14142, 14169);
+         // Setup SlotRun 2 - UnitRun 51
+         expectedUnitRun = new UnitRun(expectedSlotRun, 2, 13895, 14169);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 37, 12);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -4145,7 +3795,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 62
+         // Setup SlotRun 2 - UnitRun 52
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 14170, 14422);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 37, 23);
@@ -4159,7 +3809,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 63
+         // Setup SlotRun 2 - UnitRun 53
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 14404, 21577);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 26, 58);
@@ -4173,358 +3823,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 2 - UnitRun 64
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21504, 21578);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 44);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 65
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21579, 21615);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 0, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 66
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21716, 21736);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 1, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 67
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21742, 21759);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 2, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 68
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21760, 21777);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 3, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 69
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21783, 21800);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 4, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 70
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21801, 21818);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 5, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 71
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21819, 21863);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 6, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 72
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21970, 22016);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 7, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 73
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22098, 22155);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 8, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 74
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22163, 22185);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 9, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 75
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22186, 22203);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 10, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 76
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22209, 22226);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 11, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 77
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22227, 22244);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 12, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 78
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22245, 22262);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 13, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 79
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22310, 22361);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 14, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 80
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22430, 22447);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 15, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 81
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22453, 22470);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 16, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 82
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22471, 22488);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 17, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 83
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22494, 22511);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 18, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 84
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22512, 22529);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 19, 59);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 85
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22569, 22615);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 21, 19);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 86
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22716, 22766);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 22, 19);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 87
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22848, 22865);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 23, 19);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 88
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22866, 22883);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 24, 19);
-         expectedUnitRunData.CoreVersion = "0.0.16";
-         expectedUnitRunData.FramesObserved = 0;
-         expectedUnitRunData.ProjectID = 9852;
-         expectedUnitRunData.ProjectRun = 6;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 27;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 2 - UnitRun 89
-         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 22957, 22974);
+         // Setup SlotRun 2 - UnitRun 54
+         expectedUnitRun = new UnitRun(expectedSlotRun, 0, 21504, 22974);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 27, 17);
          expectedUnitRunData.CoreVersion = "0.0.16";
@@ -4544,10 +3844,11 @@ namespace HFM.Log.FahClient
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new FahClientClientRunData();
-         expectedRun.Data.StartTime = new DateTime(2015, 12, 8, 12, 44, 41, DateTimeKind.Utc);
+         var expectedRunData = new FahClientClientRunData();
+         expectedRunData.StartTime = new DateTime(2015, 12, 8, 12, 44, 41, DateTimeKind.Utc);
+         expectedRun.Data = expectedRunData;
 
-         var actualRun = fahLog.ClientRuns.Last();
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(0, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
@@ -4567,22 +3868,8 @@ namespace HFM.Log.FahClient
          expectedRun.SlotRuns.Add(0, expectedSlotRun);
 
          // Setup SlotRun 0 - UnitRun 0
-         var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 72, 132);
+         var expectedUnitRun = new UnitRun(expectedSlotRun, 1, 72, 312);
          var expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 1, 31);
-         expectedUnitRunData.CoreVersion = "2.27";
-         expectedUnitRunData.FramesObserved = 30;
-         expectedUnitRunData.ProjectID = 11633;
-         expectedUnitRunData.ProjectRun = 1;
-         expectedUnitRunData.ProjectClone = 33;
-         expectedUnitRunData.ProjectGen = 25;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UNKNOWN_ENUM;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 0 - UnitRun 1
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 133, 312);
-         expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 17, 36);
          expectedUnitRunData.CoreVersion = "2.27";
          expectedUnitRunData.FramesObserved = 69;
@@ -4594,7 +3881,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 2
+         // Setup SlotRun 0 - UnitRun 1
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 232, 467);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 35, 19);
@@ -4608,7 +3895,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 3
+         // Setup SlotRun 0 - UnitRun 2
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 411, 647);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 34, 47);
@@ -4622,7 +3909,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 4
+         // Setup SlotRun 0 - UnitRun 3
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 568, 807);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 18, 33);
@@ -4636,7 +3923,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 5
+         // Setup SlotRun 0 - UnitRun 4
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 746, 971);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 54, 48);
@@ -4650,7 +3937,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 6
+         // Setup SlotRun 0 - UnitRun 5
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 908, 1150);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 13, 20);
@@ -4664,7 +3951,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 7
+         // Setup SlotRun 0 - UnitRun 6
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1072, 1330);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 26, 28);
@@ -4678,7 +3965,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 8
+         // Setup SlotRun 0 - UnitRun 7
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1251, 1493);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 54, 9);
@@ -4692,7 +3979,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 9
+         // Setup SlotRun 0 - UnitRun 8
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1430, 1650);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 48, 23);
@@ -4706,7 +3993,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 10
+         // Setup SlotRun 0 - UnitRun 9
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1594, 1803);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 38, 21);
@@ -4720,7 +4007,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 11
+         // Setup SlotRun 0 - UnitRun 10
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 1750, 1985);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 4, 20);
@@ -4734,7 +4021,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 12
+         // Setup SlotRun 0 - UnitRun 11
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 1906, 2137);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 18, 39);
@@ -4748,7 +4035,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 13
+         // Setup SlotRun 0 - UnitRun 12
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2084, 2319);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 8, 45);
@@ -4762,7 +4049,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 14
+         // Setup SlotRun 0 - UnitRun 13
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2240, 2472);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 21, 1);
@@ -4776,7 +4063,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 15
+         // Setup SlotRun 0 - UnitRun 14
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2419, 2630);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 17, 23);
@@ -4790,7 +4077,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 16
+         // Setup SlotRun 0 - UnitRun 15
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2574, 2787);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(5, 3, 36);
@@ -4804,7 +4091,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 17
+         // Setup SlotRun 0 - UnitRun 16
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 2731, 2968);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 46, 38);
@@ -4818,7 +4105,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 18
+         // Setup SlotRun 0 - UnitRun 17
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 2888, 3120);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 13, 7);
@@ -4832,7 +4119,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 19
+         // Setup SlotRun 0 - UnitRun 18
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3067, 3283);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 39, 45);
@@ -4846,7 +4133,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 20
+         // Setup SlotRun 0 - UnitRun 19
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3223, 3439);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 16, 40);
@@ -4860,7 +4147,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 21
+         // Setup SlotRun 0 - UnitRun 20
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3383, 3592);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 5, 18);
@@ -4874,7 +4161,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 22
+         // Setup SlotRun 0 - UnitRun 21
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3539, 3751);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 32, 2);
@@ -4888,7 +4175,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 23
+         // Setup SlotRun 0 - UnitRun 22
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 3695, 3907);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 17, 10);
@@ -4902,7 +4189,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 24
+         // Setup SlotRun 0 - UnitRun 23
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 3851, 4070);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 36, 51);
@@ -4916,7 +4203,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 25
+         // Setup SlotRun 0 - UnitRun 24
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4007, 4224);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(6, 6, 16);
@@ -4930,7 +4217,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 26
+         // Setup SlotRun 0 - UnitRun 25
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4171, 4383);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(8, 49, 57);
@@ -4944,7 +4231,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 27
+         // Setup SlotRun 0 - UnitRun 26
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4326, 4538);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 36, 5);
@@ -4958,7 +4245,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 28
+         // Setup SlotRun 0 - UnitRun 27
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4484, 4703);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 1, 36);
@@ -4972,7 +4259,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 29
+         // Setup SlotRun 0 - UnitRun 28
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4640, 4860);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 18, 59);
@@ -4986,7 +4273,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 30
+         // Setup SlotRun 0 - UnitRun 29
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 4803, 5024);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(17, 3, 51);
@@ -5000,7 +4287,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 31
+         // Setup SlotRun 0 - UnitRun 30
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 4961, 5180);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 20, 9);
@@ -5014,7 +4301,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 32
+         // Setup SlotRun 0 - UnitRun 31
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5124, 5336);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(21, 7, 38);
@@ -5028,7 +4315,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 33
+         // Setup SlotRun 0 - UnitRun 32
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5280, 5490);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(22, 53, 50);
@@ -5042,7 +4329,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 34
+         // Setup SlotRun 0 - UnitRun 33
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5437, 5648);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 19, 29);
@@ -5056,7 +4343,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 35
+         // Setup SlotRun 0 - UnitRun 34
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5592, 5829);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 30, 37);
@@ -5070,7 +4357,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 36
+         // Setup SlotRun 0 - UnitRun 35
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 5749, 5993);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(10, 23, 22);
@@ -5084,7 +4371,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 37
+         // Setup SlotRun 0 - UnitRun 36
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 5929, 6156);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 40, 48);
@@ -5098,7 +4385,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 38
+         // Setup SlotRun 0 - UnitRun 37
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6093, 6312);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(14, 57, 31);
@@ -5112,7 +4399,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 39
+         // Setup SlotRun 0 - UnitRun 38
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6256, 6493);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 40, 34);
@@ -5126,7 +4413,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 40
+         // Setup SlotRun 0 - UnitRun 39
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6413, 6648);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 6, 38);
@@ -5140,7 +4427,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 41
+         // Setup SlotRun 0 - UnitRun 40
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6592, 6827);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 54, 44);
@@ -5154,7 +4441,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 42
+         // Setup SlotRun 0 - UnitRun 41
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 6749, 7008);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 40, 34);
@@ -5168,7 +4455,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 43
+         // Setup SlotRun 0 - UnitRun 42
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 6928, 7171);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(13, 54, 52);
@@ -5182,7 +4469,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 44
+         // Setup SlotRun 0 - UnitRun 43
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7107, 7324);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 10, 54);
@@ -5196,7 +4483,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 45
+         // Setup SlotRun 0 - UnitRun 44
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7271, 7483);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 36, 49);
@@ -5210,7 +4497,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 46
+         // Setup SlotRun 0 - UnitRun 45
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7427, 7636);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(20, 35, 3);
@@ -5224,7 +4511,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 47
+         // Setup SlotRun 0 - UnitRun 46
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7583, 7795);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(23, 2, 22);
@@ -5238,7 +4525,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 48
+         // Setup SlotRun 0 - UnitRun 47
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 7739, 7976);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(0, 49, 25);
@@ -5252,7 +4539,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 49
+         // Setup SlotRun 0 - UnitRun 48
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 7896, 8128);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(7, 30, 35);
@@ -5266,7 +4553,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 50
+         // Setup SlotRun 0 - UnitRun 49
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8075, 8283);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(9, 56, 54);
@@ -5280,7 +4567,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 51
+         // Setup SlotRun 0 - UnitRun 50
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8230, 8444);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(12, 22, 57);
@@ -5294,7 +4581,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 52
+         // Setup SlotRun 0 - UnitRun 51
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8386, 8601);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 12, 36);
@@ -5308,22 +4595,8 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 53
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8545, 8665);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(19, 59, 10);
-         expectedUnitRunData.CoreVersion = "2.27";
-         expectedUnitRunData.FramesObserved = 62;
-         expectedUnitRunData.ProjectID = 11626;
-         expectedUnitRunData.ProjectRun = 0;
-         expectedUnitRunData.ProjectClone = 886;
-         expectedUnitRunData.ProjectGen = 6;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UNKNOWN_ENUM;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 0 - UnitRun 54
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8666, 8816);
+         // Setup SlotRun 0 - UnitRun 52
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8545, 8816);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(16, 25, 11);
          expectedUnitRunData.CoreVersion = "2.27";
@@ -5336,7 +4609,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 55
+         // Setup SlotRun 0 - UnitRun 53
          expectedUnitRun = new UnitRun(expectedSlotRun, 0, 8736, 8997);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(18, 57, 0);
@@ -5350,7 +4623,7 @@ namespace HFM.Log.FahClient
          expectedUnitRun.Data = expectedUnitRunData;
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
-         // Setup SlotRun 0 - UnitRun 56
+         // Setup SlotRun 0 - UnitRun 54
          expectedUnitRun = new UnitRun(expectedSlotRun, 1, 8917, 9016);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(1, 30, 45);
@@ -5371,13 +4644,15 @@ namespace HFM.Log.FahClient
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new FahClientClientRunData();
-         expectedRun.Data.StartTime = new DateTime(2016, 3, 5, 5, 0, 47, DateTimeKind.Utc);
+         var expectedRunData = new FahClientClientRunData();
+         expectedRunData.StartTime = new DateTime(2016, 3, 5, 5, 0, 47, DateTimeKind.Utc);
+         expectedRun.Data = expectedRunData;
 
-         var actualRun = fahLog.ClientRuns.Last();
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(2, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
+
       }
 
       [Test]
@@ -8474,21 +7749,7 @@ namespace HFM.Log.FahClient
          expectedSlotRun.UnitRuns.Add(expectedUnitRun);
 
          // Setup SlotRun 0 - UnitRun 220
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 34109, 34249);
-         expectedUnitRunData = new FahClientUnitRunData();
-         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(3, 10, 49);
-         expectedUnitRunData.CoreVersion = "2.27";
-         expectedUnitRunData.FramesObserved = 82;
-         expectedUnitRunData.ProjectID = 9038;
-         expectedUnitRunData.ProjectRun = 353;
-         expectedUnitRunData.ProjectClone = 1;
-         expectedUnitRunData.ProjectGen = 238;
-         expectedUnitRunData.WorkUnitResult = WorkUnitResult.INTERRUPTED;
-         expectedUnitRun.Data = expectedUnitRunData;
-         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
-
-         // Setup SlotRun 0 - UnitRun 221
-         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 34282, 34345);
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 34109, 34345);
          expectedUnitRunData = new FahClientUnitRunData();
          expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(4, 41, 24);
          expectedUnitRunData.CoreVersion = "2.27";
@@ -8508,10 +7769,11 @@ namespace HFM.Log.FahClient
          expectedSlotRun.Data = expectedSlotRunData;
 
          // Setup ClientRunData 0
-         expectedRun.Data = new FahClientClientRunData();
-         expectedRun.Data.StartTime = new DateTime(2016, 6, 18, 15, 50, 21, DateTimeKind.Utc);
+         var expectedRunData = new FahClientClientRunData();
+         expectedRunData.StartTime = new DateTime(2016, 6, 18, 15, 50, 21, DateTimeKind.Utc);
+         expectedRun.Data = expectedRunData;
 
-         var actualRun = fahLog.ClientRuns.Last();
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
          AssertClientRun.AreEqual(expectedRun, actualRun, true);
 
          Assert.AreEqual(2, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
@@ -8588,6 +7850,146 @@ namespace HFM.Log.FahClient
          Assert.AreEqual(0, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
       }
 
-      // ReSharper restore InconsistentNaming
+      [Test]
+      public void FahClientLog_Read_Client_v7_18_Test()
+      {
+         // Scan
+         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_18\\log.txt");
+
+         // Setup ClientRun 0
+         var expectedRun = new ClientRun(null, 0);
+
+         // Setup SlotRun 0
+         var expectedSlotRun = new SlotRun(expectedRun, 0);
+         expectedRun.SlotRuns.Add(0, expectedSlotRun);
+
+         // Setup SlotRun 0 - UnitRun 0
+         var expectedUnitRun = new UnitRun(expectedSlotRun, 0, 73, 276);
+         var expectedUnitRunData = new FahClientUnitRunData();
+         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 50, 5);
+         expectedUnitRunData.CoreVersion = "0.0.18";
+         expectedUnitRunData.FramesObserved = 0;
+         expectedUnitRunData.ProjectID = 14402;
+         expectedUnitRunData.ProjectRun = 0;
+         expectedUnitRunData.ProjectClone = 4867;
+         expectedUnitRunData.ProjectGen = 36;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.UNKNOWN_ENUM;
+         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();
+         expectedUnitRunData.FrameDataDictionary = frameDataDictionary;
+         expectedUnitRun.Data = expectedUnitRunData;
+         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
+
+         // Setup SlotRun 0 - UnitRun 1
+         expectedUnitRun = new UnitRun(expectedSlotRun, 1, 206, 287);
+         expectedUnitRunData = new FahClientUnitRunData();
+         expectedUnitRunData.UnitStartTimeStamp = new TimeSpan(15, 50, 12);
+         expectedUnitRunData.CoreVersion = "0.0.18";
+         expectedUnitRunData.FramesObserved = 11;
+         expectedUnitRunData.ProjectID = 14401;
+         expectedUnitRunData.ProjectRun = 0;
+         expectedUnitRunData.ProjectClone = 1699;
+         expectedUnitRunData.ProjectGen = 47;
+         expectedUnitRunData.WorkUnitResult = WorkUnitResult.None;
+         frameDataDictionary = new Dictionary<int, WorkUnitFrameData>();
+         var frameData = new WorkUnitFrameData();
+         frameData.ID = 0;
+         frameData.RawFramesComplete = 1;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(570160000000);
+         frameData.Duration = TimeSpan.FromTicks(0);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 1;
+         frameData.RawFramesComplete = 1250;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(571430000000);
+         frameData.Duration = TimeSpan.FromTicks(1270000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 2;
+         frameData.RawFramesComplete = 2500;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(572690000000);
+         frameData.Duration = TimeSpan.FromTicks(1260000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 3;
+         frameData.RawFramesComplete = 3750;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(573930000000);
+         frameData.Duration = TimeSpan.FromTicks(1240000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 4;
+         frameData.RawFramesComplete = 5000;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(575180000000);
+         frameData.Duration = TimeSpan.FromTicks(1250000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 5;
+         frameData.RawFramesComplete = 6250;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(576440000000);
+         frameData.Duration = TimeSpan.FromTicks(1260000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 6;
+         frameData.RawFramesComplete = 7500;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(577680000000);
+         frameData.Duration = TimeSpan.FromTicks(1240000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 7;
+         frameData.RawFramesComplete = 8750;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(578910000000);
+         frameData.Duration = TimeSpan.FromTicks(1230000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 8;
+         frameData.RawFramesComplete = 10000;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(580160000000);
+         frameData.Duration = TimeSpan.FromTicks(1250000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 9;
+         frameData.RawFramesComplete = 11250;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(581400000000);
+         frameData.Duration = TimeSpan.FromTicks(1240000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         frameData = new WorkUnitFrameData();
+         frameData.ID = 10;
+         frameData.RawFramesComplete = 12500;
+         frameData.RawFramesTotal = 125000;
+         frameData.TimeStamp = TimeSpan.FromTicks(582650000000);
+         frameData.Duration = TimeSpan.FromTicks(1250000000);
+         frameDataDictionary.Add(frameData.ID, frameData);
+         expectedUnitRunData.FrameDataDictionary = frameDataDictionary;
+         expectedUnitRun.Data = expectedUnitRunData;
+         expectedSlotRun.UnitRuns.Add(expectedUnitRun);
+
+         // Setup SlotRunData 0
+         var expectedSlotRunData = new FahClientSlotRunData();
+         expectedSlotRunData.CompletedUnits = 0;
+         expectedSlotRunData.FailedUnits = 0;
+         expectedSlotRun.Data = expectedSlotRunData;
+
+         // Setup ClientRunData 0
+         var expectedRunData = new FahClientClientRunData();
+         expectedRunData.StartTime = new DateTime(2020, 2, 13, 1, 48, 13, DateTimeKind.Utc);
+         expectedRun.Data = expectedRunData;
+
+         var actualRun = fahLog.ClientRuns.ElementAt(0);
+         AssertClientRun.AreEqual(expectedRun, actualRun, true);
+
+         Assert.AreEqual(0, LogLineEnumerable.Create(actualRun).Count(x => x.Data is LogLineDataParserError));
+         Assert.IsTrue(LogLineEnumerable.Create(actualRun.SlotRuns[0].UnitRuns[0]).Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors));
+      }
    }
+
+   // ReSharper restore InconsistentNaming
 }
