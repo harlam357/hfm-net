@@ -83,298 +83,298 @@ namespace HFM.Core.Data
         public void Fetch_All_Test()
         {
             // Select All
-            FetchTestData(44, WorkUnitHistoryQuery.SelectAll);
+            FetchTestData(44, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource("FetchEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_Equal_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_Equal_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchEqualCases =
         {
-            new object[] { 13,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Equal, 6600) },
-            new object[] { 4,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Equal, 7) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Equal, 18) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Equal, 18) },
-            new object[] { 11,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, "nVidia GPU - GTX275") },
-            new object[] { 11,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.Equal, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.Equal, "harlam357") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.Equal, 32) },
-            new object[] { 11,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.Equal, 2.09) },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.Equal, 100) },
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.Equal, 41)},   // not a TimeSpan value
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.Equal, 1) },   // not a String value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Equal, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.Equal, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 13,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.Equal, "WorkUnitName") },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.Equal, 2.3) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.Equal, "GROGPU2") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.Equal, 100) },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.Equal, 7000) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.Equal, "GPU") },
-            new object[] { 6,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.Equal, 9482.92683) },
-            new object[] { 13,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.Equal, 450) }
+            new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600) },
+            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 7) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, 18) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, 18) },
+            new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "nVidia GPU - GTX275") },
+            new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Equal, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Equal, "harlam357") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Equal, 32) },
+            new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, 2.09) },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 41)},   // not a TimeSpan value
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Equal, "WorkUnitName") },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Equal, 2.3) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Equal, "GROGPU2") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Equal, 100) },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Equal, 7000) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Equal, "GPU") },
+            new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Equal, 9482.92683) },
+            new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Equal, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchNotEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_NotEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_NotEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchNotEqualCases =
         {
-            new object[] { 31,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.NotEqual, 6600) },
-            new object[] { 40,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.NotEqual, 7) },
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.NotEqual, 18) },
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.NotEqual, 18) },
-            new object[] { 33,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.NotEqual, "nVidia GPU - GTX275") },
-            new object[] { 33,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.NotEqual, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.NotEqual, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.NotEqual, 32) },
-            new object[] { 33,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.NotEqual, 2.09) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.NotEqual, 100) },
-            new object[] { 32,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.NotEqual, 41)},   // not a TimeSpan value
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.NotEqual, 1) },   // not a String value
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.NotEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.NotEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 31,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.NotEqual, "WorkUnitName") },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.NotEqual, 2.3) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.NotEqual, "GROGPU2") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.NotEqual, 100) },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.NotEqual, 7000) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.NotEqual, "GPU") },
-            new object[] { 38,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.NotEqual, 9482.92683) },
-            new object[] { 31,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.NotEqual, 450) }
+            new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotEqual, 6600) },
+            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotEqual, 7) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.NotEqual, 18) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.NotEqual, 18) },
+            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.NotEqual, "nVidia GPU - GTX275") },
+            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotEqual, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotEqual, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotEqual, 32) },
+            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, 2.09) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
+            new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 41)},   // not a TimeSpan value
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotEqual, "WorkUnitName") },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotEqual, 2.3) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotEqual, "GROGPU2") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotEqual, 100) },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotEqual, 7000) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotEqual, "GPU") },
+            new object[] { 38,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotEqual, 9482.92683) },
+            new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotEqual, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchGreaterThanCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_GreaterThan_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchGreaterThanCases =
         {
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.GreaterThan, 10502) },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.GreaterThan, 79) },
-            new object[] { 7,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.GreaterThan, 761) },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.GreaterThan, 279) },
-            new object[] { 21,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThan, "nVidia GPU - GTX275") },
-            new object[] { 32,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.GreaterThan, @"\\Mainworkstation\Folding@home-gpu\") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.GreaterThan, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.GreaterThan, 32) },
-            new object[] { 4,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.GreaterThan, 2.09) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.GreaterThan, 100) },
-            new object[] { 23,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.GreaterThan, 41)},   // not a TimeSpan value
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.GreaterThan, 1) },   // not a String value
-            new object[] { 7,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 23,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.GreaterThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.GreaterThan, "WorkUnitName") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.GreaterThan, 2.3) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.GreaterThan, "GRO-A3") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.GreaterThan, 99) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThan, 0) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.GreaterThan, "CPU") },
-            new object[] { 6,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.GreaterThan, 9482.92683) },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.GreaterThan, 450) }
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThan, 10502) },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThan, 79) },
+            new object[] { 7,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.GreaterThan, 761) },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.GreaterThan, 279) },
+            new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThan, "nVidia GPU - GTX275") },
+            new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThan, @"\\Mainworkstation\Folding@home-gpu\") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThan, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThan, 32) },
+            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, 2.09) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
+            new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 41)},   // not a TimeSpan value
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
+            new object[] { 7,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThan, "WorkUnitName") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThan, 2.3) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A3") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThan, 99) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan, 0) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
+            new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThan, 9482.92683) },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThan, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchGreaterThanOrEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchGreaterThanOrEqualCases =
         {
-            new object[] { 13,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 10502) },
-            new object[] { 5,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 79) },
-            new object[] { 8,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 761) },
-            new object[] { 4,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 279) },
-            new object[] { 32,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "nVidia GPU - GTX275") },
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "harlam357") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 32) },
-            new object[] { 15,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 2.09) },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 100) },
-            new object[] { 35,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 41)},   // not a TimeSpan value
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
-            new object[] { 8,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 24,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "WorkUnitName") },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 2.3) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "GRO-A3") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 99) },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 0) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "CPU") },
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 9482.92683) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 450) }
+            new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThanOrEqual, 10502) },
+            new object[] { 5,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThanOrEqual, 79) },
+            new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.GreaterThanOrEqual, 761) },
+            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.GreaterThanOrEqual, 279) },
+            new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThanOrEqual, "nVidia GPU - GTX275") },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThanOrEqual, "harlam357") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThanOrEqual, 32) },
+            new object[] { 15,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, 2.09) },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
+            new object[] { 35,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 41)},   // not a TimeSpan value
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
+            new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 24,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThanOrEqual, "WorkUnitName") },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThanOrEqual, 2.3) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A3") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThanOrEqual, 99) },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThanOrEqual, 0) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThanOrEqual, 9482.92683) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThanOrEqual, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchLessThanCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_LessThan_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_LessThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchLessThanCases =
         {
-            new object[] { 31,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.LessThan, 10502) },
-            new object[] { 39,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.LessThan, 79) },
-            new object[] { 36,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.LessThan, 761) },
-            new object[] { 40,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.LessThan, 279) },
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThan, "nVidia GPU - GTX275") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.LessThan, @"\\Mainworkstation\Folding@home-gpu\") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.LessThan, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.LessThan, 32) },
-            new object[] { 29,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.LessThan, 2.09) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.LessThan, 100) },
-            new object[] { 9,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.LessThan, 41)},   // not a TimeSpan value
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.LessThan, 1) },   // not a String value
-            new object[] { 36,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.LessThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.LessThan, "WorkUnitName") },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.LessThan, 2.3) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.LessThan, "GRO-A3") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.LessThan, 99) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThan, 0) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.LessThan, "CPU") },
-            new object[] { 32,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.LessThan, 9482.92683) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.LessThan, 450) }
+            new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThan, 10502) },
+            new object[] { 39,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThan, 79) },
+            new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.LessThan, 761) },
+            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.LessThan, 279) },
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.LessThan, "nVidia GPU - GTX275") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThan, @"\\Mainworkstation\Folding@home-gpu\") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThan, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThan, 32) },
+            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, 2.09) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
+            new object[] { 9,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 41)},   // not a TimeSpan value
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
+            new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThan, "WorkUnitName") },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThan, 2.3) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A3") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThan, 99) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThan, 0) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
+            new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThan, 9482.92683) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThan, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchLessThanOrEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_LessThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchLessThanOrEqualCases =
         {
-            new object[] { 32,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.LessThanOrEqual, 10502) },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.LessThanOrEqual, 79) },
-            new object[] { 37,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.LessThanOrEqual, 761) },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.LessThanOrEqual, 279) },
-            new object[] { 23,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThanOrEqual, "nVidia GPU - GTX275") },
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.LessThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.LessThanOrEqual, "harlam357") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.LessThanOrEqual, 32) },
-            new object[] { 40,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.LessThanOrEqual, 2.09) },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.LessThanOrEqual, 100) },
-            new object[] { 21,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, 41)},   // not a TimeSpan value
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.LessThanOrEqual, 1) },   // not a String value
-            new object[] { 37,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 21,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.LessThanOrEqual, "WorkUnitName") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.LessThanOrEqual, 2.3) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.LessThanOrEqual, "GRO-A3") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.LessThanOrEqual, 99) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThanOrEqual, 0) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.LessThanOrEqual, "CPU") },
-            new object[] { 38,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.LessThanOrEqual, 9482.92683) },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.LessThanOrEqual, 450) }
+            new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThanOrEqual, 10502) },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThanOrEqual, 79) },
+            new object[] { 37,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.LessThanOrEqual, 761) },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.LessThanOrEqual, 279) },
+            new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.LessThanOrEqual, "nVidia GPU - GTX275") },
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThanOrEqual, "harlam357") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThanOrEqual, 32) },
+            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, 2.09) },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
+            new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 41)},   // not a TimeSpan value
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
+            new object[] { 37,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThanOrEqual, "WorkUnitName") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThanOrEqual, 2.3) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A3") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThanOrEqual, 99) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual, 0) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
+            new object[] { 38,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThanOrEqual, 9482.92683) },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThanOrEqual, 450) }
         };
 
         [Test]
         [TestCaseSource("FetchLikeCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_Like_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_Like_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchLikeCases =
         {
-            new object[] { 14,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Like, "10%") },
-            new object[] { 8,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 5,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Like, "9%") },
-            new object[] { 15,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Like, "2%") },
-            new object[] { 40,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Like, "nVidia GPU%") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.Like,  @"\\%\%") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.Like, "h%") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.Like, "%2") },
-            new object[] { 15,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.Like, "2%") },
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 14,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.Like, "4%")},     // not a TimeSpan value
-            new object[] { 44,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.Like, "1%") },    // not a String value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Like, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.Like, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.Like, "Work%Name%") },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.Like, "0%") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.Like, "GRO%") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.Like, "0%") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.Like, "%U") },
-            new object[] { 9,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.Like, "9%") },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.Like, "6%") }
+            new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Like, "10%") },
+            new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 5,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Like, "9%") },
+            new object[] { 15,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Like, "2%") },
+            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Like, "nVidia GPU%") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Like,  @"\\%\%") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Like, "h%") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Like, "%2") },
+            new object[] { 15,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Like, "2%") },
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Like, "4%")},     // not a TimeSpan value
+            new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Like, "1%") },    // not a String value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Like, "Work%Name%") },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Like, "0%") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Like, "0%") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
+            new object[] { 9,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Like, "9%") },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Like, "6%") }
         };
 
         [Test]
         [TestCaseSource("FetchNotLikeCases")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_NotLike_Test(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_NotLike_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
         private static object[] FetchNotLikeCases =
         {
-            new object[] { 30,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.NotLike, "10%") },
-            new object[] { 36,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 39,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.NotLike, "9%") },
-            new object[] { 29,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.NotLike, "2%") },
-            new object[] { 4,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.NotLike, "nVidia GPU%") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.NotLike,  @"\\%\%") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.NotLike, "h%") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.NotLike, "%2") },
-            new object[] { 29,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.NotLike, "2%") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 30,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.NotLike, "4%")},     // not a TimeSpan value
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.NotLike, "1%") },    // not a String value
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.NotLike, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.NotLike, new DateTime(2010, 8, 21, 20, 57, 0)) },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.NotLike, "Work%Name%") },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.NotLike, "0%") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.NotLike, "GRO%") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.NotLike, "0%") },
-            new object[] { 28,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.NotLike, "%U") },
-            new object[] { 35,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.NotLike, "9%") },
-            new object[] { 41,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.NotLike, "6%") }
+            new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotLike, "10%") },
+            new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 39,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.NotLike, "9%") },
+            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.NotLike, "2%") },
+            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.NotLike, "nVidia GPU%") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotLike,  @"\\%\%") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotLike, "h%") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotLike, "%2") },
+            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotLike, "2%") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotLike, "4%")},     // not a TimeSpan value
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotLike, "1%") },    // not a String value
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotLike, "Work%Name%") },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotLike, "0%") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotLike, "0%") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
+            new object[] { 35,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotLike, "9%") },
+            new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotLike, "6%") }
         };
 
         [Test]
         public void Fetch_Complex_Test1()
         {
-            FetchTestData(33, new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan,
+            FetchTestData(33, new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2010, 8, 8))
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan,
+                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan,
                     new DateTime(2010, 8, 22)));
         }
 
         [Test]
         public void Fetch_Complex_Test2()
         {
-            FetchTestData(3, new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThan,
+            FetchTestData(3, new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan,
                     5000)
-                .AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThanOrEqual,
+                .AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual,
                     7000));
         }
 
@@ -383,314 +383,314 @@ namespace HFM.Core.Data
         public void Fetch_All_Test2()
         {
             // Select All
-            FetchTestData2(253, WorkUnitHistoryQuery.SelectAll);
+            FetchTestData2(253, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource("FetchEqualCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_Equal_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_Equal_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchEqualCases2 =
         {
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Equal, 8011) },
-            new object[] { 72,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Equal, 0) },
-            new object[] { 6,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Equal, 63) },
-            new object[] { 2,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Equal, 188) },
-            new object[] { 12,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, "Windows - Test Workstation Slot 00") },
-            new object[] { 30,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.Equal, "192.168.0.172-36330") },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.Equal, "harlam357") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.Equal, 32) },
-            new object[] { 63,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.Equal, 2.27) },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.Equal, 100) },
-            new object[] { 14,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.Equal, 100)},  // not a TimeSpan value
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.Equal, 1) },   // not a String value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Equal, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.Equal, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.Equal, "WorkUnitName3") },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.Equal, 0.75) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.Equal, "GRO-A5") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.Equal, 100) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.Equal, 11000) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.Equal, "CPU") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.Equal, 486876.03173) },
-            new object[] { 2,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.Equal, 869.4797) }
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 8011) },
+            new object[] { 72,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 0) },
+            new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, 63) },
+            new object[] { 2,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, 188) },
+            new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "Windows - Test Workstation Slot 00") },
+            new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Equal, "192.168.0.172-36330") },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Equal, "harlam357") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Equal, 32) },
+            new object[] { 63,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, 2.27) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
+            new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 100)},  // not a TimeSpan value
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Equal, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Equal, "WorkUnitName3") },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Equal, 0.75) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Equal, "GRO-A5") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Equal, 100) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Equal, 11000) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Equal, "CPU") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Equal, 486876.03173) },
+            new object[] { 2,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Equal, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchNotEqualCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_NotEqual_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchNotEqualCases2 =
         {
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.NotEqual, 8011) },
-            new object[] { 181,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.NotEqual, 0) },
-            new object[] { 247,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.NotEqual, 63) },
-            new object[] { 251,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.NotEqual, 188) },
-            new object[] { 241,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.NotEqual, "Windows - Test Workstation Slot 00") },
-            new object[] { 223,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.NotEqual, "192.168.0.172-36330") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.NotEqual, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.NotEqual, 32) },
-            new object[] { 190,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.NotEqual, 2.27) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.NotEqual, 100) },
-            new object[] { 239,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.NotEqual, 100)},  // not a TimeSpan value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.NotEqual, 1) },   // not a String value
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.NotEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.NotEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.NotEqual, "WorkUnitName3") },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.NotEqual, 0.75) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.NotEqual, "GRO-A5") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.NotEqual, 100) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.NotEqual, 11000) },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.NotEqual, "CPU") },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.NotEqual, 486876.03173) },
-            new object[] { 251,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.NotEqual, 869.4797) }
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotEqual, 8011) },
+            new object[] { 181,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotEqual, 0) },
+            new object[] { 247,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.NotEqual, 63) },
+            new object[] { 251,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.NotEqual, 188) },
+            new object[] { 241,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.NotEqual, "Windows - Test Workstation Slot 00") },
+            new object[] { 223,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotEqual, "192.168.0.172-36330") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotEqual, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotEqual, 32) },
+            new object[] { 190,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, 2.27) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
+            new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 100)},  // not a TimeSpan value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotEqual, "WorkUnitName3") },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotEqual, 0.75) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotEqual, "GRO-A5") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotEqual, 100) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotEqual, 11000) },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotEqual, "CPU") },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotEqual, 486876.03173) },
+            new object[] { 251,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotEqual, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchGreaterThanCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_GreaterThan_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchGreaterThanCases2 =
         {
-            new object[] { 75,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.GreaterThan, 7137) },
-            new object[] { 47,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.GreaterThan, 18) },
-            new object[] { 99,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.GreaterThan, 63) },
-            new object[] { 146,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.GreaterThan, 188) },
-            new object[] { 86,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThan, "Windows - Test Workstation Slot 00") },
-            new object[] { 197,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.GreaterThan, @"\\192.168.0.133\FAH\") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.GreaterThan, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.GreaterThan, 32) },
-            new object[] { 166,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.GreaterThan, 2.15) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.GreaterThan, 100) },
-            new object[] { 150,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.GreaterThan, 100)},  // not a TimeSpan value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.GreaterThan, 1) },   // not a String value
-            new object[] { 42,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.GreaterThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.GreaterThan, "WorkUnitName3") },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.GreaterThan, 0.75) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.GreaterThan, "GRO-A4") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.GreaterThan, 100) },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThan, 9000) },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.GreaterThan, "CPU") },
-            new object[] { 5,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.GreaterThan, 486876.03173) },
-            new object[] { 14,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.GreaterThan, 869.4797) }
+            new object[] { 75,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThan, 7137) },
+            new object[] { 47,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThan, 18) },
+            new object[] { 99,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.GreaterThan, 63) },
+            new object[] { 146,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.GreaterThan, 188) },
+            new object[] { 86,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThan, "Windows - Test Workstation Slot 00") },
+            new object[] { 197,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThan, @"\\192.168.0.133\FAH\") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThan, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThan, 32) },
+            new object[] { 166,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, 2.15) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
+            new object[] { 150,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 100)},  // not a TimeSpan value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
+            new object[] { 42,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThan, "WorkUnitName3") },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThan, 0.75) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A4") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThan, 100) },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan, 9000) },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
+            new object[] { 5,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThan, 486876.03173) },
+            new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThan, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchGreaterThanOrEqualCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchGreaterThanOrEqualCases2 =
         {
-            new object[] { 78,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 7137) },
-            new object[] { 51,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 18) },
-            new object[] { 105,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 63) },
-            new object[] { 148,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 188) },
-            new object[] { 98,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "Windows - Test Workstation Slot 00") },
-            new object[] { 205,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, @"\\192.168.0.133\FAH\") },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "harlam357") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 32) },
-            new object[] { 226,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 2.15) },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 100) },
-            new object[] { 164,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 100)},  // not a TimeSpan value
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
-            new object[] { 43,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 17,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "WorkUnitName3") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 0.75) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "GRO-A4") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 100) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 9000) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, "CPU") },
-            new object[] { 6,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 486876.03173) },
-            new object[] { 16,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.GreaterThanOrEqual, 869.4797) }
+            new object[] { 78,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThanOrEqual, 7137) },
+            new object[] { 51,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThanOrEqual, 18) },
+            new object[] { 105,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.GreaterThanOrEqual, 63) },
+            new object[] { 148,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.GreaterThanOrEqual, 188) },
+            new object[] { 98,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThanOrEqual, "Windows - Test Workstation Slot 00") },
+            new object[] { 205,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThanOrEqual, @"\\192.168.0.133\FAH\") },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThanOrEqual, "harlam357") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThanOrEqual, 32) },
+            new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, 2.15) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
+            new object[] { 164,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 100)},  // not a TimeSpan value
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 17,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThanOrEqual, "WorkUnitName3") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThanOrEqual, 0.75) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A4") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThanOrEqual, 9000) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
+            new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThanOrEqual, 486876.03173) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThanOrEqual, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchLessThanCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_LessThan_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_LessThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchLessThanCases2 =
         {
-            new object[] { 175,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.LessThan, 7137) },
-            new object[] { 202,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.LessThan, 18) },
-            new object[] { 148,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.LessThan, 63) },
-            new object[] { 105,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.LessThan, 188) },
-            new object[] { 155,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThan, "Windows - Test Workstation Slot 00") },
-            new object[] { 48,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.LessThan, @"\\192.168.0.133\FAH\") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.LessThan, "harlam357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.LessThan, 32) },
-            new object[] { 27,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.LessThan, 2.15) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.LessThan, 100) },
-            new object[] { 89,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.LessThan, 100)},  // not a TimeSpan value
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.LessThan, 1) },   // not a String value
-            new object[] { 210,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 236,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.LessThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.LessThan, "WorkUnitName4") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.LessThan, 0.75) },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.LessThan, "GRO-A4") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.LessThan, 100) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThan, 11000) },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.LessThan, "CPU") },
-            new object[] { 247,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.LessThan, 486876.03173) },
-            new object[] { 237,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.LessThan, 869.4797) }
+            new object[] { 175,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThan, 7137) },
+            new object[] { 202,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThan, 18) },
+            new object[] { 148,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.LessThan, 63) },
+            new object[] { 105,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.LessThan, 188) },
+            new object[] { 155,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.LessThan, "Windows - Test Workstation Slot 00") },
+            new object[] { 48,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThan, @"\\192.168.0.133\FAH\") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThan, "harlam357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThan, 32) },
+            new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, 2.15) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
+            new object[] { 89,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 100)},  // not a TimeSpan value
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
+            new object[] { 210,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 236,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThan, "WorkUnitName4") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThan, 0.75) },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A4") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThan, 100) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThan, 11000) },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
+            new object[] { 247,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThan, 486876.03173) },
+            new object[] { 237,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThan, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchLessThanOrEqualCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_LessThanOrEqual_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchLessThanOrEqualCases2 =
         {
-            new object[] { 178,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.LessThanOrEqual, 7137) },
-            new object[] { 206,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.LessThanOrEqual, 18) },
-            new object[] { 154,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.LessThanOrEqual, 63) },
-            new object[] { 107,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.LessThanOrEqual, 188) },
-            new object[] { 167,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThanOrEqual, "Windows - Test Workstation Slot 00") },
-            new object[] { 56,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.LessThanOrEqual, @"\\192.168.0.133\FAH\") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.LessThanOrEqual, "harlam357") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.LessThanOrEqual, 32) },
-            new object[] { 87,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.LessThanOrEqual, 2.15) },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.LessThanOrEqual, 100) },
-            new object[] { 103,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, 100)},  // not a TimeSpan value
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.LessThanOrEqual, 1) },   // not a String value
-            new object[] { 211,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 237,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.LessThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.LessThanOrEqual, "WorkUnitName4") },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.LessThanOrEqual, 0.75) },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.LessThanOrEqual, "GRO-A4") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.LessThanOrEqual, 100) },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.LessThanOrEqual, 11000) },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.LessThanOrEqual, "CPU") },
-            new object[] { 248,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.LessThanOrEqual, 486876.03173) },
-            new object[] { 239,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.LessThanOrEqual, 869.4797) }
+            new object[] { 178,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThanOrEqual, 7137) },
+            new object[] { 206,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThanOrEqual, 18) },
+            new object[] { 154,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.LessThanOrEqual, 63) },
+            new object[] { 107,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.LessThanOrEqual, 188) },
+            new object[] { 167,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.LessThanOrEqual, "Windows - Test Workstation Slot 00") },
+            new object[] { 56,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThanOrEqual, @"\\192.168.0.133\FAH\") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThanOrEqual, "harlam357") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThanOrEqual, 32) },
+            new object[] { 87,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, 2.15) },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
+            new object[] { 103,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 100)},  // not a TimeSpan value
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
+            new object[] { 211,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 237,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThanOrEqual, "WorkUnitName4") },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThanOrEqual, 0.75) },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A4") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThanOrEqual, 100) },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual, 11000) },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
+            new object[] { 248,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThanOrEqual, 486876.03173) },
+            new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThanOrEqual, 869.4797) }
         };
 
         [Test]
         [TestCaseSource("FetchLikeCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_Like_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_Like_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchLikeCases2 =
         {
-            new object[] { 33,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Like, "8%") },
-            new object[] { 70,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 14,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Like, "9%") },
-            new object[] { 29,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Like, "2%") },
-            new object[] { 76,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Like, "Ubuntu VM SMP%") },
-            new object[] { 160,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.Like, "%192%") },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.Like, "%357") },
-            new object[] { 253,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.Like, "3%") },
-            new object[] { 27,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 27,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.Like, "3_")},     // not a TimeSpan value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.Like, "3%") },    // not a String value
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Like, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.Like, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.Like, "Work%Name%") },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.Like, "0%") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.Like, "GRO%") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.Like, "0%") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.Like, "0%") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.Like, "%U") },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.Like, "1%") },
-            new object[] { 3,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.Like, "9%") }
+            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Like, "8%") },
+            new object[] { 70,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Like, "9%") },
+            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Like, "2%") },
+            new object[] { 76,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Like, "Ubuntu VM SMP%") },
+            new object[] { 160,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Like, "%192%") },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Like, "%357") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Like, "3%") },
+            new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Like, "3_")},     // not a TimeSpan value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Like, "3%") },    // not a String value
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Like, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Like, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Like, "Work%Name%") },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Like, "0%") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Like, "0%") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Like, "0%") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Like, "1%") },
+            new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Like, "9%") }
         };
 
         [Test]
         [TestCaseSource("FetchNotLikeCases2")]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void Fetch_NotLike_Test2(int expected, WorkUnitHistoryQuery query)
+        public void Fetch_NotLike_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
         private static object[] FetchNotLikeCases2 =
         {
-            new object[] { 220,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.NotLike, "8%") },
-            new object[] { 183,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 239,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.NotLike, "9%") },
-            new object[] { 224,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.NotLike, "2%") },
-            new object[] { 177,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.NotLike, "Ubuntu VM SMP%") },
-            new object[] { 93,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Path, WorkUnitHistoryQueryOperator.NotLike, "%192%") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Username, WorkUnitHistoryQueryOperator.NotLike, "%357") },
-            new object[] { 0,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Team, WorkUnitHistoryQueryOperator.NotLike, "3%") },
-            new object[] { 226,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CoreVersion, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 1,    new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FramesCompleted, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 226,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.FrameTime, WorkUnitHistoryQueryOperator.NotLike, "3_")},     // not a TimeSpan value
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Result, WorkUnitHistoryQueryOperator.NotLike, "3%") },    // not a String value
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.NotLike, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 252,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.CompletionDateTime, WorkUnitHistoryQueryOperator.NotLike, new DateTime(2012, 11, 19, 6, 56, 47)) },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.WorkUnitName, WorkUnitHistoryQueryOperator.NotLike, "Work%Name%") },
-            new object[] { 10,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.KFactor, WorkUnitHistoryQueryOperator.NotLike, "0%") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Core, WorkUnitHistoryQueryOperator.NotLike, "GRO%") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Frames, WorkUnitHistoryQueryOperator.NotLike, "0%") },
-            new object[] { 20,   new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Atoms, WorkUnitHistoryQueryOperator.NotLike, "0%") },
-            new object[] { 233,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.SlotType, WorkUnitHistoryQueryOperator.NotLike, "%U") },
-            new object[] { 243,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.PPD, WorkUnitHistoryQueryOperator.NotLike, "1%") },
-            new object[] { 250,  new WorkUnitHistoryQuery().AddParameter(WorkUnitHistoryRowColumn.Credit, WorkUnitHistoryQueryOperator.NotLike, "9%") }
+            new object[] { 220,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotLike, "8%") },
+            new object[] { 183,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.NotLike, "9%") },
+            new object[] { 224,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.NotLike, "2%") },
+            new object[] { 177,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.NotLike, "Ubuntu VM SMP%") },
+            new object[] { 93,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotLike, "%192%") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotLike, "%357") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotLike, "3%") },
+            new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotLike, "3_")},     // not a TimeSpan value
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotLike, "3%") },    // not a String value
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotLike, "Work%Name%") },
+            new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotLike, "0%") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotLike, "0%") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotLike, "0%") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
+            new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotLike, "1%") },
+            new object[] { 250,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotLike, "9%") }
         };
 
         [Test]
         public void Fetch_Complex_Test3()
         {
-            FetchTestData2(52, new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.GreaterThan,
+            FetchTestData2(52, new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2012, 5, 29))
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.LessThan,
+                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan,
                     new DateTime(2012, 11, 1)));
         }
 
         [Test]
         public void Fetch_Complex_Test4()
         {
-            FetchTestData2(77, new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.GreaterThanOrEqual,
+            FetchTestData2(77, new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThanOrEqual,
                     "Ubuntu VM SMP - Media Server")
-                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.LessThanOrEqual,
+                .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.LessThanOrEqual,
                     "n"));
         }
 
-        private void FetchTestData(int count, WorkUnitHistoryQuery query)
+        private void FetchTestData(int count, WorkUnitQuery query)
         {
             _database.Initialize(_testDataFileCopy);
             FetchInternal(count, query, BonusCalculationType.DownloadTime);
         }
 
-        private void FetchTestData2(int count, WorkUnitHistoryQuery query)
+        private void FetchTestData2(int count, WorkUnitQuery query)
         {
             _database.Initialize(_testData2FileCopy);
             FetchInternal(count, query, BonusCalculationType.FrameTime);
         }
 
-        private void FetchInternal(int count, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
+        private void FetchInternal(int count, WorkUnitQuery query, BonusCalculationType bonusCalculation)
         {
             var entries = _database.Fetch(query, bonusCalculation);
 //#if DEBUG
@@ -712,13 +712,13 @@ namespace HFM.Core.Data
         public void Page_All_Test1()
         {
             // Select All
-            PageTestData(44, WorkUnitHistoryQuery.SelectAll);
+            PageTestData(44, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource("FetchEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_Equal_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_Equal_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -726,7 +726,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchNotEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_NotEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_NotEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -734,7 +734,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchGreaterThanCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_GreaterThan_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -742,7 +742,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchGreaterThanOrEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_GreaterThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -750,7 +750,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchLessThanCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_LessThan_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_LessThan_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -758,7 +758,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchLessThanOrEqualCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_LessThanOrEqual_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -766,7 +766,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchLikeCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_Like_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_Like_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -774,12 +774,12 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource("FetchNotLikeCases")]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void Page_NotLike_Test(int expected, WorkUnitHistoryQuery query)
+        public void Page_NotLike_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
 
-        private void PageTestData(long totalItems, WorkUnitHistoryQuery query)
+        private void PageTestData(long totalItems, WorkUnitQuery query)
         {
             const long itemsPerPage = 10;
 

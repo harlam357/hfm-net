@@ -41,7 +41,7 @@ namespace HFM.Forms
    public class HistoryPresenterTests
    {
       private IPreferenceSet _prefs;
-      private WorkUnitHistoryQueryDataContainer _queryContainer;
+      private WorkUnitQueryDataContainer _queryContainer;
       private IHistoryView _view;
       private IViewFactory _viewFactory;
       private IMessageBoxView _messageBoxView;
@@ -55,7 +55,7 @@ namespace HFM.Forms
       public void Init()
       {
          _prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         _queryContainer = new WorkUnitHistoryQueryDataContainer();
+         _queryContainer = new WorkUnitQueryDataContainer();
          _view = MockRepository.GenerateMock<IHistoryView>();
          _viewFactory = MockRepository.GenerateMock<IViewFactory>();
          _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
@@ -155,8 +155,8 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var query = new WorkUnitHistoryQuery("Test")
-             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 });
+         var query = new WorkUnitQuery("Test")
+             .AddParameter(new WorkUnitQueryParameter { Value = 6606 });
          queryView.Stub(x => x.Query).Return(query);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
@@ -188,7 +188,7 @@ namespace HFM.Forms
          // Arrange
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         queryView.Stub(x => x.Query).Return(new WorkUnitHistoryQuery());
+         queryView.Stub(x => x.Query).Return(new WorkUnitQuery());
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
          // Act
@@ -204,13 +204,13 @@ namespace HFM.Forms
       public void HistoryPresenter_EditQueryClick_Test()
       {
          // Arrange
-         _model.AddQuery(new WorkUnitHistoryQuery("Test")
-             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
+         _model.AddQuery(new WorkUnitQuery("Test")
+             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
 
          var queryView = MockRepository.GenerateMock<IQueryView>();
          queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var query = new WorkUnitHistoryQuery("Test2")
-            .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 });
+         var query = new WorkUnitQuery("Test2")
+            .AddParameter(new WorkUnitQueryParameter { Value = 6606 });
          queryView.Stub(x => x.Query).Return(query);
          _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
          // Act
@@ -219,7 +219,7 @@ namespace HFM.Forms
          _presenter.EditQueryClick();
          // Assert
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         Assert.AreEqual("Test2", _model.SelectedWorkUnitHistoryQuery.Name);
+         Assert.AreEqual("Test2", _model.SelectedWorkUnitQuery.Name);
          queryView.VerifyAllExpectations();
          _viewFactory.VerifyAllExpectations();
       }
@@ -260,8 +260,8 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_Test()
       {
          // Arrange
-         _model.AddQuery(new WorkUnitHistoryQuery("Test")
-             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
+         _model.AddQuery(new WorkUnitQuery("Test")
+             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          // Act
@@ -277,8 +277,8 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteQueryClick_No_Test()
       {
          // Arrange
-         _model.AddQuery(new WorkUnitHistoryQuery("Test")
-             .AddParameter(new WorkUnitHistoryQueryParameter { Value = 6606 }));
+         _model.AddQuery(new WorkUnitQuery("Test")
+             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
          // Act
@@ -307,7 +307,7 @@ namespace HFM.Forms
       public void HistoryPresenter_DeleteWorkUnitClick_Test()
       {
          // Arrange
-         _model.HistoryBindingSource.Add(new WorkUnitHistoryRow { ID = 1 });
+         _model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          _repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
@@ -335,7 +335,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Test()
       {
          // Arrange
-         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
+         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
@@ -344,8 +344,8 @@ namespace HFM.Forms
          _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
          _viewFactory.Expect(x => x.Release(saveFileDialogView));
 
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitHistoryRow>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitHistoryRow>)));
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitRow>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitRow>)));
          // Act
          _presenter = CreatePresenter();
          _presenter.ExportSerializers = new[] { serializer };
@@ -360,7 +360,7 @@ namespace HFM.Forms
       public void HistoryPresenter_ExportClick_Exception_Test()
       {
          // Arrange
-         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitHistoryRow[0]);
+         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
 
          var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
          saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
@@ -370,8 +370,8 @@ namespace HFM.Forms
          _viewFactory.Expect(x => x.Release(saveFileDialogView));
 
          var exception = new IOException();
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitHistoryRow>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitHistoryRow>)))
+         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitRow>>>();
+         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitRow>)))
             .Throw(exception);
 
          var logger = MockRepository.GenerateMock<ILogger>();

@@ -115,7 +115,7 @@
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkSlotIdentifierTests.cs" />
-    <Compile Include="Data\WorkUnitHistoryQueryTests.cs" />
+    <Compile Include="Data\WorkUnitQueryTests.cs" />
     <Compile Include="WorkUnits\WorkUnitTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Client\ClientConfigurationTests.cs" />
@@ -128,10 +128,10 @@
     <Compile Include="Utilities\FileSystemPathTests.cs" />
     <Compile Include="ApplicationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\WorkUnitHistoryRowCsvFileSerializerTests.cs" />
+    <Compile Include="Data\WorkUnitRowCsvFileSerializerTests.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkServiceTests.cs" />
     <Compile Include="WorkUnits\ProteinServiceTests.cs" />
-    <Compile Include="Data\WorkUnitHistoryQueryDataContainerTests.cs" />
+    <Compile Include="Data\WorkUnitQueryDataContainerTests.cs" />
     <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
     <Compile Include="Data\WorkUnitRepositoryReadOnlyTests.cs" />
     <Compile Include="Data\WorkUnitRepositoryTests.cs" />

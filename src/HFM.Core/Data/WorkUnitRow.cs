@@ -26,7 +26,7 @@ namespace HFM.Core.Data
     /// <summary>
     /// Represents the columns returned by a work unit history database query.
     /// </summary>
-    public enum WorkUnitHistoryRowColumn
+    public enum WorkUnitRowColumn
     {
         ID = -1,
         ProjectID = 0,
@@ -55,7 +55,7 @@ namespace HFM.Core.Data
 
     [PetaPoco.TableName("WuHistory")]
     [PetaPoco.PrimaryKey("ID")]
-    public class WorkUnitHistoryRow
+    public class WorkUnitRow
     {
         public long ID { get; set; }
 

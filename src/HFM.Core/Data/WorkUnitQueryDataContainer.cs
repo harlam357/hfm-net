@@ -24,18 +24,18 @@ using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    public sealed class WorkUnitHistoryQueryDataContainer : DataContainer<List<WorkUnitHistoryQuery>>
+    public sealed class WorkUnitQueryDataContainer : DataContainer<List<WorkUnitQuery>>
     {
         public const string DefaultFileName = "WuHistoryQuery.dat";
 
-        public override Serializers.IFileSerializer<List<WorkUnitHistoryQuery>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<WorkUnitHistoryQuery>>();
+        public override Serializers.IFileSerializer<List<WorkUnitQuery>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<WorkUnitQuery>>();
 
-        public WorkUnitHistoryQueryDataContainer() : this(null)
+        public WorkUnitQueryDataContainer() : this(null)
         {
 
         }
 
-        public WorkUnitHistoryQueryDataContainer(IPreferenceSet prefs)
+        public WorkUnitQueryDataContainer(IPreferenceSet prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

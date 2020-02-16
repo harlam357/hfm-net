@@ -33,18 +33,10 @@ using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    internal enum WorkUnitHistoryDatabaseTable
+    internal enum WorkUnitRepositoryTable
     {
         WuHistory,
         Version
-    }
-
-    public enum WorkUnitHistoryProteinUpdateScope
-    {
-        All,
-        Unknown,
-        Project,
-        Id
     }
 
     public interface IWorkUnitRepository : IDisposable
@@ -59,17 +51,17 @@ namespace HFM.Core.Data
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         bool Insert(WorkUnitModel workUnitModel);
 
-        int Delete(WorkUnitHistoryRow row);
+        int Delete(WorkUnitRow row);
 
-        IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation);
+        IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculationType bonusCalculation);
 
-        PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation);
+        PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
         long CountFailed(string clientName, DateTime? clientStartTime);
 
-        Task<bool> UpdateProteinDataAsync(WorkUnitHistoryProteinUpdateScope scope, long arg);
+        Task<bool> UpdateProteinDataAsync(WorkUnitProteinUpdateScope scope, long arg);
     }
 
     public partial class WorkUnitRepository : IWorkUnitRepository
@@ -90,11 +82,11 @@ namespace HFM.Core.Data
 
         private readonly IProteinService _proteinService;
 
-        private static readonly Dictionary<WorkUnitHistoryDatabaseTable, SqlTableCommands> SqlTableCommandDictionary =
-            new Dictionary<WorkUnitHistoryDatabaseTable, SqlTableCommands>
+        private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> SqlTableCommandDictionary =
+            new Dictionary<WorkUnitRepositoryTable, SqlTableCommands>
             {
-                { WorkUnitHistoryDatabaseTable.WuHistory, new WuHistorySqlTableCommands() },
-                { WorkUnitHistoryDatabaseTable.Version, new VersionSqlTableCommands() }
+                { WorkUnitRepositoryTable.WuHistory, new WuHistorySqlTableCommands() },
+                { WorkUnitRepositoryTable.Version, new VersionSqlTableCommands() }
             };
 
         #endregion
@@ -132,11 +124,11 @@ namespace HFM.Core.Data
             FilePath = filePath;
             try
             {
-                bool exists = TableExists(WorkUnitHistoryDatabaseTable.WuHistory);
+                bool exists = TableExists(WorkUnitRepositoryTable.WuHistory);
                 if (!exists)
                 {
-                    CreateTable(WorkUnitHistoryDatabaseTable.WuHistory);
-                    CreateTable(WorkUnitHistoryDatabaseTable.Version);
+                    CreateTable(WorkUnitRepositoryTable.WuHistory);
+                    CreateTable(WorkUnitRepositoryTable.Version);
                     SetDatabaseVersion(Application.Version);
                 }
                 // verify the connection by performing a db operation
@@ -160,7 +152,7 @@ namespace HFM.Core.Data
         private void Upgrade()
         {
             string dbVersionString = "0.0.0.0";
-            if (TableExists(WorkUnitHistoryDatabaseTable.Version))
+            if (TableExists(WorkUnitRepositoryTable.Version))
             {
                 string versionFromTable = GetDatabaseVersion();
                 if (!String.IsNullOrEmpty(versionFromTable))
@@ -170,7 +162,7 @@ namespace HFM.Core.Data
             }
             else
             {
-                CreateTable(WorkUnitHistoryDatabaseTable.Version);
+                CreateTable(WorkUnitRepositoryTable.Version);
             }
             int dbVersion = Application.ParseVersion(dbVersionString);
             Logger.InfoFormat("WU History database v{0}", dbVersionString);
@@ -216,7 +208,7 @@ namespace HFM.Core.Data
 
         private static void AddProteinColumns(SQLiteConnection connection)
         {
-            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].TableName, connection))
+            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].TableName, connection))
             {
                 adder.AddColumn("WorkUnitName", "VARCHAR(30)");
                 adder.AddColumn("KFactor", "FLOAT");
@@ -269,7 +261,7 @@ namespace HFM.Core.Data
                 return false;
             }
 
-            var entry = AutoMapper.Mapper.Map<WorkUnitHistoryRow>(workUnitModel.Data);
+            var entry = AutoMapper.Mapper.Map<WorkUnitRow>(workUnitModel.Data);
             // cannot map these two properties from a WorkUnit instance
             // they only live at the WorkUnitModel level
             entry.FramesCompleted = workUnitModel.FramesComplete;
@@ -308,23 +300,23 @@ namespace HFM.Core.Data
             return rows.Count != 0;
         }
 
-        private static WorkUnitHistoryQuery CreateWorkUnitQuery(WorkUnit workUnit)
+        private static WorkUnitQuery CreateWorkUnitQuery(WorkUnit workUnit)
         {
-            return new WorkUnitHistoryQuery($"Query for existing {workUnit.ToProjectString()}")
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectID, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectID)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectRun, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectRun)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectClone, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectClone)
-                .AddParameter(WorkUnitHistoryRowColumn.ProjectGen, WorkUnitHistoryQueryOperator.Equal, workUnit.ProjectGen)
-                .AddParameter(WorkUnitHistoryRowColumn.DownloadDateTime, WorkUnitHistoryQueryOperator.Equal, workUnit.DownloadTime);
+            return new WorkUnitQuery($"Query for existing {workUnit.ToProjectString()}")
+                .AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, workUnit.ProjectID)
+                .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, workUnit.ProjectRun)
+                .AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, workUnit.ProjectClone)
+                .AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, workUnit.ProjectGen)
+                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, workUnit.DownloadTime);
         }
 
         #endregion
 
         #region Delete
 
-        public int Delete(WorkUnitHistoryRow row)
+        public int Delete(WorkUnitRow row)
         {
-            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -339,7 +331,7 @@ namespace HFM.Core.Data
 
         #region Fetch
 
-        public IList<WorkUnitHistoryRow> Fetch(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
+        public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -352,11 +344,11 @@ namespace HFM.Core.Data
             }
         }
 
-        private IList<WorkUnitHistoryRow> FetchInternal(WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
+        private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculationType bonusCalculation)
         {
-            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -364,12 +356,12 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Fetch<WorkUnitHistoryRow>(select);
+                    return database.Fetch<WorkUnitRow>(select);
                 }
             }
         }
 
-        public PetaPoco.Page<WorkUnitHistoryRow> Page(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
+        public PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -382,11 +374,11 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Page<WorkUnitHistoryRow> PageInternal(long page, long itemsPerPage, WorkUnitHistoryQuery query, BonusCalculationType bonusCalculation)
+        private PetaPoco.Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation)
         {
-            Debug.Assert(TableExists(WorkUnitHistoryDatabaseTable.WuHistory));
+            Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitHistoryDatabaseTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -394,7 +386,7 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Page<WorkUnitHistoryRow>(page, itemsPerPage, select);
+                    return database.Page<WorkUnitRow>(page, itemsPerPage, select);
                 }
             }
         }
@@ -443,14 +435,14 @@ namespace HFM.Core.Data
 
         private long Count(string clientName, bool completed, DateTime? clientStartTime)
         {
-            var query = new WorkUnitHistoryQuery()
-                .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, clientName)
-                .AddParameter(WorkUnitHistoryRowColumn.Result, completed ? WorkUnitHistoryQueryOperator.Equal : WorkUnitHistoryQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
+            var query = new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, clientName)
+                .AddParameter(WorkUnitRowColumn.Result, completed ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {
-                query.AddParameter(completed ? WorkUnitHistoryRowColumn.CompletionDateTime : WorkUnitHistoryRowColumn.DownloadDateTime,
-                    WorkUnitHistoryQueryOperator.GreaterThan, clientStartTime.Value);
+                query.AddParameter(completed ? WorkUnitRowColumn.CompletionDateTime : WorkUnitRowColumn.DownloadDateTime,
+                    WorkUnitQueryOperator.GreaterThan, clientStartTime.Value);
             }
 
             var countSql = PetaPoco.Sql.Builder.Select("COUNT(*)")
@@ -469,7 +461,7 @@ namespace HFM.Core.Data
 
         #endregion
 
-        public async Task<bool> UpdateProteinDataAsync(WorkUnitHistoryProteinUpdateScope scope, long arg)
+        public async Task<bool> UpdateProteinDataAsync(WorkUnitProteinUpdateScope scope, long arg)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -526,7 +518,7 @@ namespace HFM.Core.Data
 
         #region Table Helpers
 
-        internal bool TableExists(WorkUnitHistoryDatabaseTable databaseTable)
+        internal bool TableExists(WorkUnitRepositoryTable databaseTable)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -538,7 +530,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal void CreateTable(WorkUnitHistoryDatabaseTable databaseTable)
+        internal void CreateTable(WorkUnitRepositoryTable databaseTable)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -552,7 +544,7 @@ namespace HFM.Core.Data
 
         internal string GetDatabaseVersion()
         {
-            if (!TableExists(WorkUnitHistoryDatabaseTable.Version))
+            if (!TableExists(WorkUnitRepositoryTable.Version))
             {
                 return null;
             }

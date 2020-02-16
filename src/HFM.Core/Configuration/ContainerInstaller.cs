@@ -125,9 +125,9 @@ namespace HFM.Core.Configuration
             Component.For<ScheduledTasks.IWebsiteDeployer>()
                .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
 
-         // WorkUnitHistoryQueryDataContainer - Singleton
+         // WorkUnitQueryDataContainer - Singleton
          container.Register(
-            Component.For<Data.WorkUnitHistoryQueryDataContainer>()
+            Component.For<Data.WorkUnitQueryDataContainer>()
                   .OnCreate(instance => instance.Read()));
 
          // IProteinBenchmarkCollection - Singleton

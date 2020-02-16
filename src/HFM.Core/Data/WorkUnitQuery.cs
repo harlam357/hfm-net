@@ -28,7 +28,7 @@ namespace HFM.Core.Data
     /// <summary>
     /// Represents the operators for a work unit history query.
     /// </summary>
-    public enum WorkUnitHistoryQueryOperator
+    public enum WorkUnitQueryOperator
     {
         Equal,
         GreaterThan,
@@ -41,20 +41,20 @@ namespace HFM.Core.Data
     }
 
     [DataContract]
-    public class WorkUnitHistoryQuery : IComparable<WorkUnitHistoryQuery>, IEquatable<WorkUnitHistoryQuery>
+    public class WorkUnitQuery : IComparable<WorkUnitQuery>, IEquatable<WorkUnitQuery>
     {
-        private static readonly WorkUnitHistoryQuery SelectAllValue = new WorkUnitHistoryQuery();
+        private static readonly WorkUnitQuery SelectAllValue = new WorkUnitQuery();
 
-        public static WorkUnitHistoryQuery SelectAll => SelectAllValue;
+        public static WorkUnitQuery SelectAll => SelectAllValue;
 
         private const string SelectAllName = "*** SELECT ALL ***";
 
-        public WorkUnitHistoryQuery()
+        public WorkUnitQuery()
         {
             Name = SelectAllName;
         }
 
-        public WorkUnitHistoryQuery(string name)
+        public WorkUnitQuery(string name)
         {
             Name = name;
         }
@@ -62,16 +62,16 @@ namespace HFM.Core.Data
         [DataMember(Order = 1)]
         public string Name { get; set; }
         [DataMember(Order = 2)]
-        private readonly List<WorkUnitHistoryQueryParameter> _parameters = new List<WorkUnitHistoryQueryParameter>();
+        private readonly List<WorkUnitQueryParameter> _parameters = new List<WorkUnitQueryParameter>();
 
-        public List<WorkUnitHistoryQueryParameter> Parameters => _parameters;
+        public List<WorkUnitQueryParameter> Parameters => _parameters;
 
-        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator queryOperator, object value)
+        public WorkUnitQuery AddParameter(WorkUnitRowColumn column, WorkUnitQueryOperator queryOperator, object value)
         {
-            return AddParameter(new WorkUnitHistoryQueryParameter(column, queryOperator, value));
+            return AddParameter(new WorkUnitQueryParameter(column, queryOperator, value));
         }
 
-        public WorkUnitHistoryQuery AddParameter(WorkUnitHistoryQueryParameter parameter)
+        public WorkUnitQuery AddParameter(WorkUnitQueryParameter parameter)
         {
             Parameters.Add(parameter);
             return this;
@@ -81,8 +81,8 @@ namespace HFM.Core.Data
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(WorkUnitHistoryQuery)) return false;
-            return Equals((WorkUnitHistoryQuery)obj);
+            if (obj.GetType() != typeof(WorkUnitQuery)) return false;
+            return Equals((WorkUnitQuery)obj);
         }
 
         public override int GetHashCode()
@@ -90,17 +90,17 @@ namespace HFM.Core.Data
             return (Name != null ? Name.GetHashCode() : 0);
         }
 
-        public static bool operator ==(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        public static bool operator ==(WorkUnitQuery left, WorkUnitQuery right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        public static bool operator !=(WorkUnitQuery left, WorkUnitQuery right)
         {
             return !Equals(left, right);
         }
 
-        #region IEquatable<WorkUnitHistoryQuery> Members
+        #region IEquatable<WorkUnitQuery> Members
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
@@ -109,7 +109,7 @@ namespace HFM.Core.Data
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(WorkUnitHistoryQuery other)
+        public bool Equals(WorkUnitQuery other)
         {
             //if (ReferenceEquals(null, other)) return false;
             //if (ReferenceEquals(this, other)) return true;
@@ -118,19 +118,19 @@ namespace HFM.Core.Data
 
         #endregion
 
-        public static bool operator <(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        public static bool operator <(WorkUnitQuery left, WorkUnitQuery right)
         {
             return left == null ? right != null : left.CompareTo(right) < 0;
         }
 
-        public static bool operator >(WorkUnitHistoryQuery left, WorkUnitHistoryQuery right)
+        public static bool operator >(WorkUnitQuery left, WorkUnitQuery right)
         {
             return right == null ? left != null : right.CompareTo(left) < 0;
         }
 
-        #region IComparable<WorkUnitHistoryQuery> Members
+        #region IComparable<WorkUnitQuery> Members
 
-        public int CompareTo(WorkUnitHistoryQuery other)
+        public int CompareTo(WorkUnitQuery other)
         {
             if (ReferenceEquals(null, other)) return 1;
             if (ReferenceEquals(this, other)) return 0;
@@ -173,7 +173,7 @@ namespace HFM.Core.Data
 
         #endregion
 
-        public WorkUnitHistoryQuery DeepClone()
+        public WorkUnitQuery DeepClone()
         {
             return ProtoBuf.Serializer.DeepClone(this);
         }
@@ -184,14 +184,14 @@ namespace HFM.Core.Data
         }
     }
 
-    internal static class WorkUnitHistoryQueryExtensions
+    internal static class WorkUnitQueryExtensions
     {
-        internal static PetaPoco.Sql Append(this PetaPoco.Sql sql, WorkUnitHistoryQuery query)
+        internal static PetaPoco.Sql Append(this PetaPoco.Sql sql, WorkUnitQuery query)
         {
             return sql.Append(query.ToSql());
         }
 
-        internal static PetaPoco.Sql ToSql(this WorkUnitHistoryQuery query)
+        internal static PetaPoco.Sql ToSql(this WorkUnitQuery query)
         {
             if (query.Parameters.Count == 0)
             {
@@ -211,11 +211,11 @@ namespace HFM.Core.Data
             return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;
         }
 
-        private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitHistoryQueryParameter parameter)
+        private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitQueryParameter parameter)
         {
             string format = "[{0}] {1} @0";
-            if (parameter.Column.Equals(WorkUnitHistoryRowColumn.DownloadDateTime) ||
-                parameter.Column.Equals(WorkUnitHistoryRowColumn.CompletionDateTime))
+            if (parameter.Column.Equals(WorkUnitRowColumn.DownloadDateTime) ||
+                parameter.Column.Equals(WorkUnitRowColumn.CompletionDateTime))
             {
                 format = "datetime([{0}]) {1} datetime(@0)";
             }
@@ -225,24 +225,24 @@ namespace HFM.Core.Data
             return sql;
         }
 
-        private static readonly Dictionary<WorkUnitHistoryRowColumn, string> ColumnNameOverrides = new Dictionary<WorkUnitHistoryRowColumn, string>
+        private static readonly Dictionary<WorkUnitRowColumn, string> ColumnNameOverrides = new Dictionary<WorkUnitRowColumn, string>
         {
-            { WorkUnitHistoryRowColumn.Name, "InstanceName" },
-            { WorkUnitHistoryRowColumn.Path, "InstancePath" },
-            { WorkUnitHistoryRowColumn.Credit, "CalcCredit" },
+            { WorkUnitRowColumn.Name, "InstanceName" },
+            { WorkUnitRowColumn.Path, "InstancePath" },
+            { WorkUnitRowColumn.Credit, "CalcCredit" },
         };
     }
 
     [DataContract]
-    public class WorkUnitHistoryQueryParameter
+    public class WorkUnitQueryParameter
     {
-        public WorkUnitHistoryQueryParameter()
+        public WorkUnitQueryParameter()
         {
-            Column = WorkUnitHistoryRowColumn.ProjectID;
-            Operator = WorkUnitHistoryQueryOperator.Equal;
+            Column = WorkUnitRowColumn.ProjectID;
+            Operator = WorkUnitQueryOperator.Equal;
         }
 
-        public WorkUnitHistoryQueryParameter(WorkUnitHistoryRowColumn column, WorkUnitHistoryQueryOperator queryOperator, object value)
+        public WorkUnitQueryParameter(WorkUnitRowColumn column, WorkUnitQueryOperator queryOperator, object value)
         {
             Column = column;
             Operator = queryOperator;
@@ -250,10 +250,10 @@ namespace HFM.Core.Data
         }
 
         [DataMember(Order = 1)]
-        public WorkUnitHistoryRowColumn Column { get; set; }
+        public WorkUnitRowColumn Column { get; set; }
         [DataMember(Order = 2)]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
-        public WorkUnitHistoryQueryOperator Operator { get; set; }
+        public WorkUnitQueryOperator Operator { get; set; }
 
         public object Value
         {
@@ -292,25 +292,25 @@ namespace HFM.Core.Data
 
         internal string OperatorString => GetOperator(Operator);
 
-        private static string GetOperator(WorkUnitHistoryQueryOperator type)
+        private static string GetOperator(WorkUnitQueryOperator type)
         {
             switch (type)
             {
-                case WorkUnitHistoryQueryOperator.Equal:
+                case WorkUnitQueryOperator.Equal:
                     return "=";
-                case WorkUnitHistoryQueryOperator.GreaterThan:
+                case WorkUnitQueryOperator.GreaterThan:
                     return ">";
-                case WorkUnitHistoryQueryOperator.GreaterThanOrEqual:
+                case WorkUnitQueryOperator.GreaterThanOrEqual:
                     return ">=";
-                case WorkUnitHistoryQueryOperator.LessThan:
+                case WorkUnitQueryOperator.LessThan:
                     return "<";
-                case WorkUnitHistoryQueryOperator.LessThanOrEqual:
+                case WorkUnitQueryOperator.LessThanOrEqual:
                     return "<=";
-                case WorkUnitHistoryQueryOperator.Like:
+                case WorkUnitQueryOperator.Like:
                     return "LIKE";
-                case WorkUnitHistoryQueryOperator.NotLike:
+                case WorkUnitQueryOperator.NotLike:
                     return "NOT LIKE";
-                case WorkUnitHistoryQueryOperator.NotEqual:
+                case WorkUnitQueryOperator.NotEqual:
                     return "!=";
                 default:
                     throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
@@ -325,7 +325,7 @@ namespace HFM.Core.Data
 
         public static string[] GetColumnNames()
         {
-            // Indexes Must Match WorkUnitHistoryRowColumn enum defined in Enumerations.cs
+            // Indexes Must Match WorkUnitRowColumn enum defined in Enumerations.cs
             return new[]
             {
                 "ProjectID",

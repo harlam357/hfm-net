@@ -139,7 +139,7 @@ namespace HFM.Core.Data
                                  _repository.Insert(workUnitModel);
                               });
 
-         Assert.AreEqual(100, _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None).Count);
+         Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None).Count);
       }
 
       #region Connected
@@ -226,7 +226,7 @@ namespace HFM.Core.Data
          InsertTestInternal(BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
       }
 
-      private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitHistoryRow>> verifyAction)
+      private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
       {
          _repository.Initialize(TestScratchFile);
 
@@ -236,13 +236,13 @@ namespace HFM.Core.Data
 
          _repository.Insert(workUnitModel);
 
-         var rows = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
          verifyAction(rows);
 
          // test code to ensure this unit is NOT written again
          _repository.Insert(workUnitModel);
          // verify
-         rows = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(1, rows.Count);
       }
 
@@ -296,12 +296,12 @@ namespace HFM.Core.Data
                 };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit1VerifyAction()
+      private static Action<IList<WorkUnitRow>> BuildWorkUnit1VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            WorkUnitHistoryRow row = rows[0];
+            WorkUnitRow row = rows[0];
             Assert.AreEqual(2669, row.ProjectID);
             Assert.AreEqual(1, row.ProjectRun);
             Assert.AreEqual(2, row.ProjectClone);
@@ -373,12 +373,12 @@ namespace HFM.Core.Data
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit2VerifyAction()
+      private static Action<IList<WorkUnitRow>> BuildWorkUnit2VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            WorkUnitHistoryRow row = rows[0];
+            WorkUnitRow row = rows[0];
             Assert.AreEqual(6900, row.ProjectID);
             Assert.AreEqual(4, row.ProjectRun);
             Assert.AreEqual(5, row.ProjectClone);
@@ -450,12 +450,12 @@ namespace HFM.Core.Data
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit3VerifyAction()
+      private static Action<IList<WorkUnitRow>> BuildWorkUnit3VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            WorkUnitHistoryRow row = rows[0];
+            WorkUnitRow row = rows[0];
             Assert.AreEqual(2670, row.ProjectID);
             Assert.AreEqual(2, row.ProjectRun);
             Assert.AreEqual(3, row.ProjectClone);
@@ -527,12 +527,12 @@ namespace HFM.Core.Data
          };
       }
 
-      private static Action<IList<WorkUnitHistoryRow>> BuildWorkUnit4VerifyAction()
+      private static Action<IList<WorkUnitRow>> BuildWorkUnit4VerifyAction()
       {
          return rows =>
          {
             Assert.AreEqual(1, rows.Count);
-            WorkUnitHistoryRow row = rows[0];
+            WorkUnitRow row = rows[0];
             Assert.AreEqual(6903, row.ProjectID);
             Assert.AreEqual(2, row.ProjectRun);
             Assert.AreEqual(3, row.ProjectClone);
@@ -567,10 +567,10 @@ namespace HFM.Core.Data
       public void Delete_Test()
       {
          _repository.Initialize(_testDataFileCopy);
-         var entries = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(44, entries.Count);
          Assert.AreEqual(1, _repository.Delete(entries[14]));
-         entries = _repository.Fetch(WorkUnitHistoryQuery.SelectAll, BonusCalculationType.None);
+         entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
          Assert.AreEqual(43, entries.Count);
       }
       
@@ -578,7 +578,7 @@ namespace HFM.Core.Data
       public void Delete_NotExist_Test()
       {
          _repository.Initialize(_testDataFileCopy);
-         Assert.AreEqual(0, _repository.Delete(new WorkUnitHistoryRow { ID = 100 }));
+         Assert.AreEqual(0, _repository.Delete(new WorkUnitRow { ID = 100 }));
       }
 
       #endregion

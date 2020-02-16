@@ -25,15 +25,15 @@ using NUnit.Framework;
 namespace HFM.Core.Data
 {
     [TestFixture]
-    public class WorkUnitHistoryQueryDataContainerTests
+    public class WorkUnitQueryDataContainerTests
     {
         [Test]
-        public void WorkUnitHistoryQueryDataContainer_Read_FromDisk()
+        public void WorkUnitQueryDataContainer_Read_FromDisk()
         {
             // Arrange
-            var container = new WorkUnitHistoryQueryDataContainer
+            var container = new WorkUnitQueryDataContainer
             {
-                FilePath = Path.Combine("..\\..\\TestFiles", WorkUnitHistoryQueryDataContainer.DefaultFileName),
+                FilePath = Path.Combine("..\\..\\TestFiles", WorkUnitQueryDataContainer.DefaultFileName),
             };
             // Act
             container.Read();
@@ -42,11 +42,11 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitHistoryQueryDataContainer_Write_ToDisk()
+        public void WorkUnitQueryDataContainer_Write_ToDisk()
         {
             // Arrange
             // TODO: Implement ArtifactFolder
-            var container = new WorkUnitHistoryQueryDataContainer
+            var container = new WorkUnitQueryDataContainer
             {
                 FilePath = "TestQueryParametersBinary.dat", Data = CreateTestQueryParameters(),
             };
@@ -59,27 +59,27 @@ namespace HFM.Core.Data
             ValidateTestQueryParameters(container.Data);
         }
 
-        private static List<WorkUnitHistoryQuery> CreateTestQueryParameters()
+        private static List<WorkUnitQuery> CreateTestQueryParameters()
         {
-            var list = new List<WorkUnitHistoryQuery>();
+            var list = new List<WorkUnitQuery>();
             for (int i = 0; i < 5; i++)
             {
-                list.Add(new WorkUnitHistoryQuery("Test" + i)
-                    .AddParameter(WorkUnitHistoryRowColumn.Name, WorkUnitHistoryQueryOperator.Equal, "Test" + i));
+                list.Add(new WorkUnitQuery("Test" + i)
+                    .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "Test" + i));
             }
 
             return list;
         }
 
-        private static void ValidateTestQueryParameters(IList<WorkUnitHistoryQuery> list)
+        private static void ValidateTestQueryParameters(IList<WorkUnitQuery> list)
         {
             for (int i = 0; i < 5; i++)
             {
-                WorkUnitHistoryQuery workUnitHistoryQuery = list[i];
-                Assert.AreEqual("Test" + i, workUnitHistoryQuery.Name);
-                Assert.AreEqual(WorkUnitHistoryRowColumn.Name, workUnitHistoryQuery.Parameters[0].Column);
-                Assert.AreEqual(WorkUnitHistoryQueryOperator.Equal, workUnitHistoryQuery.Parameters[0].Operator);
-                Assert.AreEqual("Test" + i, workUnitHistoryQuery.Parameters[0].Value);
+                WorkUnitQuery workUnitQuery = list[i];
+                Assert.AreEqual("Test" + i, workUnitQuery.Name);
+                Assert.AreEqual(WorkUnitRowColumn.Name, workUnitQuery.Parameters[0].Column);
+                Assert.AreEqual(WorkUnitQueryOperator.Equal, workUnitQuery.Parameters[0].Operator);
+                Assert.AreEqual("Test" + i, workUnitQuery.Parameters[0].Value);
             }
         }
     }

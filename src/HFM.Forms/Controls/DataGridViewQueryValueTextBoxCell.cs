@@ -36,8 +36,8 @@ namespace HFM.Forms.Controls
             if (OwningRow != null && OwningRow.Index >= 0)
             {
                var nameCell = OwningRow.Cells["Name"];
-               return nameCell.Value.Equals(WorkUnitHistoryRowColumn.DownloadDateTime) ||
-                      nameCell.Value.Equals(WorkUnitHistoryRowColumn.CompletionDateTime);
+               return nameCell.Value.Equals(WorkUnitRowColumn.DownloadDateTime) ||
+                      nameCell.Value.Equals(WorkUnitRowColumn.CompletionDateTime);
             }
 
             return false;

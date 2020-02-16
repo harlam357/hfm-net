@@ -38,7 +38,7 @@ namespace HFM.Forms
    public class HistoryPresenter
    {
       private readonly IPreferenceSet _prefs;
-      private readonly WorkUnitHistoryQueryDataContainer _queryContainer;
+      private readonly WorkUnitQueryDataContainer _queryContainer;
       private readonly IHistoryView _view;
       private readonly IViewFactory _viewFactory;
       private readonly IMessageBoxView _messageBoxView;
@@ -56,7 +56,7 @@ namespace HFM.Forms
       public event EventHandler PresenterClosed;
       
       public HistoryPresenter(IPreferenceSet prefs, 
-                              WorkUnitHistoryQueryDataContainer queryContainer, 
+                              WorkUnitQueryDataContainer queryContainer, 
                               IHistoryView view, 
                               IViewFactory viewFactory, 
                               IMessageBoxView messageBoxView, 
@@ -120,13 +120,13 @@ namespace HFM.Forms
          _model.Update(_prefs, _queryContainer);
       }
 
-      internal IList<IFileSerializer<List<WorkUnitHistoryRow>>> ExportSerializers { get; set; }
+      internal IList<IFileSerializer<List<WorkUnitRow>>> ExportSerializers { get; set; }
 
       internal void ExportClick()
       {
-         var serializers = ExportSerializers ?? new List <IFileSerializer<List<WorkUnitHistoryRow>>>
+         var serializers = ExportSerializers ?? new List <IFileSerializer<List<WorkUnitRow>>>
          {
-            new WorkUnitHistoryRowCsvFileSerializer()
+            new WorkUnitRowCsvFileSerializer()
          };
 
          var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
@@ -171,8 +171,8 @@ namespace HFM.Forms
       public void NewQueryClick()
       {
          var queryView = _viewFactory.GetQueryDialog();
-         var query = new WorkUnitHistoryQuery("* New Query *")
-             .AddParameter(new WorkUnitHistoryQueryParameter());
+         var query = new WorkUnitQuery("* New Query *")
+             .AddParameter(new WorkUnitQueryParameter());
          queryView.Query = query;
          
          bool showDialog = true;
@@ -201,7 +201,7 @@ namespace HFM.Forms
       public void EditQueryClick()
       {
          var queryView = _viewFactory.GetQueryDialog();
-         queryView.Query = _model.SelectedWorkUnitHistoryQuery.DeepClone();
+         queryView.Query = _model.SelectedWorkUnitQuery.DeepClone();
 
          bool showDialog = true;
          while (showDialog)
@@ -233,7 +233,7 @@ namespace HFM.Forms
          {
             try
             {
-               _model.RemoveQuery(_model.SelectedWorkUnitHistoryQuery);
+               _model.RemoveQuery(_model.SelectedWorkUnitQuery);
             }
             catch (ArgumentException ex)
             {
@@ -244,7 +244,7 @@ namespace HFM.Forms
       
       public void DeleteWorkUnitClick()
       {
-         var entry = _model.SelectedWorkUnitHistoryRow;
+         var entry = _model.SelectedWorkUnitRow;
          if (entry == null)
          {
             _messageBoxView.ShowInformation(_view, "No work unit selected.", Core.Application.NameAndVersion);
@@ -261,25 +261,25 @@ namespace HFM.Forms
 
       public async void RefreshAllProjectDataClick()
       {
-         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.All);
+         await RefreshProjectData(WorkUnitProteinUpdateScope.All);
       }
 
       public async void RefreshUnknownProjectDataClick()
       {
-         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Unknown);
+         await RefreshProjectData(WorkUnitProteinUpdateScope.Unknown);
       }
 
       public async void RefreshDataByProjectClick()
       {
-         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Project);
+         await RefreshProjectData(WorkUnitProteinUpdateScope.Project);
       }
 
       public async void RefreshDataByIdClick()
       {
-         await RefreshProjectData(WorkUnitHistoryProteinUpdateScope.Id);
+         await RefreshProjectData(WorkUnitProteinUpdateScope.Id);
       }
 
-      private async Task RefreshProjectData(WorkUnitHistoryProteinUpdateScope scope)
+      private async Task RefreshProjectData(WorkUnitProteinUpdateScope scope)
       {
          var result = _messageBoxView.AskYesNoQuestion(_view, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
          if (result == DialogResult.No)
@@ -288,13 +288,13 @@ namespace HFM.Forms
          }
 
          long arg = 0;
-         if (scope == WorkUnitHistoryProteinUpdateScope.Project)
+         if (scope == WorkUnitProteinUpdateScope.Project)
          {
-            arg = _model.SelectedWorkUnitHistoryRow.ProjectID;
+            arg = _model.SelectedWorkUnitRow.ProjectID;
          }
-         else if (scope == WorkUnitHistoryProteinUpdateScope.Id)
+         else if (scope == WorkUnitProteinUpdateScope.Id)
          {
-            arg = _model.SelectedWorkUnitHistoryRow.ID;
+            arg = _model.SelectedWorkUnitRow.ID;
          }
 
          try
