@@ -1,0 +1,288 @@
+*********************** Log Started 2020-02-13T01:48:13Z ***********************
+01:48:13:************************* Folding@home Client *************************
+01:48:13:        Website: https://foldingathome.org/
+01:48:13:      Copyright: (c) 2009-2018 foldingathome.org
+01:48:13:         Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+01:48:13:           Args: --config C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\config.xml
+01:48:13:         Config: C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\config.xml
+01:48:13:******************************** Build ********************************
+01:48:13:        Version: 7.5.1
+01:48:13:           Date: May 11 2018
+01:48:13:           Time: 13:06:32
+01:48:13:     Repository: Git
+01:48:13:       Revision: 4705bf53c635f88b8fe85af7675557e15d491ff0
+01:48:13:         Branch: master
+01:48:13:       Compiler: Visual C++ 2008
+01:48:13:        Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+01:48:13:       Platform: win32 10
+01:48:13:           Bits: 32
+01:48:13:           Mode: Release
+01:48:13:******************************* System ********************************
+01:48:13:            CPU: Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+01:48:13:         CPU ID: GenuineIntel Family 6 Model 42 Stepping 7
+01:48:13:           CPUs: 8
+01:48:13:         Memory: 7.98GiB
+01:48:13:    Free Memory: 5.38GiB
+01:48:13:        Threads: WINDOWS_THREADS
+01:48:13:     OS Version: 6.2
+01:48:13:    Has Battery: false
+01:48:13:     On Battery: false
+01:48:13:     UTC Offset: -6
+01:48:13:            PID: 5396
+01:48:13:            CWD: C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient
+01:48:13:             OS: Windows 10 Enterprise
+01:48:13:        OS Arch: AMD64
+01:48:13:           GPUs: 0
+01:48:13:  CUDA Device 0: Platform:0 Device:0 Bus:1 Slot:0 Compute:1.2 Driver:6.5
+01:48:13:OpenCL Device 0: Platform:0 Device:0 Bus:1 Slot:0 Compute:1.0 Driver:342.1
+01:48:13:  Win32 Service: false
+01:48:13:***********************************************************************
+01:48:13:<config>
+01:48:13:  <!-- Folding Core -->
+01:48:13:  <checkpoint v='30'/>
+01:48:13:
+01:48:13:  <!-- Folding Slot Configuration -->
+01:48:13:  <gpu v='false'/>
+01:48:13:
+01:48:13:  <!-- HTTP Server -->
+01:48:13:  <allow v='127.0.0.1 192.168.1.0/24'/>
+01:48:13:
+01:48:13:  <!-- Network -->
+01:48:13:  <proxy v=':8080'/>
+01:48:13:
+01:48:13:  <!-- Remote Command Server -->
+01:48:13:  <command-allow-no-pass v='127.0.0.1 192.168.1.0/24'/>
+01:48:13:
+01:48:13:  <!-- User Information -->
+01:48:13:  <passkey v='********************************'/>
+01:48:13:  <team v='32'/>
+01:48:13:  <user v='harlam357'/>
+01:48:13:
+01:48:13:  <!-- Folding Slots -->
+01:48:13:  <slot id='0' type='CPU'>
+01:48:13:    <client-type v='advanced'/>
+01:48:13:    <cpus v='8'/>
+01:48:13:    <max-packet-size v='big'/>
+01:48:13:    <pause-on-start v='true'/>
+01:48:13:  </slot>
+01:48:13:</config>
+01:48:13:Trying to access database...
+01:48:13:Successfully acquired database lock
+01:48:13:Enabled folding slot 00: PAUSED cpu:8 (by user)
+******************************* Date: 2020-02-16 *******************************
+15:50:00:FS00:Unpaused
+15:50:01:WU00:FS00:Starting
+15:50:01:WU00:FS00:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\cores/cores.foldingathome.org/v7/win/64bit/avx/Core_a7.fah/FahCore_a7.exe -dir 00 -suffix 01 -version 705 -lifeline 5396 -checkpoint 30 -np 8
+15:50:01:WU00:FS00:Started FahCore on PID 8416
+15:50:01:WU00:FS00:Core PID:1652
+15:50:01:WU00:FS00:FahCore 0xa7 started
+15:50:01:WU00:FS00:0xa7:*********************** Log Started 2020-02-16T15:50:01Z ***********************
+15:50:01:WU00:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+15:50:01:WU00:FS00:0xa7:       Type: 0xa7
+15:50:01:WU00:FS00:0xa7:       Core: Gromacs
+15:50:01:WU00:FS00:0xa7:       Args: -dir 00 -suffix 01 -version 705 -lifeline 8416 -checkpoint 30 -np 8
+15:50:01:WU00:FS00:0xa7:************************************ CBang *************************************
+15:50:01:WU00:FS00:0xa7:       Date: Oct 26 2019
+15:50:01:WU00:FS00:0xa7:       Time: 01:38:25
+15:50:01:WU00:FS00:0xa7:   Revision: c46a1a011a24143739ac7218c5a435f66777f62f
+15:50:01:WU00:FS00:0xa7:     Branch: master
+15:50:01:WU00:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:01:WU00:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:01:WU00:FS00:0xa7:   Platform: win32 10
+15:50:01:WU00:FS00:0xa7:       Bits: 64
+15:50:01:WU00:FS00:0xa7:       Mode: Release
+15:50:01:WU00:FS00:0xa7:************************************ System ************************************
+15:50:01:WU00:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+15:50:01:WU00:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 42 Stepping 7
+15:50:01:WU00:FS00:0xa7:       CPUs: 8
+15:50:01:WU00:FS00:0xa7:     Memory: 7.98GiB
+15:50:01:WU00:FS00:0xa7:Free Memory: 4.90GiB
+15:50:01:WU00:FS00:0xa7:    Threads: WINDOWS_THREADS
+15:50:01:WU00:FS00:0xa7: OS Version: 6.2
+15:50:01:WU00:FS00:0xa7:Has Battery: false
+15:50:01:WU00:FS00:0xa7: On Battery: false
+15:50:01:WU00:FS00:0xa7: UTC Offset: -6
+15:50:01:WU00:FS00:0xa7:        PID: 1652
+15:50:01:WU00:FS00:0xa7:        CWD: C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\work
+15:50:01:WU00:FS00:0xa7:******************************** Build - libFAH ********************************
+15:50:01:WU00:FS00:0xa7:    Version: 0.0.18
+15:50:01:WU00:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+15:50:01:WU00:FS00:0xa7:  Copyright: 2019 foldingathome.org
+15:50:01:WU00:FS00:0xa7:   Homepage: https://foldingathome.org/
+15:50:01:WU00:FS00:0xa7:       Date: Oct 26 2019
+15:50:01:WU00:FS00:0xa7:       Time: 01:52:30
+15:50:01:WU00:FS00:0xa7:   Revision: c1e3513b1bc0c16013668f2173ee969e5995b38e
+15:50:01:WU00:FS00:0xa7:     Branch: master
+15:50:01:WU00:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:01:WU00:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:01:WU00:FS00:0xa7:   Platform: win32 10
+15:50:01:WU00:FS00:0xa7:       Bits: 64
+15:50:01:WU00:FS00:0xa7:       Mode: Release
+15:50:01:WU00:FS00:0xa7:************************************ Build *************************************
+15:50:01:WU00:FS00:0xa7:       SIMD: avx_256
+15:50:01:WU00:FS00:0xa7:********************************************************************************
+15:50:01:WU00:FS00:0xa7:Project: 14402 (Run 0, Clone 4867, Gen 36)
+15:50:01:WU00:FS00:0xa7:Unit: 0x0000002680fccb095dcb2a5764eda89f
+15:50:01:WU00:FS00:0xa7:Digital signatures verified
+15:50:01:WU00:FS00:0xa7:Calling: mdrun -s frame36.tpr -o frame36.trr -x frame36.xtc -cpi state.cpt -cpt 30 -nt 8
+15:50:01:WU00:FS00:0xa7:ERROR:Guru Meditation #d340cdd4f8679768.1ad0a76fcc1f7f8b (17312.17428) '00/01/md.log'
+15:50:01:WU00:FS00:0xa7:WARNING:Unexpected exit() call
+15:50:02:WU00:FS00:0xa7:WARNING:Unexpected exit from science code
+15:50:02:WU00:FS00:0xa7:Saving result file ..\\logfile_01.txt
+15:50:02:WU00:FS00:0xa7:Saving result file frame36.trr
+15:50:02:WU00:FS00:0xa7:Saving result file frame36.xtc
+15:50:02:WU00:FS00:0xa7:Saving result file md.log
+15:50:02:WU00:FS00:0xa7:ERROR:Guru Meditation #d340cdd4f8679768.1ad0a76fcc1f7f8b (17312.17428) '00/01/md.log'
+15:50:05:WARNING:WU00:FS00:FahCore returned an unknown error code which probably indicates that it crashed
+15:50:05:WARNING:WU00:FS00:FahCore returned: UNKNOWN_ENUM (-1073740791 = 0xc0000409)
+15:50:05:WU00:FS00:Starting
+15:50:05:WU00:FS00:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\cores/cores.foldingathome.org/v7/win/64bit/avx/Core_a7.fah/FahCore_a7.exe -dir 00 -suffix 01 -version 705 -lifeline 5396 -checkpoint 30 -np 8
+15:50:05:WU00:FS00:Started FahCore on PID 10152
+15:50:05:WU00:FS00:Core PID:10096
+15:50:05:WU00:FS00:FahCore 0xa7 started
+15:50:05:WU00:FS00:0xa7:*********************** Log Started 2020-02-16T15:50:05Z ***********************
+15:50:05:WU00:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+15:50:05:WU00:FS00:0xa7:       Type: 0xa7
+15:50:05:WU00:FS00:0xa7:       Core: Gromacs
+15:50:05:WU00:FS00:0xa7:       Args: -dir 00 -suffix 01 -version 705 -lifeline 10152 -checkpoint 30 -np
+15:50:05:WU00:FS00:0xa7:             8
+15:50:05:WU00:FS00:0xa7:************************************ CBang *************************************
+15:50:05:WU00:FS00:0xa7:       Date: Oct 26 2019
+15:50:05:WU00:FS00:0xa7:       Time: 01:38:25
+15:50:05:WU00:FS00:0xa7:   Revision: c46a1a011a24143739ac7218c5a435f66777f62f
+15:50:05:WU00:FS00:0xa7:     Branch: master
+15:50:05:WU00:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:05:WU00:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:05:WU00:FS00:0xa7:   Platform: win32 10
+15:50:05:WU00:FS00:0xa7:       Bits: 64
+15:50:05:WU00:FS00:0xa7:       Mode: Release
+15:50:05:WU00:FS00:0xa7:************************************ System ************************************
+15:50:05:WU00:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+15:50:05:WU00:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 42 Stepping 7
+15:50:05:WU00:FS00:0xa7:       CPUs: 8
+15:50:05:WU00:FS00:0xa7:     Memory: 7.98GiB
+15:50:05:WU00:FS00:0xa7:Free Memory: 4.88GiB
+15:50:05:WU00:FS00:0xa7:    Threads: WINDOWS_THREADS
+15:50:05:WU00:FS00:0xa7: OS Version: 6.2
+15:50:05:WU00:FS00:0xa7:Has Battery: false
+15:50:05:WU00:FS00:0xa7: On Battery: false
+15:50:05:WU00:FS00:0xa7: UTC Offset: -6
+15:50:05:WU00:FS00:0xa7:        PID: 10096
+15:50:05:WU00:FS00:0xa7:        CWD: C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\work
+15:50:05:WU00:FS00:0xa7:******************************** Build - libFAH ********************************
+15:50:05:WU00:FS00:0xa7:    Version: 0.0.18
+15:50:05:WU00:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+15:50:05:WU00:FS00:0xa7:  Copyright: 2019 foldingathome.org
+15:50:05:WU00:FS00:0xa7:   Homepage: https://foldingathome.org/
+15:50:05:WU00:FS00:0xa7:       Date: Oct 26 2019
+15:50:05:WU00:FS00:0xa7:       Time: 01:52:30
+15:50:05:WU00:FS00:0xa7:   Revision: c1e3513b1bc0c16013668f2173ee969e5995b38e
+15:50:05:WU00:FS00:0xa7:     Branch: master
+15:50:05:WU00:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:05:WU00:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:05:WU00:FS00:0xa7:   Platform: win32 10
+15:50:05:WU00:FS00:0xa7:       Bits: 64
+15:50:05:WU00:FS00:0xa7:       Mode: Release
+15:50:05:WU00:FS00:0xa7:************************************ Build *************************************
+15:50:05:WU00:FS00:0xa7:       SIMD: avx_256
+15:50:05:WU00:FS00:0xa7:********************************************************************************
+15:50:05:WU00:FS00:0xa7:Project: 14402 (Run 0, Clone 4867, Gen 36)
+15:50:05:WU00:FS00:0xa7:Unit: 0x0000002680fccb095dcb2a5764eda89f
+15:50:05:WU00:FS00:0xa7:Digital signatures verified
+15:50:05:WU00:FS00:0xa7:Calling: mdrun -s frame36.tpr -o frame36.trr -x frame36.xtc -cpi state.cpt -cpt 30 -nt 8
+15:50:05:WU00:FS00:0xa7:ERROR:Guru Meditation #d340cdd4f8679768.1ad0a76fcc1f7f8b (17312.17428) '00/01/md.log'
+15:50:05:WU00:FS00:0xa7:WARNING:Unexpected exit() call
+15:50:05:WU00:FS00:0xa7:WARNING:Unexpected exit from science code
+15:50:05:WU00:FS00:0xa7:Saving result file ..\\logfile_01.txt
+15:50:05:WU00:FS00:0xa7:Saving result file frame36.trr
+15:50:05:WU00:FS00:0xa7:Saving result file frame36.xtc
+15:50:05:WU00:FS00:0xa7:Saving result file md.log
+15:50:05:WU00:FS00:0xa7:ERROR:Guru Meditation #d340cdd4f8679768.1ad0a76fcc1f7f8b (17312.17428) '00/01/md.log'
+15:50:08:WARNING:WU00:FS00:FahCore returned an unknown error code which probably indicates that it crashed
+15:50:08:WARNING:WU00:FS00:FahCore returned: UNKNOWN_ENUM (-1073740791 = 0xc0000409)
+15:50:08:WARNING:WU00:FS00:Too many errors, failing
+15:50:08:WU00:FS00:Sending unit results: id:00 state:SEND error:FAILED project:14402 run:0 clone:4867 gen:36 core:0xa7 unit:0x0000002680fccb095dcb2a5764eda89f
+15:50:08:WU00:FS00:Uploading 4.83MiB to 128.252.203.9
+15:50:08:WU00:FS00:Connecting to 128.252.203.9:8080
+15:50:09:WU01:FS00:Connecting to 65.254.110.245:8080
+15:50:09:WU01:FS00:Assigned to work server 128.252.203.9
+15:50:09:WU01:FS00:Requesting new work unit for slot 00: READY cpu:8 from 128.252.203.9
+15:50:09:WU01:FS00:Connecting to 128.252.203.9:8080
+15:50:10:WU01:FS00:Downloading 7.72MiB
+15:50:11:WU01:FS00:Download complete
+15:50:12:WU01:FS00:Received Unit: id:01 state:DOWNLOAD error:NO_ERROR project:14401 run:0 clone:1699 gen:47 core:0xa7 unit:0x0000003680fccb095dcb2feae9921471
+15:50:12:WU01:FS00:Starting
+15:50:12:WU01:FS00:Running FahCore: \"C:\\Program Files (x86)\\FAHClient/FAHCoreWrapper.exe\" C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\cores/cores.foldingathome.org/v7/win/64bit/avx/Core_a7.fah/FahCore_a7.exe -dir 01 -suffix 01 -version 705 -lifeline 5396 -checkpoint 30 -np 8
+15:50:12:WU01:FS00:Started FahCore on PID 12276
+15:50:12:WU01:FS00:Core PID:9836
+15:50:12:WU01:FS00:FahCore 0xa7 started
+15:50:12:WU01:FS00:0xa7:*********************** Log Started 2020-02-16T15:50:12Z ***********************
+15:50:12:WU01:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+15:50:12:WU01:FS00:0xa7:       Type: 0xa7
+15:50:12:WU01:FS00:0xa7:       Core: Gromacs
+15:50:12:WU01:FS00:0xa7:       Args: -dir 01 -suffix 01 -version 705 -lifeline 12276 -checkpoint 30 -np
+15:50:12:WU01:FS00:0xa7:             8
+15:50:12:WU01:FS00:0xa7:************************************ CBang *************************************
+15:50:12:WU01:FS00:0xa7:       Date: Oct 26 2019
+15:50:12:WU01:FS00:0xa7:       Time: 01:38:25
+15:50:12:WU01:FS00:0xa7:   Revision: c46a1a011a24143739ac7218c5a435f66777f62f
+15:50:12:WU01:FS00:0xa7:     Branch: master
+15:50:12:WU01:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:12:WU01:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:12:WU01:FS00:0xa7:   Platform: win32 10
+15:50:12:WU01:FS00:0xa7:       Bits: 64
+15:50:12:WU01:FS00:0xa7:       Mode: Release
+15:50:12:WU01:FS00:0xa7:************************************ System ************************************
+15:50:12:WU01:FS00:0xa7:        CPU: Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+15:50:12:WU01:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 42 Stepping 7
+15:50:12:WU01:FS00:0xa7:       CPUs: 8
+15:50:12:WU01:FS00:0xa7:     Memory: 7.98GiB
+15:50:12:WU01:FS00:0xa7:Free Memory: 4.87GiB
+15:50:12:WU01:FS00:0xa7:    Threads: WINDOWS_THREADS
+15:50:12:WU01:FS00:0xa7: OS Version: 6.2
+15:50:12:WU01:FS00:0xa7:Has Battery: false
+15:50:12:WU01:FS00:0xa7: On Battery: false
+15:50:12:WU01:FS00:0xa7: UTC Offset: -6
+15:50:12:WU01:FS00:0xa7:        PID: 9836
+15:50:12:WU01:FS00:0xa7:        CWD: C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\work
+15:50:12:WU01:FS00:0xa7:******************************** Build - libFAH ********************************
+15:50:12:WU01:FS00:0xa7:    Version: 0.0.18
+15:50:12:WU01:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+15:50:12:WU01:FS00:0xa7:  Copyright: 2019 foldingathome.org
+15:50:12:WU01:FS00:0xa7:   Homepage: https://foldingathome.org/
+15:50:12:WU01:FS00:0xa7:       Date: Oct 26 2019
+15:50:12:WU01:FS00:0xa7:       Time: 01:52:30
+15:50:12:WU01:FS00:0xa7:   Revision: c1e3513b1bc0c16013668f2173ee969e5995b38e
+15:50:12:WU01:FS00:0xa7:     Branch: master
+15:50:12:WU01:FS00:0xa7:   Compiler: Visual C++ 2008
+15:50:12:WU01:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+15:50:12:WU01:FS00:0xa7:   Platform: win32 10
+15:50:12:WU01:FS00:0xa7:       Bits: 64
+15:50:12:WU01:FS00:0xa7:       Mode: Release
+15:50:12:WU01:FS00:0xa7:************************************ Build *************************************
+15:50:12:WU01:FS00:0xa7:       SIMD: avx_256
+15:50:12:WU01:FS00:0xa7:********************************************************************************
+15:50:12:WU01:FS00:0xa7:Project: 14401 (Run 0, Clone 1699, Gen 47)
+15:50:12:WU01:FS00:0xa7:Unit: 0x0000003680fccb095dcb2feae9921471
+15:50:12:WU01:FS00:0xa7:Reading tar file core.xml
+15:50:12:WU01:FS00:0xa7:Reading tar file frame47.tpr
+15:50:12:WU01:FS00:0xa7:Digital signatures verified
+15:50:12:WU01:FS00:0xa7:Calling: mdrun -s frame47.tpr -o frame47.trr -x frame47.xtc -cpt 30 -nt 8
+15:50:12:WU01:FS00:0xa7:Steps: first=5875000 total=125000
+15:50:14:WU00:FS00:Upload 46.56%
+15:50:16:WU01:FS00:0xa7:Completed 1 out of 125000 steps (0%)
+15:50:17:WU00:FS00:Upload complete
+15:50:17:WU00:FS00:Server responded WORK_QUIT (404)
+15:50:17:WARNING:WU00:FS00:Server did not like results, dumping
+15:50:17:WU00:FS00:Cleaning up
+15:52:23:WU01:FS00:0xa7:Completed 1250 out of 125000 steps (1%)
+15:54:29:WU01:FS00:0xa7:Completed 2500 out of 125000 steps (2%)
+15:54:53:ERROR:Receive error: 10054: An existing connection was forcibly closed by the remote host.
+15:56:33:WU01:FS00:0xa7:Completed 3750 out of 125000 steps (3%)
+15:58:38:WU01:FS00:0xa7:Completed 5000 out of 125000 steps (4%)
+16:00:44:WU01:FS00:0xa7:Completed 6250 out of 125000 steps (5%)
+16:02:48:WU01:FS00:0xa7:Completed 7500 out of 125000 steps (6%)
+16:04:51:WU01:FS00:0xa7:Completed 8750 out of 125000 steps (7%)
+16:06:56:WU01:FS00:0xa7:Completed 10000 out of 125000 steps (8%)
+16:09:00:WU01:FS00:0xa7:Completed 11250 out of 125000 steps (9%)
+16:11:05:WU01:FS00:0xa7:Completed 12500 out of 125000 steps (10%)

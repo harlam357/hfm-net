@@ -185,6 +185,7 @@ namespace HFM.Log
                {
                   case LogLineType.WorkUnitWorking:
                      unitRunData.UnitStartTimeStamp = line.TimeStamp;
+                     unitRunData.WorkUnitResult = Internal.WorkUnitResult.None;
                      break;
                   case LogLineType.WorkUnitFrame:
                      if (unitRunData.UnitStartTimeStamp == null)
@@ -217,6 +218,11 @@ namespace HFM.Log
                      break;
                   case LogLineType.WorkUnitCoreReturn:
                      unitRunData.WorkUnitResult = (string)line.Data;
+                     if (unitRunData.WorkUnitResult == Internal.WorkUnitResult.INTERRUPTED ||
+                         unitRunData.WorkUnitResult == Internal.WorkUnitResult.UNKNOWN_ENUM)
+                     { 
+                        unitRunData.FramesObserved = 0;
+                     }
                      break;
                }
             }

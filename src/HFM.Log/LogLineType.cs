@@ -159,6 +159,10 @@ namespace HFM.Log
       /// Line indicates the client has been shutdown (Legacy clients only)
       /// </summary>
       public const int ClientShutdown = 32;
+      /// <summary>
+      /// Line indicates the client detected too many failures to run the same work unit (FahClient clients only)
+      /// </summary>
+      public const int WorkUnitTooManyErrors = 33;
 
       private readonly int _value;
 
