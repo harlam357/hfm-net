@@ -22,8 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Preferences;
 
@@ -425,7 +425,7 @@ namespace HFM.Core.WorkUnits
             if (newName == null) throw new ArgumentNullException(nameof(newName));
 
             // Core library - should have a valid client name 
-            Debug.Assert(ClientSettings.ValidateName(newName));
+            Debug.Assert(DataTypes.ClientSettings.ValidateName(newName));
 
             // GetBenchmarks() BEFORE entering write lock 
             // because it uses a read lock

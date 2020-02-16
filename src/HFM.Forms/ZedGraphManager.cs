@@ -25,7 +25,7 @@ using System.Text;
 
 using ZedGraph;
 
-using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Proteins;
 
 namespace HFM.Forms
