@@ -133,8 +133,8 @@
     <Compile Include="WorkUnits\ProteinServiceTests.cs" />
     <Compile Include="Data\WorkUnitHistoryQueryDataContainerTests.cs" />
     <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
-    <Compile Include="Data\UnitInfoDatabaseReadOnlyTests.cs" />
-    <Compile Include="Data\UnitInfoDatabaseTests.cs" />
+    <Compile Include="Data\WorkUnitRepositoryReadOnlyTests.cs" />
+    <Compile Include="Data\WorkUnitRepositoryTests.cs" />
     <Compile Include="UnitInfoExtensions.cs" />
     <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
     <Compile Include="ValidateTests.cs" />

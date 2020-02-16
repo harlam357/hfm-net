@@ -40,7 +40,7 @@ using HFM.Proteins;
 namespace HFM.Core.Data
 {
    [TestFixture]
-   public class UnitInfoDatabaseTests
+   public class WorkUnitRepositoryTests
    {
       private const string TestDataFilesFolder = "..\\..\\TestFiles";
 

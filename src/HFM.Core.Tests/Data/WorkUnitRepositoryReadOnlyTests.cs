@@ -28,7 +28,7 @@ using HFM.Core.WorkUnits;
 namespace HFM.Core.Data
 {
     [TestFixture]
-    public class UnitInfoDatabaseReadOnlyTests
+    public class WorkUnitRepositoryReadOnlyTests
     {
         private const string TestDataFilesFolder = "..\\..\\TestFiles";
 
@@ -39,7 +39,7 @@ namespace HFM.Core.Data
         private readonly string _testData2FileCopy = Path.ChangeExtension(TestData2File, ".dbcopy");
 
         private WorkUnitRepository _database;
-        private readonly IProteinService _proteinService = UnitInfoDatabaseTests.CreateProteinService();
+        private readonly IProteinService _proteinService = WorkUnitRepositoryTests.CreateProteinService();
 
         #region Setup and TearDown
 
