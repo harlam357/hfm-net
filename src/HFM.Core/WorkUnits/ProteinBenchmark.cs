@@ -23,155 +23,149 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.WorkUnits
 {
-   [Serializable]
-   [DataContract]
-   public sealed class ProteinBenchmark
-   {
-      private const int DefaultMaxFrames = 300;
+    [Serializable]
+    [DataContract]
+    public sealed class ProteinBenchmark
+    {
+        private const int DefaultMaxFrames = 300;
 
-      private static readonly object FrameTimesListLock = new object();
-   
-      #region Properties
-      
-      /// <summary>
-      /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
-      /// </summary>
-      public string OwningSlotName
-      {
-         get { return OwningClientName.AppendSlotId(OwningSlotId); }
-      }
+        private static readonly object FrameTimesListLock = new object();
 
-      /// <summary>
-      /// Name of the folding client that owns this object (name given during client setup).
-      /// </summary>
-      [DataMember(Order = 1)]
-      public string OwningClientName { get; set; }
+        #region Properties
 
-      /// <summary>
-      /// Path of the folding slot that own this object.
-      /// </summary>
-      [DataMember(Order = 2)]
-      public string OwningClientPath { get; set; }
+        /// <summary>
+        /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
+        /// </summary>
+        public string OwningSlotName
+        {
+            get { return OwningClientName.AppendSlotId(OwningSlotId); }
+        }
 
-      /// <summary>
-      /// Identification number of the folding slot on the folding client that owns this object.
-      /// </summary>
-      [DataMember(Order = 6, IsRequired = true)]
-      public int OwningSlotId { get; set; }
+        /// <summary>
+        /// Name of the folding client that owns this object (name given during client setup).
+        /// </summary>
+        [DataMember(Order = 1)]
+        public string OwningClientName { get; set; }
 
-      /// <summary>
-      /// Project ID
-      /// </summary>
-      [DataMember(Order = 3)]
-      public int ProjectID { get; set; }
+        /// <summary>
+        /// Path of the folding slot that own this object.
+        /// </summary>
+        [DataMember(Order = 2)]
+        public string OwningClientPath { get; set; }
 
-      /// <summary>
-      /// Minimum Frame Time
-      /// </summary>
-      [DataMember(Order = 4)]
-      public TimeSpan MinimumFrameTime { get; set; }
+        /// <summary>
+        /// Identification number of the folding slot on the folding client that owns this object.
+        /// </summary>
+        [DataMember(Order = 6, IsRequired = true)]
+        public int OwningSlotId { get; set; }
 
-      /// <summary>
-      /// Average Frame Time
-      /// </summary>
-      public TimeSpan AverageFrameTime
-      {
-         get
-         {
-            if (FrameTimes.Count > 0)
+        /// <summary>
+        /// Project ID
+        /// </summary>
+        [DataMember(Order = 3)]
+        public int ProjectID { get; set; }
+
+        /// <summary>
+        /// Minimum Frame Time
+        /// </summary>
+        [DataMember(Order = 4)]
+        public TimeSpan MinimumFrameTime { get; set; }
+
+        /// <summary>
+        /// Average Frame Time
+        /// </summary>
+        public TimeSpan AverageFrameTime
+        {
+            get
             {
-               TimeSpan totalTime = TimeSpan.Zero;
-               lock (FrameTimesListLock)
-               {
-                  foreach (ProteinFrameTime time in FrameTimes)
-                  {
-                     totalTime = totalTime.Add(time.Duration);
-                  }
-               }
+                if (FrameTimes.Count > 0)
+                {
+                    TimeSpan totalTime = TimeSpan.Zero;
+                    lock (FrameTimesListLock)
+                    {
+                        foreach (ProteinFrameTime time in FrameTimes)
+                        {
+                            totalTime = totalTime.Add(time.Duration);
+                        }
+                    }
 
-               return TimeSpan.FromSeconds((Convert.ToInt32(totalTime.TotalSeconds) / FrameTimes.Count));
+                    return TimeSpan.FromSeconds(Convert.ToInt32(totalTime.TotalSeconds) / FrameTimes.Count);
+                }
+
+                return TimeSpan.Zero;
+            }
+        }
+
+        /// <summary>
+        /// Frame Times List
+        /// </summary>
+        [DataMember(Order = 5)]
+        public List<ProteinFrameTime> FrameTimes { get; set; }
+
+        #endregion
+
+        public ProteinBenchmark()
+        {
+            OwningSlotId = -1;
+            MinimumFrameTime = TimeSpan.Zero;
+            FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
+        }
+
+        /// <summary>
+        /// Set Next Frame Time
+        /// </summary>
+        /// <param name="frameTime">Frame Time</param>
+        public bool SetFrameDuration(TimeSpan frameTime)
+        {
+            if (frameTime > TimeSpan.Zero)
+            {
+                if (frameTime < MinimumFrameTime || MinimumFrameTime.Equals(TimeSpan.Zero))
+                {
+                    MinimumFrameTime = frameTime;
+                }
+
+                lock (FrameTimesListLock)
+                {
+                    // Dequeue once we have the Maximum number of frame times
+                    if (FrameTimes.Count == DefaultMaxFrames)
+                    {
+                        FrameTimes.RemoveAt(DefaultMaxFrames - 1);
+                    }
+                    FrameTimes.Insert(0, new ProteinFrameTime { Duration = frameTime });
+                }
+
+                return true;
             }
 
-            return TimeSpan.Zero;
-         }
-      }
+            return false;
+        }
 
-      /// <summary>
-      /// Frame Times List
-      /// </summary>
-      [DataMember(Order = 5)]
-      public List<ProteinFrameTime> FrameTimes { get; set; }
-
-      #endregion
-
-      #region Constructor
-      
-      /// <summary>
-      /// Default Constructor
-      /// </summary>
-      public ProteinBenchmark()
-      {
-         OwningSlotId = -1;
-         MinimumFrameTime = TimeSpan.Zero;
-         FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
-      }
-      
-      #endregion
-      
-      #region Implementation
-      
-      /// <summary>
-      /// Set Next Frame Time
-      /// </summary>
-      /// <param name="frameTime">Frame Time</param>
-      public bool SetFrameDuration(TimeSpan frameTime)
-      {
-         if (frameTime > TimeSpan.Zero)
-         {
-            if (frameTime < MinimumFrameTime || MinimumFrameTime.Equals(TimeSpan.Zero))
-            {
-               MinimumFrameTime = frameTime;
-            }
-
+        /// <summary>
+        /// Refresh the Minimum Frame Time for this Benchmark based on current List of Frame Times
+        /// </summary>
+        public void UpdateMinimumFrameTime()
+        {
+            TimeSpan minimumFrameTime = TimeSpan.Zero;
             lock (FrameTimesListLock)
             {
-               // Dequeue once we have the Maximum number of frame times
-               if (FrameTimes.Count == DefaultMaxFrames)
-               {
-                  FrameTimes.RemoveAt(DefaultMaxFrames - 1);
-               }
-               FrameTimes.Insert(0, new ProteinFrameTime { Duration = frameTime });
+                foreach (ProteinFrameTime frameTime in FrameTimes)
+                {
+                    if (frameTime.Duration < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero))
+                    {
+                        minimumFrameTime = frameTime.Duration;
+                    }
+                }
             }
 
-            return true;
-         }
-         
-         return false;
-      }
-
-      /// <summary>
-      /// Refresh the Minimum Frame Time for this Benchmark based on current List of Frame Times
-      /// </summary>
-      public void UpdateMinimumFrameTime()
-      {
-         TimeSpan minimumFrameTime = TimeSpan.Zero;
-         lock (FrameTimesListLock)
-         {
-            foreach (ProteinFrameTime frameTime in FrameTimes)
+            if (minimumFrameTime.Equals(TimeSpan.Zero) == false)
             {
-               if (frameTime.Duration < minimumFrameTime || minimumFrameTime.Equals(TimeSpan.Zero))
-               {
-                  minimumFrameTime = frameTime.Duration;
-               }
+                MinimumFrameTime = minimumFrameTime;
             }
-         }
+        }
 
-         if (minimumFrameTime.Equals(TimeSpan.Zero) == false)
-         {
-            MinimumFrameTime = minimumFrameTime;
-         }
-      }
-      
-      #endregion
-   }
+        internal ProteinBenchmarkSlotIdentifier ToSlotIdentifier()
+        {
+            return new ProteinBenchmarkSlotIdentifier(OwningSlotName, OwningClientPath);
+        }
+    }
 }

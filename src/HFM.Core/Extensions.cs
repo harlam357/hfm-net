@@ -22,8 +22,6 @@ using System.Globalization;
 
 using HFM.Client.DataTypes;
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
-using HFM.Core.WorkUnits;
 
 namespace HFM.Core
 {
@@ -174,15 +172,6 @@ namespace HFM.Core
                 default:
                     return SlotType.Unknown;
             }
-        }
-
-        #endregion
-
-        #region ProteinBenchmark
-
-        internal static ProteinBenchmarkSlotIdentifier ToSlotIdentifier(this ProteinBenchmark proteinBenchmark)
-        {
-            return new ProteinBenchmarkSlotIdentifier(proteinBenchmark.OwningSlotName, proteinBenchmark.OwningClientPath);
         }
 
         #endregion

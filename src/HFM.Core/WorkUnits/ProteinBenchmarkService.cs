@@ -62,28 +62,11 @@ namespace HFM.Core.WorkUnits
         void RemoveAll(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
 
         /// <summary>
-        /// Determines whether the ProteinBenchmarkCollection contains a specific value.
-        /// </summary>
-        /// <returns>
-        /// true if <paramref name="slotIdentifier"/> is found in the ProteinBenchmarkCollection; otherwise, false.
-        /// </returns>
-        /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
-        bool Contains(ProteinBenchmarkSlotIdentifier slotIdentifier);
-
-        /// <summary>
         /// Gets a list of benchmark project numbers.
         /// </summary>
         /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
-        ICollection<Int32> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier);
-
-        /// <summary>
-        /// Gets a list of ProteinBenchmark objects.
-        /// </summary>
-        /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
-        ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier);
+        ICollection<int> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier);
 
         /// <summary>
         /// Gets a list of ProteinBenchmark objects.
@@ -91,7 +74,7 @@ namespace HFM.Core.WorkUnits
         /// <param name="slotIdentifier">The slot identifier to locate in the ProteinBenchmarkCollection.</param>
         /// <param name="projectId">The Folding@Home project number.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
-        ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, Int32 projectId);
+        ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
 
         /// <summary>
         /// Updates the owner name of all the elements in ProteinBenchmarkCollection that match the given client name and path.
@@ -110,24 +93,12 @@ namespace HFM.Core.WorkUnits
         /// <param name="projectId">The Folding@Home project number.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="slotIdentifier"/> is null.</exception>
         void UpdateMinimumFrameTime(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
-
-        /// <summary>
-        /// Adds a ProteinBenchmark to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-        /// </summary>
-        /// <param name="item">The ProteinBenchmark to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="item"/> already exists in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</exception>
-        void Add(ProteinBenchmark item);
-
-        ICollection<ProteinBenchmark> GetAll();
     }
 
     public sealed class ProteinBenchmarkService : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkService
     {
         public const string DefaultFileName = "BenchmarkCache.dat";
         
-        #region Properties
-
         public override Serializers.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>();
 
         public ICollection<ProteinBenchmarkSlotIdentifier> SlotIdentifiers
@@ -141,11 +112,7 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        #endregion
-
         private readonly ReaderWriterLockSlim _cacheLock;
-
-        #region Constructor
 
         public ProteinBenchmarkService() : this(null)
         {
@@ -162,15 +129,11 @@ namespace HFM.Core.WorkUnits
             _cacheLock = new ReaderWriterLockSlim();
         }
 
-        #endregion
-
         #region Implementation
-
-        #region UpdateData
 
         public void UpdateData(WorkUnit workUnit, int startingFrame, int endingFrame)
         {
-            Debug.Assert(workUnit != null);
+            if (workUnit == null) throw new ArgumentNullException(nameof(workUnit));
 
             // project is not known, don't add to benchmark data
             if (workUnit.ProjectIsUnknown()) return;
@@ -178,8 +141,7 @@ namespace HFM.Core.WorkUnits
             // no progress has been made so stub out
             if (startingFrame > endingFrame) return;
 
-            // GetBenchmark() BEFORE entering write lock 
-            // because it uses a read lock
+            // GetBenchmark() BEFORE entering write lock because it uses a read lock
             ProteinBenchmark findBenchmark = GetBenchmark(workUnit);
             // write lock
             _cacheLock.EnterWriteLock();
@@ -234,8 +196,6 @@ namespace HFM.Core.WorkUnits
 
             return result;
         }
-
-        #endregion
 
         public ProteinBenchmark GetBenchmark(WorkUnit workUnit)
         {
@@ -303,33 +263,7 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        public bool Contains(ProteinBenchmarkSlotIdentifier slotIdentifier)
-        {
-            if (slotIdentifier == null) throw new ArgumentNullException(nameof(slotIdentifier));
-
-            _cacheLock.EnterReadLock();
-            try
-            {
-                return Data.Find(benchmark =>
-                                 {
-                                     if (slotIdentifier.AllSlots)
-                                     {
-                                         return true;
-                                     }
-                                     if (benchmark.ToSlotIdentifier().Equals(slotIdentifier))
-                                     {
-                                         return true;
-                                     }
-                                     return false;
-                                 }) != null;
-            }
-            finally
-            {
-                _cacheLock.ExitReadLock();
-            }
-        }
-
-        public ICollection<Int32> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier)
+        public ICollection<int> GetBenchmarkProjects(ProteinBenchmarkSlotIdentifier slotIdentifier)
         {
             if (slotIdentifier == null) throw new ArgumentNullException(nameof(slotIdentifier));
 
@@ -366,31 +300,7 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        public ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier)
-        {
-            if (slotIdentifier == null) throw new ArgumentNullException(nameof(slotIdentifier));
-
-            _cacheLock.EnterReadLock();
-            try
-            {
-                var list = Data.FindAll(benchmark =>
-                                        {
-                                            if (slotIdentifier.AllSlots)
-                                            {
-                                                return true;
-                                            }
-                                            return benchmark.ToSlotIdentifier().Equals(slotIdentifier);
-                                        });
-
-                return list.AsReadOnly();
-            }
-            finally
-            {
-                _cacheLock.ExitReadLock();
-            }
-        }
-
-        public ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, Int32 projectId)
+        public ICollection<ProteinBenchmark> GetBenchmarks(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId)
         {
             if (slotIdentifier == null) throw new ArgumentNullException(nameof(slotIdentifier));
 
@@ -512,34 +422,5 @@ namespace HFM.Core.WorkUnits
         }
 
         #endregion
-
-        public void Add(ProteinBenchmark item)
-        {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            if (Data.Contains(item)) throw new ArgumentException("The benchmark already exists.", nameof(item));
-
-            _cacheLock.EnterWriteLock();
-            try
-            {
-                Data.Add(item);
-            }
-            finally
-            {
-                _cacheLock.ExitWriteLock();
-            }
-        }
-
-        public ICollection<ProteinBenchmark> GetAll()
-        {
-            _cacheLock.EnterReadLock();
-            try
-            {
-                return Data.ToList();
-            }
-            finally
-            {
-                _cacheLock.ExitReadLock();
-            }
-        }
     }
 }

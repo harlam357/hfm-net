@@ -16,22 +16,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
+
 using System;
 using System.Runtime.Serialization;
 
 namespace HFM.Core.WorkUnits
 {
-   [DataContract]
-   public sealed class ProteinFrameTime
-   {
-      public TimeSpan Duration { get; set; }
+    [DataContract]
+    public sealed class ProteinFrameTime
+    {
+        public TimeSpan Duration { get; set; }
 
-      [DataMember(Order = 1)]
-      public long DurationTicks
-      {
-         get { return Duration.Ticks; }
-         set { Duration = new TimeSpan(value); }
-      }
-   }
+        [DataMember(Order = 1)]
+        public long DurationTicks
+        {
+            get => Duration.Ticks;
+            set => Duration = new TimeSpan(value);
+        }
+    }
 }
