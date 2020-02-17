@@ -45,7 +45,7 @@ namespace HFM.Core.Client
         public void FahClient_UpdateBenchmarkData_Test()
         {
             // setup
-            var benchmarks = new ProteinBenchmarkService();
+            var benchmarks = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
             var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarks, WorkUnitRepository = repository };
 
@@ -80,7 +80,7 @@ namespace HFM.Core.Client
             var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
 
             // Assert (pre-condition)
-            Assert.IsFalse(benchmarks.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
+            Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
             Assert.IsFalse(new List<int>(benchmarks.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
             Assert.IsNull(benchmarks.GetBenchmark(currentWorkUnit.Data));
 
@@ -88,7 +88,7 @@ namespace HFM.Core.Client
             fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
 
             // Assert
-            Assert.IsTrue(benchmarks.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
+            Assert.IsTrue(benchmarks.DataContainer.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
             Assert.IsTrue(new List<int>(benchmarks.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
             Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarks.GetBenchmark(currentWorkUnit.Data).AverageFrameTime);
 

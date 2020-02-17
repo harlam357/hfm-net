@@ -25,7 +25,6 @@ using System.Threading;
 
 using HFM.Core.Data;
 using HFM.Log;
-using HFM.Preferences;
 
 namespace HFM.Core.WorkUnits
 {
@@ -95,37 +94,25 @@ namespace HFM.Core.WorkUnits
         void UpdateMinimumFrameTime(ProteinBenchmarkSlotIdentifier slotIdentifier, int projectId);
     }
 
-    public sealed class ProteinBenchmarkService : DataContainer<List<ProteinBenchmark>>, IProteinBenchmarkService
+    public class ProteinBenchmarkService : IProteinBenchmarkService
     {
-        public const string DefaultFileName = "BenchmarkCache.dat";
-        
-        public override Serializers.IFileSerializer<List<ProteinBenchmark>> DefaultSerializer => new Serializers.ProtoBufFileSerializer<List<ProteinBenchmark>>();
-
         public ICollection<ProteinBenchmarkSlotIdentifier> SlotIdentifiers
         {
             get
             {
-                var slotIdentifiers = Data.Select(x => x.ToSlotIdentifier()).Distinct().ToList();
+                var slotIdentifiers = DataContainer.Data.Select(x => x.ToSlotIdentifier()).Distinct().ToList();
                 slotIdentifiers.Add(new ProteinBenchmarkSlotIdentifier());
                 slotIdentifiers.Sort();
                 return slotIdentifiers.AsReadOnly();
             }
         }
 
+        public ProteinBenchmarkDataContainer DataContainer { get; }
         private readonly ReaderWriterLockSlim _cacheLock;
 
-        public ProteinBenchmarkService() : this(null)
+        public ProteinBenchmarkService(ProteinBenchmarkDataContainer dataContainer)
         {
-
-        }
-
-        public ProteinBenchmarkService(IPreferenceSet prefs)
-        {
-            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
-            if (!String.IsNullOrEmpty(path))
-            {
-                FilePath = System.IO.Path.Combine(path, DefaultFileName);
-            }
+            DataContainer = dataContainer;
             _cacheLock = new ReaderWriterLockSlim();
         }
 
@@ -159,14 +146,14 @@ namespace HFM.Core.WorkUnits
 
                     if (UpdateFrames(workUnit, startingFrame, endingFrame, newBenchmark))
                     {
-                        Data.Add(newBenchmark);
+                        DataContainer.Data.Add(newBenchmark);
                     }
                 }
                 else
                 {
                     UpdateFrames(workUnit, startingFrame, endingFrame, findBenchmark);
                 }
-                Write();
+                DataContainer.Write();
             }
             finally
             {
@@ -188,10 +175,6 @@ namespace HFM.Core.WorkUnits
                         result = true;
                     }
                 }
-                else
-                {
-                    Logger.DebugFormat("({0}) FrameID '{1}' not found for Project {2}", workUnit.OwningSlotName, i, workUnit.ProjectID);
-                }
             }
 
             return result;
@@ -204,7 +187,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                return Data.Find(benchmark => Equals(benchmark, workUnit));
+                return DataContainer.Data.Find(benchmark => Equals(benchmark, workUnit));
             }
             finally
             {
@@ -227,8 +210,8 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                Data.RemoveAll(benchmark => benchmark.ToSlotIdentifier().Equals(slotIdentifier));
-                Write();
+                DataContainer.Data.RemoveAll(benchmark => benchmark.ToSlotIdentifier().Equals(slotIdentifier));
+                DataContainer.Write();
             }
             finally
             {
@@ -243,7 +226,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                Data.RemoveAll(benchmark =>
+                DataContainer.Data.RemoveAll(benchmark =>
                                {
                                    if (slotIdentifier.AllSlots)
                                    {
@@ -255,7 +238,7 @@ namespace HFM.Core.WorkUnits
                                    }
                                    return false;
                                });
-                Write();
+                DataContainer.Write();
             }
             finally
             {
@@ -271,7 +254,7 @@ namespace HFM.Core.WorkUnits
             try
             {
                 var projects = new List<int>();
-                foreach (var benchmark in Data)
+                foreach (var benchmark in DataContainer.Data)
                 {
                     if (projects.Contains(benchmark.ProjectID))
                     {
@@ -307,7 +290,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                var list = Data.FindAll(benchmark =>
+                var list = DataContainer.Data.FindAll(benchmark =>
                                         {
                                             if (slotIdentifier.AllSlots)
                                             {
@@ -348,7 +331,7 @@ namespace HFM.Core.WorkUnits
                 {
                     benchmark.OwningClientName = newName;
                 }
-                Write();
+                DataContainer.Write();
             }
             finally
             {
@@ -373,7 +356,7 @@ namespace HFM.Core.WorkUnits
                 {
                     benchmark.OwningClientPath = newPath;
                 }
-                Write();
+                DataContainer.Write();
             }
             finally
             {
@@ -389,8 +372,8 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                return Data.FindAll(benchmark => benchmark.OwningClientName.Equals(clientName) &&
-                                                 FileSystemPath.Equals(benchmark.OwningClientPath, clientPath)).AsReadOnly();
+                return DataContainer.Data.FindAll(benchmark => benchmark.OwningClientName.Equals(clientName) &&
+                                                                FileSystemPath.Equals(benchmark.OwningClientPath, clientPath)).AsReadOnly();
             }
             finally
             {
@@ -413,7 +396,7 @@ namespace HFM.Core.WorkUnits
                 {
                     benchmark.UpdateMinimumFrameTime();
                 }
-                Write();
+                DataContainer.Write();
             }
             finally
             {

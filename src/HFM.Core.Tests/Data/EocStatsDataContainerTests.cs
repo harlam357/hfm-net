@@ -21,10 +21,8 @@ using System;
 using System.IO;
 
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.Services;
-using HFM.Preferences;
 
 namespace HFM.Core.Data
 {

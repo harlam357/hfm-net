@@ -27,142 +27,147 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Core.Net;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration
 {
-   [ExcludeFromCodeCoverage]
-   public class ContainerInstaller : IWindsorInstaller
-   {
-      public string ApplicationPath { get; set; }
+    [ExcludeFromCodeCoverage]
+    public class ContainerInstaller : IWindsorInstaller
+    {
+        public string ApplicationPath { get; set; }
 
-      public string ApplicationDataFolderPath { get; set; }
+        public string ApplicationDataFolderPath { get; set; }
 
-      public void Install(IWindsorContainer container, IConfigurationStore store)
-      {
-         container.Register(
-            Component.For<ILazyComponentLoader>()
-               .ImplementedBy<LazyOfTComponentLoader>());
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            container.Register(
+               Component.For<ILazyComponentLoader>()
+                  .ImplementedBy<LazyOfTComponentLoader>());
 
-         #region Service Interfaces
+            #region Service Interfaces
 
-         // ILogger - Singleton
-         container.Register(
-            Component.For<ILogger>()
-               .ImplementedBy<Logging.Logger>()
-               .UsingFactoryMethod(() => new Logging.Logger(ApplicationDataFolderPath)));
+            // ILogger - Singleton
+            container.Register(
+               Component.For<ILogger>()
+                  .ImplementedBy<Logging.Logger>()
+                  .UsingFactoryMethod(() => new Logging.Logger(ApplicationDataFolderPath)));
 
-         // IPreferenceSet - Singleton
-         container.Register(
-            Component.For<Preferences.IPreferenceSet>()
-               .ImplementedBy<Preferences.PreferenceSet>()
-               .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
-               .OnCreate((kernel, instance) =>
-               {
-                  var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
-                  instance.PreferenceChanged += (s, e) =>
+            // IPreferenceSet - Singleton
+            container.Register(
+               Component.For<Preferences.IPreferenceSet>()
+                  .ImplementedBy<Preferences.PreferenceSet>()
+                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
+                  .OnCreate((kernel, instance) =>
                   {
-                     if (e.Preference == Preferences.Preference.MessageLevel)
-                     {
-                        var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
-                        if (newLevel != logger.Level)
-                        {
-                           logger.Level = newLevel;
-                           logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
-                        }
-                     }
-                  };
-               }));
+                      var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
+                      instance.PreferenceChanged += (s, e) =>
+                   {
+                         if (e.Preference == Preferences.Preference.MessageLevel)
+                         {
+                             var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
+                             if (newLevel != logger.Level)
+                             {
+                                 logger.Level = newLevel;
+                                 logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
+                             }
+                         }
+                     };
+                  }));
 
-         // INetworkOps - Transient
-         container.Register(
-            Component.For<INetworkOps>()
-               .ImplementedBy<NetworkOps>()
-                  .LifeStyle.Transient);
+            // INetworkOps - Transient
+            container.Register(
+               Component.For<INetworkOps>()
+                  .ImplementedBy<NetworkOps>()
+                     .LifeStyle.Transient);
 
-         // IWorkUnitRepository - Singleton
-         container.Register(
-            Component.For<Data.IWorkUnitRepository>()
-               .ImplementedBy<Data.WorkUnitRepository>());
+            // IWorkUnitRepository - Singleton
+            container.Register(
+               Component.For<Data.IWorkUnitRepository>()
+                  .ImplementedBy<Data.WorkUnitRepository>());
 
-         // IClientConfiguration - Singleton
-         container.Register(
-            Component.For<IClientConfiguration>()
-               .ImplementedBy<ClientConfiguration>()
-                  .OnCreate((kernel, instance) => instance.SubscribeToEvents(
-                     kernel.Resolve<IProteinBenchmarkService>())));
+            // IClientConfiguration - Singleton
+            container.Register(
+               Component.For<IClientConfiguration>()
+                  .ImplementedBy<ClientConfiguration>()
+                     .OnCreate((kernel, instance) => instance.SubscribeToEvents(
+                        kernel.Resolve<IProteinBenchmarkService>())));
 
-         // ClientFactory - Singleton
-         container.Register(
-            Component.For<ClientFactory>());
+            // ClientFactory - Singleton
+            container.Register(
+               Component.For<ClientFactory>());
 
-         // HFM.Core.FahClient - Transient
-         container.Register(
-            Component.For<FahClient>()
-               .LifeStyle.Transient,
-            Component.For<IFahClientFactory>()
-               .AsFactory());
+            // HFM.Core.FahClient - Transient
+            container.Register(
+               Component.For<FahClient>()
+                  .LifeStyle.Transient,
+               Component.For<IFahClientFactory>()
+                  .AsFactory());
 
-         // HFM.Client.TypedMessageConnection - Transient
-         container.Register(
-            Component.For<HFM.Client.IMessageConnection>()
-               .ImplementedBy<HFM.Client.TypedMessageConnection>()
-                  .LifeStyle.Transient);
+            // HFM.Client.TypedMessageConnection - Transient
+            container.Register(
+               Component.For<HFM.Client.IMessageConnection>()
+                  .ImplementedBy<HFM.Client.TypedMessageConnection>()
+                     .LifeStyle.Transient);
 
-         // RetrievalModel - Singleton
-         container.Register(
-            Component.For<ScheduledTasks.RetrievalModel>());
+            // RetrievalModel - Singleton
+            container.Register(
+               Component.For<ScheduledTasks.RetrievalModel>());
 
-         // IMarkupGenerator - Singleton
-         container.Register(
-            Component.For<ScheduledTasks.IMarkupGenerator>()
-               .ImplementedBy<ScheduledTasks.MarkupGenerator>());
+            // IMarkupGenerator - Singleton
+            container.Register(
+               Component.For<ScheduledTasks.IMarkupGenerator>()
+                  .ImplementedBy<ScheduledTasks.MarkupGenerator>());
 
-         // IWebsiteDeployer - Singleton
-         container.Register(
-            Component.For<ScheduledTasks.IWebsiteDeployer>()
-               .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
+            // IWebsiteDeployer - Singleton
+            container.Register(
+               Component.For<ScheduledTasks.IWebsiteDeployer>()
+                  .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
 
-         // WorkUnitQueryDataContainer - Singleton
-         container.Register(
-            Component.For<Data.WorkUnitQueryDataContainer>()
-                  .OnCreate(instance => instance.Read()));
+            // WorkUnitQueryDataContainer - Singleton
+            container.Register(
+               Component.For<Data.WorkUnitQueryDataContainer>()
+                     .OnCreate(instance => instance.Read()));
 
-         // IProteinBenchmarkCollection - Singleton
-         container.Register(
-            Component.For<IProteinBenchmarkService>()
-               .ImplementedBy<ProteinBenchmarkService>()
-                  .OnCreate(instance => ((ProteinBenchmarkService)instance).Read())
-                  .OnDestroy(instance => ((ProteinBenchmarkService)instance).Write()));
+            // ProteinBenchmarkDataContainer - Singleton
+            container.Register(
+                Component.For<ProteinBenchmarkDataContainer>()
+                    .OnCreate(instance => instance.Read())
+                    .OnDestroy(instance => instance.Write()));
 
-         // IEocStatsService - Singleton
-         container.Register(
-             Component.For<IEocStatsService>()
-                 .ImplementedBy<EocStatsService>());
+            // IProteinBenchmarkCollection - Singleton
+            container.Register(
+               Component.For<IProteinBenchmarkService>()
+                  .ImplementedBy<ProteinBenchmarkService>());
 
-         // EocStatsDataContainer - Singleton
-         container.Register(
-            Component.For<Data.EocStatsDataContainer>()
-                  .OnCreate(instance => instance.Read()));
+            // IEocStatsService - Singleton
+            container.Register(
+                Component.For<IEocStatsService>()
+                    .ImplementedBy<EocStatsService>());
 
-         // EocStatsScheduledTask - Singleton
-         container.Register(
-             Component.For<ScheduledTasks.EocStatsScheduledTask>());
+            // EocStatsDataContainer - Singleton
+            container.Register(
+               Component.For<Data.EocStatsDataContainer>()
+                     .OnCreate(instance => instance.Read()));
 
-         // IProteinService - Singleton
-         container.Register(
-            Component.For<IProteinService>()
-               .ImplementedBy<ProteinService>()
-                  .OnCreate(instance => ((ProteinService)instance).Read()));
+            // EocStatsScheduledTask - Singleton
+            container.Register(
+                Component.For<ScheduledTasks.EocStatsScheduledTask>());
 
-         // IProjectSummaryDownloader - Singleton
-         container.Register(
-            Component.For<IProjectSummaryDownloader>()
-               .ImplementedBy<ProjectSummaryDownloader>());
+            // IProteinService - Singleton
+            container.Register(
+               Component.For<IProteinService>()
+                  .ImplementedBy<ProteinService>()
+                     .OnCreate(instance => ((ProteinService)instance).Read()));
 
-         #endregion
-      }
-   }
+            // IProjectSummaryDownloader - Singleton
+            container.Register(
+               Component.For<IProjectSummaryDownloader>()
+                  .ImplementedBy<ProjectSummaryDownloader>());
+
+            #endregion
+        }
+    }
 }

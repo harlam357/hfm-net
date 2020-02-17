@@ -110,6 +110,7 @@
     <Compile Include="Client\SlotModelTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
+    <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
     <Compile Include="Services\EocStatsDataTests.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
