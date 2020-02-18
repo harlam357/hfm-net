@@ -45,63 +45,51 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void DownloadTimeTest1()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime(),
-                            workUnitModel.DownloadTime);
+            Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime(), workUnitModel.DownloadTime);
         }
 
         [Test]
         public void DownloadTimeTest2()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 60;
-
-            Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime()
-                            .Subtract(TimeSpan.FromMinutes(60)),
-                            workUnitModel.DownloadTime);
+            Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.DownloadTime);
         }
 
         [Test]
         public void DownloadTimeTest3()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime,
-                            workUnitModel.DownloadTime);
+            Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.DownloadTime);
         }
 
         [Test]
         public void DownloadTimeTest4()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = -60;
-
-            Assert.AreEqual(unitInfo.DownloadTime
-                            .Add(TimeSpan.FromMinutes(60)),
-                            workUnitModel.DownloadTime);
+            Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.DownloadTime);
         }
 
         [Test]
         public void DownloadTimeTest5()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime,
-                            workUnitModel.DownloadTime);
+            Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.DownloadTime);
         }
 
         #endregion
@@ -111,63 +99,51 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void DueTimeTest1()
         {
-            var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DueTime.ToLocalTime(),
-                            workUnitModel.DueTime);
+            Assert.AreEqual(unitInfo.DueTime.ToLocalTime(), workUnitModel.DueTime);
         }
 
         [Test]
         public void DueTimeTest2()
         {
-            var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 60;
-
-            Assert.AreEqual(unitInfo.DueTime.ToLocalTime()
-                            .Subtract(TimeSpan.FromMinutes(60)),
-                            workUnitModel.DueTime);
+            Assert.AreEqual(unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.DueTime);
         }
 
         [Test]
         public void DueTimeTest3()
         {
-            var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DueTime,
-                            workUnitModel.DueTime);
+            Assert.AreEqual(unitInfo.DueTime, workUnitModel.DueTime);
         }
 
         [Test]
         public void DueTimeTest4()
         {
-            var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = -60;
-
-            Assert.AreEqual(unitInfo.DueTime
-                            .Add(TimeSpan.FromMinutes(60)),
-                            workUnitModel.DueTime);
+            Assert.AreEqual(unitInfo.DueTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.DueTime);
         }
 
         [Test]
         public void DueTimeTest5()
         {
-            var unitInfo = new WorkUnit { DueTime = DateTime.MinValue };
+            var unitInfo = new WorkUnit {DueTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DueTime,
-                            workUnitModel.DueTime);
+            Assert.AreEqual(unitInfo.DueTime, workUnitModel.DueTime);
         }
 
         #endregion
@@ -177,59 +153,50 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void FinishedTimeTest1()
         {
-            var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime(),
-                            workUnitModel.FinishedTime);
+            Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime(), workUnitModel.FinishedTime);
         }
 
         [Test]
         public void FinishedTimeTest2()
         {
-            var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 60;
-
-            Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime()
-                            .Subtract(TimeSpan.FromMinutes(60)),
-                            workUnitModel.FinishedTime);
+            Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.FinishedTime);
         }
 
         [Test]
         public void FinishedTimeTest3()
         {
-            var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = 0;
-
             Assert.AreEqual(unitInfo.FinishedTime, workUnitModel.FinishedTime);
         }
 
         [Test]
         public void FinishedTimeTest4()
         {
-            var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = true;
             workUnitModel.ClientTimeOffset = -60;
-
-            Assert.AreEqual(unitInfo.FinishedTime.Add(TimeSpan.FromMinutes(60)),
-                            workUnitModel.FinishedTime);
+            Assert.AreEqual(unitInfo.FinishedTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.FinishedTime);
         }
 
         [Test]
         public void FinishedTimeTest5()
         {
-            var unitInfo = new WorkUnit { FinishedTime = DateTime.MinValue };
+            var unitInfo = new WorkUnit {FinishedTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
             Assert.AreEqual(unitInfo.FinishedTime, workUnitModel.FinishedTime);
         }
 
@@ -240,37 +207,33 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void PreferredDeadlineTest1()
         {
-            var protein = new Protein { ProjectNumber = 1, PreferredDays = 3 };
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var protein = new Protein {ProjectNumber = 1, PreferredDays = 3};
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(3).ToLocalTime(),
-                            workUnitModel.PreferredDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(3).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         [Test]
         public void PreferredDeadlineTest2()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5)) };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5))};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
 
             // PreferredDeadline comes from DueTime when Protein.IsUnknown
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(5).ToLocalTime(),
-                            workUnitModel.PreferredDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(5).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         [Test]
         public void PreferredDeadlineTest3()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
             Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.PreferredDeadline);
         }
 
@@ -278,28 +241,24 @@ namespace HFM.Core.WorkUnits
         public void PreferredDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
-            var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
-            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
+            var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
+            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 11, 1)};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(),
-                            workUnitModel.PreferredDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         [Test]
         public void PreferredDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
-            var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
-            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
+            var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
+            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 3, 9)};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(),
-                            workUnitModel.PreferredDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         #endregion
@@ -309,35 +268,31 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void FinalDeadlineTest1()
         {
-            var protein = new Protein { ProjectNumber = 1, MaximumDays = 6 };
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var protein = new Protein {ProjectNumber = 1, MaximumDays = 6};
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(6).ToLocalTime(),
-                            workUnitModel.FinalDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(6).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
         [Test]
         public void FinalDeadlineTest2()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
             Assert.AreEqual(DateTime.MinValue, workUnitModel.FinalDeadline);
         }
 
         [Test]
         public void FinalDeadlineTest3()
         {
-            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
+            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
             Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.FinalDeadline);
         }
 
@@ -345,28 +300,24 @@ namespace HFM.Core.WorkUnits
         public void FinalDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
-            var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
-            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
+            var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
+            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 11, 1)};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(),
-                            workUnitModel.FinalDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
         [Test]
         public void FinalDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
-            var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
-            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
+            var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
+            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 3, 9)};
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
-
-            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(),
-                            workUnitModel.FinalDeadline);
+            Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
         #endregion
