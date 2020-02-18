@@ -100,7 +100,7 @@ namespace HFM.Core.WorkUnits
             {
                 if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
 
-                return CurrentProtein.IsUnknown()
+                return ProteinIsUnknown(CurrentProtein)
                           ? DueTime
                           : AdjustDeadlineForDaylightSavings(CurrentProtein.PreferredDays);
             }
@@ -115,7 +115,7 @@ namespace HFM.Core.WorkUnits
             {
                 if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
 
-                return CurrentProtein.IsUnknown()
+                return ProteinIsUnknown(CurrentProtein)
                           ? DateTime.MinValue
                           : AdjustDeadlineForDaylightSavings(CurrentProtein.MaximumDays);
             }
@@ -316,7 +316,7 @@ namespace HFM.Core.WorkUnits
 
         private double GetCredit(TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
         {
-            if (CurrentProtein.IsUnknown())
+            if (ProteinIsUnknown(CurrentProtein))
             {
                 return 0.0;
             }
@@ -336,7 +336,7 @@ namespace HFM.Core.WorkUnits
 
         private double GetPPD(TimeSpan frameTime, TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
         {
-            if (CurrentProtein.IsUnknown())
+            if (ProteinIsUnknown(CurrentProtein))
             {
                 return 0.0;
             }
@@ -359,7 +359,7 @@ namespace HFM.Core.WorkUnits
             // test the level
             if (!logger.IsDebugEnabled) return;
 
-            if (CurrentProtein.IsUnknown())
+            if (ProteinIsUnknown(CurrentProtein))
             {
                 logger.DebugFormat(Constants.ClientNameFormat, slotName, "Protein is unknown... 0 PPD.");
                 return;
@@ -468,5 +468,10 @@ namespace HFM.Core.WorkUnits
         }
 
         #endregion
+
+        internal static bool ProteinIsUnknown(Protein protein)
+        {
+            return protein.ProjectNumber == 0;
+        }
     }
 }

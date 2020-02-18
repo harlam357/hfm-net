@@ -102,7 +102,6 @@
     <Compile Include="ScheduledTasks\ScheduledTask.cs" />
     <Compile Include="Services\EocStatsService.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
-    <Compile Include="WorkUnits\ProteinExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="WorkUnits\ProjectInfo.cs" />
     <Compile Include="PpdCalculationType.cs" />
