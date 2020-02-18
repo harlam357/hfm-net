@@ -30,7 +30,6 @@ using ZedGraph;
 
 using HFM.Core;
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Preferences;
@@ -88,7 +87,7 @@ namespace HFM.Forms
         private readonly IExternalProcessStarter _processStarter;
         private readonly ZedGraphManager _zedGraphManager;
 
-        private ProteinBenchmarkSlotIdentifier _currentSlotIdentifier;
+        private SlotIdentifier _currentSlotIdentifier;
 
         #endregion
 
@@ -140,8 +139,8 @@ namespace HFM.Forms
 
         private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currentSlotIdentifier = (ProteinBenchmarkSlotIdentifier)cboClients.SelectedValue;
-            picDeleteClient.Visible = !_currentSlotIdentifier.AllSlots;
+            _currentSlotIdentifier = (SlotIdentifier)cboClients.SelectedValue;
+            picDeleteClient.Visible = _currentSlotIdentifier != SlotIdentifier.AllSlots;
 
             UpdateProjectListBoxBinding();
         }
@@ -149,17 +148,17 @@ namespace HFM.Forms
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtBenchmarks.Text = String.Empty;
-            int projectId = (int)listBox1.SelectedItem;
-            Protein protein = _proteinService.Get(projectId);
+            int projectID = (int)listBox1.SelectedItem;
+            Protein protein = _proteinService.Get(projectID);
             if (protein == null)
             {
-                Logger.WarnFormat("Could not find Project {0}.", projectId);
+                Logger.WarnFormat("Could not find Project {0}.", projectID);
             }
 
             var projectInfoLines = new List<string>();
-            PopulateProteinInformation(protein, projectInfoLines);
+            PopulateProteinInformation(projectID, protein, projectInfoLines);
 
-            List<ProteinBenchmark> list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectId).ToList();
+            List<ProteinBenchmark> list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectID).ToList();
             list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
 
             var benchmarkInfoLines = new List<string>(projectInfoLines);
@@ -349,7 +348,7 @@ namespace HFM.Forms
         {
             if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                "Are you sure you want to refresh {0} - Project {1} minimum frame time?",
-                  _currentSlotIdentifier.Value, listBox1.SelectedItem),
+                  _currentSlotIdentifier, listBox1.SelectedItem),
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
             {
                 _benchmarkService.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
@@ -361,12 +360,12 @@ namespace HFM.Forms
         {
             if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
                "Are you sure you want to delete {0} - Project {1}?",
-                  _currentSlotIdentifier.Value, listBox1.SelectedItem),
+                  _currentSlotIdentifier, listBox1.SelectedItem),
                      Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
             {
                 _benchmarkService.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
                 UpdateProjectListBoxBinding();
-                if (_benchmarkService.SlotIdentifiers.Contains(_currentSlotIdentifier) == false)
+                if (_benchmarkService.GetSlotIdentifiers().Contains(_currentSlotIdentifier) == false)
                 {
                     UpdateClientsComboBinding();
                 }
@@ -388,7 +387,7 @@ namespace HFM.Forms
 
         private void picDeleteClient_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentSlotIdentifier.Value),
+            if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentSlotIdentifier),
                         Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
             {
                 int currentIndex = cboClients.SelectedIndex;
@@ -545,7 +544,7 @@ namespace HFM.Forms
             txtBenchmarks.Lines = benchmarkLines.ToArray();
         }
 
-        private void PopulateProteinInformation(Protein protein, ICollection<string> lines)
+        private void PopulateProteinInformation(int projectID, Protein protein, ICollection<string> lines)
         {
             if (protein != null)
             {
@@ -582,6 +581,8 @@ namespace HFM.Forms
                 txtMaximumDays.Text = String.Empty;
                 txtContact.Text = String.Empty;
                 txtServerIP.Text = String.Empty;
+
+                lines.Add(String.Format(" Project ID: {0} Not Found", projectID));
             }
         }
 
@@ -595,7 +596,7 @@ namespace HFM.Forms
         private void UpdateClientsComboBinding(int index)
         {
             cboClients.DataBindings.Clear();
-            cboClients.DataSource = _benchmarkService.SlotIdentifiers;
+            cboClients.DataSource = _benchmarkService.GetSlotIdentifiers();
             cboClients.DisplayMember = "Value";
             // TODO: Is this required for Mono compatibility?
             //cboClients.ValueMember = "Client";

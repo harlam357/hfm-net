@@ -87,6 +87,8 @@ namespace HFM.Core.WorkUnits
 
         #region Properties
 
+        internal SlotIdentifier SlotIdentifier => new SlotIdentifier(OwningClientName, OwningSlotId, OwningClientPath);
+
         /// <summary>
         /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
         /// </summary>

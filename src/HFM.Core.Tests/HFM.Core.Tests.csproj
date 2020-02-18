@@ -115,7 +115,6 @@
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="WorkUnits\ProteinExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkSlotIdentifierTests.cs" />
     <Compile Include="Data\WorkUnitQueryTests.cs" />
     <Compile Include="WorkUnits\WorkUnitTests.cs" />
     <Compile Include="ExtensionsTests.cs" />

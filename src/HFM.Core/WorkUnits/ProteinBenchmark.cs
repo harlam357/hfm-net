@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using HFM.Core.Client;
+
 namespace HFM.Core.WorkUnits
 {
     [Serializable]
@@ -31,7 +33,7 @@ namespace HFM.Core.WorkUnits
 
         private static readonly object FrameTimesListLock = new object();
 
-        #region Properties
+        internal SlotIdentifier SlotIdentifier => new SlotIdentifier(OwningClientName, OwningSlotId, OwningClientPath);
 
         /// <summary>
         /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
@@ -102,13 +104,21 @@ namespace HFM.Core.WorkUnits
         [DataMember(Order = 5)]
         public List<ProteinFrameTime> FrameTimes { get; set; }
 
-        #endregion
-
         public ProteinBenchmark()
         {
             OwningSlotId = -1;
             MinimumFrameTime = TimeSpan.Zero;
             FrameTimes = new List<ProteinFrameTime>(DefaultMaxFrames);
+        }
+
+        public static ProteinBenchmark FromSlotIdentifier(SlotIdentifier slotIdentifier)
+        {
+            return new ProteinBenchmark
+            {
+                OwningClientName = slotIdentifier.OwningClientName,
+                OwningSlotId = slotIdentifier.OwningSlotId,
+                OwningClientPath = slotIdentifier.OwningClientPath
+            };
         }
 
         /// <summary>
@@ -161,11 +171,6 @@ namespace HFM.Core.WorkUnits
             {
                 MinimumFrameTime = minimumFrameTime;
             }
-        }
-
-        internal ProteinBenchmarkSlotIdentifier ToSlotIdentifier()
-        {
-            return new ProteinBenchmarkSlotIdentifier(OwningSlotName, OwningClientPath);
         }
     }
 }

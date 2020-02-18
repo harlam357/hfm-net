@@ -223,7 +223,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = _benchmarkService?.GetBenchmark(Data);
+            var benchmark = _benchmarkService?.GetBenchmark(Data.SlotIdentifier, Data.ProjectID);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 

@@ -491,9 +491,11 @@ namespace HFM.Core.Client
                 {
                     // found the current unit
                     // current frame has already been recorded, increment to the next frame
-                    int previousFramesComplete = currentWorkUnit.FramesComplete + 1;
+                    int nextFrame = currentWorkUnit.FramesComplete + 1;
+                    int count = model.FramesComplete - currentWorkUnit.FramesComplete;
+                    var frameTimes = GetFrameTimes(model.Data, nextFrame, count);
                     // Update benchmarks
-                    BenchmarkService.UpdateData(model.Data, previousFramesComplete, model.FramesComplete);
+                    BenchmarkService.Update(model.Data.SlotIdentifier, model.Data.ProjectID, frameTimes);
                 }
                 // Update history database
                 if (model.Data.UnitResult != WorkUnitResult.Unknown)
@@ -501,6 +503,15 @@ namespace HFM.Core.Client
                     InsertCompletedWorkUnit(model);
                 }
             }
+        }
+
+        private static IEnumerable<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
+        {
+            return Enumerable.Range(nextFrame, count)
+                .Select(workUnit.GetFrameData)
+                .Where(f => f != null)
+                .Select(f => f.Duration)
+                .ToList();
         }
 
         private class MessageReceiver

@@ -84,6 +84,7 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="BonusCalculationType.cs" />
     <Compile Include="Client\LogLineCopier.cs" />
+    <Compile Include="Client\SlotIdentifier.cs" />
     <Compile Include="DataTypes\Markup\LogLine.cs" />
     <Compile Include="DataTypes\Markup\Protein.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainer.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkSlotIdentifier.cs" />
     <Compile Include="Client\ClientSettings.cs" />
     <Compile Include="DataTypes\QueueDictionary.cs" />
     <Compile Include="DataTypes\QueueUnitItem.cs" />

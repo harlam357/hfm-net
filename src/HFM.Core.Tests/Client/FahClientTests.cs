@@ -77,20 +77,20 @@ namespace HFM.Core.Client
             repository.Stub(x => x.Connected).Return(true);
             repository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
-            var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
+            var slotIdentifier = new SlotIdentifier("Owner", 0, "Path");
 
             // Assert (pre-condition)
-            Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
-            Assert.IsFalse(new List<int>(benchmarks.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-            Assert.IsNull(benchmarks.GetBenchmark(currentWorkUnit.Data));
+            Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsFalse(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.IsNull(benchmarks.GetBenchmark(slotIdentifier, 2669));
 
             // Act
             fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
 
             // Assert
-            Assert.IsTrue(benchmarks.DataContainer.Data.Any(x => x.ToSlotIdentifier().Equals(benchmarkClient)));
-            Assert.IsTrue(new List<int>(benchmarks.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarks.GetBenchmark(currentWorkUnit.Data).AverageFrameTime);
+            Assert.IsTrue(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsTrue(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarks.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
 
             repository.VerifyAllExpectations();
         }
