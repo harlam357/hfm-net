@@ -21,8 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using harlam357.Windows.Forms;
-
 using HFM.Core;
 using HFM.Core.Client;
 
@@ -37,13 +35,6 @@ namespace HFM.Forms
       }
 
       public SlotModelSortableBindingList()
-         : this(null)
-      {
-
-      }
-
-      public SlotModelSortableBindingList(ISynchronizeInvoke syncObject)
-         : base(syncObject)
       {
          SortComparer = new SlotModelSortComparer();
       }
@@ -80,28 +71,6 @@ namespace HFM.Forms
 
          throw new NotSupportedException("Key must be of Type System.String.");
       }
-
-      #endregion
-
-      /// <summary>
-      /// Sorts the items and optionally fires the ListChanged event.
-      /// </summary>
-      /// <param name="fireListChanged">true to fire the ListChanged event; otherwise, false.</param>
-      protected override void ApplySortCoreInternal(bool fireListChanged)
-      {
-         base.ApplySortCoreInternal(false);
-      }
-
-      /// <summary>
-      /// Gets a value indicating whether the data source supports filtering. 
-      /// </summary>
-      /// <returns>true if the data source supports filtering; otherwise, false.</returns>
-      public override bool SupportsFiltering
-      {
-         get { return false; }
-      }
-
-      #region SlotModelSortComparer
 
       #endregion
    }

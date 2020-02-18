@@ -308,6 +308,7 @@ namespace HFM.Forms
       {
          // Arrange
          _model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
+         _model.HistoryBindingSource.ResetBindings(false);
 
          _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
          _repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
