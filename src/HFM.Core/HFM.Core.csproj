@@ -145,7 +145,7 @@
     <Compile Include="DataTypes\QueueUnitItem.cs" />
     <Compile Include="Data\WorkUnitRow.cs" />
     <Compile Include="WorkUnits\ProteinBenchmark.cs" />
-    <Compile Include="WorkUnits\ProteinFrameTime.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkFrameTime.cs" />
     <Compile Include="Data\WorkUnitQuery.cs" />
     <Compile Include="WorkUnits\WorkUnit.cs" />
     <Compile Include="Services\EocStatsData.cs" />

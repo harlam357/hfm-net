@@ -86,7 +86,7 @@ namespace HFM.Core.WorkUnits
                 }
                 foreach (var f in frameTimes)
                 {
-                    benchmark.SetFrameDuration(f);
+                    benchmark.AddFrameTime(f);
                 }
                 DataContainer.Write();
             }

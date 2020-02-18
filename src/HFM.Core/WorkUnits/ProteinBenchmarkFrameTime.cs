@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 namespace HFM.Core.WorkUnits
 {
     [DataContract]
-    public sealed class ProteinFrameTime
+    public sealed class ProteinBenchmarkFrameTime
     {
         public TimeSpan Duration { get; set; }
 
