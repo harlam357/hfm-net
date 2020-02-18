@@ -208,7 +208,10 @@ namespace HFM.Client
                _tcpClient.Close();
                throw new TimeoutException("Client connection has timed out.");
             }
-
+            if (_tcpClient.Client == null)
+            {
+               throw new IOException("Client died before establishing a connection.");
+            }
             _tcpClient.EndConnect(ar);
             _lockedStream.Set(_tcpClient.GetStream());
 

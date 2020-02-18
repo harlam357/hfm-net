@@ -108,21 +108,27 @@ namespace HFM.Forms
                              IPreferenceSet prefs, ClientSettingsManager settingsManager)
         {
             _gridModel = mainGridModel;
-            //_gridModel.BeforeResetBindings += delegate { _view.DataGridView.FreezeSelectionChanged = true; };
-            _gridModel.AfterResetBindings += delegate
-                                             {
-                                              //_view.DataGridView.FreezeSelectionChanged = false;
-                                              DisplaySelectedSlotData();
-                                                 _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
-                                             };
+            _gridModel.AfterResetBindings += (sender, e) =>
+            {
+               // run asynchronously so binding operation can finish
+               _view.BeginInvoke(new Action(() =>
+               {
+                  DisplaySelectedSlotData();
+                  _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
+               }), null);
+            };
             _gridModel.SelectedSlotChanged += (sender, e) =>
-                                              {
-                                                  if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
-                                                  {
-                                                      _view.DataGridView.Rows[e.Index].Selected = true;
-                                                      DisplaySelectedSlotData();
-                                                  }
-                                              };
+            {
+               if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
+               {
+                  // run asynchronously so binding operation can finish
+                  _view.BeginInvoke(new Action(() =>
+                  {
+                     _view.DataGridView.Rows[e.Index].Selected = true;
+                     DisplaySelectedSlotData();
+                  }), null);
+               }
+            };
             _userStatsDataModel = userStatsDataModel;
 
             // Views

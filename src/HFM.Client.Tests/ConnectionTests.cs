@@ -155,17 +155,14 @@ namespace HFM.Client
 
       private static void SetupSuccessfulConnectionExpectations(ITcpClient tcpClient, INetworkStream stream, bool withPassword = true)
       {
-         // client not connected
-         tcpClient.Expect(x => x.Client).PropertyBehavior();
-
          // setup connect expectations
          var asyncResult = MockRepository.GenerateStub<IAsyncResult>();
          tcpClient.Expect(x => x.BeginConnect("server", 10000, null, null)).Return(asyncResult);
          asyncResult.Stub(x => x.AsyncWaitHandle).Return(new EventWaitHandle(true, EventResetMode.ManualReset));
+         tcpClient.Expect(x => x.Client).Return(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)).Repeat.AtLeastOnce();
          tcpClient.Expect(x => x.EndConnect(asyncResult)).Do(new Action<IAsyncResult>(ar =>
          {
             // setup Connected property expectations
-            tcpClient.Client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             tcpClient.Expect(x => x.Connected).Return(true).Repeat.AtLeastOnce();
          }));
          tcpClient.Expect(x => x.GetStream()).Return(stream);
