@@ -14,12 +14,12 @@ namespace HFM.Core.Client
         {
             var instance1 = new SlotModel();
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
-            var logic1 = CreateUnitInfoLogic(unitInfo1);
+            var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
             var instance2 = new SlotModel();
             var unitInfo2 = new WorkUnit { ProjectID = 1 };
-            var logic2 = CreateUnitInfoLogic(unitInfo2);
+            var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
 
             SlotModel.FindDuplicateProjects(new[] { instance1, instance2 });
@@ -33,12 +33,12 @@ namespace HFM.Core.Client
         {
             var instance1 = new SlotModel();
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
-            var logic1 = CreateUnitInfoLogic(unitInfo1);
+            var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
             var instance2 = new SlotModel();
             var unitInfo2 = new WorkUnit { ProjectID = 2 };
-            var logic2 = CreateUnitInfoLogic(unitInfo2);
+            var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
 
             SlotModel.FindDuplicateProjects(new[] { instance1, instance2 });
@@ -52,17 +52,17 @@ namespace HFM.Core.Client
         {
             var instance1 = new SlotModel();
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
-            var logic1 = CreateUnitInfoLogic(unitInfo1);
+            var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
             var instance2 = new SlotModel();
             var unitInfo2 = new WorkUnit { ProjectID = 2 };
-            var logic2 = CreateUnitInfoLogic(unitInfo2);
+            var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
 
             var instance3 = new SlotModel();
             var unitInfo3 = new WorkUnit { ProjectID = 1 };
-            var logic3 = CreateUnitInfoLogic(unitInfo3);
+            var logic3 = CreateWorkUnitModel(unitInfo3);
             instance3.WorkUnitModel = logic3;
 
             SlotModel.FindDuplicateProjects(new[] { instance1, instance2, instance3 });
@@ -72,12 +72,9 @@ namespace HFM.Core.Client
             Assert.IsTrue(instance3.ProjectIsDuplicate);
         }
 
-        private static WorkUnitModel CreateUnitInfoLogic(WorkUnit workUnit)
+        private static WorkUnitModel CreateWorkUnitModel(WorkUnit workUnit)
         {
-            return new WorkUnitModel(MockRepository.GenerateStub<IProteinBenchmarkService>())
-            {
-                Data = workUnit
-            };
+            return new WorkUnitModel { Data = workUnit };
         }
     }
 }

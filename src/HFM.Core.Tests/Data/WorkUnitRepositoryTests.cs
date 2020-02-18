@@ -126,13 +126,12 @@ namespace HFM.Core.Data
       public void MultiThread_Test()
       {
          _repository.Initialize(TestScratchFile);
-         var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
          
          Parallel.For(0, 100, i =>
                               {
                                  Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
  
-                                 var workUnitModel = new WorkUnitModel(benchmarkService);
+                                 var workUnitModel = new WorkUnitModel();
                                  workUnitModel.CurrentProtein = BuildProtein1();
                                  workUnitModel.Data = BuildWorkUnit1(i);
 
@@ -230,7 +229,7 @@ namespace HFM.Core.Data
       {
          _repository.Initialize(TestScratchFile);
 
-         var workUnitModel = new WorkUnitModel(MockRepository.GenerateStub<IProteinBenchmarkService>());
+         var workUnitModel = new WorkUnitModel();
          workUnitModel.CurrentProtein = protein;
          workUnitModel.Data = workUnit;
 
