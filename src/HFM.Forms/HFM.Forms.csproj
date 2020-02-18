@@ -228,6 +228,7 @@
     <Compile Include="Services\AutoRun.cs" />
     <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="UpdateDialog.cs">
       <SubType>Form</SubType>

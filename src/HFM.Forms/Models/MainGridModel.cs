@@ -115,7 +115,7 @@ namespace HFM.Forms.Models
       {
          _syncObject = syncObject;
          _clientConfiguration = clientConfiguration;
-         _slotList = new SlotModelSortableBindingList(_syncObject);
+         _slotList = new SlotModelSortableBindingList();
          _slotList.RaiseListChangedEvents = false;
          _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
          _slotList.Sorted += (sender, e) =>
@@ -200,8 +200,7 @@ namespace HFM.Forms.Models
             Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
 
             // sort the list
-            _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToDirectionString()}";
-            _slotList.ApplySort(_slotList.SortDescriptions);
+            SortInternal();
             // reset selected slot
             ResetSelectedSlot();
             // find duplicates
@@ -220,8 +219,16 @@ namespace HFM.Forms.Models
          lock (_slotsListLock)
          {
             // sort the list
-            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-            _slotList.ApplySort(_slotList.SortDescriptions);
+            SortInternal();
+         }
+      }
+
+      private void SortInternal()
+      {
+         _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToDirectionString()}";
+         if (_slotList is IBindingList bindingList)
+         {
+            bindingList.ApplySort(bindingList.SortProperty, bindingList.SortDirection);
          }
       }
 

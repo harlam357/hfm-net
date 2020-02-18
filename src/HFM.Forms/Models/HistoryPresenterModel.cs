@@ -74,6 +74,7 @@ namespace HFM.Forms.Models
                                                    };
 
          _historyList = new HistoryEntrySortableBindingList();
+         _historyList.RaiseListChangedEvents = false;
          _historyList.Sorted += (s, e) =>
          {
             SortColumnName = e.Name;
@@ -217,21 +218,17 @@ namespace HFM.Forms.Models
             return;
          }
 
-         // halt binding source updates
-         _historyBindingSource.RaiseListChangedEvents = false;
-         _historyList.RaiseListChangedEvents = false;
          // refresh the underlying binding list
          RefreshHistoryList(_page.Items);
+
          // sort the list
          _historyBindingSource.Sort = null;
          if (!String.IsNullOrEmpty(SortColumnName))
          {
             _historyBindingSource.Sort = SortColumnName + " " + SortOrder.ToDirectionString();
+            _historyList.ApplySort(_historyList.SortDescriptions);
          }
-         // enable binding source updates
-         _historyBindingSource.RaiseListChangedEvents = true;
-         _historyList.RaiseListChangedEvents = true;
-         // reset AFTER RaiseListChangedEvents is enabled
+
          _historyBindingSource.ResetBindings(false);
 
          OnPropertyChanged("TotalEntries");

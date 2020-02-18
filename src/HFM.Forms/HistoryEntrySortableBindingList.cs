@@ -20,9 +20,7 @@
 using System.ComponentModel;
 
 using harlam357.Core.ComponentModel;
-using harlam357.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.DataTypes;
 
 namespace HFM.Forms
