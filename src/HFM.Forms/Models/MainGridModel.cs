@@ -35,7 +35,6 @@ namespace HFM.Forms.Models
    {
       #region Events
 
-      public event EventHandler BeforeResetBindings;
       public event EventHandler AfterResetBindings;
       public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
 
@@ -117,6 +116,7 @@ namespace HFM.Forms.Models
          _syncObject = syncObject;
          _clientConfiguration = clientConfiguration;
          _slotList = new SlotModelSortableBindingList(_syncObject);
+         _slotList.RaiseListChangedEvents = false;
          _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
          _slotList.Sorted += (sender, e) =>
                              {
@@ -129,8 +129,8 @@ namespace HFM.Forms.Models
          _bindingSource.DataSource = _slotList;
          _bindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)_bindingSource.Current;
 #if DEBUG
-         _slotList.ListChanged += (s, e) => Debug.WriteLine("BindingList: " + e.ListChangedType);
-         _bindingSource.ListChanged += (s, e) => Debug.WriteLine("BindingSource: " + e.ListChangedType);
+         _slotList.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
+         _bindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
 #endif
          // Subscribe to PreferenceSet events
          prefs.PreferenceChanged += (s, e) =>
@@ -186,15 +186,11 @@ namespace HFM.Forms.Models
             return;
          }
 
-         OnBeforeResetBindings(EventArgs.Empty);
          lock (_slotsListLock)
          {
-            // halt binding updates
-            _bindingSource.RaiseListChangedEvents = false;
-            _slotList.RaiseListChangedEvents = false;
-
             // get slots from the dictionary
             var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
+
             // refresh the underlying binding list
             _bindingSource.Clear();
             foreach (var slot in slots)
@@ -202,17 +198,14 @@ namespace HFM.Forms.Models
                _bindingSource.Add(slot);
             }
             Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
+
             // sort the list
-            _bindingSource.Sort = null;
-            _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
+            _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToDirectionString()}";
+            _slotList.ApplySort(_slotList.SortDescriptions);
             // reset selected slot
             ResetSelectedSlot();
             // find duplicates
             slots.FindDuplicates();
-
-            // enable binding updates
-            _bindingSource.RaiseListChangedEvents = true;
-            _slotList.RaiseListChangedEvents = true;
 
             _bindingSource.ResetBindings(false);
          }
@@ -226,17 +219,9 @@ namespace HFM.Forms.Models
       {
          lock (_slotsListLock)
          {
-            // halt binding updates
-            _bindingSource.RaiseListChangedEvents = false;
-            _slotList.RaiseListChangedEvents = false;
-
             // sort the list
-            _bindingSource.Sort = null;
             _bindingSource.Sort = SortColumnName + " " + SortColumnOrder.ToDirectionString();
-            
-            // enable binding updates
-            _bindingSource.RaiseListChangedEvents = true;
-            _slotList.RaiseListChangedEvents = true;
+            _slotList.ApplySort(_slotList.SortDescriptions);
          }
       }
 
@@ -251,43 +236,24 @@ namespace HFM.Forms.Models
          }
       }
 
-      private void OnBeforeResetBindings(EventArgs e)
-      {
-         if (BeforeResetBindings != null)
-         {
-            BeforeResetBindings(this, e);
-         }
-      }
-
       private void OnAfterResetBindings(EventArgs e)
       {
-         if (AfterResetBindings != null)
-         {
-            AfterResetBindings(this, e);
-         }
+         AfterResetBindings?.Invoke(this, e);
       }
 
       private void OnSelectedSlotChanged(IndexChangedEventArgs e)
       {
-         if (SelectedSlotChanged != null)
-         {
-            SelectedSlotChanged(this, e);
-         }
+         SelectedSlotChanged?.Invoke(this, e);
       }
    }
 
    public sealed class IndexChangedEventArgs : EventArgs
    {
-      private readonly int _index;
-
-      public int Index
-      {
-         get { return _index; }
-      }
+      public int Index { get; }
 
       public IndexChangedEventArgs(int index)
       {
-         _index = index;
+         Index = index;
       }
    }
 }
