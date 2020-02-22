@@ -138,7 +138,7 @@ namespace HFM.Core.Data
                                      _repository.Insert(workUnitModel);
                                  });
 
-            Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None).Count);
+            Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Count);
         }
 
         #region Connected
@@ -235,13 +235,13 @@ namespace HFM.Core.Data
 
             _repository.Insert(workUnitModel);
 
-            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
+            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             verifyAction(rows);
 
             // test code to ensure this unit is NOT written again
             _repository.Insert(workUnitModel);
             // verify
-            rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
+            rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(1, rows.Count);
         }
 
@@ -566,10 +566,10 @@ namespace HFM.Core.Data
         public void Delete_Test()
         {
             _repository.Initialize(_testDataFileCopy);
-            var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
+            var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(44, entries.Count);
             Assert.AreEqual(1, _repository.Delete(entries[14]));
-            entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculationType.None);
+            entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(43, entries.Count);
         }
 

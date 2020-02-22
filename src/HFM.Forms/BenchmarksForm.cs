@@ -262,7 +262,7 @@ namespace HFM.Forms
         {
             _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors);
             _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), projectInfoLines, benchmarks, _graphColors,
-               _prefs.Get<int>(Preference.DecimalPlaces), protein, IsEnabled(_prefs.Get<BonusCalculationType>(Preference.BonusCalculation)));
+               _prefs.Get<int>(Preference.DecimalPlaces), protein, IsEnabled(_prefs.Get<BonusCalculation>(Preference.BonusCalculation)));
         }
 
         private ZedGraphControl GetFrameTimeGraph(int index)
@@ -282,7 +282,7 @@ namespace HFM.Forms
                 return;
             }
 
-            var calculateBonus = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+            var calculateBonus = _prefs.Get<BonusCalculation>(Preference.BonusCalculation);
             var calculateBonusEnabled = IsEnabled(calculateBonus);
 
             lines.Add(String.Empty);
@@ -310,10 +310,10 @@ namespace HFM.Forms
             lines.Add(String.Empty);
         }
 
-        private static bool IsEnabled(BonusCalculationType type)
+        private static bool IsEnabled(BonusCalculation type)
         {
-            return type.Equals(BonusCalculationType.DownloadTime) ||
-                   type.Equals(BonusCalculationType.FrameTime);
+            return type.Equals(BonusCalculation.DownloadTime) ||
+                   type.Equals(BonusCalculation.FrameTime);
         }
 
         private static double GetPPD(TimeSpan frameTime, Protein protein, bool calculateUnitTimeByFrameTime)

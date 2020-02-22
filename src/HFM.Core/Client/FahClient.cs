@@ -415,7 +415,7 @@ namespace HFM.Core.Client
 
                     slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                        Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
-                       Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
+                       Prefs.Get<BonusCalculation>(Preference.BonusCalculation));
 
                     string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
                     Logger.InfoFormat(Constants.ClientNameFormat, slotModel.Name, statusMessage);

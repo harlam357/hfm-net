@@ -230,7 +230,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Work unit credit
         /// </summary>
-        public double GetCredit(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
+        public double GetCredit(SlotStatus status, PpdCalculationType calculationType, BonusCalculation calculateBonus)
         {
             TimeSpan frameTime = GetFrameTime(calculationType);
             return GetCredit(GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
@@ -247,7 +247,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Points per day (PPD) rating for this unit
         /// </summary>
-        public double GetPPD(SlotStatus status, PpdCalculationType calculationType, BonusCalculationType calculateBonus)
+        public double GetPPD(SlotStatus status, PpdCalculationType calculationType, BonusCalculation calculateBonus)
         {
             TimeSpan frameTime = GetFrameTime(calculationType);
             return GetPPD(frameTime, GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
@@ -314,7 +314,7 @@ namespace HFM.Core.WorkUnits
 
         #region Calculate Credit and PPD
 
-        private double GetCredit(TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
+        private double GetCredit(TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculation calculateBonus)
         {
             if (ProteinIsUnknown(CurrentProtein))
             {
@@ -323,18 +323,18 @@ namespace HFM.Core.WorkUnits
 
             switch (calculateBonus)
             {
-                case BonusCalculationType.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
+                case BonusCalculation.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
                     return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
-                case BonusCalculationType.DownloadTime:
+                case BonusCalculation.DownloadTime:
                     return CurrentProtein.GetBonusCredit(unitTimeByDownloadTime);
-                case BonusCalculationType.FrameTime:
+                case BonusCalculation.FrameTime:
                     return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
                 default:
                     return CurrentProtein.Credit;
             }
         }
 
-        private double GetPPD(TimeSpan frameTime, TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculationType calculateBonus)
+        private double GetPPD(TimeSpan frameTime, TimeSpan unitTimeByDownloadTime, TimeSpan unitTimeByFrameTime, SlotStatus status, BonusCalculation calculateBonus)
         {
             if (ProteinIsUnknown(CurrentProtein))
             {
@@ -343,18 +343,18 @@ namespace HFM.Core.WorkUnits
 
             switch (calculateBonus)
             {
-                case BonusCalculationType.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
+                case BonusCalculation.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
                     return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
-                case BonusCalculationType.DownloadTime:
+                case BonusCalculation.DownloadTime:
                     return CurrentProtein.GetBonusPPD(frameTime, unitTimeByDownloadTime);
-                case BonusCalculationType.FrameTime:
+                case BonusCalculation.FrameTime:
                     return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
                 default:
                     return CurrentProtein.GetPPD(frameTime);
             }
         }
 
-        public void ShowProductionTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculationType bonusCalculationType)
+        public void ShowProductionTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculation bonusCalculation)
         {
             // test the level
             if (!logger.IsDebugEnabled) return;
@@ -365,15 +365,15 @@ namespace HFM.Core.WorkUnits
                 return;
             }
 
-            switch (bonusCalculationType)
+            switch (bonusCalculation)
             {
-                case BonusCalculationType.DownloadTime:
+                case BonusCalculation.DownloadTime:
                     logger.DebugFormat(Constants.ClientNameFormat, slotName,
                         status == SlotStatus.RunningNoFrameTimes
                             ? "Calculate Bonus PPD by Frame Time."
                             : "Calculate Bonus PPD by Download Time.");
                     break;
-                case BonusCalculationType.FrameTime:
+                case BonusCalculation.FrameTime:
                     logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
                     break;
                 default:

@@ -22,8 +22,8 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Core;
 using HFM.Core.Data;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Forms.Models
 {
@@ -161,7 +161,7 @@ namespace HFM.Forms.Models
              .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
          Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-         _repository.Expect(x => x.Page(1, 1, null, BonusCalculationType.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitRow>());
+         _repository.Expect(x => x.Page(1, 1, null, BonusCalculation.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitRow>());
          // Act
          _model.ResetBindings(true);
          // Assert

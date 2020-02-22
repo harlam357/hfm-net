@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
+using HFM.Core.WorkUnits;
 using HFM.Proteins;
 
 namespace HFM.Core.Data
@@ -31,7 +32,7 @@ namespace HFM.Core.Data
       private sealed class GetProduction : SQLiteFunction
       {
          [ThreadStatic]
-         public static BonusCalculationType BonusCalculation;
+         public static BonusCalculation BonusCalculation;
 
          public override object Invoke(object[] args)
          {
@@ -61,10 +62,10 @@ namespace HFM.Core.Data
             TimeSpan unitTime = TimeSpan.Zero;
             switch (BonusCalculation)
             {
-               case BonusCalculationType.FrameTime:
+               case BonusCalculation.FrameTime:
                   unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * frames);
                   break;
-               case BonusCalculationType.DownloadTime:
+               case BonusCalculation.DownloadTime:
                   unitTime = completionDateTime.Subtract(downloadDateTime);
                   break;
             }

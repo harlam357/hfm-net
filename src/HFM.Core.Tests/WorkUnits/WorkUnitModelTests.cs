@@ -449,7 +449,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(600, workUnitModel.GetRawTime(PpdCalculationType.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(600), workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate));
-            Assert.AreEqual(144, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculationType.None));
+            Assert.AreEqual(144, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculation.None));
         }
 
         [Test]
@@ -461,7 +461,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculation.None));
         }
 
         [Test]
@@ -480,7 +480,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculation.None));
         }
 
         [Test]
@@ -496,7 +496,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.EffectiveRate, BonusCalculation.None));
         }
 
         [Test]
@@ -517,7 +517,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(360, workUnitModel.GetRawTime(PpdCalculationType.AllFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(360), workUnitModel.GetFrameTime(PpdCalculationType.AllFrames));
-            Assert.AreEqual(240, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.AllFrames, BonusCalculationType.None));
+            Assert.AreEqual(240, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.AllFrames, BonusCalculation.None));
         }
 
         [Test]
@@ -529,7 +529,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.AllFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.AllFrames));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.AllFrames, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.AllFrames, BonusCalculation.None));
         }
 
         [Test]
@@ -550,7 +550,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(376, workUnitModel.GetRawTime(PpdCalculationType.LastThreeFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(376), workUnitModel.GetFrameTime(PpdCalculationType.LastThreeFrames));
-            Assert.AreEqual(229.78723, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastThreeFrames, BonusCalculationType.None));
+            Assert.AreEqual(229.78723, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastThreeFrames, BonusCalculation.None));
         }
 
         [Test]
@@ -562,7 +562,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.LastThreeFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.LastThreeFrames));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastThreeFrames, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastThreeFrames, BonusCalculation.None));
         }
 
         [Test]
@@ -583,7 +583,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(380, workUnitModel.GetRawTime(PpdCalculationType.LastFrame));
             Assert.AreEqual(TimeSpan.FromSeconds(380), workUnitModel.GetFrameTime(PpdCalculationType.LastFrame));
-            Assert.AreEqual(227.36842, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(227.36842, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
         }
 
         [Test]
@@ -595,7 +595,7 @@ namespace HFM.Core.WorkUnits
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PpdCalculationType.LastFrame));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PpdCalculationType.LastFrame));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
         }
 
         [Test]
@@ -716,9 +716,9 @@ namespace HFM.Core.WorkUnits
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
 
-            Assert.AreEqual(848.528, workUnitModel.GetCredit(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, BonusCalculationType.DownloadTime));
+            Assert.AreEqual(848.528, workUnitModel.GetCredit(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, BonusCalculation.DownloadTime));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PpdCalculationType.LastFrame));
-            Assert.AreEqual(2036.4672, workUnitModel.GetPPD(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, BonusCalculationType.DownloadTime));
+            Assert.AreEqual(2036.4672, workUnitModel.GetPPD(SlotStatus.RunningNoFrameTimes, PpdCalculationType.LastFrame, BonusCalculation.DownloadTime));
         }
 
         [Test]
@@ -737,9 +737,9 @@ namespace HFM.Core.WorkUnits
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
 
-            Assert.AreEqual(1897.367, workUnitModel.GetCredit(SlotStatus.Running, PpdCalculationType.LastFrame, BonusCalculationType.DownloadTime));
+            Assert.AreEqual(1897.367, workUnitModel.GetCredit(SlotStatus.Running, PpdCalculationType.LastFrame, BonusCalculation.DownloadTime));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PpdCalculationType.LastFrame));
-            Assert.AreEqual(4553.6808, workUnitModel.GetPPD(SlotStatus.Running, PpdCalculationType.LastFrame, BonusCalculationType.DownloadTime));
+            Assert.AreEqual(4553.6808, workUnitModel.GetPPD(SlotStatus.Running, PpdCalculationType.LastFrame, BonusCalculation.DownloadTime));
         }
 
         [Test]
@@ -757,9 +757,9 @@ namespace HFM.Core.WorkUnits
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
 
-            Assert.AreEqual(100, workUnitModel.GetCredit(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(100, workUnitModel.GetCredit(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PpdCalculationType.LastFrame));
-            Assert.AreEqual(240, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(240, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
         }
 
         [Test]
@@ -776,9 +776,9 @@ namespace HFM.Core.WorkUnits
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
 
-            Assert.AreEqual(0, workUnitModel.GetCredit(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetCredit(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PpdCalculationType.LastFrame));
-            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculationType.None));
+            Assert.AreEqual(0, workUnitModel.GetPPD(SlotStatus.Unknown, PpdCalculationType.LastFrame, BonusCalculation.None));
         }
 
         #endregion

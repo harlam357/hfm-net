@@ -24,6 +24,7 @@ using System.ComponentModel;
 using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -42,7 +43,7 @@ namespace HFM.Forms.Models
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
          PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
-         CalculateBonus = prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+         CalculateBonus = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
          EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
          DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
          ShowXmlStats = prefs.Get<bool>(Preference.EnableUserStats);
@@ -142,9 +143,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private BonusCalculationType _calculateBonus;
+      private BonusCalculation _calculateBonus;
 
-      public BonusCalculationType CalculateBonus
+      public BonusCalculation CalculateBonus
       {
          get { return _calculateBonus; }
          set
@@ -282,11 +283,11 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = "Download Time", ValueMember = BonusCalculationType.DownloadTime },
+                          { DisplayMember = "Download Time", ValueMember = BonusCalculation.DownloadTime },
                           new ListItem
-                          { DisplayMember = "Frame Time", ValueMember = BonusCalculationType.FrameTime },
+                          { DisplayMember = "Frame Time", ValueMember = BonusCalculation.FrameTime },
                           new ListItem
-                          { DisplayMember = "None", ValueMember = BonusCalculationType.None },
+                          { DisplayMember = "None", ValueMember = BonusCalculation.None },
                        };
             return list.AsReadOnly();
          }

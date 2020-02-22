@@ -681,16 +681,16 @@ namespace HFM.Core.Data
         private void FetchTestData(int count, WorkUnitQuery query)
         {
             _database.Initialize(_testDataFileCopy);
-            FetchInternal(count, query, BonusCalculationType.DownloadTime);
+            FetchInternal(count, query, BonusCalculation.DownloadTime);
         }
 
         private void FetchTestData2(int count, WorkUnitQuery query)
         {
             _database.Initialize(_testData2FileCopy);
-            FetchInternal(count, query, BonusCalculationType.FrameTime);
+            FetchInternal(count, query, BonusCalculation.FrameTime);
         }
 
-        private void FetchInternal(int count, WorkUnitQuery query, BonusCalculationType bonusCalculation)
+        private void FetchInternal(int count, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var entries = _database.Fetch(query, bonusCalculation);
 //#if DEBUG
@@ -784,7 +784,7 @@ namespace HFM.Core.Data
             const long itemsPerPage = 10;
 
             _database.Initialize(_testDataFileCopy);
-            var page = _database.Page(1, itemsPerPage, query, BonusCalculationType.DownloadTime);
+            var page = _database.Page(1, itemsPerPage, query, BonusCalculation.DownloadTime);
             int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
             Assert.AreEqual(totalItems, page.TotalItems);
             Assert.AreEqual(expectedPages, page.TotalPages);

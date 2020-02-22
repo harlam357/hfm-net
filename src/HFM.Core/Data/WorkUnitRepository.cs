@@ -52,9 +52,9 @@ namespace HFM.Core.Data
 
         int Delete(WorkUnitRow row);
 
-        IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculationType bonusCalculation);
+        IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-        PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation);
+        PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -284,7 +284,7 @@ namespace HFM.Core.Data
 
         private bool WorkUnitExists(WorkUnit workUnit)
         {
-            var rows = Fetch(CreateWorkUnitQuery(workUnit), BonusCalculationType.None);
+            var rows = Fetch(CreateWorkUnitQuery(workUnit), BonusCalculation.None);
             return rows.Count != 0;
         }
 
@@ -319,7 +319,7 @@ namespace HFM.Core.Data
 
         #region Fetch
 
-        public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculationType bonusCalculation)
+        public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -332,7 +332,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculationType bonusCalculation)
+        private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
@@ -349,7 +349,7 @@ namespace HFM.Core.Data
             }
         }
 
-        public PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation)
+        public PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -362,7 +362,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculationType bonusCalculation)
+        private PetaPoco.Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 

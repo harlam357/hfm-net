@@ -36,30 +36,15 @@ namespace HFM.Core.Client
 
         public IPreferenceSet Prefs { get; set; }
 
-        private PpdCalculationType CalculationType
-        {
-            get { return Prefs.Get<PpdCalculationType>(Preference.PpdCalculation); }
-        }
+        private PpdCalculationType CalculationType => Prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
 
-        private BonusCalculationType CalculateBonus
-        {
-            get { return Prefs.Get<BonusCalculationType>(Preference.BonusCalculation); }
-        }
+        private BonusCalculation BonusCalculation => Prefs.Get<BonusCalculation>(Preference.BonusCalculation);
 
-        private bool ShowVersions
-        {
-            get { return Prefs.Get<bool>(Preference.DisplayVersions); }
-        }
+        private bool ShowVersions => Prefs.Get<bool>(Preference.DisplayVersions);
 
-        private int DecimalPlaces
-        {
-            get { return Prefs.Get<int>(Preference.DecimalPlaces); }
-        }
+        private int DecimalPlaces => Prefs.Get<int>(Preference.DecimalPlaces);
 
-        internal bool ShowETADate
-        {
-            get { return Prefs.Get<bool>(Preference.DisplayEtaAsDate); }
-        }
+        internal bool ShowETADate => Prefs.Get<bool>(Preference.DisplayEtaAsDate);
 
         #endregion
 
@@ -71,7 +56,7 @@ namespace HFM.Core.Client
         /// </summary>
         public WorkUnitModel WorkUnitModel
         {
-            get { return _workUnitModel; }
+            get => _workUnitModel;
             set
             {
                 if (_workUnitModel != null)
@@ -87,8 +72,8 @@ namespace HFM.Core.Client
 
         public WorkUnit WorkUnit
         {
-            get { return _workUnit ?? WorkUnitModel.Data; }
-            set { _workUnit = value; }
+            get => _workUnit ?? WorkUnitModel.Data;
+            set => _workUnit = value;
         }
 
         public ClientSettings Settings { get; set; }
@@ -145,8 +130,8 @@ namespace HFM.Core.Client
         public int MachineId
         {
             // if SlotId is populated by a v7 client then also use it for the MachineId value
-            get { return SlotId > -1 ? SlotId : _machineId; }
-            set { _machineId = value; }
+            get => SlotId > -1 ? SlotId : _machineId;
+            set => _machineId = value;
         }
 
         #endregion
@@ -158,30 +143,21 @@ namespace HFM.Core.Client
         /// </summary>
         public SlotStatus Status { get; set; }
 
-        public float Progress
-        {
-            get { return ((float)PercentComplete) / 100; }
-        }
+        public float Progress => ((float)PercentComplete) / 100;
 
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        public int PercentComplete
-        {
-            get { return ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0; }
-        }
+        public int PercentComplete => ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public string Name
-        {
-            get { return Settings.Name.AppendSlotId(SlotId); }
-        }
+        public string Name => Settings.Name.AppendSlotId(SlotId);
 
         private int _slotId = -1;
 
         public int SlotId
         {
-            get { return _slotId; }
-            set { _slotId = value; }
+            get => _slotId;
+            set => _slotId = value;
         }
 
         public string SlotType
@@ -202,50 +178,32 @@ namespace HFM.Core.Client
         /// </summary>
         public string ClientVersion { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime
-        {
-            get { return ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(CalculationType); }
-        }
+        public bool IsUsingBenchmarkFrameTime => ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(CalculationType);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan TPF
-        {
-            get { return ProductionValuesOk ? WorkUnitModel.GetFrameTime(CalculationType) : TimeSpan.Zero; }
-        }
+        public TimeSpan TPF => ProductionValuesOk ? WorkUnitModel.GetFrameTime(CalculationType) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public double PPD
-        {
-            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, CalculationType, CalculateBonus), DecimalPlaces) : 0; }
-        }
+        public double PPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, CalculationType, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public double UPD
-        {
-            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(CalculationType), 3) : 0; }
-        }
+        public double UPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(CalculationType), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public TimeSpan ETA
-        {
-            get { return ProductionValuesOk ? WorkUnitModel.GetEta(CalculationType) : TimeSpan.Zero; }
-        }
+        public TimeSpan ETA => ProductionValuesOk ? WorkUnitModel.GetEta(CalculationType) : TimeSpan.Zero;
 
         /// <summary>
         /// Esimated time of arrival (ETA) for this protein
         /// </summary>
-        public DateTime ETADate
-        {
-            get { return ProductionValuesOk ? WorkUnitModel.GetEtaDate(CalculationType) : DateTime.MinValue; }
-        }
+        public DateTime ETADate => ProductionValuesOk ? WorkUnitModel.GetEtaDate(CalculationType) : DateTime.MinValue;
 
         public string Core
         {
@@ -259,20 +217,11 @@ namespace HFM.Core.Client
             }
         }
 
-        public string CoreId
-        {
-            get { return WorkUnit.CoreID; }
-        }
+        public string CoreId => WorkUnit.CoreID;
 
-        public string ProjectRunCloneGen
-        {
-            get { return WorkUnit.ToShortProjectString(); }
-        }
+        public string ProjectRunCloneGen => WorkUnit.ToShortProjectString();
 
-        public double Credit
-        {
-            get { return ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, CalculationType, CalculateBonus), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit; }
-        }
+        public double Credit => ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, CalculationType, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public int Completed =>
            Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
@@ -307,33 +256,19 @@ namespace HFM.Core.Client
         /// <summary>
         /// Combined Folding ID and Team String
         /// </summary>
-        public string Username
-        {
-            get { return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team); }
-        }
+        public string Username => String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team);
 
-        public DateTime DownloadTime
-        {
-            get { return WorkUnitModel.DownloadTime; }
-        }
+        public DateTime DownloadTime => WorkUnitModel.DownloadTime;
 
-        public DateTime PreferredDeadline
-        {
-            get { return WorkUnitModel.PreferredDeadline; }
-        }
+        public DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
 
         /// <summary>
         /// Flag denoting if Progress, Production, and Time based values are OK to Display
         /// </summary>
-        public bool ProductionValuesOk
-        {
-            get
-            {
-                return Status == SlotStatus.Running ||
-                       Status == SlotStatus.RunningNoFrameTimes ||
-                       Status == SlotStatus.Finishing;
-            }
-        }
+        public bool ProductionValuesOk =>
+            Status == SlotStatus.Running ||
+            Status == SlotStatus.RunningNoFrameTimes ||
+            Status == SlotStatus.Finishing;
 
         #endregion
 

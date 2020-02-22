@@ -1035,21 +1035,21 @@ namespace HFM.Forms
 
         public void ViewCycleBonusCalculationClick()
         {
-            var calculationType = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+            var calculationType = _prefs.Get<BonusCalculation>(Preference.BonusCalculation);
             int typeIndex = 0;
             // None is always LAST entry
-            if (calculationType != BonusCalculationType.None)
+            if (calculationType != BonusCalculation.None)
             {
                 typeIndex = (int)calculationType;
                 typeIndex++;
             }
 
-            calculationType = (BonusCalculationType)typeIndex;
+            calculationType = (BonusCalculation)typeIndex;
             _prefs.Set(Preference.BonusCalculation, calculationType);
             _prefs.Save();
 
             string calculationTypeString = (from item in OptionsModel.BonusCalculationList
-                                            where ((BonusCalculationType)item.ValueMember) == calculationType
+                                            where ((BonusCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();

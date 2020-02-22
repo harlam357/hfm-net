@@ -26,8 +26,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Data;
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -85,7 +85,7 @@ namespace HFM.Forms.Models
 
         public void Load(IPreferenceSet prefs, WorkUnitQueryDataContainer queryContainer)
         {
-            _bonusCalculation = prefs.Get<BonusCalculationType>(Preference.HistoryBonusCalculation);
+            _bonusCalculation = prefs.Get<BonusCalculation>(Preference.HistoryBonusCalculation);
             _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
             FormLocation = prefs.Get<Point>(Preference.HistoryFormLocation);
             FormSize = prefs.Get<Size>(Preference.HistoryFormSize);
@@ -282,9 +282,9 @@ namespace HFM.Forms.Models
             get { return SelectedWorkUnitQuery.Name != WorkUnitQuery.SelectAll.Name; }
         }
 
-        private BonusCalculationType _bonusCalculation;
+        private BonusCalculation _bonusCalculation;
 
-        public BonusCalculationType BonusCalculation
+        public BonusCalculation BonusCalculation
         {
             get { return _bonusCalculation; }
             set
