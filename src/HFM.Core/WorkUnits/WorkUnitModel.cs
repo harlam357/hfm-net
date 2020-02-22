@@ -172,17 +172,17 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Frame Time per section based on current PPD calculation setting (readonly)
         /// </summary>
-        public int GetRawTime(PpdCalculationType calculationType)
+        public int GetRawTime(PPDCalculation ppdCalculation)
         {
-            switch (calculationType)
+            switch (ppdCalculation)
             {
-                case PpdCalculationType.LastFrame:
+                case PPDCalculation.LastFrame:
                     return _workUnit.FramesObserved > 1 ? Convert.ToInt32(_workUnit.CurrentFrame.Duration.TotalSeconds) : 0;
-                case PpdCalculationType.LastThreeFrames:
+                case PPDCalculation.LastThreeFrames:
                     return _workUnit.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
-                case PpdCalculationType.AllFrames:
+                case PPDCalculation.AllFrames:
                     return _workUnit.FramesObserved > 0 ? GetDurationInSeconds(_workUnit.FramesObserved) : 0;
-                case PpdCalculationType.EffectiveRate:
+                case PPDCalculation.EffectiveRate:
                     return GetRawTimePerUnitDownload();
             }
 
@@ -207,17 +207,17 @@ namespace HFM.Core.WorkUnits
             return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _workUnit.CurrentFrame.ID);
         }
 
-        public bool IsUsingBenchmarkFrameTime(PpdCalculationType calculationType)
+        public bool IsUsingBenchmarkFrameTime(PPDCalculation ppdCalculation)
         {
-            return GetRawTime(calculationType) == 0;
+            return GetRawTime(ppdCalculation) == 0;
         }
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan GetFrameTime(PpdCalculationType calculationType)
+        public TimeSpan GetFrameTime(PPDCalculation ppdCalculation)
         {
-            int rawTime = GetRawTime(calculationType);
+            int rawTime = GetRawTime(ppdCalculation);
             if (rawTime != 0)
             {
                 return TimeSpan.FromSeconds(rawTime);
@@ -230,35 +230,35 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Work unit credit
         /// </summary>
-        public double GetCredit(SlotStatus status, PpdCalculationType calculationType, BonusCalculation calculateBonus)
+        public double GetCredit(SlotStatus status, PPDCalculation ppdCalculation, BonusCalculation calculateBonus)
         {
-            TimeSpan frameTime = GetFrameTime(calculationType);
+            TimeSpan frameTime = GetFrameTime(ppdCalculation);
             return GetCredit(GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
         }
 
         /// <summary>
         /// Units per day (UPD) rating for this unit
         /// </summary>
-        public double GetUPD(PpdCalculationType calculationType)
+        public double GetUPD(PPDCalculation ppdCalculation)
         {
-            return ProductionCalculator.GetUPD(GetFrameTime(calculationType), CurrentProtein.Frames);
+            return ProductionCalculator.GetUPD(GetFrameTime(ppdCalculation), CurrentProtein.Frames);
         }
 
         /// <summary>
         /// Points per day (PPD) rating for this unit
         /// </summary>
-        public double GetPPD(SlotStatus status, PpdCalculationType calculationType, BonusCalculation calculateBonus)
+        public double GetPPD(SlotStatus status, PPDCalculation ppdCalculation, BonusCalculation calculateBonus)
         {
-            TimeSpan frameTime = GetFrameTime(calculationType);
+            TimeSpan frameTime = GetFrameTime(ppdCalculation);
             return GetPPD(frameTime, GetUnitTimeByDownloadTime(frameTime), GetUnitTimeByFrameTime(frameTime), status, calculateBonus);
         }
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this unit
         /// </summary>
-        public TimeSpan GetEta(PpdCalculationType calculationType)
+        public TimeSpan GetEta(PPDCalculation ppdCalculation)
         {
-            return GetEta(GetFrameTime(calculationType));
+            return GetEta(GetFrameTime(ppdCalculation));
         }
 
         /// <summary>
@@ -272,9 +272,9 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Estimated time of arrival (ETA) for this unit
         /// </summary>
-        public DateTime GetEtaDate(PpdCalculationType calculationType)
+        public DateTime GetEtaDate(PPDCalculation ppdCalculation)
         {
-            return _workUnit.UnitRetrievalTime.Add(GetEta(calculationType));
+            return _workUnit.UnitRetrievalTime.Add(GetEta(ppdCalculation));
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        public void ShowProductionTrace(ILogger logger, string slotName, SlotStatus status, PpdCalculationType calculationType, BonusCalculation bonusCalculation)
+        public void ShowProductionTrace(ILogger logger, string slotName, SlotStatus status, PPDCalculation ppdCalculation, BonusCalculation bonusCalculation)
         {
             // test the level
             if (!logger.IsDebugEnabled) return;
@@ -381,7 +381,7 @@ namespace HFM.Core.WorkUnits
                     break;
             }
 
-            TimeSpan frameTime = GetFrameTime(calculationType);
+            TimeSpan frameTime = GetFrameTime(ppdCalculation);
             var noBonusValues = CurrentProtein.GetProductionValues(frameTime, TimeSpan.Zero);
             TimeSpan unitTimeByDownloadTime = GetUnitTimeByDownloadTime(frameTime);
             var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);

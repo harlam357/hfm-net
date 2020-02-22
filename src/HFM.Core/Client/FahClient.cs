@@ -414,7 +414,7 @@ namespace HFM.Core.Client
                     SetSlotStatus(slotModel);
 
                     slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
-                       Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
+                       Prefs.Get<PPDCalculation>(Preference.PPDCalculation),
                        Prefs.Get<BonusCalculation>(Preference.BonusCalculation));
 
                     string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);

@@ -105,7 +105,7 @@
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="WorkUnits\ProjectInfo.cs" />
-    <Compile Include="PpdCalculationType.cs" />
+    <Compile Include="WorkUnits\PPDCalculation.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />

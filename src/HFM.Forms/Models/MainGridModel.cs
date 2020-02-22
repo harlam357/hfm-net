@@ -142,7 +142,7 @@ namespace HFM.Forms.Models
                                               _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
                                               Sort();
                                               break;
-                                           case Preference.PpdCalculation:
+                                           case Preference.PPDCalculation:
                                            case Preference.DecimalPlaces:
                                            case Preference.BonusCalculation:
                                               ResetBindings();

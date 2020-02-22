@@ -253,7 +253,7 @@ namespace HFM.Core.Data
             // cannot map these two properties from a WorkUnit instance
             // they only live at the WorkUnitModel level
             entry.FramesCompleted = workUnitModel.FramesComplete;
-            entry.FrameTimeValue = workUnitModel.GetRawTime(PpdCalculationType.AllFrames);
+            entry.FrameTimeValue = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
             // copy protein values for insert
             entry.WorkUnitName = workUnitModel.CurrentProtein.WorkUnitName;
             entry.KFactor = workUnitModel.CurrentProtein.KFactor;

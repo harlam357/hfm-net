@@ -179,7 +179,7 @@ namespace HFM.Preferences
          prefs.Add(Preference.OfflineLast, p => p.MainWindowGridProperties.OfflineClientsLast);
          prefs.Add(Preference.ColorLogFile, p => p.LogWindowProperties.ApplyColor);
          prefs.Add(Preference.AutoSaveConfig, p => p.ApplicationSettings.AutoSaveConfig);
-         prefs.Add(Preference.PpdCalculation, p => p.ApplicationSettings.PpdCalculation);
+         prefs.Add(Preference.PPDCalculation, p => p.ApplicationSettings.PpdCalculation);
          prefs.Add(Preference.DecimalPlaces, p => p.ApplicationSettings.DecimalPlaces);
          prefs.Add(Preference.BonusCalculation, p => p.ApplicationSettings.BonusCalculation);
          prefs.Add(Preference.FollowLog, p => p.LogWindowProperties.FollowLog);

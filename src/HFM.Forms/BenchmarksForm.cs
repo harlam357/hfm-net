@@ -298,13 +298,13 @@ namespace HFM.Forms
             if (workUnitModel != null)
             {
                 lines.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   workUnitModel.GetFrameTime(PpdCalculationType.LastFrame), workUnitModel.GetPPD(status, PpdCalculationType.LastFrame, calculateBonus)));
+                   workUnitModel.GetFrameTime(PPDCalculation.LastFrame), workUnitModel.GetPPD(status, PPDCalculation.LastFrame, calculateBonus)));
                 lines.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   workUnitModel.GetFrameTime(PpdCalculationType.LastThreeFrames), workUnitModel.GetPPD(status, PpdCalculationType.LastThreeFrames, calculateBonus)));
+                   workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames), workUnitModel.GetPPD(status, PPDCalculation.LastThreeFrames, calculateBonus)));
                 lines.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   workUnitModel.GetFrameTime(PpdCalculationType.AllFrames), workUnitModel.GetPPD(status, PpdCalculationType.AllFrames, calculateBonus)));
+                   workUnitModel.GetFrameTime(PPDCalculation.AllFrames), workUnitModel.GetPPD(status, PPDCalculation.AllFrames, calculateBonus)));
                 lines.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
-                   workUnitModel.GetFrameTime(PpdCalculationType.EffectiveRate), workUnitModel.GetPPD(status, PpdCalculationType.EffectiveRate, calculateBonus)));
+                   workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate), workUnitModel.GetPPD(status, PPDCalculation.EffectiveRate, calculateBonus)));
             }
 
             lines.Add(String.Empty);

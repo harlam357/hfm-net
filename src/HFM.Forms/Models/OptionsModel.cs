@@ -23,7 +23,6 @@ using System.ComponentModel;
 
 using Castle.Core.Logging;
 
-using HFM.Core;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -41,7 +40,7 @@ namespace HFM.Forms.Models
          OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
          ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
-         PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+         PpdCalculation = prefs.Get<PPDCalculation>(Preference.PPDCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
          CalculateBonus = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
          EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
@@ -56,7 +55,7 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.OfflineLast, OfflineLast);
          prefs.Set(Preference.ColorLogFile, ColorLogFile);
          prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-         prefs.Set(Preference.PpdCalculation, PpdCalculation);
+         prefs.Set(Preference.PPDCalculation, PpdCalculation);
          prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
          prefs.Set(Preference.BonusCalculation, CalculateBonus);
          prefs.Set(Preference.DisplayEtaAsDate, EtaDate);
@@ -113,9 +112,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private PpdCalculationType _ppdCalculation;
+      private PPDCalculation _ppdCalculation;
       
-      public PpdCalculationType PpdCalculation
+      public PPDCalculation PpdCalculation
       {
          get { return _ppdCalculation; }
          set
@@ -264,13 +263,13 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = "Last Frame", ValueMember = PpdCalculationType.LastFrame },
+                          { DisplayMember = "Last Frame", ValueMember = PPDCalculation.LastFrame },
                           new ListItem
-                          { DisplayMember = "Last Three Frames", ValueMember = PpdCalculationType.LastThreeFrames },
+                          { DisplayMember = "Last Three Frames", ValueMember = PPDCalculation.LastThreeFrames },
                           new ListItem
-                          { DisplayMember = "All Frames", ValueMember = PpdCalculationType.AllFrames },
+                          { DisplayMember = "All Frames", ValueMember = PPDCalculation.AllFrames },
                           new ListItem
-                          { DisplayMember = "Effective Rate", ValueMember = PpdCalculationType.EffectiveRate }
+                          { DisplayMember = "Effective Rate", ValueMember = PPDCalculation.EffectiveRate }
                        };
             return list.AsReadOnly();
          }

@@ -1057,21 +1057,21 @@ namespace HFM.Forms
 
         public void ViewCycleCalculationClick()
         {
-            var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+            var calculationType = _prefs.Get<PPDCalculation>(Preference.PPDCalculation);
             int typeIndex = 0;
             // EffectiveRate is always LAST entry
-            if (calculationType != PpdCalculationType.EffectiveRate)
+            if (calculationType != PPDCalculation.EffectiveRate)
             {
                 typeIndex = (int)calculationType;
                 typeIndex++;
             }
 
-            calculationType = (PpdCalculationType)typeIndex;
-            _prefs.Set(Preference.PpdCalculation, calculationType);
+            calculationType = (PPDCalculation)typeIndex;
+            _prefs.Set(Preference.PPDCalculation, calculationType);
             _prefs.Save();
 
             string calculationTypeString = (from item in OptionsModel.PpdCalculationList
-                                            where ((PpdCalculationType)item.ValueMember) == calculationType
+                                            where ((PPDCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();

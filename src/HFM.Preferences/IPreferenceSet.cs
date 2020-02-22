@@ -85,7 +85,7 @@ namespace HFM.Preferences
       OfflineLast,
       ColorLogFile,
       AutoSaveConfig,
-      PpdCalculation,
+      PPDCalculation,
       DecimalPlaces,
       BonusCalculation,
       FollowLog,

@@ -36,7 +36,7 @@ namespace HFM.Core.Client
 
         public IPreferenceSet Prefs { get; set; }
 
-        private PpdCalculationType CalculationType => Prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+        private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
 
         private BonusCalculation BonusCalculation => Prefs.Get<BonusCalculation>(Preference.BonusCalculation);
 
@@ -178,32 +178,32 @@ namespace HFM.Core.Client
         /// </summary>
         public string ClientVersion { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(CalculationType);
+        public bool IsUsingBenchmarkFrameTime => ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan TPF => ProductionValuesOk ? WorkUnitModel.GetFrameTime(CalculationType) : TimeSpan.Zero;
+        public TimeSpan TPF => ProductionValuesOk ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public double PPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, CalculationType, BonusCalculation), DecimalPlaces) : 0;
+        public double PPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public double UPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(CalculationType), 3) : 0;
+        public double UPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public TimeSpan ETA => ProductionValuesOk ? WorkUnitModel.GetEta(CalculationType) : TimeSpan.Zero;
+        public TimeSpan ETA => ProductionValuesOk ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Esimated time of arrival (ETA) for this protein
         /// </summary>
-        public DateTime ETADate => ProductionValuesOk ? WorkUnitModel.GetEtaDate(CalculationType) : DateTime.MinValue;
+        public DateTime ETADate => ProductionValuesOk ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
 
         public string Core
         {
@@ -221,7 +221,7 @@ namespace HFM.Core.Client
 
         public string ProjectRunCloneGen => WorkUnit.ToShortProjectString();
 
-        public double Credit => ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, CalculationType, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+        public double Credit => ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public int Completed =>
            Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
