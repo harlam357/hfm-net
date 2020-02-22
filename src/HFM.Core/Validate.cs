@@ -18,13 +18,11 @@
  */
 
 using System;
-using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HFM.Core
 {
-   public static partial class Validate
+   public static class Validate
    {
       #region Constants
 

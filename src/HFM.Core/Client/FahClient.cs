@@ -435,7 +435,7 @@ namespace HFM.Core.Client
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnit != null);
 
-            Protein protein = ProteinService.Get(workUnit.ProjectID, true) ?? new Protein();
+            Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
             workUnit.UnitRetrievalTime = LastRetrievalTime;

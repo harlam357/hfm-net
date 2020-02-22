@@ -24,6 +24,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Cache;
 
+using Castle.Core.Logging;
+
 using harlam357.Core;
 
 using HFM.Core.Data;
@@ -36,270 +38,187 @@ namespace HFM.Core.WorkUnits
     public interface IProteinService
     {
         /// <summary>
-        /// Gets the protein with the given project id.
+        /// Gets the protein with the given project ID.
         /// </summary>
-        /// <param name="projectId">The project id of the protein to return.</param>
-        /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
-        Protein Get(int projectId);
+        /// <param name="projectID">The project ID of the protein to return.</param>
+        /// <returns>The protein object with the given project ID or null if the protein does not exist.</returns>
+        Protein Get(int projectID);
 
         /// <summary>
-        /// Gets the protein with the given project id.
+        /// Gets the protein with the given project ID or refreshes the service data from the project summary.
         /// </summary>
-        /// <param name="projectId">The project id of the protein to return.</param>
-        /// <param name="allowRefresh">true to allow this Get method to refresh the service.</param>
-        /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
-        Protein Get(int projectId, bool allowRefresh);
+        /// <param name="projectID">The project ID of the protein to return.</param>
+        /// <returns>The protein object with the given project ID or null if the protein does not exist.</returns>
+        Protein GetOrRefresh(int projectID);
 
         /// <summary>
-        /// Gets a collection of all protein project id numbers.
+        /// Gets a collection of all protein project ID numbers.
         /// </summary>
-        /// <returns>A collection of all protein project id numbers.</returns>
+        /// <returns>A collection of all protein project ID numbers.</returns>
         IEnumerable<int> GetProjects();
 
         /// <summary>
-        /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
+        /// Refreshes the service data from the project summary and returns a collection of objects detailing how the service data was changed.
         /// </summary>
         /// <param name="progress">The object used to report refresh progress.</param>
         /// <returns>A collection of objects detailing how the service data was changed</returns>
         IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress);
     }
 
-    public sealed class ProteinService : DataContainer<List<Protein>>, IProteinService
+    public sealed class ProteinService : IProteinService
     {
-        public const string DefaultFileName = "ProjectInfo.tab";
-
-        private ProteinDictionary _dictionary;
+        private readonly ProteinDataContainer _dataContainer;
         private readonly IProjectSummaryDownloader _downloader;
-
-        private readonly Dictionary<int, DateTime> _projectsNotFound;
-        private DateTime? _lastRefreshTime;
+        private readonly ILogger _logger;
+        private ProteinDictionary _dictionary;
 
         internal ProteinService()
-           : this(null, null)
+           : this(new ProteinDataContainer(), null, null)
         {
 
         }
 
-        public ProteinService(IPreferenceSet prefs, IProjectSummaryDownloader downloader)
+        public ProteinService(ProteinDataContainer dataContainer, IProjectSummaryDownloader downloader, ILogger logger)
         {
-            _dictionary = new ProteinDictionary();
+            _dataContainer = dataContainer;
             _downloader = downloader;
+            _logger = logger ?? NullLogger.Instance;
+            _dictionary = CreateProteinDictionary(_dataContainer.Data);
 
-            _projectsNotFound = new Dictionary<int, DateTime>();
-
-            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
-            if (!String.IsNullOrEmpty(path))
-            {
-                FilePath = Path.Combine(path, DefaultFileName);
-            }
+            LastProjectRefresh = new Dictionary<int, DateTime>();
         }
 
-        #region Properties
-
-        /// <summary>
-        /// Gets the dictionary that contains previously queried project id numbers that were not found and the date and time of the query.
-        /// </summary>
-        internal IDictionary<int, DateTime> ProjectsNotFound
+        private static ProteinDictionary CreateProteinDictionary(IEnumerable<Protein> proteins)
         {
-            get { return _projectsNotFound; }
-        }
-
-        internal DateTime? LastRefreshTime
-        {
-            get { return _lastRefreshTime; }
-            set { _lastRefreshTime = value; }
-        }
-
-        public override Serializers.IFileSerializer<List<Protein>> DefaultSerializer
-        {
-            get { return new TabSerializer(); }
-        }
-
-        private sealed class TabSerializer : Serializers.IFileSerializer<List<Protein>>
-        {
-            private readonly Proteins.TabDelimitedTextSerializer _serializer = new Proteins.TabDelimitedTextSerializer();
-
-            public string FileExtension
+            var dictionary = new ProteinDictionary();
+            foreach (var p in proteins)
             {
-                get { return "tab"; }
+                dictionary.Add(p.ProjectNumber, p);
             }
-
-            public string FileTypeFilter
-            {
-                get { return "Project Info Tab Delimited Files|*.tab"; }
-            }
-
-            public List<Protein> Deserialize(string path)
-            {
-                return _serializer.ReadFile(path).ToList();
-            }
-
-            public void Serialize(string path, List<Protein> value)
-            {
-                _serializer.WriteFile(path, value);
-            }
+            return dictionary;
         }
 
-        #endregion
-
-        /// <summary>
-        /// Gets the protein with the given project id.
-        /// </summary>
-        /// <param name="projectId">The project id of the protein to return.</param>
-        /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
-        public Protein Get(int projectId)
+        public Protein Get(int projectID)
         {
-            return Get(projectId, false);
+            return _dictionary.TryGetValue(projectID, out Protein p) ? p : null;
         }
 
-        /// <summary>
-        /// Gets a collection of all protein project id numbers.
-        /// </summary>
-        /// <returns>A collection of all protein project id numbers.</returns>
         public IEnumerable<int> GetProjects()
         {
             return _dictionary.Keys;
         }
 
-        internal void Add(Protein protein)
+        public Protein GetOrRefresh(int projectID)
         {
-            _dictionary.Add(protein.ProjectNumber, protein);
-        }
-
-        /// <summary>
-        /// Gets the protein with the given project id.
-        /// </summary>
-        /// <param name="projectId">The project id of the protein to return.</param>
-        /// <param name="allowRefresh">true to allow this Get method to refresh the service.</param>
-        /// <returns>The protein object with the given project id or null if the protein does not exist.</returns>
-        public Protein Get(int projectId, bool allowRefresh)
-        {
-            if (_dictionary.ContainsKey(projectId))
+            if (_dictionary.TryGetValue(projectID, out Protein p))
             {
-                return _dictionary[projectId];
+                return p;
             }
 
-            if (projectId == 0 || !allowRefresh || !CanRefresh(projectId))
+            if (_downloader is null || ProjectIDIsNotValid(projectID) || AutoRefreshIsNotAvailable(projectID))
             {
                 return null;
             }
 
-            if (_downloader != null)
+            _logger.Info($"Project ID {projectID} triggering project data refresh.");
+            try
             {
-                Logger.Info(String.Format("Project ID {0} triggering project data refresh.", projectId));
-
-                try
+                Refresh(null);
+                if (_dictionary.TryGetValue(projectID, out p))
                 {
-                    Refresh(null);
+                    return p;
                 }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                }
-
-                if (_dictionary.ContainsKey(projectId))
-                {
-                    return _dictionary[projectId];
-                }
-
-                // update the last download attempt date
-                _projectsNotFound[projectId] = DateTime.UtcNow;
+                LastProjectRefresh[projectID] = DateTime.UtcNow;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message, ex);
             }
 
             return null;
         }
 
-        /// <summary>
-        /// Refreshes the service data and returns a collection of objects detailing how the service data was changed.
-        /// </summary>
-        /// <param name="progress">The object used to report refresh progress.</param>
-        /// <returns>A collection of objects detailing how the service data was changed</returns>
+        private static bool ProjectIDIsNotValid(int projectID)
+        {
+            return projectID <= 0;
+        }
+
         public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
         {
-            IReadOnlyCollection<ProteinDictionaryChange> dictionaryChanges;
             using (var stream = new MemoryStream())
             {
-                Logger.Info("Downloading new project data from Stanford...");
+                _logger.Info("Downloading new project data from Stanford...");
                 _downloader.Download(stream, progress);
                 stream.Position = 0;
 
                 var serializer = new ProjectSummaryJsonDeserializer();
-                var newDictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
-                dictionaryChanges = newDictionary.Changes;
-                _dictionary = newDictionary;
+                _dictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
             }
 
-            foreach (var info in dictionaryChanges.Where(info => info.Result != ProteinDictionaryChangeResult.NoChange))
+            foreach (var info in _dictionary.Changes.Where(info => info.Result != ProteinDictionaryChangeResult.NoChange))
             {
-                Logger.Info(info.ToString());
+                _logger.Info(info.ToString());
             }
 
             var now = DateTime.UtcNow;
-            foreach (var key in _projectsNotFound.Keys.ToList())
+            foreach (var key in LastProjectRefresh.Keys.ToList())
             {
                 if (_dictionary.ContainsKey(key))
                 {
-                    _projectsNotFound.Remove(key);
+                    LastProjectRefresh.Remove(key);
                 }
                 else
                 {
-                    _projectsNotFound[key] = now;
+                    LastProjectRefresh[key] = now;
                 }
             }
-            _lastRefreshTime = now;
+            LastRefresh = now;
 
             Write();
-            return dictionaryChanges;
+            return _dictionary.Changes;
         }
 
-        private bool CanRefresh(int projectId)
+        private void Write()
         {
-            if (_lastRefreshTime.HasValue)
+            _dataContainer.Data = _dictionary.Values.ToList();
+            _dataContainer.Write();
+        }
+
+        /// <summary>
+        /// Gets the dictionary that contains previously queried project ID numbers that were not found and the date and time of the query.
+        /// </summary>
+        internal IDictionary<int, DateTime> LastProjectRefresh { get; }
+
+        internal DateTime? LastRefresh { get; set; }
+
+        private bool AutoRefreshIsNotAvailable(int projectID)
+        {
+            var utcNow = DateTime.UtcNow;
+
+            if (LastRefresh.HasValue)
             {
-                // if a download was attempted in the last hour, don't execute again
-                TimeSpan lastDownloadDifference = DateTime.UtcNow.Subtract(_lastRefreshTime.Value);
-                if (lastDownloadDifference.TotalHours < 1)
+                const double canRefreshAfterHours = 1.0;
+                TimeSpan lastRefreshDifference = utcNow.Subtract(LastRefresh.Value);
+                if (lastRefreshDifference.TotalHours < canRefreshAfterHours)
                 {
-                    Logger.Debug(String.Format("Download executed {0:0} minutes ago.", lastDownloadDifference.TotalMinutes));
-                    return false;
+                    _logger.Debug($"Refresh executed {lastRefreshDifference.TotalMinutes:0} minutes ago.");
+                    return true;
                 }
             }
 
-            // if this project has already been looked for previously
-            if (_projectsNotFound.ContainsKey(projectId))
+            if (LastProjectRefresh.ContainsKey(projectID))
             {
-                // if it has been less than one day since this project triggered an
-                // automatic download attempt just return a blank protein.
-                if (DateTime.UtcNow.Subtract(_projectsNotFound[projectId]).TotalDays < 1)
+                const double canRefreshAfterHours = 24.0;
+                TimeSpan lastRefreshDifference = utcNow.Subtract(LastProjectRefresh[projectID]);
+                if (lastRefreshDifference.TotalHours < canRefreshAfterHours)
                 {
-                    return false;
+                    _logger.Debug($"Project {projectID} refresh executed {lastRefreshDifference.TotalMinutes:0} minutes ago.");
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
-
-        #region DataContainer<T>
-
-        public override void Read()
-        {
-            // read the List<Protein>
-            base.Read();
-            // add each protein to the Dictionary<int, Protein>
-            foreach (var protein in Data)
-            {
-                Add(protein);
-            }
-        }
-
-        public override void Write()
-        {
-            Data = _dictionary.Values.ToList();
-
-            base.Write();
-        }
-
-        #endregion
     }
 
     public interface IProjectSummaryDownloader
