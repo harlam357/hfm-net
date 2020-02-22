@@ -27,6 +27,7 @@ using Rhino.Mocks;
 using harlam357.Core;
 
 using HFM.Core.Data;
+using HFM.Core.Services;
 using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
@@ -63,8 +64,8 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_Get_UnavailableProtein_AddsTheProjectIDToLastProjectRefresh()
         {
             // Arrange
-            var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = MockRepository.GenerateStub<IProjectSummaryService>();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // Act
             service.GetOrRefresh(2482);
             // Assert
@@ -75,8 +76,8 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_GetOrRefresh_CalledMultipleTimesOnlyTriggersOneRefresh_ByLastRefresh()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // Act
             var p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
@@ -84,15 +85,15 @@ namespace HFM.Core.WorkUnits
             p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
             // Assert
-            downloader.VerifyAllExpectations();
+            summaryService.VerifyAllExpectations();
         }
 
         [Test]
         public void ProteinService_GetOrRefresh_CalledMultipleTimesOnlyTriggersOneRefresh_ByLastProjectRefresh()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // Act
             var p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
@@ -101,30 +102,30 @@ namespace HFM.Core.WorkUnits
             p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
             // Assert
-            downloader.VerifyAllExpectations();
+            summaryService.VerifyAllExpectations();
         }
 
         [Test]
         public void ProteinService_GetOrRefresh_AllowsRefreshWhenLastRefreshElapsed()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // set to over the elapsed time (1 hour)
             service.LastRefresh = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(61));
             // Act
             var p = service.GetOrRefresh(6940);
             Assert.IsNotNull(p);
             // Assert
-            downloader.VerifyAllExpectations();
+            summaryService.VerifyAllExpectations();
         }
 
         [Test]
         public void ProteinService_GetOrRefresh_RemovesFromLastProjectRefresh()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceStub();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // Set project not found to exercise removal code
             service.LastProjectRefresh.Add(6940, DateTime.MinValue);
             // Act
@@ -155,8 +156,8 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_RefreshRemovesFromProjectsNotFound_Test()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceStub();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             service.LastProjectRefresh.Add(6940, DateTime.MinValue);
             // Act
             service.Refresh(null);
@@ -168,8 +169,8 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_Refresh_UpdatesRefreshProperties()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceStub();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             service.LastProjectRefresh.Add(2968, DateTime.MinValue);
             service.LastRefresh = DateTime.MinValue;
             // Act
@@ -183,8 +184,8 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_Refresh_RefreshesProjects()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceStub();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             Assert.AreEqual(0, service.GetProjects().Count());
             // Act
             service.Refresh(null);
@@ -196,36 +197,36 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_Refresh_ReturnsProteinChanges()
         {
             // Arrange
-            var downloader = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), downloader, new Logging.DebugLogger());
+            var summaryService = CreateProjectSummaryServiceStub();
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
             // Act
             var changes = service.Refresh(null);
             // Assert
             Assert.AreEqual(624, changes.Count);
         }
 
-        private static IProjectSummaryDownloader CreateProjectSummaryServiceStub()
+        private static IProjectSummaryService CreateProjectSummaryServiceStub()
         {
-            var downloader = MockRepository.GenerateStub<IProjectSummaryDownloader>();
-            downloader.Stub(x => x.Download(null, null)).IgnoreArguments()
+            var summaryService = MockRepository.GenerateStub<IProjectSummaryService>();
+            summaryService.Stub(x => x.CopyToStream(null, null)).IgnoreArguments()
                 .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
                 {
                     File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
                     return true;
                 }));
-            return downloader;
+            return summaryService;
         }
 
-        private static IProjectSummaryDownloader CreateProjectSummaryServiceMockRepeatOnce()
+        private static IProjectSummaryService CreateProjectSummaryServiceMockRepeatOnce()
         {
-            var downloader = MockRepository.GenerateMock<IProjectSummaryDownloader>();
-            downloader.Expect(x => x.Download(null, null)).IgnoreArguments()
+            var summaryService = MockRepository.GenerateMock<IProjectSummaryService>();
+            summaryService.Expect(x => x.CopyToStream(null, null)).IgnoreArguments()
                 .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
                 {
                     File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
                     return true;
                 })).Repeat.Once();
-            return downloader;
+            return summaryService;
         }
 
         private static Protein CreateValidProtein(int projectNumber)

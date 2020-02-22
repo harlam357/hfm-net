@@ -166,10 +166,10 @@ namespace HFM.Core.Configuration
                Component.For<IProteinService>()
                   .ImplementedBy<ProteinService>());
 
-            // IProjectSummaryDownloader - Singleton
+            // IProjectSummaryService - Singleton
             container.Register(
-               Component.For<IProjectSummaryDownloader>()
-                  .ImplementedBy<ProjectSummaryDownloader>());
+               Component.For<IProjectSummaryService>()
+                  .ImplementedBy<ProjectSummaryService>());
 
             #endregion
         }

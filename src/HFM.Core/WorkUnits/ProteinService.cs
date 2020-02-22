@@ -19,18 +19,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Cache;
-
 using Castle.Core.Logging;
 
 using harlam357.Core;
 
 using HFM.Core.Data;
-using HFM.Core.Net;
-using HFM.Preferences;
+using HFM.Core.Services;
 using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
@@ -68,7 +64,7 @@ namespace HFM.Core.WorkUnits
     public sealed class ProteinService : IProteinService
     {
         private readonly ProteinDataContainer _dataContainer;
-        private readonly IProjectSummaryDownloader _downloader;
+        private readonly IProjectSummaryService _projectSummaryService;
         private readonly ILogger _logger;
         private ProteinDictionary _dictionary;
 
@@ -78,10 +74,10 @@ namespace HFM.Core.WorkUnits
 
         }
 
-        public ProteinService(ProteinDataContainer dataContainer, IProjectSummaryDownloader downloader, ILogger logger)
+        public ProteinService(ProteinDataContainer dataContainer, IProjectSummaryService projectSummaryService, ILogger logger)
         {
             _dataContainer = dataContainer;
-            _downloader = downloader;
+            _projectSummaryService = projectSummaryService;
             _logger = logger ?? NullLogger.Instance;
             _dictionary = CreateProteinDictionary(_dataContainer.Data);
 
@@ -115,7 +111,7 @@ namespace HFM.Core.WorkUnits
                 return p;
             }
 
-            if (_downloader is null || ProjectIDIsNotValid(projectID) || AutoRefreshIsNotAvailable(projectID))
+            if (_projectSummaryService is null || ProjectIDIsNotValid(projectID) || AutoRefreshIsNotAvailable(projectID))
             {
                 return null;
             }
@@ -148,7 +144,7 @@ namespace HFM.Core.WorkUnits
             using (var stream = new MemoryStream())
             {
                 _logger.Info("Downloading new project data from Stanford...");
-                _downloader.Download(stream, progress);
+                _projectSummaryService.CopyToStream(stream, progress);
                 stream.Position = 0;
 
                 var serializer = new ProjectSummaryJsonDeserializer();
@@ -218,45 +214,6 @@ namespace HFM.Core.WorkUnits
             }
 
             return false;
-        }
-    }
-
-    public interface IProjectSummaryDownloader
-    {
-        /// <summary>
-        /// Downloads the project information.
-        /// </summary>
-        void Download(Stream stream, IProgress<ProgressInfo> progress);
-    }
-
-    public sealed class ProjectSummaryDownloader : IProjectSummaryDownloader
-    {
-        private readonly IPreferenceSet _prefs;
-
-        public ProjectSummaryDownloader(IPreferenceSet prefs)
-        {
-            _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
-        }
-
-        /// <summary>
-        /// Downloads the project information.
-        /// </summary>
-        /// <remarks>Access to the Download method is synchronized.</remarks>
-        public void Download(Stream stream, IProgress<ProgressInfo> progress)
-        {
-            IWebOperation httpWebOperation = WebOperation.Create(_prefs.Get<string>(Preference.ProjectDownloadUrl));
-            if (progress != null)
-            {
-                httpWebOperation.ProgressChanged += (sender, e) =>
-                {
-                    int progressPercentage = Convert.ToInt32(e.Length / (double)e.TotalLength * 100);
-                    string message = String.Format(CultureInfo.CurrentCulture, "Downloading {0} of {1} bytes...", e.Length, e.TotalLength);
-                    progress.Report(new ProgressInfo(progressPercentage, message));
-                };
-            }
-            httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            httpWebOperation.WebRequest.Proxy = _prefs.GetWebProxy();
-            httpWebOperation.Download(stream);
         }
     }
 }
