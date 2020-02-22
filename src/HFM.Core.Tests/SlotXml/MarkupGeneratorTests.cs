@@ -33,7 +33,7 @@ using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Preferences;
 
-namespace HFM.Core.ScheduledTasks
+namespace HFM.Core.SlotXml
 {
    [TestFixture]
    public class MarkupGeneratorTests
@@ -158,9 +158,9 @@ namespace HFM.Core.ScheduledTasks
          slot.Prefs = prefs;
          // set concrete values
          slot.Settings = new ClientSettings { Name = "Test2" };
-         var logLines = new List<LogLine>
+         var logLines = new List<Log.LogLine>
          {
-            new LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
+            new Log.LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
          };
          slot.CurrentLogLines = logLines;
          slot.WorkUnit.LogLines = logLines;

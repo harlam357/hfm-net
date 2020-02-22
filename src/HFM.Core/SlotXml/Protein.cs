@@ -1,7 +1,7 @@
 ﻿
 using System.Runtime.Serialization;
 
-namespace HFM.Core.DataTypes.Markup
+namespace HFM.Core.SlotXml
 {
    [DataContract(Namespace = "")]
    public class Protein

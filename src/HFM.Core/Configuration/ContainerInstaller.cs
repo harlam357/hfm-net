@@ -116,10 +116,9 @@ namespace HFM.Core.Configuration
             container.Register(
                Component.For<ScheduledTasks.RetrievalModel>());
 
-            // IMarkupGenerator - Singleton
+            // MarkupGenerator - Singleton
             container.Register(
-               Component.For<ScheduledTasks.IMarkupGenerator>()
-                  .ImplementedBy<ScheduledTasks.MarkupGenerator>());
+               Component.For<SlotXml.MarkupGenerator>());
 
             // IWebsiteDeployer - Singleton
             container.Register(

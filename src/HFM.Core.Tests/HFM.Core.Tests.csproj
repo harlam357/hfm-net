@@ -121,7 +121,7 @@
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
-    <Compile Include="ScheduledTasks\MarkupGeneratorTests.cs" />
+    <Compile Include="SlotXml\MarkupGeneratorTests.cs" />
     <Compile Include="Net\NetworkOpsTests.cs" />
     <Compile Include="SetUpFixture.cs" />
     <Compile Include="Utilities\FileSystemPathTests.cs" />

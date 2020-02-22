@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Castle.Core.Logging;
 
 using HFM.Core.Client;
+using HFM.Core.SlotXml;
 using HFM.Preferences;
 
 namespace HFM.Core.ScheduledTasks
@@ -33,12 +34,12 @@ namespace HFM.Core.ScheduledTasks
 
         private readonly IPreferenceSet _prefs;
         private readonly IClientConfiguration _clientConfiguration;
-        private readonly Lazy<IMarkupGenerator> _markupGenerator;
+        private readonly Lazy<MarkupGenerator> _markupGenerator;
         private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
         private readonly AggregateScheduledTask _aggregateScheduledTask;
 
         public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration,
-                              Lazy<IMarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
+                              Lazy<MarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
         {
             _prefs = prefs;
             _clientConfiguration = clientConfiguration;

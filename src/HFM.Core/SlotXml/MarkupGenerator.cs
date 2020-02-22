@@ -31,34 +31,12 @@ using System.Xml.Xsl;
 using Castle.Core.Logging;
 
 using HFM.Core.Client;
-using HFM.Core.DataTypes.Markup;
 using HFM.Core.Serializers;
 using HFM.Preferences;
 
-namespace HFM.Core.ScheduledTasks
+namespace HFM.Core.SlotXml
 {
-   public interface IMarkupGenerator
-   {
-      /// <summary>
-      /// Contains XML File Paths from most recent XML Generation
-      /// </summary>
-      IEnumerable<string> XmlFilePaths { get; }
-
-      /// <summary>
-      /// Contains HTML File Paths from most recent HTML Generation
-      /// </summary>
-      IEnumerable<string> HtmlFilePaths { get; }
-
-      /// <summary>
-      /// Generate Web Files from the given slot data.
-      /// </summary>
-      /// <param name="slots">Slot Models</param>
-      /// <exception cref="ArgumentNullException">Throws if slots is null.</exception>
-      /// <exception cref="InvalidOperationException">Throws if a Generate method is called in succession.</exception>
-      void Generate(ICollection<SlotModel> slots);
-   }
-
-   public sealed class MarkupGenerator : IMarkupGenerator
+   public class MarkupGenerator
    {
       #region Properties
 
