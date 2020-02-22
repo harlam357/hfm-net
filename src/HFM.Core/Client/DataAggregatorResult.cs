@@ -29,7 +29,7 @@ namespace HFM.Core.Client
       // Queue Values
       public int CurrentUnitIndex { get; set; }
 
-      public QueueDictionary Queue { get; set; }
+      public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
 
       public IDictionary<int, WorkUnit> WorkUnits { get; set; }
    }

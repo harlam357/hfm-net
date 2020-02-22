@@ -370,10 +370,7 @@ namespace HFM.Core.Client
 
         public IList<LogLine>[] UnitLogLines { get; set; }
 
-        /// <summary>
-        /// Client Queue
-        /// </summary>
-        public QueueDictionary Queue { get; set; }
+        public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
 
         #endregion
 

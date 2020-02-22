@@ -97,9 +97,9 @@ namespace HFM.Forms
 
       void ShowNotifyToolTip(string text);
 
-      void SetQueue(QueueDictionary queue);
+      void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos);
 
-      void SetQueue(QueueDictionary queue, SlotType slotType);
+      void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType);
 
       void RefreshControlsWithTotalsData(SlotTotals totals);
 
@@ -574,26 +574,26 @@ namespace HFM.Forms
          toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
       }
 
-      public void SetQueue(QueueDictionary queue)
+      public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<QueueDictionary>(SetQueue), queue);
+            Invoke(new Action<SlotWorkUnitDictionary>(SetWorkUnitInfos), workUnitInfos);
             return;
          }
 
-         queueControl.SetQueue(queue);
+         queueControl.SetWorkUnitInfos(workUnitInfos);
       }
 
-      public void SetQueue(QueueDictionary queue, SlotType slotType)
+      public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType)
       {
          if (InvokeRequired)
          {
-            Invoke(new Action<QueueDictionary, SlotType>(SetQueue), queue, slotType);
+            Invoke(new Action<SlotWorkUnitDictionary, SlotType>(SetWorkUnitInfos), workUnitInfos, slotType);
             return;
          }
 
-         queueControl.SetQueue(queue, slotType);
+         queueControl.SetWorkUnitInfos(workUnitInfos, slotType);
       }
 
       #endregion

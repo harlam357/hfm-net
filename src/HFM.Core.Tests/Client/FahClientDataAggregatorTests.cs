@@ -75,7 +75,7 @@ namespace HFM.Core.Client
 
          #region Check Data Aggregator
 
-         Assert.IsNotNull(result.Queue);
+         Assert.IsNotNull(result.WorkUnitInfos);
          Assert.AreEqual(1, result.CurrentUnitIndex);
          Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
          Assert.AreEqual(null, result.Arguments);
@@ -161,7 +161,7 @@ namespace HFM.Core.Client
 
          #region Check Data Aggregator
 
-         Assert.IsNotNull(result.Queue);
+         Assert.IsNotNull(result.WorkUnitInfos);
          Assert.AreEqual(1, result.CurrentUnitIndex);
          Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
          Assert.AreEqual(null, result.Arguments);
@@ -237,7 +237,7 @@ namespace HFM.Core.Client
 
          #region Check Data Aggregator
 
-         Assert.IsNotNull(result.Queue);
+         Assert.IsNotNull(result.WorkUnitInfos);
          Assert.AreEqual(2, result.CurrentUnitIndex);
          Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
          Assert.AreEqual(null, result.Arguments);
@@ -317,7 +317,7 @@ namespace HFM.Core.Client
 
          #region Check Data Aggregator
 
-         Assert.IsNotNull(result.Queue);
+         Assert.IsNotNull(result.WorkUnitInfos);
          Assert.AreEqual(1, result.CurrentUnitIndex);
          Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), result.StartTime);
          Assert.AreEqual(null, result.Arguments);

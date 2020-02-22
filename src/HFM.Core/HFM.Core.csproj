@@ -142,8 +142,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Client\ClientSettings.cs" />
-    <Compile Include="DataTypes\QueueDictionary.cs" />
-    <Compile Include="DataTypes\QueueUnitItem.cs" />
+    <Compile Include="Client\SlotWorkUnitDictionary.cs" />
     <Compile Include="Data\WorkUnitRow.cs" />
     <Compile Include="WorkUnits\ProteinBenchmark.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkFrameTime.cs" />

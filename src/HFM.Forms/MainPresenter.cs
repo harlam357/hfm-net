@@ -412,12 +412,12 @@ namespace HFM.Forms
                 // TODO: StatusLabelLeftText for v7 client
                 //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
 
-                _view.SetQueue(_gridModel.SelectedSlot.Queue,
-                               _gridModel.SelectedSlot.WorkUnit.SlotType);
+                _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
+                                       _gridModel.SelectedSlot.WorkUnit.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
-                if (_gridModel.SelectedSlot.Queue != null) return;
+                if (_gridModel.SelectedSlot.WorkUnitInfos != null) return;
 
                 // otherwise, load up the CurrentLogLines
                 SetLogLines(_gridModel.SelectedSlot, _gridModel.SelectedSlot.CurrentLogLines);
@@ -443,7 +443,7 @@ namespace HFM.Forms
                 {
                     var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
                     // show the current log even if not the current unit index - 2/17/12
-                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
+                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
                     {
                         logLines = _gridModel.SelectedSlot.CurrentLogLines;
                     }
@@ -467,7 +467,7 @@ namespace HFM.Forms
             // clear the log text
             _view.LogFileViewer.SetNoLogLines();
             // clear the queue control
-            _view.SetQueue(null);
+            _view.SetWorkUnitInfos(null);
         }
 
         private void SetLogLines(SlotModel instance, IList<LogLine> logLines)

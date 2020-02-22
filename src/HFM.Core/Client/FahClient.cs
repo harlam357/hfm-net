@@ -389,7 +389,7 @@ namespace HFM.Core.Client
                                                                                slotModel.SlotId);
                     PopulateRunLevelData(result, info, slotModel);
 
-                    slotModel.Queue = result.Queue;
+                    slotModel.WorkUnitInfos = result.WorkUnitInfos;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 

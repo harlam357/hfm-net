@@ -77,8 +77,8 @@ namespace HFM.Core.Client
                 }
             }
 
-            GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, slotId);
-            result.Queue = BuildQueueDictionary(unitCollection, info, slotOptions, slotId);
+            BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, slotId);
+            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, slotOptions, slotId);
 
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
             {
@@ -96,64 +96,62 @@ namespace HFM.Core.Client
             return result;
         }
 
-        private static QueueDictionary BuildQueueDictionary(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
+        private static SlotWorkUnitDictionary BuildSlotWorkUnitInfos(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
         {
-            QueueDictionary cq = null;
+            SlotWorkUnitDictionary d = null;
             foreach (var unit in unitCollection.Where(unit => unit.Slot == slotId))
             {
-                // don't create a queue until we find a unit that matches this slot id
-                if (cq == null)
+                if (d == null)
                 {
-                    cq = new QueueDictionary { CurrentIndex = -1 };
+                    d = new SlotWorkUnitDictionary { CurrentWorkUnitKey = -1 };
                 }
 
-                var cqe = new QueueUnitItem();
-                cqe.EntryStatusLiteral = unit.StateEnum.ToString();
-                cqe.WaitingOn = unit.WaitingOn;
-                cqe.Attempts = unit.Attempts;
-                cqe.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                cqe.NumberOfSmpCores = info.System.CpuCount;
-                cqe.BeginTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
-                cqe.BeginTimeLocal = unit.AssignedDateTime.GetValueOrDefault().ToLocalTime();
-                cqe.ProjectID = unit.Project;
-                cqe.ProjectRun = unit.Run;
-                cqe.ProjectClone = unit.Clone;
-                cqe.ProjectGen = unit.Gen;
-                cqe.MachineID = slotId;
-                cqe.ServerIP = unit.WorkServer;
-                cqe.CpuString = GetCpuString(info, slotOptions);
-                cqe.OsString = ToOperatingSystemString(info.System);
+                var wui = new SlotWorkUnitInfo();
+                wui.State = unit.StateEnum.ToString();
+                wui.WaitingOn = unit.WaitingOn;
+                wui.Attempts = unit.Attempts;
+                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
+                wui.NumberOfSmpCores = info.System.CpuCount;
+                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
+                wui.ProjectID = unit.Project;
+                wui.ProjectRun = unit.Run;
+                wui.ProjectClone = unit.Clone;
+                wui.ProjectGen = unit.Gen;
+                wui.SlotID = slotId;
+                wui.WorkServer = unit.WorkServer;
+                wui.CPU = GetCPU(info, slotOptions);
+                wui.OperatingSystem = GetOperatingSystem(info.System);
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
-                cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
-                cq.Add(unit.Id, cqe);
+                wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
+                d.Add(unit.Id, wui);
 
                 if (unit.StateEnum == UnitState.Running)
                 {
-                    cq.CurrentIndex = unit.Id;
+                    d.CurrentWorkUnitKey = unit.Id;
                 }
             }
 
-            if (cq != null)
+            if (d != null)
             {
                 // if no running index and at least something in the queue
-                if (cq.CurrentIndex == -1 && cq.Count != 0)
+                if (d.CurrentWorkUnitKey == -1 && d.Count != 0)
                 {
                     // take the minimum queue id
-                    cq.CurrentIndex = cq.Keys.First();
+                    d.CurrentWorkUnitKey = d.Keys.First();
                 }
             }
 
-            return cq;
+            return d;
         }
 
-        private static string ToOperatingSystemString(SystemInfo systemInfo)
+        private static string GetOperatingSystem(SystemInfo systemInfo)
         {
             return !String.IsNullOrWhiteSpace(systemInfo.OperatingSystemArchitecture)
                ? String.Format(CultureInfo.InvariantCulture, "{0} {1}", systemInfo.OperatingSystem, systemInfo.OperatingSystemArchitecture)
                : systemInfo.OperatingSystem;
         }
 
-        private static string GetCpuString(Info info, SlotOptions slotOptions)
+        private static string GetCPU(Info info, SlotOptions slotOptions)
         {
             if (slotOptions.GpuIndex.HasValue)
             {
@@ -185,13 +183,13 @@ namespace HFM.Core.Client
             return String.Empty;
         }
 
-        private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result,
-                                                   SlotRun slotRun,
-                                                   ICollection<Unit> unitCollection,
-                                                   Options options,
-                                                   SlotOptions slotOptions,
-                                                   WorkUnit currentWorkUnit,
-                                                   int slotId)
+        private void BuildWorkUnits(DataAggregatorResult result,
+                                    SlotRun slotRun,
+                                    ICollection<Unit> unitCollection,
+                                    Options options,
+                                    SlotOptions slotOptions,
+                                    WorkUnit currentWorkUnit,
+                                    int slotId)
         {
             Debug.Assert(unitCollection != null);
             Debug.Assert(options != null);
