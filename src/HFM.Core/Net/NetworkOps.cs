@@ -116,24 +116,6 @@ namespace HFM.Core.Net
             webOperation.WebRequest.SetNetworkCredentials(username, password);
             webOperation.CheckConnection();
         }
-
-        /// <summary>
-        /// Sends an e-mail message
-        /// </summary>
-        public static void SendEmail(bool enableSsl, string messageFrom, string messageTo, string messageSubject,
-                                     string messageBody, string smtpHost, int smtpPort, string smtpHostUsername,
-                                     string smtpHostPassword)
-        {
-            using (var message = new MailMessage(messageFrom, messageTo, messageSubject, messageBody))
-            {
-                var client = new SmtpClient(smtpHost, smtpPort)
-                {
-                    Credentials = NetworkCredentialFactory.Create(smtpHostUsername, smtpHostPassword),
-                    EnableSsl = enableSsl
-                };
-                client.Send(message);
-            }
-        }
     }
 
     public static class NetworkCredentialFactory

@@ -717,8 +717,9 @@ namespace HFM.Forms
          {
             try
             {
-               NetworkOps.SendEmail(chkEmailSecure.Checked, txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
-                  "HFM.NET - Test Email", txtSmtpServer.Text, int.Parse(txtSmtpServerPort.Text), txtSmtpUsername.Text, txtSmtpPassword.Text);
+               var sendMailService = new Core.Services.SendMailService();
+               sendMailService.SendEmail(txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
+                  "HFM.NET - Test Email", txtSmtpServer.Text, int.Parse(txtSmtpServerPort.Text), txtSmtpUsername.Text, txtSmtpPassword.Text, chkEmailSecure.Checked);
                MessageBox.Show(this, "Test Email sent successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
