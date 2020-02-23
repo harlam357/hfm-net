@@ -82,6 +82,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
@@ -103,7 +104,6 @@
     <Compile Include="ScheduledTasks\ScheduledTask.cs" />
     <Compile Include="Services\EocStatsService.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
-    <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="WorkUnits\ProjectInfo.cs" />
     <Compile Include="WorkUnits\PPDCalculation.cs" />
     <Compile Include="ScheduledTasks\RetrievalModel.cs" />
@@ -191,20 +191,12 @@
     <None Include="..\harlam357.snk">
       <Link>Properties\harlam357.snk</Link>
     </None>
-    <None Include="Models\Generated\PetaPoco.Core.ttinclude" />
-    <None Include="Models\Generated\PetaPoco.Generator.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>Properties\CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\Generated\Database.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Database.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
