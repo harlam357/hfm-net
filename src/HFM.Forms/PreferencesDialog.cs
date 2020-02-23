@@ -844,7 +844,7 @@ namespace HFM.Forms
       {
          if (_net == null)
          {
-            _net = new NetworkOps(_prefs);
+            _net = new NetworkOps();
          }
 
          try

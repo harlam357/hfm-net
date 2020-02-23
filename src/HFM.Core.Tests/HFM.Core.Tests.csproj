@@ -122,7 +122,6 @@
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="SlotXml\MarkupGeneratorTests.cs" />
-    <Compile Include="Net\NetworkOpsTests.cs" />
     <Compile Include="SetUpFixture.cs" />
     <Compile Include="Utilities\FileSystemPathTests.cs" />
     <Compile Include="ApplicationTests.cs" />
@@ -179,7 +178,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DataTypes\" />
+    <Folder Include="Net\" />
     <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
