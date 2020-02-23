@@ -70,6 +70,7 @@ namespace HFM.Forms
 
       private readonly IPreferenceSet _prefs;
       private readonly IAutoRun _autoRun;
+      private readonly IFtpService _ftpService;
 
       private readonly List<IValidatingControl>[] _validatingControls;
       private readonly PropertyDescriptorCollection[] _propertyCollection;
@@ -85,11 +86,6 @@ namespace HFM.Forms
          set { _logger = value; }
       }
 
-      /// <summary>
-      /// Network Operations Interface
-      /// </summary>
-      private NetworkOps _net;
-
       private readonly ScheduledTasksModel _scheduledTasksModel;
       private readonly StartupAndExternalModel _startupAndExternalModel;
       private readonly OptionsModel _optionsModel;
@@ -101,13 +97,11 @@ namespace HFM.Forms
 
       #region Constructor And Binding/Load Methods
 
-      public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
+      public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun, IFtpService ftpService)
       {
-         if (prefs == null) throw new ArgumentNullException("prefs");
-         if (autoRun == null) throw new ArgumentNullException("autoRun");
-
-         _prefs = prefs;
-         _autoRun = autoRun;
+          _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
+         _autoRun = autoRun ?? throw new ArgumentNullException(nameof(autoRun));
+         _ftpService = ftpService ?? throw new ArgumentNullException(nameof(ftpService));
 
          InitializeComponent();
 
@@ -724,7 +718,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               _logger.WarnFormat(ex, "{0}", ex.Message);
+               Logger.WarnFormat(ex, "{0}", ex.Message);
                MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message),
                   Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -754,7 +748,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
          }
       }
@@ -767,7 +761,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
          }
       }
@@ -780,7 +774,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
          }
       }
@@ -843,16 +837,12 @@ namespace HFM.Forms
 
       private void TestConnectionButtonClick(object sender, EventArgs e)
       {
-         if (_net == null)
-         {
-            _net = new NetworkOps();
-         }
-
          try
          {
             SetWaitCursor();
             if (!_scheduledTasksModel.FtpModeEnabled)
             {
+               // TODO: await Task.Run
                Action<string> del = CheckFileConnection;
                del.BeginInvoke(WebSiteTargetPathTextBox.Text, CheckFileConnectionCallback, del);
             }
@@ -864,13 +854,14 @@ namespace HFM.Forms
                string username = _scheduledTasksModel.WebGenUsername;
                string password = _scheduledTasksModel.WebGenPassword;
 
-               FtpCheckConnectionDelegate del = _net.FtpCheckConnection;
+               // TODO: await Task.Run
+               FtpCheckConnectionDelegate del = _ftpService.CheckConnection;
                del.BeginInvoke(server, port, path, username, password, _scheduledTasksModel.FtpMode, FtpCheckConnectionCallback, del);
             }
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
       }
@@ -894,7 +885,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
          finally
@@ -913,7 +904,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             ShowConnectionFailedMessage(ex.Message);
          }
          finally
@@ -1019,7 +1010,7 @@ namespace HFM.Forms
          }
          catch (InvalidOperationException ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.ErrorFormat(ex, "{0}", ex.Message);
             MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
                Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
          }

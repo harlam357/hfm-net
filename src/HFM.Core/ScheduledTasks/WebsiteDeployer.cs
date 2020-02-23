@@ -52,12 +52,12 @@ namespace HFM.Core.ScheduledTasks
         }
 
         private readonly IPreferenceSet _prefs;
-        private readonly INetworkOps _networkOps;
+        private readonly IFtpService _ftpService;
 
-        public WebsiteDeployer(IPreferenceSet prefs, INetworkOps networkOps)
+        public WebsiteDeployer(IPreferenceSet prefs, IFtpService ftpService)
         {
             _prefs = prefs;
-            _networkOps = networkOps;
+            _ftpService = ftpService;
         }
 
         public void DeployWebsite(IEnumerable<string> htmlFilePaths, IEnumerable<string> xmlFilePaths, IEnumerable<SlotModel> slots)
@@ -140,13 +140,13 @@ namespace HFM.Core.ScheduledTasks
                 var ftpMode = _prefs.Get<FtpMode>(Preference.WebGenFtpMode);
 
                 // Upload CSS File
-                _networkOps.FtpUploadHelper(server, port, ftpPath, Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName,
+                _ftpService.Upload(server, port, ftpPath, Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Constants.CssFolderName,
                    _prefs.Get<string>(Preference.CssFile)), username, password, ftpMode);
 
                 // Upload each HTML File
                 foreach (string filePath in htmlFilePaths)
                 {
-                    _networkOps.FtpUploadHelper(server, port, ftpPath, filePath, username, password, ftpMode);
+                    _ftpService.Upload(server, port, ftpPath, filePath, username, password, ftpMode);
                 }
 
                 if (_prefs.Get<bool>(Preference.WebGenCopyFAHlog))
@@ -167,7 +167,7 @@ namespace HFM.Core.ScheduledTasks
                                     Logger.WarnFormat("Could not open {0} for FTP upload.", cachedFahlogPath);
                                     continue;
                                 }
-                                _networkOps.FtpUploadHelper(server, port, ftpPath, Path.GetFileName(cachedFahlogPath), stream, maximumLength, username, password, ftpMode);
+                                _ftpService.Upload(server, port, ftpPath, Path.GetFileName(cachedFahlogPath), stream, maximumLength, username, password, ftpMode);
                             }
                         }
                     }
@@ -191,7 +191,7 @@ namespace HFM.Core.ScheduledTasks
                 // Upload each XML File
                 foreach (string filePath in xmlFilePaths)
                 {
-                    _networkOps.FtpUploadHelper(server, port, ftpPath, filePath, username, password, ftpMode);
+                    _ftpService.Upload(server, port, ftpPath, filePath, username, password, ftpMode);
                 }
             }
             finally

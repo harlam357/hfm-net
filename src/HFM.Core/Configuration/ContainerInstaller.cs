@@ -64,24 +64,23 @@ namespace HFM.Core.Configuration
                   {
                       var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
                       instance.PreferenceChanged += (s, e) =>
-                   {
-                         if (e.Preference == Preferences.Preference.MessageLevel)
-                         {
-                             var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
-                             if (newLevel != logger.Level)
-                             {
-                                 logger.Level = newLevel;
-                                 logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
-                             }
-                         }
-                     };
+                      {
+                          if (e.Preference == Preferences.Preference.MessageLevel)
+                          {
+                              var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
+                              if (newLevel != logger.Level)
+                              {
+                                  logger.Level = newLevel;
+                                  logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
+                              }
+                          }
+                      };
                   }));
 
-            // INetworkOps - Transient
+            // IFtpService - Singleton
             container.Register(
-               Component.For<INetworkOps>()
-                  .ImplementedBy<NetworkOps>()
-                     .LifeStyle.Transient);
+               Component.For<IFtpService>()
+                  .ImplementedBy<FtpService>());
 
             // IWorkUnitRepository - Singleton
             container.Register(
