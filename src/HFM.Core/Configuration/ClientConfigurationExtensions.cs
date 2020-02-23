@@ -1,5 +1,6 @@
 ﻿
 using System.Threading.Tasks;
+
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
@@ -35,7 +36,7 @@ namespace HFM.Core.Configuration
             benchmarkService.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
          }
          // the path changed
-         if (!FileSystemPath.Equals(e.PreviousPath, e.NewPath))
+         if (!Internal.FileSystem.PathsEqual(e.PreviousPath, e.NewPath))
          {
             // update the Paths in the benchmark collection
             benchmarkService.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);

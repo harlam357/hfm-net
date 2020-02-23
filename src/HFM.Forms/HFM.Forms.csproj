@@ -153,6 +153,7 @@
       <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="FahClientSetupPresenter.cs" />
+    <Compile Include="Internal\FileSystemPath.cs" />
     <Compile Include="IPresenterFactory.cs" />
     <Compile Include="IViewFactory.cs" />
     <Compile Include="ListItem.cs" />

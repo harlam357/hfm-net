@@ -211,7 +211,7 @@ namespace HFM.Core.Client
 
             try
             {
-                using (var stream = FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
+                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
                 using (var writer = new StreamWriter(stream))
                 {
                     foreach (var chunk in logText.GetChunks())

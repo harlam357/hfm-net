@@ -228,7 +228,8 @@ namespace HFM.Core.WorkUnits
 
         private IEnumerable<ProteinBenchmark> EnumerateBenchmarksForOwnerUpdate(string clientName, string clientPath)
         {
-            return DataContainer.Data.Where(b => b.OwningClientName.Equals(clientName) && FileSystemPath.Equals(b.OwningClientPath, clientPath));
+            return DataContainer.Data.Where(b => b.OwningClientName.Equals(clientName) &&
+                                                 Internal.FileSystem.PathsEqual(b.OwningClientPath, clientPath));
         }
 
         public void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID)

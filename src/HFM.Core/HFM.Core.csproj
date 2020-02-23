@@ -96,7 +96,7 @@
     <Compile Include="Data\WorkUnitRepository.ProteinDataUpdater.cs" />
     <Compile Include="Data\WorkUnitRepository.SQLiteFunctions.cs" />
     <Compile Include="Net\FtpMode.cs" />
-    <Compile Include="Internal\StopwatchExtensions.cs" />
+    <Compile Include="Logging\StopwatchExtensions.cs" />
     <Compile Include="Net\TcpPort.cs" />
     <Compile Include="Client\SlotType.cs" />
     <Compile Include="ScheduledTasks\EocStatsScheduledTask.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
-    <Compile Include="Utilities\FileSystem.cs" />
+    <Compile Include="Internal\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
@@ -152,7 +152,6 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Services\FtpService.cs" />
-    <Compile Include="Utilities\FileSystemPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />
     <Compile Include="Data\WorkUnitQueryDataContainer.cs" />

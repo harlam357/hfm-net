@@ -161,7 +161,7 @@ namespace HFM.Core.ScheduledTasks
                     {
                         if (File.Exists(cachedFahlogPath))
                         {
-                            using (var stream = FileSystem.TryFileOpen(cachedFahlogPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            using (var stream = Internal.FileSystem.TryFileOpen(cachedFahlogPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                             {
                                 if (stream == null)
                                 {
