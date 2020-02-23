@@ -57,7 +57,7 @@ namespace HFM.Forms.Models
       [Test]
       public void HistoryPresenterModel_AddQuery_SelectAll_Test()
       {
-         var query = new WorkUnitQuery();
+         var query = WorkUnitQuery.SelectAll;
          Assert.Throws<ArgumentException>(() => _model.AddQuery(query));
       }
 
@@ -148,7 +148,7 @@ namespace HFM.Forms.Models
       [Test]
       public void HistoryPresenterModel_RemoveQuery_Failed_Test()
       {
-         Assert.Throws<ArgumentException>(() => _model.RemoveQuery(new WorkUnitQuery()));
+         Assert.Throws<ArgumentException>(() => _model.RemoveQuery(WorkUnitQuery.SelectAll));
       }
 
       [Test]

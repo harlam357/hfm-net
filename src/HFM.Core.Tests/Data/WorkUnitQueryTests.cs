@@ -27,23 +27,26 @@ namespace HFM.Core.Data
     public class WorkUnitQueryTests
     {
         [Test]
-        public void WorkUnitQuery_Create_Test()
+        public void WorkUnitQuery_DefaultConstructor_HasPropertyValues()
         {
             var query = new WorkUnitQuery();
-            Assert.AreEqual(WorkUnitQuery.SelectAll.Name, query.Name);
+            Assert.AreEqual(String.Empty, query.Name);
             Assert.AreEqual(0, query.Parameters.Count);
         }
 
         [Test]
-        public void WorkUnitQuery_DeepClone_Test()
+        public void WorkUnitQuery_DeepClone_ReturnsCopyOfQuery()
         {
+            // Arrange
             var query = new WorkUnitQuery("Test")
                 .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "Test Instance")
                 .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2000, 1, 1));
-
+            // Act
             var copy = query.DeepClone();
+            // Assert
             Assert.AreNotSame(query, copy);
             Assert.AreEqual(query.Name, copy.Name);
+            Assert.AreEqual(query.Parameters.Count, copy.Parameters.Count);
             for (int i = 0; i < query.Parameters.Count; i++)
             {
                 Assert.AreEqual(query.Parameters[i].Column, copy.Parameters[i].Column);
@@ -53,39 +56,34 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test1()
+        public void WorkUnitQuery_Compare_AreEqual()
         {
             var query1 = new WorkUnitQuery();
             var query2 = new WorkUnitQuery();
-            Assert.AreEqual(0, query1.CompareTo(query2));
+            Assert.IsTrue(query1.CompareTo(query2) == 0);
+            Assert.IsTrue(query1 == query2);
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test2()
+        public void WorkUnitQuery_Compare_IsGreaterThan()
         {
             var query1 = new WorkUnitQuery { Name = "Name" };
             var query2 = new WorkUnitQuery();
-            Assert.AreEqual(1, query1.CompareTo(query2));
+            Assert.IsTrue(query1.CompareTo(query2) > 0);
+            Assert.IsTrue(query1 > query2);
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test3()
+        public void WorkUnitQuery_Compare_IsLessThan()
         {
             var query1 = new WorkUnitQuery();
             var query2 = new WorkUnitQuery { Name = "Name" };
-            Assert.AreEqual(-1, query1.CompareTo(query2));
+            Assert.IsTrue(query1.CompareTo(query2) < 0);
+            Assert.IsTrue(query1 < query2);
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test4()
-        {
-            var query1 = new WorkUnitQuery { Name = null };
-            var query2 = new WorkUnitQuery();
-            Assert.AreEqual(-1, query1.CompareTo(query2));
-        }
-
-        [Test]
-        public void WorkUnitQuery_Compare_Test5()
+        public void WorkUnitQuery_Compare_NullAreEqual()
         {
             var query1 = new WorkUnitQuery { Name = null };
             var query2 = new WorkUnitQuery { Name = null };
@@ -93,38 +91,51 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test6()
+        public void WorkUnitQuery_Compare_IsGreaterThanNull()
+        {
+            var query1 = new WorkUnitQuery();
+            var query2 = new WorkUnitQuery { Name = null };
+            Assert.IsTrue(query1.CompareTo(query2) > 0);
+            Assert.IsTrue(query1 > query2);
+        }
+
+        [Test]
+        public void WorkUnitQuery_Compare_NullIsLessThan()
+        {
+            var query1 = new WorkUnitQuery { Name = null };
+            var query2 = new WorkUnitQuery();
+            Assert.IsTrue(query1.CompareTo(query2) < 0);
+            Assert.IsTrue(query1 < query2);
+        }
+        
+        [Test]
+        public void WorkUnitQuery_Compare_AreNotEqual()
         {
             var query1 = new WorkUnitQuery { Name = "A" };
             var query2 = new WorkUnitQuery { Name = "B" };
-            Assert.AreEqual(-1, query1.CompareTo(query2));
+            Assert.IsTrue(query1.CompareTo(query2) != 0);
+            Assert.IsTrue(query1 != query2);
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test7()
+        public void WorkUnitQuery_Compare_IsGreaterThanNullQuery()
         {
-            var query1 = new WorkUnitQuery { Name = "B" };
-            var query2 = new WorkUnitQuery { Name = "A" };
-            Assert.AreEqual(1, query1.CompareTo(query2));
+            var query = new WorkUnitQuery();
+            Assert.IsTrue(query.CompareTo(null) > 0);
+            Assert.IsTrue(query > null);
         }
 
         [Test]
-        public void WorkUnitQuery_Compare_Test8()
-        {
-            var query1 = new WorkUnitQuery();
-            Assert.AreEqual(1, query1.CompareTo(null));
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Create_Test()
+        public void WorkUnitQueryParameter_DefaultConstructor_HasPropertyValues()
         {
             var parameter = new WorkUnitQueryParameter();
             Assert.AreEqual(WorkUnitRowColumn.ProjectID, parameter.Column);
             Assert.AreEqual(WorkUnitQueryOperator.Equal, parameter.Operator);
+            Assert.AreEqual("=", parameter.GetOperatorString());
         }
 
         [Test]
-        public void WorkUnitQueryParameter_Value_Test1()
+        public void WorkUnitQueryParameter_Value_StringBehavior()
         {
             var parameter = new WorkUnitQueryParameter();
             parameter.Value = "Value";
@@ -134,7 +145,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitQueryParameter_Value_Test2()
+        public void WorkUnitQueryParameter_Value_DateTimeBehavior()
         {
             var parameter = new WorkUnitQueryParameter();
             parameter.Value = new DateTime(2000, 1, 1);
@@ -144,7 +155,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitQueryParameter_Value_Test3()
+        public void WorkUnitQueryParameter_Value_IntegerBehavior()
         {
             var parameter = new WorkUnitQueryParameter();
             parameter.Value = 6900;
@@ -154,66 +165,21 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitQueryParameter_Operator_Default_Test()
+        public void WorkUnitQueryParameter_Operator_OperatorsHaveStringValue()
         {
             var parameter = new WorkUnitQueryParameter();
-            Assert.AreEqual("=", parameter.OperatorString);
+            foreach (WorkUnitQueryOperator op in Enum.GetValues(typeof(WorkUnitQueryOperator)))
+            {
+                parameter.Operator = op;
+                Console.WriteLine(parameter.GetOperatorString());
+            }
         }
 
         [Test]
-        public void WorkUnitQueryParameter_Operator_Equal_Test()
+        public void WorkUnitQueryParameter_Operator_UnknownOperatorsThrowExceptionOnStringValue()
         {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.Equal };
-            Assert.AreEqual("=", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_GreaterThan_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.GreaterThan };
-            Assert.AreEqual(">", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_GreaterThanOrEqual_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.GreaterThanOrEqual };
-            Assert.AreEqual(">=", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_LessThan_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.LessThan };
-            Assert.AreEqual("<", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_LessThanOrEqual_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.LessThanOrEqual };
-            Assert.AreEqual("<=", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_Like_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.Like };
-            Assert.AreEqual("LIKE", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_NotLike_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.NotLike };
-            Assert.AreEqual("NOT LIKE", parameter.OperatorString);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_NotEqual_Test()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = WorkUnitQueryOperator.NotEqual };
-            Assert.AreEqual("!=", parameter.OperatorString);
+            var parameter = new WorkUnitQueryParameter { Operator = (WorkUnitQueryOperator)Int32.MaxValue };
+            Assert.Throws<InvalidOperationException>(() => parameter.GetOperatorString());
         }
     }
 }

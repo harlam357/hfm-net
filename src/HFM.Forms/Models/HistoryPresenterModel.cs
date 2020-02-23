@@ -58,9 +58,7 @@ namespace HFM.Forms.Models
 
             Debug.Assert(_repository.Connected);
 
-            _queryList = new List<WorkUnitQuery>();
-            _queryList.Add(new WorkUnitQuery());
-            _queryList.Sort();
+            _queryList = new List<WorkUnitQuery> { WorkUnitQuery.SelectAll };
             _queryBindingSource = new BindingSource();
             _queryBindingSource.DataSource = _queryList;
             _queryBindingSource.CurrentItemChanged += (s, e) =>
@@ -94,15 +92,8 @@ namespace HFM.Forms.Models
             FormColumns = prefs.Get<ICollection<string>>(Preference.HistoryFormColumns);
 
             _queryList.Clear();
-            _queryList.Add(new WorkUnitQuery());
-            foreach (var query in queryContainer.Data)
-            {
-                // don't load Select All twice
-                if (query.Name != WorkUnitQuery.SelectAll.Name)
-                {
-                    _queryList.Add(query);
-                }
-            }
+            _queryList.Add(WorkUnitQuery.SelectAll);
+            _queryList.AddRange(queryContainer.Data.Where(q => q != WorkUnitQuery.SelectAll));
             _queryList.Sort();
             ResetBindings(true);
         }
@@ -119,7 +110,7 @@ namespace HFM.Forms.Models
             prefs.Save();
 
             queryContainer.Data.Clear();
-            queryContainer.Data.AddRange(_queryList.Where(x => x.Name != WorkUnitQuery.SelectAll.Name));
+            queryContainer.Data.AddRange(_queryList.Where(q => q != WorkUnitQuery.SelectAll));
             queryContainer.Write();
         }
 
@@ -141,9 +132,9 @@ namespace HFM.Forms.Models
 
         public void ReplaceQuery(WorkUnitQuery query)
         {
-            if (SelectedWorkUnitQuery.Name == WorkUnitQuery.SelectAll.Name)
+            if (SelectedWorkUnitQuery == WorkUnitQuery.SelectAll)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot replace the '{0}' query.", WorkUnitQuery.SelectAll));
+                throw new ArgumentException($"Cannot replace the '{WorkUnitQuery.SelectAll}' query.");
             }
 
             CheckQueryParametersForAddOrReplace(query);
@@ -164,9 +155,9 @@ namespace HFM.Forms.Models
 
         private static void CheckQueryParametersForAddOrReplace(WorkUnitQuery query)
         {
-            if (query.Name == WorkUnitQuery.SelectAll.Name)
+            if (query == WorkUnitQuery.SelectAll)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Query name cannot be '{0}'.", WorkUnitQuery.SelectAll));
+                throw new ArgumentException($"Query name cannot be '{WorkUnitQuery.SelectAll}'.");
             }
 
             if (query.Parameters.Count == 0)
@@ -178,16 +169,16 @@ namespace HFM.Forms.Models
             {
                 if (query.Parameters[i].Value == null)
                 {
-                    throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Field index {0} must have a query value.", (i + 1)));
+                    throw new ArgumentException($"Field index {(i + 1)} must have a query value.");
                 }
             }
         }
 
         public void RemoveQuery(WorkUnitQuery query)
         {
-            if (query.Name == WorkUnitQuery.SelectAll.Name)
+            if (query == WorkUnitQuery.SelectAll)
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "Cannot remove '{0}' query.", WorkUnitQuery.SelectAll));
+                throw new ArgumentException($"Cannot remove '{WorkUnitQuery.SelectAll}' query.");
             }
 
             _queryList.Remove(query);

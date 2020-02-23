@@ -41,17 +41,15 @@ namespace HFM.Core.Data
     }
 
     [DataContract]
-    public class WorkUnitQuery : IComparable<WorkUnitQuery>, IEquatable<WorkUnitQuery>
+    public class WorkUnitQuery : IEquatable<WorkUnitQuery>, IComparable<WorkUnitQuery>, IComparable
     {
-        private static readonly WorkUnitQuery SelectAllValue = new WorkUnitQuery();
-
-        public static WorkUnitQuery SelectAll => SelectAllValue;
-
         private const string SelectAllName = "*** SELECT ALL ***";
+
+        public static WorkUnitQuery SelectAll { get; } = new WorkUnitQuery { _ordinal = 0, Name = SelectAllName };
 
         public WorkUnitQuery()
         {
-            Name = SelectAllName;
+            Name = String.Empty;
         }
 
         public WorkUnitQuery(string name)
@@ -59,12 +57,13 @@ namespace HFM.Core.Data
             Name = name;
         }
 
+        private int _ordinal = Int32.MaxValue;
+
         [DataMember(Order = 1)]
         public string Name { get; set; }
-        [DataMember(Order = 2)]
-        private readonly List<WorkUnitQueryParameter> _parameters = new List<WorkUnitQueryParameter>();
 
-        public List<WorkUnitQueryParameter> Parameters => _parameters;
+        [field: DataMember(Order = 2)]
+        public List<WorkUnitQueryParameter> Parameters { get; } = new List<WorkUnitQueryParameter>();
 
         public WorkUnitQuery AddParameter(WorkUnitRowColumn column, WorkUnitQueryOperator queryOperator, object value)
         {
@@ -77,12 +76,29 @@ namespace HFM.Core.Data
             return this;
         }
 
+        public WorkUnitQuery DeepClone()
+        {
+            return ProtoBuf.Serializer.DeepClone(this);
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool Equals(WorkUnitQuery other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name;
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(WorkUnitQuery)) return false;
-            return Equals((WorkUnitQuery)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((WorkUnitQuery) obj);
         }
 
         public override int GetHashCode()
@@ -100,87 +116,40 @@ namespace HFM.Core.Data
             return !Equals(left, right);
         }
 
-        #region IEquatable<WorkUnitQuery> Members
-
-        /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-        /// </returns>
-        /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(WorkUnitQuery other)
+        public int CompareTo(WorkUnitQuery other)
         {
-            //if (ReferenceEquals(null, other)) return false;
-            //if (ReferenceEquals(this, other)) return true;
-            return CompareTo(other) == 0;
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            var ordinalComparison = _ordinal.CompareTo(other._ordinal);
+            if (ordinalComparison != 0) return ordinalComparison;
+            return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        #endregion
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return 1;
+            if (ReferenceEquals(this, obj)) return 0;
+            return obj is WorkUnitQuery other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(WorkUnitQuery)}");
+        }
 
         public static bool operator <(WorkUnitQuery left, WorkUnitQuery right)
         {
-            return left == null ? right != null : left.CompareTo(right) < 0;
+            return Comparer<WorkUnitQuery>.Default.Compare(left, right) < 0;
         }
 
         public static bool operator >(WorkUnitQuery left, WorkUnitQuery right)
         {
-            return right == null ? left != null : right.CompareTo(left) < 0;
+            return Comparer<WorkUnitQuery>.Default.Compare(left, right) > 0;
         }
 
-        #region IComparable<WorkUnitQuery> Members
-
-        public int CompareTo(WorkUnitQuery other)
+        public static bool operator <=(WorkUnitQuery left, WorkUnitQuery right)
         {
-            if (ReferenceEquals(null, other)) return 1;
-            if (ReferenceEquals(this, other)) return 0;
-
-            // other not null, check this Name
-            if (Name == null)
-            {
-                // if null, check other.Name
-                if (other.Name == null)
-                {
-                    // if other.Name is null, equal
-                    return 0;
-                }
-
-                // other.Name NOT null, this is less
-                return -1;
-            }
-
-            if (Name == SelectAllName)
-            {
-                if (other.Name == SelectAllName)
-                {
-                    // both SelectAll, equal
-                    return 0;
-                }
-
-                // Name is SelectAll, this is less
-                return -1;
-            }
-
-            if (other.Name == SelectAllName)
-            {
-                // other.Name is SelectAll, this is greater
-                return 1;
-            }
-
-            // finally, just compare
-            return Name.CompareTo(other.Name);
+            return Comparer<WorkUnitQuery>.Default.Compare(left, right) <= 0;
         }
 
-        #endregion
-
-        public WorkUnitQuery DeepClone()
+        public static bool operator >=(WorkUnitQuery left, WorkUnitQuery right)
         {
-            return ProtoBuf.Serializer.DeepClone(this);
-        }
-
-        public override string ToString()
-        {
-            return Name;
+            return Comparer<WorkUnitQuery>.Default.Compare(left, right) >= 0;
         }
     }
 
@@ -221,7 +190,7 @@ namespace HFM.Core.Data
             }
             sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
                 ColumnNameOverrides.ContainsKey(parameter.Column) ? ColumnNameOverrides[parameter.Column] : parameter.Column.ToString(),
-                parameter.OperatorString), parameter.Value);
+                parameter.GetOperatorString()), parameter.Value);
             return sql;
         }
 
@@ -290,11 +259,9 @@ namespace HFM.Core.Data
         [DataMember(Order = 4)]
         private string _stringValue;
 
-        internal string OperatorString => GetOperator(Operator);
-
-        private static string GetOperator(WorkUnitQueryOperator type)
+        internal string GetOperatorString()
         {
-            switch (type)
+            switch (Operator)
             {
                 case WorkUnitQueryOperator.Equal:
                     return "=";
@@ -313,14 +280,13 @@ namespace HFM.Core.Data
                 case WorkUnitQueryOperator.NotEqual:
                     return "!=";
                 default:
-                    throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                       "Query Field Type '{0}' is not implemented.", type));
+                    throw new InvalidOperationException($"Operator {Operator} is not supported.");
             }
         }
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, OperatorString, Value);
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, GetOperatorString(), Value);
         }
 
         public static string[] GetColumnNames()
