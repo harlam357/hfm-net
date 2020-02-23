@@ -71,15 +71,10 @@ namespace HFM.Core.Net
         /// </summary>
         public event EventHandler<WebOperationProgressChangedEventArgs> ProgressChanged;
 
-        private WebRequest _webRequest;
         /// <summary>
         /// Gets or sets the inner WebRequest object.
         /// </summary>
-        public WebRequest WebRequest
-        {
-            get { return _webRequest; }
-            protected set { _webRequest = value; }
-        }
+        public WebRequest WebRequest { get; protected set; }
 
         private WebOperationState _state = WebOperationState.Idle;
         /// <summary>
@@ -87,7 +82,7 @@ namespace HFM.Core.Net
         /// </summary>
         public WebOperationState State
         {
-            get { return _state; }
+            get => _state;
             protected set
             {
                 _state = value;
@@ -98,38 +93,20 @@ namespace HFM.Core.Net
             }
         }
 
-        private WebOperationResult _result = WebOperationResult.None;
         /// <summary>
         /// Gets the result of the last operation.
         /// </summary>
-        public WebOperationResult Result
-        {
-            get { return _result; }
-            protected set
-            {
-                _result = value;
-            }
-        }
+        public WebOperationResult Result { get; protected set; } = WebOperationResult.None;
 
-        private bool _autoSizeBuffer = true;
         /// <summary>
         /// Indicates whether the buffer will be automatically sized.
         /// </summary>
-        public bool AutoSizeBuffer
-        {
-            get { return _autoSizeBuffer; }
-            set { _autoSizeBuffer = value; }
-        }
+        public bool AutoSizeBuffer { get; set; } = true;
 
-        private int _buffer = DefaultBufferSize;
         /// <summary>
         /// Gets or sets the internal buffer size.
         /// </summary>
-        public int Buffer
-        {
-            get { return _buffer; }
-            set { _buffer = value; }
-        }
+        public int Buffer { get; set; } = DefaultBufferSize;
 
         private bool _cancel;
 
@@ -175,12 +152,12 @@ namespace HFM.Core.Net
 
             State = WebOperationState.InProgress;
             Result = WebOperationResult.None;
-            _webRequest.Method = GetWebDownloadMethod();
+            WebRequest.Method = GetWebDownloadMethod();
 
             long totalBytesRead = 0;
             long totalLength;
 
-            WebResponse response = _webRequest.GetResponse();
+            WebResponse response = WebRequest.GetResponse();
             using (Stream responseStream = response.GetResponseStream())
             {
                 totalLength = response.ContentLength;
@@ -237,10 +214,10 @@ namespace HFM.Core.Net
 
             State = WebOperationState.InProgress;
             Result = WebOperationResult.None;
-            _webRequest.Method = GetWebDownloadMethod();
+            WebRequest.Method = GetWebDownloadMethod();
 
             OnWebOperationProgress(new WebOperationProgressChangedEventArgs(0, 0, State, Result));
-            WebResponse response = _webRequest.GetResponse();
+            WebResponse response = WebRequest.GetResponse();
             long length = response.ContentLength;
             response.Close();
 
@@ -257,22 +234,8 @@ namespace HFM.Core.Net
         /// <param name="fileName">The file to send to the resource.</param>
         public void Upload(string fileName)
         {
-            Upload(fileName, -1);
-        }
-
-        /// <summary>
-        /// Uploads the specified local file to the resource.
-        /// </summary>
-        /// <param name="fileName">The file to send to the resource.</param>
-        /// <param name="maximumLength">The maximum number of bytes to upload.  If the value is 0 or less the entire file will be uploaded.</param>
-        public void Upload(string fileName, int maximumLength)
-        {
             using (Stream fileStream = File.OpenRead(fileName))
             {
-                if (maximumLength >= 0 && fileStream.Length >= maximumLength)
-                {
-                    fileStream.Position = fileStream.Length - maximumLength;
-                }
                 Upload(fileStream);
             }
 
@@ -298,7 +261,7 @@ namespace HFM.Core.Net
 
             State = WebOperationState.InProgress;
             Result = WebOperationResult.None;
-            _webRequest.Method = GetWebUploadMethod();
+            WebRequest.Method = GetWebUploadMethod();
 
             long totalBytesRead = 0;
             long totalLength = stream.Length - stream.Position;
@@ -308,7 +271,7 @@ namespace HFM.Core.Net
                 Buffer = CalculateBufferSize(totalLength);
             }
 
-            using (Stream requestStream = _webRequest.GetRequestStream())
+            using (Stream requestStream = WebRequest.GetRequestStream())
             {
                 var buffer = new byte[Buffer];
                 int bytesRead;
@@ -335,7 +298,7 @@ namespace HFM.Core.Net
                 Result = WebOperationResult.Completed;
             }
 
-            WebResponse response = _webRequest.GetResponse();
+            WebResponse response = WebRequest.GetResponse();
             response.Close();
 
             State = WebOperationState.Idle;
@@ -354,21 +317,18 @@ namespace HFM.Core.Net
 
             State = WebOperationState.InProgress;
             Result = WebOperationResult.None;
-            _webRequest.Method = GetWebCheckConnectionMethod();
+            WebRequest.Method = GetWebCheckConnectionMethod();
 
             WebResponse response = null;
             try
             {
                 OnWebOperationProgress(new WebOperationProgressChangedEventArgs(0, 0, State, Result));
-                response = _webRequest.GetResponse();
+                response = WebRequest.GetResponse();
                 Result = WebOperationResult.Completed;
             }
             finally
             {
-                if (response != null)
-                {
-                    response.Close();
-                }
+                response?.Close();
 
                 State = WebOperationState.Idle;
                 OnWebOperationProgress(new WebOperationProgressChangedEventArgs(0, 0, State, Result));
@@ -410,11 +370,7 @@ namespace HFM.Core.Net
         {
             Debug.Assert(e != null);
 
-            var handler = ProgressChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            ProgressChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -445,7 +401,7 @@ namespace HFM.Core.Net
         /// <returns>A WebOperation descendant for the specific URI scheme.</returns>
         public static WebOperation Create(string requestUriString)
         {
-            if (requestUriString == null) throw new ArgumentNullException("requestUriString");
+            if (requestUriString == null) throw new ArgumentNullException(nameof(requestUriString));
             if (requestUriString.Contains("://") == false)
             {
                 requestUriString = "file://" + requestUriString;
@@ -465,20 +421,17 @@ namespace HFM.Core.Net
 
         private static WebOperation CreateWebOperation(WebRequest webRequest)
         {
-            var fileWebRequest = webRequest as FileWebRequest;
-            if (fileWebRequest != null)
+            if (webRequest is FileWebRequest fileWebRequest)
             {
                 return new FileWebOperation(fileWebRequest);
             }
 
-            var httpWebRequest = webRequest as HttpWebRequest;
-            if (httpWebRequest != null)
+            if (webRequest is HttpWebRequest httpWebRequest)
             {
                 return new HttpWebOperation(httpWebRequest);
             }
 
-            var ftpWebRequest = webRequest as FtpWebRequest;
-            if (ftpWebRequest != null)
+            if (webRequest is FtpWebRequest ftpWebRequest)
             {
                 return new FtpWebOperation(ftpWebRequest);
             }
@@ -562,41 +515,25 @@ namespace HFM.Core.Net
     /// </summary>
     public class WebOperationProgressChangedEventArgs : EventArgs
     {
-        private readonly long _length;
         /// <summary>
         /// Gets the number of bytes received.
         /// </summary>
-        public long Length
-        {
-            get { return _length; }
-        }
+        public long Length { get; }
 
-        private readonly long _totalLength;
         /// <summary>
         /// Gets the total number of bytes to receive.
         /// </summary>
-        public long TotalLength
-        {
-            get { return _totalLength; }
-        }
+        public long TotalLength { get; }
 
-        private readonly WebOperationState _state;
         /// <summary>
         /// Indicates the current state of the operation.
         /// </summary>
-        public WebOperationState State
-        {
-            get { return _state; }
-        }
+        public WebOperationState State { get; }
 
-        private readonly WebOperationResult _result;
         /// <summary>
         /// Indicates the result of the operation.
         /// </summary>
-        public WebOperationResult Result
-        {
-            get { return _result; }
-        }
+        public WebOperationResult Result { get; }
 
         /// <summary>
         /// Initializes a new instance of the WebOperationProgressChangedEventArgs class.
@@ -607,10 +544,10 @@ namespace HFM.Core.Net
         /// <param name="result">The result of the operation.</param>
         public WebOperationProgressChangedEventArgs(long length, long totalLength, WebOperationState state, WebOperationResult result)
         {
-            _length = length;
-            _totalLength = totalLength;
-            _state = state;
-            _result = result;
+            Length = length;
+            TotalLength = totalLength;
+            State = state;
+            Result = result;
         }
     }
 }
