@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Cache;
 
 using HFM.Core.Net;
@@ -77,7 +78,7 @@ namespace HFM.Core.Services
 
             string uriString = String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}", host, port, ftpPath);
             var webOperation = CreateWebOperation(uriString, ftpMode, username, password);
-            var ftpWebRequest = (IFtpWebRequest)webOperation.WebRequest;
+            var ftpWebRequest = (FtpWebRequest)webOperation.WebRequest;
             ftpWebRequest.KeepAlive = false;
             ftpWebRequest.Timeout = 5000;
             webOperation.CheckConnection();
@@ -87,12 +88,12 @@ namespace HFM.Core.Services
         {
             var webOperation = WebOperation.Create(new Uri(uriString));
             webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            SetFtpMode((IFtpWebRequest)webOperation.WebRequest, ftpMode);
+            SetFtpMode((FtpWebRequest)webOperation.WebRequest, ftpMode);
             SetNetworkCredentials(webOperation.WebRequest, username, password);
             return webOperation;
         }
 
-        private static void SetFtpMode(IFtpWebRequest request, FtpMode ftpMode)
+        private static void SetFtpMode(FtpWebRequest request, FtpMode ftpMode)
         {
             Debug.Assert(request != null);
 
@@ -109,7 +110,7 @@ namespace HFM.Core.Services
             }
         }
 
-        private static void SetNetworkCredentials(IWebRequest request, string username, string password)
+        private static void SetNetworkCredentials(WebRequest request, string username, string password)
         {
             var credentials = NetworkCredentialFactory.Create(username, password);
             if (credentials != null)

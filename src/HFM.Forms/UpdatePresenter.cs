@@ -33,7 +33,7 @@ namespace HFM.Forms
    {
       #region Fields
 
-      private IWebOperation _webOperation;
+      private WebOperation _webOperation;
       
       private readonly Action<Exception> _exceptionLogger;
       private readonly ApplicationUpdate _updateData;
@@ -90,7 +90,7 @@ namespace HFM.Forms
 
       public UpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData, 
                              IWebProxy proxy, IUpdateView updateView, harlam357.Windows.Forms.ISaveFileDialogView saveFileView,
-                             IWebOperation webOperation)
+                             WebOperation webOperation)
       {
          _exceptionLogger = exceptionLogger;
          _updateData = updateData;

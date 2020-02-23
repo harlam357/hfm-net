@@ -49,7 +49,7 @@ namespace HFM.Forms
       {
          string localFilePath = Path.Combine(Path.GetTempPath(), String.Concat(applicationId, ApplicationUpdateXml));
          
-         IWebOperation web = WebOperation.Create(updateUrl);
+         WebOperation web = WebOperation.Create(updateUrl);
          if (proxy != null) web.WebRequest.Proxy = proxy;
          web.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
          web.Download(localFilePath);
