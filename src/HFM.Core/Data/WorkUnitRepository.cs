@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 
 using Castle.Core.Logging;
 
+using HFM.Core.Internal;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data

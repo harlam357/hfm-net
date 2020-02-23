@@ -113,7 +113,7 @@
     <Compile Include="Configuration\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Client\SlotStatus.cs" />
-    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
+    <Compile Include="Internal\AsyncProcessorExtensions.cs" />
     <Compile Include="Internal\FileSystem.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />

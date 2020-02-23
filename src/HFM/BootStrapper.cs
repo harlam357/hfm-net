@@ -54,7 +54,7 @@ namespace HFM
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
-            Core.AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = Forms.AsyncProcessorExtensions.ExecuteAsyncWithProgress;
+            Core.Internal.AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = AsyncProcessorExtensions.ExecuteAsyncWithProgress;
 
             // Issue 180 - Restore the already running instance to the screen.
             using (var singleInstance = new SingleInstanceHelper())
