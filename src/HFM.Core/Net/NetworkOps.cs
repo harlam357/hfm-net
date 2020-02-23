@@ -123,88 +123,6 @@ namespace HFM.Core.Net
       }
 
       /// <summary>
-      /// Download a File via Ftp.
-      /// </summary>
-      /// <param name="ftpWebOperation">Web Operation.</param>
-      /// <param name="localFilePath">Path to local file.</param>
-      /// <param name="username">Ftp Login Username.</param>
-      /// <param name="password">Ftp Login Password.</param>
-      /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if ftpWebOperation is null.</exception>
-      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void FtpDownloadHelper(IWebOperation ftpWebOperation, string localFilePath, string username, string password, FtpMode ftpMode)
-      {
-         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation");
-         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
-
-         ftpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         ((IFtpWebRequest)ftpWebOperation.WebRequest).SetFtpMode(ftpMode);
-
-         ftpWebOperation.WebRequest.SetNetworkCredentials(username, password);
-         ftpWebOperation.Download(localFilePath);
-      }
-
-      /// <summary>
-      /// Get the Length of the Http Download.
-      /// </summary>
-      /// <param name="ftpWebOperation">Web Operation.</param>
-      /// <param name="username">Http Login Username.</param>
-      /// <param name="password">Http Login Password.</param>
-      /// <param name="ftpMode">Ftp Transfer Mode.</param>
-      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public long GetFtpDownloadLength(IWebOperation ftpWebOperation, string username, string password, FtpMode ftpMode)
-      {
-         if (ftpWebOperation == null) throw new ArgumentNullException("ftpWebOperation", "Argument 'httpWebOperation' cannot be null.");
-
-         ftpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         ((IFtpWebRequest)ftpWebOperation.WebRequest).SetFtpMode(ftpMode);
-
-         ftpWebOperation.WebRequest.SetNetworkCredentials(username, password);
-         return ftpWebOperation.GetDownloadLength();
-      }
-
-      /// <summary>
-      /// Download a File via Http.
-      /// </summary>
-      /// <param name="httpWebOperation">Web Operation.</param>
-      /// <param name="localFilePath">Path to local file.</param>
-      /// <param name="username">Http Login Username.</param>
-      /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      /// <exception cref="ArgumentException">Throws if localFilePath is null or empty.</exception>
-      public void HttpDownloadHelper(IWebOperation httpWebOperation, string localFilePath, string username, string password)
-      {
-         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation");
-         if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
-
-         httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-
-         httpWebOperation.WebRequest.SetNetworkCredentials(username, password);
-         SetProxy(httpWebOperation.WebRequest);
-
-         httpWebOperation.Download(localFilePath);
-      }
-
-      /// <summary>
-      /// Get the Length of the Http Download.
-      /// </summary>
-      /// <param name="httpWebOperation">Web Operation.</param>
-      /// <param name="username">Http Login Username.</param>
-      /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentNullException">Throws if resourceUri is null.</exception>
-      public long GetHttpDownloadLength(IWebOperation httpWebOperation, string username, string password)
-      {
-         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation");
-
-         httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-
-         httpWebOperation.WebRequest.SetNetworkCredentials(username, password);
-         SetProxy(httpWebOperation.WebRequest);
-
-         return httpWebOperation.GetDownloadLength();
-      }
-
-      /// <summary>
       /// Check an FTP Connection.
       /// </summary>
       /// <param name="server">Server Name or IP.</param>
@@ -247,26 +165,6 @@ namespace HFM.Core.Net
       }
 
       /// <summary>
-      /// Check an HTTP Connection.
-      /// </summary>
-      /// <param name="httpWebOperation">Web Operation.</param>
-      /// <param name="username">Http Login Username.</param>
-      /// <param name="password">Http Login Password.</param>
-      /// <exception cref="ArgumentException">Throws if httpWebOperation is null.</exception>
-      public void HttpCheckConnection(IWebOperation httpWebOperation, string username, string password)
-      {
-         if (httpWebOperation == null) throw new ArgumentNullException("httpWebOperation", "Argument 'httpWebOperation' cannot be null.");
-
-         httpWebOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-         httpWebOperation.WebRequest.Timeout = 5000; // 5 second timeout
-
-         httpWebOperation.WebRequest.SetNetworkCredentials(username, password);
-         SetProxy(httpWebOperation.WebRequest);
-
-         httpWebOperation.CheckConnection();
-      }
-
-      /// <summary>
       /// Sends an e-mail message
       /// </summary>
       public static void SendEmail(bool enableSsl, string messageFrom, string messageTo, string messageSubject,
@@ -282,22 +180,6 @@ namespace HFM.Core.Net
             };
             client.Send(message);
          }
-      }
-
-      /// <summary>
-      /// Set Proxy Information on WebRequest.
-      /// </summary>
-      /// <param name="request">Makes a request to a Uniform Resource Identifier (URI).</param>
-      private void SetProxy(IWebRequest request)
-      {
-         Debug.Assert(request != null);
-
-         IWebProxy proxy = _prefs.GetWebProxy();
-         if (proxy != null)
-         {
-            request.Proxy = proxy;
-         }
-         // Don't set request.Proxy = null - Issue 49
       }
    }
 
