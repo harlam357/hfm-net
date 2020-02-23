@@ -33,15 +33,9 @@ namespace HFM.Core.Data
         {
             private readonly TabDelimitedTextSerializer _serializer = new TabDelimitedTextSerializer();
 
-            public string FileExtension
-            {
-                get { return "tab"; }
-            }
+            public string FileExtension => "tab";
 
-            public string FileTypeFilter
-            {
-                get { return "Project Info Tab Delimited Files|*.tab"; }
-            }
+            public string FileTypeFilter => "Project Info Tab Delimited Files|*.tab";
 
             public List<Protein> Deserialize(string path)
             {
