@@ -63,11 +63,8 @@ namespace HFM.Core.Net
             if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
             if (String.IsNullOrEmpty(localFilePath)) throw new ArgumentException("Argument 'localFilePath' cannot be a null or empty string.");
 
-            string uriString = String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}", server, port, ftpPath, Path.GetFileName(localFilePath));
-            var webOperation = WebOperation.Create(new Uri(uriString));
-            webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            ((IFtpWebRequest)webOperation.WebRequest).SetFtpMode(ftpMode);
-            webOperation.WebRequest.SetNetworkCredentials(username, password);
+            string uriString = CreateUriStringForUpload(server, port, ftpPath, localFilePath);
+            var webOperation = CreateWebOperation(uriString, ftpMode, username, password);
             webOperation.Upload(localFilePath);
         }
 
@@ -78,16 +75,18 @@ namespace HFM.Core.Net
             if (String.IsNullOrEmpty(remoteFileName)) throw new ArgumentException("Argument 'remoteFileName' cannot be a null or empty string.");
             if (stream == null) throw new ArgumentNullException("stream");
 
-            string uriString = String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}", server, port, ftpPath, remoteFileName);
-            var webOperation = WebOperation.Create(new Uri(uriString));
-            webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            ((IFtpWebRequest)webOperation.WebRequest).SetFtpMode(ftpMode);
-            webOperation.WebRequest.SetNetworkCredentials(username, password);
+            string uriString = CreateUriStringForUpload(server, port, ftpPath, remoteFileName);
+            var webOperation = CreateWebOperation(uriString, ftpMode, username, password);
             if (maximumLength >= 0 && stream.Length >= maximumLength)
             {
                 stream.Position = stream.Length - maximumLength;
             }
             webOperation.Upload(stream);
+        }
+
+        private static string CreateUriStringForUpload(string server, int port, string ftpPath, string filePath)
+        {
+            return String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}", server, port, ftpPath, Path.GetFileName(filePath));
         }
 
         /// <summary>
@@ -106,45 +105,23 @@ namespace HFM.Core.Net
             if (String.IsNullOrEmpty(ftpPath)) throw new ArgumentException("Argument 'ftpPath' cannot be a null or empty string.");
 
             string uriString = String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}", server, port, ftpPath);
-            var webOperation = WebOperation.Create(new Uri(uriString));
+            var webOperation = CreateWebOperation(uriString, ftpMode, username, password);
             var ftpWebRequest = (IFtpWebRequest)webOperation.WebRequest;
-            ftpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            // close the request
             ftpWebRequest.KeepAlive = false;
             ftpWebRequest.Timeout = 5000;
-            ftpWebRequest.SetFtpMode(ftpMode);
-            webOperation.WebRequest.SetNetworkCredentials(username, password);
             webOperation.CheckConnection();
         }
-    }
 
-    public static class NetworkCredentialFactory
-    {
-        /// <summary>
-        /// Creates and returns a new NetworkCredential object.
-        /// </summary>
-        /// <param name="username">The username literal or in domain\username format.</param>
-        /// <param name="password">The password literal.</param>
-        public static NetworkCredential Create(string username, string password)
+        private static WebOperation CreateWebOperation(string uriString, FtpMode ftpMode, string username, string password)
         {
-            if (Validate.UsernamePasswordPair(username, password))
-            {
-                if (username.Contains("\\"))
-                {
-                    string[] userParts = username.Split('\\');
-                    return new NetworkCredential(userParts[1], password, userParts[0]);
-                }
-
-                return new NetworkCredential(username, password);
-            }
-
-            return null;
+            var webOperation = WebOperation.Create(new Uri(uriString));
+            webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            SetFtpMode((IFtpWebRequest)webOperation.WebRequest, ftpMode);
+            SetNetworkCredentials(webOperation.WebRequest, username, password);
+            return webOperation;
         }
-    }
 
-    public static class WebRequestExtensions
-    {
-        public static void SetFtpMode(this IFtpWebRequest request, FtpMode ftpMode)
+        private static void SetFtpMode(IFtpWebRequest request, FtpMode ftpMode)
         {
             Debug.Assert(request != null);
 
@@ -157,23 +134,13 @@ namespace HFM.Core.Net
                     request.UsePassive = false;
                     break;
                 default:
-                    throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                       "FTP Type '{0}' is not valid.", ftpMode));
+                    throw new InvalidOperationException($"FTP Mode {ftpMode} is not valid.");
             }
         }
 
-        /// <summary>
-        /// Sets the Credentials property with the username and password.
-        /// </summary>
-        /// <param name="request">The object that makes a request to a Uniform Resource Identifier (URI).</param>
-        /// <param name="username">The login username.</param>
-        /// <param name="password">The login password.</param>
-        /// <exception cref="ArgumentNullException">request is null.</exception>
-        public static void SetNetworkCredentials(this IWebRequest request, string username, string password)
+        private static void SetNetworkCredentials(IWebRequest request, string username, string password)
         {
-            if (request == null) throw new ArgumentNullException("request", "Argument 'Request' cannot be null.");
-
-            NetworkCredential credentials = NetworkCredentialFactory.Create(username, password);
+            var credentials = NetworkCredentialFactory.Create(username, password);
             if (credentials != null)
             {
                 request.Credentials = credentials;
