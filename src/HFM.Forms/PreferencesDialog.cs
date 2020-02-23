@@ -33,6 +33,7 @@ using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Net;
+using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
 using HFM.Preferences;

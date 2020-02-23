@@ -26,6 +26,7 @@ using Castle.Core.Logging;
 
 using HFM.Core.Client;
 using HFM.Core.Net;
+using HFM.Core.Services;
 using HFM.Preferences;
 
 namespace HFM.Core.ScheduledTasks
