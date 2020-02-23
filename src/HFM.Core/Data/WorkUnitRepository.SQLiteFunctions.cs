@@ -49,14 +49,12 @@ namespace HFM.Core.Data
             var kFactor = (double)args[3];
             var preferredDays = (double)args[4];
             var maximumDays = (double)args[5];
-            DateTime downloadDateTime;
             DateTime.TryParseExact((string)args[6], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
                                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                                   out downloadDateTime);
-            DateTime completionDateTime;
+                                   out var downloadDateTime);
             DateTime.TryParseExact((string)args[7], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
                                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                                   out completionDateTime);
+                                   out var completionDateTime);
             var calcOption = (long)args[8];
 
             TimeSpan unitTime = TimeSpan.Zero;

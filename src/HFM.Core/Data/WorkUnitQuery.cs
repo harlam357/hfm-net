@@ -103,7 +103,9 @@ namespace HFM.Core.Data
 
         public override int GetHashCode()
         {
+            // ReSharper disable NonReadonlyMemberInGetHashCode
             return (Name != null ? Name.GetHashCode() : 0);
+            // ReSharper restore NonReadonlyMemberInGetHashCode
         }
 
         public static bool operator ==(WorkUnitQuery left, WorkUnitQuery right)

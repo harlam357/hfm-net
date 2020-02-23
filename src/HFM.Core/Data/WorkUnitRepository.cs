@@ -558,10 +558,7 @@ namespace HFM.Core.Data
         {
             public abstract string TableName { get; }
 
-            public virtual string SelectSql
-            {
-                get { return String.Empty; }
-            }
+            public virtual string SelectSql => String.Empty;
 
             public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
         }
@@ -633,15 +630,9 @@ namespace HFM.Core.Data
 
             #endregion
 
-            public override string TableName
-            {
-                get { return WuHistoryTableName; }
-            }
+            public override string TableName => WuHistoryTableName;
 
-            public override string SelectSql
-            {
-                get { return WuHistoryTableSelect; }
-            }
+            public override string SelectSql => WuHistoryTableSelect;
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
@@ -666,10 +657,7 @@ namespace HFM.Core.Data
 
             #endregion
 
-            public override string TableName
-            {
-                get { return VersionTableName; }
-            }
+            public override string TableName => VersionTableName;
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             public override DbCommand GetCreateTableCommand(SQLiteConnection connection)

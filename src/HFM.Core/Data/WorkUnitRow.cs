@@ -82,19 +82,13 @@ namespace HFM.Core.Data
         public int FramesCompleted { get; set; }
 
         [PetaPoco.Ignore]
-        public TimeSpan FrameTime
-        {
-            get { return TimeSpan.FromSeconds(FrameTimeValue); }
-        }
+        public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeValue);
 
         [PetaPoco.Column("FrameTime")]
         public int FrameTimeValue { get; set; }
 
         [PetaPoco.Ignore]
-        public string Result
-        {
-            get { return ToWorkUnitResultString(ResultValue); }
-        }
+        public string Result => ToWorkUnitResultString(ResultValue);
 
         private static string ToWorkUnitResultString(int result)
         {
