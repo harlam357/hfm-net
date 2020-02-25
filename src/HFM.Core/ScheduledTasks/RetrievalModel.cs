@@ -36,7 +36,8 @@ namespace HFM.Core.ScheduledTasks
         private readonly IClientConfiguration _clientConfiguration;
         private readonly Lazy<MarkupGenerator> _markupGenerator;
         private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
-        private readonly AggregateScheduledTask _aggregateScheduledTask;
+        private readonly DelegateScheduledTask _clientRetrievalTask;
+        private readonly DelegateScheduledTask _webGenerationTask;
 
         public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration,
                               Lazy<MarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
@@ -45,9 +46,7 @@ namespace HFM.Core.ScheduledTasks
             _clientConfiguration = clientConfiguration;
             _markupGenerator = markupGenerator;
             _websiteDeployer = websiteDeployer;
-            _aggregateScheduledTask = new AggregateScheduledTask();
-            _aggregateScheduledTask.Changed += TaskChanged;
-
+            
             _prefs.PreferenceChanged += (s, e) =>
             {
                 switch (e.Preference)
@@ -57,12 +56,13 @@ namespace HFM.Core.ScheduledTasks
                         {
                             if (_clientConfiguration.Count != 0)
                             {
-                                _aggregateScheduledTask.Restart(ClientTaskKey, ClientInterval);
+                                _clientRetrievalTask.Interval = ClientInterval;
+                                _clientRetrievalTask.Restart();
                             }
                         }
                         else
                         {
-                            _aggregateScheduledTask.Stop(ClientTaskKey);
+                            _clientRetrievalTask.Stop();
                         }
                         break;
                     case Preference.WebGenerationTask:
@@ -71,12 +71,13 @@ namespace HFM.Core.ScheduledTasks
                         {
                             if (_clientConfiguration.Count != 0)
                             {
-                                _aggregateScheduledTask.Restart(WebTaskKey, WebInterval);
+                                _webGenerationTask.Interval = WebInterval;
+                                _webGenerationTask.Restart();
                             }
                         }
                         else
                         {
-                            _aggregateScheduledTask.Stop(WebTaskKey);
+                            _webGenerationTask.Stop();
                         }
                         break;
                 }
@@ -88,11 +89,11 @@ namespace HFM.Core.ScheduledTasks
                     e.Action == ConfigurationChangedAction.Clear)
                 {
                     // Disable timers if no hosts
-                    if (_aggregateScheduledTask.Enabled && _clientConfiguration.Count == 0)
+                    if ((_clientRetrievalTask.Enabled || _webGenerationTask.Enabled) && _clientConfiguration.Count == 0)
                     {
                         Logger.Info("No clients... stopping all scheduled tasks");
-                        //_aggregateScheduledTask.Stop();
-                        _aggregateScheduledTask.Cancel();
+                        _clientRetrievalTask.Cancel();
+                        _webGenerationTask.Cancel();
                     }
                 }
                 else if (e.Action == ConfigurationChangedAction.Add)
@@ -101,23 +102,28 @@ namespace HFM.Core.ScheduledTasks
                     if (e.Client == null)
                     {
                         // no client specified - retrieve all
-                        _aggregateScheduledTask.Run(ClientTaskKey, ClientInterval, clientTaskEnabled);
+                        _clientRetrievalTask.Interval = ClientInterval;
+                        _clientRetrievalTask.Run(clientTaskEnabled);
                     }
                     else if (clientTaskEnabled)
                     {
-                        _aggregateScheduledTask.Start(ClientTaskKey, ClientInterval);
+                        _clientRetrievalTask.Interval = ClientInterval;
+                        _clientRetrievalTask.Start();
                     }
 
                     if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
                         _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
                     {
-                        _aggregateScheduledTask.Start(WebTaskKey, WebInterval);
+                        _webGenerationTask.Interval = WebInterval;
+                        _webGenerationTask.Start();
                     }
                 }
             };
 
-            _aggregateScheduledTask.Add(new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval));
-            _aggregateScheduledTask.Add(new DelegateScheduledTask(WebTaskKey, WebGenerationAction, WebInterval));
+            _clientRetrievalTask = new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval);
+            _clientRetrievalTask.Changed += TaskChanged;
+            _webGenerationTask = new DelegateScheduledTask(WebTaskKey, WebGenerationAction, WebInterval);
+            _webGenerationTask.Changed += TaskChanged;
         }
 
         private void TaskChanged(object sender, ScheduledTaskChangedEventArgs e)
@@ -151,12 +157,12 @@ namespace HFM.Core.ScheduledTasks
 
         public void RunClientRetrieval()
         {
-            _aggregateScheduledTask.Run(ClientTaskKey, false);
+            _clientRetrievalTask.Run(false);
         }
 
         //public void RunWebGeneration()
         //{
-        //   _aggregateScheduledTask.Run(WebTaskKey, false);
+        //   _webGenerationTask.Run(false);
         //}
 
         private void ClientRetrievalAction(CancellationToken ct)
@@ -192,7 +198,7 @@ namespace HFM.Core.ScheduledTasks
                 _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval))
             {
                 ct.ThrowIfCancellationRequested();
-                _aggregateScheduledTask.Run(WebTaskKey, false);
+                _webGenerationTask.Run(false);
             }
         }
 

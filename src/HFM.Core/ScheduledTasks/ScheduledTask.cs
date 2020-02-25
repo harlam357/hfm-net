@@ -39,7 +39,7 @@ namespace HFM.Core.ScheduledTasks
 
         public string ToString(Func<double?, string> formatInterval)
         {
-            string key = Source.Key;
+            string key = Source.Name;
             switch (Action)
             {
                 case ScheduledTaskChangedAction.Started:
@@ -66,7 +66,7 @@ namespace HFM.Core.ScheduledTasks
     {
         public Action<CancellationToken> Action { get; }
 
-        public DelegateScheduledTask(string key, Action<CancellationToken> action, double interval) : base(key, interval)
+        public DelegateScheduledTask(string name, Action<CancellationToken> action, double interval) : base(name, interval)
         {
             Action = action;
         }
@@ -81,14 +81,14 @@ namespace HFM.Core.ScheduledTasks
     {
         private readonly System.Timers.Timer _timer;
 
-        protected ScheduledTask(string key) : this(key, 100.0)
+        protected ScheduledTask(string name) : this(name, 100.0)
         {
 
         }
 
-        protected ScheduledTask(string key, double interval)
+        protected ScheduledTask(string name, double interval)
         {
-            Key = key;
+            Name = name;
             _timer = new System.Timers.Timer();
             _timer.Interval = interval;
             _timer.Elapsed += (s, e) => Run();
@@ -101,7 +101,7 @@ namespace HFM.Core.ScheduledTasks
             Changed?.Invoke(this, new ScheduledTaskChangedEventArgs(this, action, interval));
         }
 
-        public string Key { get; }
+        public string Name { get; }
 
         public double Interval
         {

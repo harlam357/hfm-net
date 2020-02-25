@@ -156,7 +156,6 @@
     <Compile Include="Data\WorkUnitQueryDataContainer.cs" />
     <Compile Include="SlotXml\SlotSummary.cs" />
     <Compile Include="Client\SlotModelSortComparer.cs" />
-    <Compile Include="ScheduledTasks\AggregateScheduledTask.cs" />
     <Compile Include="Data\WorkUnitRepository.cs" />
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
     <Compile Include="PreferenceSetExtensions.cs" />
