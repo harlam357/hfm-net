@@ -12,7 +12,7 @@ namespace HFM.Proteins
     /// <summary>
     /// Represents a serializer capable of serializing and deserializing a collection of <see cref="Protein"/> objects to and from tab delimited text.
     /// </summary>
-    public sealed class TabDelimitedTextSerializer : IProteinCollectionSerializer
+    public class TabDelimitedTextSerializer : IProteinCollectionSerializer
     {
         /// <summary>
         /// Deserializes a collection of <see cref="Protein"/> objects from a <see cref="Stream"/>.

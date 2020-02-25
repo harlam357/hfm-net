@@ -23,7 +23,7 @@ namespace HFM.Core.Data
 
     public partial class WorkUnitRepository
     {
-        private sealed class ProteinDataUpdater : ProteinDataUpdaterBase, IAsyncProcessor
+        private class ProteinDataUpdater : ProteinDataUpdaterBase, IAsyncProcessor
         {
             public ProteinDataUpdater(SQLiteConnection connection, IProteinService proteinService)
                : base(connection, proteinService)
@@ -53,7 +53,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private sealed class ProteinDataUpdaterWithCancellation : ProteinDataUpdaterBase, IAsyncProcessorWithCancellation
+        private class ProteinDataUpdaterWithCancellation : ProteinDataUpdaterBase, IAsyncProcessorWithCancellation
         {
             public ProteinDataUpdaterWithCancellation(SQLiteConnection connection, IProteinService proteinService)
                : base(connection, proteinService)

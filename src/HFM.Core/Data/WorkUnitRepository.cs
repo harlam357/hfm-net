@@ -564,7 +564,7 @@ namespace HFM.Core.Data
             public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
         }
 
-        private sealed class WuHistorySqlTableCommands : SqlTableCommands
+        private class WuHistorySqlTableCommands : SqlTableCommands
         {
             #region SQL Constants
 
@@ -646,7 +646,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private sealed class VersionSqlTableCommands : SqlTableCommands
+        private class VersionSqlTableCommands : SqlTableCommands
         {
             #region SQL Constants
 
