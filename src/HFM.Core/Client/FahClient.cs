@@ -618,7 +618,8 @@ namespace HFM.Core.Client
                 return result;
             }
 
-            public sealed class Result
+            // TODO: use ValueTuple
+            internal struct Result
             {
                 public bool SlotsUpdated { get; set; }
 
