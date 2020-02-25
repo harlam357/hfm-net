@@ -18,11 +18,12 @@
  */
 
 using System.Diagnostics.CodeAnalysis;
-
+using System.Drawing;
 using AutoMapper;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
+using HFM.Core.SlotXml;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Configuration
@@ -32,16 +33,16 @@ namespace HFM.Core.Configuration
     {
         public AutoMapperProfile()
         {
-            CreateMap<SlotModel, SlotXml.SlotData>()
-               .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => src.Status.GetHtmlColor()))
-               .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => src.Status.GetHtmlFontColor()))
+            CreateMap<SlotModel, SlotData>()
+               .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(src.Status.GetStatusColor())))
+               .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(MarkupGenerator.GetHtmlFontColor(src.Status))))
                .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToDateString() : src.ETA.ToString()))
                .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
                .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()))
                .ForMember(dest => dest.Protein, opt => opt.MapFrom(src => CreateMarkupProtein(src.WorkUnitModel.CurrentProtein)));
 
-            CreateMap<Log.LogLine, SlotXml.LogLine>();
-            CreateMap<Proteins.Protein, SlotXml.Protein>();
+            CreateMap<Log.LogLine, LogLine>();
+            CreateMap<Proteins.Protein, Protein>();
 
             CreateMap<WorkUnit, WorkUnitRow>()
                .ForMember(dest => dest.ID, opt => opt.Ignore())
@@ -67,10 +68,9 @@ namespace HFM.Core.Configuration
                .ForMember(dest => dest.Credit, opt => opt.Ignore());
         }
 
-        private static SlotXml.Protein CreateMarkupProtein(Proteins.Protein p)
+        private static Protein CreateMarkupProtein(Proteins.Protein p)
         {
-            if (p == null) return null;
-            return Mapper.Map<SlotXml.Protein>(p);
+            return p == null ? null : Mapper.Map<Protein>(p);
         }
     }
 }

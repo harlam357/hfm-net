@@ -51,31 +51,6 @@ namespace HFM.Core.Client
     public static class SlotStatusExtensions
     {
         /// <summary>
-        /// Gets Status Html Color String
-        /// </summary>
-        internal static string GetHtmlColor(this SlotStatus status)
-        {
-            return ColorTranslator.ToHtml(status.GetStatusColor());
-        }
-
-        /// <summary>
-        /// Gets Status Html Font Color String
-        /// </summary>
-        internal static string GetHtmlFontColor(this SlotStatus status)
-        {
-            switch (status)
-            {
-                case SlotStatus.RunningNoFrameTimes:
-                case SlotStatus.Paused:
-                case SlotStatus.Finishing:
-                case SlotStatus.Offline:
-                    return ColorTranslator.ToHtml(Color.Black);
-                default:
-                    return ColorTranslator.ToHtml(Color.White);
-            }
-        }
-
-        /// <summary>
         /// Gets Status Color Object
         /// </summary>
         public static Color GetStatusColor(this SlotStatus status)
