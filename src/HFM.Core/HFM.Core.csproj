@@ -86,7 +86,6 @@
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
-    <Compile Include="Client\LogLineCopier.cs" />
     <Compile Include="Client\SlotIdentifier.cs" />
     <Compile Include="SlotXml\LogLine.cs" />
     <Compile Include="SlotXml\Protein.cs" />
