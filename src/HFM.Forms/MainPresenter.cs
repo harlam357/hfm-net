@@ -55,11 +55,6 @@ namespace HFM.Forms
         #region Properties
 
         /// <summary>
-        /// Command Line Arguments.
-        /// </summary>
-        public IEnumerable<Argument> Arguments { get; set; }
-
-        /// <summary>
         /// Holds the state of the window before it is hidden (minimize to tray behaviour)
         /// </summary>
         public FormWindowState OriginalWindowState { get; private set; }
@@ -157,8 +152,12 @@ namespace HFM.Forms
 
         #region Initialize
 
-        public void Initialize()
+        private string _openFile;
+
+        public void Initialize(string openFile)
         {
+            _openFile = openFile;
+
             // Restore View Preferences (must be done AFTER DataGridView columns are setup)
             RestoreViewPreferences();
             //
@@ -284,14 +283,9 @@ namespace HFM.Forms
                 _view.WindowState = FormWindowState.Minimized;
             }
 
-            Debug.Assert(Arguments != null);
-            var openFile = Arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.OpenFile));
-            if (openFile != null)
+            if (!String.IsNullOrEmpty(_openFile))
             {
-                if (!String.IsNullOrEmpty(openFile.Data))
-                {
-                    LoadConfigFile(openFile.Data);
-                }
+                LoadConfigFile(_openFile);
             }
             else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
             {

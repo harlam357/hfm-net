@@ -151,6 +151,7 @@
     <Compile Include="..\ExeAssemblyVersion.cs">
       <Link>Properties\ExeAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Arguments.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

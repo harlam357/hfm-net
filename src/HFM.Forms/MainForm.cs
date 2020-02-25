@@ -25,7 +25,6 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
@@ -77,7 +76,7 @@ namespace HFM.Forms
 
       #region Methods
 
-      void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel);
+      void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel, string openFile);
 
       void SetGridDataSource(object dataSource);
 
@@ -176,7 +175,7 @@ namespace HFM.Forms
 
       #region Initialize
 
-      public void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel)
+      public void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel, string openFile)
       {
          _presenter = presenter;
          // Resize can be invoked when InitializeComponent() is called
@@ -198,7 +197,7 @@ namespace HFM.Forms
          #endregion
 
          // Initialize the Presenter
-         _presenter.Initialize();
+         _presenter.Initialize(openFile);
 
          BindToUserStatsDataModel(userStatsDataModel);
          // Hook-up Status Label Event Handlers

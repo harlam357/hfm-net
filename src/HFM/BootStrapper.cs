@@ -298,10 +298,10 @@ namespace HFM
         private static bool InitializeMainView(string appDataPath, IWindsorContainer container, ICollection<Argument> arguments, IMainView mainView)
         {
             var mainPresenter = container.Resolve<MainPresenter>();
-            mainPresenter.Arguments = arguments;
+            string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainView.Initialize(mainPresenter, container.Resolve<IProteinService>(), container.Resolve<UserStatsDataModel>());
+                mainView.Initialize(mainPresenter, container.Resolve<IProteinService>(), container.Resolve<UserStatsDataModel>(), openFile);
             }
             catch (Exception ex)
             {
