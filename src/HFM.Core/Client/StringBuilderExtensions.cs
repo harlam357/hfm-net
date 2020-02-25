@@ -23,65 +23,24 @@ using System.Text;
 
 namespace HFM.Core.Client
 {
-   internal static class StringBuilderExtensions
-   {
-      private const int MaxChunkSize = 8000;
+    internal static class StringBuilderExtensions
+    {
+        // use maximum chunk size equal to that used by StringBuilder itself
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/Text/StringBuilder.cs
+        private const int MaxChunkSize = 8000;
 
-      internal static IEnumerable<char[]> GetChunks(this StringBuilder sb)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
+        // TODO: when upgrading to .netcore 3+, use StringBuilder.GetChunks() as IEnumerable<ReadOnlyMemory<char>>
+        internal static IEnumerable<char[]> GetChunks(this StringBuilder sb)
+        {
+            if (sb == null) throw new ArgumentNullException(nameof(sb));
 
-         return GetChunks(sb, MaxChunkSize);
-      }
-
-      private static IEnumerable<char[]> GetChunks(this StringBuilder sb, int chunkSize)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
-         if (chunkSize < 1000) throw new ArgumentOutOfRangeException("chunkSize");
-
-         var list = new List<char[]>();
-         for (int i = 0; i < sb.Length; i += chunkSize)
-         {
-            int length = i + chunkSize < sb.Length ? chunkSize : sb.Length - i;
-            var temp = new char[length];
-            sb.CopyTo(i, temp, 0, temp.Length);
-            list.Add(temp);
-         }
-         return list.AsReadOnly();
-      }
-
-      //internal static StringBuilder MergeChunks(this IEnumerable<char[]> chunks)
-      //{
-      //   if (chunks == null) throw new ArgumentNullException("chunks");
-      //
-      //   var sb = new StringBuilder(chunks.Count() * MaxChunkSize);
-      //   foreach (var chunk in chunks)
-      //   {
-      //      sb.Append(chunk);
-      //   }
-      //   return sb;
-      //}
-
-      internal static IEnumerable<string> Split(this StringBuilder sb, char splitChar)
-      {
-         if (sb == null) throw new ArgumentNullException("sb");
-
-         var list = new LinkedList<string>();
-
-         int lastIndex = 0;
-         for (int i = 0; i < sb.Length; i++)
-         {
-            if (sb[i] == splitChar)
+            for (int i = 0; i < sb.Length; i += MaxChunkSize)
             {
-               var buffer = new char[i - lastIndex];
-               sb.CopyTo(lastIndex, buffer, 0, buffer.Length);
-               lastIndex = i + 1;
-
-               list.AddLast(new string(buffer));
+                int length = i + MaxChunkSize < sb.Length ? MaxChunkSize : sb.Length - i;
+                var chunkCopy = new char[length];
+                sb.CopyTo(i, chunkCopy, 0, chunkCopy.Length);
+                yield return chunkCopy;
             }
-         }
-
-         return list;
-      }
-   }
+        }
+    }
 }
