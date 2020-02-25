@@ -105,10 +105,14 @@ namespace HFM.Core.ScheduledTasks
                         _clientRetrievalTask.Interval = ClientInterval;
                         _clientRetrievalTask.Run(clientTaskEnabled);
                     }
-                    else if (clientTaskEnabled)
+                    else
                     {
-                        _clientRetrievalTask.Interval = ClientInterval;
-                        _clientRetrievalTask.Start();
+                        Task.Run(() => e.Client.Retrieve());
+                        if (clientTaskEnabled)
+                        {
+                            _clientRetrievalTask.Interval = ClientInterval;
+                            _clientRetrievalTask.Start();
+                        }
                     }
 
                     if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
@@ -117,6 +121,10 @@ namespace HFM.Core.ScheduledTasks
                         _webGenerationTask.Interval = WebInterval;
                         _webGenerationTask.Start();
                     }
+                }
+                else if (e.Action == ConfigurationChangedAction.Edit)
+                {
+                    Task.Run(() => e.Client.Retrieve());
                 }
             };
 
