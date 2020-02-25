@@ -14,10 +14,10 @@ namespace HFM.Core.Configuration
 
          configuration.ConfigurationChanged += (s, e) =>
          {
-            switch (e.ChangedType)
+            switch (e.Action)
             {
-               case ConfigurationChangedType.Add:
-               case ConfigurationChangedType.Edit:
+               case ConfigurationChangedAction.Add:
+               case ConfigurationChangedAction.Edit:
                   if (e.Client != null)
                   {
                      Task.Run(() => e.Client.Retrieve());

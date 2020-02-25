@@ -141,7 +141,7 @@ namespace HFM.Core.Client
 
         private void OnInvalidate(object sender, EventArgs e)
         {
-            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Invalidate, null));
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Invalidate, null));
         }
 
         public void Load(IEnumerable<ClientSettings> settings)
@@ -174,7 +174,7 @@ namespace HFM.Core.Client
 
             if (added != 0)
             {
-                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Add, null));
+                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Add, null));
             }
         }
 
@@ -254,7 +254,7 @@ namespace HFM.Core.Client
 
             IsDirty = true;
             OnClientEdited(e);
-            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Edit, client));
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Edit, client));
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace HFM.Core.Client
             }
 
             IsDirty = true;
-            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Add, value));
+            OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Add, value));
         }
 
         public bool ContainsKey(string key)
@@ -328,7 +328,7 @@ namespace HFM.Core.Client
             if (result)
             {
                 IsDirty = true;
-                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Remove, client));
+                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Remove, client));
             }
             return result;
         }
@@ -386,7 +386,7 @@ namespace HFM.Core.Client
             IsDirty = false;
             if (hasValues)
             {
-                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedType.Clear, null));
+                OnDictionaryChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Clear, null));
             }
         }
 
@@ -407,7 +407,7 @@ namespace HFM.Core.Client
         }
     }
 
-    public enum ConfigurationChangedType
+    public enum ConfigurationChangedAction
     {
         Add,
         Remove,
@@ -418,13 +418,13 @@ namespace HFM.Core.Client
 
     public class ConfigurationChangedEventArgs : EventArgs
     {
-        public ConfigurationChangedType ChangedType { get; }
+        public ConfigurationChangedAction Action { get; }
 
         public IClient Client { get; }
 
-        public ConfigurationChangedEventArgs(ConfigurationChangedType type, IClient client)
+        public ConfigurationChangedEventArgs(ConfigurationChangedAction action, IClient client)
         {
-            ChangedType = type;
+            Action = action;
             Client = client;
         }
     }

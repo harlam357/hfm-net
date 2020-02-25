@@ -102,7 +102,7 @@ namespace HFM.Core.Client
             // Act
             _clientConfiguration.Load(settings);
             // Assert
-            Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+            Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
         }
 
@@ -124,7 +124,7 @@ namespace HFM.Core.Client
             // Act
             _clientConfiguration.Add(settings);
             // Assert
-            Assert.AreEqual(ConfigurationChangedType.Add, eventArgs.ChangedType);
+            Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
         }
         
@@ -148,7 +148,7 @@ namespace HFM.Core.Client
             bool clientInvalidateFired = false;
             _clientConfiguration.ConfigurationChanged += (sender, args) =>
             {
-                if (args.ChangedType == ConfigurationChangedType.Invalidate) clientInvalidateFired = true;
+                if (args.Action == ConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
             };
             _clientConfiguration.Add("test", client);
             // Act
@@ -165,7 +165,7 @@ namespace HFM.Core.Client
             bool clientDataInvalidatedFired = false;
             _clientConfiguration.ConfigurationChanged += (sender, args) =>
             {
-                if (args.ChangedType == ConfigurationChangedType.Invalidate) clientDataInvalidatedFired = true;
+                if (args.Action == ConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
             };
             _clientConfiguration.Add("test", client);
             // Act
@@ -206,7 +206,7 @@ namespace HFM.Core.Client
             // Assert
             Assert.AreEqual(1, _clientConfiguration.Count);
             Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
-            Assert.AreEqual(ConfigurationChangedType.Edit, changedEventArgs.ChangedType);
+            Assert.AreEqual(ConfigurationChangedAction.Edit, changedEventArgs.Action);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
             Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
             Assert.AreEqual("test", editedEventArgs.OldName);
@@ -256,7 +256,7 @@ namespace HFM.Core.Client
             bool result = _clientConfiguration.Remove("test");
             // Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(ConfigurationChangedType.Remove, eventArgs.ChangedType);
+            Assert.AreEqual(ConfigurationChangedAction.Remove, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
         }
 
@@ -316,7 +316,7 @@ namespace HFM.Core.Client
             // Act
             _clientConfiguration.Clear();
             // Assert
-            Assert.AreEqual(ConfigurationChangedType.Clear, eventArgs.ChangedType);
+            Assert.AreEqual(ConfigurationChangedAction.Clear, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
         }
 

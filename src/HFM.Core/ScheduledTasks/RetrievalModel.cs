@@ -84,8 +84,8 @@ namespace HFM.Core.ScheduledTasks
 
             _clientConfiguration.ConfigurationChanged += (s, e) =>
             {
-                if (e.ChangedType == ConfigurationChangedType.Remove ||
-                    e.ChangedType == ConfigurationChangedType.Clear)
+                if (e.Action == ConfigurationChangedAction.Remove ||
+                    e.Action == ConfigurationChangedAction.Clear)
                 {
                     // Disable timers if no hosts
                     if (_aggregateScheduledTask.Enabled && _clientConfiguration.Count == 0)
@@ -95,7 +95,7 @@ namespace HFM.Core.ScheduledTasks
                         _aggregateScheduledTask.Cancel();
                     }
                 }
-                else if (e.ChangedType == ConfigurationChangedType.Add)
+                else if (e.Action == ConfigurationChangedAction.Add)
                 {
                     var clientTaskEnabled = _prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled);
                     if (e.Client == null)
