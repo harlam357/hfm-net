@@ -209,8 +209,8 @@ namespace HFM.Core.Client
             Assert.AreEqual(ConfigurationChangedType.Edit, changedEventArgs.ChangedType);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
             Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
-            Assert.AreEqual("test", editedEventArgs.PreviousName);
-            Assert.AreEqual("server-36330", editedEventArgs.PreviousPath);
+            Assert.AreEqual("test", editedEventArgs.OldName);
+            Assert.AreEqual("server-36330", editedEventArgs.OldPath);
             Assert.AreEqual("test2", editedEventArgs.NewName);
             Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
         }

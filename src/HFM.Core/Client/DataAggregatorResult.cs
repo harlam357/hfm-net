@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 

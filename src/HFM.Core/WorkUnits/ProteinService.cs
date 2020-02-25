@@ -61,7 +61,7 @@ namespace HFM.Core.WorkUnits
         IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress);
     }
 
-    public sealed class ProteinService : IProteinService
+    public class ProteinService : IProteinService
     {
         private readonly ProteinDataContainer _dataContainer;
         private readonly IProjectSummaryService _projectSummaryService;

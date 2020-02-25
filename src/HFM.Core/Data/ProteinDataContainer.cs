@@ -29,7 +29,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private sealed class TabSerializer : Serializers.IFileSerializer<List<Protein>>
+        private class TabSerializer : Serializers.IFileSerializer<List<Protein>>
         {
             private readonly TabDelimitedTextSerializer _serializer = new TabDelimitedTextSerializer();
 

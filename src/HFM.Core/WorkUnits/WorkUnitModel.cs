@@ -28,7 +28,7 @@ using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
 {
-    public sealed class WorkUnitModel
+    public class WorkUnitModel
     {
         private readonly IProteinBenchmarkService _benchmarkService;
 

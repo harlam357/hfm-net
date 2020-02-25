@@ -17,7 +17,7 @@ namespace HFM.Core.ScheduledTasks
         AlreadyInProgress
     }
 
-    public sealed class ScheduledTaskChangedEventArgs : EventArgs
+    public class ScheduledTaskChangedEventArgs : EventArgs
     {
         public ScheduledTask Source { get; }
 

@@ -24,7 +24,7 @@ using HFM.Preferences;
 
 namespace HFM.Core.Data
 {
-    public sealed class WorkUnitQueryDataContainer : DataContainer<List<WorkUnitQuery>>
+    public class WorkUnitQueryDataContainer : DataContainer<List<WorkUnitQuery>>
     {
         public const string DefaultFileName = "WuHistoryQuery.dat";
 

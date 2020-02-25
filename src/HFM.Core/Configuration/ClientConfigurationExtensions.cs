@@ -30,16 +30,16 @@ namespace HFM.Core.Configuration
       private static void UpdateBenchmarkData(IProteinBenchmarkService benchmarkService, ClientEditedEventArgs e)
       {
          // the name changed
-         if (e.PreviousName != e.NewName)
+         if (e.OldName != e.NewName)
          {
             // update the Names in the benchmark collection
-            benchmarkService.UpdateOwnerName(e.PreviousName, e.PreviousPath, e.NewName);
+            benchmarkService.UpdateOwnerName(e.OldName, e.OldPath, e.NewName);
          }
          // the path changed
-         if (!Internal.FileSystem.PathsEqual(e.PreviousPath, e.NewPath))
+         if (!Internal.FileSystem.PathsEqual(e.OldPath, e.NewPath))
          {
             // update the Paths in the benchmark collection
-            benchmarkService.UpdateOwnerPath(e.NewName, e.PreviousPath, e.NewPath);
+            benchmarkService.UpdateOwnerPath(e.NewName, e.OldPath, e.NewPath);
          }
       }
    }

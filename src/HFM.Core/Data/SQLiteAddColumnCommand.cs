@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace HFM.Core.Data
 {
-    internal sealed class SQLiteAddColumnCommand : IDisposable
+    internal class SQLiteAddColumnCommand : IDisposable
     {
         private readonly string _tableName;
         private readonly SQLiteConnection _connection;
