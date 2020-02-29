@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.Net;
 using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
