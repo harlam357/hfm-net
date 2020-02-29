@@ -865,7 +865,7 @@ namespace HFM.Forms
 
         public void ClientsRefreshAllClick()
         {
-            _clientConfiguration.RetrievalModel.RetrieveAll();
+            _clientConfiguration.ScheduledTasks.RetrieveAll();
         }
 
         public void ClientsViewCachedLogClick()
@@ -1089,7 +1089,7 @@ namespace HFM.Forms
                     var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                     if (proteinChanges.Count > 0)
                     {
-                        _clientConfiguration.RetrievalModel.RetrieveAll();
+                        _clientConfiguration.ScheduledTasks.RetrieveAll();
                         using (var dlg = new ProteinLoadResultsDialog())
                         {
                             dlg.DataBind(proteinChanges);

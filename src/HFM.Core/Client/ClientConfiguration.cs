@@ -60,23 +60,23 @@ namespace HFM.Core.Client
         public ILogger Logger { get; }
         public IPreferenceSet Preferences { get; }
         public ClientFactory ClientFactory { get; }
-        public RetrievalModel RetrievalModel { get; }
+        public ClientScheduledTasks ScheduledTasks { get; }
 
         private readonly Dictionary<string, IClient> _clientDictionary;
         private readonly ReaderWriterLockSlim _syncLock;
 
         public ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory)
-            : this(logger, preferences, clientFactory, RetrievalModel.Factory)
+            : this(logger, preferences, clientFactory, ClientScheduledTasks.Factory)
         {
             
         }
 
-        internal ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory, RetrievalModelFactory retrievalModelFactory)
+        internal ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
         {
             Logger = logger;
             Preferences = preferences;
             ClientFactory = clientFactory;
-            RetrievalModel = retrievalModelFactory(logger, preferences, this);
+            ScheduledTasks = clientScheduledTasksFactory(logger, preferences, this);
 
             _clientDictionary = new Dictionary<string, IClient>();
             _syncLock = new ReaderWriterLockSlim();

@@ -347,7 +347,7 @@ namespace HFM.Core.Client
             return new ClientConfiguration(null,
                 new InMemoryPreferenceSet(),
                 new ClientFactory(),
-                (l, p, c) => new RetrievalModelWithoutEvents(l, p, c));
+                (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
         }
 
         private static ClientConfiguration CreateConfiguration(IFahClientFactory fahClientFactory)
@@ -355,13 +355,13 @@ namespace HFM.Core.Client
             return new ClientConfiguration(null,
                 new InMemoryPreferenceSet(), 
                 new ClientFactory { FahClientFactory = fahClientFactory },
-                (l, p, c) => new RetrievalModelWithoutEvents(l, p, c));
+                (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
         }
 
-        // a RetrievalModel that does not respond to preference or configuration changed events
-        private class RetrievalModelWithoutEvents : RetrievalModel
+        // a ClientScheduledTasks that does not respond to preference or configuration changed events
+        private class ClientScheduledTasksWithoutEvents : ClientScheduledTasks
         {
-            public RetrievalModelWithoutEvents(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
+            public ClientScheduledTasksWithoutEvents(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
                 : base(logger, prefs, clientConfiguration)
             {
                 

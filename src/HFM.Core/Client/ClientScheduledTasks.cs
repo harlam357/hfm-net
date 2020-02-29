@@ -19,9 +19,9 @@ namespace HFM.Core.Client
         Serial
     }
 
-    public delegate RetrievalModel RetrievalModelFactory(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration);
+    public delegate ClientScheduledTasks ClientScheduledTasksFactory(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration);
 
-    public class RetrievalModel
+    public class ClientScheduledTasks
     {
         private const string ClientTaskKey = "Client Retrieval";
         private const string WebTaskKey = "Web Generation";
@@ -33,9 +33,9 @@ namespace HFM.Core.Client
         private readonly DelegateScheduledTask _clientRetrievalTask;
         private readonly DelegateScheduledTask _webGenerationTask;
 
-        public static RetrievalModelFactory Factory => (l, p, c) => new RetrievalModel(l, p, c);
+        public static ClientScheduledTasksFactory Factory => (l, p, c) => new ClientScheduledTasks(l, p, c);
 
-        public RetrievalModel(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
+        public ClientScheduledTasks(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = prefs;
