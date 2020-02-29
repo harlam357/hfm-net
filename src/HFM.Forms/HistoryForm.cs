@@ -227,7 +227,7 @@ namespace HFM.Forms
 
       private void frmHistory_FormClosing(object sender, FormClosingEventArgs e)
       {
-         _presenter.OnViewClosing();
+         _presenter.ViewClosing();
       }
 
       private void frmHistory_FormClosed(object sender, FormClosedEventArgs e)

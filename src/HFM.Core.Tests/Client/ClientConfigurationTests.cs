@@ -22,85 +22,79 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using Castle.Core.Logging;
+
 using HFM.Core.DataTypes;
+using HFM.Core.ScheduledTasks;
+using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
     [TestFixture]
     public class ClientConfigurationTests
     {
-        private ClientFactory _factory;
-        private ClientConfiguration _clientConfiguration;
-
-        [SetUp]
-        public void TestSetUp()
-        {
-            _factory = new ClientFactory();
-            _clientConfiguration = new ClientConfiguration(_factory);
-        }
-
-        [Test]
-        public void ClientDictionary_ArgumentNullException_Test()
-        {
-            Assert.Throws(typeof(ArgumentNullException), () => new ClientConfiguration(null));
-        }
-
         [Test]
         public void ClientConfiguration_Load_CreatesAndAddsClientsToTheConfiguration()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
             // Act
-            _clientConfiguration.Load(settings);
+            configuration.Load(settings);
             // Assert
-            Assert.AreEqual(1, _clientConfiguration.Count);
+            Assert.AreEqual(1, configuration.Count);
         }
 
         [Test]
         public void ClientConfiguration_Load_SetsIsDirtyPropertyToFalse()
         {
             // Arrange
-            _clientConfiguration.Add("test", new FahClient());
-            Assert.IsTrue(_clientConfiguration.IsDirty);
+            var configuration = CreateConfiguration();
+            configuration.Add("test", new FahClient());
+            Assert.IsTrue(configuration.IsDirty);
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
             // Act
-            _clientConfiguration.Load(settings);
+            configuration.Load(settings);
             // Assert
-            Assert.AreEqual(1, _clientConfiguration.Count);
-            Assert.IsFalse(_clientConfiguration.IsDirty);
+            Assert.AreEqual(1, configuration.Count);
+            Assert.IsFalse(configuration.IsDirty);
         }
 
         [Test]
         public void ClientConfiguration_Add_SetsIsDirtyPropertyToTrue()
         {
+            // Arrange
+            var configuration = CreateConfiguration();
             // Act
-            _clientConfiguration.Add("test", new FahClient());
+            configuration.Add("test", new FahClient());
             // Assert
-            Assert.IsTrue(_clientConfiguration.IsDirty);
+            Assert.IsTrue(configuration.IsDirty);
         }
 
         [Test]
         public void ClientConfiguration_Remove_SetsIsDirtyPropertyToTrue()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
-            _clientConfiguration.Load(settings);
+            configuration.Load(settings);
             // Act
-            bool result = _clientConfiguration.Remove("test");
+            bool result = configuration.Remove("test");
             // Assert
             Assert.IsTrue(result);
-            Assert.IsTrue(_clientConfiguration.IsDirty);
+            Assert.IsTrue(configuration.IsDirty);
         }
 
         [Test]
         public void ClientConfiguration_Load_RaisesConfigurationChangedEvent()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
             ConfigurationChangedEventArgs eventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
-            _clientConfiguration.Load(settings);
+            configuration.Load(settings);
             // Assert
             Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
@@ -111,18 +105,19 @@ namespace HFM.Core.Client
         [Test]
         public void ClientConfiguration_Load_ThrowsWhenSettingsIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Load(null));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Load(null));
         }
 
         [Test]
         public void ClientConfiguration_Add_RaisesConfigurationChangedEvent()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var settings = new ClientSettings { Name = "test", Server = "foo" };
             ConfigurationChangedEventArgs eventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
-            _clientConfiguration.Add(settings);
+            configuration.Add(settings);
             // Assert
             Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
@@ -132,9 +127,10 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Add_SubscribesToClientEvents()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var client = MockRepository.GenerateMock<IClient>();
             // Act
-            _clientConfiguration.Add("test", client);
+            configuration.Add("test", client);
             // Assert
             client.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
             client.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
@@ -144,13 +140,14 @@ namespace HFM.Core.Client
         public void ClientConfiguration_ClientSlotsChangedRaisesConfigurationChanged()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var client = MockRepository.GenerateMock<IClient>();
             bool clientInvalidateFired = false;
-            _clientConfiguration.ConfigurationChanged += (sender, args) =>
+            configuration.ConfigurationChanged += (sender, args) =>
             {
                 if (args.Action == ConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
             };
-            _clientConfiguration.Add("test", client);
+            configuration.Add("test", client);
             // Act
             client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
             // Assert
@@ -161,13 +158,14 @@ namespace HFM.Core.Client
         public void ClientConfiguration_ClientRetrievalFinishedRaisesConfigurationChanged()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             var client = MockRepository.GenerateMock<IClient>();
             bool clientDataInvalidatedFired = false;
-            _clientConfiguration.ConfigurationChanged += (sender, args) =>
+            configuration.ConfigurationChanged += (sender, args) =>
             {
                 if (args.Action == ConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
             };
-            _clientConfiguration.Add("test", client);
+            configuration.Add("test", client);
             // Act
             client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
             // Assert
@@ -177,35 +175,36 @@ namespace HFM.Core.Client
         [Test]
         public void ClientConfiguration_Add_ThrowsWhenKeyIsNullAndClientIsNotNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add(null, new FahClient()));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Add(null, new FahClient()));
         }
 
         [Test]
         public void ClientConfiguration_Add_ThrowsWhenKeyIsNotNullAndClientIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add("test", null));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Add("test", null));
         }
 
         [Test]
         public void ClientConfiguration_Add_ThrowsWhenSettingsIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Add(null));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Add(null));
         }
 
         [Test]
         public void ClientConfiguration_Edit_RaisesEvents()
         {
             // Arrange
-            _clientConfiguration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
+            var configuration = CreateConfiguration();
+            configuration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
             ConfigurationChangedEventArgs changedEventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { changedEventArgs = e; };
+            configuration.ConfigurationChanged += (sender, e) => { changedEventArgs = e; };
             ClientEditedEventArgs editedEventArgs = null;
-            _clientConfiguration.ClientEdited += (sender, e) => editedEventArgs = e;
+            configuration.ClientEdited += (sender, e) => editedEventArgs = e;
             // Act
-            _clientConfiguration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
+            configuration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
             // Assert
-            Assert.AreEqual(1, _clientConfiguration.Count);
-            Assert.IsTrue(_clientConfiguration.ContainsKey("test2"));
+            Assert.AreEqual(1, configuration.Count);
+            Assert.IsTrue(configuration.ContainsKey("test2"));
             Assert.AreEqual(ConfigurationChangedAction.Edit, changedEventArgs.Action);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
             Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
@@ -219,41 +218,44 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Edit_ThrowsWhenClientNameAlreadyExistsInConfiguration()
         {
             // Arrange
-            _clientConfiguration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "foo" } });
-            _clientConfiguration.Add("other", new FahClient { Settings = new ClientSettings { Name = "other", Server = "bar" } });
-            Assert.AreEqual(2, _clientConfiguration.Count);
+            var configuration = CreateConfiguration();
+            configuration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "foo" } });
+            configuration.Add("other", new FahClient { Settings = new ClientSettings { Name = "other", Server = "bar" } });
+            Assert.AreEqual(2, configuration.Count);
             // Act & Assert
-            Assert.Throws(typeof(ArgumentException), () => _clientConfiguration.Edit("test", new ClientSettings { Name = "other", Server = "bar" }));
+            Assert.Throws(typeof(ArgumentException), () => configuration.Edit("test", new ClientSettings { Name = "other", Server = "bar" }));
         }
 
         [Test]
         public void ClientConfiguration_Edit_ThrowsWhenKeyIsNullAndClientSettingsIsNotNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Edit(null, new ClientSettings()));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Edit(null, new ClientSettings()));
         }
 
         [Test]
         public void ClientConfiguration_Edit_ThrowsWhenKeyIsNotNullAndClientSettingsIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Edit("test", null));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Edit("test", null));
         }
 
         [Test]
         public void ClientConfiguration_Remove_ReturnsFalseWhenKeyDoesNotExist()
         {
-            Assert.IsFalse(_clientConfiguration.Remove("test"));
-            Assert.IsFalse(_clientConfiguration.IsDirty);
+            var configuration = CreateConfiguration();
+            Assert.IsFalse(configuration.Remove("test"));
+            Assert.IsFalse(configuration.IsDirty);
         }
 
         [Test]
         public void ClientConfiguration_Remove_RaisesConfigurationChangedEvent()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             ConfigurationChangedEventArgs eventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
-            _clientConfiguration.Add("test", new FahClient());
+            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.Add("test", new FahClient());
             // Act
-            bool result = _clientConfiguration.Remove("test");
+            bool result = configuration.Remove("test");
             // Assert
             Assert.IsTrue(result);
             Assert.AreEqual(ConfigurationChangedAction.Remove, eventArgs.Action);
@@ -266,7 +268,7 @@ namespace HFM.Core.Client
             // Arrange
             var client = MockRepository.GeneratePartialMock<FahClient>();
             var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
-            var configuration = new ClientConfiguration(new ClientFactory { FahClientFactory = fahClientFactory });
+            var configuration = CreateConfiguration(fahClientFactory);
             configuration.Add("test", client);
             client.Expect(x => x.Abort());
             fahClientFactory.Expect(x => x.Release(client));
@@ -280,28 +282,30 @@ namespace HFM.Core.Client
         [Test]
         public void ClientConfiguration_Remove_ThrowsWhenKeyIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _clientConfiguration.Remove(null));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Remove(null));
         }
 
         [Test]
         public void ClientConfiguration_Clear_SetsIsDirtyPropertyToFalse()
         {
             // Arrange
-            _clientConfiguration.Add("test", new FahClient());
+            var configuration = CreateConfiguration();
+            configuration.Add("test", new FahClient());
             // Act
-            _clientConfiguration.Clear();
+            configuration.Clear();
             // Assert
-            Assert.IsFalse(_clientConfiguration.IsDirty);
+            Assert.IsFalse(configuration.IsDirty);
         }
 
         [Test]
         public void ClientConfiguration_Clear_DoesNotRaiseConfigurationChangedWhenConfigurationIsEmpty()
         {
             // Arrange
+            var configuration = CreateConfiguration();
             ConfigurationChangedEventArgs eventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
-            _clientConfiguration.Clear();
+            configuration.Clear();
             // Assert
             Assert.IsNull(eventArgs);
         }
@@ -310,11 +314,12 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Clear_RaisesConfigurationChangedEvent()
         {
             // Arrange
-            _clientConfiguration.Add("test", new FahClient());
+            var configuration = CreateConfiguration();
+            configuration.Add("test", new FahClient());
             ConfigurationChangedEventArgs eventArgs = null;
-            _clientConfiguration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
-            _clientConfiguration.Clear();
+            configuration.Clear();
             // Assert
             Assert.AreEqual(ConfigurationChangedAction.Clear, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
@@ -326,7 +331,7 @@ namespace HFM.Core.Client
             // Arrange
             var client = MockRepository.GeneratePartialMock<FahClient>();
             var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
-            var configuration = new ClientConfiguration(new ClientFactory { FahClientFactory = fahClientFactory });
+            var configuration = CreateConfiguration(fahClientFactory);
             configuration.Add("test", client);
             client.Expect(x => x.Abort());
             fahClientFactory.Expect(x => x.Release(client));
@@ -335,6 +340,42 @@ namespace HFM.Core.Client
             // Assert
             client.VerifyAllExpectations();
             fahClientFactory.VerifyAllExpectations();
+        }
+
+        private static ClientConfiguration CreateConfiguration()
+        {
+            return new ClientConfiguration(null,
+                new InMemoryPreferenceSet(),
+                new ClientFactory(),
+                (l, p, c) => new RetrievalModelWithoutEvents(l, p, c));
+        }
+
+        private static ClientConfiguration CreateConfiguration(IFahClientFactory fahClientFactory)
+        {
+            return new ClientConfiguration(null,
+                new InMemoryPreferenceSet(), 
+                new ClientFactory { FahClientFactory = fahClientFactory },
+                (l, p, c) => new RetrievalModelWithoutEvents(l, p, c));
+        }
+
+        // a RetrievalModel that does not respond to preference or configuration changed events
+        private class RetrievalModelWithoutEvents : RetrievalModel
+        {
+            public RetrievalModelWithoutEvents(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
+                : base(logger, prefs, clientConfiguration)
+            {
+                
+            }
+
+            protected override void OnPreferenceChanged(object sender, PreferenceChangedEventArgs e)
+            {
+                
+            }
+
+            protected override void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+            {
+                
+            }
         }
     }
 }

@@ -19,119 +19,116 @@ namespace HFM.Core.ScheduledTasks
         Serial
     }
 
+    public delegate RetrievalModel RetrievalModelFactory(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration);
+
     public class RetrievalModel
     {
-        private ILogger _logger;
-
-        public ILogger Logger
-        {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
-        }
-
         private const string ClientTaskKey = "Client Retrieval";
         private const string WebTaskKey = "Web Generation";
 
-        private readonly IPreferenceSet _prefs;
-        private readonly IClientConfiguration _clientConfiguration;
-        private readonly Lazy<MarkupGenerator> _markupGenerator;
-        private readonly Lazy<IWebsiteDeployer> _websiteDeployer;
+        public ILogger Logger { get; }
+        public IPreferenceSet Preferences { get; }
+        public ClientConfiguration ClientConfiguration { get; }
+
         private readonly DelegateScheduledTask _clientRetrievalTask;
         private readonly DelegateScheduledTask _webGenerationTask;
 
-        public RetrievalModel(IPreferenceSet prefs, IClientConfiguration clientConfiguration,
-                              Lazy<MarkupGenerator> markupGenerator, Lazy<IWebsiteDeployer> websiteDeployer)
+        public static RetrievalModelFactory Factory => (l, p, c) => new RetrievalModel(l, p, c);
+
+        public RetrievalModel(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
         {
-            _prefs = prefs;
-            _clientConfiguration = clientConfiguration;
-            _markupGenerator = markupGenerator;
-            _websiteDeployer = websiteDeployer;
+            Logger = logger ?? NullLogger.Instance;
+            Preferences = prefs;
+            ClientConfiguration = clientConfiguration;
+
+            Preferences.PreferenceChanged += OnPreferenceChanged;
+            ClientConfiguration.ConfigurationChanged += OnConfigurationChanged;
             
-            _prefs.PreferenceChanged += (s, e) =>
-            {
-                switch (e.Preference)
-                {
-                    case Preference.ClientRetrievalTask:
-                        if (_prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled))
-                        {
-                            if (_clientConfiguration.Count != 0)
-                            {
-                                _clientRetrievalTask.Interval = ClientInterval;
-                                _clientRetrievalTask.Restart();
-                            }
-                        }
-                        else
-                        {
-                            _clientRetrievalTask.Stop();
-                        }
-                        break;
-                    case Preference.WebGenerationTask:
-                        if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
-                            _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
-                        {
-                            if (_clientConfiguration.Count != 0)
-                            {
-                                _webGenerationTask.Interval = WebInterval;
-                                _webGenerationTask.Restart();
-                            }
-                        }
-                        else
-                        {
-                            _webGenerationTask.Stop();
-                        }
-                        break;
-                }
-            };
-
-            _clientConfiguration.ConfigurationChanged += (s, e) =>
-            {
-                if (e.Action == ConfigurationChangedAction.Remove ||
-                    e.Action == ConfigurationChangedAction.Clear)
-                {
-                    // Disable timers if no hosts
-                    if ((_clientRetrievalTask.Enabled || _webGenerationTask.Enabled) && _clientConfiguration.Count == 0)
-                    {
-                        Logger.Info("No clients... stopping all scheduled tasks");
-                        _clientRetrievalTask.Cancel();
-                        _webGenerationTask.Cancel();
-                    }
-                }
-                else if (e.Action == ConfigurationChangedAction.Add)
-                {
-                    var clientTaskEnabled = _prefs.Get<bool>(Preference.ClientRetrievalTaskEnabled);
-                    if (e.Client == null)
-                    {
-                        // no client specified - retrieve all
-                        _clientRetrievalTask.Interval = ClientInterval;
-                        _clientRetrievalTask.Run(clientTaskEnabled);
-                    }
-                    else
-                    {
-                        Task.Run(() => e.Client.Retrieve());
-                        if (clientTaskEnabled)
-                        {
-                            _clientRetrievalTask.Interval = ClientInterval;
-                            _clientRetrievalTask.Start();
-                        }
-                    }
-
-                    if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
-                        _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
-                    {
-                        _webGenerationTask.Interval = WebInterval;
-                        _webGenerationTask.Start();
-                    }
-                }
-                else if (e.Action == ConfigurationChangedAction.Edit)
-                {
-                    Task.Run(() => e.Client.Retrieve());
-                }
-            };
-
             _clientRetrievalTask = new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval);
             _clientRetrievalTask.Changed += TaskChanged;
             _webGenerationTask = new DelegateScheduledTask(WebTaskKey, WebGenerationAction, WebInterval);
             _webGenerationTask.Changed += TaskChanged;
+        }
+
+        protected virtual void OnPreferenceChanged(object sender, PreferenceChangedEventArgs e)
+        {
+            switch (e.Preference)
+            {
+                case Preference.ClientRetrievalTask:
+                    if (Preferences.Get<bool>(Preference.ClientRetrievalTaskEnabled))
+                    {
+                        if (ClientConfiguration.Count != 0)
+                        {
+                            _clientRetrievalTask.Interval = ClientInterval;
+                            _clientRetrievalTask.Restart();
+                        }
+                    }
+                    else
+                    {
+                        _clientRetrievalTask.Stop();
+                    }
+                    break;
+                case Preference.WebGenerationTask:
+                    if (Preferences.Get<bool>(Preference.WebGenerationTaskEnabled) &&
+                        Preferences.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
+                    {
+                        if (ClientConfiguration.Count != 0)
+                        {
+                            _webGenerationTask.Interval = WebInterval;
+                            _webGenerationTask.Restart();
+                        }
+                    }
+                    else
+                    {
+                        _webGenerationTask.Stop();
+                    }
+                    break;
+            }
+        }
+
+        protected virtual void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        {
+            if (e.Action == ConfigurationChangedAction.Remove ||
+                e.Action == ConfigurationChangedAction.Clear)
+            {
+                // Disable timers if no hosts
+                if ((_clientRetrievalTask.Enabled || _webGenerationTask.Enabled) && ClientConfiguration.Count == 0)
+                {
+                    Logger.Info("No clients... stopping all scheduled tasks");
+                    _clientRetrievalTask.Cancel();
+                    _webGenerationTask.Cancel();
+                }
+            }
+            else if (e.Action == ConfigurationChangedAction.Add)
+            {
+                var clientTaskEnabled = Preferences.Get<bool>(Preference.ClientRetrievalTaskEnabled);
+                if (e.Client == null)
+                {
+                    // no client specified - retrieve all
+                    _clientRetrievalTask.Interval = ClientInterval;
+                    _clientRetrievalTask.Run(clientTaskEnabled);
+                }
+                else
+                {
+                    Task.Run(() => e.Client.Retrieve());
+                    if (clientTaskEnabled)
+                    {
+                        _clientRetrievalTask.Interval = ClientInterval;
+                        _clientRetrievalTask.Start();
+                    }
+                }
+
+                if (Preferences.Get<bool>(Preference.WebGenerationTaskEnabled) &&
+                    Preferences.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval) == false)
+                {
+                    _webGenerationTask.Interval = WebInterval;
+                    _webGenerationTask.Start();
+                }
+            }
+            else if (e.Action == ConfigurationChangedAction.Edit)
+            {
+                Task.Run(() => e.Client.Retrieve());
+            }
         }
 
         private void TaskChanged(object sender, ScheduledTaskChangedEventArgs e)
@@ -155,15 +152,15 @@ namespace HFM.Core.ScheduledTasks
 
         private double ClientInterval
         {
-            get { return _prefs.Get<int>(Preference.ClientRetrievalTaskInterval) * Constants.MinToMillisec; }
+            get { return Preferences.Get<int>(Preference.ClientRetrievalTaskInterval) * Constants.MinToMillisec; }
         }
 
         private double WebInterval
         {
-            get { return _prefs.Get<int>(Preference.WebGenerationTaskInterval) * Constants.MinToMillisec; }
+            get { return Preferences.Get<int>(Preference.WebGenerationTaskInterval) * Constants.MinToMillisec; }
         }
 
-        public void RunClientRetrieval()
+        public void RetrieveAll()
         {
             _clientRetrievalTask.Run(false);
         }
@@ -177,11 +174,11 @@ namespace HFM.Core.ScheduledTasks
         {
             // get flag synchronous or asynchronous - we don't want this flag to change on us
             // in the middle of a retrieve, so grab it now and use the local copy
-            var mode = _prefs.Get<ProcessingMode>(Preference.ClientRetrievalTaskType);
+            var mode = Preferences.Get<ProcessingMode>(Preference.ClientRetrievalTaskType);
 
             ct.ThrowIfCancellationRequested();
 
-            var clientsEnumerable = _clientConfiguration.GetClients();
+            var clientsEnumerable = ClientConfiguration.GetClients();
             var clients = clientsEnumerable as IList<IClient> ?? clientsEnumerable.ToList();
             if (mode == ProcessingMode.Serial)
             {
@@ -202,8 +199,8 @@ namespace HFM.Core.ScheduledTasks
                 });
             }
 
-            if (_prefs.Get<bool>(Preference.WebGenerationTaskEnabled) &&
-                _prefs.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval))
+            if (Preferences.Get<bool>(Preference.WebGenerationTaskEnabled) &&
+                Preferences.Get<bool>(Preference.WebGenerationTaskAfterClientRetrieval))
             {
                 ct.ThrowIfCancellationRequested();
                 _webGenerationTask.Run(false);
@@ -213,11 +210,12 @@ namespace HFM.Core.ScheduledTasks
         private void WebGenerationAction(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
-            _markupGenerator.Value.Generate(slots);
+            var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
+            var markupGenerator = new MarkupGenerator(Preferences);
+            markupGenerator.Generate(slots);
 
             ct.ThrowIfCancellationRequested();
-            _websiteDeployer.Value.DeployWebsite(_markupGenerator.Value.HtmlFilePaths, _markupGenerator.Value.XmlFilePaths, slots);
+            new WebsiteDeployer(Preferences).DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, slots);
         }
     }
 }

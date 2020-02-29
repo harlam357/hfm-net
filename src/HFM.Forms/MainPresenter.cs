@@ -82,11 +82,10 @@ namespace HFM.Forms
         private readonly IViewFactory _viewFactory;
         private readonly IPresenterFactory _presenterFactory;
 
-        private readonly IClientConfiguration _clientConfiguration;
+        private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
 
         private readonly IUpdateLogic _updateLogic;
-        private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
         private readonly IExternalProcessStarter _processStarter;
 
         private readonly IPreferenceSet _prefs;
@@ -98,8 +97,8 @@ namespace HFM.Forms
 
         public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                              IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                             IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                             Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
+                             ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
+                             IExternalProcessStarter processStarter,
                              IPreferenceSet prefs, ClientSettingsManager settingsManager)
         {
             _gridModel = mainGridModel;
@@ -139,7 +138,6 @@ namespace HFM.Forms
             // Logic Services
             _updateLogic = updateLogic;
             _updateLogic.Owner = _view;
-            _retrievalModel = retrievalModel;
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
@@ -867,7 +865,7 @@ namespace HFM.Forms
 
         public void ClientsRefreshAllClick()
         {
-            _retrievalModel.RunClientRetrieval();
+            _clientConfiguration.RetrievalModel.RetrieveAll();
         }
 
         public void ClientsViewCachedLogClick()
@@ -1091,7 +1089,7 @@ namespace HFM.Forms
                     var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                     if (proteinChanges.Count > 0)
                     {
-                        _retrievalModel.RunClientRetrieval();
+                        _clientConfiguration.RetrievalModel.RetrieveAll();
                         using (var dlg = new ProteinLoadResultsDialog())
                         {
                             dlg.DataBind(proteinChanges);

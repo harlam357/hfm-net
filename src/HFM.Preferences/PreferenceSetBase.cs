@@ -24,9 +24,6 @@ namespace HFM.Preferences
 
         protected PreferenceSetBase(string applicationPath, string applicationDataFolderPath, string applicationVersion)
         {
-            if (String.IsNullOrWhiteSpace(applicationPath)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationPath));
-            if (String.IsNullOrWhiteSpace(applicationDataFolderPath)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationDataFolderPath));
-            if (String.IsNullOrWhiteSpace(applicationVersion)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(applicationVersion));
             ApplicationPath = applicationPath;
             ApplicationDataFolderPath = applicationDataFolderPath;
             ApplicationVersion = applicationVersion;

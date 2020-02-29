@@ -82,7 +82,7 @@ namespace HFM.Forms
         private readonly IProteinService _proteinService;
         private readonly IProteinBenchmarkService _benchmarkService;
         private readonly IList<Color> _graphColors;
-        private readonly IClientConfiguration _clientConfiguration;
+        private readonly ClientConfiguration _clientConfiguration;
         private readonly IMessageBoxView _messageBoxView;
         private readonly IExternalProcessStarter _processStarter;
         private readonly ZedGraphManager _zedGraphManager;
@@ -94,7 +94,7 @@ namespace HFM.Forms
         #region Constructor
 
         public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkService benchmarkService,
-                              IClientConfiguration clientConfiguration, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                              ClientConfiguration clientConfiguration, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
         {
             _prefs = prefs;
             _proteinService = proteinService;

@@ -21,375 +21,424 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 
 using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Serializers;
-using HFM.Forms.Models;
 using HFM.Preferences;
 
 namespace HFM.Forms
 {
-   [TestFixture]
-   public class HistoryPresenterTests
-   {
-      private IPreferenceSet _prefs;
-      private WorkUnitQueryDataContainer _queryContainer;
-      private IHistoryView _view;
-      private IViewFactory _viewFactory;
-      private IMessageBoxView _messageBoxView;
+    [TestFixture]
+    public class HistoryPresenterTests
+    {
+        private HistoryPresenter CreatePresenter()
+        {
+            var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
+            repository.Stub(x => x.Connected).Return(true);
+            return new HistoryPresenter(MockRepository.GenerateMock<ILogger>(),
+                                        new InMemoryPreferenceSet(), 
+                                        new WorkUnitQueryDataContainer(), 
+                                        MockRepository.GenerateMock<IHistoryView>(), 
+                                        MockRepository.GenerateStub<IViewFactory>(), 
+                                        MockRepository.GenerateMock<IMessageBoxView>(), 
+                                        repository);
+        }
 
-      private IWorkUnitRepository _repository;
-      private HistoryPresenterModel _model;
+        [Test]
+        public void HistoryPresenter_Show_ShowsViewAndBringsToFront()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.HistoryView.Expect(x => x.Show());
+            presenter.HistoryView.Expect(x => x.BringToFront());
+            // Act
+            presenter.Show();
+            // Assert
+            presenter.HistoryView.VerifyAllExpectations();
+        }
 
-      private HistoryPresenter _presenter;
+        [Test]
+        public void HistoryPresenter_Show_ShowsViewAndSetsWindowStateToNormal_Test()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.HistoryView.Expect(x => x.Show());
+            presenter.HistoryView.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
+            presenter.HistoryView.Expect(x => x.WindowState = FormWindowState.Normal);
+            // Act
+            presenter.Show();
+            // Assert
+            presenter.HistoryView.VerifyAllExpectations();
+        }
 
-      [SetUp]
-      public void Init()
-      {
-         _prefs = MockRepository.GenerateStub<IPreferenceSet>();
-         _queryContainer = new WorkUnitQueryDataContainer();
-         _view = MockRepository.GenerateMock<IHistoryView>();
-         _viewFactory = MockRepository.GenerateMock<IViewFactory>();
-         _messageBoxView = MockRepository.GenerateMock<IMessageBoxView>();
+        [Test]
+        public void HistoryPresenter_Close_RaisesPresenterClosedEvent()
+        {
+            var presenter = CreatePresenter();
+            bool presenterClosedFired = false;
+            presenter.PresenterClosed += delegate { presenterClosedFired = true; };
+            // Act
+            presenter.Close();
+            // Assert
+            Assert.AreEqual(true, presenterClosedFired);
+        }
 
-         _repository = MockRepository.GenerateMock<IWorkUnitRepository>();
-         _repository.Stub(x => x.Connected).Return(true);
-         _model = new HistoryPresenterModel(_repository);
-      }
+        [Test]
+        public void HistoryPresenter_ViewClosing_SavesFormStateToModel()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var p = new Point(10, 10);
+            var s = new Size(100, 100);
+            var columns = new List<string> { "foo" };
+            presenter.HistoryView.Stub(x => x.Location).Return(p);
+            presenter.HistoryView.Stub(x => x.Size).Return(s);
+            presenter.HistoryView.Stub(x => x.GetColumnSettings()).Return(columns);
+            presenter.HistoryView.Stub(x => x.WindowState).Return(FormWindowState.Normal);
+            // Act
+            presenter.ViewClosing();
+            // Assert
+            Assert.AreEqual(p, presenter.Model.FormLocation);
+            Assert.AreEqual(s, presenter.Model.FormSize);
+            Assert.AreEqual(columns, presenter.Model.FormColumns);
+        }
 
-      private HistoryPresenter CreatePresenter()
-      {
-         return new HistoryPresenter(_prefs, _queryContainer, _view, _viewFactory, _messageBoxView, _repository, _model);
-      }
+        [Test]
+        public void HistoryPresenter_ViewClosing_WhileMinimizedSavesFormStateToModel_Test()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var r = new Rectangle(new Point(10, 10), new Size(100, 100));
+            var columns = new List<string> { "foo" };
+            presenter.HistoryView.Expect(x => x.RestoreBounds).Return(r);
+            presenter.HistoryView.Expect(x => x.GetColumnSettings()).Return(columns);
+            presenter.HistoryView.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
+            // Act
+            presenter.ViewClosing();
+            // Assert
+            presenter.HistoryView.VerifyAllExpectations();
+            Assert.AreEqual(r.Location, presenter.Model.FormLocation);
+            Assert.AreEqual(r.Size, presenter.Model.FormSize);
+            Assert.AreEqual(columns, presenter.Model.FormColumns);
+        }
 
-      [Test]
-      public void HistoryPresenter_Show_Test()
-      {
-         // Arrange
-         _view.Expect(x => x.Show());
-         _view.Expect(x => x.BringToFront());
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.Show();
-         // Assert
-         _view.VerifyAllExpectations();
-      }
+        [Test]
+        public void HistoryPresenter_ViewClosing_SavesFormStateToPreferences()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var p = new Point(10, 10);
+            var s = new Size(100, 100);
+            var columns = new List<string> { "foo" };
+            presenter.HistoryView.Stub(x => x.Location).Return(p);
+            presenter.HistoryView.Stub(x => x.Size).Return(s);
+            presenter.HistoryView.Stub(x => x.GetColumnSettings()).Return(columns);
+            presenter.HistoryView.Stub(x => x.WindowState).Return(FormWindowState.Normal);
+            // Act
+            presenter.ViewClosing();
+            // Assert
+            Assert.AreEqual(p, presenter.Preferences.Get<Point>(Preference.HistoryFormLocation));
+            Assert.AreEqual(s, presenter.Preferences.Get<Size>(Preference.HistoryFormSize));
+            Assert.AreEqual(columns, presenter.Preferences.Get<ICollection<string>>(Preference.HistoryFormColumns));
+        }
+        
+        [Test]
+        public void HistoryPresenter_NewQueryClick_AddsNewQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var queryView = new QueryViewModifiesQueryAndReturnsOk(q =>
+            {
+                q.Name = "Test";
+                q.Parameters[0].Value = 6606;
+            });
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            // Act
+            presenter.NewQueryClick();
+            // Assert
+            Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
+            Assert.AreEqual("Test", presenter.Model.SelectedWorkUnitQuery.Name);
+        }
 
-      [Test]
-      public void HistoryPresenter_Show_FromMinimized_Test()
-      {
-         // Arrange
-         _view.Expect(x => x.Show());
-         _view.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
-         _view.Expect(x => x.WindowState = FormWindowState.Normal);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.Show();
-         // Assert
-         _view.VerifyAllExpectations();
-      }
+        [Test]
+        public void HistoryPresenter_NewQueryClick_CancelsNewQueryAndExits()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var queryView = MockRepository.GenerateMock<IQueryView>();
+            queryView.Expect(x => x.ShowDialog(presenter.HistoryView)).Return(DialogResult.Cancel);
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            // Act
+            presenter.NewQueryClick();
+            // Assert
+            queryView.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void HistoryPresenter_Close_Test()
-      {
-         bool presenterClosedFired = false;
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.PresenterClosed += delegate { presenterClosedFired = true; };
-         _presenter.Close();
-         // Assert
-         Assert.AreEqual(true, presenterClosedFired);
-      }
+        [Test]
+        public void HistoryPresenter_NewQueryClick_ShowsMessageBoxWhenAttemptingToEditSelectAllQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var queryView = new QueryViewReturnsOkOnce();
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
+            // Act
+            presenter.NewQueryClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void HistoryPresenter_OnClosing_Test()
-      {
-         // Arrange
-         var p = new Point();
-         var s = new Size();
-         var columns = new List<string>();
-         _view.Expect(x => x.Location).Return(p);
-         _view.Expect(x => x.Size).Return(s);
-         _view.Expect(x => x.GetColumnSettings()).Return(columns);
-         _view.Expect(x => x.WindowState).Return(FormWindowState.Normal);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.OnViewClosing();
-         // Assert
-         _view.VerifyAllExpectations();
-         Assert.AreEqual(p, _model.FormLocation);
-         Assert.AreEqual(s, _model.FormSize);
-         Assert.AreEqual(columns, _model.FormColumns);
-      }
+        [Test]
+        public void HistoryPresenter_EditQueryClick_EditsExistingQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.Model.AddQuery(new WorkUnitQuery("Test")
+                .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
+            Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
 
-      [Test]
-      public void HistoryPresenter_OnClosing_WhileNotNormalWindow_Test()
-      {
-         // Arrange
-         var r = new Rectangle();
-         var columns = new List<string>();
-         _view.Expect(x => x.RestoreBounds).Return(r);
-         _view.Expect(x => x.GetColumnSettings()).Return(columns);
-         _view.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.OnViewClosing();
-         // Assert
-         _view.VerifyAllExpectations();
-         Assert.AreEqual(r.Location, _model.FormLocation);
-         Assert.AreEqual(r.Size, _model.FormSize);
-         Assert.AreEqual(columns, _model.FormColumns);
-      }
+            var queryView = new QueryViewModifiesQueryAndReturnsOk(q => q.Name = "Test2");
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            // Act
+            presenter.EditQueryClick();
+            // Assert
+            Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
+            Assert.AreEqual("Test2", presenter.Model.SelectedWorkUnitQuery.Name);
+        }
 
-      [Test]
-      public void HistoryPresenter_NewQueryClick_Test()
-      {
-         // Arrange
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var query = new WorkUnitQuery("Test")
-             .AddParameter(new WorkUnitQueryParameter { Value = 6606 });
-         queryView.Stub(x => x.Query).Return(query);
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.NewQueryClick();
-         // Assert
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-      }
+        [Test]
+        public void HistoryPresenter_EditQueryClick_CancelsTheEditAndExits()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var queryView = MockRepository.GenerateMock<IQueryView>();
+            queryView.Expect(x => x.ShowDialog(presenter.HistoryView)).Return(DialogResult.Cancel);
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            // Act
+            presenter.EditQueryClick();
+            // Assert
+            queryView.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void HistoryPresenter_NewQueryClick_Cancel_Test()
-      {
-         // Arrange
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.NewQueryClick();
-         // Assert
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-      }
+        [Test]
+        public void HistoryPresenter_EditQueryClick_ShowsMessageBoxWhenAttemptingToEditSelectAllQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            var queryView = new QueryViewReturnsOkOnce();
+            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
+            // Act
+            presenter.EditQueryClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void HistoryPresenter_NewQueryClick_Failed_Test()
-      {
-         // Arrange
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         queryView.Stub(x => x.Query).Return(new WorkUnitQuery());
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.NewQueryClick();
-         // Assert
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-         _messageBoxView.VerifyAllExpectations();
-      }
+        private class QueryViewModifiesQueryAndReturnsOk : IQueryView
+        {
+            private readonly Action<WorkUnitQuery> _queryAction;
 
-      [Test]
-      public void HistoryPresenter_EditQueryClick_Test()
-      {
-         // Arrange
-         _model.AddQuery(new WorkUnitQuery("Test")
-             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
+            public QueryViewModifiesQueryAndReturnsOk(Action<WorkUnitQuery> queryAction)
+            {
+                _queryAction = queryAction;
+            }
 
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK);
-         var query = new WorkUnitQuery("Test2")
-            .AddParameter(new WorkUnitQueryParameter { Value = 6606 });
-         queryView.Stub(x => x.Query).Return(query);
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         // Act
-         _presenter = CreatePresenter();
-         Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         _presenter.EditQueryClick();
-         // Assert
-         Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         Assert.AreEqual("Test2", _model.SelectedWorkUnitQuery.Name);
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-      }
+            public IntPtr Handle { get; }
 
-      [Test]
-      public void HistoryPresenter_EditQueryClick_Cancel_Test()
-      {
-         // Arrange
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.Cancel);
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.EditQueryClick();
-         // Assert
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-      }
+            public WorkUnitQuery Query { get; set; }
 
-      [Test]
-      public void HistoryPresenter_EditQueryClick_Failed_Test()
-      {
-         // Arrange
-         var queryView = MockRepository.GenerateMock<IQueryView>();
-         queryView.Expect(x => x.ShowDialog(_view)).Return(DialogResult.OK).Repeat.Once();
-         _viewFactory.Expect(x => x.GetQueryDialog()).Return(queryView);
-         _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.EditQueryClick();
-         // Assert
-         queryView.VerifyAllExpectations();
-         _viewFactory.VerifyAllExpectations();
-         _messageBoxView.VerifyAllExpectations();
-      }
+            public bool Visible { get; set; }
 
-      [Test]
-      public void HistoryPresenter_DeleteQueryClick_Test()
-      {
-         // Arrange
-         _model.AddQuery(new WorkUnitQuery("Test")
-             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
+            public DialogResult ShowDialog(IWin32Window owner)
+            {
+                _queryAction(Query);
+                return DialogResult.OK;
+            }
 
-         _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-         // Act
-         _presenter = CreatePresenter();
-         Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         _presenter.DeleteQueryClick();
-         // Assert
-         Assert.AreEqual(1, _model.QueryBindingSource.Count);
-         _messageBoxView.VerifyAllExpectations();
-      }
+            public void Close()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
-      [Test]
-      public void HistoryPresenter_DeleteQueryClick_No_Test()
-      {
-         // Arrange
-         _model.AddQuery(new WorkUnitQuery("Test")
-             .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
+        private class QueryViewReturnsOkOnce : IQueryView
+        {
+            public IntPtr Handle { get; }
 
-         _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
-         // Act
-         _presenter = CreatePresenter();
-         Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         _presenter.DeleteQueryClick();
-         // Assert
-         Assert.AreEqual(2, _model.QueryBindingSource.Count);
-         _messageBoxView.VerifyAllExpectations();
-      }
+            public WorkUnitQuery Query { get; set; }
 
-      [Test]
-      public void HistoryPresenter_DeleteQueryClick_Failed_Test()
-      {
-         // Arrange
-         _messageBoxView.Expect(x => x.AskYesNoQuestion(_view, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-         _messageBoxView.Expect(x => x.ShowError(_view, String.Empty, String.Empty)).IgnoreArguments();
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.DeleteQueryClick();
-         // Assert
-         _messageBoxView.VerifyAllExpectations();
-      }
+            public bool Visible { get; set; }
 
-      [Test]
-      public void HistoryPresenter_DeleteWorkUnitClick_Test()
-      {
-         // Arrange
-         _model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
-         _model.HistoryBindingSource.ResetBindings(false);
+            private int _count;
 
-         _messageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-         _repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.DeleteWorkUnitClick();
-         // Assert
-         _messageBoxView.VerifyAllExpectations();
-         _repository.VerifyAllExpectations();
-      }
+            public DialogResult ShowDialog(IWin32Window owner)
+            {
+                if (++_count > 1) return DialogResult.None;
+                return DialogResult.OK;
+            }
 
-      [Test]
-      public void HistoryPresenter_DeleteWorkUnitClick_NoSelection_Test()
-      {
-         // Arrange
-         _messageBoxView.Expect(x => x.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.DeleteWorkUnitClick();
-         // Assert
-         _messageBoxView.VerifyAllExpectations();
-      }
+            public void Close()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
-      [Test]
-      public void HistoryPresenter_ExportClick_Test()
-      {
-         // Arrange
-         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
+        [Test]
+        public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndDeletesQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.Model.AddQuery(new WorkUnitQuery("Test")
+                .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
+            Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
+            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
+            // Act
+            presenter.DeleteQueryClick();
+            // Assert
+            Assert.AreEqual(1, presenter.Model.QueryBindingSource.Count);
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-         var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
-         saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
-         saveFileDialogView.Expect(x => x.FilterIndex).Return(1);
-         saveFileDialogView.Expect(x => x.ShowDialog()).Return(DialogResult.OK);
-         _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
-         _viewFactory.Expect(x => x.Release(saveFileDialogView));
+        [Test]
+        public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndExitsAfterNoAnswer()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
+            // Act
+            presenter.DeleteQueryClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitRow>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitRow>)));
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.ExportSerializers = new[] { serializer };
-         _presenter.ExportClick();
-         // Assert
-         _viewFactory.VerifyAllExpectations();
-         saveFileDialogView.VerifyAllExpectations();
-         serializer.VerifyAllExpectations();
-      }
+        [Test]
+        public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndFailsToDeleteSelectAllQuery()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
+            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
+            // Act
+            presenter.DeleteQueryClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-      [Test]
-      public void HistoryPresenter_ExportClick_Exception_Test()
-      {
-         // Arrange
-         _repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
+        [Test]
+        public void HistoryPresenter_DeleteWorkUnitClick_AsksYesNoQuestionAndDeletesSelectedRow()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
+            presenter.Model.HistoryBindingSource.ResetBindings(false);
 
-         var saveFileDialogView = MockRepository.GenerateMock<ISaveFileDialogView>();
-         saveFileDialogView.Expect(x => x.FileName).Return("test.csv");
-         saveFileDialogView.Expect(x => x.FilterIndex).Return(1);
-         saveFileDialogView.Expect(x => x.ShowDialog()).Return(DialogResult.OK);
-         _viewFactory.Expect(x => x.GetSaveFileDialogView()).Return(saveFileDialogView);
-         _viewFactory.Expect(x => x.Release(saveFileDialogView));
+            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
+            presenter.WorkUnitRepository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
+            // Act
+            presenter.DeleteWorkUnitClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+            presenter.WorkUnitRepository.VerifyAllExpectations();
+        }
 
-         var exception = new IOException();
-         var serializer = MockRepository.GenerateMock<IFileSerializer<List<WorkUnitRow>>>();
-         serializer.Expect(x => x.Serialize(null, null)).Constraints(new Equal("test.csv"), new TypeOf(typeof(List<WorkUnitRow>)))
-            .Throw(exception);
+        [Test]
+        public void HistoryPresenter_DeleteWorkUnitClick_ShowsMessageBoxWhenNoRowIsSelected()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.MessageBoxView.Expect(x => x.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();
+            // Act
+            presenter.DeleteWorkUnitClick();
+            // Assert
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
 
-         var logger = MockRepository.GenerateMock<ILogger>();
-         logger.Expect(x => x.ErrorFormat(exception, "", new object[0])).IgnoreArguments();
-         _messageBoxView.Expect(x => x.ShowError(null, null, null)).IgnoreArguments();
+        [Test]
+        public void HistoryPresenter_ExportClick_ProvidesSerializerWithFileNameAndRows()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.ViewFactory.Stub(x => x.GetSaveFileDialogView()).Return(CreateSaveFileDialogView());
+            var workUnitRows = new[] { new WorkUnitRow() };
+            presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(workUnitRows);
+            var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
+            // Act
+            presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
+            // Assert
+            Assert.AreEqual("test.csv", serializer.FileName);
+            Assert.IsTrue(workUnitRows.SequenceEqual(serializer.Rows));
+        }
 
-         // Act
-         _presenter = CreatePresenter();
-         _presenter.ExportSerializers = new[] { serializer };
-         _presenter.Logger = logger;
-         _presenter.ExportClick();
-         // Assert
-         _viewFactory.VerifyAllExpectations();
-         saveFileDialogView.VerifyAllExpectations();
-         serializer.VerifyAllExpectations();
-         logger.VerifyAllExpectations();
-         _messageBoxView.VerifyAllExpectations();
-      }
-   }
+        private class WorkUnitRowFileSerializerSavesFileNameAndRows : IFileSerializer<List<WorkUnitRow>>
+        {
+            public string FileExtension { get; }
+            public string FileTypeFilter { get; }
+
+            public List<WorkUnitRow> Deserialize(string path)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string FileName { get; set; }
+
+            public List<WorkUnitRow> Rows { get; set; }
+
+            public void Serialize(string path, List<WorkUnitRow> value)
+            {
+                FileName = path;
+                Rows = value;
+            }
+        }
+
+        [Test]
+        public void HistoryPresenter_ExportClick_LogsExceptionAndShowsMessageBoxWhenSerializerThrowsException()
+        {
+            // Arrange
+            var presenter = CreatePresenter();
+            presenter.ViewFactory.Stub(x => x.GetSaveFileDialogView()).Return(CreateSaveFileDialogView());
+            presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
+
+            var logger = presenter.Logger;
+            logger.Expect(x => x.ErrorFormat((Exception)null, "", new object[0])).IgnoreArguments();
+            presenter.MessageBoxView.Expect(x => x.ShowError(null, null, null)).IgnoreArguments();
+            // Act
+            presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
+            // Assert
+            logger.VerifyAllExpectations();
+            presenter.MessageBoxView.VerifyAllExpectations();
+        }
+
+        private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitRow>>
+        {
+            public string FileExtension { get; }
+            public string FileTypeFilter { get; }
+
+            public List<WorkUnitRow> Deserialize(string path)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Serialize(string path, List<WorkUnitRow> value)
+            {
+                throw new IOException();
+            }
+        }
+
+        private static ISaveFileDialogView CreateSaveFileDialogView()
+        {
+            var saveFileDialogView = MockRepository.GenerateStub<ISaveFileDialogView>();
+            saveFileDialogView.FileName = "test.csv";
+            saveFileDialogView.Stub(x => x.FilterIndex).Return(1);
+            saveFileDialogView.Stub(x => x.ShowDialog()).Return(DialogResult.OK);
+            return saveFileDialogView;
+        }
+    }
 }

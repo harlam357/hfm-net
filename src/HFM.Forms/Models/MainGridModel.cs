@@ -78,7 +78,7 @@ namespace HFM.Forms.Models
       #region Fields
 
       private readonly ISynchronizeInvoke _syncObject;
-      private readonly IClientConfiguration _clientConfiguration;
+      private readonly ClientConfiguration _clientConfiguration;
       private readonly SlotModelSortableBindingList _slotList;
       private readonly BindingSource _bindingSource;
 
@@ -112,7 +112,7 @@ namespace HFM.Forms.Models
          get { return _bindingSource; }
       }
 
-      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientConfiguration clientConfiguration)
+      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
       {
          _syncObject = syncObject;
          _clientConfiguration = clientConfiguration;

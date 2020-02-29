@@ -77,22 +77,16 @@ namespace HFM.Core.Configuration
                       };
                   }));
 
-            // IFtpService - Singleton
-            container.Register(
-               Component.For<IFtpService>()
-                  .ImplementedBy<FtpService>());
-
             // IWorkUnitRepository - Singleton
             container.Register(
                Component.For<Data.IWorkUnitRepository>()
                   .ImplementedBy<Data.WorkUnitRepository>());
 
-            // IClientConfiguration - Singleton
+            // ClientConfiguration - Singleton
             container.Register(
-               Component.For<IClientConfiguration>()
-                  .ImplementedBy<ClientConfiguration>()
-                     .OnCreate((kernel, instance) => instance.SubscribeToEvents(
-                        kernel.Resolve<IProteinBenchmarkService>())));
+               Component.For<ClientConfiguration>()
+                  .OnCreate((kernel, instance) => instance.SubscribeToEvents(
+                     kernel.Resolve<IProteinBenchmarkService>())));
 
             // ClientFactory - Singleton
             container.Register(
@@ -111,19 +105,6 @@ namespace HFM.Core.Configuration
                   .ImplementedBy<HFM.Client.TypedMessageConnection>()
                      .LifeStyle.Transient);
 
-            // RetrievalModel - Singleton
-            container.Register(
-               Component.For<ScheduledTasks.RetrievalModel>());
-
-            // MarkupGenerator - Singleton
-            container.Register(
-               Component.For<SlotXml.MarkupGenerator>());
-
-            // IWebsiteDeployer - Singleton
-            container.Register(
-               Component.For<ScheduledTasks.IWebsiteDeployer>()
-                  .ImplementedBy<ScheduledTasks.WebsiteDeployer>());
-
             // WorkUnitQueryDataContainer - Singleton
             container.Register(
                Component.For<Data.WorkUnitQueryDataContainer>()
@@ -135,7 +116,7 @@ namespace HFM.Core.Configuration
                     .OnCreate(instance => instance.Read())
                     .OnDestroy(instance => instance.Write()));
 
-            // IProteinBenchmarkCollection - Singleton
+            // IProteinBenchmarkService - Singleton
             container.Register(
                Component.For<IProteinBenchmarkService>()
                   .ImplementedBy<ProteinBenchmarkService>());

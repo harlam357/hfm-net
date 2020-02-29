@@ -55,6 +55,11 @@ namespace HFM.Core.ScheduledTasks
         private readonly IPreferenceSet _prefs;
         private readonly IFtpService _ftpService;
 
+        public WebsiteDeployer(IPreferenceSet prefs) : this(prefs, new FtpService())
+        {
+
+        }
+
         public WebsiteDeployer(IPreferenceSet prefs, IFtpService ftpService)
         {
             _prefs = prefs;

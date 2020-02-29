@@ -167,16 +167,5 @@ namespace HFM.Forms.Models
          // Assert
          _repository.VerifyAllExpectations();
       }
-
-      [Test]
-      public void HistoryPresenterModel_FetchSelectedQuery_Test()
-      {
-         // Arrange
-         _repository.Expect(x => x.Fetch(_model.SelectedWorkUnitQuery, _model.BonusCalculation));
-         // Act
-         _model.FetchSelectedQuery();
-         // Assert
-         _repository.VerifyAllExpectations();
-      }
    }
 }

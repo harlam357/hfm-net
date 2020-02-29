@@ -23,86 +23,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
+using Castle.Core.Logging;
+
 using HFM.Core.DataTypes;
+using HFM.Core.ScheduledTasks;
+using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
-    public interface IClientConfiguration
-    {
-        event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
-        event EventHandler<ClientEditedEventArgs> ClientEdited;
-
-        bool IsDirty { get; set; }
-
-        /// <summary>
-        /// Clears the configuration and loads a collection of ClientSettings objects.
-        /// </summary>
-        /// <remarks>This method will clear the configuration, per implementation of the Clear() method, and raise the ConfigurationChanged event if items were loaded.</remarks>
-        /// <param name="settings"><see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of ClientSettings objects.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="settings"/> is null.</exception>
-        void Load(IEnumerable<ClientSettings> settings);
-
-        /// <summary>
-        /// Gets an enumerable collection of all slots.
-        /// </summary>
-        IEnumerable<SlotModel> Slots { get; }
-
-        /// <summary>
-        /// Gets the number of clients in the configuration.
-        /// </summary>
-        int Count { get; }
-
-        /// <summary>
-        /// Gets all the clients in the configuration.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<IClient> GetClients();
-
-        /// <summary>
-        /// Gets the client with the specified key value.
-        /// </summary>
-        /// <param name="key">The key of the client to get.</param>
-        /// <returns>The client with the specified key value or null if the key does not exist.</returns>
-        IClient Get(string key);
-
-        /// <summary>
-        /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-        /// </summary>
-        /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
-        /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to add.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="settings"/> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/> or the settings are not valid.</exception>
-        void Add(ClientSettings settings);
-
-        /// <summary>
-        /// Edits an <see cref="T:HFM.Core.IClient"/> element with the provided key and in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-        /// </summary>
-        /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
-        /// <param name="key">The string to use as the key of the element to edit.</param>
-        /// <param name="settings">The <see cref="T:HFM.Core.DataTypes.ClientSettings"/> object to use as the value of the element to edit.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="settings"/> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">If the settings name changed, an element with the new settings name already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
-        void Edit(string key, ClientSettings settings);
-
-        /// <summary>
-        /// Removes the <see cref="T:HFM.Core.IClient"/> element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-        /// </summary>
-        /// <returns>
-        /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-        /// </returns>
-        /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event when successful.</remarks>
-        /// <param name="key">The key of the element to remove.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is null.</exception>
-        bool Remove(string key);
-
-        /// <summary>
-        /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-        /// </summary>
-        /// <remarks>Sets the IsDirty property to false and raises the ConfigurationChanged event if values existed before this call.</remarks>
-        void Clear();
-    }
-
-    public class ClientConfiguration : IClientConfiguration
+    public class ClientConfiguration
     {
         #region Events
 
@@ -128,13 +57,27 @@ namespace HFM.Core.Client
 
         #endregion
 
-        private readonly ClientFactory _factory;
+        public ILogger Logger { get; }
+        public IPreferenceSet Preferences { get; }
+        public ClientFactory ClientFactory { get; }
+        public RetrievalModel RetrievalModel { get; }
+
         private readonly Dictionary<string, IClient> _clientDictionary;
         private readonly ReaderWriterLockSlim _syncLock;
 
-        public ClientConfiguration(ClientFactory factory)
+        public ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory)
+            : this(logger, preferences, clientFactory, RetrievalModel.Factory)
         {
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            
+        }
+
+        internal ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory, RetrievalModelFactory retrievalModelFactory)
+        {
+            Logger = logger;
+            Preferences = preferences;
+            ClientFactory = clientFactory;
+            RetrievalModel = retrievalModelFactory(logger, preferences, this);
+
             _clientDictionary = new Dictionary<string, IClient>();
             _syncLock = new ReaderWriterLockSlim();
         }
@@ -156,7 +99,7 @@ namespace HFM.Core.Client
             try
             {
                 // add each instance to the collection
-                foreach (var client in _factory.CreateCollection(settings))
+                foreach (var client in ClientFactory.CreateCollection(settings))
                 {
                     if (client != null)
                     {
@@ -199,7 +142,7 @@ namespace HFM.Core.Client
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             // cacheLock handled in Add(string, IClient)
-            Add(settings.Name, _factory.Create(settings));
+            Add(settings.Name, ClientFactory.Create(settings));
         }
 
         public void Edit(string key, ClientSettings settings)
@@ -316,7 +259,7 @@ namespace HFM.Core.Client
                     client.RetrievalFinished -= OnInvalidate;
                     client.Abort();
                     // Release from the Factory
-                    _factory.Release(client);
+                    ClientFactory.Release(client);
                 }
                 result = _clientDictionary.Remove(key);
             }
@@ -374,7 +317,7 @@ namespace HFM.Core.Client
                     client.RetrievalFinished -= OnInvalidate;
                     client.Abort();
                     // Release from the Factory
-                    _factory.Release(client);
+                    ClientFactory.Release(client);
                 }
                 _clientDictionary.Clear();
             }

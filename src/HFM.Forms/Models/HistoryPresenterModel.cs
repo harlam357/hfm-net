@@ -34,39 +34,29 @@ namespace HFM.Forms.Models
 {
     public sealed class HistoryPresenterModel : INotifyPropertyChanged
     {
-        private readonly IWorkUnitRepository _repository;
+        public IWorkUnitRepository Repository { get; }
+        public BindingSource QueryBindingSource { get; }
+        public BindingSource HistoryBindingSource { get; }
 
         private readonly List<WorkUnitQuery> _queryList;
-        private readonly BindingSource _queryBindingSource;
-        public BindingSource QueryBindingSource
-        {
-            get { return _queryBindingSource; }
-        }
-
         private readonly WorkUnitHistoryRowSortableBindingList _workUnitHistoryList;
-        private readonly BindingSource _historyBindingSource;
-        public BindingSource HistoryBindingSource
-        {
-            get { return _historyBindingSource; }
-        }
-
         private PetaPoco.Page<WorkUnitRow> _page;
 
         public HistoryPresenterModel(IWorkUnitRepository repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-            Debug.Assert(_repository.Connected);
+            Debug.Assert(Repository.Connected);
 
             _queryList = new List<WorkUnitQuery> { WorkUnitQuery.SelectAll };
-            _queryBindingSource = new BindingSource();
-            _queryBindingSource.DataSource = _queryList;
-            _queryBindingSource.CurrentItemChanged += (s, e) =>
-                                                      {
-                                                          OnPropertyChanged(nameof(EditAndDeleteButtonsEnabled));
-                                                          _currentPage = 1;
-                                                          ResetBindings(true);
-                                                      };
+            QueryBindingSource = new BindingSource();
+            QueryBindingSource.DataSource = _queryList;
+            QueryBindingSource.CurrentItemChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(EditAndDeleteButtonsEnabled));
+                _currentPage = 1;
+                ResetBindings(true);
+            };
 
             _workUnitHistoryList = new WorkUnitHistoryRowSortableBindingList();
             _workUnitHistoryList.RaiseListChangedEvents = false;
@@ -75,8 +65,8 @@ namespace HFM.Forms.Models
                 SortColumnName = e.Name;
                 SortOrder = e.Direction;
             };
-            _historyBindingSource = new BindingSource();
-            _historyBindingSource.DataSource = _workUnitHistoryList;
+            HistoryBindingSource = new BindingSource();
+            HistoryBindingSource.DataSource = _workUnitHistoryList;
 
             _page = new PetaPoco.Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
@@ -126,8 +116,8 @@ namespace HFM.Forms.Models
 
             _queryList.Add(query);
             _queryList.Sort();
-            _queryBindingSource.ResetBindings(false);
-            _queryBindingSource.Position = _queryBindingSource.IndexOf(query);
+            QueryBindingSource.ResetBindings(false);
+            QueryBindingSource.Position = QueryBindingSource.IndexOf(query);
         }
 
         public void ReplaceQuery(WorkUnitQuery query)
@@ -149,8 +139,8 @@ namespace HFM.Forms.Models
             _queryList.Remove(SelectedWorkUnitQuery);
             _queryList.Add(query);
             _queryList.Sort();
-            _queryBindingSource.ResetBindings(false);
-            _queryBindingSource.Position = _queryBindingSource.IndexOf(query);
+            QueryBindingSource.ResetBindings(false);
+            QueryBindingSource.Position = QueryBindingSource.IndexOf(query);
         }
 
         private static void CheckQueryParametersForAddOrReplace(WorkUnitQuery query)
@@ -169,7 +159,7 @@ namespace HFM.Forms.Models
             {
                 if (query.Parameters[i].Value == null)
                 {
-                    throw new ArgumentException($"Field index {(i + 1)} must have a query value.");
+                    throw new ArgumentException($"Parameter {i + 1} must have a value.");
                 }
             }
         }
@@ -182,12 +172,12 @@ namespace HFM.Forms.Models
             }
 
             _queryList.Remove(query);
-            _queryBindingSource.ResetBindings(false);
+            QueryBindingSource.ResetBindings(false);
         }
 
         public void DeleteHistoryEntry(WorkUnitRow row)
         {
-            if (_repository.Delete(row) != 0)
+            if (Repository.Delete(row) != 0)
             {
                 _page.Items.Remove(row);
                 _page.TotalItems--;
@@ -201,7 +191,7 @@ namespace HFM.Forms.Models
 
             if (executeQuery)
             {
-                _page = _repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
+                _page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
             }
             if (_page == null)
             {
@@ -212,14 +202,14 @@ namespace HFM.Forms.Models
             RefreshHistoryList(_page.Items);
 
             // sort the list
-            _historyBindingSource.Sort = null;
+            HistoryBindingSource.Sort = null;
             if (!String.IsNullOrEmpty(SortColumnName))
             {
-                _historyBindingSource.Sort = SortColumnName + " " + SortOrder.ToDirectionString();
+                HistoryBindingSource.Sort = SortColumnName + " " + SortOrder.ToDirectionString();
                 _workUnitHistoryList.ApplySort(_workUnitHistoryList.SortDescriptions);
             }
 
-            _historyBindingSource.ResetBindings(false);
+            HistoryBindingSource.ResetBindings(false);
 
             OnPropertyChanged(nameof(TotalEntries));
             OnPropertyChanged(nameof(CurrentPage));
@@ -227,19 +217,14 @@ namespace HFM.Forms.Models
 
         private void RefreshHistoryList(IEnumerable<WorkUnitRow> historyEntries)
         {
-            _historyBindingSource.Clear();
+            HistoryBindingSource.Clear();
             if (historyEntries != null)
             {
                 foreach (var entry in historyEntries)
                 {
-                    _historyBindingSource.Add(entry);
+                    HistoryBindingSource.Add(entry);
                 }
             }
-        }
-
-        public IList<WorkUnitRow> FetchSelectedQuery()
-        {
-            return _repository.Fetch(SelectedWorkUnitQuery, BonusCalculation);
         }
 
         #region Properties
@@ -248,9 +233,9 @@ namespace HFM.Forms.Models
         {
             get
             {
-                if (_queryBindingSource.Current != null)
+                if (QueryBindingSource.Current != null)
                 {
-                    return (WorkUnitQuery)_queryBindingSource.Current;
+                    return (WorkUnitQuery)QueryBindingSource.Current;
                 }
                 return null;
             }
@@ -260,9 +245,9 @@ namespace HFM.Forms.Models
         {
             get
             {
-                if (_historyBindingSource.Current != null)
+                if (HistoryBindingSource.Current != null)
                 {
-                    return (WorkUnitRow)_historyBindingSource.Current;
+                    return (WorkUnitRow)HistoryBindingSource.Current;
                 }
                 return null;
             }

@@ -6,7 +6,7 @@ namespace HFM.Core.Configuration
 {
     internal static class ClientConfigurationExtensions
     {
-        internal static void SubscribeToEvents(this IClientConfiguration configuration, IProteinBenchmarkService benchmarkService)
+        internal static void SubscribeToEvents(this ClientConfiguration configuration, IProteinBenchmarkService benchmarkService)
         {
             configuration.ClientEdited += (s, e) => UpdateBenchmarkData(benchmarkService, e);
         }

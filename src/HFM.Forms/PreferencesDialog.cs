@@ -33,7 +33,6 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.Net;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
@@ -99,11 +98,11 @@ namespace HFM.Forms
 
         #region Constructor And Binding/Load Methods
 
-        public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun, IFtpService ftpService)
+        public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
         {
             _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
             _autoRun = autoRun ?? throw new ArgumentNullException(nameof(autoRun));
-            _ftpService = ftpService ?? throw new ArgumentNullException(nameof(ftpService));
+            _ftpService = new FtpService();
 
             InitializeComponent();
 
