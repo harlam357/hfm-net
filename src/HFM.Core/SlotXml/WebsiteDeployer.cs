@@ -29,7 +29,7 @@ using HFM.Core.Net;
 using HFM.Core.Services;
 using HFM.Preferences;
 
-namespace HFM.Core.ScheduledTasks
+namespace HFM.Core.SlotXml
 {
     public enum WebDeploymentType
     {

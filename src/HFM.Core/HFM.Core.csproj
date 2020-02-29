@@ -161,7 +161,7 @@
     <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="Validate.cs" />
-    <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
+    <Compile Include="SlotXml\WebsiteDeployer.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />
     <Compile Include="Net\WebOperation.cs" />
     <Compile Include="WorkUnits\WorkUnitResult.cs" />
