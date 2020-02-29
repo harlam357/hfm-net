@@ -217,5 +217,13 @@ namespace HFM.Core.Client
             ct.ThrowIfCancellationRequested();
             new WebsiteDeployer(Preferences).DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, slots);
         }
+
+        public static bool ValidateInterval(int interval)
+        {
+            return interval <= MaxInterval && interval >= MinInterval;
+        }
+
+        public const int MinInterval = 1;
+        public const int MaxInterval = 180;
     }
 }

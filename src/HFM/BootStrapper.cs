@@ -229,16 +229,14 @@ namespace HFM
             prefs.Set(Preference.MessageLevel, level);
 
             const int defaultInterval = 15;
-            // ClientRetrievalTask.Interval
             var clientRetrievalTask = prefs.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
-            if (!Interval.Validate(clientRetrievalTask.Interval))
+            if (!Core.Client.ClientScheduledTasks.ValidateInterval(clientRetrievalTask.Interval))
             {
                 clientRetrievalTask.Interval = defaultInterval;
                 prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
             }
-            // WebGenerationTask.Interval
             var webGenerationTask = prefs.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
-            if (!Interval.Validate(webGenerationTask.Interval))
+            if (!Core.Client.ClientScheduledTasks.ValidateInterval(webGenerationTask.Interval))
             {
                 webGenerationTask.Interval = defaultInterval;
                 prefs.Set(Preference.WebGenerationTask, webGenerationTask);

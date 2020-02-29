@@ -160,7 +160,6 @@
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
     <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
-    <Compile Include="ScheduledTasks\Interval.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />

@@ -139,7 +139,7 @@ namespace HFM.Forms.Models
          get
          {
             if (SyncOnSchedule == false) return false;
-            return !Interval.Validate(SyncTimeMinutes);
+            return !ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
          }
       }
 
@@ -236,7 +236,7 @@ namespace HFM.Forms.Models
          get
          {
             if (GenerateIntervalEnabled == false) return false;
-            return !Interval.Validate(GenerateInterval);
+            return !ClientScheduledTasks.ValidateInterval(GenerateInterval);
          }
       }
 

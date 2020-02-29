@@ -33,6 +33,7 @@ using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
@@ -127,8 +128,8 @@ namespace HFM.Forms
                 _cssSampleBrowser.TabStop = false;
             }
 
-            txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.ScheduledTasks.Interval.MinInterval, Core.ScheduledTasks.Interval.MaxInterval);
-            txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", Core.ScheduledTasks.Interval.MinInterval, Core.ScheduledTasks.Interval.MaxInterval);
+            txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
+            txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
 
             _scheduledTasksModel = new ScheduledTasksModel(prefs);
             _startupAndExternalModel = new StartupAndExternalModel(prefs);
