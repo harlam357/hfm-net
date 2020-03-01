@@ -163,7 +163,7 @@
     <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="Data\WorkUnitRepository.cs" />
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
-    <Compile Include="PreferenceSetExtensions.cs" />
+    <Compile Include="PreferencesExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />

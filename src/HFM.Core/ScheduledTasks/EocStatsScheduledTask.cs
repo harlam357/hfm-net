@@ -66,7 +66,7 @@ namespace HFM.Core.ScheduledTasks
             switch (e.Action)
             {
                 case ScheduledTaskChangedAction.Started:
-                    Logger.Info(e.ToString(i => $"{(int)(i.GetValueOrDefault() / Constants.MinToMillisec)} minutes"));
+                    Logger.Info(e.ToString(i => $"{(int)TimeSpan.FromMilliseconds(i.GetValueOrDefault()).TotalMinutes} minutes"));
                     break;
                 case ScheduledTaskChangedAction.Faulted:
                     Logger.Error(e.ToString());

@@ -137,7 +137,7 @@ namespace HFM.Core.Client
             switch (e.Action)
             {
                 case ScheduledTaskChangedAction.Started:
-                    Logger.Info(e.ToString(i => $"{(int)(i.GetValueOrDefault() / Constants.MinToMillisec)} minutes"));
+                    Logger.Info(e.ToString(i => $"{(int)TimeSpan.FromMilliseconds(i.GetValueOrDefault()).TotalMinutes} minutes"));
                     break;
                 case ScheduledTaskChangedAction.Faulted:
                     Logger.Error(e.ToString());
@@ -151,15 +151,9 @@ namespace HFM.Core.Client
             }
         }
 
-        private double ClientInterval
-        {
-            get { return Preferences.Get<int>(Preference.ClientRetrievalTaskInterval) * Constants.MinToMillisec; }
-        }
+        private double ClientInterval => TimeSpan.FromMinutes(Preferences.Get<int>(Preference.ClientRetrievalTaskInterval)).TotalMilliseconds;
 
-        private double WebInterval
-        {
-            get { return Preferences.Get<int>(Preference.WebGenerationTaskInterval) * Constants.MinToMillisec; }
-        }
+        private double WebInterval => TimeSpan.FromMinutes(Preferences.Get<int>(Preference.WebGenerationTaskInterval)).TotalMilliseconds;
 
         public void RetrieveAll()
         {

@@ -21,11 +21,6 @@ namespace HFM.Core
 {
     public static class Constants
     {
-        /// <summary>
-        /// Conversion factor - minutes to milli-seconds
-        /// </summary>
-        public const int MinToMillisec = 60000;
-
         public const string ClientNameFormat = "({0}) {1}";
     }
 }
