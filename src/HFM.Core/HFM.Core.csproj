@@ -142,7 +142,6 @@
     <Compile Include="SlotXml\SlotData.cs" />
     <Compile Include="SlotXml\SlotDetail.cs" />
     <Compile Include="Client\SlotModel.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Client\ClientSettings.cs" />

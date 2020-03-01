@@ -104,7 +104,7 @@ namespace HFM.Core.Client
             }
             catch (CryptographicException)
             {
-               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to encrypt password... saving clear value.");
+               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to encrypt password... saving clear value.");
             }
          }
       }
@@ -122,11 +122,11 @@ namespace HFM.Core.Client
             }
             catch (FormatException)
             {
-               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
             }
             catch (CryptographicException)
             {
-               Logger.WarnFormat(Constants.ClientNameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
             }
          }
       }

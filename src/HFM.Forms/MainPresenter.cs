@@ -471,8 +471,6 @@ namespace HFM.Forms
                 if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
                 {
                     _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-                    //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.Name));
                 }
                 // Textbox has text lines
                 else if (_view.LogFileViewer.Lines.Length > 0)
@@ -487,7 +485,7 @@ namespace HFM.Forms
                     {
                         // even though i've checked the count above, it could have changed in between then
                         // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                        Logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
+                        Logger.WarnFormat(ex, Core.Logging.Logger.NameFormat, instance.Name, ex.Message);
                     }
 
                     // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
@@ -495,8 +493,6 @@ namespace HFM.Forms
                     if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
                         _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-                        //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                     }
                 }
                 // Nothing in the Textbox... Load LogLines

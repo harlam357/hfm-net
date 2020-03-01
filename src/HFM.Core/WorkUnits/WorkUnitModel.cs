@@ -361,23 +361,23 @@ namespace HFM.Core.WorkUnits
 
             if (ProteinIsUnknown(CurrentProtein))
             {
-                logger.DebugFormat(Constants.ClientNameFormat, slotName, "Protein is unknown... 0 PPD.");
+                logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Protein is unknown... 0 PPD.");
                 return;
             }
 
             switch (bonusCalculation)
             {
                 case BonusCalculation.DownloadTime:
-                    logger.DebugFormat(Constants.ClientNameFormat, slotName,
+                    logger.DebugFormat(Logging.Logger.NameFormat, slotName,
                         status == SlotStatus.RunningNoFrameTimes
                             ? "Calculate Bonus PPD by Frame Time."
                             : "Calculate Bonus PPD by Download Time.");
                     break;
                 case BonusCalculation.FrameTime:
-                    logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
+                    logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
                     break;
                 default:
-                    logger.DebugFormat(Constants.ClientNameFormat, slotName, "Calculate Standard PPD.");
+                    logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Calculate Standard PPD.");
                     break;
             }
 

@@ -149,7 +149,7 @@ namespace HFM.Core.Client
       {
          if (!Monitor.TryEnter(_retrieveLock))
          {
-            Debug.WriteLine(Constants.ClientNameFormat, Settings.Name, "Retrieval already in progress...");
+            Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
             return;
          }
          try
@@ -179,8 +179,8 @@ namespace HFM.Core.Client
                {
                   if (Logger.IsDebugEnabled)
                   {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", workUnitModel.Data.ToProjectString());
-                     Logger.DebugFormat(Constants.ClientNameFormat, workUnitModel.Data.OwningSlotName, message);
+                     string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
+                     Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.OwningSlotName, message));
                   }
                }
             }

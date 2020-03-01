@@ -32,6 +32,8 @@ namespace HFM.Core.Logging
     [ExcludeFromCodeCoverage]
     public class Logger : LevelFilteredLogger
     {
+        public const string NameFormat = "({0}) {1}";
+
         public Logger(string path)
            : base("Default")
         {
