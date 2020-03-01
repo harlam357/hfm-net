@@ -21,9 +21,6 @@ namespace HFM.Core
 {
    public static class Constants
    {
-      public const string CssFolderName = "CSS";
-      public const string XsltFolderName = "XSL";
-
       public const string EOCUserBaseUrl = "http://folding.extremeoverclocking.com/user_summary.php?s=&u=";
       public const string EOCTeamBaseUrl = "http://folding.extremeoverclocking.com/team_summary.php?s=&t=";
       public const string StanfordBaseUrl = "http://fah-web.stanford.edu/cgi-bin/main.py?qtype=userpage&username=";

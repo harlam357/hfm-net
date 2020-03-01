@@ -166,7 +166,7 @@ namespace HFM
             Version monoVersion = null;
             try
             {
-                monoVersion = Core.Application.GetMonoVersionNumer();
+                monoVersion = Core.Application.GetMonoVersionNumber();
             }
             catch (Exception ex)
             {

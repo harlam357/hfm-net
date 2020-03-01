@@ -51,7 +51,7 @@ namespace HFM.Core.SlotXml
         {
             var applicationPath = Preferences.Get<string>(Preference.ApplicationPath);
 
-            string cssFilePath = Path.Combine(applicationPath, Constants.CssFolderName, cssFileName);
+            string cssFilePath = Path.Combine(applicationPath, Application.CssFolderName, cssFileName);
             if (File.Exists(cssFilePath))
             {
                 var destFileName = Path.Combine(path, cssFileName);
@@ -153,7 +153,7 @@ namespace HFM.Core.SlotXml
             }
             else
             {
-                string xsltFileName = Path.Combine(Preferences.Get<string>(Preference.ApplicationPath), Constants.XsltFolderName, xslt);
+                string xsltFileName = Path.Combine(Preferences.Get<string>(Preference.ApplicationPath), Application.XsltFolderName, xslt);
                 if (File.Exists(xsltFileName))
                 {
                     return xsltFileName;

@@ -25,198 +25,201 @@ using System.Text.RegularExpressions;
 
 namespace HFM.Core
 {
-   public static partial class Application
-   {
-      public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
+    public static partial class Application
+    {
+        public const string CssFolderName = "CSS";
+        public const string XsltFolderName = "XSL";
 
-      #region Name and Version Strings
+        public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
-      /// <summary>
-      /// The application name.
-      /// </summary>
-      public const string Name = "HFM.NET";
+        #region Name and Version Strings
 
-      /// <summary>
-      /// Gets a string in the format Name vMajor.Minor.Build.
-      /// </summary>
-      public static string NameAndVersion
-      {
-         get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}")); }
-      }
+        /// <summary>
+        /// The application name.
+        /// </summary>
+        public const string Name = "HFM.NET";
 
-      /// <summary>
-      /// Gets a string in the format Name vMajor.Minor.Build.Revision
-      /// </summary>
-      public static string NameAndVersionWithRevision
-      {
-         get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}.{3}")); }
-      }
+        /// <summary>
+        /// Gets a string in the format Name vMajor.Minor.Build.
+        /// </summary>
+        public static string NameAndVersion
+        {
+            get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}")); }
+        }
 
-      /// <summary>
-      /// Gets a string in the format Major.Minor.Build.
-      /// </summary>
-      public static string Version
-      {
-         get { return CreateVersionString("{0}.{1}.{2}"); }
-      }
+        /// <summary>
+        /// Gets a string in the format Name vMajor.Minor.Build.Revision
+        /// </summary>
+        public static string NameAndVersionWithRevision
+        {
+            get { return String.Concat(Name, " v", CreateVersionString("{0}.{1}.{2}.{3}")); }
+        }
 
-      /// <summary>
-      /// Gets a string in the format Major.Minor.Build.Revision.
-      /// </summary>
-      public static string VersionWithRevision
-      {
-         get { return CreateVersionString("{0}.{1}.{2}.{3}"); }
-      }
+        /// <summary>
+        /// Gets a string in the format Major.Minor.Build.
+        /// </summary>
+        public static string Version
+        {
+            get { return CreateVersionString("{0}.{1}.{2}"); }
+        }
 
-      private static string CreateVersionString(string format)
-      {
-         Debug.Assert(format != null);
+        /// <summary>
+        /// Gets a string in the format Major.Minor.Build.Revision.
+        /// </summary>
+        public static string VersionWithRevision
+        {
+            get { return CreateVersionString("{0}.{1}.{2}.{3}"); }
+        }
 
-         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-         return String.Format(CultureInfo.InvariantCulture, format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                                                    fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-      }
+        private static string CreateVersionString(string format)
+        {
+            Debug.Assert(format != null);
 
-      #endregion
-
-      #region Version Numbers
-
-      public static int VersionNumber
-      {
-         get
-         {
-            // Example: 0.3.1.50 == 30010050 / 1.3.4.75 == 1030040075
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            return GetVersionFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
-                                       fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
-         }
-      }
-      
-      /// <summary>
-      /// Parses a version number from a 'x.x.x.x' or 'x.x.x' formatted string.
-      /// </summary>
-      /// <exception cref="ArgumentNullException">version is null.</exception>
-      /// <exception cref="FormatException">Throws when given version cannot be parsed.</exception>
-      public static int ParseVersion(string version)
-      {
-         if (version == null) throw new ArgumentNullException("version");
+            return String.Format(CultureInfo.InvariantCulture, format, fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                                                       fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+        }
 
-         var versionNumbers = GetVersionNumbers(version);
-         return GetVersionFromArray(versionNumbers);
-      }
+        #endregion
 
-      private static int GetVersionFromArray(params int[] versionNumbers)
-      {
-         Debug.Assert(versionNumbers != null);
+        #region Version Numbers
 
-         int value = 0;
+        public static int VersionNumber
+        {
+            get
+            {
+                // Example: 0.3.1.50 == 30010050 / 1.3.4.75 == 1030040075
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                return GetVersionFromArray(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
+                                           fileVersionInfo.FileBuildPart, fileVersionInfo.FilePrivatePart);
+            }
+        }
 
-         if (versionNumbers.Length > 0)
-         {
-            value += versionNumbers[0] * 1000000000;
-         }
-         if (versionNumbers.Length > 1)
-         {
-            value += versionNumbers[1] * 10000000;
-         }
-         if (versionNumbers.Length > 2)
-         {
-            value += versionNumbers[2] * 10000;
-         }
-         if (versionNumbers.Length > 3)
-         {
-            value += versionNumbers[3];
-         }
+        /// <summary>
+        /// Parses a version number from a 'x.x.x.x' or 'x.x.x' formatted string.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">version is null.</exception>
+        /// <exception cref="FormatException">Throws when given version cannot be parsed.</exception>
+        public static int ParseVersion(string version)
+        {
+            if (version == null) throw new ArgumentNullException("version");
 
-         return value;
-      }
+            var versionNumbers = GetVersionNumbers(version);
+            return GetVersionFromArray(versionNumbers);
+        }
 
-      public static int[] GetVersionNumbers()
-      {
-         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-         var versionNumbers = new int[4];
-         versionNumbers[0] = fileVersionInfo.FileMajorPart;
-         versionNumbers[1] = fileVersionInfo.FileMinorPart;
-         versionNumbers[2] = fileVersionInfo.FileBuildPart;
-         versionNumbers[3] = fileVersionInfo.FilePrivatePart;
-         return versionNumbers;
-      }
+        private static int GetVersionFromArray(params int[] versionNumbers)
+        {
+            Debug.Assert(versionNumbers != null);
 
-      private static int[] GetVersionNumbers(string version)
-      {
-         Debug.Assert(version != null);
+            int value = 0;
 
-         var regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))\\.(?<Revision>(\\d+))$", RegexOptions.ExplicitCapture);
-         var match = regex.Match(version);
-         if (match.Success)
-         {
+            if (versionNumbers.Length > 0)
+            {
+                value += versionNumbers[0] * 1000000000;
+            }
+            if (versionNumbers.Length > 1)
+            {
+                value += versionNumbers[1] * 10000000;
+            }
+            if (versionNumbers.Length > 2)
+            {
+                value += versionNumbers[2] * 10000;
+            }
+            if (versionNumbers.Length > 3)
+            {
+                value += versionNumbers[3];
+            }
+
+            return value;
+        }
+
+        public static int[] GetVersionNumbers()
+        {
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
             var versionNumbers = new int[4];
-            versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
-            versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
-            versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
-            versionNumbers[3] = Int32.Parse(match.Result("${Revision}"), CultureInfo.InvariantCulture);
+            versionNumbers[0] = fileVersionInfo.FileMajorPart;
+            versionNumbers[1] = fileVersionInfo.FileMinorPart;
+            versionNumbers[2] = fileVersionInfo.FileBuildPart;
+            versionNumbers[3] = fileVersionInfo.FilePrivatePart;
             return versionNumbers;
-         }
+        }
 
-         regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))$", RegexOptions.ExplicitCapture);
-         match = regex.Match(version);
-         if (match.Success)
-         {
-            var versionNumbers = new int[3];
-            versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
-            versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
-            versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
-            return versionNumbers;
-         }
+        private static int[] GetVersionNumbers(string version)
+        {
+            Debug.Assert(version != null);
 
-         throw new FormatException(String.Format(CultureInfo.CurrentCulture, 
-            "Given version '{0}' is not in the correct format.", version));
-      }
-
-      #endregion
-
-      #region Mono Version
-
-      /// <summary>
-      /// Uses the GetDisplayName method to get the name. It most likely contains a version number.
-      /// </summary>
-      private static string GetMonoDisplayName()
-      {
-         return ((string)typeof(object).Assembly.GetType("Mono.Runtime").InvokeMember("GetDisplayName", BindingFlags.InvokeMethod |
-                                                                                                        BindingFlags.NonPublic |
-                                                                                                        BindingFlags.Static |
-                                                                                                        BindingFlags.DeclaredOnly |
-                                                                                                        BindingFlags.ExactBinding, null, null, null));
-      }
-
-      /// <summary>
-      /// Extracts Complete version number from the Display Name.
-      /// </summary>
-      public static Version GetMonoVersionNumer()
-      {
-         string[] tokens = GetMonoDisplayName().Split(' ');
-         foreach (string word in tokens)
-         {
-            // This if statement is needed because mono 2.6 display name is "tarball"
-            string versionString;
-            if (word == "tarball")
+            var regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))\\.(?<Revision>(\\d+))$", RegexOptions.ExplicitCapture);
+            var match = regex.Match(version);
+            if (match.Success)
             {
-               versionString = "2.6";
-            }
-            else
-            {
-               versionString = word;
+                var versionNumbers = new int[4];
+                versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
+                versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
+                versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
+                versionNumbers[3] = Int32.Parse(match.Result("${Revision}"), CultureInfo.InvariantCulture);
+                return versionNumbers;
             }
 
-            Version result;
-            if (System.Version.TryParse(versionString, out result))
+            regex = new Regex("^(?<Major>(\\d+))\\.(?<Minor>(\\d+))\\.(?<Build>(\\d+))$", RegexOptions.ExplicitCapture);
+            match = regex.Match(version);
+            if (match.Success)
             {
-               return result;
+                var versionNumbers = new int[3];
+                versionNumbers[0] = Int32.Parse(match.Result("${Major}"), CultureInfo.InvariantCulture);
+                versionNumbers[1] = Int32.Parse(match.Result("${Minor}"), CultureInfo.InvariantCulture);
+                versionNumbers[2] = Int32.Parse(match.Result("${Build}"), CultureInfo.InvariantCulture);
+                return versionNumbers;
             }
-         }
-         return null;
-      }
 
-      #endregion
-   }
+            throw new FormatException(String.Format(CultureInfo.CurrentCulture,
+               "Given version '{0}' is not in the correct format.", version));
+        }
+
+        #endregion
+
+        #region Mono Version
+
+        /// <summary>
+        /// Uses the GetDisplayName method to get the name. It most likely contains a version number.
+        /// </summary>
+        private static string GetMonoDisplayName()
+        {
+            return ((string)typeof(object).Assembly.GetType("Mono.Runtime").InvokeMember("GetDisplayName", BindingFlags.InvokeMethod |
+                                                                                                           BindingFlags.NonPublic |
+                                                                                                           BindingFlags.Static |
+                                                                                                           BindingFlags.DeclaredOnly |
+                                                                                                           BindingFlags.ExactBinding, null, null, null));
+        }
+
+        /// <summary>
+        /// Extracts Complete version number from the Display Name.
+        /// </summary>
+        public static Version GetMonoVersionNumber()
+        {
+            string[] tokens = GetMonoDisplayName().Split(' ');
+            foreach (string word in tokens)
+            {
+                // This if statement is needed because mono 2.6 display name is "tarball"
+                string versionString;
+                if (word == "tarball")
+                {
+                    versionString = "2.6";
+                }
+                else
+                {
+                    versionString = word;
+                }
+
+                Version result;
+                if (System.Version.TryParse(versionString, out result))
+                {
+                    return result;
+                }
+            }
+            return null;
+        }
+
+        #endregion
+    }
 }
