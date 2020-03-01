@@ -26,6 +26,7 @@ using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Logging;
+using HFM.Core.Net;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -76,14 +77,14 @@ namespace HFM.Forms
       private bool _userInvoked;
       private IWebProxy _proxy;
       
-      private readonly IPreferenceSet _prefs;
+      private readonly IPreferenceSet _preferences;
       private readonly IMessageBoxView _messageBoxView;
       
       #endregion
 
-      public UpdateLogic(IPreferenceSet prefs, IMessageBoxView messageBoxView)
+      public UpdateLogic(IPreferenceSet preferences, IMessageBoxView messageBoxView)
       {
-         _prefs = prefs;
+         _preferences = preferences;
          _messageBoxView = messageBoxView;
       }
 
@@ -108,7 +109,7 @@ namespace HFM.Forms
          
          // set globals
          _userInvoked = userInvoked;
-         _proxy = _prefs.GetWebProxy();
+         _proxy = WebProxyFactory.Create(_preferences);
          
          Func<ApplicationUpdate> func = DoCheckForUpdate;
          func.BeginInvoke(CheckForUpdateCallback, func);

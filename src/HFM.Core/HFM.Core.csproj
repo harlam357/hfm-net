@@ -89,6 +89,7 @@
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
+    <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />
     <Compile Include="SlotXml\HtmlBuilder.cs" />
     <Compile Include="SlotXml\WebArtifactDeployment.cs" />

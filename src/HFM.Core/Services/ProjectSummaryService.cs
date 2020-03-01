@@ -20,16 +20,16 @@ namespace HFM.Core.Services
 
     public class ProjectSummaryService : IProjectSummaryService
     {
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferenceSet _preferences;
 
-        public ProjectSummaryService(IPreferenceSet prefs)
+        public ProjectSummaryService(IPreferenceSet preferences)
         {
-            _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
+            _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
         }
         
         public void CopyToStream(Stream stream, IProgress<ProgressInfo> progress)
         {
-            var webOperation = WebOperation.Create(_prefs.Get<string>(Preference.ProjectDownloadUrl));
+            var webOperation = WebOperation.Create(_preferences.Get<string>(Preference.ProjectDownloadUrl));
             if (progress != null)
             {
                 webOperation.ProgressChanged += (sender, e) =>
@@ -40,7 +40,7 @@ namespace HFM.Core.Services
                 };
             }
             webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            webOperation.WebRequest.Proxy = _prefs.GetWebProxy();
+            webOperation.WebRequest.Proxy = WebProxyFactory.Create(_preferences);
             webOperation.Download(stream);
         }
     }
