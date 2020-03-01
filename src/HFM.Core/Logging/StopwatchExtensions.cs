@@ -1,8 +1,7 @@
 ﻿
 using System.Diagnostics;
 
-// ReSharper disable once CheckNamespace
-namespace HFM.Core
+namespace HFM.Core.Logging
 {
     internal static class StopwatchExtensions
     {

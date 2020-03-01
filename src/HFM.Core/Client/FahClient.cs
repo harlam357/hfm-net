@@ -29,6 +29,7 @@ using System.Threading;
 using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core.DataTypes;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
