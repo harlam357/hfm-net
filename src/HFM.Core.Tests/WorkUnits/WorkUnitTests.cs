@@ -28,7 +28,7 @@ using HFM.Log;
 namespace HFM.Core.WorkUnits
 {
    [TestFixture]
-   public class UnitInfoTests
+   public class WorkUnitTests
    {
       [Test]
       public void WorkUnit_DefaultPropertyValues_Test()
@@ -45,7 +45,7 @@ namespace HFM.Core.WorkUnits
          Assert.AreEqual(WorkUnitResult.Unknown, unitInfo.UnitResult);
          Assert.IsNull(unitInfo.LogLines);
          Assert.IsNull(unitInfo.FrameData);
-         Assert.AreEqual(Constants.DefaultCoreID, unitInfo.CoreID);
+         Assert.AreEqual(WorkUnit.DefaultCoreID, unitInfo.CoreID);
       }
 
       [Test]

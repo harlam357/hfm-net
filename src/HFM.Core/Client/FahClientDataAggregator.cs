@@ -352,8 +352,8 @@ namespace HFM.Core.Client
             workUnit.ProjectGen = queueEntry.Gen;
 
             /* FoldingID and Team from Queue Entry */
-            workUnit.FoldingID = options.User ?? Constants.DefaultFoldingID;
-            workUnit.Team = options.Team ?? Constants.DefaultTeam;
+            workUnit.FoldingID = options.User ?? WorkUnit.DefaultFoldingID;
+            workUnit.Team = options.Team ?? WorkUnit.DefaultTeam;
             workUnit.SlotType = slotOptions.ToSlotType();
 
             /* Core ID */

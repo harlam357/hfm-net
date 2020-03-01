@@ -29,13 +29,17 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
+        public const string DefaultFoldingID = "Unknown";
+        public const int DefaultTeam = 0;
+        public const string DefaultCoreID = "Unknown";
+
         #region Constructor
 
         public WorkUnit()
         {
             UnitRetrievalTime = DateTime.MinValue;
-            FoldingID = Constants.DefaultFoldingID;
-            Team = Constants.DefaultTeam;
+            FoldingID = DefaultFoldingID;
+            Team = DefaultTeam;
             SlotType = SlotType.Unknown;
             DownloadTime = DateTime.MinValue;
             DueTime = DateTime.MinValue;
@@ -45,7 +49,7 @@ namespace HFM.Core.WorkUnits
             ProteinName = String.Empty;
             ProteinTag = String.Empty;
             UnitResult = WorkUnitResult.Unknown;
-            CoreID = Constants.DefaultCoreID;
+            CoreID = DefaultCoreID;
             QueueIndex = -1;
             OwningSlotId = -1;
         }

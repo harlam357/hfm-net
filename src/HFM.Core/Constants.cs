@@ -21,11 +21,6 @@ namespace HFM.Core
 {
    public static class Constants
    {
-      // Folding ID and Team Defaults
-      public const string DefaultFoldingID = "Unknown";
-      public const int DefaultTeam = 0;
-      public const string DefaultCoreID = "Unknown";
-
       // Log Filename Constants
       public const string FahClientLogFileName = "log.txt";
 

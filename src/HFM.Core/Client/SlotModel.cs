@@ -321,7 +321,7 @@ namespace HFM.Core.Client
             get
             {
                 // if these are the default assigned values, don't check the prefs and just return true
-                if (WorkUnit.FoldingID == Constants.DefaultFoldingID && WorkUnit.Team == Constants.DefaultTeam)
+                if (WorkUnit.FoldingID == WorkUnit.DefaultFoldingID && WorkUnit.Team == WorkUnit.DefaultTeam)
                 {
                     return true;
                 }
