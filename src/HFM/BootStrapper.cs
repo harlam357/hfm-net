@@ -26,14 +26,12 @@ using System.Linq;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
 using Castle.Windsor;
 
 using harlam357.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Data;
-using HFM.Core.ScheduledTasks;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms;
 using HFM.Forms.Models;
@@ -181,7 +179,7 @@ namespace HFM
                     ShowStartupError(ex);
                     return false;
                 }
-                logger.InfoFormat("Running on Mono v{0}...", monoVersion);
+                logger.Info($"Running on Mono v{monoVersion}...");
             }
             else
             {
@@ -262,7 +260,7 @@ namespace HFM
                         }
                         catch (Exception ex)
                         {
-                            logger.WarnFormat(ex, Properties.Resources.CacheFileDeleteFailed, fi.Name);
+                            logger.Warn(String.Format(Properties.Resources.CacheFileDeleteFailed, fi.Name), ex);
                         }
                     }
                 }
@@ -332,7 +330,7 @@ namespace HFM
                 {
                     string filePath = Path.GetFullPath(Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(Path.Combine("SQLite", platform), String.Concat(sqliteDll, ".dll"))));
                     var logger = container.Resolve<ILogger>();
-                    logger.InfoFormat("SQLite DLL Path: {0}", filePath);
+                    logger.Info($"SQLite DLL Path: {filePath}");
                     if (File.Exists(filePath))
                     {
                         return System.Reflection.Assembly.LoadFile(filePath);

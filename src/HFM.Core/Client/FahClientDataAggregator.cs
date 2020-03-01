@@ -23,9 +23,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-using Castle.Core.Logging;
-
 using HFM.Client.DataTypes;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 
@@ -72,7 +71,7 @@ namespace HFM.Core.Client
             {
                 foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
                 {
-                    Logger.DebugFormat(Logging.Logger.NameFormat, ClientName, $"Failed to parse log line: {s}");
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, $"Failed to parse log line: {s}"));
                 }
             }
 
@@ -213,7 +212,7 @@ namespace HFM.Core.Client
                 if (unitRun == null)
                 {
                     string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
-                    Logger.DebugFormat(Logging.Logger.NameFormat, ClientName, message);
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, message));
                 }
 
                 WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);

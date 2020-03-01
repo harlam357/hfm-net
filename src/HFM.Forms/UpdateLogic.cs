@@ -17,20 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+
 using System;
 using System.Globalization;
 using System.Net;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Forms
 {
-   public interface IUpdateLogic
+    public interface IUpdateLogic
    {
       IMainView Owner { get; set; }
    
@@ -141,7 +141,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.Error(ex.Message, ex);
             if (_userInvoked)
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
@@ -165,7 +165,7 @@ namespace HFM.Forms
          }
          catch (FormatException ex)
          {
-            Logger.WarnFormat(ex, "{0}", ex.Message);
+            Logger.Warn(ex.Message, ex);
             return false;
          }
       }
@@ -186,7 +186,7 @@ namespace HFM.Forms
 
       private void ExceptionLogger(Exception ex)
       {
-         Logger.ErrorFormat(ex, "{0}", ex.Message);
+         Logger.Error(ex.Message, ex);
       }
 
       private void HandleUpdatePresenterResults(UpdatePresenter presenter)

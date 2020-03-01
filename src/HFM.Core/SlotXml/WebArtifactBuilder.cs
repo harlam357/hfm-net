@@ -22,9 +22,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Castle.Core.Logging;
-
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Core.SlotXml

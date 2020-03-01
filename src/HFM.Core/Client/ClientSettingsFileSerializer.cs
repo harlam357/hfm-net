@@ -24,12 +24,11 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Xml;
 
-using Castle.Core.Logging;
-
 using harlam357.Core.Security;
 using harlam357.Core.Security.Cryptography;
 
 using HFM.Core.DataTypes;
+using HFM.Core.Logging;
 using HFM.Core.Serializers;
 
 namespace HFM.Core.Client
@@ -104,7 +103,7 @@ namespace HFM.Core.Client
             }
             catch (CryptographicException)
             {
-               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to encrypt password... saving clear value.");
+               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to encrypt password... saving clear value."));
             }
          }
       }
@@ -122,11 +121,11 @@ namespace HFM.Core.Client
             }
             catch (FormatException)
             {
-               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
             }
             catch (CryptographicException)
             {
-               Logger.WarnFormat(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value.");
+               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
             }
          }
       }

@@ -27,14 +27,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Client;
 using HFM.Client.DataTypes;
-using HFM.Core;
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -147,7 +145,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _logger.Error(ex.Message, ex);
             }
          }
 

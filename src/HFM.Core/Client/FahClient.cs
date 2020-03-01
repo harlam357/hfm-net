@@ -170,7 +170,7 @@ namespace HFM.Core.Client
         {
             if (AbortFlag) return;
 
-            Logger.DebugFormat(Logging.Logger.NameFormat, Settings.Name, e.JsonMessage.GetHeader());
+            Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, e.JsonMessage.GetHeader()));
 
             _messages.Add(e);
             if (e.DataType == typeof(SlotCollection))
@@ -223,7 +223,7 @@ namespace HFM.Core.Client
             }
             catch (Exception ex)
             {
-                Logger.WarnFormat(ex, "Failed to write to {0}", fahLogPath);
+                Logger.Warn($"Failed to write to {fahLogPath}", ex);
             }
         }
 
@@ -324,7 +324,7 @@ namespace HFM.Core.Client
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, Logging.Logger.NameFormat, Settings.Name, ex.Message);
+                    Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
                 }
                 return;
             }
@@ -336,7 +336,7 @@ namespace HFM.Core.Client
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, Logging.Logger.NameFormat, Settings.Name, ex.Message);
+                Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
             }
             finally
             {
@@ -419,7 +419,7 @@ namespace HFM.Core.Client
                        Prefs.Get<BonusCalculation>(Preference.BonusCalculation));
 
                     string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-                    Logger.InfoFormat(Logging.Logger.NameFormat, slotModel.Name, statusMessage);
+                    Logger.Info(String.Format(Logging.Logger.NameFormat, slotModel.Name, statusMessage));
                 }
             }
             finally
@@ -428,7 +428,7 @@ namespace HFM.Core.Client
             }
 
             string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
-            Logger.InfoFormat(Logging.Logger.NameFormat, Settings.Name, message);
+            Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
         private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)

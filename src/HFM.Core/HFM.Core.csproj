@@ -84,6 +84,9 @@
     <Compile Include="Client\StringBuilderReader.cs" />
     <Compile Include="EocUrl.cs" />
     <Compile Include="FahUrl.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggerBase.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />

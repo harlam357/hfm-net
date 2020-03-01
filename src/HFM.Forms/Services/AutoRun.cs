@@ -18,11 +18,10 @@
  */
 
 using System;
+
 using Microsoft.Win32;
 
-using Castle.Core.Logging;
-
-using HFM.Core;
+using HFM.Core.Logging;
 
 namespace HFM.Forms
 {
@@ -79,7 +78,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+             _logger.Error(ex.Message, ex);
          }
          
          return false;

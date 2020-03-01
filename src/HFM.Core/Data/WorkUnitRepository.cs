@@ -26,9 +26,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 
-using Castle.Core.Logging;
-
 using HFM.Core.Internal;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
@@ -130,7 +129,7 @@ namespace HFM.Core.Data
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
 
                 Connected = false;
             }
@@ -154,7 +153,7 @@ namespace HFM.Core.Data
                 CreateTable(WorkUnitRepositoryTable.Version);
             }
             int dbVersion = Application.ParseVersion(dbVersionString);
-            Logger.InfoFormat("WU History database v{0}", dbVersionString);
+            Logger.Info($"WU History database v{dbVersionString}");
 
             UpgradeToVersion092(dbVersion);
         }
@@ -171,7 +170,7 @@ namespace HFM.Core.Data
                     {
                         try
                         {
-                            Logger.InfoFormat("Performing WU History database upgrade to v{0}...", upgradeVersionString);
+                            Logger.Info($"Performing WU History database upgrade to v{upgradeVersionString}...");
                             // delete duplicates
                             var duplicateDeleter = new DuplicateDeleter(connection, Logger);
                             duplicateDeleter.ExecuteAsyncWithProgress(true).Wait();
@@ -224,7 +223,7 @@ namespace HFM.Core.Data
         {
             Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
-            Logger.InfoFormat("Setting database version to: v{0}", version);
+            Logger.Info($"Setting database version to: v{version}");
             using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
             {
                 var param = new SQLiteParameter("Version", DbType.String) { Value = version };
@@ -329,7 +328,7 @@ namespace HFM.Core.Data
             }
             finally
             {
-                Logger.DebugFormat("Database Fetch ({0}) completed in {1}", query, sw.GetExecTime());
+                Logger.Debug($"Database Fetch ({query}) completed in {sw.GetExecTime()}");
             }
         }
 
@@ -359,7 +358,7 @@ namespace HFM.Core.Data
             }
             finally
             {
-                Logger.DebugFormat("Database Page Fetch ({0}) completed in {1}", query, sw.GetExecTime());
+                Logger.Debug($"Database Page Fetch ({query}) completed in {sw.GetExecTime()}");
             }
         }
 

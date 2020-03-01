@@ -28,12 +28,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
@@ -722,7 +721,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.WarnFormat(ex, "{0}", ex.Message);
+                    Logger.Warn(ex.Message, ex);
                     MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message),
                        Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -752,7 +751,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
             }
         }
@@ -765,7 +764,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
             }
         }
@@ -778,7 +777,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
             }
         }
@@ -867,7 +866,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 ShowConnectionFailedMessage(ex.Message);
             }
             finally
@@ -939,7 +938,7 @@ namespace HFM.Forms
             }
             catch (InvalidOperationException ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
                    Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -6,8 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Castle.Core.Logging;
-
+using HFM.Core.Logging;
 using HFM.Core.ScheduledTasks;
 using HFM.Core.SlotXml;
 using HFM.Preferences;

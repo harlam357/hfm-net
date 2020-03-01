@@ -19,7 +19,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-using Castle.Core.Logging;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
@@ -28,7 +27,7 @@ using Castle.Windsor;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
-using HFM.Core.Net;
+using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 
@@ -52,8 +51,8 @@ namespace HFM.Core.Configuration
             // ILogger - Singleton
             container.Register(
                Component.For<ILogger>()
-                  .ImplementedBy<Logging.Logger>()
-                  .UsingFactoryMethod(() => new Logging.Logger(ApplicationDataFolderPath)));
+                  .ImplementedBy<Logger>()
+                  .UsingFactoryMethod(() => new Logger(ApplicationDataFolderPath)));
 
             // IPreferenceSet - Singleton
             container.Register(
@@ -62,7 +61,7 @@ namespace HFM.Core.Configuration
                   .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
                   .OnCreate((kernel, instance) =>
                   {
-                      var logger = (LevelFilteredLogger)kernel.Resolve<ILogger>();
+                      var logger = (LoggerBase)kernel.Resolve<ILogger>();
                       instance.PreferenceChanged += (s, e) =>
                       {
                           if (e.Preference == Preferences.Preference.MessageLevel)
@@ -71,7 +70,7 @@ namespace HFM.Core.Configuration
                               if (newLevel != logger.Level)
                               {
                                   logger.Level = newLevel;
-                                  logger.InfoFormat("Debug Message Level Changed: {0}", newLevel);
+                                  logger.Info($"Debug Message Level Changed: {newLevel}");
                               }
                           }
                       };

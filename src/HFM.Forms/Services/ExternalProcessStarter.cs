@@ -22,9 +22,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -208,7 +208,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+             _logger.Error(ex.Message, ex);
             return errorMessage;
          }
       }

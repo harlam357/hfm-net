@@ -27,10 +27,10 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 
 using HFM.Core.Data;
+using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Preferences;
 
@@ -407,7 +407,7 @@ namespace HFM.Forms
             presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
 
             var logger = presenter.Logger;
-            logger.Expect(x => x.ErrorFormat((Exception)null, "", new object[0])).IgnoreArguments();
+            logger.Expect(x => x.Error("", null)).IgnoreArguments();
             presenter.MessageBoxView.Expect(x => x.ShowError(null, null, null)).IgnoreArguments();
             // Act
             presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });

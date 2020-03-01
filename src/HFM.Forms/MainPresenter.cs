@@ -33,8 +33,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
@@ -42,6 +40,7 @@ using harlam357.Windows.Forms;
 using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.DataTypes;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Log;
@@ -104,24 +103,24 @@ namespace HFM.Forms
             _gridModel = mainGridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
             {
-               // run asynchronously so binding operation can finish
-               _view.BeginInvoke(new Action(() =>
-               {
-                  DisplaySelectedSlotData();
-                  _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
-               }), null);
+                // run asynchronously so binding operation can finish
+                _view.BeginInvoke(new Action(() =>
+                {
+                    DisplaySelectedSlotData();
+                    _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
+                }), null);
             };
             _gridModel.SelectedSlotChanged += (sender, e) =>
             {
-               if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
-               {
-                  // run asynchronously so binding operation can finish
-                  _view.BeginInvoke(new Action(() =>
-                  {
-                     _view.DataGridView.Rows[e.Index].Selected = true;
-                     DisplaySelectedSlotData();
-                  }), null);
-               }
+                if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
+                {
+                    // run asynchronously so binding operation can finish
+                    _view.BeginInvoke(new Action(() =>
+                    {
+                        _view.DataGridView.Rows[e.Index].Selected = true;
+                        DisplaySelectedSlotData();
+                    }), null);
+                }
             };
             _userStatsDataModel = userStatsDataModel;
 
@@ -377,14 +376,14 @@ namespace HFM.Forms
         {
             if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
             {
-                Logger.InfoFormat("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
+                Logger.Info($"Firing update file '{_updateLogic.UpdateFilePath}'...");
                 try
                 {
                     Process.Start(_updateLogic.UpdateFilePath);
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     string message = String.Format(CultureInfo.CurrentCulture,
                                                    "Update process failed to start with the following error:{0}{0}{1}",
                                                    Environment.NewLine, ex.Message);
@@ -444,7 +443,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _view.LogFileViewer.SetNoLogLines();
                 }
             }
@@ -485,7 +484,7 @@ namespace HFM.Forms
                     {
                         // even though i've checked the count above, it could have changed in between then
                         // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                        Logger.WarnFormat(ex, Core.Logging.Logger.NameFormat, instance.Name, ex.Message);
+                        Logger.Warn(String.Format(Core.Logging.Logger.NameFormat, instance.Name, ex.Message), ex);
                     }
 
                     // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
@@ -641,7 +640,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                    "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
@@ -676,7 +675,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                        "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
                 }
@@ -703,7 +702,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                        "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
                 }
@@ -800,7 +799,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                 }
             }
@@ -835,7 +834,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                 }
             }

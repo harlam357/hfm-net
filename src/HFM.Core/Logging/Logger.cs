@@ -25,17 +25,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using Castle.Core.Logging;
-
 namespace HFM.Core.Logging
 {
     [ExcludeFromCodeCoverage]
-    public class Logger : LevelFilteredLogger
+    public class Logger : LoggerBase
     {
         public const string NameFormat = "({0}) {1}";
 
         public Logger(string path)
-           : base("Default")
         {
             try
             {
@@ -52,14 +49,9 @@ namespace HFM.Core.Logging
             Level = LoggerLevel.Info;
         }
 
-        public override ILogger CreateChildLogger(string loggerName)
-        {
-            throw new NotImplementedException();
-        }
-
         private static readonly object LogLock = new object();
 
-        protected override void Log(LoggerLevel loggerLevel, string loggerName, string message, Exception exception)
+        protected override void Log(LoggerLevel loggerLevel, string message, Exception exception)
         {
             if (loggerLevel <= Level)
             {
@@ -105,7 +97,7 @@ namespace HFM.Core.Logging
             }
 
             DateTime dateTime = DateTime.Now;
-            return String.Format("[{0}-{1}] {2} {3}", dateTime.ToShortDateString(), dateTime.ToLongTimeString(), messageIdentifier, message);
+            return $"[{dateTime.ToShortDateString()}-{dateTime.ToLongTimeString()}] {messageIdentifier} {message}";
         }
 
         #region Text Message Event
@@ -152,16 +144,11 @@ namespace HFM.Core.Logging
     [ExcludeFromCodeCoverage]
     public class TextMessageEventArgs : EventArgs
     {
-        private readonly ICollection<string> _messages;
-
-        public ICollection<string> Messages
-        {
-            get { return _messages; }
-        }
+        public ICollection<string> Messages { get; }
 
         public TextMessageEventArgs(ICollection<string> messages)
         {
-            _messages = messages;
+            Messages = messages;
         }
     }
 }

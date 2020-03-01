@@ -22,10 +22,8 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using Castle.Core.Logging;
-
 using HFM.Core.DataTypes;
-using HFM.Core.ScheduledTasks;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Core.Client

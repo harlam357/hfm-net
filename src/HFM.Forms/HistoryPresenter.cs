@@ -24,11 +24,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Core.Data;
+using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Models;
 using HFM.Preferences;
@@ -128,7 +127,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     MessageBoxView.ShowError(HistoryView, String.Format(CultureInfo.CurrentCulture,
                        "The history data export failed.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
                 }

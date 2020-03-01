@@ -24,12 +24,12 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
 using harlam357.Windows.Forms;
 using ZedGraph;
 
 using HFM.Core;
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Preferences;
@@ -152,7 +152,7 @@ namespace HFM.Forms
             Protein protein = _proteinService.Get(projectID);
             if (protein == null)
             {
-                Logger.WarnFormat("Could not find Project {0}.", projectID);
+                Logger.Warn($"Could not find Project {projectID}.");
             }
 
             var projectInfoLines = new List<string>();

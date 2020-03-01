@@ -21,9 +21,8 @@ using System;
 using System.Globalization;
 using System.Text;
 
-using Castle.Core.Logging;
-
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
@@ -361,23 +360,23 @@ namespace HFM.Core.WorkUnits
 
             if (ProteinIsUnknown(CurrentProtein))
             {
-                logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Protein is unknown... 0 PPD.");
+                logger.Debug(String.Format(Logger.NameFormat, slotName, "Protein is unknown... 0 PPD."));
                 return;
             }
 
             switch (bonusCalculation)
             {
                 case BonusCalculation.DownloadTime:
-                    logger.DebugFormat(Logging.Logger.NameFormat, slotName,
+                    logger.Debug(String.Format(Logger.NameFormat, slotName,
                         status == SlotStatus.RunningNoFrameTimes
                             ? "Calculate Bonus PPD by Frame Time."
-                            : "Calculate Bonus PPD by Download Time.");
+                            : "Calculate Bonus PPD by Download Time."));
                     break;
                 case BonusCalculation.FrameTime:
-                    logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Calculate Bonus PPD by Frame Time.");
+                    logger.Debug(String.Format(Logger.NameFormat, slotName, "Calculate Bonus PPD by Frame Time."));
                     break;
                 default:
-                    logger.DebugFormat(Logging.Logger.NameFormat, slotName, "Calculate Standard PPD.");
+                    logger.Debug(String.Format(Logger.NameFormat, slotName, "Calculate Standard PPD."));
                     break;
             }
 

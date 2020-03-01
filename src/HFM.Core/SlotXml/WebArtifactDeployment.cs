@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-using Castle.Core.Logging;
-
+using HFM.Core.Logging;
 using HFM.Core.Net;
 using HFM.Core.Services;
 using HFM.Preferences;

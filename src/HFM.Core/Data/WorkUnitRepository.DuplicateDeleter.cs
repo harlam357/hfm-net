@@ -5,10 +5,10 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.Threading.Tasks;
 
-using Castle.Core.Logging;
-
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
+
+using HFM.Core.Logging;
 
 namespace HFM.Core.Data
 {
@@ -57,7 +57,7 @@ namespace HFM.Core.Data
                         }
                         if (result != 0)
                         {
-                            _logger.DebugFormat("Deleted rows: {0}", result);
+                            _logger.Debug($"Deleted rows: {result}");
                             totalCount += result;
                         }
                         count++;
@@ -74,7 +74,7 @@ namespace HFM.Core.Data
 
                 if (totalCount != 0)
                 {
-                    _logger.InfoFormat("Total number of duplicate WU History entries deleted: {0}", totalCount);
+                    _logger.Info($"Total number of duplicate WU History entries deleted: {totalCount}");
                 }
             }
         }

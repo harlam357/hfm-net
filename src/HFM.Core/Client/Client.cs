@@ -20,13 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
-
-using Castle.Core.Logging;
 
 using HFM.Core.Data;
 using HFM.Core.DataTypes;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -186,7 +184,7 @@ namespace HFM.Core.Client
             }
             catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.Error(ex.Message, ex);
             }
          }
       }

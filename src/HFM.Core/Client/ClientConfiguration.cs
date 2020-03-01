@@ -23,10 +23,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-using Castle.Core.Logging;
-
 using HFM.Core.DataTypes;
-using HFM.Core.ScheduledTasks;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Core.Client

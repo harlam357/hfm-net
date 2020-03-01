@@ -21,8 +21,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-using Castle.Core.Logging;
-
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 

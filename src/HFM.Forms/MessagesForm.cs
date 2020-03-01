@@ -21,8 +21,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using HFM.Core.Logging;
 using HFM.Forms.Controls;
 using HFM.Preferences;
