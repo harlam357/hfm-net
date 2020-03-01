@@ -213,9 +213,8 @@ namespace HFM.Core.Client
                 var unitRun = GetUnitRun(slotRun, unit.Id, projectInfo);
                 if (unitRun == null)
                 {
-                    string message = String.Format(CultureInfo.CurrentCulture,
-                       "Could not find log section for Slot {0} {1}. Cannot update log data for this unit.", slotId, projectInfo);
-                    Logger.WarnFormat(Constants.ClientNameFormat, ClientName, message);
+                    string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
+                    Logger.DebugFormat(Constants.ClientNameFormat, ClientName, message);
                 }
 
                 WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);
