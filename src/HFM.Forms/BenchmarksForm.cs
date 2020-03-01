@@ -182,7 +182,8 @@ namespace HFM.Forms
                     workUnitModel = slotModel.WorkUnitModel;
                     status = slotModel.Status;
                 }
-                PopulateBenchmarkInformation(protein, benchmark, workUnitModel, status, _prefs.GetPpdFormatString(), benchmarkInfoLines);
+                string numberFormat = NumberFormat.Get(_prefs.Get<int>(Preference.DecimalPlaces));
+                PopulateBenchmarkInformation(protein, benchmark, workUnitModel, status, numberFormat, benchmarkInfoLines);
             }
 
             UpdateBenchmarkText(benchmarkInfoLines);
@@ -281,7 +282,7 @@ namespace HFM.Forms
             return (ZedGraphControl)tabControl1.TabPages["tabGraphPPD" + index].Controls["zgPpd" + index];
         }
 
-        private void PopulateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, WorkUnitModel workUnitModel, SlotStatus status, string ppdFormatString, ICollection<string> lines)
+        private void PopulateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, WorkUnitModel workUnitModel, SlotStatus status, string numberFormat, ICollection<string> lines)
         {
             if (protein == null)
             {
@@ -296,20 +297,20 @@ namespace HFM.Forms
             lines.Add(String.Format(" Path: {0}", benchmark.OwningClientPath));
             lines.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             lines.Add(String.Empty);
-            lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+            lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein, calculateBonusEnabled)));
-            lines.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+            lines.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled)));
 
             if (workUnitModel != null)
             {
-                lines.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                lines.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                    workUnitModel.GetFrameTime(PPDCalculation.LastFrame), workUnitModel.GetPPD(status, PPDCalculation.LastFrame, calculateBonus)));
-                lines.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                lines.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                    workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames), workUnitModel.GetPPD(status, PPDCalculation.LastThreeFrames, calculateBonus)));
-                lines.Add(String.Format(" All  Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                lines.Add(String.Format(" All  Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                    workUnitModel.GetFrameTime(PPDCalculation.AllFrames), workUnitModel.GetPPD(status, PPDCalculation.AllFrames, calculateBonus)));
-                lines.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + ppdFormatString + "} PPD",
+                lines.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
                    workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate), workUnitModel.GetPPD(status, PPDCalculation.EffectiveRate, calculateBonus)));
             }
 

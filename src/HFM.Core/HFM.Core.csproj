@@ -81,6 +81,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Client\NumberFormat.cs" />
     <Compile Include="Client\StringBuilderReader.cs" />
     <Compile Include="EocUrl.cs" />
     <Compile Include="FahUrl.cs" />
@@ -165,7 +166,6 @@
     <Compile Include="Client\SlotModelSortComparer.cs" />
     <Compile Include="Data\WorkUnitRepository.cs" />
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
-    <Compile Include="PreferencesExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />

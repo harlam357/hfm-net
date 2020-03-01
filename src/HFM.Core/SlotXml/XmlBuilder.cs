@@ -49,7 +49,7 @@ namespace HFM.Core.SlotXml
         {
             var slotSummary = new SlotSummary();
             slotSummary.HfmVersion = Application.VersionWithRevision;
-            slotSummary.NumberFormat = Preferences.GetPpdFormatString();
+            slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
             slotSummary.UpdateDateTime = updateDateTime;
             slotSummary.SlotTotals = SlotTotals.Create(slots);
             slotSummary.Slots = SortSlots(slots).Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
@@ -96,7 +96,7 @@ namespace HFM.Core.SlotXml
         {
             var slotDetail = new SlotDetail();
             slotDetail.HfmVersion = Application.VersionWithRevision;
-            slotDetail.NumberFormat = Preferences.GetPpdFormatString();
+            slotDetail.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
             slotDetail.UpdateDateTime = updateDateTime;
             slotDetail.LogFileAvailable = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
             slotDetail.LogFileName = slot.Settings.ClientLogFileName;
