@@ -155,7 +155,6 @@
     <Compile Include="Data\WorkUnitQuery.cs" />
     <Compile Include="WorkUnits\WorkUnit.cs" />
     <Compile Include="Services\EocStatsData.cs" />
-    <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Services\FtpService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

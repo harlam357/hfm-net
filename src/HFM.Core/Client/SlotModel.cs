@@ -30,6 +30,19 @@ using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
+    // TODO: TimeFormatting should be a function of SlotModel, not view grid painting
+    public enum TimeFormatting
+    {
+        None,
+        Format1
+    }
+
+    public enum UnitTotalsType
+    {
+        All,
+        ClientStart
+    }
+
     public class SlotModel
     {
         #region IPreferenceSet

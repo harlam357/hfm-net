@@ -53,6 +53,12 @@ namespace HFM.Forms
         void Show();
     }
 
+    public enum GraphLayoutType
+    {
+        Single,
+        ClientsPerGraph
+    }
+
     public partial class BenchmarksForm : FormWrapper, IBenchmarksView
     {
         #region Properties
