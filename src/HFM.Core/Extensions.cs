@@ -27,12 +27,12 @@ namespace HFM.Core
 {
     public static class Extensions
     {
-        public static bool IsKnown(this DateTime dateTime)
+        internal static bool IsKnown(this DateTime dateTime)
         {
             return !IsUnknown(dateTime);
         }
 
-        public static bool IsUnknown(this DateTime dateTime)
+        internal static bool IsUnknown(this DateTime dateTime)
         {
             return dateTime.Equals(DateTime.MinValue);
         }
@@ -52,7 +52,5 @@ namespace HFM.Core
         {
             return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
         }
-
-        
     }
 }

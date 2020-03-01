@@ -131,15 +131,7 @@ namespace HFM.Forms.Controls
                 NextAttemptTextBox.Text = info.NextAttempt.ToString();
                 var protein = _proteinService.Get(info.ProjectID);
                 txtCredit.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                if (info.AssignedDateTimeUtc.IsUnknown())
-                {
-                    txtBeginDate.Text = "(Unknown)";
-                }
-                else
-                {
-                    var localTime = info.AssignedDateTimeUtc.ToLocalTime();
-                    txtBeginDate.Text = $"{localTime.ToShortDateString()} {localTime.ToShortTimeString()}";
-                }
+                txtBeginDate.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
                 txtServer.Text = info.WorkServer;
                 txtCpuType.Text = info.CPU;
                 txtOsType.Text = info.OperatingSystem;
@@ -156,6 +148,17 @@ namespace HFM.Forms.Controls
 
                 OnQueueIndexChanged(new QueueIndexChangedEventArgs(-1));
             }
+        }
+
+        private static string FormatAssignedDateTimeUtc(DateTime value)
+        {
+            if (value == DateTime.MinValue)
+            {
+                return "(Unknown)";
+            }
+
+            var localTime = value.ToLocalTime();
+            return $"{localTime.ToShortDateString()} {localTime.ToShortTimeString()}";
         }
 
         private void SetControlsVisible(bool visible)
