@@ -361,8 +361,8 @@ namespace HFM.Core.Client
         // a ClientScheduledTasks that does not respond to preference or configuration changed events
         private class ClientScheduledTasksWithoutEvents : ClientScheduledTasks
         {
-            public ClientScheduledTasksWithoutEvents(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
-                : base(logger, prefs, clientConfiguration)
+            public ClientScheduledTasksWithoutEvents(ILogger logger, IPreferenceSet preferences, ClientConfiguration clientConfiguration)
+                : base(logger, preferences, clientConfiguration)
             {
                 
             }

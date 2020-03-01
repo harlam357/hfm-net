@@ -106,6 +106,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Client\ClientFactoryTests.cs" />
     <Compile Include="Client\SlotModelTests.cs" />
     <Compile Include="Configuration\AutoMapperProfileTests.cs" />
@@ -121,7 +122,7 @@
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
-    <Compile Include="SlotXml\MarkupGeneratorTests.cs" />
+    <Compile Include="SlotXml\WebArtifactTests.cs" />
     <Compile Include="SetUpFixture.cs" />
     <Compile Include="Internal\FileSystemTests.cs" />
     <Compile Include="ApplicationTests.cs" />

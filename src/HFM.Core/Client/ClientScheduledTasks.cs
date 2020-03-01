@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace HFM.Core.Client
         Serial
     }
 
-    public delegate ClientScheduledTasks ClientScheduledTasksFactory(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration);
+    public delegate ClientScheduledTasks ClientScheduledTasksFactory(ILogger logger, IPreferenceSet preferences, ClientConfiguration clientConfiguration);
 
     public class ClientScheduledTasks
     {
@@ -35,10 +36,10 @@ namespace HFM.Core.Client
 
         public static ClientScheduledTasksFactory Factory => (l, p, c) => new ClientScheduledTasks(l, p, c);
 
-        public ClientScheduledTasks(ILogger logger, IPreferenceSet prefs, ClientConfiguration clientConfiguration)
+        public ClientScheduledTasks(ILogger logger, IPreferenceSet preferences, ClientConfiguration clientConfiguration)
         {
             Logger = logger ?? NullLogger.Instance;
-            Preferences = prefs;
+            Preferences = preferences;
             ClientConfiguration = clientConfiguration;
 
             Preferences.PreferenceChanged += OnPreferenceChanged;
@@ -210,12 +211,37 @@ namespace HFM.Core.Client
         private void WebGenerationAction(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
-            var markupGenerator = new MarkupGenerator(Preferences);
-            markupGenerator.Generate(slots);
+            string artifactPath = null;
+            try
+            {
+                var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
+                var artifactBuilder = new WebArtifactBuilder(Logger, Preferences);
+                artifactPath = artifactBuilder.Build(slots);
 
-            ct.ThrowIfCancellationRequested();
-            new WebsiteDeployer(Preferences).DeployWebsite(markupGenerator.HtmlFilePaths, markupGenerator.XmlFilePaths, slots);
+                ct.ThrowIfCancellationRequested();
+                var deploymentType = Preferences.Get<WebDeploymentType>(Preference.WebDeploymentType);
+                var deployment = WebArtifactDeployment.Create(deploymentType, Logger, Preferences);
+                deployment.Deploy(artifactPath);
+            }
+            finally
+            {
+                TryDeleteDirectory(artifactPath);
+            }
+        }
+
+        private static void TryDeleteDirectory(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
         }
 
         public static bool ValidateInterval(int interval)

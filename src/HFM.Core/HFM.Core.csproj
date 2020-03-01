@@ -85,6 +85,9 @@
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />
+    <Compile Include="SlotXml\HtmlBuilder.cs" />
+    <Compile Include="SlotXml\WebArtifactDeployment.cs" />
+    <Compile Include="SlotXml\XmlBuilder.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
     <Compile Include="Client\SlotIdentifier.cs" />
     <Compile Include="SlotXml\LogLine.cs" />
@@ -120,7 +123,7 @@
     <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
     <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
-    <Compile Include="SlotXml\MarkupGenerator.cs" />
+    <Compile Include="SlotXml\WebArtifactBuilder.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="Client\SlotTotals.cs" />
@@ -161,7 +164,6 @@
     <Compile Include="PreferenceSetExtensions.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
     <Compile Include="Validate.cs" />
-    <Compile Include="SlotXml\WebsiteDeployer.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />
     <Compile Include="Net\WebOperation.cs" />
     <Compile Include="WorkUnits\WorkUnitResult.cs" />

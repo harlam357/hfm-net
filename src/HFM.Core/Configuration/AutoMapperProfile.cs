@@ -35,7 +35,7 @@ namespace HFM.Core.Configuration
         {
             CreateMap<SlotModel, SlotData>()
                .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(src.Status.GetStatusColor())))
-               .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(MarkupGenerator.GetHtmlFontColor(src.Status))))
+               .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(src.Status))))
                .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToDateString() : src.ETA.ToString()))
                .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToDateString()))
                .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToDateString()))

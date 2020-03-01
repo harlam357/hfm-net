@@ -7,5 +7,11 @@ namespace HFM.Preferences
         {
 
         }
+
+        public InMemoryPreferenceSet(string applicationPath, string applicationDataFolderPath, string applicationVersion) 
+            : base(applicationPath, applicationDataFolderPath, applicationVersion)
+        {
+
+        }
     }
 }
