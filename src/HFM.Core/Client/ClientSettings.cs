@@ -74,7 +74,9 @@ namespace HFM.Core.DataTypes
         [DataMember(Order = 5)]
         public string Password { get; set; }
 
-        public string ClientLogFileName => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Name, Constants.FahClientLogFileName);
+        private const string FahClientLogFileName = "log.txt";
+
+        public string ClientLogFileName => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Name, FahClientLogFileName);
 
         public string ClientPath => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Server, Port);
 

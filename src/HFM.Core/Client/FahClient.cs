@@ -143,6 +143,8 @@ namespace HFM.Core.Client
         private readonly FahLog _fahLog;
         private MessageReceiver _messages;
 
+        public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
+        
         public FahClient() : this(new TypedMessageConnection())
         {
 
@@ -175,7 +177,7 @@ namespace HFM.Core.Client
             {
                 foreach (var slot in _messages.SlotCollection)
                 {
-                    _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
+                    _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.Id));
                 }
             }
             else if (e.DataType == typeof(LogRestart) ||

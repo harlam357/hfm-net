@@ -34,6 +34,7 @@ using harlam357.Windows.Forms;
 using HFM.Client;
 using HFM.Client.DataTypes;
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -117,7 +118,7 @@ namespace HFM.Forms
             _slotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _slotCollection)
             {
-               _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
+               _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, FahClient.DefaultSlotOptions, slot.Id));
             }
             _settingsModel.RefreshSlots(_slotCollection);
          }

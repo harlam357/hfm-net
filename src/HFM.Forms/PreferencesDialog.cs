@@ -97,6 +97,8 @@ namespace HFM.Forms
 
         #endregion
 
+        private const int MaxDecimalPlaces = 5;
+
         #region Constructor And Binding/Load Methods
 
         public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
@@ -108,7 +110,7 @@ namespace HFM.Forms
             InitializeComponent();
 
             udDecimalPlaces.Minimum = 0;
-            udDecimalPlaces.Maximum = Constants.MaxDecimalPlaces;
+            udDecimalPlaces.Maximum = MaxDecimalPlaces;
 
             _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
             _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];

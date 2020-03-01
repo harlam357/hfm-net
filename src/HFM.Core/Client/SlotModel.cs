@@ -94,10 +94,12 @@ namespace HFM.Core.Client
             TimeOfLastFrameProgress = DateTime.MinValue;
         }
 
+        private const int DefaultMachineID = 0;
+        
         public void Initialize()
         {
             Arguments = String.Empty;
-            MachineId = Constants.DefaultMachineID;
+            MachineId = DefaultMachineID;
             // Status = 
             ClientVersion = String.Empty;
             TotalRunCompletedUnits = 0;

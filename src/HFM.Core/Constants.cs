@@ -19,25 +19,13 @@
 
 namespace HFM.Core
 {
-   public static class Constants
-   {
-      // Log Filename Constants
-      public const string FahClientLogFileName = "log.txt";
+    public static class Constants
+    {
+        /// <summary>
+        /// Conversion factor - minutes to milli-seconds
+        /// </summary>
+        public const int MinToMillisec = 60000;
 
-      /// <summary>
-      /// Conversion factor - minutes to milli-seconds
-      /// </summary>
-      public const int MinToMillisec = 60000;
-
-      public const int MaxDecimalPlaces = 5;
-
-      // Default ID Constants
-      public const int DefaultMachineID = 0;
-
-      public const int MaxDisplayableLogLines = 500;
-
-      public const string ClientNameFormat = "({0}) {1}";
-
-      public const string FahClientSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
-   }
+        public const string ClientNameFormat = "({0}) {1}";
+    }
 }
