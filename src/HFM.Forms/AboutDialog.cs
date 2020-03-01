@@ -59,7 +59,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(Constants.GitHubUrl);
+            Process.Start(Core.Application.GitHubUrl);
          }
          catch (Exception)
          {
@@ -72,7 +72,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(Constants.GoogleGroupUrl);
+            Process.Start(Core.Application.GoogleGroupUrl);
          }
          catch (Exception)
          {

@@ -349,7 +349,7 @@ namespace HFM
                Core.Application.NameAndVersionWithRevision,
                Environment.OSVersion.VersionString,
                message,
-               Constants.GoogleGroupUrl,
+               Core.Application.GoogleGroupUrl,
                mustTerminate);
         }
     }

@@ -82,6 +82,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Client\StringBuilderReader.cs" />
+    <Compile Include="EocUrl.cs" />
+    <Compile Include="FahUrl.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />

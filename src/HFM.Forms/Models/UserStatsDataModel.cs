@@ -78,9 +78,11 @@ namespace HFM.Forms.Models
             OnPropertyChanged(null);
         }
 
+        private const string NumberFormat = "{0:###,###,##0}";
+
         private static string BuildLabel(string labelName, object value)
         {
-            return String.Format(CultureInfo.CurrentCulture, String.Concat(labelName, ": ", Constants.EocStatsFormat), value);
+            return String.Format(CultureInfo.CurrentCulture, String.Concat(labelName, ": ", NumberFormat), value);
         }
 
         public string Rank => BuildLabel("Team", ShowTeamStats ? TeamRank : UserTeamRank);

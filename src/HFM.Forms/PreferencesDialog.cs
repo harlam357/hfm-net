@@ -746,7 +746,7 @@ namespace HFM.Forms
         {
             try
             {
-                Process.Start(String.Concat(Constants.EOCUserBaseUrl, txtEOCUserID.Text));
+                Process.Start(String.Concat(EocUrl.UserBaseUrl, txtEOCUserID.Text));
             }
             catch (Exception ex)
             {
@@ -759,7 +759,7 @@ namespace HFM.Forms
         {
             try
             {
-                Process.Start(String.Concat(Constants.StanfordBaseUrl, txtStanfordUserID.Text));
+                Process.Start(String.Concat(FahUrl.UserBaseUrl, txtStanfordUserID.Text));
             }
             catch (Exception ex)
             {
@@ -772,7 +772,7 @@ namespace HFM.Forms
         {
             try
             {
-                Process.Start(String.Concat(Constants.EOCTeamBaseUrl, txtStanfordTeamID.Text));
+                Process.Start(String.Concat(EocUrl.TeamBaseUrl, txtStanfordTeamID.Text));
             }
             catch (Exception ex)
             {

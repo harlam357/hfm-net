@@ -145,7 +145,7 @@ namespace HFM.Forms
       public string ShowHfmGitHub()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET GitHub Project.";
-         return RunProcess(Constants.GitHubUrl, null, errorMessage);
+         return RunProcess(Application.GitHubUrl, null, errorMessage);
       }
 
       /// <summary>
@@ -154,12 +154,12 @@ namespace HFM.Forms
       public string ShowHfmGoogleGroup()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Group.";
-         return RunProcess(Constants.GoogleGroupUrl, null, errorMessage);
+         return RunProcess(Application.GoogleGroupUrl, null, errorMessage);
       }
 
       private Uri EocUserUrl
       {
-         get { return new Uri(String.Concat(Constants.EOCUserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
+         get { return new Uri(String.Concat(EocUrl.UserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
       }
 
       /// <summary>
@@ -173,7 +173,7 @@ namespace HFM.Forms
 
       private Uri EocTeamUrl
       {
-         get { return new Uri(String.Concat(Constants.EOCTeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
+         get { return new Uri(String.Concat(EocUrl.TeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
       }
 
       /// <summary>
@@ -187,7 +187,7 @@ namespace HFM.Forms
 
       private Uri StanfordUserUrl
       {
-         get { return new Uri(String.Concat(Constants.StanfordBaseUrl, _prefs.Get<string>(Preference.StanfordId))); }
+         get { return new Uri(String.Concat(FahUrl.UserBaseUrl, _prefs.Get<string>(Preference.StanfordId))); }
       }
 
       /// <summary>
