@@ -167,7 +167,7 @@ namespace HFM.Proteins
         {
             // Arrange
             var client = new WebClient();
-            using (var stream = new MemoryStream(client.DownloadData(WebAddresses.ProjectSummaryJson)))
+            using (var stream = new MemoryStream(client.DownloadData(ProjectSummaryUrl.Json)))
             {
                 stream.Position = 0;
                 var deserializer = new ProjectSummaryJsonDeserializer();
@@ -183,7 +183,7 @@ namespace HFM.Proteins
         {
             // Arrange
             var client = new WebClient();
-            using (var stream = new MemoryStream(await client.DownloadDataTaskAsync(WebAddresses.ProjectSummaryJson)))
+            using (var stream = new MemoryStream(await client.DownloadDataTaskAsync(ProjectSummaryUrl.Json)))
             {
                 stream.Position = 0;
                 var deserializer = new ProjectSummaryJsonDeserializer();
