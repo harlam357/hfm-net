@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Proteins;
 
@@ -24,7 +25,7 @@ namespace HFM.Core.Data
             }
 
             var core = (string)args[0];
-            return String.IsNullOrEmpty(core) ? String.Empty : core.ToSlotType().ToString();
+            return String.IsNullOrEmpty(core) ? String.Empty : SlotTypeConvert.FromCoreName(core).ToString();
          }
       }
 

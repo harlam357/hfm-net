@@ -24,6 +24,7 @@ using System.Globalization;
 
 using HFM.Client.DataTypes;
 using HFM.Core;
+using HFM.Core.Client;
 using HFM.Core.DataTypes;
 using HFM.Core.Net;
 
@@ -147,7 +148,7 @@ namespace HFM.Forms.Models
             _slots.Add(new FahClientSettingsSlotModel
                        {
                           ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.Id), 
-                          SlotType = slot.SlotOptions.ToSlotType().ToString(),
+                          SlotType = SlotTypeConvert.FromSlotOptions(slot.SlotOptions).ToString(),
                           ClientType = slot.SlotOptions.FahClientTypeEnum.ToString(),
                           MaxPacketSize = slot.SlotOptions.MaxPacketSizeEnum.ToString()
                        });

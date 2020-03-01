@@ -446,10 +446,10 @@ namespace HFM.Core.Client
             workUnit.OwningSlotId = slotModel.SlotId;
             if (workUnit.SlotType == SlotType.Unknown)
             {
-                workUnit.SlotType = protein.Core.ToSlotType();
+                workUnit.SlotType = SlotTypeConvert.FromCoreName(protein.Core);
                 if (workUnit.SlotType == SlotType.Unknown)
                 {
-                    workUnit.SlotType = workUnit.CoreID.ToSlotType();
+                    workUnit.SlotType = SlotTypeConvert.FromCoreId(workUnit.CoreID);
                 }
             }
             

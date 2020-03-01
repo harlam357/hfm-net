@@ -352,7 +352,7 @@ namespace HFM.Core.Client
             /* FoldingID and Team from Queue Entry */
             workUnit.FoldingID = options.User ?? WorkUnit.DefaultFoldingID;
             workUnit.Team = options.Team ?? WorkUnit.DefaultTeam;
-            workUnit.SlotType = slotOptions.ToSlotType();
+            workUnit.SlotType = SlotTypeConvert.FromSlotOptions(slotOptions);
 
             /* Core ID */
             workUnit.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();

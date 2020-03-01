@@ -27,8 +27,6 @@ namespace HFM.Core
 {
     public static class Extensions
     {
-        #region DateTime/TimeSpan
-
         public static bool IsKnown(this DateTime dateTime)
         {
             return !IsUnknown(dateTime);
@@ -50,130 +48,11 @@ namespace HFM.Core
             return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
         }
 
-        #endregion
-
-        #region SlotName
-
         internal static string AppendSlotId(this string name, int slotId)
         {
             return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
         }
 
-        #endregion
-
-        #region SlotType
-
-        public static SlotType ToSlotType(this SlotOptions value)
-        {
-            return (SlotType)Enum.Parse(typeof(SlotType), value.GpuIndex.HasValue ? "GPU" : "CPU");
-        }
-
-        public static SlotType ToSlotType(this string value)
-        {
-            SlotType type = ToSlotTypeFromCoreName(value);
-            if (type == SlotType.Unknown)
-            {
-                type = ToSlotTypeFromCoreId(value);
-            }
-            return type;
-        }
-
-        /// <summary>
-        /// Determine the Client Type based on the FAH Core Name
-        /// </summary>
-        /// <param name="coreName">FAH Core Name (from psummary)</param>
-        private static SlotType ToSlotTypeFromCoreName(string coreName)
-        {
-            // make this method more forgiving - rwh 9/6/10
-            if (String.IsNullOrEmpty(coreName))
-            {
-                return SlotType.Unknown;
-            }
-
-            switch (coreName.ToUpperInvariant())
-            {
-                case "GROMACS":
-                case "DGROMACS":
-                case "GBGROMACS":
-                case "AMBER":
-                case "GROMACS33":
-                case "GROST":
-                case "GROSIMT":
-                case "DGROMACSB":
-                case "DGROMACSC":
-                case "GRO-A4":
-                case "GRO_A4":
-                case "PROTOMOL":
-                case "GRO-SMP":
-                case "GROCVS":
-                case "GRO-A3":
-                case "GRO_A3":
-                case "GRO-A5":
-                case "GRO_A5":
-                case "GRO-A6":
-                case "GRO_A7":
-                    return SlotType.CPU;
-                case "GROGPU2":
-                case "GROGPU2-MT":
-                case "OPENMM_21":
-                case "OPENMM_22":
-                case "OPENMMGPU":
-                case "OPENMM_OPENCL":
-                case "ATI-DEV":
-                case "NVIDIA-DEV":
-                case "ZETA":
-                case "ZETA_DEV":
-                    return SlotType.GPU;
-                default:
-                    return SlotType.Unknown;
-            }
-        }
-
-        /// <summary>
-        /// Determine the Client Type based on the FAH Core ID
-        /// </summary>
-        /// <param name="coreId">FAH Core ID</param>
-        private static SlotType ToSlotTypeFromCoreId(string coreId)
-        {
-            // make this method more forgiving - rwh 9/6/10
-            if (String.IsNullOrEmpty(coreId))
-            {
-                return SlotType.Unknown;
-            }
-
-            switch (coreId.ToUpperInvariant())
-            {
-                case "78": // Gromacs
-                case "79": // Double Gromacs
-                case "7A": // GB Gromacs
-                case "7B": // Double Gromacs B
-                case "7C": // Double Gromacs C
-                case "80": // Gromacs SREM
-                case "81": // Gromacs SIMT
-                case "82": // Amber
-                case "A0": // Gromacs 33
-                case "B4": // ProtoMol
-                case "A1": // Gromacs SMP
-                case "A2": // Gromacs SMP
-                case "A3": // Gromacs SMP2
-                case "A5": // Gromacs SMP2
-                case "A6": // Gromacs SMP2
-                case "A7":
-                    return SlotType.CPU;
-                case "11": // GPU2 - GROGPU2
-                case "12": // GPU2 - ATI-DEV
-                case "13": // GPU2 - NVIDIA-DEV
-                case "14": // GPU2 - GROGPU2-MT
-                case "15": // GPU3 - OPENMMGPU - NVIDIA
-                case "16": // GPU3 - OPENMMGPU - ATI
-                case "17": // GPU3 - ZETA
-                case "18": // GPU3 - ZETA_DEV
-                    return SlotType.GPU;
-                default:
-                    return SlotType.Unknown;
-            }
-        }
-
-        #endregion
+        
     }
 }
