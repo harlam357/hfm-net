@@ -316,8 +316,9 @@ namespace HFM.Core
 
         private static float ParseCoreVersion(string coreVer)
         {
-            float value;
-            if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+            if (coreVer is null) return 0.0f;
+
+            if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
             {
                 return value;
             }
