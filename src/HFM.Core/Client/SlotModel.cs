@@ -165,15 +165,12 @@ namespace HFM.Core.Client
         /// </summary>
         public int PercentComplete => ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public string Name => Settings.Name.AppendSlotId(SlotId);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ToClientIdentifier(), SlotId);
 
-        private int _slotId = -1;
+        public string Name => SlotIdentifier.Name;
 
-        public int SlotId
-        {
-            get => _slotId;
-            set => _slotId = value;
-        }
+        // TODO: Rename to SlotID
+        public int SlotId { get; set; } = SlotIdentifier.NoSlotID;
 
         public string SlotType
         {

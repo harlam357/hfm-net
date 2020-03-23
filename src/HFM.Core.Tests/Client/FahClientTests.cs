@@ -49,10 +49,10 @@ namespace HFM.Core.Client
             var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
             var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarks, WorkUnitRepository = repository };
 
+            var slotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner", "Path"), SlotIdentifier.NoSlotID);
+
             var workUnit = new WorkUnit();
-            workUnit.OwningClientName = "Owner";
-            workUnit.OwningClientPath = "Path";
-            workUnit.OwningSlotId = 0;
+            workUnit.SlotIdentifier = slotIdentifier;
             workUnit.ProjectID = 2669;
             workUnit.ProjectRun = 1;
             workUnit.ProjectClone = 2;
@@ -76,8 +76,6 @@ namespace HFM.Core.Client
             // Arrange
             repository.Stub(x => x.Connected).Return(true);
             repository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
-
-            var slotIdentifier = new SlotIdentifier("Owner", 0, "Path");
 
             // Assert (pre-condition)
             Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));

@@ -27,7 +27,6 @@ using System.Windows.Forms;
 using harlam357.Windows.Forms;
 using ZedGraph;
 
-using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -164,8 +163,9 @@ namespace HFM.Forms
             var projectInfoLines = new List<string>();
             PopulateProteinInformation(projectID, protein, projectInfoLines);
 
-            List<ProteinBenchmark> list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectID).ToList();
-            list.Sort((benchmark1, benchmark2) => benchmark1.OwningSlotName.CompareTo(benchmark2.OwningSlotName));
+            var list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectID)
+                .OrderBy(x => x.SlotIdentifier)
+                .ToList();
 
             var benchmarkInfoLines = new List<string>(projectInfoLines);
             foreach (ProteinBenchmark benchmark in list)
@@ -174,9 +174,9 @@ namespace HFM.Forms
                 SlotStatus status = SlotStatus.Unknown;
 
                 var slotModel = _clientConfiguration.Slots.FirstOrDefault(x =>
-                   x.Name == benchmark.OwningSlotName &&
-                   x.Settings.ClientPath == benchmark.OwningClientPath &&
+                   x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
                    x.WorkUnitModel.Data.ProjectID == benchmark.ProjectID);
+
                 if (slotModel != null && slotModel.ProductionValuesOk)
                 {
                     workUnitModel = slotModel.WorkUnitModel;
@@ -293,8 +293,8 @@ namespace HFM.Forms
             var calculateBonusEnabled = IsEnabled(calculateBonus);
 
             lines.Add(String.Empty);
-            lines.Add(String.Format(" Name: {0}", benchmark.OwningSlotName));
-            lines.Add(String.Format(" Path: {0}", benchmark.OwningClientPath));
+            lines.Add(String.Format(" Name: {0}", benchmark.SlotIdentifier.Name));
+            lines.Add(String.Format(" Path: {0}", benchmark.SlotIdentifier.Client.ToPath()));
             lines.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             lines.Add(String.Empty);
             lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + numberFormat + "} PPD",

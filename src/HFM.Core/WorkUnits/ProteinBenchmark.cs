@@ -34,33 +34,31 @@ namespace HFM.Core.WorkUnits
 
         private static readonly object FrameTimesListLock = new object();
 
-        internal SlotIdentifier SlotIdentifier => new SlotIdentifier(OwningClientName, OwningSlotId, OwningClientPath);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(ClientIdentifier.FromPath(SourceName, SourcePath, SourceGuid), SourceSlotID);
 
         /// <summary>
-        /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
-        /// </summary>
-        public string OwningSlotName
-        {
-            get { return OwningClientName.AppendSlotId(OwningSlotId); }
-        }
-
-        /// <summary>
-        /// Name of the folding client that owns this object (name given during client setup).
+        /// Gets or sets the source client name.
         /// </summary>
         [DataMember(Order = 1)]
-        public string OwningClientName { get; set; }
+        public string SourceName { get; set; }
 
         /// <summary>
-        /// Path of the folding slot that own this object.
+        /// Gets or sets the source client path (physical path or host name and port).
         /// </summary>
         [DataMember(Order = 2)]
-        public string OwningClientPath { get; set; }
+        public string SourcePath { get; set; }
 
         /// <summary>
-        /// Identification number of the folding slot on the folding client that owns this object.
+        /// Gets or sets the source client unique identifier.
+        /// </summary>
+        [DataMember(Order = 7)]
+        public Guid SourceGuid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the source client slot ID number.
         /// </summary>
         [DataMember(Order = 6, IsRequired = true)]
-        public int OwningSlotId { get; set; }
+        public int SourceSlotID { get; set; }
 
         [DataMember(Order = 3)]
         public int ProjectID { get; set; }
@@ -79,7 +77,8 @@ namespace HFM.Core.WorkUnits
                 {
                     totalTime = FrameTimes.Aggregate(totalTime, (current, frameTime) => current.Add(frameTime.Duration));
                 }
-                return TimeSpan.FromSeconds(totalTime.TotalSeconds / FrameTimes.Count);
+                // ReSharper disable once PossibleLossOfFraction
+                return TimeSpan.FromSeconds(Convert.ToInt32(totalTime.TotalSeconds) / FrameTimes.Count);
             }
         }
 
@@ -88,18 +87,27 @@ namespace HFM.Core.WorkUnits
 
         public ProteinBenchmark()
         {
-            OwningSlotId = -1;
+            SourceSlotID = SlotIdentifier.NoSlotID;
             MinimumFrameTime = TimeSpan.Zero;
             FrameTimes = new List<ProteinBenchmarkFrameTime>(DefaultMaxFrames);
+        }
+
+        public void UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
+        {
+            SourceName = slotIdentifier.Client.Name;
+            SourcePath = slotIdentifier.Client.ToPath();
+            SourceGuid = slotIdentifier.Client.Guid;
+            SourceSlotID = slotIdentifier.SlotID;
         }
 
         public static ProteinBenchmark FromSlotIdentifier(SlotIdentifier slotIdentifier)
         {
             return new ProteinBenchmark
             {
-                OwningClientName = slotIdentifier.OwningClientName,
-                OwningSlotId = slotIdentifier.OwningSlotId,
-                OwningClientPath = slotIdentifier.OwningClientPath
+                SourceName = slotIdentifier.Client.Name,
+                SourcePath = slotIdentifier.Client.ToPath(),
+                SourceGuid = slotIdentifier.Client.Guid,
+                SourceSlotID = slotIdentifier.SlotID
             };
         }
 

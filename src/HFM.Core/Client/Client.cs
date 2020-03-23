@@ -178,7 +178,7 @@ namespace HFM.Core.Client
                   if (Logger.IsDebugEnabled)
                   {
                      string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
-                     Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.OwningSlotName, message));
+                     Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.SlotIdentifier.Name, message));
                   }
                }
             }

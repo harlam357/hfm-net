@@ -51,6 +51,7 @@ namespace HFM.Core.WorkUnits
 
         public double ClientTimeOffset { get; set; }
 
+        // TODO: Remove WorkUnitModel.UtcOffsetIsZero
         public bool UtcOffsetIsZero { get; set; }
 
         internal WorkUnitModel()

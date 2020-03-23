@@ -44,10 +44,6 @@ namespace HFM.Core.WorkUnits
 
         ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
-        void UpdateOwnerName(string clientName, string clientPath, string newName);
-
-        void UpdateOwnerPath(string clientName, string clientPath, string newPath);
-
         void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID);
     }
 
@@ -84,6 +80,10 @@ namespace HFM.Core.WorkUnits
                     benchmark.ProjectID = projectID;
                     DataContainer.Data.Add(benchmark);
                 }
+                else
+                {
+                    benchmark.UpdateFromSlotIdentifier(slotIdentifier);
+                }
                 foreach (var f in frameTimes)
                 {
                     benchmark.AddFrameTime(f);
@@ -102,7 +102,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                return DataContainer.Data.Find(b => MatchSlotAndProject(b, slotIdentifier, projectID));
+                return DataContainer.Data.Find(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
             }
             finally
             {
@@ -131,7 +131,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                DataContainer.Data.RemoveAll(b => MatchSlotAndProject(b, slotIdentifier, projectID));
+                DataContainer.Data.RemoveAll(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
                 DataContainer.Write();
             }
             finally
@@ -164,7 +164,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                return DataContainer.Data.FindAll(b => MatchSlotAndProject(b, slotIdentifier, projectID));
+                return DataContainer.Data.FindAll(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
             }
             finally
             {
@@ -172,64 +172,9 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        private static bool MatchSlotAndProject(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
+        private static bool SlotIdentifierAndProjectEquals(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
         {
-            return b.ProjectID.Equals(projectID) && (SlotIdentifier.AllSlots == slotIdentifier || b.SlotIdentifier.Equals(slotIdentifier));
-        }
-
-        public void UpdateOwnerName(string clientName, string clientPath, string newName)
-        {
-            if (clientName == null) throw new ArgumentNullException(nameof(clientName));
-            if (clientPath == null) throw new ArgumentNullException(nameof(clientPath));
-            if (newName == null) throw new ArgumentNullException(nameof(newName));
-
-            // Core library - should have a valid client name 
-            Debug.Assert(DataTypes.ClientSettings.ValidateName(newName));
-
-            // write lock
-            _cacheLock.EnterWriteLock();
-            try
-            {
-                var benchmarks = EnumerateBenchmarksForOwnerUpdate(clientName, clientPath);
-                foreach (var b in benchmarks)
-                {
-                    b.OwningClientName = newName;
-                }
-                DataContainer.Write();
-            }
-            finally
-            {
-                _cacheLock.ExitWriteLock();
-            }
-        }
-
-        public void UpdateOwnerPath(string clientName, string clientPath, string newPath)
-        {
-            if (clientName == null) throw new ArgumentNullException(nameof(clientName));
-            if (clientPath == null) throw new ArgumentNullException(nameof(clientPath));
-            if (newPath == null) throw new ArgumentNullException(nameof(newPath));
-
-            // write lock
-            _cacheLock.EnterWriteLock();
-            try
-            {
-                var benchmarks = EnumerateBenchmarksForOwnerUpdate(clientName, clientPath);
-                foreach (var b in benchmarks)
-                {
-                    b.OwningClientPath = newPath;
-                }
-                DataContainer.Write();
-            }
-            finally
-            {
-                _cacheLock.ExitWriteLock();
-            }
-        }
-
-        private IEnumerable<ProteinBenchmark> EnumerateBenchmarksForOwnerUpdate(string clientName, string clientPath)
-        {
-            return DataContainer.Data.Where(b => b.OwningClientName.Equals(clientName) &&
-                                                 Internal.FileSystem.PathsEqual(b.OwningClientPath, clientPath));
+            return b.ProjectID.Equals(projectID) && (SlotIdentifier.AllSlots.Equals(slotIdentifier) || b.SlotIdentifier.Equals(slotIdentifier));
         }
 
         public void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID)

@@ -91,7 +91,7 @@ namespace HFM.Core.SlotXml
                         continue;
                     }
 
-                    if (maximumLength >= 0)
+                    if (maximumLength >= 0 && readStream.Length > maximumLength)
                     {
                         readStream.Position = readStream.Length - maximumLength;
                     }

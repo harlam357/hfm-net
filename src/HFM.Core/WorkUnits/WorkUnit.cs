@@ -37,6 +37,7 @@ namespace HFM.Core.WorkUnits
 
         public WorkUnit()
         {
+            SlotIdentifier = SlotIdentifier.None;
             UnitRetrievalTime = DateTime.MinValue;
             FoldingID = DefaultFoldingID;
             Team = DefaultTeam;
@@ -51,7 +52,6 @@ namespace HFM.Core.WorkUnits
             UnitResult = WorkUnitResult.Unknown;
             CoreID = DefaultCoreID;
             QueueIndex = -1;
-            OwningSlotId = -1;
         }
 
         #endregion
@@ -61,8 +61,7 @@ namespace HFM.Core.WorkUnits
         {
             var u = new WorkUnit
             {
-                OwningClientName = OwningClientName,
-                OwningClientPath = OwningClientPath,
+                SlotIdentifier = SlotIdentifier,
                 UnitRetrievalTime = UnitRetrievalTime,
                 FoldingID = FoldingID,
                 Team = Team,
@@ -83,38 +82,14 @@ namespace HFM.Core.WorkUnits
                 // TODO: LogLines is NOT a clone
                 LogLines = LogLines,
                 CoreID = CoreID,
-                QueueIndex = QueueIndex,
-                OwningSlotId = OwningSlotId
+                QueueIndex = QueueIndex
             };
             return u;
         }
 
         #region Properties
 
-        internal SlotIdentifier SlotIdentifier => new SlotIdentifier(OwningClientName, OwningSlotId, OwningClientPath);
-
-        /// <summary>
-        /// Fully qualified name of the folding slot that owns this object (includes "Slot" designation).
-        /// </summary>
-        public string OwningSlotName
-        {
-            get { return OwningClientName.AppendSlotId(OwningSlotId); }
-        }
-
-        /// <summary>
-        /// Name of the folding client that owns this object (name given during client setup).
-        /// </summary>
-        public string OwningClientName { get; set; }
-
-        /// <summary>
-        /// Path of the folding slot that own this object.
-        /// </summary>
-        public string OwningClientPath { get; set; }
-
-        /// <summary>
-        /// Identification number of the folding slot on the folding client that owns this object.
-        /// </summary>
-        public int OwningSlotId { get; set; }
+        public SlotIdentifier SlotIdentifier { get; set; }
 
         /// <summary>
         /// Local time the logs used to generate this WorkUnit were retrieved

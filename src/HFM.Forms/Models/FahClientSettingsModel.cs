@@ -128,6 +128,8 @@ namespace HFM.Forms.Models
          }
       }
 
+      public Guid Guid { get; set; }
+
       //public bool PasswordError
       //{
       //   get { return Password.Length == 0; }

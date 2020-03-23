@@ -46,8 +46,8 @@ namespace HFM.Core.Configuration
 
             CreateMap<WorkUnit, WorkUnitRow>()
                .ForMember(dest => dest.ID, opt => opt.Ignore())
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.OwningSlotName))
-               .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.OwningClientPath))
+               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.SlotIdentifier.Name))
+               .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.SlotIdentifier.Client.ToPath()))
                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.FoldingID))
                .ForMember(dest => dest.FramesCompleted, opt => opt.Ignore())
                .ForMember(dest => dest.FrameTimeValue, opt => opt.Ignore())

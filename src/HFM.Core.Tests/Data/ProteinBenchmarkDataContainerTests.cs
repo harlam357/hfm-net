@@ -32,18 +32,20 @@ namespace HFM.Core.Data
         public void ProteinBenchmarkDataContainer_Write_ToDisk()
         {
             // Arrange
-            // TODO: Implement ArtifactFolder
-            var collection = new ProteinBenchmarkDataContainer
+            using (var artifacts = new ArtifactFolder())
             {
-                FilePath = "TestProteinBenchmark.dat", Data = CreateTestBenchmarkData(),
-            };
-            // Act
-            collection.Write();
-            // Assert
-            // clear the data and read it
-            collection.Data = null;
-            collection.Read();
-            ValidateTestBenchmarkData(collection.Data);
+                var collection = new ProteinBenchmarkDataContainer
+                {
+                    FilePath = artifacts.GetRandomFilePath(), Data = CreateTestBenchmarkData(),
+                };
+                // Act
+                collection.Write();
+                // Assert
+                // clear the data and read it
+                collection.Data = null;
+                collection.Read();
+                ValidateTestBenchmarkData(collection.Data);
+            }
         }
 
         [Test]
@@ -52,12 +54,15 @@ namespace HFM.Core.Data
             // Arrange
             var data = CreateTestBenchmarkData();
             var serializer = new DataContractFileSerializer<List<ProteinBenchmark>>();
-            // Act
-            // TODO: Implement ArtifactFolder
-            serializer.Serialize("TestProteinBenchmark.xml", data);
-            // Assert
-            var fromXml = serializer.Deserialize("TestProteinBenchmark.xml");
-            ValidateTestBenchmarkData(fromXml);
+            using (var artifacts = new ArtifactFolder())
+            {
+                string path = artifacts.GetRandomFilePath();
+                // Act
+                serializer.Serialize(path, data);
+                // Assert
+                var fromXml = serializer.Deserialize(path);
+                ValidateTestBenchmarkData(fromXml);
+            }
         }
 
         private static List<ProteinBenchmark> CreateTestBenchmarkData()
@@ -67,8 +72,8 @@ namespace HFM.Core.Data
             {
                 var benchmark = new ProteinBenchmark
                 {
-                    OwningClientName = "TestOwner",
-                    OwningClientPath = "TestPath",
+                    SourceName = "TestOwner",
+                    SourcePath = "TestPath",
                     ProjectID = 100 + i
                 };
 
@@ -83,9 +88,10 @@ namespace HFM.Core.Data
             {
                 var benchmark = new ProteinBenchmark
                 {
-                    OwningClientName = "TestOwner2",
-                    OwningClientPath = "TestPath2",
-                    OwningSlotId = i - 10,
+                    SourceName = "TestOwner2",
+                    SourcePath = "TestPath2",
+                    SourceGuid = GuidFromInt32(i),
+                    SourceSlotID = i - 10,
                     ProjectID = 200 + i
                 };
 
@@ -104,10 +110,13 @@ namespace HFM.Core.Data
             for (int i = 0; i < 10; i++)
             {
                 ProteinBenchmark benchmark = list[i];
-                Assert.AreEqual("TestOwner", benchmark.OwningSlotName);
-                Assert.AreEqual("TestOwner", benchmark.OwningClientName);
-                Assert.AreEqual("TestPath", benchmark.OwningClientPath);
-                Assert.AreEqual(-1, benchmark.OwningSlotId);
+                Assert.AreEqual("TestOwner", benchmark.SlotIdentifier.Name);
+                Assert.AreEqual("TestOwner", benchmark.SlotIdentifier.Client.Name);
+                Assert.AreEqual("TestOwner", benchmark.SourceName);
+                Assert.AreEqual("TestPath", benchmark.SlotIdentifier.Client.ToPath());
+                Assert.AreEqual("TestPath", benchmark.SourcePath);
+                Assert.AreEqual(-1, benchmark.SlotIdentifier.SlotID);
+                Assert.AreEqual(-1, benchmark.SourceSlotID);
                 Assert.AreEqual(100 + i, benchmark.ProjectID);
 
                 int index = 0;
@@ -121,10 +130,15 @@ namespace HFM.Core.Data
             for (int i = 10; i < 20; i++)
             {
                 ProteinBenchmark benchmark = list[i];
-                Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), benchmark.OwningSlotName);
-                Assert.AreEqual("TestOwner2", benchmark.OwningClientName);
-                Assert.AreEqual("TestPath2", benchmark.OwningClientPath);
-                Assert.AreEqual(i - 10, benchmark.OwningSlotId);
+                Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), benchmark.SlotIdentifier.Name);
+                Assert.AreEqual("TestOwner2", benchmark.SlotIdentifier.Client.Name);
+                Assert.AreEqual("TestOwner2", benchmark.SourceName);
+                Assert.AreEqual("TestPath2", benchmark.SlotIdentifier.Client.ToPath());
+                Assert.AreEqual("TestPath2", benchmark.SourcePath);
+                Assert.AreEqual(GuidFromInt32(i), benchmark.SlotIdentifier.Client.Guid);
+                Assert.AreEqual(GuidFromInt32(i), benchmark.SourceGuid);
+                Assert.AreEqual(i - 10, benchmark.SlotIdentifier.SlotID);
+                Assert.AreEqual(i - 10, benchmark.SourceSlotID);
                 Assert.AreEqual(200 + i, benchmark.ProjectID);
 
                 int index = 0;
@@ -134,6 +148,11 @@ namespace HFM.Core.Data
                     index++;
                 }
             }
+        }
+
+        private static Guid GuidFromInt32(int value)
+        {
+            return new Guid(value, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 }

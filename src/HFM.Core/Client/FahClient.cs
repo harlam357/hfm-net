@@ -440,10 +440,8 @@ namespace HFM.Core.Client
             Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
+            workUnit.SlotIdentifier = slotModel.SlotIdentifier;
             workUnit.UnitRetrievalTime = LastRetrievalTime;
-            workUnit.OwningClientName = Settings.Name;
-            workUnit.OwningClientPath = Settings.ClientPath;
-            workUnit.OwningSlotId = slotModel.SlotId;
             if (workUnit.SlotType == SlotType.Unknown)
             {
                 workUnit.SlotType = SlotTypeConvert.FromCoreName(protein.Core);

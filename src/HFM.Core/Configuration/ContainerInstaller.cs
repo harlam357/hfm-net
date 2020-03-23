@@ -83,9 +83,7 @@ namespace HFM.Core.Configuration
 
             // ClientConfiguration - Singleton
             container.Register(
-               Component.For<ClientConfiguration>()
-                  .OnCreate((kernel, instance) => instance.SubscribeToEvents(
-                     kernel.Resolve<IProteinBenchmarkService>())));
+               Component.For<ClientConfiguration>());
 
             // ClientFactory - Singleton
             container.Register(

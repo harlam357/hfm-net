@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.Client;
 using HFM.Core.Configuration;
@@ -258,9 +257,7 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = run;
             workUnit.ProjectClone = 2;
             workUnit.ProjectGen = 3;
-            workUnit.OwningClientName = "Owner";
-            workUnit.OwningClientPath = "Path";
-            //workUnit.OwningSlotId = 
+            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -335,9 +332,7 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 4;
             workUnit.ProjectClone = 5;
             workUnit.ProjectGen = 6;
-            workUnit.OwningClientName = "Owner's";
-            workUnit.OwningClientPath = "The Path's";
-            //workUnit.OwningSlotId = 
+            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner's","The Path's"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357's";
             workUnit.Team = 100;
             workUnit.CoreVersion = 2.27f;
@@ -412,9 +407,7 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.OwningClientName = "Owner";
-            workUnit.OwningClientPath = "Path";
-            //workUnit.OwningSlotId = 
+            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -489,9 +482,7 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.OwningClientName = "Owner2";
-            workUnit.OwningClientPath = "Path2";
-            workUnit.OwningSlotId = 2;
+            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner2","Path2"), 2);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.27f;

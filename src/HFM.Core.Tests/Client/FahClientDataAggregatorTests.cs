@@ -25,7 +25,6 @@ using NUnit.Framework;
 
 using HFM.Client;
 using HFM.Client.DataTypes;
-using HFM.Core.DataTypes;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Log.FahClient;
@@ -95,10 +94,7 @@ namespace HFM.Core.Client
          var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningClientName);
-         Assert.AreEqual(null, unitInfoData.OwningClientPath);
-         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -181,10 +177,7 @@ namespace HFM.Core.Client
          var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningClientName);
-         Assert.AreEqual(null, unitInfoData.OwningClientPath);
-         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -257,10 +250,7 @@ namespace HFM.Core.Client
          var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningClientName);
-         Assert.AreEqual(null, unitInfoData.OwningClientPath);
-         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);
@@ -337,10 +327,7 @@ namespace HFM.Core.Client
          var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
          #region Check Unit Info Data Values
-         Assert.AreEqual(null, unitInfoData.OwningSlotName);
-         Assert.AreEqual(null, unitInfoData.OwningClientName);
-         Assert.AreEqual(null, unitInfoData.OwningClientPath);
-         Assert.AreEqual(-1, unitInfoData.OwningSlotId);
+         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
          Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
          Assert.AreEqual("harlam357", unitInfoData.FoldingID);
          Assert.AreEqual(32, unitInfoData.Team);

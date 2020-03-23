@@ -47,10 +47,5 @@ namespace HFM.Core
         {
             return date.Equals(DateTime.MinValue) ? "Unknown" : formattedValue;
         }
-
-        internal static string AppendSlotId(this string name, int slotId)
-        {
-            return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
-        }
     }
 }

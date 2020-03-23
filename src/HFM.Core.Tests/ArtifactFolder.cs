@@ -19,6 +19,11 @@ namespace HFM.Core
             Directory.CreateDirectory(Path);
         }
 
+        public string GetRandomFilePath()
+        {
+            return System.IO.Path.Combine(Path, System.IO.Path.GetRandomFileName());
+        }
+
         public void Dispose()
         {
             try

@@ -23,6 +23,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using HFM.Core.Client;
+
 // TODO: Figure out how to move this to Client namespace and maintain compatibility with existing hfmx files
 namespace HFM.Core.DataTypes
 {
@@ -45,34 +47,40 @@ namespace HFM.Core.DataTypes
         }
 
         /// <summary>
-        /// Client Type
+        /// Gets or sets the client type.
         /// </summary>
         [DataMember(Order = 1)]
         public ClientType ClientType { get; set; }
 
         /// <summary>
-        /// The name assigned to this client instance
+        /// Gets or sets the client name.
         /// </summary>
         [DataMember(Order = 2)]
         public string Name { get; set; }
 
         /// <summary>
-        /// Server name or IP Address
+        /// Gets or sets the client host name or IP address.
         /// </summary>
         [DataMember(Order = 3)]
         public string Server { get; set; }
 
         /// <summary>
-        /// Server port
+        /// Gets or sets the client host port number.
         /// </summary>
         [DataMember(Order = 4)]
         public int Port { get; set; }
 
         /// <summary>
-        /// Password on remote server
+        /// Gets or sets the client host password.
         /// </summary>
         [DataMember(Order = 5)]
         public string Password { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client unique identifier.
+        /// </summary>
+        [DataMember(Order = 6)]
+        public Guid Guid { get; set; }
 
         private const string FahClientLogFileName = "log.txt";
 
@@ -140,6 +148,11 @@ namespace HFM.Core.DataTypes
             }
 
             return sb.ToString();
+        }
+
+        public ClientIdentifier ToClientIdentifier()
+        {
+            return new ClientIdentifier(Name, Server, Port, Guid);
         }
     }
 }

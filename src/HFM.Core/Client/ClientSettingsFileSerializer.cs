@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Xml;
@@ -33,103 +34,114 @@ using HFM.Core.Serializers;
 
 namespace HFM.Core.Client
 {
-   public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>>
-   {
-      #region Fields
+    public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>>
+    {
+        #region Fields
 
-      private ILogger _logger;
+        private ILogger _logger;
 
-      public ILogger Logger
-      {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
-      }
+        public ILogger Logger
+        {
+            get { return _logger ?? (_logger = NullLogger.Instance); }
+            set { _logger = value; }
+        }
 
-      // Encryption Key and Initialization Vector
-      private readonly SymmetricKeyData _iv = new SymmetricKeyData("CH/&QE;NsT.2z+Me");
-      private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("usPP'/Cb5?NWC*60");
+        // Encryption Key and Initialization Vector
+        private readonly SymmetricKeyData _iv = new SymmetricKeyData("CH/&QE;NsT.2z+Me");
+        private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("usPP'/Cb5?NWC*60");
 
-      #endregion
+        #endregion
 
-      public string FileExtension
-      {
-         get { return "hfmx"; }
-      }
+        public string FileExtension
+        {
+            get { return "hfmx"; }
+        }
 
-      public string FileTypeFilter
-      {
-         get { return "HFM Configuration Files|*.hfmx"; }
-      }
+        public string FileTypeFilter
+        {
+            get { return "HFM Configuration Files|*.hfmx"; }
+        }
 
-      public List<ClientSettings> Deserialize(string path)
-      {
-         using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-         {
-            var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
-            var value = (List<ClientSettings>)serializer.ReadObject(fileStream);
-            Decrypt(value);
-            return value;
-         }
-      }
-
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-      public void Serialize(string path, List<ClientSettings> value)
-      {
-         // copy the values before encrypting, otherwise the ClientSettings
-         // objects will retain the encrypted value from here on out...
-         var valueCopy = ProtoBuf.Serializer.DeepClone(value);
-
-         using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-         using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
-         {
-            var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
-            Encrypt(valueCopy);
-            serializer.WriteObject(xmlWriter, valueCopy);
-         }
-      }
-
-      #region Encryption
-
-      private void Encrypt(IEnumerable<ClientSettings> value)
-      {
-         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
-         foreach (var settings in value)
-         {
-            if (String.IsNullOrWhiteSpace(settings.Password)) continue;
-
-            try
+        public List<ClientSettings> Deserialize(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-               settings.Password = symmetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
+                var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
+                var value = (List<ClientSettings>)serializer.ReadObject(fileStream);
+                Decrypt(value);
+                return value;
             }
-            catch (CryptographicException)
-            {
-               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to encrypt password... saving clear value."));
-            }
-         }
-      }
+        }
 
-      private void Decrypt(IEnumerable<ClientSettings> value)
-      {
-         var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
-         foreach (var settings in value)
-         {
-            if (String.IsNullOrWhiteSpace(settings.Password)) continue;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        public void Serialize(string path, List<ClientSettings> value)
+        {
+            // for configurations without Guid values, add them when saving
+            GenerateRequiredGuids(value);
 
-            try
-            {
-               settings.Password = symmetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
-            }
-            catch (FormatException)
-            {
-               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
-            }
-            catch (CryptographicException)
-            {
-               Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
-            }
-         }
-      }
+            // copy the values before encrypting, otherwise the ClientSettings
+            // objects will retain the encrypted value from here on out...
+            var valueCopy = ProtoBuf.Serializer.DeepClone(value);
 
-      #endregion
-   }
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
+            {
+                var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
+                Encrypt(valueCopy);
+                serializer.WriteObject(xmlWriter, valueCopy);
+            }
+        }
+
+        private static void GenerateRequiredGuids(IEnumerable<ClientSettings> collection)
+        {
+            foreach (var settings in collection.Where(x => x.Guid == Guid.Empty))
+            {
+                settings.Guid = Guid.NewGuid();
+            }
+        }
+
+        #region Encryption
+
+        private void Encrypt(IEnumerable<ClientSettings> value)
+        {
+            var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+            foreach (var settings in value)
+            {
+                if (String.IsNullOrWhiteSpace(settings.Password)) continue;
+
+                try
+                {
+                    settings.Password = symmetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
+                }
+                catch (CryptographicException)
+                {
+                    Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to encrypt password... saving clear value."));
+                }
+            }
+        }
+
+        private void Decrypt(IEnumerable<ClientSettings> value)
+        {
+            var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+            foreach (var settings in value)
+            {
+                if (String.IsNullOrWhiteSpace(settings.Password)) continue;
+
+                try
+                {
+                    settings.Password = symmetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
+                }
+                catch (FormatException)
+                {
+                    Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
+                }
+                catch (CryptographicException)
+                {
+                    Logger.Warn(String.Format(Logging.Logger.NameFormat, settings.Name, "Failed to decrypt password... loading clear value."));
+                }
+            }
+        }
+
+        #endregion
+    }
 }

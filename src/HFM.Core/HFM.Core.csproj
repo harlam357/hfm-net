@@ -81,6 +81,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Client\ClientIdentifier.cs" />
     <Compile Include="Client\NumberFormat.cs" />
     <Compile Include="Client\StringBuilderReader.cs" />
     <Compile Include="EocUrl.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />
     <Compile Include="Serializers\ISerializer.cs" />
-    <Compile Include="Configuration\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
     <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Internal\AsyncProcessorExtensions.cs" />
