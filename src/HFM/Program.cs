@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Net;
 using Application = System.Windows.Forms.Application;
 
 using AutoMapper;
@@ -44,6 +45,10 @@ namespace HFM
          // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
          //System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("de-DE");
          //System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("de-DE");
+
+         // default is Tls | Ssl3, add Tls11 and Tls12 to fix issues accessing EOC stats XML
+         // https://stackoverflow.com/questions/2859790/the-request-was-aborted-could-not-create-ssl-tls-secure-channel
+         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
 
          try
          {
