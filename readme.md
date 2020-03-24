@@ -4,6 +4,21 @@
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
+## Version 0.9.12.839
+
+### Release Date: March 23, 2020
+
+* Fix: Issue 302 HFM sometimes closes (crashes) when a v7 client connection is lost
+* Fix: Issue 303 Incorrect status for slot 1+ when no work on slot 0
+* Fix: DataGridView System.IndexOutOfRangeException when removing clients/slots
+* Fix: Client grid sorting and work unit history grid sorting now persists between grid refreshes
+* Fix: Connection issue to folding.extremeoverclocking.com stats
+
+* Change: Remove legacy (v6 and prior) client support
+* Change: Add additional support for OPENMM_22 core
+* Change: Add detection for clients reporting "Too many errors, failing" after too many UNKNOWN_ENUM results
+
+
 ## Version 0.9.11.815
 
 ### Release Date: August 11, 2019
