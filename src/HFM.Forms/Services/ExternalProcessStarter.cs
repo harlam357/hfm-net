@@ -101,7 +101,7 @@ namespace HFM.Forms
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
-         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), WrapInQuotes(logFilePath), errorMessage);
       }
 
       /// <summary>
@@ -113,7 +113,7 @@ namespace HFM.Forms
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show the FAHlog.txt file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
-         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), logFilePath, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), WrapInQuotes(logFilePath), errorMessage);
       }
 
       /// <summary>
@@ -125,7 +125,7 @@ namespace HFM.Forms
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show '{0}'.{1}{1}Please check the current File Explorer defined in the Preferences.",
                path, Environment.NewLine);
-         return RunProcess(_prefs.Get<string>(Preference.FileExplorer), path, errorMessage);
+         return RunProcess(_prefs.Get<string>(Preference.FileExplorer), WrapInQuotes(path), errorMessage);
       }
 
       /// <summary>
@@ -203,7 +203,7 @@ namespace HFM.Forms
       {
          try
          {
-            Process.Start(fileName, PrepArguments(arguments));
+            Process.Start(fileName, arguments);
             return null;
          }
          catch (Exception ex)
@@ -213,9 +213,9 @@ namespace HFM.Forms
          }
       }
 
-      private static string PrepArguments(string arguments)
+      private static string WrapInQuotes(string arguments)
       {
-         return Application.IsRunningOnMono && arguments != null ? String.Format(CultureInfo.InvariantCulture, "\"{0}\"", arguments) : arguments;
+         return String.Format(CultureInfo.InvariantCulture, "\"{0}\"", arguments);
       }
    }
 }

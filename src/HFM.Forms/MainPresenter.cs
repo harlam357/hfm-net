@@ -184,20 +184,20 @@ namespace HFM.Forms
             // Form is restored from the system tray, the DataGridView is drawn with
             // a big black box on the right hand side. Like it didn't get initialized
             // properly when the Form was created.
-            //if (Prefs.RunMinimized)
+            //if (_prefs.Get<bool>(Preference.RunMinimized))
             //{
             //   WindowState = FormWindowState.Minimized;
             //}
 
             // Look for start position
             var location = _prefs.Get<Point>(Preference.FormLocation);
+            var size = _prefs.Get<Size>(Preference.FormSize);
             if (location.X != 0 && location.Y != 0)
             {
                 _view.SetManualStartPosition();
-                _view.Location = location;
+                _view.Location = WindowPosition.Normalize(location, size);
             }
             // Look for view size
-            var size = _prefs.Get<Size>(Preference.FormSize);
             if (size.Width != 0 && size.Height != 0)
             {
                 // make sure values coming from the prefs are at least the minimums - Issue 234
@@ -1132,6 +1132,7 @@ namespace HFM.Forms
             // Restore state data
             var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
             var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
+            location = WindowPosition.Normalize(location, size);
 
             if (location.X != 0 && location.Y != 0)
             {
@@ -1139,7 +1140,7 @@ namespace HFM.Forms
             }
             else
             {
-                benchmarksView.Location = new Point(_view.Location.X + 50, _view.Location.Y + 50);
+                benchmarksView.Location = WindowPosition.CenterOnPrimaryScreen(size);
             }
 
             if (size.Width != 0 && size.Height != 0)
