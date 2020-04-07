@@ -22,7 +22,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
-using HFM.Core;
 using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 
@@ -55,6 +54,16 @@ namespace HFM.Forms.Models
                                                 }
                                             }
                                         };
+
+            _scheduledTask.Changed += (s, e) =>
+            {
+                switch (e.Action)
+                {
+                    case ScheduledTaskChangedAction.Finished:
+                        RefreshFromData();
+                        break;
+                }
+            };
 
             ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
             RefreshFromData();
