@@ -84,7 +84,6 @@
     <Compile Include="Client\ClientIdentifier.cs" />
     <Compile Include="Client\NumberFormat.cs" />
     <Compile Include="Client\StringBuilderReader.cs" />
-    <Compile Include="EocUrl.cs" />
     <Compile Include="FahUrl.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerBase.cs" />

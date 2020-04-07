@@ -13,6 +13,10 @@ namespace HFM.Core.Services
 
     public class EocStatsService : IEocStatsService
     {
+        public const string UserBaseUrl = "https://folding.extremeoverclocking.com/user_summary.php?s=&u=";
+        public const string TeamBaseUrl = "https://folding.extremeoverclocking.com/team_summary.php?s=&t=";
+        public const string UserXmlBaseUrl = "https://folding.extremeoverclocking.com/xml/user_summary.php?u=";
+
         private readonly IPreferenceSet _prefs;
 
         public EocStatsService(IPreferenceSet prefs)
@@ -22,8 +26,7 @@ namespace HFM.Core.Services
 
         public EocStatsData GetStatsData()
         {
-            const string eocUserXmlUrl = "http://folding.extremeoverclocking.com/xml/user_summary.php?u=";
-            string eocXmlDataUrl = String.Concat(eocUserXmlUrl, _prefs.Get<int>(Preference.EocUserId));
+            string eocXmlDataUrl = String.Concat(UserXmlBaseUrl, _prefs.Get<int>(Preference.EocUserId));
 
             var xmlData = new XmlDocument();
             xmlData.Load(eocXmlDataUrl);

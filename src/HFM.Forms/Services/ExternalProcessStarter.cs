@@ -145,7 +145,7 @@ namespace HFM.Forms
       public string ShowHfmGitHub()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET GitHub Project.";
-         return RunProcess(Application.GitHubUrl, null, errorMessage);
+         return RunProcess(Application.ProjectSiteUrl, null, errorMessage);
       }
 
       /// <summary>
@@ -154,12 +154,12 @@ namespace HFM.Forms
       public string ShowHfmGoogleGroup()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Group.";
-         return RunProcess(Application.GoogleGroupUrl, null, errorMessage);
+         return RunProcess(Application.SupportForumUrl, null, errorMessage);
       }
 
       private Uri EocUserUrl
       {
-         get { return new Uri(String.Concat(EocUrl.UserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
+         get { return new Uri(String.Concat(Core.Services.EocStatsService.UserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
       }
 
       /// <summary>
@@ -173,7 +173,7 @@ namespace HFM.Forms
 
       private Uri EocTeamUrl
       {
-         get { return new Uri(String.Concat(EocUrl.TeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
+         get { return new Uri(String.Concat(Core.Services.EocStatsService.TeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
       }
 
       /// <summary>

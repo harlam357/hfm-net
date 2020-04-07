@@ -347,7 +347,7 @@ namespace HFM
                Core.Application.NameAndVersionWithRevision,
                Environment.OSVersion.VersionString,
                message,
-               Core.Application.GoogleGroupUrl,
+               Core.Application.SupportForumUrl,
                mustTerminate);
         }
     }

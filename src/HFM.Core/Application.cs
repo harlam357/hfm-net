@@ -30,8 +30,8 @@ namespace HFM.Core
         public const string CssFolderName = "CSS";
         public const string XsltFolderName = "XSL";
 
-        public const string GitHubUrl = "https://github.com/harlam357/hfm-net";
-        public const string GoogleGroupUrl = "http://groups.google.com/group/hfm-net/";
+        public const string ProjectSiteUrl = "https://github.com/harlam357/hfm-net";
+        public const string SupportForumUrl = "https://groups.google.com/group/hfm-net/";
 
         public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
 

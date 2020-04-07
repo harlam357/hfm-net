@@ -747,7 +747,7 @@ namespace HFM.Forms
         {
             try
             {
-                Process.Start(String.Concat(EocUrl.UserBaseUrl, txtEOCUserID.Text));
+                Process.Start(String.Concat(EocStatsService.UserBaseUrl, txtEOCUserID.Text));
             }
             catch (Exception ex)
             {
@@ -773,7 +773,7 @@ namespace HFM.Forms
         {
             try
             {
-                Process.Start(String.Concat(EocUrl.TeamBaseUrl, txtStanfordTeamID.Text));
+                Process.Start(String.Concat(EocStatsService.TeamBaseUrl, txtStanfordTeamID.Text));
             }
             catch (Exception ex)
             {

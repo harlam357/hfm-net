@@ -1084,7 +1084,10 @@ namespace HFM.Forms
                     var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                     if (proteinChanges.Count > 0)
                     {
-                        _clientConfiguration.ScheduledTasks.RetrieveAll();
+                        if (_clientConfiguration.Count > 0)
+                        {
+                            _clientConfiguration.ScheduledTasks.RetrieveAll();
+                        }
                         using (var dlg = new ProteinLoadResultsDialog())
                         {
                             dlg.DataBind(proteinChanges);
