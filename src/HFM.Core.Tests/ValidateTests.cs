@@ -27,24 +27,6 @@ namespace HFM.Core
    public class ValidateTests
    {
       [Test]
-      public void FileName()
-      {
-         Assert.IsFalse(Validate.FileName(null));
-         Assert.IsFalse(Validate.FileName(String.Empty));
-         Assert.IsFalse(Validate.FileName("          "));
-         Assert.IsTrue(Validate.FileName("FAHlog.txt"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t\\t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t/t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t:t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t*t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t?t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t\"t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t<t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t>t"));
-         Assert.IsFalse(Validate.FileName("FAHlog.t|t"));
-      }
-      
-      [Test]
       public void PathInstancePath()
       {
          // Windows
@@ -82,29 +64,6 @@ namespace HFM.Core
       }
       
       [Test]
-      public void ServerName()
-      {
-         // This Validation is pretty wide open.  Should probably not validate
-         // (..) two dots in a row and server names should probably be forced
-         // to begin and end an alpha-numeric character.
-         Assert.IsTrue(Validate.ServerName(@"ftp.someserver.com"));
-         Assert.IsTrue(Validate.ServerName(@"ftp..some.server..com"));
-         Assert.IsTrue(Validate.ServerName(@"MediaServer2"));
-         Assert.IsTrue(Validate.ServerName("-a-"));
-         Assert.IsTrue(Validate.ServerName("_a_"));
-         Assert.IsTrue(Validate.ServerName(".a."));
-         Assert.IsTrue(Validate.ServerName("%a%"));
-
-         Assert.IsFalse(Validate.ServerName("+a+"));
-         Assert.IsFalse(Validate.ServerName("=a="));
-         Assert.IsFalse(Validate.ServerName("$a$"));
-         Assert.IsFalse(Validate.ServerName("&a&"));
-         Assert.IsFalse(Validate.ServerName("^a^"));
-         Assert.IsFalse(Validate.ServerName("[a["));
-         Assert.IsFalse(Validate.ServerName("]a]"));
-      }
-      
-      [Test]
       public void FtpPath()
       {
          // Unix-Like (same RegEx used for Path Instance Path)
@@ -135,81 +94,6 @@ namespace HFM.Core
          Assert.IsTrue(Validate.HttpUrl(@"file://c:/folder/subfolder/"));
          Assert.IsTrue(Validate.HttpUrl(@"file://c:/folder/subfolder/myfile.txt"));
          Assert.IsTrue(Validate.HttpUrl(@"http://fah-web.stanford.edu/psummary.html"));
-      }
-
-      [Test]
-      public void HttpOrFtpUrl()
-      {
-         Assert.IsTrue(Validate.HttpOrFtpUrl(@"http://www.domain.com/somesite/index.html"));
-         Assert.IsTrue(Validate.HttpOrFtpUrl(@"https://some-server/serverfolder/dsfasfsdf"));
-         Assert.IsTrue(Validate.HttpOrFtpUrl(@"https://some-server/serverfolder/dsfasfsdf/"));
-         Assert.IsTrue(Validate.HttpOrFtpUrl(@"ftp://ftp.ftp.com/ftpfolder/"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"ftp://user:pass@ftp.ftp.com/ftpfolder/"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"file://c:/folder/subfolder"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"file://c:/folder/subfolder/"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"file://c:/folder/subfolder/myfile.txt"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"smb://smb.smb.com"));
-         Assert.IsFalse(Validate.HttpOrFtpUrl(@"smb://smb.smb.com/"));
-         Assert.IsTrue(Validate.HttpOrFtpUrl(@"http://fah-web.stanford.edu/psummary.html"));
-      }
-      
-      [Test]
-      public void FtpWithUserPassUrl()
-      {
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"http://www.domain.com/somesite/index.html"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"https://some-server/serverfolder/dsfasfsdf"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"https://some-server/serverfolder/dsfasfsdf/"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"ftp://ftp.ftp.com/ftpfolder/"));
-         Assert.IsTrue(Validate.FtpWithUserPassUrl(@"ftp://user:pass@ftp.ftp.com/ftpfolder/"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"file://c:/folder/subfolder"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"file://c:/folder/subfolder/"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"file://c:/folder/subfolder/myfile.txt"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"smb://smb.smb.com"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"smb://smb.smb.com/"));
-         Assert.IsFalse(Validate.FtpWithUserPassUrl(@"http://fah-web.stanford.edu/psummary.html"));
-      }
-      
-      [Test]
-      public void EmailAddress()
-      {
-         Assert.IsTrue(Validate.EmailAddress("someone@home.co"));
-         Assert.IsTrue(Validate.EmailAddress("someone@home.com"));
-         Assert.IsTrue(Validate.EmailAddress("someone@home.comm"));
-         Assert.IsFalse(Validate.EmailAddress("@home.com"));
-         Assert.IsTrue(Validate.EmailAddress("a@home.com"));
-         Assert.IsFalse(Validate.EmailAddress("someone@home"));
-         Assert.IsFalse(Validate.EmailAddress("someone@home.c"));
-         // RegEx here that does not validate (..) two dots in a row - see ServerName()
-         Assert.IsFalse(Validate.EmailAddress("someelse@not.at.home..com"));
-      }
-      
-      [Test]
-      public void UsernamePasswordPair()
-      {
-         Assert.IsTrue(Validate.UsernamePasswordPair("Username", "Password"));
-
-         try
-         {
-            Validate.UsernamePasswordPair("Username", String.Empty);
-         }
-         catch (ArgumentException)
-         { }
-
-         try
-         {
-            Validate.UsernamePasswordPair(String.Empty, "Password");
-         }
-         catch (ArgumentException)
-         { }
-         
-         Assert.IsFalse(Validate.UsernamePasswordPair(String.Empty, String.Empty));
-         
-         try
-         {
-            Validate.UsernamePasswordPair(String.Empty, String.Empty, true);
-         }
-         catch (ArgumentException)
-         { }
       }
 
       [Test]

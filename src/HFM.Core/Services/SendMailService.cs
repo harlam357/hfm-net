@@ -1,5 +1,7 @@
 ﻿
+using System;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 using HFM.Core.Net;
 
@@ -22,6 +24,19 @@ namespace HFM.Core.Services
                 };
                 client.Send(message);
             }
+        }
+
+        private const string EmailAddressPattern = @"^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$";
+        
+        /// <summary>
+        /// Validates an email address.
+        /// </summary>
+        public static bool ValidateEmail(string emailAddress)
+        {
+            if (String.IsNullOrWhiteSpace(emailAddress)) return false;
+
+            var validEmailAddress = new Regex(EmailAddressPattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            return validEmailAddress.IsMatch(emailAddress);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace HFM.Forms.Models
 
       public bool ServerError
       {
-         get { return !Validate.ServerName(Server); }
+         get { return !HostName.Validate(Server); }
       }
 
       private int _port = ClientSettings.DefaultPort;

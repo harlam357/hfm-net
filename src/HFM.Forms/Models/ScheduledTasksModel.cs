@@ -315,7 +315,7 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !Validate.ServerName(WebGenServer);
+                  return !HostName.Validate(WebGenServer);
                default:
                   return false;
             }
@@ -400,27 +400,18 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !ValidateCredentials(true);
+                  return HasCredentialsError();
                default:
                   return false;
             }
          }
       }
 
-      private bool ValidateCredentials(bool throwOnEmpty)
+      private bool HasCredentialsError()
       {
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            Validate.UsernamePasswordPair(WebGenUsername, WebGenPassword, throwOnEmpty);
-            CredentialsErrorMessage = String.Empty;
-            return true;
-         }
-         catch (ArgumentException ex)
-         {
-            CredentialsErrorMessage = ex.Message;
-            return false;
-         }
+         var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
+         CredentialsErrorMessage = result ? String.Empty : message;
+         return !result;
       }
 
       public string CredentialsErrorMessage { get; private set; }

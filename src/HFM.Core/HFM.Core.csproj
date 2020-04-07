@@ -89,6 +89,7 @@
     <Compile Include="Logging\LoggerBase.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
+    <Compile Include="Net\HostName.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />

@@ -24,38 +24,10 @@ namespace HFM.Core
 {
    public static class Validate
    {
-      #region Constants
-
-      private const string ValidFileName = @"^[^\\/:*?""<>|\r\n]*$";
-
       private const string ValidWinPath = @"(?:\b[a-z]:|\\\\[a-z0-9.$_-]+\\[a-z0-9.`~!@#$%^&()_-]+)\\(?:[^\\/:*?""<>|\r\n]+\\)*";
       private const string ValidUnixPath = @"^(?:(/|~)[a-z0-9\-\s._~%!$&'()*+,;=:@/]*)+$";
 
-      private const string ValidServer = @"^[a-z0-9\-._%]+$";
-
       private const string ValidHttpUrl = "^(https?|file)://[-A-Z0-9+&@#/%?=~_|$!:,.;]+$";
-
-      private const string ValidMatchHttpOrFtpUrl = @"\b(?<protocol>https?|ftp)://(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*)";
-      private const string ValidMatchFtpWithUserPassUrl = @"\b(?<protocol>ftp)://(?<username>[A-Z0-9+&@#/%=~_|!:,.;]+):(?<password>[A-Z0-9+&@#/%=~_|!:,.;]+)@(?<domain>[-A-Z0-9.]+)(?<file>/[-A-Z0-9+&@#/%=~_|!:,.;]*/)";
-
-      private const string ValidEmailAddress = @"^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$";
-
-      #endregion
-
-      #region Methods
-
-      /// <summary>
-      /// Validate File Name
-      /// </summary>
-      public static bool FileName(string value)
-      {
-         if (value == null) return false;
-         value = value.Trim();
-         if (value.Length == 0) return false;
-
-         var validFileName = new Regex(ValidFileName, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         return validFileName.IsMatch(value);
-      }
 
       /// <summary>
       /// Validate Path
@@ -72,19 +44,6 @@ namespace HFM.Core
          var validUnixPath = new Regex(ValidUnixPath, RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
          return (validPathWin.IsMatch(value) || validUnixPath.IsMatch(value));
-      }
-
-      /// <summary>
-      /// Validate Server Name
-      /// </summary>
-      public static bool ServerName(string value)
-      {
-         if (value == null) return false;
-         value = value.Trim();
-         if (value.Length == 0) return false;
-
-         var validServer = new Regex(ValidServer, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         return validServer.IsMatch(value);
       }
 
       /// <summary>
@@ -112,90 +71,6 @@ namespace HFM.Core
 
          var validHttpUrl = new Regex(ValidHttpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
          return validHttpUrl.IsMatch(value);
-      }
-
-      /// <summary>
-      /// Validate Http or Ftp URL
-      /// </summary>
-      public static bool HttpOrFtpUrl(string value)
-      {
-         var match = MatchHttpOrFtpUrl(value);
-         return match != null && match.Success;
-      }
-
-      /// <summary>
-      /// Match Http or Ftp URL
-      /// </summary>
-      public static Match MatchHttpOrFtpUrl(string value)
-      {
-         if (value == null) return null;
-         value = value.Trim();
-         if (value.Length == 0) return null;
-
-         var validHttpOrFtpUrl = new Regex(ValidMatchHttpOrFtpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         return validHttpOrFtpUrl.Match(value);
-      }
-
-      /// <summary>
-      /// Validate Ftp URL with Username and Password
-      /// </summary>
-      public static bool FtpWithUserPassUrl(string value)
-      {
-         var match = MatchFtpWithUserPassUrl(value);
-         return match != null && match.Success;
-      }
-
-      /// <summary>
-      /// Match FTP URL String with Username and Password
-      /// </summary>
-      public static Match MatchFtpWithUserPassUrl(string value)
-      {
-         if (value == null) return null;
-         value = value.Trim();
-         if (value.Length == 0) return null;
-
-         var validFtpWithUserPassUrl = new Regex(ValidMatchFtpWithUserPassUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         return validFtpWithUserPassUrl.Match(value);
-      }
-
-      /// <summary>
-      /// Validate Email Address
-      /// </summary>
-      public static bool EmailAddress(string value)
-      {
-         if (value == null) return false;
-         value = value.Trim();
-         if (value.Length == 0) return false;
-
-         var validEmailAddress = new Regex(ValidEmailAddress, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-         return validEmailAddress.IsMatch(value);
-      }
-
-      /// <summary>
-      /// Validate that both Username and Password have been specified
-      /// </summary>
-      /// <param name="username">Username Value</param>
-      /// <param name="password">Password Value</param>
-      /// <exception cref="ArgumentException">Throws when either username or password is null or empty but not the other.</exception>
-      public static bool UsernamePasswordPair(string username, string password)
-      {
-         return ValidateValuePair(username, "Password must also be specified when specifying Username.",
-                                  password, "Username must also be specified when specifying Password.",
-                                  false, String.Empty);
-      }
-
-      /// <summary>
-      /// Validate that both Username and Password have been specified
-      /// </summary>
-      /// <param name="username">Username Value</param>
-      /// <param name="password">Password Value</param>
-      /// <param name="throwOnEmpty">Throw Exception if both values are empty.</param>
-      /// <exception cref="ArgumentException">Throws when either username or password is null or empty but not the other.</exception>
-      public static bool UsernamePasswordPair(string username, string password, bool throwOnEmpty)
-      {
-         return ValidateValuePair(username, "Password must also be specified when specifying Username.",
-                                  password, "Username must also be specified when specifying Password.",
-                                  throwOnEmpty, "Username and Password must be specified.");
       }
 
       /// <summary>
@@ -235,7 +110,5 @@ namespace HFM.Core
 
          return true;
       }
-
-      #endregion
    }
 }

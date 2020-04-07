@@ -21,6 +21,8 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.Net;
+using HFM.Core.Services;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -111,7 +113,7 @@ namespace HFM.Forms.Models
             if (ReportingEnabled == false) return false;
             if (ToAddress.Length == 0) return true;
 
-            return !Validate.EmailAddress(ToAddress);
+            return !SendMailService.ValidateEmail(ToAddress);
          }
       }
 
@@ -138,7 +140,7 @@ namespace HFM.Forms.Models
             if (ReportingEnabled == false) return false;
             if (FromAddress.Length == 0) return true;
 
-            return !Validate.EmailAddress(FromAddress);
+            return !SendMailService.ValidateEmail(FromAddress);
          }
       }
 
@@ -256,19 +258,10 @@ namespace HFM.Forms.Models
          get
          {
             if (ReportingEnabled == false) return false;
-         
-            try
-            {
-               // This will violate FxCop rule (rule ID)
-               Validate.UsernamePasswordPair(ServerUsername, ServerPassword);
-               UsernamePasswordPairErrorMessage = String.Empty;
-               return false;
-            }
-            catch (ArgumentException ex)
-            {
-               UsernamePasswordPairErrorMessage = ex.Message;
-               return true;
-            }
+
+            var result = NetworkCredentialFactory.ValidateOrEmpty(ServerUsername, ServerPassword, out var message);
+            UsernamePasswordPairErrorMessage = result ? String.Empty : message;
+            return !result;
          }
       }
 
