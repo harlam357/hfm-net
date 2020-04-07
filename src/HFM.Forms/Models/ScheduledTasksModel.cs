@@ -284,9 +284,9 @@ namespace HFM.Forms.Models
                   {
                      return true;
                   }
-                  return !Validate.Path(WebRoot);
+                  return !FileSystemPath.Validate(WebRoot);
                case WebDeploymentType.Ftp:
-                  return !Validate.FtpPath(WebRoot);
+                  return !FileSystemPath.ValidateUnix(WebRoot);
                default:
                   return true;
             }

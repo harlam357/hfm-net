@@ -20,7 +20,6 @@
 using System;
 using System.ComponentModel;
 
-using HFM.Core;
 using HFM.Core.Net;
 using HFM.Preferences;
 
@@ -159,7 +158,7 @@ namespace HFM.Forms.Models
 
       public bool ProjectDownloadUrlError
       {
-         get { return !Validate.HttpUrl(ProjectDownloadUrl); }
+         get { return !HttpUrl.Validate(ProjectDownloadUrl); }
       }
       
       #endregion

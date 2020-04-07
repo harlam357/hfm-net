@@ -113,6 +113,7 @@
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
     <Compile Include="Net\HostNameTests.cs" />
+    <Compile Include="Net\HttpUrlTests.cs" />
     <Compile Include="Net\NetworkCredentialFactoryTests.cs" />
     <Compile Include="Services\EocStatsDataTests.cs" />
     <Compile Include="Services\SendMailServiceTests.cs" />
@@ -139,7 +140,7 @@
     <Compile Include="Data\WorkUnitRepositoryTests.cs" />
     <Compile Include="UnitInfoExtensions.cs" />
     <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
-    <Compile Include="ValidateTests.cs" />
+    <Compile Include="FileSystemPathTests.cs" />
     <Compile Include="Data\EocStatsDataContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>

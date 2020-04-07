@@ -90,6 +90,7 @@
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Net\HostName.cs" />
+    <Compile Include="Net\HttpUrl.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
     <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="Services\SendMailService.cs" />
@@ -167,7 +168,7 @@
     <Compile Include="Data\WorkUnitRepository.cs" />
     <Compile Include="WorkUnits\WorkUnitModel.cs" />
     <Compile Include="Client\StringBuilderExtensions.cs" />
-    <Compile Include="Validate.cs" />
+    <Compile Include="FileSystemPath.cs" />
     <Compile Include="Data\EocStatsDataContainer.cs" />
     <Compile Include="Net\WebOperation.cs" />
     <Compile Include="WorkUnits\WorkUnitResult.cs" />

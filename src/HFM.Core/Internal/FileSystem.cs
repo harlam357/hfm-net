@@ -1,9 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace HFM.Core.Internal
@@ -58,32 +56,5 @@ namespace HFM.Core.Internal
             }
             throw new TimeoutException($"File open timed out after {timeout}ms.");
         }
-
-        internal static bool PathsEqual(string path1, string path2)
-        {
-            IEnumerable<string> path1Variations = EnumeratePathVariations(path1);
-            IEnumerable<string> path2Variations = EnumeratePathVariations(path2);
-
-            return path1Variations.Any(p1 => path2Variations.Any(p2 => String.Equals(p1, p2, StringComparison)));
-        }
-
-        private static IEnumerable<string> EnumeratePathVariations(string path)
-        {
-            if (path.EndsWith("\\", StringComparison.OrdinalIgnoreCase) ||
-                path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
-                yield return path;
-            }
-            else
-            {
-                yield return String.Concat(path, "\\");
-                yield return String.Concat(path, "/");
-            }
-        }
-
-        private static StringComparison StringComparison =>
-            Application.IsRunningOnMono
-                ? StringComparison.Ordinal
-                : StringComparison.OrdinalIgnoreCase;
     }
 }
