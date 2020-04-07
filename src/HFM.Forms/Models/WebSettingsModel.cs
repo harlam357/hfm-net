@@ -214,19 +214,10 @@ namespace HFM.Forms.Models
          get
          {
             if (UseProxy == false) return false;
-         
-            try
-            {
-               // This will violate FxCop rule (rule ID)
-               Validate.ServerPortPair(ProxyServer, ProxyPort.ToString());
-               ServerPortPairErrorMessage = String.Empty;
-               return false;
-            }
-            catch (ArgumentException ex)
-            {
-               ServerPortPairErrorMessage = ex.Message;
-               return true;
-            }
+
+            var result = HostName.ValidateNameAndPort(ProxyServer, ProxyPort, out var message);
+            ServerPortPairErrorMessage = result ? String.Empty : message;
+            return !result;
          }
       }
 

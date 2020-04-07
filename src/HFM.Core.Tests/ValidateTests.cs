@@ -95,32 +95,5 @@ namespace HFM.Core
          Assert.IsTrue(Validate.HttpUrl(@"file://c:/folder/subfolder/myfile.txt"));
          Assert.IsTrue(Validate.HttpUrl(@"http://fah-web.stanford.edu/psummary.html"));
       }
-
-      [Test]
-      public void ServerPortPair()
-      {
-         Assert.IsTrue(Validate.ServerPortPair("Server", "Port"));
-
-         try
-         {
-            Validate.ServerPortPair("Server", String.Empty);
-         }
-         catch (ArgumentException)
-         { }
-
-         try
-         {
-            Validate.ServerPortPair(String.Empty, "Port");
-         }
-         catch (ArgumentException)
-         { }
-
-         try
-         {
-            Validate.ServerPortPair(String.Empty, String.Empty);
-         }
-         catch (ArgumentException)
-         { }
-      }
    }
 }

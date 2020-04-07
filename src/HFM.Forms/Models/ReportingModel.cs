@@ -192,18 +192,10 @@ namespace HFM.Forms.Models
          get
          {
             if (ReportingEnabled == false) return false;
-         
-            try
-            {
-               Validate.ServerPortPair(ServerAddress, ServerPort.ToString());
-               ServerPortPairErrorMessage = String.Empty;
-               return false;
-            }
-            catch (ArgumentException ex)
-            {
-               ServerPortPairErrorMessage = ex.Message;
-               return true;
-            }
+
+            var result = HostName.ValidateNameAndPort(ServerAddress, ServerPort, out var message);
+            ServerPortPairErrorMessage = result ? String.Empty : message;
+            return !result;
          }
       }
       

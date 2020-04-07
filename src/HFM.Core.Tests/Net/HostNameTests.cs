@@ -34,5 +34,14 @@ namespace HFM.Core.Net
             Assert.IsFalse(HostName.Validate("  "));
             Assert.IsFalse(HostName.Validate(null));
         }
+
+        [Test]
+        public void HostName_ValidateNameAndPort_Tests()
+        {
+            Assert.IsTrue(HostName.ValidateNameAndPort("Server", 25, out _));
+            Assert.IsFalse(HostName.ValidateNameAndPort("Server", 0, out _));
+            Assert.IsFalse(HostName.ValidateNameAndPort(String.Empty, 25, out _));
+            Assert.IsFalse(HostName.ValidateNameAndPort(String.Empty, 0, out _));
+        }
     }
 }

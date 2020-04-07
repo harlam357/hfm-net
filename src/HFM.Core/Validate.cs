@@ -72,43 +72,5 @@ namespace HFM.Core
          var validHttpUrl = new Regex(ValidHttpUrl, RegexOptions.Singleline | RegexOptions.IgnoreCase);
          return validHttpUrl.IsMatch(value);
       }
-
-      /// <summary>
-      /// Validate that both Server and Port have been specified
-      /// </summary>
-      /// <param name="server">Server Value</param>
-      /// <param name="port">Port Value</param>
-      /// <exception cref="ArgumentException">Throws when either server or port is null or empty but not the other.</exception>
-      public static bool ServerPortPair(string server, string port)
-      {
-         return ValidateValuePair(server, "Port must also be specified when specifying Server.",
-                                  port, "Server must also be specified when specifying Port.",
-                                  true, "Server and Port must be specified.");
-      }
-
-      /// <summary>
-      /// Validate a Value Pair
-      /// </summary>
-      private static bool ValidateValuePair(string value1, string value1Message, string value2, string value2Message, bool throwOnEmpty, string throwOnEmptyMessage)
-      {
-         if (String.IsNullOrEmpty(value1) && String.IsNullOrEmpty(value2))
-         {
-            if (throwOnEmpty)
-            {
-               throw new ArgumentException(throwOnEmptyMessage);
-            }
-            return false;
-         }
-         if (String.IsNullOrEmpty(value1) == false && String.IsNullOrEmpty(value2))
-         {
-            throw new ArgumentException(value1Message);
-         }
-         if (String.IsNullOrEmpty(value1) && String.IsNullOrEmpty(value2) == false)
-         {
-            throw new ArgumentException(value2Message);
-         }
-
-         return true;
-      }
    }
 }
