@@ -9,8 +9,6 @@ namespace HFM.Core.Logging
 
         bool IsErrorEnabled { get; }
 
-        bool IsFatalEnabled { get; }
-
         bool IsInfoEnabled { get; }
 
         bool IsWarnEnabled { get; }
@@ -22,10 +20,6 @@ namespace HFM.Core.Logging
         void Error(string message);
 
         void Error(string message, Exception exception);
-
-        void Fatal(string message);
-
-        void Fatal(string message, Exception exception);
 
         void Info(string message);
 

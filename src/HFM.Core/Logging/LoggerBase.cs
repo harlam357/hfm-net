@@ -6,7 +6,6 @@ namespace HFM.Core.Logging
     public enum LoggerLevel
     {
         Off,
-        Fatal,
         Error,
         Warn,
         Info,
@@ -76,23 +75,10 @@ namespace HFM.Core.Logging
             Log(LoggerLevel.Error, message, exception);
         }
 
-        public void Fatal(string message)
-        {
-            if (!IsFatalEnabled) return;
-            Log(LoggerLevel.Fatal, message, null);
-        }
-
-        public void Fatal(string message, Exception exception)
-        {
-            if (!IsFatalEnabled) return;
-            Log(LoggerLevel.Fatal, message, exception);
-        }
-
         public bool IsDebugEnabled => Level >= LoggerLevel.Debug;
         public bool IsInfoEnabled => Level >= LoggerLevel.Info;
         public bool IsWarnEnabled => Level >= LoggerLevel.Warn;
         public bool IsErrorEnabled => Level >= LoggerLevel.Error;
-        public bool IsFatalEnabled => Level >= LoggerLevel.Fatal;
 
         protected abstract void Log(LoggerLevel loggerLevel, string message, Exception exception);
     }

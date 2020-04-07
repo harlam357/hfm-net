@@ -82,7 +82,6 @@ namespace HFM.Core.Logging
                     messageIdentifier = " ";
                     break;
                 case LoggerLevel.Error:
-                case LoggerLevel.Fatal:
                     messageIdentifier = "X";
                     break;
                 case LoggerLevel.Warn:
