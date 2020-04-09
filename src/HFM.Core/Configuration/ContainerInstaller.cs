@@ -50,7 +50,7 @@ namespace HFM.Core.Configuration
 
             // ILogger - Singleton
             container.Register(
-               Component.For<ILogger>()
+               Component.For<ILogger, ILoggerEvents>()
                   .ImplementedBy<Logger>()
                   .UsingFactoryMethod(() => new Logger(ApplicationDataFolderPath)));
 

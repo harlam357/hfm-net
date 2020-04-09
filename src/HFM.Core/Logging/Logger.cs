@@ -27,8 +27,13 @@ using System.Linq;
 
 namespace HFM.Core.Logging
 {
+    public interface ILoggerEvents
+    {
+        event EventHandler<LoggedEventArgs> Logged;
+    }
+
     [ExcludeFromCodeCoverage]
-    public class Logger : LoggerBase
+    public class Logger : LoggerBase, ILoggerEvents
     {
         public const string NameFormat = "({0}) {1}";
 
@@ -58,7 +63,7 @@ namespace HFM.Core.Logging
                 lock (LogLock)
                 {
                     var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(x => FormatMessage(loggerLevel, x)).ToList();
-                    OnTextMessage(new TextMessageEventArgs(lines));
+                    OnLogged(new LoggedEventArgs(lines));
                     foreach (var line in lines)
                     {
                         Trace.WriteLine(line);
@@ -99,16 +104,12 @@ namespace HFM.Core.Logging
             return $"[{dateTime.ToShortDateString()}-{dateTime.ToLongTimeString()}] {messageIdentifier} {message}";
         }
 
-        #region Text Message Event
+        public event EventHandler<LoggedEventArgs> Logged;
 
-        public event EventHandler<TextMessageEventArgs> TextMessage;
-
-        private void OnTextMessage(TextMessageEventArgs e)
+        private void OnLogged(LoggedEventArgs e)
         {
-            TextMessage?.Invoke(this, e);
+            Logged?.Invoke(this, e);
         }
-
-        #endregion
 
         public const string LogFileName = "HFM.log";
         public const string PreviousLogFileName = "HFM-prev.log";
@@ -141,11 +142,11 @@ namespace HFM.Core.Logging
     }
 
     [ExcludeFromCodeCoverage]
-    public class TextMessageEventArgs : EventArgs
+    public class LoggedEventArgs : EventArgs
     {
         public ICollection<string> Messages { get; }
 
-        public TextMessageEventArgs(ICollection<string> messages)
+        public LoggedEventArgs(ICollection<string> messages)
         {
             Messages = messages;
         }

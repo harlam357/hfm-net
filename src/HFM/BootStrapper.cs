@@ -62,9 +62,7 @@ namespace HFM
                     return;
                 }
 
-                var logger = container.Resolve<ILogger>();
-                InitializeLogging(container, logger);
-
+                var logger = InitializeLogging(container);
                 if (!CheckMonoVersion(logger))
                 {
                     return;
@@ -135,11 +133,11 @@ namespace HFM
             return true;
         }
 
-        private static void InitializeLogging(IWindsorContainer container, ILogger logger)
+        private static ILogger InitializeLogging(IWindsorContainer container)
         {
             // create messages view (hooks into logging messages)
-            var messagesForm = (MessagesForm)container.Resolve<IMessagesView>();
-            messagesForm.AttachLogger(logger);
+            container.Resolve<IMessagesView>();
+            var logger = container.Resolve<ILogger>();
             // write log header
             logger.Info(String.Empty);
             logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
@@ -151,6 +149,7 @@ namespace HFM
                 logger.Info("Exiting...");
                 logger.Info(String.Empty);
             };
+            return logger;
         }
 
         private static bool CheckMonoVersion(ILogger logger)
