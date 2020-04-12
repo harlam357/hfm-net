@@ -21,7 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using AutoMapper;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 

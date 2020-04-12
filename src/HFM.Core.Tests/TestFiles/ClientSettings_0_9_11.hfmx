@@ -17,3 +17,4 @@
     <ClientTimeOffset>0</ClientTimeOffset>
   </ClientSettings>
 </ArrayOfClientSettings>
+<!-- Represents ClientSettings format for v0.9.11 and previous versions -->

@@ -23,10 +23,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using HFM.Core.Client;
-
-// TODO: Figure out how to move this to Client namespace and maintain compatibility with existing hfmx files
-namespace HFM.Core.DataTypes
+namespace HFM.Core.Client
 {
     /// <summary>
     /// Client Types
@@ -38,7 +35,7 @@ namespace HFM.Core.DataTypes
         Legacy
     }
 
-    [DataContract]
+    [DataContract(Namespace = "")]
     public class ClientSettings
     {
         public ClientSettings()

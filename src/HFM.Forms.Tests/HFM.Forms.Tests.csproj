@@ -151,7 +151,7 @@
       <Link>Properties\harlam357.snk</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="TestFiles\TestClientSettings.hfmx" />
+    <None Include="TestFiles\ClientSettings_0_9_11.hfmx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

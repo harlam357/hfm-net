@@ -5,8 +5,6 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using HFM.Core.DataTypes;
-
 namespace HFM.Core.Client
 {
     [TestFixture]
@@ -18,7 +16,7 @@ namespace HFM.Core.Client
             // Arrange
             var serializer = new ClientSettingsFileSerializer();
             // Act
-            var settings = serializer.Deserialize("..\\..\\TestFiles\\TestClientSettings.hfmx");
+            var settings = serializer.Deserialize("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx");
             // Assert
             Assert.IsNotNull(settings);
             Assert.AreEqual(1, settings.Count);

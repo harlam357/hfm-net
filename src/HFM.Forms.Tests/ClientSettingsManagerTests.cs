@@ -20,11 +20,10 @@
 using System;
 using System.IO;
 using System.Linq;
+
 using NUnit.Framework;
 
-using HFM.Core;
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
 
 namespace HFM.Forms
 {
@@ -49,11 +48,11 @@ namespace HFM.Forms
             // Arrange
             var manager = new ClientSettingsManager();
             // Act
-            var settings = manager.Read("..\\..\\TestFiles\\TestClientSettings.hfmx", 1);
+            var settings = manager.Read("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", 1);
             // Assert
             Assert.IsNotNull(settings);
             Assert.AreEqual(1, settings.Count());
-            Assert.AreEqual("..\\..\\TestFiles\\TestClientSettings.hfmx", manager.FileName);
+            Assert.AreEqual("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", manager.FileName);
             Assert.AreEqual(1, manager.FilterIndex);
             Assert.AreEqual(".hfmx", manager.FileExtension);
         }

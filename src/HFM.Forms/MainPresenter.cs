@@ -37,9 +37,7 @@ using harlam357.Core;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
