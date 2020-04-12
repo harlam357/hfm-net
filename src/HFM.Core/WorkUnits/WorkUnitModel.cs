@@ -83,7 +83,7 @@ namespace HFM.Core.WorkUnits
 
         private DateTime GetTime(DateTime dateTime)
         {
-            if (dateTime.IsUnknown()) { return dateTime; }
+            if (dateTime.IsMinValue()) { return dateTime; }
 
             var offset = TimeSpan.FromMinutes(ClientTimeOffset);
             return UtcOffsetIsZero
@@ -98,7 +98,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
+                if (_workUnit.DownloadTime.IsMinValue()) return _workUnit.DownloadTime;
 
                 return ProteinIsUnknown(CurrentProtein)
                           ? DueTime
@@ -113,7 +113,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_workUnit.DownloadTime.IsUnknown()) return _workUnit.DownloadTime;
+                if (_workUnit.DownloadTime.IsMinValue()) return _workUnit.DownloadTime;
 
                 return ProteinIsUnknown(CurrentProtein)
                           ? DateTime.MinValue
@@ -200,7 +200,7 @@ namespace HFM.Core.WorkUnits
             if (_workUnit.CurrentFrame == null) return 0;
 
             // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.IsUnknown() || _workUnit.CurrentFrame.ID <= 0) { return 0; }
+            if (DownloadTime.IsMinValue() || _workUnit.CurrentFrame.ID <= 0) { return 0; }
 
             // Issue 92
             TimeSpan timeSinceUnitDownload = _workUnit.UnitRetrievalTime.Subtract(DownloadTime);
@@ -284,11 +284,11 @@ namespace HFM.Core.WorkUnits
 
         private TimeSpan GetUnitTimeByDownloadTime(TimeSpan frameTime)
         {
-            if (DownloadTime.IsUnknown())
+            if (DownloadTime.IsMinValue())
             {
                 return TimeSpan.Zero;
             }
-            if (FinishedTime.IsKnown())
+            if (!FinishedTime.IsMinValue())
             {
                 return FinishedTime.Subtract(DownloadTime);
             }

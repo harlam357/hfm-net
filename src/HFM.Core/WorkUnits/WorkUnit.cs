@@ -29,9 +29,9 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
-        public const string DefaultFoldingID = "Unknown";
+        public const string DefaultFoldingID = Unknown.Value;
         public const int DefaultTeam = 0;
-        public const string DefaultCoreID = "Unknown";
+        public const string DefaultCoreID = Unknown.Value;
 
         #region Constructor
 

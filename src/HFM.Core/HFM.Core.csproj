@@ -97,6 +97,7 @@
     <Compile Include="SlotXml\HtmlBuilder.cs" />
     <Compile Include="SlotXml\WebArtifactDeployment.cs" />
     <Compile Include="SlotXml\XmlBuilder.cs" />
+    <Compile Include="Unknown.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
     <Compile Include="Client\SlotIdentifier.cs" />
     <Compile Include="SlotXml\LogLine.cs" />
@@ -158,7 +159,7 @@
     <Compile Include="Data\WorkUnitQuery.cs" />
     <Compile Include="WorkUnits\WorkUnit.cs" />
     <Compile Include="Services\EocStatsData.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="WorkUnits\DateTimeExtensions.cs" />
     <Compile Include="Services\FtpService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />

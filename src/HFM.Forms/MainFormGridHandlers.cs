@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Preferences;
 
@@ -291,7 +292,7 @@ namespace HFM.Forms
                   //if (e.Value != null)
                   //{
                      Debug.Assert(data != null);
-                     DrawText(((DateTime)data).ToDateString(), textColor, e);
+                     DrawText(((DateTime)data).ToStringOrUnknown(), textColor, e);
                   //}
                }
                else if (paint.Equals(PaintCell.Warning))
@@ -416,13 +417,13 @@ namespace HFM.Forms
                else if (dataGridView1.Columns["ETA"].Index == columnIndex && _prefs.Get<bool>(Preference.DisplayEtaAsDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
-                  formattedString = slotModel.ETADate.ToDateString();
+                  formattedString = slotModel.ETADate.ToStringOrUnknown();
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)
                {
                   formattedString =
-                     ((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value).ToDateString(
+                     ((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value).ToStringOrUnknown(
                      dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
                }
                else
@@ -473,9 +474,9 @@ namespace HFM.Forms
 
       private static string GetFormattedDownloadTimeString(DateTime date)
       {
-         if (date.Equals(DateTime.MinValue))
+         if (date.IsMinValue())
          {
-            return "Unknown";
+            return Unknown.Value;
          }
 
          TimeSpan span = DateTime.Now.Subtract(date);
@@ -490,9 +491,9 @@ namespace HFM.Forms
 
       private static string GetFormattedDeadlineString(DateTime date)
       {
-         if (date.Equals(DateTime.MinValue))
+         if (date.IsMinValue())
          {
-            return "Unknown";
+            return Unknown.Value;
          }
 
          TimeSpan span = date.Subtract(DateTime.Now);

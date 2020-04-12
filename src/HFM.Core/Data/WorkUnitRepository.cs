@@ -278,8 +278,8 @@ namespace HFM.Core.Data
         private static bool ValidateWorkUnit(WorkUnit workUnit)
         {
             return workUnit.ProjectIsKnown() &&
-                   workUnit.DownloadTime.IsKnown() &&
-                   workUnit.FinishedTime.IsKnown();
+                   !workUnit.DownloadTime.IsMinValue() &&
+                   !workUnit.FinishedTime.IsMinValue();
         }
 
         private bool WorkUnitExists(WorkUnit workUnit)

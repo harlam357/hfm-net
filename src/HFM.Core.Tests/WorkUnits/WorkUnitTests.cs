@@ -35,10 +35,10 @@ namespace HFM.Core.WorkUnits
       {
          var unitInfo = new WorkUnit();
          Assert.AreEqual(SlotType.Unknown, unitInfo.SlotType);
-         Assert.IsTrue(unitInfo.DownloadTime.IsUnknown());
-         Assert.IsTrue(unitInfo.DueTime.IsUnknown());
+         Assert.IsTrue(unitInfo.DownloadTime.IsMinValue());
+         Assert.IsTrue(unitInfo.DueTime.IsMinValue());
          Assert.IsTrue(unitInfo.UnitStartTimeStamp == TimeSpan.Zero);
-         Assert.IsTrue(unitInfo.FinishedTime.IsUnknown());
+         Assert.IsTrue(unitInfo.FinishedTime.IsMinValue());
          Assert.IsTrue(unitInfo.CoreVersion == 0);
          Assert.IsTrue(unitInfo.ProteinName.Length == 0);
          Assert.IsTrue(unitInfo.ProteinTag.Length == 0);
