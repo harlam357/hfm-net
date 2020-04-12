@@ -58,7 +58,7 @@ namespace HFM.Core.Configuration
             container.Register(
                Component.For<Preferences.IPreferenceSet>()
                   .ImplementedBy<Preferences.PreferenceSet>()
-                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.VersionWithRevision))
+                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.FullVersion))
                   .OnCreate((kernel, instance) =>
                   {
                       var logger = (LoggerBase)kernel.Resolve<ILogger>();

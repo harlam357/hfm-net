@@ -92,7 +92,7 @@ namespace HFM
                 }
 
                 ExceptionDialog.RegisterForUnhandledExceptions(
-                   Core.Application.NameAndVersionWithRevision,
+                   Core.Application.NameAndFullVersion,
                    Environment.OSVersion.VersionString,
                    ex => logger.Error(ex.Message, ex));
 
@@ -140,7 +140,7 @@ namespace HFM
             var logger = container.Resolve<ILogger>();
             // write log header
             logger.Info(String.Empty);
-            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.VersionWithRevision));
+            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.FullVersion));
             logger.Info(String.Empty);
 
             System.Windows.Forms.Application.ApplicationExit += (s, e) =>
@@ -163,7 +163,7 @@ namespace HFM
             Version monoVersion = null;
             try
             {
-                monoVersion = Core.Application.GetMonoVersionNumber();
+                monoVersion = Core.Application.GetMonoVersion();
             }
             catch (Exception ex)
             {
@@ -343,7 +343,7 @@ namespace HFM
         {
             ExceptionDialog.ShowErrorDialog(
                ex,
-               Core.Application.NameAndVersionWithRevision,
+               Core.Application.NameAndFullVersion,
                Environment.OSVersion.VersionString,
                message,
                Core.Application.SupportForumUrl,

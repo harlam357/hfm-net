@@ -152,7 +152,7 @@ namespace HFM.Core.Data
             {
                 CreateTable(WorkUnitRepositoryTable.Version);
             }
-            int dbVersion = Application.ParseVersion(dbVersionString);
+            int dbVersion = Application.ParseVersionNumber(dbVersionString);
             Logger.Info($"WU History database v{dbVersionString}");
 
             UpgradeToVersion092(dbVersion);
@@ -161,7 +161,7 @@ namespace HFM.Core.Data
         private void UpgradeToVersion092(int dbVersion)
         {
             const string upgradeVersionString = "0.9.2";
-            if (dbVersion < Application.ParseVersion(upgradeVersionString))
+            if (dbVersion < Application.ParseVersionNumber(upgradeVersionString))
             {
                 using (var connection = new SQLiteConnection(ConnectionString))
                 {

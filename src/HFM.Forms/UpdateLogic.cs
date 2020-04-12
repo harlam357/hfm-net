@@ -162,7 +162,7 @@ namespace HFM.Forms
 
          try
          {
-            return Application.ParseVersion(updateVersion) > Application.VersionNumber;
+            return Application.ParseVersionNumber(updateVersion) > Application.VersionNumber;
          }
          catch (FormatException ex)
          {
@@ -180,7 +180,7 @@ namespace HFM.Forms
          }
 
          var updatePresenter = new UpdatePresenter(ExceptionLogger,
-            update, _proxy, Application.Name, Application.VersionWithRevision);
+            update, _proxy, Application.Name, Application.FullVersion);
          updatePresenter.Show(Owner);
          HandleUpdatePresenterResults(updatePresenter);
       }
