@@ -31,7 +31,6 @@ using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Core.Client;
-using HFM.Core.Configuration;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
@@ -59,12 +58,6 @@ namespace HFM.Core.Data
         private readonly IProteinService _proteinService = CreateProteinService();
 
         #region Setup and TearDown
-
-        [OneTimeSetUp]
-        public void FixtureInit()
-        {
-            Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
-        }
 
         [SetUp]
         public void Init()

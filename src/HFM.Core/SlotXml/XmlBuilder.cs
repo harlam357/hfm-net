@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
+using AutoMapper;
+
 using HFM.Core.Client;
 using HFM.Core.Serializers;
 using HFM.Preferences;
@@ -28,9 +30,12 @@ namespace HFM.Core.SlotXml
     {
         public IPreferenceSet Preferences { get; }
 
+        private readonly IMapper _mapper;
+
         public XmlBuilder(IPreferenceSet preferences)
         {
             Preferences = preferences;
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<XmlBuilderProfile>()).CreateMapper();
         }
 
         public XmlBuilderResult Build(ICollection<SlotModel> slots, string path)
@@ -52,7 +57,7 @@ namespace HFM.Core.SlotXml
             slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
             slotSummary.UpdateDateTime = updateDateTime;
             slotSummary.SlotTotals = SlotTotals.Create(slots);
-            slotSummary.Slots = SortSlots(slots).Select(AutoMapper.Mapper.Map<SlotModel, SlotData>).ToList();
+            slotSummary.Slots = SortSlots(slots).Select(_mapper.Map<SlotModel, SlotData>).ToList();
 
             var serializer = new DataContractFileSerializer<SlotSummary>();
             string filePath = Path.Combine(path, SlotSummaryXml);
@@ -104,7 +109,7 @@ namespace HFM.Core.SlotXml
             slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
             slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
             slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
-            slotDetail.SlotData = AutoMapper.Mapper.Map<SlotModel, SlotData>(slot);
+            slotDetail.SlotData = _mapper.Map<SlotModel, SlotData>(slot);
             return slotDetail;
         }
     }

@@ -109,14 +109,15 @@
     <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Client\ClientFactoryTests.cs" />
     <Compile Include="Client\SlotModelTests.cs" />
-    <Compile Include="Configuration\AutoMapperProfileTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
+    <Compile Include="Data\WorkUnitRowProfileTests.cs" />
     <Compile Include="Net\HostNameTests.cs" />
     <Compile Include="Net\HttpUrlTests.cs" />
     <Compile Include="Net\NetworkCredentialFactoryTests.cs" />
     <Compile Include="Services\EocStatsDataTests.cs" />
     <Compile Include="Services\SendMailServiceTests.cs" />
+    <Compile Include="SlotXml\XmlBuilderProfileTests.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="Data\WorkUnitQueryTests.cs" />
@@ -182,6 +183,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\" />
     <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

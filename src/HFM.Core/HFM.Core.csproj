@@ -84,6 +84,7 @@
     <Compile Include="Client\ClientIdentifier.cs" />
     <Compile Include="Client\NumberFormat.cs" />
     <Compile Include="Client\StringBuilderReader.cs" />
+    <Compile Include="Data\WorkUnitRowProfile.cs" />
     <Compile Include="FahUrl.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="SlotXml\HtmlBuilder.cs" />
     <Compile Include="SlotXml\WebArtifactDeployment.cs" />
     <Compile Include="SlotXml\XmlBuilder.cs" />
+    <Compile Include="SlotXml\XmlBuilderProfile.cs" />
     <Compile Include="Unknown.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
     <Compile Include="Client\SlotIdentifier.cs" />
@@ -134,7 +136,6 @@
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="SlotXml\WebArtifactBuilder.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
-    <Compile Include="Configuration\AutoMapperProfile.cs" />
     <Compile Include="Client\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />

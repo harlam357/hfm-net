@@ -22,11 +22,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Core.Client;
-using HFM.Core.Configuration;
 using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Preferences;
@@ -36,12 +34,6 @@ namespace HFM.Core.SlotXml
     [TestFixture]
     public class WebArtifactTests
     {
-        [SetUp]
-        public void Init()
-        {
-            Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
-        }
-
         [Test]
         public void WebArtifactBuilder_Build_CreatesDirectoryWithXmlFiles()
         {
@@ -189,7 +181,6 @@ namespace HFM.Core.SlotXml
             // setup slot
             var slot = new SlotModel();
             slot.Prefs = preferences;
-            // set concrete values
             slot.Settings = new ClientSettings {Name = "Test2"};
             var logLines = new List<Log.LogLine>
             {
@@ -202,10 +193,7 @@ namespace HFM.Core.SlotXml
             // setup slot
             slot = new SlotModel();
             slot.Prefs = preferences;
-            // Test For - Issue 201 - Web Generation Fails when a Client with no CurrentLogLines is encountered.
-            // Make sure we return null for CurrentLogLines in the second SlotModel.
             slot.Settings = new ClientSettings {Name = "Test1"};
-            slot.CurrentLogLines = null;
             slots.Add(slot);
 
             return slots;

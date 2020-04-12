@@ -26,6 +26,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
 using HFM.Core.Internal;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -65,8 +67,6 @@ namespace HFM.Core.Data
 
     public partial class WorkUnitRepository : IWorkUnitRepository
     {
-        #region Fields
-
         private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
         public string FilePath { get; private set; }
@@ -76,10 +76,12 @@ namespace HFM.Core.Data
         /// </summary>
         public bool Connected { get; private set; }
 
+        public IProteinService ProteinService { get; }
+        
         private ILogger _logger;
         private ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
 
-        private readonly IProteinService _proteinService;
+        private readonly IMapper _mapper;
 
         private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> SqlTableCommandDictionary =
             new Dictionary<WorkUnitRepositoryTable, SqlTableCommands>
@@ -88,16 +90,15 @@ namespace HFM.Core.Data
                 { WorkUnitRepositoryTable.Version, new VersionSqlTableCommands() }
             };
 
-        #endregion
-
         public const string DefaultFileName = "WuHistory.db3";
 
         #region Constructor
 
         public WorkUnitRepository(IProteinService proteinService, ILogger logger)
         {
-            _proteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
+            ProteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
             _logger = logger;
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
@@ -177,7 +178,7 @@ namespace HFM.Core.Data
                             // add columns to WuHistory table
                             AddProteinColumns(connection);
                             // update the WuHistory table with protein info
-                            var proteinDataUpdater = new ProteinDataUpdater(connection, _proteinService);
+                            var proteinDataUpdater = new ProteinDataUpdater(connection, ProteinService);
                             proteinDataUpdater.ExecuteAsyncWithProgress(true).Wait();
                             // set database version
                             SetDatabaseVersion(connection, upgradeVersionString);
@@ -249,7 +250,7 @@ namespace HFM.Core.Data
                 return false;
             }
 
-            var entry = AutoMapper.Mapper.Map<WorkUnitRow>(workUnitModel.Data);
+            var entry = _mapper.Map<WorkUnitRow>(workUnitModel.Data);
             // cannot map these two properties from a WorkUnit instance
             // they only live at the WorkUnitModel level
             entry.FramesCompleted = workUnitModel.FramesComplete;
@@ -459,7 +460,7 @@ namespace HFM.Core.Data
                     try
                     {
                         // update the WuHistory table with protein info
-                        var proteinDataUpdater = new ProteinDataUpdaterWithCancellation(connection, _proteinService);
+                        var proteinDataUpdater = new ProteinDataUpdaterWithCancellation(connection, ProteinService);
                         proteinDataUpdater.Scope = scope;
                         proteinDataUpdater.Arg = arg;
                         await proteinDataUpdater.ExecuteAsyncWithProgress(true, this).ConfigureAwait(false);
