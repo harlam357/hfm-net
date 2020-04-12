@@ -120,6 +120,7 @@
     <Compile Include="ClientSettingsManager.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\AutoMapperProfile.cs" />
+    <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
     <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -153,6 +154,9 @@
       <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="FahClientSetupPresenter.cs" />
+    <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
+    <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
+    <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="Internal\FileSystemPath.cs" />
     <Compile Include="IPresenterFactory.cs" />
     <Compile Include="IViewFactory.cs" />

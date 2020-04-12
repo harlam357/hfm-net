@@ -128,12 +128,8 @@
     <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Internal\AsyncProcessorExtensions.cs" />
     <Compile Include="Internal\FileSystem.cs" />
-    <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
-    <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="SlotXml\WebArtifactBuilder.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Client\SlotTotals.cs" />

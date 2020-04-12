@@ -57,17 +57,17 @@ namespace HFM
                 {
                     container.AddFacility<TypedFactoryFacility>();
                     container.Install(new Core.Configuration.ContainerInstaller
-                    {
-                        ApplicationPath = Application.StartupPath,
-                        ApplicationDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM")
-                    },
-                                      new Forms.Configuration.ContainerInstaller());
+                        {
+                            ApplicationPath = Application.StartupPath,
+                            ApplicationDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM")
+                        },
+                        new Forms.Configuration.ContainerInstaller());
 
                     // Create Object Maps
                     Mapper.Initialize(c => { c.AddProfile<Forms.Configuration.AutoMapperProfile>(); });
 
                     // Setup TypeDescriptor
-                    Core.Configuration.TypeDescriptionProviderSetup.Execute();
+                    Forms.Configuration.TypeDescriptionProviderSetup.Execute();
 
                     BootStrapper.Execute(args, container);
                 }
