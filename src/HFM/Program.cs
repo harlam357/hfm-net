@@ -18,10 +18,7 @@
  */
 
 using System;
-using System.Net;
 using Application = System.Windows.Forms.Application;
-
-using AutoMapper;
 
 using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
@@ -38,21 +35,14 @@ namespace HFM
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+#if DEBUG
             // for manually testing different cultures
-            // Dutch-Belgium: nl-BE
-            // German-Germany: de-DE
-            // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
-            //System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("de-DE");
-            //System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("de-DE");
-
-            // default is Tls | Ssl3, add Tls11 and Tls12 to fix issues accessing EOC stats XML
-            // https://stackoverflow.com/questions/2859790/the-request-was-aborted-could-not-create-ssl-tls-secure-channel
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+            //SetupCulture("de-DE");
+#endif
+            Core.Net.SecurityProtocol.Setup();
 
             try
             {
-                // Configure Container
                 using (var container = new WindsorContainer())
                 {
                     container.AddFacility<TypedFactoryFacility>();
@@ -74,5 +64,16 @@ namespace HFM
                 BootStrapper.ShowStartupError(ex, null);
             }
         }
+
+#if DEBUG
+        private static void SetupCulture(string name)
+        {
+            // Dutch-Belgium: nl-BE
+            // German-Germany: de-DE
+            // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo(name);
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo(name);
+        }
+#endif
     }
 }
