@@ -63,9 +63,6 @@ namespace HFM
                         },
                         new Forms.Configuration.ContainerInstaller());
 
-                    // Create Object Maps
-                    Mapper.Initialize(c => { c.AddProfile<Forms.Configuration.AutoMapperProfile>(); });
-
                     // Setup TypeDescriptor
                     Forms.Configuration.TypeDescriptionProviderSetup.Execute();
 

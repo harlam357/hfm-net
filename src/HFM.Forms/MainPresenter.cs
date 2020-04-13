@@ -33,6 +33,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using AutoMapper;
+
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
@@ -88,6 +90,8 @@ namespace HFM.Forms
         private readonly IPreferenceSet _prefs;
         private readonly ClientSettingsManager _settingsManager;
 
+        private readonly IMapper _clientSettingsMapper;
+
         #endregion
 
         #region Constructor
@@ -139,6 +143,8 @@ namespace HFM.Forms
             // Data Services
             _prefs = prefs;
             _settingsManager = settingsManager;
+
+            _clientSettingsMapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
 
             _clientConfiguration.ConfigurationChanged += delegate { AutoSaveConfig(); };
         }
@@ -782,7 +788,7 @@ namespace HFM.Forms
             dialog.SettingsModel = new FahClientSettingsModel();
             while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
-                var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                var settings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                 //if (_clientDictionary.ContainsKey(settings.Name))
                 //{
                 //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
@@ -820,10 +826,10 @@ namespace HFM.Forms
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var dialog = _presenterFactory.GetFahClientSetupPresenter();
-            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+            dialog.SettingsModel = _clientSettingsMapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
             while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
-                var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                var newSettings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                 // perform the edit
                 try
                 {

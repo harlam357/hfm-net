@@ -22,6 +22,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
+using AutoMapper;
+
 using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 
@@ -37,11 +39,13 @@ namespace HFM.Forms.Models
     {
         private readonly IPreferenceSet _prefs;
         private readonly EocStatsScheduledTask _scheduledTask;
+        private readonly IMapper _mapper;
 
         public UserStatsDataModel(IPreferenceSet prefs, EocStatsScheduledTask scheduledTask)
         {
             _prefs = prefs;
             _scheduledTask = scheduledTask;
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<UserStatsDataModelProfile>()).CreateMapper();
 
             _prefs.PreferenceChanged += (s, e) =>
                                         {
@@ -83,7 +87,7 @@ namespace HFM.Forms.Models
 
         private void RefreshFromData()
         {
-            AutoMapper.Mapper.Map(_scheduledTask.DataContainer.Data, this);
+            _mapper.Map(_scheduledTask.DataContainer.Data, this);
             OnPropertyChanged(null);
         }
 
