@@ -45,7 +45,7 @@ namespace HFM.Client.Tool
 
          InitializeComponent();
 
-         base.Text = String.Format("HFM Client Tool v{0}", Core.Application.VersionWithRevision);
+         base.Text = String.Format("HFM Client Tool v{0}", Core.Application.FullVersion);
       }
 
       private void FahClientMessageReceived(object sender, MessageReceivedEventArgs e)

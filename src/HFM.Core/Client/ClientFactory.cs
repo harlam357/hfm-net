@@ -21,9 +21,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Net;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     public interface IFahClientFactory
     {
@@ -61,11 +61,11 @@ namespace HFM.Core
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             // special consideration for obsolete ClientType values that may appear in hfmx configuration files
-            if (!settings.IsFahClient()) return null;
+            if (settings.ClientType != ClientType.FahClient) return null;
 
             if (!ClientSettings.ValidateName(settings.Name)) throw new ArgumentException($"Client name {settings.Name} is not valid.", nameof(settings));
             if (String.IsNullOrWhiteSpace(settings.Server)) throw new ArgumentException("Client server (host) name is empty.", nameof(settings));
-            if (!Validate.ServerPort(settings.Port)) throw new ArgumentException($"Client server (host) port {settings.Port} is not valid.", nameof(settings));
+            if (!TcpPort.Validate(settings.Port)) throw new ArgumentException($"Client server (host) port {settings.Port} is not valid.", nameof(settings));
 
             IClient client = FahClientFactory?.Create();
             if (client != null)

@@ -18,14 +18,12 @@
  */
 
 using System;
-using System.Linq;
 
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.DataTypes;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     [TestFixture]
     public class ClientFactoryTests

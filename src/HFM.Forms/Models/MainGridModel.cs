@@ -25,8 +25,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -77,7 +76,7 @@ namespace HFM.Forms.Models
       #region Fields
 
       private readonly ISynchronizeInvoke _syncObject;
-      private readonly IClientConfiguration _clientConfiguration;
+      private readonly ClientConfiguration _clientConfiguration;
       private readonly SlotModelSortableBindingList _slotList;
       private readonly BindingSource _bindingSource;
 
@@ -103,7 +102,7 @@ namespace HFM.Forms.Models
       public SlotTotals SlotTotals
       {
          // use SlotCollection, it's provides synchronized access to the slot list
-         get { return SlotCollection.GetSlotTotals(); }
+         get { return SlotTotals.Create(SlotCollection); }
       }
 
       public object BindingSource
@@ -111,7 +110,7 @@ namespace HFM.Forms.Models
          get { return _bindingSource; }
       }
 
-      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, IClientConfiguration clientConfiguration)
+      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
       {
          _syncObject = syncObject;
          _clientConfiguration = clientConfiguration;
@@ -141,7 +140,7 @@ namespace HFM.Forms.Models
                                               _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
                                               Sort();
                                               break;
-                                           case Preference.PpdCalculation:
+                                           case Preference.PPDCalculation:
                                            case Preference.DecimalPlaces:
                                            case Preference.BonusCalculation:
                                               ResetBindings();
@@ -204,7 +203,7 @@ namespace HFM.Forms.Models
             // reset selected slot
             ResetSelectedSlot();
             // find duplicates
-            slots.FindDuplicates();
+            SlotModel.FindDuplicateProjects(slots);
 
             _bindingSource.ResetBindings(false);
          }

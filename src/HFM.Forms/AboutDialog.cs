@@ -29,62 +29,79 @@ using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
-   public partial class AboutDialog : FormWrapper
-   {
-      #region Constructor
-      public AboutDialog()
-      {
-         InitializeComponent();
+    public partial class AboutDialog : FormWrapper
+    {
+        public AboutDialog()
+        {
+            InitializeComponent();
 
-         int[] versions = Core.Application.GetVersionNumbers();
-         Debug.Assert(versions.Length == 4);
-         lblVersion.Text = String.Format(CultureInfo.InvariantCulture, "Version {0}.{1}.{2} - Revision {3}",
-                                         versions[0], versions[1], versions[2], versions[3]);
-         string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-         if (String.IsNullOrEmpty(assemblyLocation) == false)
-         {
-            DateTime buildDate = new FileInfo(assemblyLocation).LastWriteTime;
-            // When localizing use ToLongDateString() instead.
-            //lblDate.Text = "Built on: " + buildDate.ToLongDateString();
-            lblDate.Text = "Built on: " + buildDate.ToString("D", CultureInfo.InvariantCulture);
-         }
-         else
-         {
-            lblDate.Text = String.Empty;
-         }
-      }
-      #endregion
+            SetVersionLabelText();
+            SetBuildDateLabelText();
+            SetProjectSiteLinkText();
+            SetSupportForumLinkText();
+        }
 
-      private void lnkHfmGoogleCode_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(Constants.GitHubUrl);
-         }
-         catch (Exception)
-         {
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
-               Properties.Resources.ProcessStartError, "HFM.NET GitHub Project"));
-         }
-      }
+        private void SetVersionLabelText()
+        {
+            lblVersion.Text = $"Version {Core.Application.FullVersion}";
+        }
 
-      private void lnkHfmGoogleGroup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         try
-         {
-            Process.Start(Constants.GoogleGroupUrl);
-         }
-         catch (Exception)
-         {
-            MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
-               Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
-         }
-      }
+        private void SetBuildDateLabelText()
+        {
+            string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            if (String.IsNullOrEmpty(assemblyLocation) == false)
+            {
+                DateTime buildDate = new FileInfo(assemblyLocation).LastWriteTime;
+                // When localizing use ToLongDateString() instead.
+                //lblDate.Text = "Built on: " + buildDate.ToLongDateString();
+                lblDate.Text = "Built on: " + buildDate.ToString("D", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                lblDate.Text = String.Empty;
+            }
+        }
 
-      private void btnClose_Click(object sender, EventArgs e)
-      {
-         DialogResult = DialogResult.Cancel;
-         Close();
-      }
-   }
+        private void SetProjectSiteLinkText()
+        {
+            lnkHfmGoogleCode.Text = Core.Application.ProjectSiteUrl;
+        }
+
+        private void SetSupportForumLinkText()
+        {
+            lnkHfmGoogleGroup.Text = Core.Application.SupportForumUrl;
+        }
+
+        private void ProjectSiteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(Core.Application.ProjectSiteUrl);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
+                   Properties.Resources.ProcessStartError, "HFM.NET GitHub Project"));
+            }
+        }
+
+        private void SupportForumLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(Core.Application.SupportForumUrl);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
+                   Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+    }
 }

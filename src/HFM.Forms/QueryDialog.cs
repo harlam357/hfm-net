@@ -23,14 +23,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
    public interface IQueryView : IWin32Window
    {
-      QueryParameters Query { get; set; }
+      WorkUnitQuery Query { get; set; }
       
       bool Visible { get; set; }
 
@@ -41,8 +41,8 @@ namespace HFM.Forms
 
    public partial class QueryDialog : Form, IQueryView
    {
-      private QueryParameters _query;
-      private BindingList<QueryField> _queryFieldList;
+      private WorkUnitQuery _workUnitQuery;
+      private BindingList<WorkUnitQueryParameter> _parametersList;
 
       public QueryDialog()
       {
@@ -50,27 +50,27 @@ namespace HFM.Forms
          SetupDataGridViewColumns();
          dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
 
-         Query = new QueryParameters();
+         Query = new WorkUnitQuery();
       }
 
       #region IQueryView Members
 
-      public QueryParameters Query
+      public WorkUnitQuery Query
       {
-         get { return _query; }
+         get { return _workUnitQuery; }
          set
          {
-            _query = value;
-            _queryFieldList = new BindingList<QueryField>(_query.Fields);
-            BindNameTextBox(_query);
+            _workUnitQuery = value;
+            _parametersList = new BindingList<WorkUnitQueryParameter>(_workUnitQuery.Parameters);
+            BindNameTextBox(_workUnitQuery);
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _queryFieldList;
+            dataGridView1.DataSource = _parametersList;
          }
       }
 
       #endregion
 
-      public void BindNameTextBox(QueryParameters parameters)
+      public void BindNameTextBox(WorkUnitQuery parameters)
       {
          txtName.DataBindings.Clear();
          txtName.DataBindings.Add("Text", parameters, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -119,54 +119,54 @@ namespace HFM.Forms
          // On Mono the ComboBox choices must exactly match the enumeration name - LAME!!!
          if (Core.Application.IsRunningOnMono)
          {
-            columnChoices.Add(new ListItem(QueryFieldName.ProjectID.ToString(), QueryFieldName.ProjectID));
-            columnChoices.Add(new ListItem(QueryFieldName.WorkUnitName.ToString(), QueryFieldName.WorkUnitName));
-            columnChoices.Add(new ListItem(QueryFieldName.Name.ToString(), QueryFieldName.Name));
-            columnChoices.Add(new ListItem(QueryFieldName.Path.ToString(), QueryFieldName.Path));
-            columnChoices.Add(new ListItem(QueryFieldName.Username.ToString(), QueryFieldName.Username));
-            columnChoices.Add(new ListItem(QueryFieldName.Team.ToString(), QueryFieldName.Team));
-            columnChoices.Add(new ListItem(QueryFieldName.SlotType.ToString(), QueryFieldName.SlotType));
-            columnChoices.Add(new ListItem(QueryFieldName.Core.ToString(), QueryFieldName.Core));
-            columnChoices.Add(new ListItem(QueryFieldName.CoreVersion.ToString(), QueryFieldName.CoreVersion));
-            columnChoices.Add(new ListItem(QueryFieldName.FrameTime.ToString(), QueryFieldName.FrameTime));
-            columnChoices.Add(new ListItem(QueryFieldName.KFactor.ToString(), QueryFieldName.KFactor));
-            columnChoices.Add(new ListItem(QueryFieldName.PPD.ToString(), QueryFieldName.PPD));
-            columnChoices.Add(new ListItem(QueryFieldName.DownloadDateTime.ToString(), QueryFieldName.DownloadDateTime));
-            columnChoices.Add(new ListItem(QueryFieldName.CompletionDateTime.ToString(), QueryFieldName.CompletionDateTime));
-            columnChoices.Add(new ListItem(QueryFieldName.Credit.ToString(), QueryFieldName.Credit));
-            columnChoices.Add(new ListItem(QueryFieldName.Frames.ToString(), QueryFieldName.Frames));
-            columnChoices.Add(new ListItem(QueryFieldName.FramesCompleted.ToString(), QueryFieldName.FramesCompleted));
-            columnChoices.Add(new ListItem(QueryFieldName.Result.ToString(), QueryFieldName.Result));
-            columnChoices.Add(new ListItem(QueryFieldName.Atoms.ToString(), QueryFieldName.Atoms));
-            columnChoices.Add(new ListItem(QueryFieldName.ProjectRun.ToString(), QueryFieldName.ProjectRun));
-            columnChoices.Add(new ListItem(QueryFieldName.ProjectClone.ToString(), QueryFieldName.ProjectClone));
-            columnChoices.Add(new ListItem(QueryFieldName.ProjectGen.ToString(), QueryFieldName.ProjectGen));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.ProjectID.ToString(), WorkUnitRowColumn.ProjectID));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.WorkUnitName.ToString(), WorkUnitRowColumn.WorkUnitName));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Name.ToString(), WorkUnitRowColumn.Name));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Path.ToString(), WorkUnitRowColumn.Path));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Username.ToString(), WorkUnitRowColumn.Username));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Team.ToString(), WorkUnitRowColumn.Team));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.SlotType.ToString(), WorkUnitRowColumn.SlotType));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Core.ToString(), WorkUnitRowColumn.Core));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.CoreVersion.ToString(), WorkUnitRowColumn.CoreVersion));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.FrameTime.ToString(), WorkUnitRowColumn.FrameTime));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.KFactor.ToString(), WorkUnitRowColumn.KFactor));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.PPD.ToString(), WorkUnitRowColumn.PPD));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.DownloadDateTime.ToString(), WorkUnitRowColumn.DownloadDateTime));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.CompletionDateTime.ToString(), WorkUnitRowColumn.CompletionDateTime));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Credit.ToString(), WorkUnitRowColumn.Credit));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Frames.ToString(), WorkUnitRowColumn.Frames));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.FramesCompleted.ToString(), WorkUnitRowColumn.FramesCompleted));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Result.ToString(), WorkUnitRowColumn.Result));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Atoms.ToString(), WorkUnitRowColumn.Atoms));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.ProjectRun.ToString(), WorkUnitRowColumn.ProjectRun));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.ProjectClone.ToString(), WorkUnitRowColumn.ProjectClone));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.ProjectGen.ToString(), WorkUnitRowColumn.ProjectGen));
          }
          else
          {
-            string[] names = QueryField.GetColumnNames();
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.ProjectID], QueryFieldName.ProjectID));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.WorkUnitName], QueryFieldName.WorkUnitName));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Name], QueryFieldName.Name));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Path], QueryFieldName.Path));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Username], QueryFieldName.Username));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Team], QueryFieldName.Team));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.SlotType], QueryFieldName.SlotType));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Core], QueryFieldName.Core));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.CoreVersion], QueryFieldName.CoreVersion));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.FrameTime], QueryFieldName.FrameTime));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.KFactor], QueryFieldName.KFactor));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.PPD], QueryFieldName.PPD));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.DownloadDateTime], QueryFieldName.DownloadDateTime));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.CompletionDateTime], QueryFieldName.CompletionDateTime));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Credit], QueryFieldName.Credit));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Frames], QueryFieldName.Frames));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.FramesCompleted], QueryFieldName.FramesCompleted));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Result], QueryFieldName.Result));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.Atoms], QueryFieldName.Atoms));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.ProjectRun], QueryFieldName.ProjectRun));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.ProjectClone], QueryFieldName.ProjectClone));
-            columnChoices.Add(new ListItem(names[(int)QueryFieldName.ProjectGen], QueryFieldName.ProjectGen));
+            string[] names = WorkUnitQueryParameter.GetColumnNames();
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.WorkUnitName], WorkUnitRowColumn.WorkUnitName));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Name], WorkUnitRowColumn.Name));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Path], WorkUnitRowColumn.Path));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Username], WorkUnitRowColumn.Username));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Team], WorkUnitRowColumn.Team));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.SlotType], WorkUnitRowColumn.SlotType));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Core], WorkUnitRowColumn.Core));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.CoreVersion], WorkUnitRowColumn.CoreVersion));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FrameTime], WorkUnitRowColumn.FrameTime));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.KFactor], WorkUnitRowColumn.KFactor));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.PPD], WorkUnitRowColumn.PPD));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DownloadDateTime], WorkUnitRowColumn.DownloadDateTime));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.CompletionDateTime], WorkUnitRowColumn.CompletionDateTime));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Credit], WorkUnitRowColumn.Credit));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Frames], WorkUnitRowColumn.Frames));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FramesCompleted], WorkUnitRowColumn.FramesCompleted));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Result], WorkUnitRowColumn.Result));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Atoms], WorkUnitRowColumn.Atoms));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectRun], WorkUnitRowColumn.ProjectRun));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectClone], WorkUnitRowColumn.ProjectClone));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectGen], WorkUnitRowColumn.ProjectGen));
          }
 
          return columnChoices;
@@ -177,25 +177,25 @@ namespace HFM.Forms
          var columnChoices = new List<ListItem>();
          if (Core.Application.IsRunningOnMono)
          {
-            columnChoices.Add(new ListItem(QueryFieldType.Equal.ToString(), QueryFieldType.Equal));
-            columnChoices.Add(new ListItem(QueryFieldType.NotEqual.ToString(), QueryFieldType.NotEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.GreaterThan.ToString(), QueryFieldType.GreaterThan));
-            columnChoices.Add(new ListItem(QueryFieldType.GreaterThanOrEqual.ToString(), QueryFieldType.GreaterThanOrEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.LessThan.ToString(), QueryFieldType.LessThan));
-            columnChoices.Add(new ListItem(QueryFieldType.LessThanOrEqual.ToString(), QueryFieldType.LessThanOrEqual));
-            columnChoices.Add(new ListItem(QueryFieldType.Like.ToString(), QueryFieldType.Like));
-            columnChoices.Add(new ListItem(QueryFieldType.NotLike.ToString(), QueryFieldType.NotLike));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.Equal.ToString(), WorkUnitQueryOperator.Equal));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.NotEqual.ToString(), WorkUnitQueryOperator.NotEqual));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.GreaterThan.ToString(), WorkUnitQueryOperator.GreaterThan));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.GreaterThanOrEqual.ToString(), WorkUnitQueryOperator.GreaterThanOrEqual));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.LessThan.ToString(), WorkUnitQueryOperator.LessThan));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.LessThanOrEqual.ToString(), WorkUnitQueryOperator.LessThanOrEqual));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.Like.ToString(), WorkUnitQueryOperator.Like));
+            columnChoices.Add(new ListItem(WorkUnitQueryOperator.NotLike.ToString(), WorkUnitQueryOperator.NotLike));
          }
          else
          {
-            columnChoices.Add(new ListItem("Equal", QueryFieldType.Equal));
-            columnChoices.Add(new ListItem("Not Equal", QueryFieldType.NotEqual));
-            columnChoices.Add(new ListItem("Greater Than", QueryFieldType.GreaterThan));
-            columnChoices.Add(new ListItem("Greater Than Or Equal", QueryFieldType.GreaterThanOrEqual));
-            columnChoices.Add(new ListItem("Less Than", QueryFieldType.LessThan));
-            columnChoices.Add(new ListItem("Less Than Or Equal", QueryFieldType.LessThanOrEqual));
-            columnChoices.Add(new ListItem("Like", QueryFieldType.Like));
-            columnChoices.Add(new ListItem("Not Like", QueryFieldType.NotLike));
+            columnChoices.Add(new ListItem("Equal", WorkUnitQueryOperator.Equal));
+            columnChoices.Add(new ListItem("Not Equal", WorkUnitQueryOperator.NotEqual));
+            columnChoices.Add(new ListItem("Greater Than", WorkUnitQueryOperator.GreaterThan));
+            columnChoices.Add(new ListItem("Greater Than Or Equal", WorkUnitQueryOperator.GreaterThanOrEqual));
+            columnChoices.Add(new ListItem("Less Than", WorkUnitQueryOperator.LessThan));
+            columnChoices.Add(new ListItem("Less Than Or Equal", WorkUnitQueryOperator.LessThanOrEqual));
+            columnChoices.Add(new ListItem("Like", WorkUnitQueryOperator.Like));
+            columnChoices.Add(new ListItem("Not Like", WorkUnitQueryOperator.NotLike));
          }
 
          return columnChoices;
@@ -213,7 +213,7 @@ namespace HFM.Forms
 
       private void btnAdd_Click(object sender, EventArgs e)
       {
-         _query.Fields.Add(new QueryField());
+         _workUnitQuery.Parameters.Add(new WorkUnitQueryParameter());
          RefreshDisplay();
       }
 
@@ -222,14 +222,14 @@ namespace HFM.Forms
          Debug.Assert(dataGridView1.SelectedCells.Count == 1);
          foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
          {
-            _query.Fields.RemoveAt(cell.OwningRow.Index);
+            _workUnitQuery.Parameters.RemoveAt(cell.OwningRow.Index);
          }
          RefreshDisplay();
       }
 
       private void RefreshDisplay()
       {
-         _queryFieldList.ResetBindings();
+         _parametersList.ResetBindings();
       }
 
       private void btnOK_Click(object sender, EventArgs e)

@@ -21,7 +21,7 @@ namespace HFM.Log.Tool
       {
          InitializeComponent();
 
-         base.Text = String.Format("HFM Log Tool v{0}", Core.Application.VersionWithRevision);
+         base.Text = String.Format("HFM Log Tool v{0}", Core.Application.FullVersion);
 #if !DEV
          btnGenCode.Visible = false;
 #endif

@@ -16,14 +16,14 @@ namespace HFM.Core.Serializers
       /// <summary>
       /// Deserialize the file and return the value.
       /// </summary>
-      /// <param name="fileName">A string specifying the file name to deserialize.</param>
-      T Deserialize(string fileName);
+      /// <param name="path">A string specifying the path of the file to deserialize.</param>
+      T Deserialize(string path);
 
       /// <summary>
       /// Serialize the value to the file specified by the file name.
       /// </summary>
-      /// <param name="fileName">A string specifying the file name to serialize.</param>
+      /// <param name="path">A string specifying the path of the file to serialize.</param>
       /// <param name="value">A value to serialize.</param>
-      void Serialize(string fileName, T value);
+      void Serialize(string path, T value);
    }
 }

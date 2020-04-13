@@ -64,6 +64,8 @@ namespace HFM.Forms.Controls
          InitializeComponent();
       }
 
+      private const int MaxDisplayableLogLines = 500;
+
       public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance, bool highlightLines)
       {
          if (InvokeRequired)
@@ -76,7 +78,7 @@ namespace HFM.Forms.Controls
 
 #if !LOGTOOL
          // limit the maximum number of log lines
-         int lineOffset = lines.Count() - Constants.MaxDisplayableLogLines;
+         int lineOffset = lines.Count() - MaxDisplayableLogLines;
          if (lineOffset > 0)
          {
             lines = lines.Where((x, i) => i > lineOffset);

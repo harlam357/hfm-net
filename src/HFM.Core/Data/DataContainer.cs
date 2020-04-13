@@ -19,81 +19,81 @@
 
 using System;
 
-using Castle.Core.Logging;
+using HFM.Core.Logging;
 
 namespace HFM.Core.Data
 {
-   public abstract class DataContainer<T> where T : class, new()
-   {
-      private T _data;
+    public abstract class DataContainer<T> where T : class, new()
+    {
+        private T _data;
 
-      protected internal T Data
-      {
-         get { return _data; }
-         set { _data = value ?? new T(); }
-      }
+        public T Data
+        {
+            get => _data;
+            set => _data = value ?? new T();
+        }
 
-      private ILogger _logger;
+        private ILogger _logger;
 
-      public ILogger Logger
-      {
-         get { return _logger ?? (_logger = NullLogger.Instance); }
-         set { _logger = value; }
-      }
+        public ILogger Logger
+        {
+            get => _logger ?? (_logger = NullLogger.Instance);
+            set => _logger = value;
+        }
 
-      public string FileName { get; set; }
+        public string FilePath { get; set; }
 
-      public abstract Serializers.IFileSerializer<T> DefaultSerializer { get; }
+        public abstract Serializers.IFileSerializer<T> DefaultSerializer { get; }
 
-      protected DataContainer()
-      {
-         Data = new T();
-      }
+        protected DataContainer()
+        {
+            Data = new T();
+        }
 
-      #region Serialization Support
+        #region Serialization Support
 
-      private readonly object _serializeLock = new object();
+        private readonly object _serializeLock = new object();
 
-      /// <summary>
-      /// Read data file.
-      /// </summary>
-      public virtual void Read()
-      {
-         T data = null;
+        /// <summary>
+        /// Read data file.
+        /// </summary>
+        public virtual void Read()
+        {
+            T data = null;
 
-         lock (_serializeLock)
-         {
-            try
+            lock (_serializeLock)
             {
-               data = DefaultSerializer.Deserialize(FileName);
+                try
+                {
+                    data = DefaultSerializer.Deserialize(FilePath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.Message, ex);
+                }
             }
-            catch (Exception ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-            }
-         }
 
-         Data = data ?? new T();
-      }
+            Data = data ?? new T();
+        }
 
-      /// <summary>
-      /// Write data file.
-      /// </summary>
-      public virtual void Write()
-      {
-         lock (_serializeLock)
-         {
-            try
+        /// <summary>
+        /// Write data file.
+        /// </summary>
+        public virtual void Write()
+        {
+            lock (_serializeLock)
             {
-               DefaultSerializer.Serialize(FileName, Data);
+                try
+                {
+                    DefaultSerializer.Serialize(FilePath, Data);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.Message, ex);
+                }
             }
-            catch (Exception ex)
-            {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
-            }
-         }
-      }
+        }
 
-      #endregion
-   }
+        #endregion
+    }
 }

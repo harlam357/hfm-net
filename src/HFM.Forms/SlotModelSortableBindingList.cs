@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.Client;
 
 namespace HFM.Forms
 {

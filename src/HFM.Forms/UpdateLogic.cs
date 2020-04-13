@@ -17,20 +17,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+
 using System;
 using System.Globalization;
 using System.Net;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Core;
+using HFM.Core.Logging;
+using HFM.Core.Net;
 using HFM.Preferences;
 
 namespace HFM.Forms
 {
-   public interface IUpdateLogic
+    public interface IUpdateLogic
    {
       IMainView Owner { get; set; }
    
@@ -76,14 +77,14 @@ namespace HFM.Forms
       private bool _userInvoked;
       private IWebProxy _proxy;
       
-      private readonly IPreferenceSet _prefs;
+      private readonly IPreferenceSet _preferences;
       private readonly IMessageBoxView _messageBoxView;
       
       #endregion
 
-      public UpdateLogic(IPreferenceSet prefs, IMessageBoxView messageBoxView)
+      public UpdateLogic(IPreferenceSet preferences, IMessageBoxView messageBoxView)
       {
-         _prefs = prefs;
+         _preferences = preferences;
          _messageBoxView = messageBoxView;
       }
 
@@ -108,7 +109,7 @@ namespace HFM.Forms
          
          // set globals
          _userInvoked = userInvoked;
-         _proxy = _prefs.GetWebProxy();
+         _proxy = WebProxyFactory.Create(_preferences);
          
          Func<ApplicationUpdate> func = DoCheckForUpdate;
          func.BeginInvoke(CheckForUpdateCallback, func);
@@ -141,7 +142,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            Logger.ErrorFormat(ex, "{0}", ex.Message);
+            Logger.Error(ex.Message, ex);
             if (_userInvoked)
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
@@ -161,11 +162,11 @@ namespace HFM.Forms
 
          try
          {
-            return Application.ParseVersion(updateVersion) > Application.VersionNumber;
+            return Application.ParseVersionNumber(updateVersion) > Application.VersionNumber;
          }
          catch (FormatException ex)
          {
-            Logger.WarnFormat(ex, "{0}", ex.Message);
+            Logger.Warn(ex.Message, ex);
             return false;
          }
       }
@@ -179,14 +180,14 @@ namespace HFM.Forms
          }
 
          var updatePresenter = new UpdatePresenter(ExceptionLogger,
-            update, _proxy, Application.Name, Application.VersionWithRevision);
+            update, _proxy, Application.Name, Application.FullVersion);
          updatePresenter.Show(Owner);
          HandleUpdatePresenterResults(updatePresenter);
       }
 
       private void ExceptionLogger(Exception ex)
       {
-         Logger.ErrorFormat(ex, "{0}", ex.Message);
+         Logger.Error(ex.Message, ex);
       }
 
       private void HandleUpdatePresenterResults(UpdatePresenter presenter)

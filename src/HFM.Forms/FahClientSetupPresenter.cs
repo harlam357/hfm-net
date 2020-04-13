@@ -27,13 +27,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using harlam357.Windows.Forms;
 
 using HFM.Client;
 using HFM.Client.DataTypes;
-using HFM.Core;
+using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -117,7 +116,7 @@ namespace HFM.Forms
             _slotCollection = (SlotCollection)e.TypedMessage;
             foreach (var slot in _slotCollection)
             {
-               _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
+               _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, FahClient.DefaultSlotOptions, slot.Id));
             }
             _settingsModel.RefreshSlots(_slotCollection);
          }
@@ -146,7 +145,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-               _logger.ErrorFormat(ex, "{0}", ex.Message);
+               _logger.Error(ex.Message, ex);
             }
          }
 

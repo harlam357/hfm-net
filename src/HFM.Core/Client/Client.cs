@@ -20,16 +20,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 
-using Castle.Core.Logging;
-
-using HFM.Core.Data.SQLite;
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    public interface IClient
    {
@@ -107,7 +105,7 @@ namespace HFM.Core
 
       public IProteinBenchmarkService BenchmarkService { get; set; }
 
-      public IUnitInfoDatabase UnitInfoDatabase { get; set; }
+      public IWorkUnitRepository WorkUnitRepository { get; set; }
 
       private ILogger _logger;
 
@@ -148,7 +146,7 @@ namespace HFM.Core
       {
          if (!Monitor.TryEnter(_retrieveLock))
          {
-            Debug.WriteLine(Constants.ClientNameFormat, Settings.Name, "Retrieval already in progress...");
+            Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
             return;
          }
          try
@@ -167,25 +165,25 @@ namespace HFM.Core
 
       protected abstract void RetrieveInternal();
 
-      protected void UpdateUnitInfoDatabase(UnitInfoModel unitInfoModel)
+      protected void InsertCompletedWorkUnit(WorkUnitModel workUnitModel)
       {
          // Update history database
-         if (UnitInfoDatabase != null && UnitInfoDatabase.Connected)
+         if (WorkUnitRepository != null && WorkUnitRepository.Connected)
          {
             try
             {
-               if (UnitInfoDatabase.Insert(unitInfoModel))
+               if (WorkUnitRepository.Insert(workUnitModel))
                {
                   if (Logger.IsDebugEnabled)
                   {
-                     string message = String.Format(CultureInfo.CurrentCulture, "Inserted {0} into database.", unitInfoModel.UnitInfoData.ToProjectString());
-                     Logger.DebugFormat(Constants.ClientNameFormat, unitInfoModel.UnitInfoData.OwningSlotName, message);
+                     string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
+                     Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.SlotIdentifier.Name, message));
                   }
                }
             }
             catch (Exception ex)
             {
-               Logger.ErrorFormat(ex, "{0}", ex.Message);
+               Logger.Error(ex.Message, ex);
             }
          }
       }

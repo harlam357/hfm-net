@@ -21,6 +21,9 @@ using System;
 using System.ComponentModel;
 
 using HFM.Core;
+using HFM.Core.Client;
+using HFM.Core.Net;
+using HFM.Core.SlotXml;
 using HFM.Preferences;
 using HFM.Preferences.Data;
 
@@ -96,11 +99,11 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.WebDeploymentType, WebGenType);
          if (WebGenType == WebDeploymentType.Ftp)
          {
-            prefs.Set(Preference.WebDeploymentRoot, FileSystemPath.AddUnixTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddUnixTrailingSlash(WebRoot));
          }
          else
          {
-            prefs.Set(Preference.WebDeploymentRoot, FileSystemPath.AddTrailingSlash(WebRoot));
+            prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddTrailingSlash(WebRoot));
          }
          prefs.Set(Preference.WebGenServer, WebGenServer);
          prefs.Set(Preference.WebGenPort, WebGenPort);
@@ -136,7 +139,7 @@ namespace HFM.Forms.Models
          get
          {
             if (SyncOnSchedule == false) return false;
-            return !Validate.Minutes(SyncTimeMinutes);
+            return !ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
          }
       }
 
@@ -233,7 +236,7 @@ namespace HFM.Forms.Models
          get
          {
             if (GenerateIntervalEnabled == false) return false;
-            return !Validate.Minutes(GenerateInterval);
+            return !ClientScheduledTasks.ValidateInterval(GenerateInterval);
          }
       }
 
@@ -262,7 +265,7 @@ namespace HFM.Forms.Models
          {
             if (WebRoot != value)
             {
-               _webRoot = value == null ? String.Empty : FileSystemPath.AddTrailingSlash(value.Trim());
+               _webRoot = value == null ? String.Empty : Internal.FileSystemPath.AddTrailingSlash(value.Trim());
                OnPropertyChanged("WebRoot");
             }
          }
@@ -281,9 +284,9 @@ namespace HFM.Forms.Models
                   {
                      return true;
                   }
-                  return !Validate.Path(WebRoot);
+                  return !FileSystemPath.Validate(WebRoot);
                case WebDeploymentType.Ftp:
-                  return !Validate.FtpPath(WebRoot);
+                  return !FileSystemPath.ValidateUnix(WebRoot);
                default:
                   return true;
             }
@@ -312,7 +315,7 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !Validate.ServerName(WebGenServer);
+                  return !HostName.Validate(WebGenServer);
                default:
                   return false;
             }
@@ -341,7 +344,7 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !Validate.ServerPort(WebGenPort);
+                  return !TcpPort.Validate(WebGenPort);
                default:
                   return false;
             }
@@ -397,27 +400,18 @@ namespace HFM.Forms.Models
             switch (WebGenType)
             {
                case WebDeploymentType.Ftp:
-                  return !ValidateCredentials(true);
+                  return HasCredentialsError();
                default:
                   return false;
             }
          }
       }
 
-      private bool ValidateCredentials(bool throwOnEmpty)
+      private bool HasCredentialsError()
       {
-         try
-         {
-            // This will violate FxCop rule (rule ID)
-            Validate.UsernamePasswordPair(WebGenUsername, WebGenPassword, throwOnEmpty);
-            CredentialsErrorMessage = String.Empty;
-            return true;
-         }
-         catch (ArgumentException ex)
-         {
-            CredentialsErrorMessage = ex.Message;
-            return false;
-         }
+         var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
+         CredentialsErrorMessage = result ? String.Empty : message;
+         return !result;
       }
 
       public string CredentialsErrorMessage { get; private set; }

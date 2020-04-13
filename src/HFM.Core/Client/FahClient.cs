@@ -28,12 +28,13 @@ using System.Threading;
 
 using HFM.Client;
 using HFM.Client.DataTypes;
-using HFM.Core.DataTypes;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     public interface IFahClient : IClient
     {
@@ -67,7 +68,7 @@ namespace HFM.Core
             get { return _settings; }
             set
             {
-                Debug.Assert(value.IsFahClient());
+                Debug.Assert(value.ClientType == ClientType.FahClient);
 
                 // settings already exist
                 if (_settings != null)
@@ -142,6 +143,8 @@ namespace HFM.Core
         private readonly FahLog _fahLog;
         private MessageReceiver _messages;
 
+        public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
+        
         public FahClient() : this(new TypedMessageConnection())
         {
 
@@ -167,14 +170,14 @@ namespace HFM.Core
         {
             if (AbortFlag) return;
 
-            Logger.DebugFormat(Constants.ClientNameFormat, Settings.Name, e.JsonMessage.GetHeader());
+            Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, e.JsonMessage.GetHeader()));
 
             _messages.Add(e);
             if (e.DataType == typeof(SlotCollection))
             {
                 foreach (var slot in _messages.SlotCollection)
                 {
-                    _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, Constants.FahClientSlotOptions, slot.Id));
+                    _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.Id));
                 }
             }
             else if (e.DataType == typeof(LogRestart) ||
@@ -187,8 +190,7 @@ namespace HFM.Core
                 }
 
                 var logFragment = (LogFragment)e.TypedMessage;
-                string filteredLogFragment = String.Join("\n", logFragment.Value.Split('\n').Where(x => x.Length != 0));
-                using (var textReader = new StringReader(filteredLogFragment))
+                using (var textReader = new StringBuilderReader(logFragment.Value))
                 using (var reader = new Log.FahClient.FahClientLogTextReader(textReader))
                 {
                     _fahLog.Read(reader);
@@ -206,11 +208,11 @@ namespace HFM.Core
         {
             const int sleep = 100;
             const int timeout = 60 * 1000;
-            string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.CachedFahLogFileName());
+            string fahLogPath = Path.Combine(Prefs.Get<string>(Preference.CacheDirectory), Settings.ClientLogFileName);
 
             try
             {
-                using (var stream = FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
+                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
                 using (var writer = new StreamWriter(stream))
                 {
                     foreach (var chunk in logText.GetChunks())
@@ -221,7 +223,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-                Logger.WarnFormat(ex, "Failed to write to {0}", fahLogPath);
+                Logger.Warn($"Failed to write to {fahLogPath}", ex);
             }
         }
 
@@ -322,7 +324,7 @@ namespace HFM.Core
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
+                    Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
                 }
                 return;
             }
@@ -334,7 +336,7 @@ namespace HFM.Core
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, Constants.ClientNameFormat, Settings.Name, ex.Message);
+                Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
             }
             finally
             {
@@ -384,40 +386,40 @@ namespace HFM.Core
                                                                                info,
                                                                                options,
                                                                                slotModel.SlotOptions,
-                                                                               slotModel.UnitInfo,
+                                                                               slotModel.WorkUnit,
                                                                                slotModel.SlotId);
                     PopulateRunLevelData(result, info, slotModel);
 
-                    slotModel.Queue = result.Queue;
+                    slotModel.WorkUnitInfos = result.WorkUnitInfos;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 
-                    var parsedUnits = new Dictionary<int, UnitInfoModel>(result.UnitInfos.Count);
-                    foreach (int key in result.UnitInfos.Keys)
+                    var parsedUnits = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
+                    foreach (int key in result.WorkUnits.Keys)
                     {
-                        if (result.UnitInfos[key] != null)
+                        if (result.WorkUnits[key] != null)
                         {
-                            parsedUnits[key] = BuildUnitInfoLogic(slotModel, result.UnitInfos[key]);
+                            parsedUnits[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
                         }
                     }
 
-                    // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.UnitInfoLogic ***
-                    UpdateBenchmarkData(slotModel.UnitInfoModel, parsedUnits.Values, result.CurrentUnitIndex);
+                    // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
+                    UpdateBenchmarkData(slotModel.WorkUnitModel, parsedUnits.Values);
 
-                    // Update the UnitInfoLogic if we have a current unit index
+                    // Update the WorkUnitModel if we have a current unit index
                     if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
                     {
-                        slotModel.UnitInfoModel = parsedUnits[result.CurrentUnitIndex];
+                        slotModel.WorkUnitModel = parsedUnits[result.CurrentUnitIndex];
                     }
 
                     SetSlotStatus(slotModel);
 
-                    slotModel.UnitInfoModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
-                       Prefs.Get<PpdCalculationType>(Preference.PpdCalculation),
-                       Prefs.Get<BonusCalculationType>(Preference.BonusCalculation));
+                    slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
+                       Prefs.Get<PPDCalculation>(Preference.PPDCalculation),
+                       Prefs.Get<BonusCalculation>(Preference.BonusCalculation));
 
                     string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-                    Logger.InfoFormat(Constants.ClientNameFormat, slotModel.Name, statusMessage);
+                    Logger.Info(String.Format(Logging.Logger.NameFormat, slotModel.Name, statusMessage));
                 }
             }
             finally
@@ -426,34 +428,32 @@ namespace HFM.Core
             }
 
             string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
-            Logger.InfoFormat(Constants.ClientNameFormat, Settings.Name, message);
+            Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
-        private UnitInfoModel BuildUnitInfoLogic(SlotModel slotModel, UnitInfo unitInfo)
+        private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
         {
             Debug.Assert(slotModel != null);
-            Debug.Assert(unitInfo != null);
+            Debug.Assert(workUnit != null);
 
-            Protein protein = ProteinService.Get(unitInfo.ProjectID, true) ?? new Protein();
+            Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
-            unitInfo.UnitRetrievalTime = LastRetrievalTime;
-            unitInfo.OwningClientName = Settings.Name;
-            unitInfo.OwningClientPath = Settings.DataPath();
-            unitInfo.OwningSlotId = slotModel.SlotId;
-            if (unitInfo.SlotType == SlotType.Unknown)
+            workUnit.SlotIdentifier = slotModel.SlotIdentifier;
+            workUnit.UnitRetrievalTime = LastRetrievalTime;
+            if (workUnit.SlotType == SlotType.Unknown)
             {
-                unitInfo.SlotType = protein.Core.ToSlotType();
-                if (unitInfo.SlotType == SlotType.Unknown)
+                workUnit.SlotType = SlotTypeConvert.FromCoreName(protein.Core);
+                if (workUnit.SlotType == SlotType.Unknown)
                 {
-                    unitInfo.SlotType = unitInfo.CoreID.ToSlotType();
+                    workUnit.SlotType = SlotTypeConvert.FromCoreId(workUnit.CoreID);
                 }
             }
-            // build unit info logic
-            var unitInfoLogic = new UnitInfoModel(BenchmarkService);
-            unitInfoLogic.CurrentProtein = protein;
-            unitInfoLogic.UnitInfoData = unitInfo;
-            return unitInfoLogic;
+            
+            var workUnitModel = new WorkUnitModel(BenchmarkService);
+            workUnitModel.CurrentProtein = protein;
+            workUnitModel.Data = workUnit;
+            return workUnitModel;
         }
 
         private static void SetSlotStatus(SlotModel slotModel)
@@ -473,43 +473,44 @@ namespace HFM.Core
             {
                 slotModel.ClientVersion = info.Build.Version;
             }
-            //if (run != null)
-            //{
-            //   slotModel.TotalRunCompletedUnits = run.CompletedUnits;
-            //   slotModel.TotalRunFailedUnits = run.FailedUnits;
-            //}
-            if (UnitInfoDatabase.Connected)
+            if (WorkUnitRepository.Connected)
             {
-                slotModel.TotalRunCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, result.StartTime);
-                slotModel.TotalCompletedUnits = (int)UnitInfoDatabase.CountCompleted(slotModel.Name, null);
-                slotModel.TotalRunFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, result.StartTime);
-                slotModel.TotalFailedUnits = (int)UnitInfoDatabase.CountFailed(slotModel.Name, null);
+                slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, result.StartTime);
+                slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
+                slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, result.StartTime);
+                slotModel.TotalFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, null);
             }
         }
 
-        internal void UpdateBenchmarkData(UnitInfoModel currentUnitInfo, IEnumerable<UnitInfoModel> parsedUnits, int currentUnitIndex)
+        internal void UpdateBenchmarkData(WorkUnitModel currentWorkUnit, IEnumerable<WorkUnitModel> parsedUnits)
         {
-            foreach (var unitInfoModel in parsedUnits.Where(x => x != null))
+            foreach (var model in parsedUnits.Where(x => x != null))
             {
-                if (currentUnitInfo.UnitInfoData.IsSameUnitAs(unitInfoModel.UnitInfoData))
+                if (currentWorkUnit.Data.EqualsProjectAndDownloadTime(model.Data))
                 {
                     // found the current unit
                     // current frame has already been recorded, increment to the next frame
-                    int previousFramesComplete = currentUnitInfo.FramesComplete + 1;
+                    int nextFrame = currentWorkUnit.FramesComplete + 1;
+                    int count = model.FramesComplete - currentWorkUnit.FramesComplete;
+                    var frameTimes = GetFrameTimes(model.Data, nextFrame, count);
                     // Update benchmarks
-                    BenchmarkService.UpdateData(unitInfoModel.UnitInfoData, previousFramesComplete, unitInfoModel.FramesComplete);
+                    BenchmarkService.Update(model.Data.SlotIdentifier, model.Data.ProjectID, frameTimes);
                 }
                 // Update history database
-                if (unitInfoModel.UnitInfoData.UnitResult != WorkUnitResult.Unknown)
+                if (model.Data.UnitResult != WorkUnitResult.Unknown)
                 {
-                    UpdateUnitInfoDatabase(unitInfoModel);
+                    InsertCompletedWorkUnit(model);
                 }
-                //// used when there is no currentUnitInfo
-                //else if (unitInfoLogic.UnitInfoData.QueueIndex == currentUnitIndex)
-                //{
-                //   BenchmarkCollection.UpdateData(unitInfoLogic.UnitInfoData, 0, unitInfoLogic.FramesComplete);
-                //}
             }
+        }
+
+        private static IEnumerable<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
+        {
+            return Enumerable.Range(nextFrame, count)
+                .Select(workUnit.GetFrameData)
+                .Where(f => f != null)
+                .Select(f => f.Duration)
+                .ToList();
         }
 
         private class MessageReceiver
@@ -617,7 +618,8 @@ namespace HFM.Core
                 return result;
             }
 
-            public sealed class Result
+            // TODO: use ValueTuple
+            internal struct Result
             {
                 public bool SlotsUpdated { get; set; }
 

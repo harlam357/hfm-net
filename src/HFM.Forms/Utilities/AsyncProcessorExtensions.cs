@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
-using HFM.Core.Data.SQLite;
+using HFM.Core.Data;
 
 namespace HFM.Forms
 {
@@ -42,7 +42,7 @@ namespace HFM.Forms
       {
          var openForms = Application.OpenForms.OfType<Form>().ToList();
 
-         if (state is UnitInfoDatabase)
+         if (state is WorkUnitRepository)
          {
             var historyView = openForms.Find(x => x is IHistoryView);
             if (historyView != null)

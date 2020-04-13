@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-using HFM.Core.DataTypes;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
    internal sealed class DataAggregatorResult
    {
@@ -28,8 +28,8 @@ namespace HFM.Core
       // Queue Values
       public int CurrentUnitIndex { get; set; }
 
-      public QueueDictionary Queue { get; set; }
+      public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
 
-      public IDictionary<int, UnitInfo> UnitInfos { get; set; }
+      public IDictionary<int, WorkUnit> WorkUnits { get; set; }
    }
 }

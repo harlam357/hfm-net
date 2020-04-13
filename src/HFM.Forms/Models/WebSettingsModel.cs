@@ -20,7 +20,7 @@
 using System;
 using System.ComponentModel;
 
-using HFM.Core;
+using HFM.Core.Net;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -158,7 +158,7 @@ namespace HFM.Forms.Models
 
       public bool ProjectDownloadUrlError
       {
-         get { return !Validate.HttpUrl(ProjectDownloadUrl); }
+         get { return !HttpUrl.Validate(ProjectDownloadUrl); }
       }
       
       #endregion
@@ -213,19 +213,10 @@ namespace HFM.Forms.Models
          get
          {
             if (UseProxy == false) return false;
-         
-            try
-            {
-               // This will violate FxCop rule (rule ID)
-               Validate.ServerPortPair(ProxyServer, ProxyPort.ToString());
-               ServerPortPairErrorMessage = String.Empty;
-               return false;
-            }
-            catch (ArgumentException ex)
-            {
-               ServerPortPairErrorMessage = ex.Message;
-               return true;
-            }
+
+            var result = HostName.ValidateNameAndPort(ProxyServer, ProxyPort, out var message);
+            ServerPortPairErrorMessage = result ? String.Empty : message;
+            return !result;
          }
       }
 
@@ -296,19 +287,10 @@ namespace HFM.Forms.Models
          get
          {
             if (ProxyAuthEnabled == false) return false;
-         
-            try
-            {
-               // This will violate FxCop rule (rule ID)
-               Validate.UsernamePasswordPair(ProxyUser, ProxyPass, true);
-               UsernamePasswordPairErrorMessage = String.Empty;
-               return false;
-            }
-            catch (ArgumentException ex)
-            {
-               UsernamePasswordPairErrorMessage = ex.Message;
-               return true;
-            }
+
+            var result = NetworkCredentialFactory.ValidateRequired(ProxyUser, ProxyPass, out var message);
+            UsernamePasswordPairErrorMessage = result ? String.Empty : message;
+            return !result;
          }
       }
 

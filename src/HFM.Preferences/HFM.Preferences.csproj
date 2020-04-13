@@ -79,6 +79,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="InMemoryPreferenceSet.cs" />
     <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Internal\ExpressionExtensions.cs" />
     <Compile Include="IPreferenceSet.cs" />

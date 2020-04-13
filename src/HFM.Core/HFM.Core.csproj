@@ -81,90 +81,96 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Arguments.cs" />
-    <Compile Include="BonusCalculationType.cs" />
-    <Compile Include="Client\LogLineCopier.cs" />
-    <Compile Include="DataTypes\Markup\LogLine.cs" />
-    <Compile Include="DataTypes\Markup\Protein.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.DuplicateDeleter.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.ProteinDataUpdater.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.SQLiteFunctions.cs" />
-    <Compile Include="Extensions.IProjectInfo.cs" />
-    <Compile Include="Extensions.ToProjectInfo.cs" />
-    <Compile Include="Extensions.WorkUnitResult.cs" />
-    <Compile Include="FtpMode.cs" />
-    <Compile Include="FtpWebRequestAdapter.cs" />
-    <Compile Include="FtpWebResponseAdapter.cs" />
-    <Compile Include="Internal\ProteinExtensions.cs" />
+    <Compile Include="Client\ClientIdentifier.cs" />
+    <Compile Include="Client\NumberFormat.cs" />
+    <Compile Include="Client\StringBuilderReader.cs" />
+    <Compile Include="Data\WorkUnitRowProfile.cs" />
+    <Compile Include="FahUrl.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggerBase.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
-    <Compile Include="DataTypes\ProjectInfo.cs" />
-    <Compile Include="PpdCalculationType.cs" />
-    <Compile Include="ScheduledTasks\RetrievalModel.cs" />
+    <Compile Include="Net\HostName.cs" />
+    <Compile Include="Net\HttpUrl.cs" />
+    <Compile Include="Net\NetworkCredentialFactory.cs" />
+    <Compile Include="Net\SecurityProtocol.cs" />
+    <Compile Include="Net\WebProxyFactory.cs" />
+    <Compile Include="Services\SendMailService.cs" />
+    <Compile Include="SlotXml\HtmlBuilder.cs" />
+    <Compile Include="SlotXml\WebArtifactDeployment.cs" />
+    <Compile Include="SlotXml\XmlBuilder.cs" />
+    <Compile Include="SlotXml\XmlBuilderProfile.cs" />
+    <Compile Include="Unknown.cs" />
+    <Compile Include="WorkUnits\BonusCalculation.cs" />
+    <Compile Include="Client\SlotIdentifier.cs" />
+    <Compile Include="SlotXml\LogLine.cs" />
+    <Compile Include="SlotXml\Protein.cs" />
+    <Compile Include="Data\ProteinBenchmarkDataContainer.cs" />
+    <Compile Include="Data\ProteinDataContainer.cs" />
+    <Compile Include="Data\SQLiteAddColumnCommand.cs" />
+    <Compile Include="Data\WorkUnitRepository.DuplicateDeleter.cs" />
+    <Compile Include="Data\WorkUnitRepository.ProteinDataUpdater.cs" />
+    <Compile Include="Data\WorkUnitRepository.SQLiteFunctions.cs" />
+    <Compile Include="Net\FtpMode.cs" />
+    <Compile Include="Logging\StopwatchExtensions.cs" />
+    <Compile Include="Net\TcpPort.cs" />
+    <Compile Include="Client\SlotType.cs" />
+    <Compile Include="ScheduledTasks\EocStatsScheduledTask.cs" />
+    <Compile Include="ScheduledTasks\ScheduledTask.cs" />
+    <Compile Include="Services\EocStatsService.cs" />
+    <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
+    <Compile Include="WorkUnits\ProjectInfo.cs" />
+    <Compile Include="WorkUnits\PPDCalculation.cs" />
+    <Compile Include="Client\ClientScheduledTasks.cs" />
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />
     <Compile Include="Serializers\ISerializer.cs" />
-    <Compile Include="Services\ClientConfigurationExtensions.cs" />
     <Compile Include="Client\DataAggregatorResult.cs" />
-    <Compile Include="SlotStatus.cs" />
-    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
-    <Compile Include="Utilities\FileSystem.cs" />
-    <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
+    <Compile Include="Client\SlotStatus.cs" />
+    <Compile Include="Internal\AsyncProcessorExtensions.cs" />
+    <Compile Include="Internal\FileSystem.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientFactory.cs" />
-    <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptor.cs" />
-    <Compile Include="ScheduledTasks\MarkupGenerator.cs" />
+    <Compile Include="SlotXml\WebArtifactBuilder.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
-    <Compile Include="Configuration\AutoMapperProfile.cs" />
-    <Compile Include="DataTypes\SlotTotals.cs" />
+    <Compile Include="Client\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
     <Compile Include="Client\FahClientDataAggregator.cs" />
-    <Compile Include="Services\ClientConfiguration.cs" />
+    <Compile Include="Client\ClientConfiguration.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Services\ProteinService.cs" />
-    <Compile Include="Serializers\HfmFileSerializer.cs" />
-    <Compile Include="Serializers\HistoryEntryCsvSerializer.cs" />
+    <Compile Include="Services\ProjectSummaryService.cs" />
+    <Compile Include="WorkUnits\ProteinService.cs" />
+    <Compile Include="Client\ClientSettingsFileSerializer.cs" />
+    <Compile Include="Data\WorkUnitRowCsvFileSerializer.cs" />
     <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
-    <Compile Include="Serializers\XmlFileSerializer.cs" />
-    <Compile Include="DataTypes\Markup\SlotData.cs" />
-    <Compile Include="DataTypes\Markup\SlotDetail.cs" />
-    <Compile Include="SlotModel.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Serializers\DataContractFileSerializer.cs" />
+    <Compile Include="SlotXml\SlotData.cs" />
+    <Compile Include="SlotXml\SlotDetail.cs" />
+    <Compile Include="Client\SlotModel.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
-    <Compile Include="Services\ProteinBenchmarkSlotIdentifier.cs" />
-    <Compile Include="DataTypes\ClientSettings.cs" />
-    <Compile Include="DataTypes\QueueDictionary.cs" />
-    <Compile Include="DataTypes\QueueUnitItem.cs" />
-    <Compile Include="DataTypes\HistoryEntry.cs" />
-    <Compile Include="DataTypes\ProteinBenchmark.cs" />
-    <Compile Include="DataTypes\ProteinFrameTime.cs" />
-    <Compile Include="DataTypes\QueryParameters.cs" />
-    <Compile Include="DataTypes\UnitInfo.cs" />
-    <Compile Include="DataTypes\XmlStatsData.cs" />
-    <Compile Include="Enumerations.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="NetworkOps.cs" />
-    <Compile Include="Utilities\FileSystemPath.cs" />
+    <Compile Include="Client\ClientSettings.cs" />
+    <Compile Include="Client\SlotWorkUnitDictionary.cs" />
+    <Compile Include="Data\WorkUnitRow.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmark.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkFrameTime.cs" />
+    <Compile Include="Data\WorkUnitQuery.cs" />
+    <Compile Include="WorkUnits\WorkUnit.cs" />
+    <Compile Include="Services\EocStatsData.cs" />
+    <Compile Include="WorkUnits\DateTimeExtensions.cs" />
+    <Compile Include="Services\FtpService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ProteinBenchmarkService.cs" />
-    <Compile Include="Data\QueryParametersContainer.cs" />
-    <Compile Include="DataTypes\Markup\SlotSummary.cs" />
-    <Compile Include="SlotModelSortComparer.cs" />
-    <Compile Include="ScheduledTasks\TaskManager.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabase.cs" />
-    <Compile Include="UnitInfoModel.cs" />
-    <Compile Include="Utilities\PreferenceSetExtensions.cs" />
-    <Compile Include="Utilities\StringBuilderExtensions.cs" />
-    <Compile Include="Utilities\Validate.Minutes.cs" />
-    <Compile Include="Validate.cs" />
-    <Compile Include="ScheduledTasks\WebsiteDeployer.cs" />
-    <Compile Include="Data\XmlStatsDataContainer.cs" />
-    <Compile Include="WebOperation.cs" />
-    <Compile Include="WebRequestAdapter.cs" />
-    <Compile Include="WebResponseAdapter.cs" />
-    <Compile Include="WorkUnitResult.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />
+    <Compile Include="Data\WorkUnitQueryDataContainer.cs" />
+    <Compile Include="SlotXml\SlotSummary.cs" />
+    <Compile Include="Client\SlotModelSortComparer.cs" />
+    <Compile Include="Data\WorkUnitRepository.cs" />
+    <Compile Include="WorkUnits\WorkUnitModel.cs" />
+    <Compile Include="Client\StringBuilderExtensions.cs" />
+    <Compile Include="FileSystemPath.cs" />
+    <Compile Include="Data\EocStatsDataContainer.cs" />
+    <Compile Include="Net\WebOperation.cs" />
+    <Compile Include="WorkUnits\WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
@@ -188,8 +194,6 @@
     <None Include="..\harlam357.snk">
       <Link>Properties\harlam357.snk</Link>
     </None>
-    <None Include="Models\Generated\PetaPoco.Core.ttinclude" />
-    <None Include="Models\Generated\PetaPoco.Generator.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -198,15 +202,8 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Models\Generated\Database.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Database.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

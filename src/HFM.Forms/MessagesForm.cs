@@ -21,8 +21,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
-
 using HFM.Core.Logging;
 using HFM.Forms.Controls;
 using HFM.Preferences;
@@ -51,24 +49,16 @@ namespace HFM.Forms
       private const int MaxLines = 512;
 
       private readonly IPreferenceSet _prefs;
+      private readonly ILoggerEvents _loggerEvents;
       private readonly List<string> _lines = new List<string>(MaxLines);
 
-      #region Constructor
-
-      public MessagesForm(IPreferenceSet prefs)
+      public MessagesForm(IPreferenceSet prefs, ILoggerEvents loggerEvents)
       {
          _prefs = prefs;
+         _loggerEvents = loggerEvents;
+         _loggerEvents.Logged += (s, e) => AddMessage(e.Messages);
 
          InitializeComponent();
-      }
-
-      #endregion
-
-      #region Implementation
-
-      public void AttachLogger(ILogger logger)
-      {
-         ((Logger)logger).TextMessage += (sender, e) => AddMessage(e.Messages);
       }
 
       private void AddMessage(ICollection<string> messages)
@@ -140,7 +130,5 @@ namespace HFM.Forms
          e.Cancel = true;
          base.OnClosing(e);
       }
-
-      #endregion
    }
 }

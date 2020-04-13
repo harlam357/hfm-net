@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
 using HFM.Core.Serializers;
 
 namespace HFM.Forms
@@ -78,7 +78,7 @@ namespace HFM.Forms
       {
          _serializers = new List<IFileSerializer<List<ClientSettings>>>
          {
-            new HfmFileSerializer()
+            new ClientSettingsFileSerializer()
          };
 
          ClearFileName();

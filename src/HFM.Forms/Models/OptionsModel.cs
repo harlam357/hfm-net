@@ -21,9 +21,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-using Castle.Core.Logging;
-
-using HFM.Core;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -40,12 +39,11 @@ namespace HFM.Forms.Models
          OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
          ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
          AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
-         PpdCalculation = prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+         PpdCalculation = prefs.Get<PPDCalculation>(Preference.PPDCalculation);
          DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
-         CalculateBonus = prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+         CalculateBonus = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
          EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
          DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
-         DuplicateUserIdCheck = prefs.Get<bool>(Preference.DuplicateUserIdCheck);
          ShowXmlStats = prefs.Get<bool>(Preference.EnableUserStats);
          MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
          FormShowStyle = prefs.Get<MinimizeToOption>(Preference.MinimizeTo);
@@ -56,12 +54,11 @@ namespace HFM.Forms.Models
          prefs.Set(Preference.OfflineLast, OfflineLast);
          prefs.Set(Preference.ColorLogFile, ColorLogFile);
          prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-         prefs.Set(Preference.PpdCalculation, PpdCalculation);
+         prefs.Set(Preference.PPDCalculation, PpdCalculation);
          prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
          prefs.Set(Preference.BonusCalculation, CalculateBonus);
          prefs.Set(Preference.DisplayEtaAsDate, EtaDate);
          prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-         prefs.Set(Preference.DuplicateUserIdCheck, DuplicateUserIdCheck);
          prefs.Set(Preference.EnableUserStats, ShowXmlStats);
          prefs.Set(Preference.MessageLevel, (int)MessageLevel);
          prefs.Set(Preference.MinimizeTo, FormShowStyle);
@@ -114,9 +111,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private PpdCalculationType _ppdCalculation;
+      private PPDCalculation _ppdCalculation;
       
-      public PpdCalculationType PpdCalculation
+      public PPDCalculation PpdCalculation
       {
          get { return _ppdCalculation; }
          set
@@ -144,9 +141,9 @@ namespace HFM.Forms.Models
          }
       }
 
-      private BonusCalculationType _calculateBonus;
+      private BonusCalculation _calculateBonus;
 
-      public BonusCalculationType CalculateBonus
+      public BonusCalculation CalculateBonus
       {
          get { return _calculateBonus; }
          set
@@ -185,21 +182,6 @@ namespace HFM.Forms.Models
             {
                _duplicateProjectCheck = value;
                OnPropertyChanged("DuplicateProjectCheck");
-            }
-         }
-      }
-
-      private bool _duplicateUserIdCheck;
-
-      public bool DuplicateUserIdCheck
-      {
-         get { return _duplicateUserIdCheck; }
-         set
-         {
-            if (DuplicateUserIdCheck != value)
-            {
-               _duplicateUserIdCheck = value;
-               OnPropertyChanged("DuplicateUserIdCheck");
             }
          }
       }
@@ -280,13 +262,13 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = "Last Frame", ValueMember = PpdCalculationType.LastFrame },
+                          { DisplayMember = "Last Frame", ValueMember = PPDCalculation.LastFrame },
                           new ListItem
-                          { DisplayMember = "Last Three Frames", ValueMember = PpdCalculationType.LastThreeFrames },
+                          { DisplayMember = "Last Three Frames", ValueMember = PPDCalculation.LastThreeFrames },
                           new ListItem
-                          { DisplayMember = "All Frames", ValueMember = PpdCalculationType.AllFrames },
+                          { DisplayMember = "All Frames", ValueMember = PPDCalculation.AllFrames },
                           new ListItem
-                          { DisplayMember = "Effective Rate", ValueMember = PpdCalculationType.EffectiveRate }
+                          { DisplayMember = "Effective Rate", ValueMember = PPDCalculation.EffectiveRate }
                        };
             return list.AsReadOnly();
          }
@@ -299,11 +281,11 @@ namespace HFM.Forms.Models
             var list = new List<ListItem>
                        {
                           new ListItem
-                          { DisplayMember = "Download Time", ValueMember = BonusCalculationType.DownloadTime },
+                          { DisplayMember = "Download Time", ValueMember = BonusCalculation.DownloadTime },
                           new ListItem
-                          { DisplayMember = "Frame Time", ValueMember = BonusCalculationType.FrameTime },
+                          { DisplayMember = "Frame Time", ValueMember = BonusCalculation.FrameTime },
                           new ListItem
-                          { DisplayMember = "None", ValueMember = BonusCalculationType.None },
+                          { DisplayMember = "None", ValueMember = BonusCalculation.None },
                        };
             return list.AsReadOnly();
          }

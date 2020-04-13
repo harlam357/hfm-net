@@ -23,13 +23,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-using Castle.Core.Logging;
-
 using HFM.Client.DataTypes;
-using HFM.Core.DataTypes;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
     internal class FahClientDataAggregator
     {
@@ -47,16 +46,16 @@ namespace HFM.Core
         }
 
         /// <summary>
-        /// Aggregate Data and return UnitInfo Dictionary.
+        /// Aggregate Data and return WorkUnit Dictionary.
         /// </summary>
         public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
-                                                  SlotOptions slotOptions, UnitInfo currentUnitInfo, int slotId)
+                                                  SlotOptions slotOptions, WorkUnit currentWorkUnit, int slotId)
         {
             if (clientRun == null) throw new ArgumentNullException(nameof(clientRun));
             if (unitCollection == null) throw new ArgumentNullException(nameof(unitCollection));
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (slotOptions == null) throw new ArgumentNullException(nameof(slotOptions));
-            if (currentUnitInfo == null) throw new ArgumentNullException(nameof(currentUnitInfo));
+            if (currentWorkUnit == null) throw new ArgumentNullException(nameof(currentWorkUnit));
 
             var result = new DataAggregatorResult();
             result.CurrentUnitIndex = -1;
@@ -72,16 +71,16 @@ namespace HFM.Core
             {
                 foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
                 {
-                    Logger.DebugFormat(Constants.ClientNameFormat, ClientName, String.Format("Failed to parse log line: {0}", s));
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, $"Failed to parse log line: {s}"));
                 }
             }
 
-            GenerateUnitInfoDataFromQueue(result, slotRun, unitCollection, options, slotOptions, currentUnitInfo, slotId);
-            result.Queue = BuildQueueDictionary(unitCollection, info, slotOptions, slotId);
+            BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, slotId);
+            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, slotOptions, slotId);
 
-            if (result.UnitInfos.ContainsKey(result.CurrentUnitIndex) && result.UnitInfos[result.CurrentUnitIndex].LogLines != null)
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
             {
-                result.CurrentLogLines = result.UnitInfos[result.CurrentUnitIndex].LogLines;
+                result.CurrentLogLines = result.WorkUnits[result.CurrentUnitIndex].LogLines;
             }
             else if (slotRun != null)
             {
@@ -95,64 +94,62 @@ namespace HFM.Core
             return result;
         }
 
-        private static QueueDictionary BuildQueueDictionary(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
+        private static SlotWorkUnitDictionary BuildSlotWorkUnitInfos(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
         {
-            QueueDictionary cq = null;
+            SlotWorkUnitDictionary d = null;
             foreach (var unit in unitCollection.Where(unit => unit.Slot == slotId))
             {
-                // don't create a queue until we find a unit that matches this slot id
-                if (cq == null)
+                if (d == null)
                 {
-                    cq = new QueueDictionary { CurrentIndex = -1 };
+                    d = new SlotWorkUnitDictionary { CurrentWorkUnitKey = -1 };
                 }
 
-                var cqe = new QueueUnitItem();
-                cqe.EntryStatusLiteral = unit.StateEnum.ToString();
-                cqe.WaitingOn = unit.WaitingOn;
-                cqe.Attempts = unit.Attempts;
-                cqe.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                cqe.NumberOfSmpCores = info.System.CpuCount;
-                cqe.BeginTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
-                cqe.BeginTimeLocal = unit.AssignedDateTime.GetValueOrDefault().ToLocalTime();
-                cqe.ProjectID = unit.Project;
-                cqe.ProjectRun = unit.Run;
-                cqe.ProjectClone = unit.Clone;
-                cqe.ProjectGen = unit.Gen;
-                cqe.MachineID = slotId;
-                cqe.ServerIP = unit.WorkServer;
-                cqe.CpuString = GetCpuString(info, slotOptions);
-                cqe.OsString = ToOperatingSystemString(info.System);
+                var wui = new SlotWorkUnitInfo();
+                wui.State = unit.StateEnum.ToString();
+                wui.WaitingOn = unit.WaitingOn;
+                wui.Attempts = unit.Attempts;
+                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
+                wui.NumberOfSmpCores = info.System.CpuCount;
+                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
+                wui.ProjectID = unit.Project;
+                wui.ProjectRun = unit.Run;
+                wui.ProjectClone = unit.Clone;
+                wui.ProjectGen = unit.Gen;
+                wui.SlotID = slotId;
+                wui.WorkServer = unit.WorkServer;
+                wui.CPU = GetCPU(info, slotOptions);
+                wui.OperatingSystem = GetOperatingSystem(info.System);
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
-                cqe.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
-                cq.Add(unit.Id, cqe);
+                wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
+                d.Add(unit.Id, wui);
 
                 if (unit.StateEnum == UnitState.Running)
                 {
-                    cq.CurrentIndex = unit.Id;
+                    d.CurrentWorkUnitKey = unit.Id;
                 }
             }
 
-            if (cq != null)
+            if (d != null)
             {
                 // if no running index and at least something in the queue
-                if (cq.CurrentIndex == -1 && cq.Count != 0)
+                if (d.CurrentWorkUnitKey == -1 && d.Count != 0)
                 {
                     // take the minimum queue id
-                    cq.CurrentIndex = cq.Keys.First();
+                    d.CurrentWorkUnitKey = d.Keys.First();
                 }
             }
 
-            return cq;
+            return d;
         }
 
-        private static string ToOperatingSystemString(SystemInfo systemInfo)
+        private static string GetOperatingSystem(SystemInfo systemInfo)
         {
             return !String.IsNullOrWhiteSpace(systemInfo.OperatingSystemArchitecture)
                ? String.Format(CultureInfo.InvariantCulture, "{0} {1}", systemInfo.OperatingSystem, systemInfo.OperatingSystemArchitecture)
                : systemInfo.OperatingSystem;
         }
 
-        private static string GetCpuString(Info info, SlotOptions slotOptions)
+        private static string GetCPU(Info info, SlotOptions slotOptions)
         {
             if (slotOptions.GpuIndex.HasValue)
             {
@@ -184,28 +181,28 @@ namespace HFM.Core
             return String.Empty;
         }
 
-        private void GenerateUnitInfoDataFromQueue(DataAggregatorResult result,
-                                                   SlotRun slotRun,
-                                                   ICollection<Unit> unitCollection,
-                                                   Options options,
-                                                   SlotOptions slotOptions,
-                                                   UnitInfo currentUnitInfo,
-                                                   int slotId)
+        private void BuildWorkUnits(DataAggregatorResult result,
+                                    SlotRun slotRun,
+                                    ICollection<Unit> unitCollection,
+                                    Options options,
+                                    SlotOptions slotOptions,
+                                    WorkUnit currentWorkUnit,
+                                    int slotId)
         {
             Debug.Assert(unitCollection != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
-            Debug.Assert(currentUnitInfo != null);
+            Debug.Assert(currentWorkUnit != null);
 
-            result.UnitInfos = new Dictionary<int, UnitInfo>();
+            result.WorkUnits = new Dictionary<int, WorkUnit>();
 
             bool foundCurrentUnitInfo = false;
 
             foreach (var unit in unitCollection.Where(x => x.Slot == slotId))
             {
                 var projectInfo = unit.ToProjectInfo();
-                if (projectInfo.EqualsProject(currentUnitInfo) &&
-                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentUnitInfo.DownloadTime))
+                if (projectInfo.EqualsProject(currentWorkUnit) &&
+                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.DownloadTime))
                 {
                     foundCurrentUnitInfo = true;
                 }
@@ -214,15 +211,14 @@ namespace HFM.Core
                 var unitRun = GetUnitRun(slotRun, unit.Id, projectInfo);
                 if (unitRun == null)
                 {
-                    string message = String.Format(CultureInfo.CurrentCulture,
-                       "Could not find log section for Slot {0} {1}. Cannot update log data for this unit.", slotId, projectInfo);
-                    Logger.WarnFormat(Constants.ClientNameFormat, ClientName, message);
+                    string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, message));
                 }
 
-                UnitInfo unitInfo = BuildUnitInfo(unit, options, slotOptions, unitRun);
-                if (unitInfo != null)
+                WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);
+                if (workUnit != null)
                 {
-                    result.UnitInfos.Add(unit.Id, unitInfo);
+                    result.WorkUnits.Add(unit.Id, workUnit);
                     if (unit.StateEnum == UnitState.Running)
                     {
                         result.CurrentUnitIndex = unit.Id;
@@ -245,73 +241,72 @@ namespace HFM.Core
             if (!foundCurrentUnitInfo)
             {
                 // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(slotRun, currentUnitInfo.QueueIndex, currentUnitInfo);
+                var unitRun = GetUnitRun(slotRun, currentWorkUnit.QueueIndex, currentWorkUnit);
                 if (unitRun != null)
                 {
-                    // create a clone of the current UnitInfo object so we're not working with an
+                    // create a clone of the current WorkUnit object so we're not working with an
                     // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
-                    UnitInfo currentClone = currentUnitInfo.DeepClone();
+                    WorkUnit currentClone = currentWorkUnit.DeepClone();
 
-                    UpdateUnitInfoFromLogData(currentClone, unitRun);
-                    result.UnitInfos.Add(currentClone.QueueIndex, currentClone);
+                    PopulateWorkUnitFromLogData(currentClone, unitRun);
+                    result.WorkUnits.Add(currentClone.QueueIndex, currentClone);
                 }
             }
         }
 
         private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
         {
-            if (slotRun != null)
-            {
-                var unitRun = slotRun.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
-                if (unitRun != null)
-                {
-                    return unitRun;
-                }
-            }
-            return null;
+            return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
         }
 
-        private UnitInfo BuildUnitInfo(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
+        private static WorkUnit BuildWorkUnit(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
         {
             Debug.Assert(queueEntry != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
-            var unit = new UnitInfo();
-            UpdateUnitInfoFromFahClientData(unit, queueEntry, options, slotOptions);
+            var workUnit = new WorkUnit();
+            PopulateWorkUnitFromFahClientData(workUnit, queueEntry, options, slotOptions);
             if (unitRun != null)
             {
-                UpdateUnitInfoFromLogData(unit, unitRun);
+                PopulateWorkUnitFromLogData(workUnit, unitRun);
             }
-
-            return unit;
+            return workUnit;
         }
 
-        private void UpdateUnitInfoFromLogData(UnitInfo unitInfo, UnitRun unitRun)
+        private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)
         {
-            Debug.Assert(unitInfo != null);
+            Debug.Assert(workUnit != null);
             Debug.Assert(unitRun != null);
 
-            unitInfo.LogLines = LogLineEnumerable.Create(unitRun).ToList();
-            unitInfo.FrameData = unitRun.Data.FrameDataDictionary;
-            unitInfo.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
-            unitInfo.FramesObserved = unitRun.Data.FramesObserved;
-            unitInfo.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
-            unitInfo.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
+            workUnit.LogLines = LogLineEnumerable.Create(unitRun).ToList();
+            workUnit.FrameData = unitRun.Data.FrameDataDictionary;
+            workUnit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
+            workUnit.FramesObserved = unitRun.Data.FramesObserved;
+            workUnit.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
+            workUnit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
             // there is no finished time available from the client API
             // since the unit history database won't write the same
             // result twice, the first time this hits use the local UTC
             // value for the finished time... not as good as what was
             // available with v6.
-            if (unitInfo.UnitResult.IsTerminating())
+            if (IsTerminating(workUnit))
             {
-                var finishedTime = DateTime.UtcNow;
-                //string message = String.Format(CultureInfo.CurrentCulture,
-                //   "Setting Finished Time {0} for {1}.", finishedTime, unitInfo.ToProjectInfo());
-                //Logger.Debug(Constants.ClientNameFormat, ClientName, message);
-                unitInfo.FinishedTime = finishedTime;
+               workUnit.FinishedTime = DateTime.UtcNow;
             }
+        }
+
+        private static bool IsTerminating(WorkUnit workUnit)
+        {
+            return workUnit.UnitResult.IsTerminating() ||
+                   IsUnknownEnumTerminating(workUnit);
+        }
+
+        private static bool IsUnknownEnumTerminating(WorkUnit workUnit)
+        {
+            return workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
+                   workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
         }
 
         private static float ParseCoreVersion(string coreVer)
@@ -333,41 +328,34 @@ namespace HFM.Core
             return 0.0f;
         }
 
-        private static void UpdateUnitInfoFromFahClientData(UnitInfo unitInfo, Unit queueEntry, Options options, SlotOptions slotOptions)
+        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit queueEntry, Options options, SlotOptions slotOptions)
         {
-            Debug.Assert(unitInfo != null);
+            Debug.Assert(workUnit != null);
             Debug.Assert(queueEntry != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
-            unitInfo.QueueIndex = queueEntry.Id;
+            workUnit.QueueIndex = queueEntry.Id;
 
             /* DownloadTime (AssignedDateTime from HFM.Client API) */
-            unitInfo.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
+            workUnit.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
 
             /* DueTime (TimeoutDateTime from HFM.Client API) */
-            unitInfo.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
-
-            /* FinishedTime */
-            //if (queueEntryStatus.Equals(QueueEntryStatus.Finished) ||
-            //    queueEntryStatus.Equals(QueueEntryStatus.ReadyForUpload))
-            //{
-            //   unit.FinishedTime = entry.EndTimeUtc;
-            //}
+            workUnit.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
 
             /* Project (R/C/G) */
-            unitInfo.ProjectID = queueEntry.Project;
-            unitInfo.ProjectRun = queueEntry.Run;
-            unitInfo.ProjectClone = queueEntry.Clone;
-            unitInfo.ProjectGen = queueEntry.Gen;
+            workUnit.ProjectID = queueEntry.Project;
+            workUnit.ProjectRun = queueEntry.Run;
+            workUnit.ProjectClone = queueEntry.Clone;
+            workUnit.ProjectGen = queueEntry.Gen;
 
             /* FoldingID and Team from Queue Entry */
-            unitInfo.FoldingID = options.User ?? Constants.DefaultFoldingID;
-            unitInfo.Team = options.Team ?? Constants.DefaultTeam;
-            unitInfo.SlotType = slotOptions.ToSlotType();
+            workUnit.FoldingID = options.User ?? WorkUnit.DefaultFoldingID;
+            workUnit.Team = options.Team ?? WorkUnit.DefaultTeam;
+            workUnit.SlotType = SlotTypeConvert.FromSlotOptions(slotOptions);
 
             /* Core ID */
-            unitInfo.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
         }
     }
 }

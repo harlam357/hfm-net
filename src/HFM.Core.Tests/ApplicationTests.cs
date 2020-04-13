@@ -23,31 +23,31 @@ using NUnit.Framework;
 
 namespace HFM.Core
 {
-   [TestFixture]
-   public class ApplicationTests
-   {
-      [Test]
-      public void Application_ParseVersion_Test1()
-      {
-         Assert.AreEqual(1020030004, Application.ParseVersion("1.2.3.4"));
-      }
+    [TestFixture]
+    public class ApplicationTests
+    {
+        [Test]
+        public void Application_ParseVersionNumber_FromFourSegments()
+        {
+            Assert.AreEqual(1020030004, Application.ParseVersionNumber("1.2.3.4"));
+        }
 
-      [Test]
-      public void Application_ParseVersion_Test2()
-      {
-         Assert.Throws<ArgumentNullException>(() => Application.ParseVersion(null));
-      }
+        [Test]
+        public void Application_ParseVersionNumber_ThrowsWhenVersionStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => Application.ParseVersionNumber(null));
+        }
 
-      [Test]
-      public void Application_ParseVersion_Test3()
-      {
-         Assert.AreEqual(1020030000, Application.ParseVersion("1.2.3"));
-      }
+        [Test]
+        public void Application_ParseVersionNumber_FromThreeSegments()
+        {
+            Assert.AreEqual(1020030000, Application.ParseVersionNumber("1.2.3"));
+        }
 
-      [Test]
-      public void Application_ParseVersion_Test4()
-      {
-         Assert.Throws<FormatException>(() => Application.ParseVersion("1.2.3.b"));
-      }
-   }
+        [Test]
+        public void Application_ParseVersionNumber_ThrowsWhenSegmentIsNotInteger()
+        {
+            Assert.Throws<FormatException>(() => Application.ParseVersionNumber("1.2.3.b"));
+        }
+    }
 }

@@ -21,7 +21,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
 
 namespace HFM.Forms.Controls
 {
@@ -35,8 +35,8 @@ namespace HFM.Forms.Controls
             if (OwningRow != null && OwningRow.Index >= 0)
             {
                var nameCell = OwningRow.Cells["Name"];
-               return nameCell.Value.Equals(QueryFieldName.DownloadDateTime) ||
-                      nameCell.Value.Equals(QueryFieldName.CompletionDateTime);
+               return nameCell.Value.Equals(WorkUnitRowColumn.DownloadDateTime) ||
+                      nameCell.Value.Equals(WorkUnitRowColumn.CompletionDateTime);
             }
 
             return false;

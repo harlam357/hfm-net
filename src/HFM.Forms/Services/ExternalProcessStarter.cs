@@ -22,9 +22,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using Castle.Core.Logging;
 
 using HFM.Core;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -97,7 +97,7 @@ namespace HFM.Forms
       /// </summary>
       public string ShowHfmLogFile()
       {
-         string logFilePath = Path.Combine(_prefs.Get<string>(Preference.ApplicationDataFolderPath), Constants.HfmLogFileName);
+         string logFilePath = Path.Combine(_prefs.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
          string errorMessage = String.Format(CultureInfo.CurrentCulture,
                "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                Environment.NewLine);
@@ -145,7 +145,7 @@ namespace HFM.Forms
       public string ShowHfmGitHub()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET GitHub Project.";
-         return RunProcess(Constants.GitHubUrl, null, errorMessage);
+         return RunProcess(Application.ProjectSiteUrl, null, errorMessage);
       }
 
       /// <summary>
@@ -154,12 +154,12 @@ namespace HFM.Forms
       public string ShowHfmGoogleGroup()
       {
          const string errorMessage = "An error occured while attempting to show the HFM.NET Google Group.";
-         return RunProcess(Constants.GoogleGroupUrl, null, errorMessage);
+         return RunProcess(Application.SupportForumUrl, null, errorMessage);
       }
 
       private Uri EocUserUrl
       {
-         get { return new Uri(String.Concat(Constants.EOCUserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
+         get { return new Uri(String.Concat(Core.Services.EocStatsService.UserBaseUrl, _prefs.Get<int>(Preference.EocUserId))); }
       }
 
       /// <summary>
@@ -173,7 +173,7 @@ namespace HFM.Forms
 
       private Uri EocTeamUrl
       {
-         get { return new Uri(String.Concat(Constants.EOCTeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
+         get { return new Uri(String.Concat(Core.Services.EocStatsService.TeamBaseUrl, _prefs.Get<int>(Preference.TeamId))); }
       }
 
       /// <summary>
@@ -187,7 +187,7 @@ namespace HFM.Forms
 
       private Uri StanfordUserUrl
       {
-         get { return new Uri(String.Concat(Constants.StanfordBaseUrl, _prefs.Get<string>(Preference.StanfordId))); }
+         get { return new Uri(String.Concat(FahUrl.UserBaseUrl, _prefs.Get<string>(Preference.StanfordId))); }
       }
 
       /// <summary>
@@ -208,7 +208,7 @@ namespace HFM.Forms
          }
          catch (Exception ex)
          {
-            _logger.ErrorFormat(ex, "{0}", ex.Message);
+             _logger.Error(ex.Message, ex);
             return errorMessage;
          }
       }

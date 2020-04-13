@@ -19,80 +19,78 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 using Rhino.Mocks;
 
 using HFM.Client;
-using HFM.Core.Data.SQLite;
-using HFM.Core.DataTypes;
+using HFM.Core.Data;
+using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
 
-namespace HFM.Core
+namespace HFM.Core.Client
 {
-   [TestFixture]
-   public class FahClientTests
-   {
-      [Test]
-      public void FahClient_ArgumentNullException_Test()
-      {
-         Assert.Throws<ArgumentNullException>(() => new FahClient(null));
-      }
+    [TestFixture]
+    public class FahClientTests
+    {
+        [Test]
+        public void FahClient_ArgumentNullException_Test()
+        {
+            Assert.Throws<ArgumentNullException>(() => new FahClient(null));
+        }
 
-      [Test]
-      public void FahClient_UpdateBenchmarkData_Test()
-      {
-         // setup
-         var benchmarkCollection = new ProteinBenchmarkService();
-         var database = MockRepository.GenerateMock<IUnitInfoDatabase>();
-         var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarkCollection, UnitInfoDatabase = database };
+        [Test]
+        public void FahClient_UpdateBenchmarkData_Test()
+        {
+            // setup
+            var benchmarks = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
+            var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarks, WorkUnitRepository = repository };
 
-         var unitInfo1 = new UnitInfo();
-         unitInfo1.OwningClientName = "Owner";
-         unitInfo1.OwningClientPath = "Path";
-         unitInfo1.OwningSlotId = 0;
-         unitInfo1.ProjectID = 2669;
-         unitInfo1.ProjectRun = 1;
-         unitInfo1.ProjectClone = 2;
-         unitInfo1.ProjectGen = 3;
-         unitInfo1.FinishedTime = new DateTime(2010, 1, 1);
-         unitInfo1.QueueIndex = 0;
-         var currentUnitInfo = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1 };
+            var slotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner", "Path"), SlotIdentifier.NoSlotID);
 
-         var unitInfo1Clone = unitInfo1.DeepClone();
-         unitInfo1Clone.FramesObserved = 4;
-         var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-            .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
-                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
-                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
-                  new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
-         unitInfo1Clone.FrameData = frameDataDictionary;
-         unitInfo1Clone.UnitResult = WorkUnitResult.FinishedUnit;
-         var unitInfoLogic1 = new UnitInfoModel { CurrentProtein = new Protein(), UnitInfoData = unitInfo1Clone };
+            var workUnit = new WorkUnit();
+            workUnit.SlotIdentifier = slotIdentifier;
+            workUnit.ProjectID = 2669;
+            workUnit.ProjectRun = 1;
+            workUnit.ProjectClone = 2;
+            workUnit.ProjectGen = 3;
+            workUnit.FinishedTime = new DateTime(2010, 1, 1);
+            workUnit.QueueIndex = 0;
+            var currentWorkUnit = new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnit };
 
-         var parsedUnits = new[] { unitInfoLogic1 };
+            var workUnitCopy = workUnit.DeepClone();
+            workUnitCopy.FramesObserved = 4;
+            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
+               .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
+                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
+                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
+                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
+            workUnitCopy.FrameData = frameDataDictionary;
+            workUnitCopy.UnitResult = WorkUnitResult.FinishedUnit;
 
-         // arrange
-         database.Stub(x => x.Connected).Return(true);
-         database.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
+            var parsedUnits = new[] { new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnitCopy } };
 
-         var benchmarkClient = new ProteinBenchmarkSlotIdentifier("Owner Slot 00", "Path");
+            // Arrange
+            repository.Stub(x => x.Connected).Return(true);
+            repository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
-         // assert before act
-         Assert.AreEqual(false, benchmarkCollection.Contains(benchmarkClient));
-         Assert.AreEqual(false, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.IsNull(benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData));
+            // Assert (pre-condition)
+            Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsFalse(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.IsNull(benchmarks.GetBenchmark(slotIdentifier, 2669));
 
-         // act
-         fahClient.UpdateBenchmarkData(currentUnitInfo, parsedUnits, 0);
+            // Act
+            fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
 
-         // assert after act
-         Assert.AreEqual(true, benchmarkCollection.Contains(benchmarkClient));
-         Assert.AreEqual(true, new List<int>(benchmarkCollection.GetBenchmarkProjects(benchmarkClient)).Contains(2669));
-         Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkCollection.GetBenchmark(currentUnitInfo.UnitInfoData).AverageFrameTime);
+            // Assert
+            Assert.IsTrue(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsTrue(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarks.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
 
-         database.VerifyAllExpectations();
-      }
-   }
+            repository.VerifyAllExpectations();
+        }
+    }
 }

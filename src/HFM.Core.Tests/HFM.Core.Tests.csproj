@@ -106,36 +106,42 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Client\ClientFactoryTests.cs" />
-    <Compile Include="Configuration\AutoMapperProfileTests.cs" />
-    <Compile Include="DataTypes\ClientSettingsTests.cs" />
-    <Compile Include="Internal\ProteinExtensionsTests.cs" />
-    <Compile Include="Serializers\HfmFileSerializerTests.cs" />
-    <Compile Include="Services\ProteinBenchmarkSlotIdentifierTests.cs" />
-    <Compile Include="DataTypes\QueryParametersTests.cs" />
-    <Compile Include="DataTypes\UnitInfoTests.cs" />
-    <Compile Include="ExtensionsTests.cs" />
-    <Compile Include="Services\ClientConfigurationTests.cs" />
+    <Compile Include="Client\SlotModelTests.cs" />
+    <Compile Include="Client\ClientSettingsTests.cs" />
+    <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
+    <Compile Include="Data\WorkUnitRowProfileTests.cs" />
+    <Compile Include="Net\HostNameTests.cs" />
+    <Compile Include="Net\HttpUrlTests.cs" />
+    <Compile Include="Net\NetworkCredentialFactoryTests.cs" />
+    <Compile Include="Services\EocStatsDataTests.cs" />
+    <Compile Include="Services\SendMailServiceTests.cs" />
+    <Compile Include="SlotXml\XmlBuilderProfileTests.cs" />
+    <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
+    <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
+    <Compile Include="Data\WorkUnitQueryTests.cs" />
+    <Compile Include="WorkUnits\WorkUnitTests.cs" />
+    <Compile Include="Client\ClientConfigurationTests.cs" />
     <Compile Include="Client\FahClientDataAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
-    <Compile Include="ScheduledTasks\MarkupGeneratorTests.cs" />
-    <Compile Include="NetworkOpsTests.cs" />
+    <Compile Include="SlotXml\WebArtifactTests.cs" />
     <Compile Include="SetUpFixture.cs" />
-    <Compile Include="Utilities\FileSystemPathTests.cs" />
+    <Compile Include="Internal\FileSystemTests.cs" />
     <Compile Include="ApplicationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serializers\HistoryEntryCsvSerializerTests.cs" />
-    <Compile Include="Services\ProteinBenchmarkServiceTests.cs" />
-    <Compile Include="Services\ProteinServiceTests.cs" />
-    <Compile Include="Data\QueryParameterContainerTests.cs" />
-    <Compile Include="ScheduledTasks\TaskManagerTests.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabaseReadOnlyTests.cs" />
-    <Compile Include="Data\SQLite\UnitInfoDatabaseTests.cs" />
+    <Compile Include="Data\WorkUnitRowCsvFileSerializerTests.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkServiceTests.cs" />
+    <Compile Include="WorkUnits\ProteinServiceTests.cs" />
+    <Compile Include="Data\WorkUnitQueryDataContainerTests.cs" />
+    <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
+    <Compile Include="Data\WorkUnitRepositoryReadOnlyTests.cs" />
+    <Compile Include="Data\WorkUnitRepositoryTests.cs" />
     <Compile Include="UnitInfoExtensions.cs" />
-    <Compile Include="UnitInfoModelTests.cs" />
-    <Compile Include="ValidateTests.cs" />
-    <Compile Include="Data\XmlStatsDataContainerTests.cs" />
+    <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
+    <Compile Include="FileSystemPathTests.cs" />
+    <Compile Include="Data\EocStatsDataContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
@@ -165,7 +171,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\BenchmarkCache.dat" />
-    <None Include="TestFiles\TestClientSettings.hfmx" />
+    <None Include="TestFiles\ClientSettings_0_9_11.hfmx" />
     <None Include="TestFiles\TestData.db3" />
     <None Include="TestFiles\TestData2.db3" />
     <None Include="TestFiles\TestData_1.db3" />
@@ -175,6 +181,10 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

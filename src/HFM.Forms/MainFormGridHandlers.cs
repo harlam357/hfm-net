@@ -24,7 +24,8 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Preferences;
 
@@ -90,14 +91,6 @@ namespace HFM.Forms
                   return;
                }
             }
-            else if (dataGridView1.Columns["Name"].Index == info.ColumnIndex)
-            {
-               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck) && slotModel.UserIdIsDuplicate)
-               {
-                  toolTipGrid.Show("Client is working with the same User and Machine ID as another client", dataGridView1, e.X + 15, e.Y);
-                  return;
-               }
-            }
             // ReSharper restore PossibleNullReferenceException
          }
 
@@ -126,19 +119,6 @@ namespace HFM.Forms
             if (dataGridView1.Columns["Status"].Index == e.ColumnIndex)
             {
                PaintGridCell(PaintCell.Status, e);
-            }
-            else if (dataGridView1.Columns["Name"].Index == e.ColumnIndex)
-            {
-               #region Duplicate User and Machine ID Custom Paint
-               if (_prefs.Get<bool>(Preference.DuplicateUserIdCheck))
-               {
-                  var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString());
-                  if (slotModel != null && slotModel.UserIdIsDuplicate)
-                  {
-                     PaintGridCell(PaintCell.Warning, e);
-                  }
-               }
-               #endregion
             }
             else if (dataGridView1.Columns["ProjectRunCloneGen"].Index == e.ColumnIndex)
             {
@@ -311,7 +291,7 @@ namespace HFM.Forms
                   //if (e.Value != null)
                   //{
                      Debug.Assert(data != null);
-                     DrawText(((DateTime)data).ToDateString(), textColor, e);
+                     DrawText(((DateTime)data).ToStringOrUnknown(), textColor, e);
                   //}
                }
                else if (paint.Equals(PaintCell.Warning))
@@ -436,13 +416,13 @@ namespace HFM.Forms
                else if (dataGridView1.Columns["ETA"].Index == columnIndex && _prefs.Get<bool>(Preference.DisplayEtaAsDate))
                {
                   var slotModel = _presenter.FindSlotModel(dataGridView1.Rows[i].Cells["Name"].Value.ToString());
-                  formattedString = slotModel.ETADate.ToDateString();
+                  formattedString = slotModel.ETADate.ToStringOrUnknown();
                }
                else if (dataGridView1.Columns["DownloadTime"].Index == columnIndex ||
                         dataGridView1.Columns["Deadline"].Index == columnIndex)
                {
                   formattedString =
-                     ((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value).ToDateString(
+                     ((DateTime)dataGridView1.Rows[i].Cells[columnIndex].Value).ToStringOrUnknown(
                      dataGridView1.Rows[i].Cells[columnIndex].FormattedValue.ToString());
                }
                else
@@ -493,9 +473,9 @@ namespace HFM.Forms
 
       private static string GetFormattedDownloadTimeString(DateTime date)
       {
-         if (date.Equals(DateTime.MinValue))
+         if (date.IsMinValue())
          {
-            return "Unknown";
+            return Unknown.Value;
          }
 
          TimeSpan span = DateTime.Now.Subtract(date);
@@ -510,9 +490,9 @@ namespace HFM.Forms
 
       private static string GetFormattedDeadlineString(DateTime date)
       {
-         if (date.Equals(DateTime.MinValue))
+         if (date.IsMinValue())
          {
-            return "Unknown";
+            return Unknown.Value;
          }
 
          TimeSpan span = date.Subtract(DateTime.Now);

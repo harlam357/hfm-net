@@ -54,14 +54,12 @@ namespace HFM.Forms.Configuration
 
          // HistoryPresenterModel - Transient
          container.Register(
-            Component.For<HistoryPresenter>()
-               .Named("HistoryPresenter")
-                  .LifeStyle.Transient,
-            Component.For<IHistoryView>()
-               .ImplementedBy<HistoryForm>()
-                  .LifeStyle.Transient,
-            Component.For<Models.HistoryPresenterModel>()
-               .LifeStyle.Transient);
+             Component.For<HistoryPresenter>()
+                 .Named("HistoryPresenter")
+                 .LifeStyle.Transient,
+             Component.For<IHistoryView>()
+                 .ImplementedBy<HistoryForm>()
+                 .LifeStyle.Transient);
 
          container.Register(
             Component.For<IPresenterFactory>()

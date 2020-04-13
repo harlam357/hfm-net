@@ -33,14 +33,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Castle.Core.Logging;
+using AutoMapper;
 
 using harlam357.Core;
 using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
-using HFM.Core;
-using HFM.Core.DataTypes;
+using HFM.Core.Client;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Log;
 using HFM.Preferences;
@@ -51,11 +52,6 @@ namespace HFM.Forms
     public sealed class MainPresenter
     {
         #region Properties
-
-        /// <summary>
-        /// Command Line Arguments.
-        /// </summary>
-        public IEnumerable<Argument> Arguments { get; set; }
 
         /// <summary>
         /// Holds the state of the window before it is hidden (minimize to tray behaviour)
@@ -85,15 +81,16 @@ namespace HFM.Forms
         private readonly IViewFactory _viewFactory;
         private readonly IPresenterFactory _presenterFactory;
 
-        private readonly IClientConfiguration _clientConfiguration;
+        private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
 
         private readonly IUpdateLogic _updateLogic;
-        private readonly Core.ScheduledTasks.RetrievalModel _retrievalModel;
         private readonly IExternalProcessStarter _processStarter;
 
         private readonly IPreferenceSet _prefs;
         private readonly ClientSettingsManager _settingsManager;
+
+        private readonly IMapper _clientSettingsMapper;
 
         #endregion
 
@@ -101,31 +98,31 @@ namespace HFM.Forms
 
         public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                              IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                             IClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                             Core.ScheduledTasks.RetrievalModel retrievalModel, IExternalProcessStarter processStarter,
+                             ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
+                             IExternalProcessStarter processStarter,
                              IPreferenceSet prefs, ClientSettingsManager settingsManager)
         {
             _gridModel = mainGridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
             {
-               // run asynchronously so binding operation can finish
-               _view.BeginInvoke(new Action(() =>
-               {
-                  DisplaySelectedSlotData();
-                  _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
-               }), null);
+                // run asynchronously so binding operation can finish
+                _view.BeginInvoke(new Action(() =>
+                {
+                    DisplaySelectedSlotData();
+                    _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
+                }), null);
             };
             _gridModel.SelectedSlotChanged += (sender, e) =>
             {
-               if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
-               {
-                  // run asynchronously so binding operation can finish
-                  _view.BeginInvoke(new Action(() =>
-                  {
-                     _view.DataGridView.Rows[e.Index].Selected = true;
-                     DisplaySelectedSlotData();
-                  }), null);
-               }
+                if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
+                {
+                    // run asynchronously so binding operation can finish
+                    _view.BeginInvoke(new Action(() =>
+                    {
+                        _view.DataGridView.Rows[e.Index].Selected = true;
+                        DisplaySelectedSlotData();
+                    }), null);
+                }
             };
             _userStatsDataModel = userStatsDataModel;
 
@@ -142,11 +139,12 @@ namespace HFM.Forms
             // Logic Services
             _updateLogic = updateLogic;
             _updateLogic.Owner = _view;
-            _retrievalModel = retrievalModel;
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
             _settingsManager = settingsManager;
+
+            _clientSettingsMapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
 
             _clientConfiguration.ConfigurationChanged += delegate { AutoSaveConfig(); };
         }
@@ -155,8 +153,12 @@ namespace HFM.Forms
 
         #region Initialize
 
-        public void Initialize()
+        private string _openFile;
+
+        public void Initialize(string openFile)
         {
+            _openFile = openFile;
+
             // Restore View Preferences (must be done AFTER DataGridView columns are setup)
             RestoreViewPreferences();
             //
@@ -282,14 +284,9 @@ namespace HFM.Forms
                 _view.WindowState = FormWindowState.Minimized;
             }
 
-            Debug.Assert(Arguments != null);
-            var openFile = Arguments.FirstOrDefault(x => x.Type.Equals(ArgumentType.OpenFile));
-            if (openFile != null)
+            if (!String.IsNullOrEmpty(_openFile))
             {
-                if (!String.IsNullOrEmpty(openFile.Data))
-                {
-                    LoadConfigFile(openFile.Data);
-                }
+                LoadConfigFile(_openFile);
             }
             else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
             {
@@ -383,14 +380,14 @@ namespace HFM.Forms
         {
             if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
             {
-                Logger.InfoFormat("Firing update file '{0}'...", _updateLogic.UpdateFilePath);
+                Logger.Info($"Firing update file '{_updateLogic.UpdateFilePath}'...");
                 try
                 {
                     Process.Start(_updateLogic.UpdateFilePath);
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     string message = String.Format(CultureInfo.CurrentCulture,
                                                    "Update process failed to start with the following error:{0}{0}{1}",
                                                    Environment.NewLine, ex.Message);
@@ -410,12 +407,12 @@ namespace HFM.Forms
                 // TODO: StatusLabelLeftText for v7 client
                 //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
 
-                _view.SetQueue(_gridModel.SelectedSlot.Queue,
-                               _gridModel.SelectedSlot.UnitInfo.SlotType);
+                _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
+                                       _gridModel.SelectedSlot.WorkUnit.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
-                if (_gridModel.SelectedSlot.Queue != null) return;
+                if (_gridModel.SelectedSlot.WorkUnitInfos != null) return;
 
                 // otherwise, load up the CurrentLogLines
                 SetLogLines(_gridModel.SelectedSlot, _gridModel.SelectedSlot.CurrentLogLines);
@@ -441,7 +438,7 @@ namespace HFM.Forms
                 {
                     var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
                     // show the current log even if not the current unit index - 2/17/12
-                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentIndex)
+                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
                     {
                         logLines = _gridModel.SelectedSlot.CurrentLogLines;
                     }
@@ -450,7 +447,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _view.LogFileViewer.SetNoLogLines();
                 }
             }
@@ -465,7 +462,7 @@ namespace HFM.Forms
             // clear the log text
             _view.LogFileViewer.SetNoLogLines();
             // clear the queue control
-            _view.SetQueue(null);
+            _view.SetWorkUnitInfos(null);
         }
 
         private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
@@ -477,8 +474,6 @@ namespace HFM.Forms
                 if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
                 {
                     _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-                    //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, String.Format("Set Log Lines (Changed Client - {0})", instance.Name));
                 }
                 // Textbox has text lines
                 else if (_view.LogFileViewer.Lines.Length > 0)
@@ -493,7 +488,7 @@ namespace HFM.Forms
                     {
                         // even though i've checked the count above, it could have changed in between then
                         // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                        Logger.WarnFormat(ex, Constants.ClientNameFormat, instance.Name, ex.Message);
+                        Logger.Warn(String.Format(Core.Logging.Logger.NameFormat, instance.Name, ex.Message), ex);
                     }
 
                     // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
@@ -501,8 +496,6 @@ namespace HFM.Forms
                     if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
                         _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
-
-                        //HfmTrace.WriteToHfmConsole(TraceLevel.Verbose, "Set Log Lines (log lines different)");
                     }
                 }
                 // Nothing in the Textbox... Load LogLines
@@ -651,7 +644,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.ErrorFormat(ex, "{0}", ex.Message);
+                Logger.Error(ex.Message, ex);
                 _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                    "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
@@ -686,7 +679,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                        "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
                 }
@@ -713,7 +706,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                        "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
                 }
@@ -795,7 +788,7 @@ namespace HFM.Forms
             dialog.SettingsModel = new FahClientSettingsModel();
             while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
-                var settings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                var settings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                 //if (_clientDictionary.ContainsKey(settings.Name))
                 //{
                 //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
@@ -810,7 +803,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                 }
             }
@@ -830,13 +823,13 @@ namespace HFM.Forms
             Debug.Assert(_gridModel.SelectedSlot != null);
             IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
             ClientSettings originalSettings = client.Settings;
-            Debug.Assert(originalSettings.IsFahClient());
+            Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var dialog = _presenterFactory.GetFahClientSetupPresenter();
-            dialog.SettingsModel = AutoMapper.Mapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+            dialog.SettingsModel = _clientSettingsMapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
             while (dialog.ShowDialog(_view) == DialogResult.OK)
             {
-                var newSettings = AutoMapper.Mapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
+                var newSettings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
                 // perform the edit
                 try
                 {
@@ -845,7 +838,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    Logger.ErrorFormat(ex, "{0}", ex.Message);
+                    Logger.Error(ex.Message, ex);
                     _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                 }
             }
@@ -871,7 +864,7 @@ namespace HFM.Forms
 
         public void ClientsRefreshAllClick()
         {
-            _retrievalModel.RunClientRetrieval();
+            _clientConfiguration.ScheduledTasks.RetrieveAll();
         }
 
         public void ClientsViewCachedLogClick()
@@ -879,7 +872,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (_gridModel.SelectedSlot == null) return;
 
-            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.CachedFahLogFileName());
+            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.ClientLogFileName);
             if (File.Exists(logFilePath))
             {
                 HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
@@ -1033,21 +1026,21 @@ namespace HFM.Forms
 
         public void ViewCycleBonusCalculationClick()
         {
-            var calculationType = _prefs.Get<BonusCalculationType>(Preference.BonusCalculation);
+            var calculationType = _prefs.Get<BonusCalculation>(Preference.BonusCalculation);
             int typeIndex = 0;
             // None is always LAST entry
-            if (calculationType != BonusCalculationType.None)
+            if (calculationType != BonusCalculation.None)
             {
                 typeIndex = (int)calculationType;
                 typeIndex++;
             }
 
-            calculationType = (BonusCalculationType)typeIndex;
+            calculationType = (BonusCalculation)typeIndex;
             _prefs.Set(Preference.BonusCalculation, calculationType);
             _prefs.Save();
 
             string calculationTypeString = (from item in OptionsModel.BonusCalculationList
-                                            where ((BonusCalculationType)item.ValueMember) == calculationType
+                                            where ((BonusCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();
@@ -1055,21 +1048,21 @@ namespace HFM.Forms
 
         public void ViewCycleCalculationClick()
         {
-            var calculationType = _prefs.Get<PpdCalculationType>(Preference.PpdCalculation);
+            var calculationType = _prefs.Get<PPDCalculation>(Preference.PPDCalculation);
             int typeIndex = 0;
             // EffectiveRate is always LAST entry
-            if (calculationType != PpdCalculationType.EffectiveRate)
+            if (calculationType != PPDCalculation.EffectiveRate)
             {
                 typeIndex = (int)calculationType;
                 typeIndex++;
             }
 
-            calculationType = (PpdCalculationType)typeIndex;
-            _prefs.Set(Preference.PpdCalculation, calculationType);
+            calculationType = (PPDCalculation)typeIndex;
+            _prefs.Set(Preference.PPDCalculation, calculationType);
             _prefs.Save();
 
             string calculationTypeString = (from item in OptionsModel.PpdCalculationList
-                                            where ((PpdCalculationType)item.ValueMember) == calculationType
+                                            where ((PPDCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();
@@ -1095,7 +1088,10 @@ namespace HFM.Forms
                     var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                     if (proteinChanges.Count > 0)
                     {
-                        _retrievalModel.RunClientRetrieval();
+                        if (_clientConfiguration.Count > 0)
+                        {
+                            _clientConfiguration.ScheduledTasks.RetrieveAll();
+                        }
                         using (var dlg = new ProteinLoadResultsDialog())
                         {
                             dlg.DataBind(proteinChanges);
@@ -1133,7 +1129,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and if found... load its ProjectID.
             if (_gridModel.SelectedSlot != null)
             {
-                projectId = _gridModel.SelectedSlot.UnitInfo.ProjectID;
+                projectId = _gridModel.SelectedSlot.WorkUnit.ProjectID;
             }
 
             var benchmarksView = _viewFactory.GetBenchmarksForm();

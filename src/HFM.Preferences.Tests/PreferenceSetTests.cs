@@ -146,7 +146,7 @@ namespace HFM.Preferences
             Assert.IsTrue(File.Exists(configPath));
             Assert.AreEqual(applicationVersion, prefs.ApplicationVersion);
             Assert.AreEqual(applicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
-            Assert.AreEqual("http://assign.stanford.edu/api/project/summary", prefs.Get<string>(Preference.ProjectDownloadUrl));
+            Assert.AreEqual("https://apps.foldingathome.org/psummary.json", prefs.Get<string>(Preference.ProjectDownloadUrl));
          }
       }
 
