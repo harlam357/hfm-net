@@ -36,10 +36,6 @@ namespace HFM.Core.Configuration
     [ExcludeFromCodeCoverage]
     public class ContainerInstaller : IWindsorInstaller
     {
-        public string ApplicationPath { get; set; }
-
-        public string ApplicationDataFolderPath { get; set; }
-
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
@@ -52,13 +48,13 @@ namespace HFM.Core.Configuration
             container.Register(
                Component.For<ILogger, ILoggerEvents>()
                   .ImplementedBy<Logger>()
-                  .UsingFactoryMethod(() => new Logger(ApplicationDataFolderPath)));
+                  .UsingFactoryMethod(() => new Logger(Application.DataFolderPath)));
 
             // IPreferenceSet - Singleton
             container.Register(
                Component.For<Preferences.IPreferenceSet>()
                   .ImplementedBy<Preferences.PreferenceSet>()
-                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(ApplicationPath, ApplicationDataFolderPath, Application.FullVersion))
+                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(Application.Path, Application.DataFolderPath, Application.FullVersion))
                   .OnCreate((kernel, instance) =>
                   {
                       var logger = (LoggerBase)kernel.Resolve<ILogger>();

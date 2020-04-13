@@ -40,18 +40,16 @@ namespace HFM
             //SetupCulture("de-DE");
 #endif
             Core.Net.SecurityProtocol.Setup();
+            Core.Application.SetPaths(
+                Application.StartupPath, 
+                System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));
 
             try
             {
                 using (var container = new WindsorContainer())
                 {
                     container.AddFacility<TypedFactoryFacility>();
-                    container.Install(new Core.Configuration.ContainerInstaller
-                        {
-                            ApplicationPath = Application.StartupPath,
-                            ApplicationDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM")
-                        },
-                        new Forms.Configuration.ContainerInstaller());
+                    container.Install(new Core.Configuration.ContainerInstaller(), new Forms.Configuration.ContainerInstaller());
 
                     // Setup TypeDescriptor
                     Forms.Configuration.TypeDescriptionProviderSetup.Execute();

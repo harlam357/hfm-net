@@ -10,6 +10,16 @@ namespace HFM.Core
 {
     public static class Application
     {
+        public static string Path { get; private set; }
+
+        public static string DataFolderPath { get; private set; }
+
+        public static void SetPaths(string path, string dataFolderPath)
+        {
+            Path = path;
+            DataFolderPath = dataFolderPath;
+        }
+
         public const string Name = "HFM.NET";
         
         public const string CssFolderName = "CSS";
