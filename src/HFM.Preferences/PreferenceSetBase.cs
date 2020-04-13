@@ -16,9 +16,9 @@ namespace HFM.Preferences
     {
         public string ApplicationPath { get; }
 
-        public string ApplicationDataFolderPath { get; set; }
+        public string ApplicationDataFolderPath { get; }
 
-        public string ApplicationVersion { get; set; }
+        public string ApplicationVersion { get; }
 
         private PreferenceDictionary _prefs;
 
@@ -272,6 +272,10 @@ namespace HFM.Preferences
                     return default(T);
                 }
             }
+            if (typeof(T).IsEnum && metadata.DataType == typeof(int))
+            {
+                return (T)Enum.ToObject(typeof(T), ((IMetadata<int>) metadata).Data);
+            }
 
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
                "Preference '{0}' of Type '{1}' does not exist.", key, typeof(T)));
@@ -294,6 +298,17 @@ namespace HFM.Preferences
                 if (metadata.Data == null || !metadata.Data.Equals(value))
                 {
                     metadata.Data = value.Copy(metadata.DataType);
+                    OnPreferenceChanged(key);
+                }
+            }
+            else if (metadata.DataType == typeof(int) && value != null && value.GetType().IsEnum)
+            {
+                var newValue = (int)Convert.ChangeType(value, typeof(int));
+
+                var intMetadata = (IMetadata<int>)metadata;
+                if (!intMetadata.Data.Equals(newValue))
+                {
+                    intMetadata.Data = newValue;
                     OnPreferenceChanged(key);
                 }
             }

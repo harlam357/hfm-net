@@ -25,12 +25,6 @@ using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-using HFM.Core.Client;
-using HFM.Core.Data;
-using HFM.Core.Logging;
-using HFM.Core.Services;
-using HFM.Core.WorkUnits;
-
 namespace HFM.Core.Configuration
 {
     [ExcludeFromCodeCoverage]
@@ -42,35 +36,17 @@ namespace HFM.Core.Configuration
                Component.For<ILazyComponentLoader>()
                   .ImplementedBy<LazyOfTComponentLoader>());
 
-            #region Service Interfaces
-
             // ILogger - Singleton
             container.Register(
-               Component.For<ILogger, ILoggerEvents>()
-                  .ImplementedBy<Logger>()
-                  .UsingFactoryMethod(() => new Logger(Application.DataFolderPath)));
+               Component.For<Logging.ILogger, Logging.ILoggerEvents>()
+                  .ImplementedBy<Logging.Logger>()
+                  .UsingFactoryMethod(() => new Logging.Logger(Application.DataFolderPath)));
 
             // IPreferenceSet - Singleton
             container.Register(
                Component.For<Preferences.IPreferenceSet>()
                   .ImplementedBy<Preferences.PreferenceSet>()
-                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(Application.Path, Application.DataFolderPath, Application.FullVersion))
-                  .OnCreate((kernel, instance) =>
-                  {
-                      var logger = (LoggerBase)kernel.Resolve<ILogger>();
-                      instance.PreferenceChanged += (s, e) =>
-                      {
-                          if (e.Preference == Preferences.Preference.MessageLevel)
-                          {
-                              var newLevel = (LoggerLevel)instance.Get<int>(Preferences.Preference.MessageLevel);
-                              if (newLevel != logger.Level)
-                              {
-                                  logger.Level = newLevel;
-                                  logger.Info($"Debug Message Level Changed: {newLevel}");
-                              }
-                          }
-                      };
-                  }));
+                  .UsingFactoryMethod(() => new Preferences.PreferenceSet(Application.Path, Application.DataFolderPath, Application.FullVersion)));
 
             // IWorkUnitRepository - Singleton
             container.Register(
@@ -79,17 +55,17 @@ namespace HFM.Core.Configuration
 
             // ClientConfiguration - Singleton
             container.Register(
-               Component.For<ClientConfiguration>());
+               Component.For<Client.ClientConfiguration>());
 
             // ClientFactory - Singleton
             container.Register(
-               Component.For<ClientFactory>());
+               Component.For<Client.ClientFactory>());
 
             // HFM.Core.FahClient - Transient
             container.Register(
-               Component.For<FahClient>()
+               Component.For<Client.FahClient>()
                   .LifeStyle.Transient,
-               Component.For<IFahClientFactory>()
+               Component.For<Client.IFahClientFactory>()
                   .AsFactory());
 
             // HFM.Client.TypedMessageConnection - Transient
@@ -105,19 +81,19 @@ namespace HFM.Core.Configuration
 
             // ProteinBenchmarkDataContainer - Singleton
             container.Register(
-                Component.For<ProteinBenchmarkDataContainer>()
+                Component.For<Data.ProteinBenchmarkDataContainer>()
                     .OnCreate(instance => instance.Read())
                     .OnDestroy(instance => instance.Write()));
 
             // IProteinBenchmarkService - Singleton
             container.Register(
-               Component.For<IProteinBenchmarkService>()
-                  .ImplementedBy<ProteinBenchmarkService>());
+               Component.For<WorkUnits.IProteinBenchmarkService>()
+                  .ImplementedBy<WorkUnits.ProteinBenchmarkService>());
 
             // IEocStatsService - Singleton
             container.Register(
-                Component.For<IEocStatsService>()
-                    .ImplementedBy<EocStatsService>());
+                Component.For<Services.IEocStatsService>()
+                    .ImplementedBy<Services.EocStatsService>());
 
             // EocStatsDataContainer - Singleton
             container.Register(
@@ -130,20 +106,18 @@ namespace HFM.Core.Configuration
 
             // ProteinDataContainer
             container.Register(
-                Component.For<ProteinDataContainer>()
+                Component.For<Data.ProteinDataContainer>()
                     .OnCreate(instance => instance.Read()));
 
             // IProteinService - Singleton
             container.Register(
-               Component.For<IProteinService>()
-                  .ImplementedBy<ProteinService>());
+               Component.For<WorkUnits.IProteinService>()
+                  .ImplementedBy<WorkUnits.ProteinService>());
 
             // IProjectSummaryService - Singleton
             container.Register(
-               Component.For<IProjectSummaryService>()
-                  .ImplementedBy<ProjectSummaryService>());
-
-            #endregion
+               Component.For<Services.IProjectSummaryService>()
+                  .ImplementedBy<Services.ProjectSummaryService>());
         }
     }
 }

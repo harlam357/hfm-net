@@ -134,7 +134,7 @@ namespace HFM.Forms
             this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
             this.chkAutoSave = new System.Windows.Forms.CheckBox();
             this.labelWrapper1 = new System.Windows.Forms.Label();
-            this.grpDebugMessageLevel = new System.Windows.Forms.GroupBox();
+            this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
             this.cboMessageLevel = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabReporting = new System.Windows.Forms.TabPage();
@@ -217,7 +217,7 @@ namespace HFM.Forms
             this.grpShowStyle.SuspendLayout();
             this.grpInteractiveOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
-            this.grpDebugMessageLevel.SuspendLayout();
+            this.LoggingGroupBox.SuspendLayout();
             this.tabReporting.SuspendLayout();
             this.grpEmailSettings.SuspendLayout();
             this.tabWeb.SuspendLayout();
@@ -979,7 +979,7 @@ namespace HFM.Forms
             // 
             this.tabOptions.Controls.Add(this.grpShowStyle);
             this.tabOptions.Controls.Add(this.grpInteractiveOptions);
-            this.tabOptions.Controls.Add(this.grpDebugMessageLevel);
+            this.tabOptions.Controls.Add(this.LoggingGroupBox);
             this.tabOptions.Location = new System.Drawing.Point(4, 22);
             this.tabOptions.Name = "tabOptions";
             this.tabOptions.Size = new System.Drawing.Size(501, 303);
@@ -1149,22 +1149,22 @@ namespace HFM.Forms
             this.labelWrapper1.TabIndex = 6;
             this.labelWrapper1.Text = "PPD Decimal Places:";
             // 
-            // grpDebugMessageLevel
+            // LoggingGroupBox
             // 
-            this.grpDebugMessageLevel.Controls.Add(this.cboMessageLevel);
-            this.grpDebugMessageLevel.Controls.Add(this.label6);
-            this.grpDebugMessageLevel.Location = new System.Drawing.Point(6, 239);
-            this.grpDebugMessageLevel.Name = "grpDebugMessageLevel";
-            this.grpDebugMessageLevel.Size = new System.Drawing.Size(241, 54);
-            this.grpDebugMessageLevel.TabIndex = 3;
-            this.grpDebugMessageLevel.TabStop = false;
-            this.grpDebugMessageLevel.Text = "Messages";
+            this.LoggingGroupBox.Controls.Add(this.cboMessageLevel);
+            this.LoggingGroupBox.Controls.Add(this.label6);
+            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 239);
+            this.LoggingGroupBox.Name = "LoggingGroupBox";
+            this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
+            this.LoggingGroupBox.TabIndex = 3;
+            this.LoggingGroupBox.TabStop = false;
+            this.LoggingGroupBox.Text = "Logging";
             // 
             // cboMessageLevel
             // 
             this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboMessageLevel.FormattingEnabled = true;
-            this.cboMessageLevel.Location = new System.Drawing.Point(139, 21);
+            this.cboMessageLevel.Location = new System.Drawing.Point(99, 19);
             this.cboMessageLevel.Name = "cboMessageLevel";
             this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
             this.cboMessageLevel.TabIndex = 1;
@@ -1174,9 +1174,9 @@ namespace HFM.Forms
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(16, 24);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(117, 13);
+            this.label6.Size = new System.Drawing.Size(77, 13);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Debug Message Level:";
+            this.label6.Text = "Logging Level:";
             // 
             // tabReporting
             // 
@@ -2061,8 +2061,8 @@ namespace HFM.Forms
             this.grpInteractiveOptions.ResumeLayout(false);
             this.grpInteractiveOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
-            this.grpDebugMessageLevel.ResumeLayout(false);
-            this.grpDebugMessageLevel.PerformLayout();
+            this.LoggingGroupBox.ResumeLayout(false);
+            this.LoggingGroupBox.PerformLayout();
             this.tabReporting.ResumeLayout(false);
             this.grpEmailSettings.ResumeLayout(false);
             this.grpEmailSettings.PerformLayout();
@@ -2132,7 +2132,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Label label5;
       private System.Windows.Forms.RadioButton radioSchedule;
       private System.Windows.Forms.RadioButton radioFullRefresh;
-      private System.Windows.Forms.GroupBox grpDebugMessageLevel;
+      private System.Windows.Forms.GroupBox LoggingGroupBox;
       private System.Windows.Forms.ComboBox cboMessageLevel;
       private System.Windows.Forms.Label label6;
       private System.Windows.Forms.ToolTip toolTipPrefs;

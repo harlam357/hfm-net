@@ -133,11 +133,11 @@ namespace HFM
             return true;
         }
 
-        private static ILogger InitializeLogging(IWindsorContainer container)
+        private static Logger InitializeLogging(IWindsorContainer container)
         {
             // create messages view (hooks into logging messages)
             container.Resolve<IMessagesView>();
-            var logger = container.Resolve<ILogger>();
+            var logger = (Logger)container.Resolve<ILogger>();
             // write log header
             logger.Info(String.Empty);
             logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.FullVersion));
@@ -187,18 +187,18 @@ namespace HFM
             return true;
         }
 
-        private static bool InitializePreferences(IPreferenceSet prefs, ILogger logger, bool reset)
+        private static bool InitializePreferences(IPreferenceSet preferences, Logger logger, bool reset)
         {
             try
             {
                 if (reset)
                 {
-                    prefs.Reset();
+                    preferences.Reset();
                 }
                 else
                 {
-                    prefs.Load();
-                    ValidatePreferences(prefs);
+                    preferences.Load();
+                    ValidatePreferences(preferences);
                 }
             }
             catch (Exception ex)
@@ -206,37 +206,53 @@ namespace HFM
                 ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
                 return false;
             }
-            // set logging level from prefs
-            ((Core.Logging.Logger)logger).Level = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
+
+            // set logging level from preferences
+            logger.Level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
+
+            // process logging level changes
+            preferences.PreferenceChanged += (s, e) =>
+            {
+                if (e.Preference == Preference.MessageLevel)
+                {
+                    var newLevel = preferences.Get<LoggerLevel>(Preference.MessageLevel);
+                    if (newLevel != logger.Level)
+                    {
+                        logger.Level = newLevel;
+                        logger.Info($"Logging Level Changed: {newLevel}");
+                    }
+                }
+            };
+
             return true;
         }
 
-        private static void ValidatePreferences(IPreferenceSet prefs)
+        private static void ValidatePreferences(IPreferenceSet preferences)
         {
             // MessageLevel
-            int level = prefs.Get<int>(Preference.MessageLevel);
-            if (level < 4)
+            var level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
+            if (level < LoggerLevel.Info)
             {
-                level = 4;
+                level = LoggerLevel.Info;
             }
-            else if (level > 5)
+            else if (level > LoggerLevel.Debug)
             {
-                level = 5;
+                level = LoggerLevel.Debug;
             }
-            prefs.Set(Preference.MessageLevel, level);
+            preferences.Set(Preference.MessageLevel, level);
 
             const int defaultInterval = 15;
-            var clientRetrievalTask = prefs.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
+            var clientRetrievalTask = preferences.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
             if (!Core.Client.ClientScheduledTasks.ValidateInterval(clientRetrievalTask.Interval))
             {
                 clientRetrievalTask.Interval = defaultInterval;
-                prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
+                preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
             }
-            var webGenerationTask = prefs.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
+            var webGenerationTask = preferences.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
             if (!Core.Client.ClientScheduledTasks.ValidateInterval(webGenerationTask.Interval))
             {
                 webGenerationTask.Interval = defaultInterval;
-                prefs.Set(Preference.WebGenerationTask, webGenerationTask);
+                preferences.Set(Preference.WebGenerationTask, webGenerationTask);
             }
         }
 
