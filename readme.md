@@ -1,6 +1,6 @@
 # HFM.NET - Client Monitoring Application for the Folding@Home Distributed Computing Project
 
-[![Build status](https://harlam357.visualstudio.com/hfm-net%20test/_apis/build/status/hfm-net%20(master))](https://harlam357.visualstudio.com/hfm-net%20test/_build/latest?definitionId=0)
+[![Build status](https://harlam357.visualstudio.com/hfm-net/_apis/build/status/hfm-net%20(master))](https://harlam357.visualstudio.com/hfm-net/_build/latest?definitionId=0)
 
 Download from Google Drive - https://drive.google.com/open?id=0B8d5F59S5sCiS1RISzdsaEd5UXM&authuser=0
 
