@@ -1,6 +1,7 @@
 ﻿
 using System;
-using HFM.Client.DataTypes;
+
+using HFM.Client.ObjectModel;
 
 namespace HFM.Core.Client
 {
@@ -16,9 +17,9 @@ namespace HFM.Core.Client
 
     public static class SlotTypeConvert
     {
-        public static SlotType FromSlotOptions(SlotOptions value)
+        public static SlotType FromSlotOptions(SlotOptions slotOptions)
         {
-            return (SlotType)Enum.Parse(typeof(SlotType), value.GpuIndex.HasValue ? "GPU" : "CPU");
+            return (SlotType)Enum.Parse(typeof(SlotType), slotOptions[Options.GPUIndex] != null ? "GPU" : "CPU");
         }
 
         public static SlotType FromCoreName(string coreName)

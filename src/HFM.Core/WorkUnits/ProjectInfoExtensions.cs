@@ -5,14 +5,14 @@ namespace HFM.Core.WorkUnits
 {
     public static class ProjectInfoExtensions
     {
-        internal static ProjectInfo ToProjectInfo(this HFM.Client.DataTypes.Unit value)
+        internal static ProjectInfo ToProjectInfo(this HFM.Client.ObjectModel.Unit value)
         {
             return new ProjectInfo
             {
-                ProjectID = value.Project,
-                ProjectRun = value.Run,
-                ProjectClone = value.Clone,
-                ProjectGen = value.Gen
+                ProjectID = value.Project.GetValueOrDefault(),
+                ProjectRun = value.Run.GetValueOrDefault(),
+                ProjectClone = value.Clone.GetValueOrDefault(),
+                ProjectGen = value.Gen.GetValueOrDefault()
             };
         }
 

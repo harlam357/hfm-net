@@ -24,7 +24,6 @@ using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
@@ -36,18 +35,12 @@ namespace HFM.Core.Client
     public class FahClientTests
     {
         [Test]
-        public void FahClient_ArgumentNullException_Test()
-        {
-            Assert.Throws<ArgumentNullException>(() => new FahClient(null));
-        }
-
-        [Test]
         public void FahClient_UpdateBenchmarkData_Test()
         {
             // setup
             var benchmarks = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarks, WorkUnitRepository = repository };
+            var fahClient = new FahClient { BenchmarkService = benchmarks, WorkUnitRepository = repository };
 
             var slotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner", "Path"), SlotIdentifier.NoSlotID);
 

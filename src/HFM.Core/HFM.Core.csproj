@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Core</RootNamespace>
     <AssemblyName>HFM.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -60,6 +60,12 @@
     </Reference>
     <Reference Include="harlam357.Core">
       <HintPath>..\..\lib\harlam357-net\harlam357.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="HFM.Client, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HFM.Client.0.2.1\lib\net47\HFM.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -173,10 +179,6 @@
     <Compile Include="WorkUnits\WorkUnitResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
-      <Project>{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}</Project>
-      <Name>HFM.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
       <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
       <Name>HFM.Log</Name>

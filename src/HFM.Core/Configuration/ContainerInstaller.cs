@@ -68,12 +68,6 @@ namespace HFM.Core.Configuration
                Component.For<Client.IFahClientFactory>()
                   .AsFactory());
 
-            // HFM.Client.TypedMessageConnection - Transient
-            container.Register(
-               Component.For<HFM.Client.IMessageConnection>()
-                  .ImplementedBy<HFM.Client.TypedMessageConnection>()
-                     .LifeStyle.Transient);
-
             // WorkUnitQueryDataContainer - Singleton
             container.Register(
                Component.For<Data.WorkUnitQueryDataContainer>()

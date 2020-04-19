@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Forms</RootNamespace>
     <AssemblyName>HFM.Forms</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -82,6 +82,12 @@
     </Reference>
     <Reference Include="harlam357.Windows.Forms">
       <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="HFM.Client, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HFM.Client.0.2.1\lib\net47\HFM.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -366,10 +372,6 @@
     <None Include="Resources\UpArrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
-      <Project>{B1BB2AF4-5C2F-42A7-80B4-7291D3E4BC39}</Project>
-      <Name>HFM.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>

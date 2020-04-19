@@ -25,9 +25,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using HFM.Client;
-using HFM.Client.DataTypes;
+using HFM.Client.ObjectModel;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
@@ -82,7 +83,7 @@ namespace HFM.Core.Client
                         _settings = value;
                         // Close this client and allow retrieval
                         // to open a new connection
-                        _messageConnection.Close();
+                        _connection?.Close();
                     }
                     else
                     {
@@ -137,69 +138,56 @@ namespace HFM.Core.Client
 
         #endregion
 
-        private readonly IMessageConnection _messageConnection;
+        private FahClientConnection _connection;
         private readonly List<SlotModel> _slots;
         private readonly ReaderWriterLockSlim _slotsLock;
         private readonly FahLog _fahLog;
         private MessageReceiver _messages;
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
-        
-        public FahClient() : this(new TypedMessageConnection())
+
+        public FahClient()
         {
-
-        }
-
-        public FahClient(IMessageConnection messageConnection)
-        {
-            if (messageConnection == null) throw new ArgumentNullException("messageConnection");
-
-            _messageConnection = messageConnection;
             _slots = new List<SlotModel>();
             _slotsLock = new ReaderWriterLockSlim();
             _fahLog = new Log.FahClient.FahClientLog();
             _messages = new MessageReceiver();
-
-            _messageConnection.MessageReceived += MessageConnectionMessageReceived;
-            _messageConnection.UpdateFinished += MessageConnectionUpdateFinished;
-            _messageConnection.ConnectedChanged += MessageConnectionConnectedChanged;
-            _messageConnection.StatusMessage += MessageConnectionStatusMessage;
         }
 
-        private void MessageConnectionMessageReceived(object sender, MessageReceivedEventArgs e)
+        private void MessageConnectionMessageReceived(FahClientMessage e)
         {
             if (AbortFlag) return;
 
-            Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, e.JsonMessage.GetHeader()));
+            Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"{e.Identifier} - Length: {e.MessageText.Length}"));
 
             _messages.Add(e);
-            if (e.DataType == typeof(SlotCollection))
+            if (e.Identifier.MessageType == FahClientMessageType.SlotInfo)
             {
                 foreach (var slot in _messages.SlotCollection)
                 {
-                    _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.Id));
+                    _connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID)).Execute();
                 }
             }
-            else if (e.DataType == typeof(LogRestart) ||
-                     e.DataType == typeof(LogUpdate))
+            else if (e.Identifier.MessageType == FahClientMessageType.LogRestart ||
+                     e.Identifier.MessageType == FahClientMessageType.LogUpdate)
             {
-                bool createNew = e.DataType == typeof(LogRestart);
+                bool createNew = e.Identifier.MessageType == FahClientMessageType.LogRestart;
                 if (createNew)
                 {
                     _fahLog.Clear();
                 }
 
-                var logFragment = (LogFragment)e.TypedMessage;
-                using (var textReader = new StringBuilderReader(logFragment.Value))
+                var logUpdate = LogUpdate.Load(e.MessageText);
+                using (var textReader = new StringBuilderReader(logUpdate.Value))
                 using (var reader = new Log.FahClient.FahClientLogTextReader(textReader))
                 {
                     _fahLog.Read(reader);
                 }
-                WriteToLocalFahLogCache(logFragment.Value, createNew);
+                WriteToLocalFahLogCache(logUpdate.Value, createNew);
 
                 if (_messages.LogRetrieved)
                 {
-                    _messageConnection.SendCommand("queue-info");
+                    _connection.CreateCommand("queue-info").Execute();
                 }
             }
         }
@@ -227,7 +215,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void MessageConnectionUpdateFinished(object sender, EventArgs e)
+        private void MessageConnectionUpdateFinished()
         {
             if (AbortFlag) return;
 
@@ -243,9 +231,9 @@ namespace HFM.Core.Client
             }
         }
 
-        private void MessageConnectionConnectedChanged(object sender, ConnectedChangedEventArgs e)
+        private void MessageConnectionConnectedChanged(bool connected)
         {
-            if (!e.Connected)
+            if (!connected)
             {
                 // clear the local log buffer
                 _fahLog.Clear();
@@ -253,14 +241,6 @@ namespace HFM.Core.Client
                 _messages = new MessageReceiver();
                 // refresh (clear) the slots
                 RefreshSlots();
-            }
-        }
-
-        private void MessageConnectionStatusMessage(object sender, StatusMessageEventArgs e)
-        {
-            if (e.Exception != null)
-            {
-                Logger.Warn(e.Status, e.Exception);
             }
         }
 
@@ -280,8 +260,8 @@ namespace HFM.Core.Client
                         {
                             Settings = _settings,
                             Prefs = Prefs,
-                            Status = (SlotStatus)slot.StatusEnum,
-                            SlotId = slot.Id,
+                            Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
+                            SlotId = slot.ID.GetValueOrDefault(),
                             SlotOptions = slot.SlotOptions
                         };
                         _slots.Add(slotModel);
@@ -300,13 +280,13 @@ namespace HFM.Core.Client
         {
             base.Abort();
 
-            if (_messageConnection.Connected)
+            if (_connection != null && _connection.Connected)
             {
-                _messageConnection.Close();
+                _connection.Close();
             }
         }
 
-        protected override void RetrieveInternal()
+        protected override async void RetrieveInternal()
         {
             if (_messages.HeartbeatOverdue)
             {
@@ -315,12 +295,34 @@ namespace HFM.Core.Client
             }
 
             // connect if not connected
-            if (!_messageConnection.Connected)
+            if (_connection is null || !_connection.Connected)
             {
                 try
                 {
-                    _messageConnection.Connect(Settings.Server, Settings.Port, Settings.Password);
+                    _connection = new FahClientConnection(Settings.Server, Settings.Port);
+                    await _connection.OpenAsync().ConfigureAwait(false);
+                    if (!String.IsNullOrWhiteSpace(Settings.Password))
+                    {
+                        await _connection.CreateCommand("auth" + Settings.Password).ExecuteAsync().ConfigureAwait(false);
+                    }
+
                     SetUpdateCommands();
+                    
+                    var reader = _connection.CreateReader();
+                    try
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            MessageConnectionMessageReceived(reader.Message);
+                            MessageConnectionUpdateFinished();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // connection died
+                    }
+                    _connection.Close();
+                    MessageConnectionConnectedChanged(_connection.Connected);
                 }
                 catch (Exception ex)
                 {
@@ -349,15 +351,15 @@ namespace HFM.Core.Client
 
         private void SetUpdateCommands()
         {
-            _messageConnection.SendCommand("updates clear");
-            _messageConnection.SendCommand("log-updates restart");
-            _messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval));
-            _messageConnection.SendCommand("updates add 1 1 $info");
-            _messageConnection.SendCommand("updates add 2 1 $(options -a)");
-            _messageConnection.SendCommand("updates add 3 1 $slot-info");
-            //_messageConnection.SendCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval));
+            _connection.CreateCommand("updates clear").Execute();
+            _connection.CreateCommand("log-updates restart").Execute();
+            _connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval)).Execute();
+            _connection.CreateCommand("updates add 1 1 $info").Execute();
+            _connection.CreateCommand("updates add 2 1 $(options -a)").Execute();
+            _connection.CreateCommand("updates add 3 1 $slot-info").Execute();
+            //_connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval)).Execute();
             // get an initial queue reading
-            _messageConnection.SendCommand("queue-info");
+            _connection.CreateCommand("queue-info").Execute();
         }
 
         private void Process()
@@ -471,7 +473,7 @@ namespace HFM.Core.Client
 
             if (info != null)
             {
-                slotModel.ClientVersion = info.Build.Version;
+                slotModel.ClientVersion = info.Client.Version;
             }
             if (WorkUnitRepository.Connected)
             {
@@ -517,7 +519,7 @@ namespace HFM.Core.Client
         {
             private readonly IEqualityComparer<UnitCollection> _unitCollectionEqualityComparer = new UnitCollectionEqualityComparer();
 
-            private Heartbeat _heartbeat;
+            private FahClientMessage _heartbeat;
 
             public bool HeartbeatOverdue
             {
@@ -527,7 +529,7 @@ namespace HFM.Core.Client
                     {
                         return false;
                     }
-                    return DateTime.UtcNow.Subtract(_heartbeat.Received).TotalMinutes >
+                    return DateTime.UtcNow.Subtract(_heartbeat.Identifier.Received).TotalMinutes >
                            TimeSpan.FromSeconds(HeartbeatInterval * 3).TotalMinutes;
                 }
             }
@@ -546,38 +548,37 @@ namespace HFM.Core.Client
 
             public bool LogRetrieved { get; private set; }
 
-            public void Add(MessageReceivedEventArgs args)
+            public void Add(FahClientMessage args)
             {
-                if (args.DataType == typeof(Heartbeat))
+                if (args.Identifier.MessageType == FahClientMessageType.Heartbeat)
                 {
-                    _heartbeat = (Heartbeat)args.TypedMessage;
+                    _heartbeat = args;
                 }
-                else if (args.DataType == typeof(Info))
+                else if (args.Identifier.MessageType == FahClientMessageType.Info)
                 {
-                    Info = (Info)args.TypedMessage;
+                    Info = Info.Load(args.MessageText);
                 }
-                else if (args.DataType == typeof(Options))
+                else if (args.Identifier.MessageType == FahClientMessageType.Options)
                 {
-                    Options = (Options)args.TypedMessage;
+                    Options = Options.Load(args.MessageText);
                 }
-                else if (args.DataType == typeof(SlotCollection))
+                else if (args.Identifier.MessageType == FahClientMessageType.SlotInfo)
                 {
-                    SlotCollection = (SlotCollection)args.TypedMessage;
+                    SlotCollection = SlotCollection.Load(args.MessageText);
                 }
-                else if (args.DataType == typeof(SlotOptions))
+                else if (args.Identifier.MessageType == FahClientMessageType.SlotOptions)
                 {
-                    _slotOptions.Add((SlotOptions)args.TypedMessage);
+                    _slotOptions.Add(SlotOptions.Load(args.MessageText));
                 }
-                else if (args.DataType == typeof(UnitCollection))
+                else if (args.Identifier.MessageType == FahClientMessageType.QueueInfo)
                 {
-                    UnitCollection = (UnitCollection)args.TypedMessage;
+                    UnitCollection = UnitCollection.Load(args.MessageText);
                 }
                 else if (!LogRetrieved &&
-                        (args.DataType == typeof(LogRestart) ||
-                         args.DataType == typeof(LogUpdate)))
+                        (args.Identifier.MessageType == FahClientMessageType.LogRestart ||
+                         args.Identifier.MessageType == FahClientMessageType.LogUpdate))
                 {
-                    var logFragment = (LogFragment)args.TypedMessage;
-                    if (logFragment.Value.Length < 65536)
+                    if (args.MessageText.Length < 65536)
                     {
                         LogRetrieved = true;
                     }
@@ -591,11 +592,9 @@ namespace HFM.Core.Client
                 {
                     foreach (var options in _slotOptions)
                     {
-                        SlotOptions options1 = options;
-                        if (options1.MachineId.HasValue)
+                        if (Int32.TryParse(options[Options.MachineID], out var machineId))
                         {
-                            int machineId = options1.MachineId.Value;
-                            var slot = SlotCollection.First(x => x.Id == machineId);
+                            var slot = SlotCollection.First(x => x.ID == machineId);
                             slot.SlotOptions = options;
                         }
                     }
@@ -656,14 +655,14 @@ namespace HFM.Core.Client
                         int xPercentDone = GetPercentDone(x.PercentDone);
                         int yPercentDone = GetPercentDone(y.PercentDone);
 
-                        return x.Id == y.Id &&
+                        return x.ID == y.ID &&
                                x.State == y.State &&
                                x.Project == y.Project &&
                                x.Run == y.Run &&
                                x.Clone == y.Clone &&
                                x.Gen == y.Gen &&
                                x.Core == y.Core &&
-                               x.UnitId == y.UnitId &&
+                               x.UnitHex == y.UnitHex &&
                                xPercentDone == yPercentDone &&
                                x.TotalFrames == y.TotalFrames &&
                                x.FramesDone == y.FramesDone &&
@@ -702,32 +701,32 @@ namespace HFM.Core.Client
 
         public void Fold(int? slotId)
         {
-            if (!_messageConnection.Connected)
+            if (!_connection.Connected)
             {
                 return;
             }
             string command = slotId.HasValue ? "unpause " + slotId.Value : "unpause";
-            _messageConnection.SendCommand(command);
+            _connection.CreateCommand(command).Execute();
         }
 
         public void Pause(int? slotId)
         {
-            if (!_messageConnection.Connected)
+            if (!_connection.Connected)
             {
                 return;
             }
             string command = slotId.HasValue ? "pause " + slotId.Value : "pause";
-            _messageConnection.SendCommand(command);
+            _connection.CreateCommand(command).Execute();
         }
 
         public void Finish(int? slotId)
         {
-            if (!_messageConnection.Connected)
+            if (!_connection.Connected)
             {
                 return;
             }
             string command = slotId.HasValue ? "finish " + slotId.Value : "finish";
-            _messageConnection.SendCommand(command);
+            _connection.CreateCommand(command).Execute();
         }
     }
 }
