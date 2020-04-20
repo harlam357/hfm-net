@@ -38,10 +38,12 @@ namespace HFM.Core.Client
 
         public FahClientLog Log { get; } = new FahClientLog();
 
+        private StringBuilder LogBuffer { get; set; } = new StringBuilder();
+
         /// <summary>
         /// Gets a value indicating when the full log has been retrieved.
         /// </summary>
-        public bool LogIsRetrieved { get; private set; }
+        public bool LogIsRetrieved => LogBuffer is null;
 
         public void Clear()
         {
@@ -51,12 +53,20 @@ namespace HFM.Core.Client
             SlotCollection = null;
             SlotOptionsCollection.Clear();
             UnitCollection = null;
+            SetupLogAssetsForLogRestart();
+        }
+
+        private void SetupLogAssetsForLogRestart()
+        {
             Log.Clear();
-            LogIsRetrieved = false;
+            if (LogBuffer is null || LogBuffer.Length > 0)
+            {
+                LogBuffer = new StringBuilder();
+            }
         }
 
         public const int HeartbeatInterval = 60;
-        
+
         public bool IsHeartbeatOverdue()
         {
             if (Heartbeat == null) return false;
@@ -110,10 +120,10 @@ namespace HFM.Core.Client
                     break;
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
-                {
-                    await UpdateLogFromMessage(message).ConfigureAwait(false);
-                    break;
-                }
+                    {
+                        await UpdateLogFromMessage(message).ConfigureAwait(false);
+                        break;
+                    }
             }
 
             return new FahClientMessagesActions(slotCollectionChanged, LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged));
@@ -161,33 +171,53 @@ namespace HFM.Core.Client
 
         private async Task UpdateLogFromMessage(FahClientMessage message)
         {
-            bool createNew = message.Identifier.MessageType == FahClientMessageType.LogRestart;
-            if (createNew)
+            bool messageIsLogRestart = message.Identifier.MessageType == FahClientMessageType.LogRestart;
+            if (messageIsLogRestart)
             {
-                Log.Clear();
-                LogIsRetrieved = false;
+                SetupLogAssetsForLogRestart();
             }
 
             var logUpdate = LogUpdate.Load(message.MessageText);
-            using (var textReader = new StringBuilderReader(logUpdate.Value))
+            if (LogIsRetrieved)
+            {
+                await UpdateLogAssetsFromStringBuilder(logUpdate.Value, FileMode.Append).ConfigureAwait(false);
+            }
+            else
+            {
+                AppendToLogBuffer(logUpdate.Value);
+                if (message.MessageText.Length < UInt16.MaxValue)
+                {
+                    await UpdateLogAssetsFromStringBuilder(LogBuffer, FileMode.Create).ConfigureAwait(false);
+                    LogBuffer = null;
+                }
+            }
+        }
+
+        private void AppendToLogBuffer(StringBuilder source)
+        {
+            foreach (var chunk in source.GetChunks())
+            {
+                LogBuffer.Append(chunk);
+            }
+        }
+
+        private async Task UpdateLogAssetsFromStringBuilder(StringBuilder value, FileMode mode)
+        {
+            await UpdateLogFromStringBuilder(value).ConfigureAwait(false);
+            await WriteCachedLogFileFromStringBuilder(value, mode).ConfigureAwait(false);
+            await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+        }
+
+        private async Task UpdateLogFromStringBuilder(StringBuilder value)
+        {
+            using (var textReader = new StringBuilderReader(value))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await Log.ReadAsync(reader).ConfigureAwait(false);
             }
-            await WriteLogUpdateValueToCachedLogFile(logUpdate.Value, createNew).ConfigureAwait(false);
-
-            if (!LogIsRetrieved && message.MessageText.Length < 65536)
-            {
-                LogIsRetrieved = true;
-            }
-
-            if (LogIsRetrieved)
-            {
-                await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
-            }
         }
-
-        private async Task WriteLogUpdateValueToCachedLogFile(StringBuilder logUpdateValue, bool createNew)
+        
+        private async Task WriteCachedLogFileFromStringBuilder(StringBuilder logUpdateValue, FileMode mode)
         {
             const int sleep = 100;
             const int timeout = 60 * 1000;
@@ -201,8 +231,8 @@ namespace HFM.Core.Client
                 {
                     Directory.CreateDirectory(cacheDirectory);
                 }
-                
-                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
+
+                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, mode, FileAccess.Write, FileShare.Read, sleep, timeout))
                 using (var writer = new StreamWriter(stream))
                 {
                     foreach (var chunk in logUpdateValue.GetChunks())

@@ -315,10 +315,17 @@ namespace HFM.Core.Client
                 var fahClient = SetupFahClientForHandlingLogMessages(artifacts.Path);
                 var messages = new FahClientMessages(fahClient);
                 var logRestart = CreateMessage(FahClientMessageType.LogRestart, "\"Log\"");
+                var logUpdate = CreateMessage(FahClientMessageType.LogUpdate, "\"File\"");
                 // Act
                 var result = await messages.UpdateMessageAsync(logRestart);
                 // Assert
                 Assert.AreEqual(1, messages.Log.ClientRuns[0].LogLines.Count);
+                Assert.IsFalse(result.SlotsUpdated);
+                Assert.IsFalse(result.ExecuteRetrieval);
+                // Act
+                result = await messages.UpdateMessageAsync(logUpdate);
+                // Assert
+                Assert.AreEqual(2, messages.Log.ClientRuns[0].LogLines.Count);
                 Assert.IsFalse(result.SlotsUpdated);
                 Assert.IsFalse(result.ExecuteRetrieval);
             }
@@ -349,7 +356,7 @@ namespace HFM.Core.Client
             {
                 var fahClient = SetupFahClientForHandlingLogMessages(artifacts.Path);
                 var messages = new FahClientMessages(fahClient);
-                var logText = new String(Enumerable.Repeat('a', 66000).ToArray());
+                var logText = new String(Enumerable.Repeat('a', UInt16.MaxValue).ToArray());
                 var logRestart = CreateMessage(FahClientMessageType.LogRestart, $"\"{logText}\"");
                 // Act
                 await messages.UpdateMessageAsync(logRestart);
