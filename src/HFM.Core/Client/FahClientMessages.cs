@@ -97,7 +97,8 @@ namespace HFM.Core.Client
         {
             bool slotCollectionChanged = false;
             bool unitCollectionChanged = false;
-
+            bool logIsRetrieved = LogIsRetrieved;
+            
             switch (message.Identifier.MessageType)
             {
                 case FahClientMessageType.Heartbeat:
@@ -120,13 +121,13 @@ namespace HFM.Core.Client
                     break;
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
-                    {
-                        await UpdateLogFromMessage(message).ConfigureAwait(false);
-                        break;
-                    }
+                    await UpdateLogFromMessage(message).ConfigureAwait(false);
+                    break;
             }
 
-            return new FahClientMessagesActions(slotCollectionChanged, LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged));
+            bool executeRetrieval = logIsRetrieved != LogIsRetrieved ||
+                                    LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged);
+            return new FahClientMessagesActions(slotCollectionChanged, executeRetrieval);
         }
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
