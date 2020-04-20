@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
@@ -22,8 +23,6 @@ namespace HFM.Core.Client
         {
             _client = client;
         }
-
-        public const int HeartbeatInterval = 60;
 
         public FahClientMessage Heartbeat { get; private set; }
 
@@ -56,6 +55,8 @@ namespace HFM.Core.Client
             LogIsRetrieved = false;
         }
 
+        public const int HeartbeatInterval = 60;
+        
         public bool IsHeartbeatOverdue()
         {
             if (Heartbeat == null) return false;
@@ -64,11 +65,25 @@ namespace HFM.Core.Client
                    TimeSpan.FromSeconds(HeartbeatInterval * 3).TotalMinutes;
         }
 
+        public async Task SetupClientToSendMessageUpdatesAsync()
+        {
+            var heartbeatCommandText = String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval);
+
+            await _client.Connection.CreateCommand("updates clear").ExecuteAsync().ConfigureAwait(false);
+            await _client.Connection.CreateCommand("log-updates restart").ExecuteAsync().ConfigureAwait(false);
+            await _client.Connection.CreateCommand(heartbeatCommandText).ExecuteAsync().ConfigureAwait(false);
+            await _client.Connection.CreateCommand("updates add 1 1 $info").ExecuteAsync().ConfigureAwait(false);
+            await _client.Connection.CreateCommand("updates add 2 1 $(options -a)").ExecuteAsync().ConfigureAwait(false);
+            await _client.Connection.CreateCommand("updates add 3 1 $slot-info").ExecuteAsync().ConfigureAwait(false);
+            // get an initial queue reading
+            await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+        }
+
         /// <summary>
-        /// 
+        /// Updates the cached messages with a message received from the client.
         /// </summary>
-        /// <param name="message"></param>
-        public FahClientMessagesActions Update(FahClientMessage message)
+        /// <param name="message">The message received from the client.</param>
+        public async Task<FahClientMessagesActions> UpdateMessageAsync(FahClientMessage message)
         {
             bool slotCollectionChanged = false;
             bool unitCollectionChanged = false;
@@ -85,18 +100,18 @@ namespace HFM.Core.Client
                     Options = Options.Load(message.MessageText);
                     break;
                 case FahClientMessageType.SlotInfo:
-                    HandleSlotInfoMessage(message);
+                    await UpdateSlotCollectionFromMessage(message).ConfigureAwait(false);
                     break;
                 case FahClientMessageType.SlotOptions:
-                    slotCollectionChanged = HandleSlotOptionsMessage(message);
+                    slotCollectionChanged = UpdateSlotOptionsCollectionFromMessage(message);
                     break;
                 case FahClientMessageType.QueueInfo:
-                    unitCollectionChanged = HandleQueueInfoMessage(message);
+                    unitCollectionChanged = UpdateUnitCollectionFromMessage(message);
                     break;
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
                 {
-                    HandleLogMessage(message);
+                    await UpdateLogFromMessage(message).ConfigureAwait(false);
                     break;
                 }
             }
@@ -106,17 +121,18 @@ namespace HFM.Core.Client
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
 
-        private void HandleSlotInfoMessage(FahClientMessage message)
+        private async Task UpdateSlotCollectionFromMessage(FahClientMessage message)
         {
             SlotCollection = SlotCollection.Load(message.MessageText);
             SlotOptionsCollection.Clear();
             foreach (var slot in SlotCollection)
             {
-                _client.Connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID)).Execute();
+                var slotOptionsCommandText = String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID);
+                await _client.Connection.CreateCommand(slotOptionsCommandText).ExecuteAsync().ConfigureAwait(false);
             }
         }
 
-        private bool HandleSlotOptionsMessage(FahClientMessage message)
+        private bool UpdateSlotOptionsCollectionFromMessage(FahClientMessage message)
         {
             SlotOptionsCollection.Add(SlotOptions.Load(message.MessageText));
             if (SlotCollection != null && SlotCollection.Count == SlotOptionsCollection.Count)
@@ -136,14 +152,14 @@ namespace HFM.Core.Client
             return false;
         }
 
-        private bool HandleQueueInfoMessage(FahClientMessage message)
+        private bool UpdateUnitCollectionFromMessage(FahClientMessage message)
         {
             var existingUnitCollection = UnitCollection;
             UnitCollection = UnitCollection.Load(message.MessageText);
             return existingUnitCollection is null || !UnitCollectionEqualityComparer.Instance.Equals(existingUnitCollection, UnitCollection);
         }
 
-        private void HandleLogMessage(FahClientMessage message)
+        private async Task UpdateLogFromMessage(FahClientMessage message)
         {
             bool createNew = message.Identifier.MessageType == FahClientMessageType.LogRestart;
             if (createNew)
@@ -156,9 +172,9 @@ namespace HFM.Core.Client
             using (var textReader = new StringBuilderReader(logUpdate.Value))
             using (var reader = new FahClientLogTextReader(textReader))
             {
-                Log.Read(reader);
+                await Log.ReadAsync(reader).ConfigureAwait(false);
             }
-            WriteToCachedLogFile(logUpdate.Value, createNew);
+            await WriteLogUpdateValueToCachedLogFile(logUpdate.Value, createNew).ConfigureAwait(false);
 
             if (!LogIsRetrieved && message.MessageText.Length < 65536)
             {
@@ -167,11 +183,11 @@ namespace HFM.Core.Client
 
             if (LogIsRetrieved)
             {
-                _client.Connection.CreateCommand("queue-info").Execute();
+                await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
             }
         }
 
-        private void WriteToCachedLogFile(StringBuilder logText, bool createNew)
+        private async Task WriteLogUpdateValueToCachedLogFile(StringBuilder logUpdateValue, bool createNew)
         {
             const int sleep = 100;
             const int timeout = 60 * 1000;
@@ -189,9 +205,9 @@ namespace HFM.Core.Client
                 using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, createNew ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.Read, sleep, timeout))
                 using (var writer = new StreamWriter(stream))
                 {
-                    foreach (var chunk in logText.GetChunks())
+                    foreach (var chunk in logUpdateValue.GetChunks())
                     {
-                        writer.Write(chunk);
+                        await writer.WriteAsync(chunk).ConfigureAwait(false);
                     }
                 }
             }

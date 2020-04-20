@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
@@ -88,11 +89,11 @@ namespace HFM.Core.Client
         public IProteinService ProteinService { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
+        public FahClientMessages Messages { get; }
         public FahClientConnection Connection { get; private set; }
 
         private readonly List<SlotModel> _slots;
         private readonly ReaderWriterLockSlim _slotsLock;
-        private readonly FahClientMessages _messages;
 
         public FahClient(ILogger logger, IPreferenceSet preferences, IProteinService proteinService,
                          IProteinBenchmarkService benchmarkService, IWorkUnitRepository workUnitRepository) : base(logger)
@@ -101,19 +102,19 @@ namespace HFM.Core.Client
             ProteinService = proteinService;
             BenchmarkService = benchmarkService;
             WorkUnitRepository = workUnitRepository;
+            Messages = new FahClientMessages(this);
 
             _slots = new List<SlotModel>();
             _slotsLock = new ReaderWriterLockSlim();
-            _messages = new FahClientMessages(this);
         }
 
-        protected virtual void OnMessageRead(FahClientMessage message)
+        protected virtual async Task OnMessageRead(FahClientMessage message)
         {
             if (AbortFlag) return;
 
             Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"{message.Identifier} - Length: {message.MessageText.Length}"));
 
-            var result = _messages.Update(message);
+            var result = await Messages.UpdateMessageAsync(message).ConfigureAwait(false);
             if (result.SlotsUpdated)
             {
                 RefreshSlots();
@@ -125,12 +126,16 @@ namespace HFM.Core.Client
             }
         }
 
-        protected virtual void OnConnectedChanged(bool connected)
+        protected virtual async Task OnConnectedChanged(bool connected)
         {
-            if (!connected)
+            if (connected)
+            {
+                await Messages.SetupClientToSendMessageUpdatesAsync().ConfigureAwait(false);
+            }
+            else
             {
                 // reset messages
-                _messages.Clear();
+                Messages.Clear();
                 // refresh (clear) the slots
                 RefreshSlots();
             }
@@ -142,10 +147,10 @@ namespace HFM.Core.Client
             try
             {
                 _slots.Clear();
-                if (_messages.SlotCollection != null)
+                if (Messages.SlotCollection != null)
                 {
                     // iterate through slot collection
-                    foreach (var slot in _messages.SlotCollection)
+                    foreach (var slot in Messages.SlotCollection)
                     {
                         // add slot model to the collection
                         var slotModel = new SlotModel
@@ -180,7 +185,7 @@ namespace HFM.Core.Client
 
         protected override async void OnRetrieve()
         {
-            if (_messages.IsHeartbeatOverdue())
+            if (Messages.IsHeartbeatOverdue())
             {
                 // haven't seen a heartbeat
                 Abort();
@@ -197,15 +202,14 @@ namespace HFM.Core.Client
                     {
                         await Connection.CreateCommand("auth" + Settings.Password).ExecuteAsync().ConfigureAwait(false);
                     }
-
-                    SetUpdateCommands();
+                    await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
 
                     var reader = Connection.CreateReader();
                     try
                     {
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync().ConfigureAwait(false))
                         {
-                            OnMessageRead(reader.Message);
+                            await OnMessageRead(reader.Message).ConfigureAwait(false);
                         }
                     }
                     catch (Exception)
@@ -213,7 +217,7 @@ namespace HFM.Core.Client
                         // connection died
                     }
                     Connection.Close();
-                    OnConnectedChanged(Connection.Connected);
+                    await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -237,21 +241,6 @@ namespace HFM.Core.Client
             }
         }
 
-        //private const int QueueInfoInterval = 30;
-
-        private void SetUpdateCommands()
-        {
-            Connection.CreateCommand("updates clear").Execute();
-            Connection.CreateCommand("log-updates restart").Execute();
-            Connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", FahClientMessages.HeartbeatInterval)).Execute();
-            Connection.CreateCommand("updates add 1 1 $info").Execute();
-            Connection.CreateCommand("updates add 2 1 $(options -a)").Execute();
-            Connection.CreateCommand("updates add 3 1 $slot-info").Execute();
-            //_connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, "updates add 4 {0} $queue-info", QueueInfoInterval)).Execute();
-            // get an initial queue reading
-            Connection.CreateCommand("queue-info").Execute();
-        }
-
         private void Process()
         {
             var sw = Stopwatch.StartNew();
@@ -259,8 +248,8 @@ namespace HFM.Core.Client
             // Set successful Last Retrieval Time
             LastRetrievalTime = DateTime.Now;
 
-            var options = _messages.Options;
-            var info = _messages.Info;
+            var options = Messages.Options;
+            var info = Messages.Info;
 
             _slotsLock.EnterReadLock();
             try
@@ -273,8 +262,8 @@ namespace HFM.Core.Client
                     // Run the Aggregator
                     var dataAggregator = new FahClientDataAggregator { Logger = Logger };
                     dataAggregator.ClientName = slotModel.Name;
-                    DataAggregatorResult result = dataAggregator.AggregateData(_messages.Log.ClientRuns.LastOrDefault(),
-                                                                               _messages.UnitCollection,
+                    DataAggregatorResult result = dataAggregator.AggregateData(Messages.Log.ClientRuns.LastOrDefault(),
+                                                                               Messages.UnitCollection,
                                                                                info,
                                                                                options,
                                                                                slotModel.SlotOptions,
