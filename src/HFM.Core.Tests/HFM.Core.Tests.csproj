@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Client\ClientFactoryTests.cs" />
+    <Compile Include="Client\FahClientMessagesTests.cs" />
     <Compile Include="Client\SlotModelTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />

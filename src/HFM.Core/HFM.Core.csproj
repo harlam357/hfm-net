@@ -88,6 +88,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Client\ClientIdentifier.cs" />
+    <Compile Include="Client\FahClientMessages.cs" />
+    <Compile Include="Client\NullClient.cs" />
     <Compile Include="Client\NumberFormat.cs" />
     <Compile Include="Client\StringBuilderReader.cs" />
     <Compile Include="Data\WorkUnitRowProfile.cs" />

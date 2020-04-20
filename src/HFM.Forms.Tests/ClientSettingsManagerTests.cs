@@ -1,28 +1,11 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.IO;
 using System.Linq;
 
 using NUnit.Framework;
 
+using HFM.Core;
 using HFM.Core.Client;
 
 namespace HFM.Forms
@@ -61,31 +44,18 @@ namespace HFM.Forms
         public void ClientSettingsManager_Write_WritesTheClientSettingsToDisk()
         {
             // Arrange
-            const string testFile = "..\\..\\TestFiles\\new.ext";
-            
-            var client = new FahClient();
+            var client = new NullClient();
             client.Settings = new ClientSettings { Name = "test" };
-            // TODO: Implement ArtifactFolder
-            var manager = new ClientSettingsManager();
-            // Act
-            try
+            using (var artifacts = new ArtifactFolder())
             {
-                manager.Write(new[] { client.Settings }, testFile, 1);
+                var manager = new ClientSettingsManager();
+                string path = Path.ChangeExtension(artifacts.GetRandomFilePath(), ".hfmx");
+                // Act
+                manager.Write(new[] { client.Settings }, path, 1);
                 // Assert
-                Assert.AreEqual("..\\..\\TestFiles\\new.ext", manager.FileName);
+                Assert.AreEqual(path, manager.FileName);
                 Assert.AreEqual(1, manager.FilterIndex);
-                Assert.AreEqual(".ext", manager.FileExtension);
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(testFile);
-                }
-                catch (Exception)
-                {
-                    // do nothing
-                }
+                Assert.AreEqual(".hfmx", manager.FileExtension);
             }
         }
     }

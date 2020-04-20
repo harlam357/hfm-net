@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
@@ -30,29 +12,21 @@ namespace HFM.Core.Client
 {
     public class ClientConfiguration
     {
-        #region Events
+        public event EventHandler<ClientConfigurationChangedEventArgs> ClientConfigurationChanged;
 
-        public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
-
-        private void OnConfigurationChanged(ConfigurationChangedEventArgs e)
+        protected virtual void OnClientConfigurationChanged(ClientConfigurationChangedEventArgs e)
         {
-            ConfigurationChanged?.Invoke(this, e);
+            ClientConfigurationChanged?.Invoke(this, e);
         }
 
         public event EventHandler<ClientEditedEventArgs> ClientEdited;
 
-        private void OnClientEdited(ClientEditedEventArgs e)
+        protected virtual void OnClientEdited(ClientEditedEventArgs e)
         {
             ClientEdited?.Invoke(this, e);
         }
 
-        #endregion
-
-        #region Properties
-
         public bool IsDirty { get; set; }
-
-        #endregion
 
         public ILogger Logger { get; }
         public IPreferenceSet Preferences { get; }
@@ -70,7 +44,7 @@ namespace HFM.Core.Client
 
         internal ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
         {
-            Logger = logger;
+            Logger = logger ?? NullLogger.Instance;
             Preferences = preferences;
             ClientFactory = clientFactory;
             ScheduledTasks = clientScheduledTasksFactory(logger, preferences, this);
@@ -81,7 +55,7 @@ namespace HFM.Core.Client
 
         private void OnInvalidate(object sender, EventArgs e)
         {
-            OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Invalidate, null));
+            OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Invalidate, null));
         }
 
         public void Load(IEnumerable<ClientSettings> settings)
@@ -114,7 +88,7 @@ namespace HFM.Core.Client
 
             if (added != 0)
             {
-                OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Add, null));
+                OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Add, null));
             }
         }
 
@@ -194,7 +168,7 @@ namespace HFM.Core.Client
 
             IsDirty = true;
             OnClientEdited(e);
-            OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Edit, client));
+            OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Edit, client));
         }
 
         /// <summary>
@@ -223,7 +197,7 @@ namespace HFM.Core.Client
             }
 
             IsDirty = true;
-            OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Add, value));
+            OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Add, value));
         }
 
         public bool ContainsKey(string key)
@@ -255,8 +229,6 @@ namespace HFM.Core.Client
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrievalFinished -= OnInvalidate;
                     client.Abort();
-                    // Release from the Factory
-                    ClientFactory.Release(client);
                 }
                 result = _clientDictionary.Remove(key);
             }
@@ -268,7 +240,7 @@ namespace HFM.Core.Client
             if (result)
             {
                 IsDirty = true;
-                OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Remove, client));
+                OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Remove, client));
             }
             return result;
         }
@@ -313,8 +285,6 @@ namespace HFM.Core.Client
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrievalFinished -= OnInvalidate;
                     client.Abort();
-                    // Release from the Factory
-                    ClientFactory.Release(client);
                 }
                 _clientDictionary.Clear();
             }
@@ -326,7 +296,7 @@ namespace HFM.Core.Client
             IsDirty = false;
             if (hasValues)
             {
-                OnConfigurationChanged(new ConfigurationChangedEventArgs(ConfigurationChangedAction.Clear, null));
+                OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Clear, null));
             }
         }
 
@@ -347,7 +317,7 @@ namespace HFM.Core.Client
         }
     }
 
-    public enum ConfigurationChangedAction
+    public enum ClientConfigurationChangedAction
     {
         Add,
         Remove,
@@ -356,13 +326,13 @@ namespace HFM.Core.Client
         Invalidate
     }
 
-    public class ConfigurationChangedEventArgs : EventArgs
+    public class ClientConfigurationChangedEventArgs : EventArgs
     {
-        public ConfigurationChangedAction Action { get; }
+        public ClientConfigurationChangedAction Action { get; }
 
         public IClient Client { get; }
 
-        public ConfigurationChangedEventArgs(ConfigurationChangedAction action, IClient client)
+        public ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction action, IClient client)
         {
             Action = action;
             Client = client;

@@ -42,7 +42,7 @@ namespace HFM.Core.Client
             ClientConfiguration = clientConfiguration;
 
             Preferences.PreferenceChanged += OnPreferenceChanged;
-            ClientConfiguration.ConfigurationChanged += OnConfigurationChanged;
+            ClientConfiguration.ClientConfigurationChanged += OnClientConfigurationChanged;
             
             _clientRetrievalTask = new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval);
             _clientRetrievalTask.Changed += TaskChanged;
@@ -86,10 +86,10 @@ namespace HFM.Core.Client
             }
         }
 
-        protected virtual void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        protected virtual void OnClientConfigurationChanged(object sender, ClientConfigurationChangedEventArgs e)
         {
-            if (e.Action == ConfigurationChangedAction.Remove ||
-                e.Action == ConfigurationChangedAction.Clear)
+            if (e.Action == ClientConfigurationChangedAction.Remove ||
+                e.Action == ClientConfigurationChangedAction.Clear)
             {
                 // Disable timers if no hosts
                 if ((_clientRetrievalTask.Enabled || _webGenerationTask.Enabled) && ClientConfiguration.Count == 0)
@@ -99,7 +99,7 @@ namespace HFM.Core.Client
                     _webGenerationTask.Cancel();
                 }
             }
-            else if (e.Action == ConfigurationChangedAction.Add)
+            else if (e.Action == ClientConfigurationChangedAction.Add)
             {
                 var clientTaskEnabled = Preferences.Get<bool>(Preference.ClientRetrievalTaskEnabled);
                 if (e.Client == null)
@@ -125,7 +125,7 @@ namespace HFM.Core.Client
                     _webGenerationTask.Start();
                 }
             }
-            else if (e.Action == ConfigurationChangedAction.Edit)
+            else if (e.Action == ClientConfigurationChangedAction.Edit)
             {
                 Task.Run(() => e.Client.Retrieve());
             }

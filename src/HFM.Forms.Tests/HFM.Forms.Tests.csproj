@@ -109,6 +109,9 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="..\HFM.Core.Tests\ArtifactFolder.cs">
+      <Link>ArtifactFolder.cs</Link>
+    </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
     <Compile Include="Models\FahClientSettingsModelProfileTests.cs" />
