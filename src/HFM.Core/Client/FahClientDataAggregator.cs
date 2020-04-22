@@ -123,7 +123,7 @@ namespace HFM.Core.Client
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
                 d.Add(unit.ID.GetValueOrDefault(), wui);
 
-                if (unit.State == "RUNNING")
+                if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
                     d.CurrentWorkUnitKey = unit.ID.GetValueOrDefault();
                 }
@@ -131,7 +131,7 @@ namespace HFM.Core.Client
 
             if (d != null)
             {
-                // if no running index and at least something in the queue
+                // if no RUNNING index and at least something in the queue
                 if (d.CurrentWorkUnitKey == -1 && d.Count != 0)
                 {
                     // take the minimum queue id
@@ -146,7 +146,7 @@ namespace HFM.Core.Client
         {
             var gpuIndex = slotOptions[Options.GPUIndex];
             return gpuIndex != null 
-                ? Int32.TryParse(gpuIndex, out var i) ? info.System.GPUInfos[i].GPU : String.Empty 
+                ? Int32.TryParse(gpuIndex, out var i) ? info.System.GPUInfos[i].FriendlyName : String.Empty 
                 : info.System.CPU;
         }
 
@@ -188,18 +188,18 @@ namespace HFM.Core.Client
                 if (workUnit != null)
                 {
                     result.WorkUnits.Add(unit.ID.GetValueOrDefault(), workUnit);
-                    if (unit.State == "RUNNING")
+                    if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                     {
                         result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
                     }
                 }
             }
 
-            // if no running WU found
+            // if no RUNNING WU found
             if (result.CurrentUnitIndex == -1)
             {
-                // look for a WU with Ready state
-                var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.State == "Ready");
+                // look for a WU with READY state
+                var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase));
                 if (unit != null)
                 {
                     result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
