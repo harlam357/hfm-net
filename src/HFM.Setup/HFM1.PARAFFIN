@@ -33,7 +33,6 @@
       <ComponentRef Id="comp_5B2C3A87BC984234B3669343D02A139D" />
       <ComponentRef Id="comp_EBE77F661B554D67BFA0A5189E29087F" />
       <ComponentRef Id="comp_DD86BD77C31D4903AD1F631EF44F3C2E" />
-      <ComponentRef Id="comp_308C3509A90F486C95EE95CBF66DEFF1" />
       <ComponentRef Id="comp_1A538E03366D42D5A290527F938DD55D" />
       <ComponentRef Id="comp_7F086DD4D9F346FDA51AA4095E287466" />
       <ComponentRef Id="comp_5A2651031D1B44D085E1AD62B99D6E5E" />
@@ -58,7 +57,6 @@
       <ComponentRef Id="comp_3C11350757D24748BE300B0D378BA86A" />
       <ComponentRef Id="comp_DE8059D7C97E4408B84B059B11D35966" />
       <ComponentRef Id="comp_FFEEFD2F10514286B2847BA71D0264EB" />
-      <ComponentRef Id="comp_017B23CAD3C64AB4AD3D2C76B0093B30" />
       <ComponentRef Id="comp_07C71ABAB0384DD1AE720E3B9F922E5D" />
       <ComponentRef Id="comp_59ABC1E12CE5481FA885ADF41B4C4D9A" />
       <ComponentRef Id="comp_571A08CD4C944F4B8B6B4A2DB7F2BD1D" />
@@ -107,9 +105,6 @@
       </Component>
       <Component Id="comp_DD86BD77C31D4903AD1F631EF44F3C2E" DiskId="1" Guid="087C27A1-BDCD-412B-9128-54C535830639">
         <File Id="file_7E118C21D59A41668269A20D0C8AEDBE" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.Proteins.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="comp_308C3509A90F486C95EE95CBF66DEFF1" DiskId="1" Guid="C132327D-D605-4A1B-B5D1-8BB89A71BB8B">
-        <File Id="file_299F14EBBDB84F37B9C5C4C4BE5ADF6C" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.Queue.dll" KeyPath="yes" />
       </Component>
       <Component Id="comp_1A538E03366D42D5A290527F938DD55D" Guid="EC5307DC-39B5-40A6-A95D-9154283A8C49">
         <File Id="file_99564AD51B854ACF8CB3D387BB24E71F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Newtonsoft.Json.dll" />
@@ -197,9 +192,6 @@
         </Component>
         <Component Id="comp_FFEEFD2F10514286B2847BA71D0264EB" Guid="DDE00A41-EF19-44C3-94CF-854F5C180103">
           <File Id="file_E3531CB59072416199B727D4F16753B9" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\Tools\HFM.Log.exe" />
-        </Component>
-        <Component Id="comp_017B23CAD3C64AB4AD3D2C76B0093B30" DiskId="1" Guid="53D36265-F344-46DF-8BC0-D018990F6052">
-          <File Id="file_CBB47F45CBD845C5BD5701E0CA630E78" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\Tools\HFM.Queue.exe" KeyPath="yes" />
         </Component>
       </Directory>
       <Directory Id="dir_53F5A3A5FCAF449FA0184012BF04882D" Name="XSL">

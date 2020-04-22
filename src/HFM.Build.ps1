@@ -74,13 +74,11 @@ Function Test-Build
     Write-Host "---------------------------------------------------"
     
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
-    Exec { & $NUnitPath .\HFM.Client.Tests\bin\Release\HFM.Client.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Client.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Log.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Queue.Tests\bin\Release\HFM.Queue.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Queue.Tests.Results.xml }
 }
 
 Function Analyze-Build
@@ -94,7 +92,7 @@ Function Analyze-Build
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host "---------------------------------------------------"
 
-    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
+    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
     Exec { & $FxCopPath /f:$ArtifactsBin\HFM.exe /f:$ArtifactsBin\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:$ArtifactsPath\FxCopReport.xml /gac }
 }
 
@@ -152,7 +150,6 @@ Function Deploy-Build
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        #"HFM.Queue.dll",
         "harlam357.Core.dll",
         "harlam357.Windows.Forms.dll",
         "ZedGraph.dll",
@@ -170,9 +167,8 @@ Function Deploy-Build
     Copy-Item -Path '..\lib\System.Data.SQLite\bin\x64\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\AMD64" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\Mono" -ErrorAction Stop -Verbose:$localVerbose
     # Tools Assemblies
-    Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
+    #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
-    #Copy-Item -Path 'HFM.Queue.Tool\bin\ReleaseMerge\HFM.Queue.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
