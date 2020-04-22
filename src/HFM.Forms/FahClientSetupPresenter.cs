@@ -142,11 +142,6 @@ namespace HFM.Forms
 
         public async void ConnectClicked()
         {
-            if (_connection != null && _connection.Connected)
-            {
-                return;
-            }
-
             try
             {
                 Connect();
@@ -161,11 +156,11 @@ namespace HFM.Forms
         {
             _connection?.Dispose();
             _connection = new FahClientConnection(_settingsModel.Server, _settingsModel.Port);
+            _connection.Open();
             if (!String.IsNullOrWhiteSpace(_settingsModel.Password))
             {
-                _connection.CreateCommand("auth " + _settingsModel.Password);
+                _connection.CreateCommand("auth " + _settingsModel.Password).Execute();
             }
-            _connection.Open();
 
             bool connected = _connection.Connected;
             _settingsView.SetConnectButtonEnabled(connected);
@@ -173,21 +168,23 @@ namespace HFM.Forms
             {
                 _connection.CreateCommand("slot-info").Execute();
                 var reader = _connection.CreateReader();
-                reader.Read();
-
-                _slotCollection = SlotCollection.Load(reader.Message.MessageText);
-                foreach (var slot in _slotCollection)
+                if (reader.Read())
                 {
-                    _connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, FahClientMessages.DefaultSlotOptions, slot.ID)).Execute();
-                    reader.Read();
-
-                    var slotOptions = SlotOptions.Load(reader.Message.MessageText);
-                    if (slotOptions[Options.MachineID] != null)
+                    _slotCollection = SlotCollection.Load(reader.Message.MessageText);
+                    foreach (var slot in _slotCollection)
                     {
-                        slot.SlotOptions = slotOptions;
+                        _connection.CreateCommand(String.Format(CultureInfo.InvariantCulture, FahClientMessages.DefaultSlotOptions, slot.ID)).Execute();
+                        reader.Read();
+
+                        var slotOptions = SlotOptions.Load(reader.Message.MessageText);
+                        if (slotOptions[Options.MachineID] != null)
+                        {
+                            slot.SlotOptions = slotOptions;
+                        }
                     }
+
+                    _settingsModel.RefreshSlots(_slotCollection);
                 }
-                _settingsModel.RefreshSlots(_slotCollection);
             }
         }
 
