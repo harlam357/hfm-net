@@ -21,164 +21,136 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
-using HFM.Client.DataTypes;
+using HFM.Client.ObjectModel;
 using HFM.Core.Client;
 using HFM.Core.Net;
 
 namespace HFM.Forms.Models
 {
-   public class FahClientSettingsModel : INotifyPropertyChanged
-   {
-      public FahClientSettingsModel()
-      {
-         _slots = new List<FahClientSettingsSlotModel>();
-      }
+    public class FahClientSettingsModel : INotifyPropertyChanged
+    {
+        public FahClientSettingsModel()
+        {
+            _slots = new List<FahClientSettingsSlotModel>();
+        }
 
-      public bool Error
-      {
-         get
-         {
-            return NameError ||
-                   ServerError ||
-                   PortError;
-                   //PasswordError;
-         }
-      }
+        public bool Error =>
+            NameError ||
+            ServerError ||
+            PortError;
 
-      private string _name = String.Empty;
+        private string _name = String.Empty;
 
-      public string Name
-      {
-         get { return _name; }
-         set
-         {
-            if (_name != value)
+        public string Name
+        {
+            get => _name;
+            set
             {
-               _name = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("Name");
+                if (_name != value)
+                {
+                    _name = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool NameEmpty
-      {
-         get { return Name.Length == 0; }
-      }
+        public bool NameEmpty => Name.Length == 0;
 
-      public bool NameError
-      {
-         get { return !ClientSettings.ValidateName(Name); }
-      }
+        public bool NameError => !ClientSettings.ValidateName(Name);
 
-      private string _server = String.Empty;
+        private string _server = String.Empty;
 
-      public string Server
-      {
-         get { return _server; }
-         set
-         {
-            if (_server != value)
+        public string Server
+        {
+            get => _server;
+            set
             {
-               _server = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("Server");
+                if (_server != value)
+                {
+                    _server = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ServerError
-      {
-         get { return !HostName.Validate(Server); }
-      }
+        public bool ServerError => !HostName.Validate(Server);
 
-      private int _port = ClientSettings.DefaultPort;
+        private int _port = ClientSettings.DefaultPort;
 
-      public int Port
-      {
-         get { return _port; }
-         set
-         {
-            if (_port != value)
+        public int Port
+        {
+            get => _port;
+            set
             {
-               _port = value;
-               OnPropertyChanged("Port");               
+                if (_port != value)
+                {
+                    _port = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool PortError
-      {
-         get { return !TcpPort.Validate(Port); }
-      }
+        public bool PortError => !TcpPort.Validate(Port);
 
-      private string _password = String.Empty;
+        private string _password = String.Empty;
 
-      public string Password
-      {
-         get { return _password; }
-         set
-         {
-            if (_password != value)
+        public string Password
+        {
+            get => _password;
+            set
             {
-               _password = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("Password");
+                if (_password != value)
+                {
+                    _password = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public Guid Guid { get; set; }
+        public Guid Guid { get; set; }
 
-      //public bool PasswordError
-      //{
-      //   get { return Password.Length == 0; }
-      //}
+        private readonly List<FahClientSettingsSlotModel> _slots;
 
-      private readonly List<FahClientSettingsSlotModel> _slots;
+        public IEnumerable<FahClientSettingsSlotModel> Slots => _slots.AsReadOnly();
 
-      public IEnumerable<FahClientSettingsSlotModel> Slots
-      {
-         get { return _slots.AsReadOnly(); }
-      }
+        public void RefreshSlots(SlotCollection slots)
+        {
+            _slots.Clear();
+            foreach (var slot in slots)
+            {
+                _slots.Add(new FahClientSettingsSlotModel
+                {
+                    ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.ID),
+                    SlotType = SlotTypeConvert.FromSlotOptions(slot.SlotOptions).ToString(),
+                    ClientType = slot.SlotOptions[Options.ClientType],
+                    MaxPacketSize = slot.SlotOptions[Options.MaxPacketSize]
+                });
+            }
+            OnPropertyChanged(nameof(Slots));
+        }
 
-      public void RefreshSlots(SlotCollection slots)
-      {
-         _slots.Clear();
-         foreach (var slot in slots)
-         {
-            _slots.Add(new FahClientSettingsSlotModel
-                       {
-                          ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.Id), 
-                          SlotType = SlotTypeConvert.FromSlotOptions(slot.SlotOptions).ToString(),
-                          ClientType = slot.SlotOptions.FahClientTypeEnum.ToString(),
-                          MaxPacketSize = slot.SlotOptions.MaxPacketSizeEnum.ToString()
-                       });
-         }
-         OnPropertyChanged("Slots");
-      }
+        #region INotifyPropertyChanged Members
 
-      #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #endregion
+    }
 
-      #endregion
-   }
+    public class FahClientSettingsSlotModel
+    {
+        public string ID { get; set; }
 
-   public class FahClientSettingsSlotModel
-   {
-      public string ID { get; set; }
+        public string SlotType { get; set; }
 
-      public string SlotType { get; set; }
+        public string ClientType { get; set; }
 
-      public string ClientType { get; set; }
-
-      public string MaxPacketSize { get; set; }
-   }
+        public string MaxPacketSize { get; set; }
+    }
 }

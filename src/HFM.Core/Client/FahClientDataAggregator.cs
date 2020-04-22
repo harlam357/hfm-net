@@ -23,7 +23,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-using HFM.Client.DataTypes;
+using HFM.Client.ObjectModel;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
@@ -105,27 +105,27 @@ namespace HFM.Core.Client
                 }
 
                 var wui = new SlotWorkUnitInfo();
-                wui.State = unit.StateEnum.ToString();
+                wui.State = unit.State;
                 wui.WaitingOn = unit.WaitingOn;
-                wui.Attempts = unit.Attempts;
+                wui.Attempts = unit.Attempts.GetValueOrDefault();
                 wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                wui.NumberOfSmpCores = info.System.CpuCount;
+                wui.NumberOfSmpCores = info.System.CPUs.GetValueOrDefault();
                 wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
-                wui.ProjectID = unit.Project;
-                wui.ProjectRun = unit.Run;
-                wui.ProjectClone = unit.Clone;
-                wui.ProjectGen = unit.Gen;
+                wui.ProjectID = unit.Project.GetValueOrDefault();
+                wui.ProjectRun = unit.Run.GetValueOrDefault();
+                wui.ProjectClone = unit.Clone.GetValueOrDefault();
+                wui.ProjectGen = unit.Gen.GetValueOrDefault();
                 wui.SlotID = slotId;
                 wui.WorkServer = unit.WorkServer;
-                wui.CPU = GetCPU(info, slotOptions);
-                wui.OperatingSystem = GetOperatingSystem(info.System);
+                wui.CPU = GetCPUString(info, slotOptions);
+                wui.OperatingSystem = info.System.OS;
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
-                d.Add(unit.Id, wui);
+                d.Add(unit.ID.GetValueOrDefault(), wui);
 
-                if (unit.StateEnum == UnitState.Running)
+                if (unit.State == "RUNNING")
                 {
-                    d.CurrentWorkUnitKey = unit.Id;
+                    d.CurrentWorkUnitKey = unit.ID.GetValueOrDefault();
                 }
             }
 
@@ -142,43 +142,12 @@ namespace HFM.Core.Client
             return d;
         }
 
-        private static string GetOperatingSystem(SystemInfo systemInfo)
+        private static string GetCPUString(Info info, SlotOptions slotOptions)
         {
-            return !String.IsNullOrWhiteSpace(systemInfo.OperatingSystemArchitecture)
-               ? String.Format(CultureInfo.InvariantCulture, "{0} {1}", systemInfo.OperatingSystem, systemInfo.OperatingSystemArchitecture)
-               : systemInfo.OperatingSystem;
-        }
-
-        private static string GetCPU(Info info, SlotOptions slotOptions)
-        {
-            if (slotOptions.GpuIndex.HasValue)
-            {
-                switch (slotOptions.GpuIndex)
-                {
-                    case 0:
-                        return info.System.GpuId0Type;
-                    case 1:
-                        return info.System.GpuId1Type;
-                    case 2:
-                        return info.System.GpuId2Type;
-                    case 3:
-                        return info.System.GpuId3Type;
-                    case 4:
-                        return info.System.GpuId4Type;
-                    case 5:
-                        return info.System.GpuId5Type;
-                    case 6:
-                        return info.System.GpuId6Type;
-                    case 7:
-                        return info.System.GpuId7Type;
-                }
-            }
-            else
-            {
-                return info.System.Cpu;
-            }
-
-            return String.Empty;
+            var gpuIndex = slotOptions[Options.GPUIndex];
+            return gpuIndex != null 
+                ? Int32.TryParse(gpuIndex, out var i) ? info.System.GPUInfos[i].GPU : String.Empty 
+                : info.System.CPU;
         }
 
         private void BuildWorkUnits(DataAggregatorResult result,
@@ -208,7 +177,7 @@ namespace HFM.Core.Client
                 }
 
                 // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(slotRun, unit.Id, projectInfo);
+                var unitRun = GetUnitRun(slotRun, unit.ID.GetValueOrDefault(), projectInfo);
                 if (unitRun == null)
                 {
                     string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
@@ -218,10 +187,10 @@ namespace HFM.Core.Client
                 WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);
                 if (workUnit != null)
                 {
-                    result.WorkUnits.Add(unit.Id, workUnit);
-                    if (unit.StateEnum == UnitState.Running)
+                    result.WorkUnits.Add(unit.ID.GetValueOrDefault(), workUnit);
+                    if (unit.State == "RUNNING")
                     {
-                        result.CurrentUnitIndex = unit.Id;
+                        result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
                     }
                 }
             }
@@ -230,10 +199,10 @@ namespace HFM.Core.Client
             if (result.CurrentUnitIndex == -1)
             {
                 // look for a WU with Ready state
-                var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.StateEnum == UnitState.Ready);
+                var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.State == "Ready");
                 if (unit != null)
                 {
-                    result.CurrentUnitIndex = unit.Id;
+                    result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
                 }
             }
 
@@ -293,7 +262,7 @@ namespace HFM.Core.Client
             // available with v6.
             if (IsTerminating(workUnit))
             {
-               workUnit.FinishedTime = DateTime.UtcNow;
+                workUnit.FinishedTime = DateTime.UtcNow;
             }
         }
 
@@ -335,7 +304,7 @@ namespace HFM.Core.Client
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
-            workUnit.QueueIndex = queueEntry.Id;
+            workUnit.QueueIndex = queueEntry.ID.GetValueOrDefault();
 
             /* DownloadTime (AssignedDateTime from HFM.Client API) */
             workUnit.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
@@ -344,18 +313,23 @@ namespace HFM.Core.Client
             workUnit.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
 
             /* Project (R/C/G) */
-            workUnit.ProjectID = queueEntry.Project;
-            workUnit.ProjectRun = queueEntry.Run;
-            workUnit.ProjectClone = queueEntry.Clone;
-            workUnit.ProjectGen = queueEntry.Gen;
+            workUnit.ProjectID = queueEntry.Project.GetValueOrDefault();
+            workUnit.ProjectRun = queueEntry.Run.GetValueOrDefault();
+            workUnit.ProjectClone = queueEntry.Clone.GetValueOrDefault();
+            workUnit.ProjectGen = queueEntry.Gen.GetValueOrDefault();
 
             /* FoldingID and Team from Queue Entry */
-            workUnit.FoldingID = options.User ?? WorkUnit.DefaultFoldingID;
-            workUnit.Team = options.Team ?? WorkUnit.DefaultTeam;
+            workUnit.FoldingID = options[Options.User] ?? WorkUnit.DefaultFoldingID;
+            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault(WorkUnit.DefaultTeam);
             workUnit.SlotType = SlotTypeConvert.FromSlotOptions(slotOptions);
 
             /* Core ID */
             workUnit.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+        }
+
+        private static int? ToNullableInt32(string value)
+        {
+            return Int32.TryParse(value, out var result) ? (int?)result : null;
         }
     }
 }

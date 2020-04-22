@@ -30,236 +30,234 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   public sealed class MainGridModel
-   {
-      #region Events
+    public sealed class MainGridModel
+    {
+        #region Events
 
-      public event EventHandler AfterResetBindings;
-      public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
+        public event EventHandler AfterResetBindings;
+        public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
 
-      #endregion
+        #endregion
 
-      #region Properties
+        #region Properties
 
-      private SlotModel _selectedSlot;
+        private SlotModel _selectedSlot;
 
-      public SlotModel SelectedSlot
-      {
-         get { return _selectedSlot; }
-         set
-         {
-            if (!ReferenceEquals(_selectedSlot, value))
+        public SlotModel SelectedSlot
+        {
+            get { return _selectedSlot; }
+            set
             {
-               _selectedSlot = value;
-               OnSelectedSlotChanged(new IndexChangedEventArgs(_bindingSource.Position));
+                if (!ReferenceEquals(_selectedSlot, value))
+                {
+                    _selectedSlot = value;
+                    OnSelectedSlotChanged(new IndexChangedEventArgs(_bindingSource.Position));
+                }
             }
-         }
-      }
+        }
 
-      private string _sortColumnName;
-      /// <summary>
-      /// Holds current Sort Column Name
-      /// </summary>
-      public string SortColumnName
-      {
-         get { return _sortColumnName; }
-         set { _sortColumnName = String.IsNullOrEmpty(value) ? "Name" : value; }
-      }
+        private string _sortColumnName;
+        /// <summary>
+        /// Holds current Sort Column Name
+        /// </summary>
+        public string SortColumnName
+        {
+            get { return _sortColumnName; }
+            set { _sortColumnName = String.IsNullOrEmpty(value) ? "Name" : value; }
+        }
 
-      /// <summary>
-      /// Holds current Sort Column Order
-      /// </summary>
-      public ListSortDirection SortColumnOrder { get; set; }
+        /// <summary>
+        /// Holds current Sort Column Order
+        /// </summary>
+        public ListSortDirection SortColumnOrder { get; set; }
 
-      #endregion
+        #endregion
 
-      #region Fields
+        #region Fields
 
-      private readonly ISynchronizeInvoke _syncObject;
-      private readonly ClientConfiguration _clientConfiguration;
-      private readonly SlotModelSortableBindingList _slotList;
-      private readonly BindingSource _bindingSource;
+        private readonly ISynchronizeInvoke _syncObject;
+        private readonly ClientConfiguration _clientConfiguration;
+        private readonly SlotModelSortableBindingList _slotList;
+        private readonly BindingSource _bindingSource;
 
-      private readonly object _slotsListLock = new object();
+        private readonly object _slotsListLock = new object();
 
-      #endregion
+        #endregion
 
-      public ICollection<SlotModel> SlotCollection
-      {
-         // ToList() to make a "copy" of the current list.
-         // The value returned here is used by web generation
-         // and if the collection changes the web generation
-         // will not be able to enumerate the collection.
-         get
-         {
+        public ICollection<SlotModel> SlotCollection
+        {
+            // ToList() to make a "copy" of the current list.
+            // The value returned here is used by web generation
+            // and if the collection changes the web generation
+            // will not be able to enumerate the collection.
+            get
+            {
+                lock (_slotsListLock)
+                {
+                    return _slotList.ToList().AsReadOnly();
+                }
+            }
+        }
+
+        public SlotTotals SlotTotals
+        {
+            // use SlotCollection, it's provides synchronized access to the slot list
+            get { return SlotTotals.Create(SlotCollection); }
+        }
+
+        public object BindingSource
+        {
+            get { return _bindingSource; }
+        }
+
+        public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
+        {
+            _syncObject = syncObject;
+            _clientConfiguration = clientConfiguration;
+            _slotList = new SlotModelSortableBindingList();
+            _slotList.RaiseListChangedEvents = false;
+            _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
+            _slotList.Sorted += (sender, e) =>
+                                {
+                                    SortColumnName = e.Name;
+                                    prefs.Set(Preference.FormSortColumn, SortColumnName);
+                                    SortColumnOrder = e.Direction;
+                                    prefs.Set(Preference.FormSortOrder, SortColumnOrder);
+                                };
+            _bindingSource = new BindingSource();
+            _bindingSource.DataSource = _slotList;
+            _bindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)_bindingSource.Current;
+#if DEBUG
+            _slotList.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
+            _bindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
+#endif
+            // subscribe to services raising events that require a view action
+            prefs.PreferenceChanged += (s, e) => OnPreferenceChanged(prefs, e);
+            _clientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
+        }
+
+        private void OnPreferenceChanged(IPreferenceSet preferences, PreferenceChangedEventArgs e)
+        {
+            switch (e.Preference)
+            {
+                case Preference.OfflineLast:
+                    _slotList.OfflineClientsLast = preferences.Get<bool>(Preference.OfflineLast);
+                    Sort();
+                    break;
+                case Preference.PPDCalculation:
+                case Preference.DecimalPlaces:
+                case Preference.BonusCalculation:
+                    ResetBindings();
+                    break;
+            }
+        }
+
+        private readonly object _resetBindingsLock = new object();
+
+        private void ResetBindings()
+        {
+            if (!Monitor.TryEnter(_resetBindingsLock))
+            {
+                Debug.WriteLine("Reset already in progress...");
+                return;
+            }
+            try
+            {
+                ResetBindingsInternal();
+            }
+            finally
+            {
+                Monitor.Exit(_resetBindingsLock);
+            }
+        }
+
+        private void ResetBindingsInternal()
+        {
+            if (_syncObject is Control control && control.IsDisposed)
+            {
+                return;
+            }
+            if (_syncObject.InvokeRequired)
+            {
+                _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
+                return;
+            }
+
             lock (_slotsListLock)
             {
-               return _slotList.ToList().AsReadOnly();
+                // get slots from the dictionary
+                var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
+
+                // refresh the underlying binding list
+                _bindingSource.Clear();
+                foreach (var slot in slots)
+                {
+                    _bindingSource.Add(slot);
+                }
+                Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
+
+                // sort the list
+                SortInternal();
+                // reset selected slot
+                ResetSelectedSlot();
+                // find duplicates
+                SlotModel.FindDuplicateProjects(slots);
+
+                _bindingSource.ResetBindings(false);
             }
-         }
-      }
+            OnAfterResetBindings(EventArgs.Empty);
+        }
 
-      public SlotTotals SlotTotals
-      {
-         // use SlotCollection, it's provides synchronized access to the slot list
-         get { return SlotTotals.Create(SlotCollection); }
-      }
-
-      public object BindingSource
-      {
-         get { return _bindingSource; }
-      }
-
-      public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
-      {
-         _syncObject = syncObject;
-         _clientConfiguration = clientConfiguration;
-         _slotList = new SlotModelSortableBindingList();
-         _slotList.RaiseListChangedEvents = false;
-         _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
-         _slotList.Sorted += (sender, e) =>
-                             {
-                                SortColumnName = e.Name;
-                                prefs.Set(Preference.FormSortColumn, SortColumnName);
-                                SortColumnOrder = e.Direction;
-                                prefs.Set(Preference.FormSortOrder, SortColumnOrder);
-                             };
-         _bindingSource = new BindingSource();
-         _bindingSource.DataSource = _slotList;
-         _bindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)_bindingSource.Current;
-#if DEBUG
-         _slotList.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
-         _bindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
-#endif
-         // Subscribe to PreferenceSet events
-         prefs.PreferenceChanged += (s, e) =>
-                                     {
-                                        switch (e.Preference)
-                                        {
-                                           case Preference.OfflineLast:
-                                              _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
-                                              Sort();
-                                              break;
-                                           case Preference.PPDCalculation:
-                                           case Preference.DecimalPlaces:
-                                           case Preference.BonusCalculation:
-                                              ResetBindings();
-                                              break;
-                                        }
-
-                                     };
-
-         // Subscribe to ClientDictionary events
-         _clientConfiguration.ConfigurationChanged += (sender, args) => ResetBindings();
-      }
-
-      private readonly object _resetBindingsLock = new object();
-
-      private void ResetBindings()
-      {
-         if (!Monitor.TryEnter(_resetBindingsLock))
-         {
-            Debug.WriteLine("Reset already in progress...");
-            return;
-         }
-         try
-         {
-            ResetBindingsInternal();
-         }
-         finally
-         {
-            Monitor.Exit(_resetBindingsLock);
-         }
-      }
-
-      private void ResetBindingsInternal()
-      {
-         var control = _syncObject as Control;
-         if (control != null && control.IsDisposed)
-         {
-            return;
-         }
-         if (_syncObject.InvokeRequired)
-         {
-            _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
-            return;
-         }
-
-         lock (_slotsListLock)
-         {
-            // get slots from the dictionary
-            var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
-
-            // refresh the underlying binding list
-            _bindingSource.Clear();
-            foreach (var slot in slots)
+        /// <summary>
+        /// Sort the grid model
+        /// </summary>
+        public void Sort()
+        {
+            lock (_slotsListLock)
             {
-               _bindingSource.Add(slot);
+                // sort the list
+                SortInternal();
             }
-            Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
+        }
 
-            // sort the list
-            SortInternal();
-            // reset selected slot
-            ResetSelectedSlot();
-            // find duplicates
-            SlotModel.FindDuplicateProjects(slots);
+        private void SortInternal()
+        {
+            _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToDirectionString()}";
+            if (_slotList is IBindingList bindingList)
+            {
+                bindingList.ApplySort(bindingList.SortProperty, bindingList.SortDirection);
+            }
+        }
 
-            _bindingSource.ResetBindings(false);
-         }
-         OnAfterResetBindings(EventArgs.Empty);
-      }
+        public void ResetSelectedSlot()
+        {
+            if (SelectedSlot == null) return;
 
-      /// <summary>
-      /// Sort the grid model
-      /// </summary>
-      public void Sort()
-      {
-         lock (_slotsListLock)
-         {
-            // sort the list
-            SortInternal();
-         }
-      }
+            int row = _bindingSource.Find("Name", SelectedSlot.Name);
+            if (row > -1)
+            {
+                _bindingSource.Position = row;
+            }
+        }
 
-      private void SortInternal()
-      {
-         _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToDirectionString()}";
-         if (_slotList is IBindingList bindingList)
-         {
-            bindingList.ApplySort(bindingList.SortProperty, bindingList.SortDirection);
-         }
-      }
+        private void OnAfterResetBindings(EventArgs e)
+        {
+            AfterResetBindings?.Invoke(this, e);
+        }
 
-      public void ResetSelectedSlot()
-      {
-         if (SelectedSlot == null) return;
+        private void OnSelectedSlotChanged(IndexChangedEventArgs e)
+        {
+            SelectedSlotChanged?.Invoke(this, e);
+        }
+    }
 
-         int row = _bindingSource.Find("Name", SelectedSlot.Name);
-         if (row > -1)
-         {
-            _bindingSource.Position = row;
-         }
-      }
+    public sealed class IndexChangedEventArgs : EventArgs
+    {
+        public int Index { get; }
 
-      private void OnAfterResetBindings(EventArgs e)
-      {
-         AfterResetBindings?.Invoke(this, e);
-      }
-
-      private void OnSelectedSlotChanged(IndexChangedEventArgs e)
-      {
-         SelectedSlotChanged?.Invoke(this, e);
-      }
-   }
-
-   public sealed class IndexChangedEventArgs : EventArgs
-   {
-      public int Index { get; }
-
-      public IndexChangedEventArgs(int index)
-      {
-         Index = index;
-      }
-   }
+        public IndexChangedEventArgs(int index)
+        {
+            Index = index;
+        }
+    }
 }

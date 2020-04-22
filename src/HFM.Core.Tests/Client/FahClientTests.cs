@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Fah Client Class Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +6,10 @@ using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core.Client
@@ -36,18 +18,12 @@ namespace HFM.Core.Client
     public class FahClientTests
     {
         [Test]
-        public void FahClient_ArgumentNullException_Test()
-        {
-            Assert.Throws<ArgumentNullException>(() => new FahClient(null));
-        }
-
-        [Test]
         public void FahClient_UpdateBenchmarkData_Test()
         {
             // setup
-            var benchmarks = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
-            var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            var fahClient = new FahClient(MockRepository.GenerateStub<IMessageConnection>()) { BenchmarkService = benchmarks, WorkUnitRepository = repository };
+            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            var workUnitRepository = MockRepository.GenerateMock<IWorkUnitRepository>();
+            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), null, benchmarkService, workUnitRepository);
 
             var slotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner", "Path"), SlotIdentifier.NoSlotID);
 
@@ -74,23 +50,23 @@ namespace HFM.Core.Client
             var parsedUnits = new[] { new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnitCopy } };
 
             // Arrange
-            repository.Stub(x => x.Connected).Return(true);
-            repository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
+            workUnitRepository.Stub(x => x.Connected).Return(true);
+            workUnitRepository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
             // Assert (pre-condition)
-            Assert.IsFalse(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsFalse(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.IsNull(benchmarks.GetBenchmark(slotIdentifier, 2669));
+            Assert.IsFalse(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsFalse(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, 2669));
 
             // Act
             fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
 
             // Assert
-            Assert.IsTrue(benchmarks.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsTrue(new List<int>(benchmarks.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarks.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
+            Assert.IsTrue(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
+            Assert.IsTrue(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
+            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
 
-            repository.VerifyAllExpectations();
+            workUnitRepository.VerifyAllExpectations();
         }
     }
 }

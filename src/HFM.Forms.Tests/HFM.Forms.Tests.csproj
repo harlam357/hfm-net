@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HFM.Forms</RootNamespace>
     <AssemblyName>HFM.Forms.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -83,6 +83,12 @@
     <Reference Include="harlam357.Windows.Forms">
       <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
     </Reference>
+    <Reference Include="HFM.Client, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HFM.Client.0.2.1\lib\net47\HFM.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -103,6 +109,9 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="..\HFM.Core.Tests\ArtifactFolder.cs">
+      <Link>ArtifactFolder.cs</Link>
+    </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
     <Compile Include="Models\FahClientSettingsModelProfileTests.cs" />
@@ -113,10 +122,6 @@
     <Compile Include="SetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HFM.Client\HFM.Client.csproj">
-      <Project>{b1bb2af4-5c2f-42a7-80b4-7291d3e4bc39}</Project>
-      <Name>HFM.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>

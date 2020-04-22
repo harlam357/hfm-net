@@ -20,340 +20,333 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
 using HFM.Client;
-using HFM.Client.DataTypes;
+using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Log.FahClient;
 
 namespace HFM.Core.Client
 {
-   [TestFixture]
-   public class FahClientDataAggregatorTests
-   {
-      private FahClientDataAggregator _dataAggregator;
+    [TestFixture]
+    public class FahClientDataAggregatorTests
+    {
+        private FahClientDataAggregator _dataAggregator;
 
-      [SetUp]
-      public void Init()
-      {
-         _dataAggregator = new FahClientDataAggregator();
-      }
+        [SetUp]
+        public void Init()
+        {
+            _dataAggregator = new FahClientDataAggregator();
+        }
 
-      // ReSharper disable InconsistentNaming
+        // ReSharper disable InconsistentNaming
 
-      [Test]
-      public void Client_v7_10_0()
-      {
-         const int slotId = 0;
-         _dataAggregator.ClientName = "Client_v7_10";
+        [Test]
+        public void Client_v7_10_0()
+        {
+            const int slotId = 0;
+            _dataAggregator.ClientName = "Client_v7_10";
 
-         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
 
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-         var unitCollection = new UnitCollection();
-         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var extractor = new FahClientJsonMessageExtractor();
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-         var info = new Info();
-         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
+            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-         var options = new Options();
-         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
+            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
-         var slotOptions = new SlotOptions();
-         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
+            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
-         Assert.AreEqual(1, result.WorkUnits.Count);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
+            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         #region Check Data Aggregator
+            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            Assert.AreEqual(1, result.WorkUnits.Count);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-         Assert.IsNotNull(result.WorkUnitInfos);
-         Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-         Assert.AreEqual(null, result.Arguments);
-         Assert.AreEqual(null, result.ClientVersion);
-         Assert.AreEqual(null, result.UserID);
-         Assert.AreEqual(0, result.MachineID);
-         Assert.AreEqual(SlotStatus.Unknown, result.Status);
-         Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-         {
-            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
-         }
+            #region Check Data Aggregator
 
-         #endregion
+            Assert.IsNotNull(result.WorkUnitInfos);
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+            Assert.AreEqual(null, result.Arguments);
+            Assert.AreEqual(null, result.ClientVersion);
+            Assert.AreEqual(null, result.UserID);
+            Assert.AreEqual(0, result.MachineID);
+            Assert.AreEqual(SlotStatus.Unknown, result.Status);
+            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
+            {
+                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+            }
 
-         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
+            #endregion
 
-         #region Check Unit Info Data Values
-         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-         Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
-         Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
-         Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
-         Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
-         Assert.AreEqual(7610, unitInfoData.ProjectID);
-         Assert.AreEqual(630, unitInfoData.ProjectRun);
-         Assert.AreEqual(0, unitInfoData.ProjectClone);
-         Assert.AreEqual(59, unitInfoData.ProjectGen);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(10, unitInfoData.FramesObserved);
-         Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
-         Assert.AreEqual(660000, unitInfoData.CurrentFrame.RawFramesComplete);
-         Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
-         Assert.AreEqual(new TimeSpan(4, 46, 8), unitInfoData.CurrentFrame.TimeStamp);
-         Assert.AreEqual(new TimeSpan(0, 8, 31), unitInfoData.CurrentFrame.Duration);
-         Assert.AreEqual("A4", unitInfoData.CoreID);
-         #endregion
-      }
+            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
-      [Test]
-      public void Client_v7_10_0_UnitDataOnly()
-      {
-         const int slotId = 0;
-         _dataAggregator.ClientName = "Client_v7_10";
+            #region Check Unit Info Data Values
+            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+            Assert.AreEqual(32, unitInfoData.Team);
+            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
+            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
+            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
+            Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+            Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
+            Assert.AreEqual(7610, unitInfoData.ProjectID);
+            Assert.AreEqual(630, unitInfoData.ProjectRun);
+            Assert.AreEqual(0, unitInfoData.ProjectClone);
+            Assert.AreEqual(59, unitInfoData.ProjectGen);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+            Assert.AreEqual(10, unitInfoData.FramesObserved);
+            Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
+            Assert.AreEqual(660000, unitInfoData.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(4, 46, 8), unitInfoData.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 8, 31), unitInfoData.CurrentFrame.Duration);
+            Assert.AreEqual("A4", unitInfoData.CoreID);
+            #endregion
+        }
 
-         var fahLog = new FahClientLog();
-         string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
-         using (var textReader = new StringReader(filteredLogText))
-         using (var reader = new FahClientLogTextReader(textReader))
-         {
-            fahLog.Read(reader);
-         }
+        [Test]
+        public void Client_v7_10_0_UnitDataOnly()
+        {
+            const int slotId = 0;
+            _dataAggregator.ClientName = "Client_v7_10";
 
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-         var unitCollection = new UnitCollection();
-         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var fahLog = new FahClientLog();
+            string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
+            using (var textReader = new StringReader(filteredLogText))
+            using (var reader = new FahClientLogTextReader(textReader))
+            {
+                fahLog.Read(reader);
+            }
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-         var info = new Info();
-         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var extractor = new FahClientJsonMessageExtractor();
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-         var options = new Options();
-         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
+            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
-         var slotOptions = new SlotOptions();
-         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
+            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
-         Assert.AreEqual(1, result.WorkUnits.Count);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
+            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         #region Check Data Aggregator
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
+            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         Assert.IsNotNull(result.WorkUnitInfos);
-         Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-         Assert.AreEqual(null, result.Arguments);
-         Assert.AreEqual(null, result.ClientVersion);
-         Assert.AreEqual(null, result.UserID);
-         Assert.AreEqual(0, result.MachineID);
-         Assert.AreEqual(SlotStatus.Unknown, result.Status);
-         Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
-         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-         {
-            Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
-         }
+            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            Assert.AreEqual(1, result.WorkUnits.Count);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-         #endregion
+            #region Check Data Aggregator
 
-         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
+            Assert.IsNotNull(result.WorkUnitInfos);
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+            Assert.AreEqual(null, result.Arguments);
+            Assert.AreEqual(null, result.ClientVersion);
+            Assert.AreEqual(null, result.UserID);
+            Assert.AreEqual(0, result.MachineID);
+            Assert.AreEqual(SlotStatus.Unknown, result.Status);
+            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
+            {
+                Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
+            }
 
-         #region Check Unit Info Data Values
-         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-         Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
-         Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
-         Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
-         Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual(0, unitInfoData.CoreVersion);
-         Assert.AreEqual(7610, unitInfoData.ProjectID);
-         Assert.AreEqual(630, unitInfoData.ProjectRun);
-         Assert.AreEqual(0, unitInfoData.ProjectClone);
-         Assert.AreEqual(59, unitInfoData.ProjectGen);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(0, unitInfoData.FramesObserved);
-         Assert.IsNull(unitInfoData.CurrentFrame);
-         Assert.AreEqual("A4", unitInfoData.CoreID);
-         #endregion
-      }
+            #endregion
 
-      [Test]
-      public void Client_v7_10_1()
-      {
-         const int slotId = 1;
-         _dataAggregator.ClientName = "Client_v7_10";
+            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
-         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+            #region Check Unit Info Data Values
+            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+            Assert.AreEqual(32, unitInfoData.Team);
+            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
+            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.DownloadTime);
+            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.DueTime);
+            Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+            Assert.AreEqual(0, unitInfoData.CoreVersion);
+            Assert.AreEqual(7610, unitInfoData.ProjectID);
+            Assert.AreEqual(630, unitInfoData.ProjectRun);
+            Assert.AreEqual(0, unitInfoData.ProjectClone);
+            Assert.AreEqual(59, unitInfoData.ProjectGen);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+            Assert.AreEqual(0, unitInfoData.FramesObserved);
+            Assert.IsNull(unitInfoData.CurrentFrame);
+            Assert.AreEqual("A4", unitInfoData.CoreID);
+            #endregion
+        }
 
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-         var unitCollection = new UnitCollection();
-         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+        [Test]
+        public void Client_v7_10_1()
+        {
+            const int slotId = 1;
+            _dataAggregator.ClientName = "Client_v7_10";
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-         var info = new Info();
-         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+            
+            var extractor = new FahClientJsonMessageExtractor();
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-         var options = new Options();
-         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
+            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
-         var slotOptions = new SlotOptions();
-         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
+            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
-         Assert.AreEqual(1, result.WorkUnits.Count);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
+            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         #region Check Data Aggregator
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
+            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         Assert.IsNotNull(result.WorkUnitInfos);
-         Assert.AreEqual(2, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-         Assert.AreEqual(null, result.Arguments);
-         Assert.AreEqual(null, result.ClientVersion);
-         Assert.AreEqual(null, result.UserID);
-         Assert.AreEqual(0, result.MachineID);
-         Assert.AreEqual(SlotStatus.Unknown, result.Status);
-         Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-         {
-            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
-         }
+            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            Assert.AreEqual(1, result.WorkUnits.Count);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-         #endregion
+            #region Check Data Aggregator
 
-         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
+            Assert.IsNotNull(result.WorkUnitInfos);
+            Assert.AreEqual(2, result.CurrentUnitIndex);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
+            Assert.AreEqual(null, result.Arguments);
+            Assert.AreEqual(null, result.ClientVersion);
+            Assert.AreEqual(null, result.UserID);
+            Assert.AreEqual(0, result.MachineID);
+            Assert.AreEqual(SlotStatus.Unknown, result.Status);
+            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
+            {
+                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+            }
 
-         #region Check Unit Info Data Values
-         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-         Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
-         Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), unitInfoData.DownloadTime);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
-         Assert.AreEqual(new TimeSpan(4, 21, 52), unitInfoData.UnitStartTimeStamp);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual(1.31f, unitInfoData.CoreVersion);
-         Assert.AreEqual(5772, unitInfoData.ProjectID);
-         Assert.AreEqual(7, unitInfoData.ProjectRun);
-         Assert.AreEqual(364, unitInfoData.ProjectClone);
-         Assert.AreEqual(252, unitInfoData.ProjectGen);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(53, unitInfoData.FramesObserved);
-         Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
-         Assert.AreEqual(53, unitInfoData.CurrentFrame.RawFramesComplete);
-         Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
-         Assert.AreEqual(new TimeSpan(4, 51, 53), unitInfoData.CurrentFrame.TimeStamp);
-         Assert.AreEqual(new TimeSpan(0, 0, 42), unitInfoData.CurrentFrame.Duration);
-         Assert.AreEqual("11", unitInfoData.CoreID);
-         #endregion
-      }
+            #endregion
 
-      [Test]
-      public void Client_v7_11_0()
-      {
-         const int slotId = 0;
-         _dataAggregator.ClientName = "Client_v7_11";
+            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
-         var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt");
+            #region Check Unit Info Data Values
+            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+            Assert.AreEqual(32, unitInfoData.Team);
+            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), unitInfoData.DownloadTime);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.DueTime);
+            Assert.AreEqual(new TimeSpan(4, 21, 52), unitInfoData.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+            Assert.AreEqual(1.31f, unitInfoData.CoreVersion);
+            Assert.AreEqual(5772, unitInfoData.ProjectID);
+            Assert.AreEqual(7, unitInfoData.ProjectRun);
+            Assert.AreEqual(364, unitInfoData.ProjectClone);
+            Assert.AreEqual(252, unitInfoData.ProjectGen);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+            Assert.AreEqual(53, unitInfoData.FramesObserved);
+            Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
+            Assert.AreEqual(53, unitInfoData.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(4, 51, 53), unitInfoData.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 0, 42), unitInfoData.CurrentFrame.Duration);
+            Assert.AreEqual("11", unitInfoData.CoreID);
+            #endregion
+        }
 
-         string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
-         var unitCollection = new UnitCollection();
-         unitCollection.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+        [Test]
+        public void Client_v7_11_0()
+        {
+            const int slotId = 0;
+            _dataAggregator.ClientName = "Client_v7_11";
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt");
-         var info = new Info();
-         info.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt");
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt");
-         var options = new Options();
-         options.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            var extractor = new FahClientJsonMessageExtractor();
 
-         message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
-         var slotOptions = new SlotOptions();
-         slotOptions.Fill(JsonMessageConnection.GetNextJsonMessage(ref message));
+            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
+            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
-         Assert.AreEqual(1, result.WorkUnits.Count);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt");
+            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         #region Check Data Aggregator
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt");
+            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         Assert.IsNotNull(result.WorkUnitInfos);
-         Assert.AreEqual(1, result.CurrentUnitIndex);
-         Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), result.StartTime);
-         Assert.AreEqual(null, result.Arguments);
-         Assert.AreEqual(null, result.ClientVersion);
-         Assert.AreEqual(null, result.UserID);
-         Assert.AreEqual(0, result.MachineID);
-         Assert.AreEqual(SlotStatus.Unknown, result.Status);
-         Assert.IsNotNull(result.CurrentLogLines);
-         Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-         if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-         {
-            Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
-         }
+            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
+            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
 
-         #endregion
+            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            Assert.AreEqual(1, result.WorkUnits.Count);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-         var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
+            #region Check Data Aggregator
 
-         #region Check Unit Info Data Values
-         Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-         Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-         Assert.AreEqual(32, unitInfoData.Team);
-         Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
-         Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), unitInfoData.DownloadTime);
-         Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.DueTime);
-         Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);
-         Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
-         Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
-         Assert.AreEqual(7610, unitInfoData.ProjectID);
-         Assert.AreEqual(192, unitInfoData.ProjectRun);
-         Assert.AreEqual(0, unitInfoData.ProjectClone);
-         Assert.AreEqual(58, unitInfoData.ProjectGen);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-         Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
-         Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-         Assert.AreEqual(3, unitInfoData.FramesObserved);
-         Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);
-         Assert.AreEqual(1900000, unitInfoData.CurrentFrame.RawFramesComplete);
-         Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
-         Assert.AreEqual(new TimeSpan(6, 46, 16), unitInfoData.CurrentFrame.TimeStamp);
-         Assert.AreEqual(new TimeSpan(0, 4, 50), unitInfoData.CurrentFrame.Duration);
-         Assert.AreEqual("A4", unitInfoData.CoreID);
-         #endregion
-      }
+            Assert.IsNotNull(result.WorkUnitInfos);
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+            Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), result.StartTime);
+            Assert.AreEqual(null, result.Arguments);
+            Assert.AreEqual(null, result.ClientVersion);
+            Assert.AreEqual(null, result.UserID);
+            Assert.AreEqual(0, result.MachineID);
+            Assert.AreEqual(SlotStatus.Unknown, result.Status);
+            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
+            {
+                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+            }
 
-      // ReSharper restore InconsistentNaming
-   }
+            #endregion
+
+            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
+
+            #region Check Unit Info Data Values
+            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
+            Assert.AreEqual(32, unitInfoData.Team);
+            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
+            Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), unitInfoData.DownloadTime);
+            Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.DueTime);
+            Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, unitInfoData.FinishedTime);
+            Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
+            Assert.AreEqual(7610, unitInfoData.ProjectID);
+            Assert.AreEqual(192, unitInfoData.ProjectRun);
+            Assert.AreEqual(0, unitInfoData.ProjectClone);
+            Assert.AreEqual(58, unitInfoData.ProjectGen);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
+            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
+            Assert.AreEqual(3, unitInfoData.FramesObserved);
+            Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);
+            Assert.AreEqual(1900000, unitInfoData.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(6, 46, 16), unitInfoData.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 4, 50), unitInfoData.CurrentFrame.Duration);
+            Assert.AreEqual("A4", unitInfoData.CoreID);
+            #endregion
+        }
+
+        // ReSharper restore InconsistentNaming
+    }
 }

@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-using HFM.Client.DataTypes;
+using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;

@@ -1,28 +1,9 @@
-﻿/*
- * HFM.NET - Client Configuration Class Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using HFM.Core.DataTypes;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -48,7 +29,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            configuration.Add("test", new FahClient());
+            configuration.Add("test", new NullClient());
             Assert.IsTrue(configuration.IsDirty);
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
             // Act
@@ -64,7 +45,7 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             // Act
-            configuration.Add("test", new FahClient());
+            configuration.Add("test", new NullClient());
             // Assert
             Assert.IsTrue(configuration.IsDirty);
         }
@@ -89,16 +70,14 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
-            ConfigurationChangedEventArgs eventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            ClientConfigurationChangedEventArgs eventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
             configuration.Load(settings);
             // Assert
-            Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
+            Assert.AreEqual(ClientConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
         }
-
-        // TODO: Load() method - test client SlotsChanged and RetrievalFinished subscriptions
 
         [Test]
         public void ClientConfiguration_Load_ThrowsWhenSettingsIsNull()
@@ -112,12 +91,12 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             var settings = new ClientSettings { Name = "test", Server = "foo" };
-            ConfigurationChangedEventArgs eventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            ClientConfigurationChangedEventArgs eventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
             configuration.Add(settings);
             // Assert
-            Assert.AreEqual(ConfigurationChangedAction.Add, eventArgs.Action);
+            Assert.AreEqual(ClientConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
         }
         
@@ -141,9 +120,9 @@ namespace HFM.Core.Client
             var configuration = CreateConfiguration();
             var client = MockRepository.GenerateMock<IClient>();
             bool clientInvalidateFired = false;
-            configuration.ConfigurationChanged += (sender, args) =>
+            configuration.ClientConfigurationChanged += (sender, args) =>
             {
-                if (args.Action == ConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
+                if (args.Action == ClientConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
             };
             configuration.Add("test", client);
             // Act
@@ -159,9 +138,9 @@ namespace HFM.Core.Client
             var configuration = CreateConfiguration();
             var client = MockRepository.GenerateMock<IClient>();
             bool clientDataInvalidatedFired = false;
-            configuration.ConfigurationChanged += (sender, args) =>
+            configuration.ClientConfigurationChanged += (sender, args) =>
             {
-                if (args.Action == ConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
+                if (args.Action == ClientConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
             };
             configuration.Add("test", client);
             // Act
@@ -173,7 +152,7 @@ namespace HFM.Core.Client
         [Test]
         public void ClientConfiguration_Add_ThrowsWhenKeyIsNullAndClientIsNotNull()
         {
-            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Add(null, new FahClient()));
+            Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Add(null, new NullClient()));
         }
 
         [Test]
@@ -193,9 +172,9 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            configuration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
-            ConfigurationChangedEventArgs changedEventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { changedEventArgs = e; };
+            configuration.Add("test", new NullClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
+            ClientConfigurationChangedEventArgs changedEventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { changedEventArgs = e; };
             ClientEditedEventArgs editedEventArgs = null;
             configuration.ClientEdited += (sender, e) => editedEventArgs = e;
             // Act
@@ -203,7 +182,7 @@ namespace HFM.Core.Client
             // Assert
             Assert.AreEqual(1, configuration.Count);
             Assert.IsTrue(configuration.ContainsKey("test2"));
-            Assert.AreEqual(ConfigurationChangedAction.Edit, changedEventArgs.Action);
+            Assert.AreEqual(ClientConfigurationChangedAction.Edit, changedEventArgs.Action);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
             Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
             Assert.AreEqual("test", editedEventArgs.OldName);
@@ -217,8 +196,8 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            configuration.Add("test", new FahClient { Settings = new ClientSettings { Name = "test", Server = "foo" } });
-            configuration.Add("other", new FahClient { Settings = new ClientSettings { Name = "other", Server = "bar" } });
+            configuration.Add("test", new NullClient { Settings = new ClientSettings { Name = "test", Server = "foo" } });
+            configuration.Add("other", new NullClient { Settings = new ClientSettings { Name = "other", Server = "bar" } });
             Assert.AreEqual(2, configuration.Count);
             // Act & Assert
             Assert.Throws(typeof(ArgumentException), () => configuration.Edit("test", new ClientSettings { Name = "other", Server = "bar" }));
@@ -249,14 +228,14 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            ConfigurationChangedEventArgs eventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
-            configuration.Add("test", new FahClient());
+            ClientConfigurationChangedEventArgs eventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.Add("test", new NullClient());
             // Act
             bool result = configuration.Remove("test");
             // Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(ConfigurationChangedAction.Remove, eventArgs.Action);
+            Assert.AreEqual(ClientConfigurationChangedAction.Remove, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
         }
 
@@ -264,17 +243,14 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Remove_CallsClientAbortAndFactoryRelease()
         {
             // Arrange
-            var client = MockRepository.GeneratePartialMock<FahClient>();
-            var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
-            var configuration = CreateConfiguration(fahClientFactory);
-            configuration.Add("test", client);
+            var client = MockRepository.GenerateMock<IFahClient>();
             client.Expect(x => x.Abort());
-            fahClientFactory.Expect(x => x.Release(client));
+            var configuration = CreateConfiguration();
+            configuration.Add("test", client);
             // Act
             configuration.Remove("test");
             // Assert
             client.VerifyAllExpectations();
-            fahClientFactory.VerifyAllExpectations();
         }
 
         [Test]
@@ -288,7 +264,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            configuration.Add("test", new FahClient());
+            configuration.Add("test", new NullClient());
             // Act
             configuration.Clear();
             // Assert
@@ -300,8 +276,8 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            ConfigurationChangedEventArgs eventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            ClientConfigurationChangedEventArgs eventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
             configuration.Clear();
             // Assert
@@ -313,13 +289,13 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            configuration.Add("test", new FahClient());
-            ConfigurationChangedEventArgs eventArgs = null;
-            configuration.ConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.Add("test", new NullClient());
+            ClientConfigurationChangedEventArgs eventArgs = null;
+            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
             // Act
             configuration.Clear();
             // Assert
-            Assert.AreEqual(ConfigurationChangedAction.Clear, eventArgs.Action);
+            Assert.AreEqual(ClientConfigurationChangedAction.Clear, eventArgs.Action);
             Assert.IsNull(eventArgs.Client);
         }
 
@@ -327,17 +303,14 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Clear_CallsClientAbortAndFactoryRelease()
         {
             // Arrange
-            var client = MockRepository.GeneratePartialMock<FahClient>();
-            var fahClientFactory = MockRepository.GenerateMock<IFahClientFactory>();
-            var configuration = CreateConfiguration(fahClientFactory);
-            configuration.Add("test", client);
+            var client = MockRepository.GenerateMock<IFahClient>();
             client.Expect(x => x.Abort());
-            fahClientFactory.Expect(x => x.Release(client));
+            var configuration = CreateConfiguration();
+            configuration.Add("test", client);
             // Act
             configuration.Clear();
             // Assert
             client.VerifyAllExpectations();
-            fahClientFactory.VerifyAllExpectations();
         }
 
         private static ClientConfiguration CreateConfiguration()
@@ -345,14 +318,6 @@ namespace HFM.Core.Client
             return new ClientConfiguration(null,
                 new InMemoryPreferenceSet(),
                 new ClientFactory(),
-                (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
-        }
-
-        private static ClientConfiguration CreateConfiguration(IFahClientFactory fahClientFactory)
-        {
-            return new ClientConfiguration(null,
-                new InMemoryPreferenceSet(), 
-                new ClientFactory { FahClientFactory = fahClientFactory },
                 (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
         }
 
@@ -370,7 +335,7 @@ namespace HFM.Core.Client
                 
             }
 
-            protected override void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+            protected override void OnClientConfigurationChanged(object sender, ClientConfigurationChangedEventArgs e)
             {
                 
             }
