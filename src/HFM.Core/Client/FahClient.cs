@@ -200,7 +200,7 @@ namespace HFM.Core.Client
                     await Connection.OpenAsync().ConfigureAwait(false);
                     if (!String.IsNullOrWhiteSpace(Settings.Password))
                     {
-                        await Connection.CreateCommand("auth" + Settings.Password).ExecuteAsync().ConfigureAwait(false);
+                        await Connection.CreateCommand("auth " + Settings.Password).ExecuteAsync().ConfigureAwait(false);
                     }
                     await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
 
