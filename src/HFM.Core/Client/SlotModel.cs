@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
@@ -46,7 +28,7 @@ namespace HFM.Core.Client
     {
         #region IPreferenceSet
 
-        public IPreferenceSet Prefs { get; set; }
+        public IPreferenceSet Prefs => _client.Preferences;
 
         private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
 
@@ -88,17 +70,19 @@ namespace HFM.Core.Client
             set => _workUnit = value;
         }
 
-        public ClientSettings Settings { get; set; }
+        public ClientSettings Settings => _client.Settings;
 
         // HFM.Client data type
         public SlotOptions SlotOptions { get; set; }
 
         #endregion
 
-        #region Constructor
+        private readonly IClient _client;
 
-        public SlotModel()
+        public SlotModel(IClient client)
         {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+
             _workUnitModel = new WorkUnitModel();
 
             Initialize();
@@ -118,8 +102,6 @@ namespace HFM.Core.Client
             TotalCompletedUnits = 0;
             TotalRunFailedUnits = 0;
         }
-
-        #endregion
 
         #region Display Meta Data
 
@@ -144,7 +126,7 @@ namespace HFM.Core.Client
         public int MachineId
         {
             // if SlotId is populated by a v7 client then also use it for the MachineId value
-            get => SlotId > -1 ? SlotId : _machineId;
+            get => SlotID > -1 ? SlotID : _machineId;
             set => _machineId = value;
         }
 
@@ -162,19 +144,22 @@ namespace HFM.Core.Client
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        public int PercentComplete => ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
+        public int PercentComplete => Status.IsRunning() || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ToClientIdentifier(), SlotId);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ToClientIdentifier(), SlotID);
 
         public string Name => SlotIdentifier.Name;
 
-        // TODO: Rename to SlotID
-        public int SlotId { get; set; } = SlotIdentifier.NoSlotID;
+        public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
 
         public string SlotType
         {
             get
             {
+                if (WorkUnit.SlotType == HFM.Core.Client.SlotType.Unknown)
+                {
+                    return String.Empty;
+                }
                 string slotType = WorkUnit.SlotType.ToString();
                 if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
                 {
@@ -189,32 +174,32 @@ namespace HFM.Core.Client
         /// </summary>
         public string ClientVersion { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+        public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan TPF => ProductionValuesOk ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
+        public TimeSpan TPF => Status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public double PPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
+        public double PPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public double UPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
+        public double UPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public TimeSpan ETA => ProductionValuesOk ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
+        public TimeSpan ETA => Status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
-        /// Esimated time of arrival (ETA) for this protein
+        /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public DateTime ETADate => ProductionValuesOk ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
+        public DateTime ETADate => Status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
 
         public string Core
         {
@@ -228,11 +213,11 @@ namespace HFM.Core.Client
             }
         }
 
-        public string CoreId => WorkUnit.CoreID;
+        public string CoreID => WorkUnit.CoreID;
 
         public string ProjectRunCloneGen => WorkUnit.ToShortProjectString();
 
-        public double Credit => ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+        public double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public int Completed =>
            Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
@@ -267,19 +252,14 @@ namespace HFM.Core.Client
         /// <summary>
         /// Combined Folding ID and Team String
         /// </summary>
-        public string Username => String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team);
+        public string Username => 
+            String.IsNullOrWhiteSpace(WorkUnit.FoldingID)
+                ? String.Empty
+                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team);
 
         public DateTime DownloadTime => WorkUnitModel.DownloadTime;
 
         public DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
-
-        /// <summary>
-        /// Flag denoting if Progress, Production, and Time based values are OK to Display
-        /// </summary>
-        public bool ProductionValuesOk =>
-            Status == SlotStatus.Running ||
-            Status == SlotStatus.RunningNoFrameTimes ||
-            Status == SlotStatus.Finishing;
 
         #endregion
 
@@ -332,7 +312,7 @@ namespace HFM.Core.Client
             get
             {
                 // if these are the default assigned values, don't check the prefs and just return true
-                if (WorkUnit.FoldingID == WorkUnit.DefaultFoldingID && WorkUnit.Team == WorkUnit.DefaultTeam)
+                if ((String.IsNullOrWhiteSpace(WorkUnit.FoldingID) || WorkUnit.FoldingID == Unknown.Value) && WorkUnit.Team == default)
                 {
                     return true;
                 }

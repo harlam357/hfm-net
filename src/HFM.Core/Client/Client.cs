@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 
 using HFM.Core.Logging;
+using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
@@ -22,6 +23,8 @@ namespace HFM.Core.Client
 
         ILogger Logger { get; }
         
+        IPreferenceSet Preferences { get; }
+
         /// <summary>
         /// Settings that define this client's behavior.
         /// </summary>
@@ -65,10 +68,12 @@ namespace HFM.Core.Client
         }
 
         public ILogger Logger { get; }
+        public IPreferenceSet Preferences { get; }
         
-        protected Client(ILogger logger)
+        protected Client(ILogger logger, IPreferenceSet preferences)
         {
             Logger = logger ?? NullLogger.Instance;
+            Preferences = preferences ?? new InMemoryPreferenceSet();
         }
 
         private ClientSettings _settings;

@@ -876,7 +876,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Fold(_gridModel.SelectedSlot.SlotId);
+                client.Fold(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -886,7 +886,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Pause(_gridModel.SelectedSlot.SlotId);
+                client.Pause(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -896,7 +896,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Finish(_gridModel.SelectedSlot.SlotId);
+                client.Finish(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -1266,13 +1266,5 @@ namespace HFM.Forms
         }
 
         #endregion
-
-        /// <summary>
-        /// Finds the SlotModel by key (Name).
-        /// </summary>
-        public SlotModel FindSlotModel(string key)
-        {
-            return _clientConfiguration.Slots.FirstOrDefault(slot => slot.Name == key);
-        }
     }
 }

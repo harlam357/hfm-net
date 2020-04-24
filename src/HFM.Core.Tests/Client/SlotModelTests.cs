@@ -1,6 +1,5 @@
 ﻿
 using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.WorkUnits;
 
@@ -12,12 +11,12 @@ namespace HFM.Core.Client
         [Test]
         public void SlotModel_FindDuplicateProjects_WhenProjectsAreDuplicates()
         {
-            var instance1 = new SlotModel();
+            var instance1 = new SlotModel(new NullClient());
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
             var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
-            var instance2 = new SlotModel();
+            var instance2 = new SlotModel(new NullClient());
             var unitInfo2 = new WorkUnit { ProjectID = 1 };
             var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
@@ -31,12 +30,12 @@ namespace HFM.Core.Client
         [Test]
         public void SlotModel_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
         {
-            var instance1 = new SlotModel();
+            var instance1 = new SlotModel(new NullClient());
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
             var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
-            var instance2 = new SlotModel();
+            var instance2 = new SlotModel(new NullClient());
             var unitInfo2 = new WorkUnit { ProjectID = 2 };
             var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
@@ -50,17 +49,17 @@ namespace HFM.Core.Client
         [Test]
         public void SlotModel_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
         {
-            var instance1 = new SlotModel();
+            var instance1 = new SlotModel(new NullClient());
             var unitInfo1 = new WorkUnit { ProjectID = 1 };
             var logic1 = CreateWorkUnitModel(unitInfo1);
             instance1.WorkUnitModel = logic1;
 
-            var instance2 = new SlotModel();
+            var instance2 = new SlotModel(new NullClient());
             var unitInfo2 = new WorkUnit { ProjectID = 2 };
             var logic2 = CreateWorkUnitModel(unitInfo2);
             instance2.WorkUnitModel = logic2;
 
-            var instance3 = new SlotModel();
+            var instance3 = new SlotModel(new NullClient());
             var unitInfo3 = new WorkUnit { ProjectID = 1 };
             var logic3 = CreateWorkUnitModel(unitInfo3);
             instance3.WorkUnitModel = logic3;

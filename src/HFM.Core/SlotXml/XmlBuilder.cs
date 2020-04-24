@@ -13,7 +13,7 @@ using HFM.Preferences;
 
 namespace HFM.Core.SlotXml
 {
-    public struct XmlBuilderResult
+    public readonly struct XmlBuilderResult
     {
         public XmlBuilderResult(string slotSummaryFile, ICollection<string> slotDetailFiles)
         {
@@ -52,17 +52,23 @@ namespace HFM.Core.SlotXml
 
         private string CreateSlotSummaryFile(ICollection<SlotModel> slots, string path, DateTime updateDateTime)
         {
-            var slotSummary = new SlotSummary();
-            slotSummary.HfmVersion = Application.FullVersion;
-            slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
-            slotSummary.UpdateDateTime = updateDateTime;
-            slotSummary.SlotTotals = SlotTotals.Create(slots);
-            slotSummary.Slots = SortSlots(slots).Select(_mapper.Map<SlotModel, SlotData>).ToList();
+            var slotSummary = CreateSlotSummary(slots, updateDateTime);
 
             var serializer = new DataContractFileSerializer<SlotSummary>();
             string filePath = Path.Combine(path, SlotSummaryXml);
             serializer.Serialize(filePath, slotSummary);
             return filePath;
+        }
+
+        internal SlotSummary CreateSlotSummary(ICollection<SlotModel> slots, DateTime updateDateTime)
+        {
+            var slotSummary = new SlotSummary();
+            slotSummary.HfmVersion = Application.FullVersion;
+            slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
+            slotSummary.UpdateDateTime = updateDateTime;
+            slotSummary.SlotTotals = SlotTotals.Create(slots);
+            slotSummary.Slots = SortSlots(slots).Select(_mapper.Map<SlotModel, SlotData>).ToList();
+            return slotSummary;
         }
 
         private IEnumerable<SlotModel> SortSlots(IEnumerable<SlotModel> slots)
@@ -97,11 +103,11 @@ namespace HFM.Core.SlotXml
             }
         }
 
-        private SlotDetail CreateSlotDetail(SlotModel slot, DateTime updateDateTime)
+        internal SlotDetail CreateSlotDetail(SlotModel slot, DateTime updateDateTime)
         {
             var slotDetail = new SlotDetail();
             slotDetail.HfmVersion = Application.FullVersion;
-            slotDetail.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
+            slotDetail.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
             slotDetail.UpdateDateTime = updateDateTime;
             slotDetail.LogFileAvailable = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
             slotDetail.LogFileName = slot.Settings.ClientLogFileName;
@@ -112,5 +118,7 @@ namespace HFM.Core.SlotXml
             slotDetail.SlotData = _mapper.Map<SlotModel, SlotData>(slot);
             return slotDetail;
         }
+
+        private const string XsltNumberFormat = "###,###,##0";
     }
 }

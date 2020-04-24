@@ -19,8 +19,6 @@ namespace HFM.Core.Client
 {
     public interface IFahClient : IClient
     {
-        IPreferenceSet Preferences { get; }
-
         FahClientConnection Connection { get; }
 
         /// <summary>
@@ -75,7 +73,7 @@ namespace HFM.Core.Client
                 if (_slots.Count == 0)
                 {
                     // return default slot (for grid binding)
-                    return new[] { new SlotModel { Settings = Settings, Prefs = Preferences, Status = SlotStatus.Offline } };
+                    return new[] { new SlotModel(this) { Status = SlotStatus.Offline } };
                 }
                 return _slots.ToArray();
             }
@@ -96,7 +94,7 @@ namespace HFM.Core.Client
         private readonly ReaderWriterLockSlim _slotsLock;
 
         public FahClient(ILogger logger, IPreferenceSet preferences, IProteinService proteinService,
-                         IProteinBenchmarkService benchmarkService, IWorkUnitRepository workUnitRepository) : base(logger)
+                         IProteinBenchmarkService benchmarkService, IWorkUnitRepository workUnitRepository) : base(logger, preferences)
         {
             Preferences = preferences;
             ProteinService = proteinService;
@@ -153,12 +151,10 @@ namespace HFM.Core.Client
                     foreach (var slot in Messages.SlotCollection)
                     {
                         // add slot model to the collection
-                        var slotModel = new SlotModel
+                        var slotModel = new SlotModel(this)
                         {
-                            Settings = Settings,
-                            Prefs = Preferences,
                             Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                            SlotId = slot.ID.GetValueOrDefault(),
+                            SlotID = slot.ID.GetValueOrDefault(),
                             SlotOptions = slot.SlotOptions
                         };
                         _slots.Add(slotModel);
@@ -268,7 +264,7 @@ namespace HFM.Core.Client
                                                                                options,
                                                                                slotModel.SlotOptions,
                                                                                slotModel.WorkUnit,
-                                                                               slotModel.SlotId);
+                                                                               slotModel.SlotID);
                     PopulateRunLevelData(result, info, slotModel);
 
                     slotModel.WorkUnitInfos = result.WorkUnitInfos;

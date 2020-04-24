@@ -1,23 +1,4 @@
-﻿/*
- * HFM.NET - Slot Totals Structure
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
-
+﻿
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -38,10 +19,7 @@ namespace HFM.Core.Client
         [DataMember]
         public int WorkingSlots { get; set; }
 
-        public int NonWorkingSlots
-        {
-            get { return TotalSlots - WorkingSlots; }
-        }
+        public int NonWorkingSlots => TotalSlots - WorkingSlots;
 
         [DataMember]
         public int TotalRunCompletedUnits { get; set; }
@@ -70,7 +48,7 @@ namespace HFM.Core.Client
             }
 
             totals.TotalSlots = slots.Count;
-            foreach (SlotModel slot in slots)
+            foreach (var slot in slots)
             {
                 totals.PPD += slot.PPD;
                 totals.UPD += slot.UPD;
@@ -79,7 +57,7 @@ namespace HFM.Core.Client
                 totals.TotalCompletedUnits += slot.TotalCompletedUnits;
                 totals.TotalFailedUnits += slot.TotalFailedUnits;
 
-                if (slot.ProductionValuesOk)
+                if (slot.Status.IsRunning())
                 {
                     totals.WorkingSlots++;
                 }

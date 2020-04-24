@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Fah Client Data Aggregator Class Tests
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
-
+﻿
 using System;
 using System.IO;
 using System.Linq;
@@ -107,8 +89,8 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(null, unitInfoData.ProteinName);
+            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(10, unitInfoData.FramesObserved);
             Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
@@ -188,8 +170,8 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(null, unitInfoData.ProteinName);
+            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(0, unitInfoData.FramesObserved);
             Assert.IsNull(unitInfoData.CurrentFrame);
@@ -259,8 +241,8 @@ namespace HFM.Core.Client
             Assert.AreEqual(7, unitInfoData.ProjectRun);
             Assert.AreEqual(364, unitInfoData.ProjectClone);
             Assert.AreEqual(252, unitInfoData.ProjectGen);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(null, unitInfoData.ProteinName);
+            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(53, unitInfoData.FramesObserved);
             Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
@@ -334,8 +316,8 @@ namespace HFM.Core.Client
             Assert.AreEqual(192, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(58, unitInfoData.ProjectGen);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinName);
-            Assert.AreEqual(String.Empty, unitInfoData.ProteinTag);
+            Assert.AreEqual(null, unitInfoData.ProteinName);
+            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(3, unitInfoData.FramesObserved);
             Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);

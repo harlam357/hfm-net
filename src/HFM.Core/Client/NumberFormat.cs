@@ -1,5 +1,6 @@
 ﻿
-using System.Text;
+using System;
+using System.Linq;
 
 namespace HFM.Core.Client
 {
@@ -10,16 +11,22 @@ namespace HFM.Core.Client
         /// </summary>
         public static string Get(int decimalPlaces)
         {
-            const string baseFormat = "###,###,##0";
-            if (decimalPlaces <= 0) return baseFormat;
+            return BuildFormat(decimalPlaces, "#,0");
+        }
 
-            var sb = new StringBuilder(baseFormat);
-            sb.Append(".");
-            for (int i = 0; i < decimalPlaces; i++)
-            {
-                sb.Append("0");
-            }
-            return sb.ToString();
+        /// <summary>
+        /// Gets the number format string using the given number of decimal places.
+        /// </summary>
+        public static string Get(int decimalPlaces, string format)
+        {
+            return BuildFormat(decimalPlaces, format);
+        }
+
+        private static string BuildFormat(int decimalPlaces, string format)
+        {
+            return decimalPlaces <= 0 
+                ? format 
+                : String.Concat(format, ".", new String(Enumerable.Repeat('0', decimalPlaces).ToArray()));
         }
     }
 }

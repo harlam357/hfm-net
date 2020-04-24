@@ -125,6 +125,7 @@
     <Compile Include="Services\EocStatsDataTests.cs" />
     <Compile Include="Services\SendMailServiceTests.cs" />
     <Compile Include="SlotXml\XmlBuilderProfileTests.cs" />
+    <Compile Include="SlotXml\XmlBuilderTests.cs" />
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="Data\WorkUnitQueryTests.cs" />

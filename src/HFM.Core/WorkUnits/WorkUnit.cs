@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
@@ -29,33 +11,6 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
-        public const string DefaultFoldingID = Unknown.Value;
-        public const int DefaultTeam = 0;
-        public const string DefaultCoreID = Unknown.Value;
-
-        #region Constructor
-
-        public WorkUnit()
-        {
-            SlotIdentifier = SlotIdentifier.None;
-            UnitRetrievalTime = DateTime.MinValue;
-            FoldingID = DefaultFoldingID;
-            Team = DefaultTeam;
-            SlotType = SlotType.Unknown;
-            DownloadTime = DateTime.MinValue;
-            DueTime = DateTime.MinValue;
-            UnitStartTimeStamp = TimeSpan.Zero;
-            FinishedTime = DateTime.MinValue;
-            CoreVersion = 0;
-            ProteinName = String.Empty;
-            ProteinTag = String.Empty;
-            UnitResult = WorkUnitResult.Unknown;
-            CoreID = DefaultCoreID;
-            QueueIndex = -1;
-        }
-
-        #endregion
-
         // TODO: Rename to Copy()
         public WorkUnit DeepClone()
         {
@@ -227,7 +182,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Unit Queue Index
         /// </summary>
-        public int QueueIndex { get; set; }
+        public int QueueIndex { get; set; } = -1;
 
         #endregion
 

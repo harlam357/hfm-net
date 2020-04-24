@@ -151,6 +151,7 @@
     <Compile Include="Controls\FormWrapper.Designer.cs">
       <DependentUpon>FormWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SlotsGridColumn.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FahClientSetupDialog.cs">
       <SubType>Form</SubType>

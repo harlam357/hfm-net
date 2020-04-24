@@ -27,11 +27,12 @@ namespace HFM.Core.WorkUnits
             };
         }
 
+        // TODO: Rename to HasProject()
         /// <summary>
         /// Is the project information known?
         /// </summary>
         /// <returns>true if Project (R/C/G) has been identified; otherwise, false.</returns>
-        internal static bool ProjectIsKnown(this IProjectInfo projectInfo)
+        public static bool ProjectIsKnown(this IProjectInfo projectInfo)
         {
             return projectInfo != null && !projectInfo.ProjectIsUnknown();
         }

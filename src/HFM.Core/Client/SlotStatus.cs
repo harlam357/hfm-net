@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 
 namespace HFM.Core.Client
@@ -74,6 +75,36 @@ namespace HFM.Core.Client
                     return Color.Gray;
                 default:
                     return Color.Gray;
+            }
+        }
+
+        public static bool IsOnline(this SlotStatus status)
+        {
+            switch (status)
+            {
+                case SlotStatus.Paused:
+                case SlotStatus.Running:
+                case SlotStatus.Finishing:
+                case SlotStatus.Ready:
+                case SlotStatus.Stopping:
+                case SlotStatus.Failed:
+                case SlotStatus.RunningNoFrameTimes:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsRunning(this SlotStatus status)
+        {
+            switch (status)
+            {
+                case SlotStatus.Running:
+                case SlotStatus.Finishing:
+                case SlotStatus.RunningNoFrameTimes:
+                    return true;
+                default:
+                    return false;
             }
         }
     }

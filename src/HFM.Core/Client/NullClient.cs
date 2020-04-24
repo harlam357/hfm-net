@@ -1,5 +1,6 @@
 ﻿
 using HFM.Core.Logging;
+using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
@@ -10,7 +11,12 @@ namespace HFM.Core.Client
             
         }
 
-        public NullClient(ILogger logger) : base(logger)
+        public NullClient(ILogger logger) : this(logger, null)
+        {
+
+        }
+
+        public NullClient(ILogger logger, IPreferenceSet preferences) : base(logger, preferences)
         {
 
         }
