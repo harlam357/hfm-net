@@ -6,7 +6,7 @@ using HFM.Core.Net;
 
 namespace HFM.Core.Client
 {
-    public struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
+    public readonly struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
     {
         internal const int NoSlotID = -1;
 

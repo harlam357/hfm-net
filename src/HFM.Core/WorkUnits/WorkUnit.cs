@@ -11,6 +11,11 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
+        public WorkUnit()
+        {
+            SlotIdentifier = SlotIdentifier.None;
+        }
+
         // TODO: Rename to Copy()
         public WorkUnit DeepClone()
         {

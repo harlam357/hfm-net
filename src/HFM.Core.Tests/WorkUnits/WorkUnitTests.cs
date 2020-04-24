@@ -16,6 +16,7 @@ namespace HFM.Core.WorkUnits
       public void WorkUnit_DefaultPropertyValues()
       {
          var workUnit = new WorkUnit();
+         Assert.AreEqual(SlotIdentifier.None, workUnit.SlotIdentifier);
          Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
          Assert.IsNull(workUnit.FoldingID);
          Assert.AreEqual(0, workUnit.Team);

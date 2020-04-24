@@ -95,7 +95,7 @@ namespace HFM.Core.Client
         public void Initialize()
         {
             Arguments = String.Empty;
-            MachineId = DefaultMachineID;
+            MachineID = DefaultMachineID;
             // Status = 
             ClientVersion = String.Empty;
             TotalRunCompletedUnits = 0;
@@ -123,7 +123,7 @@ namespace HFM.Core.Client
         /// <summary>
         /// Machine ID associated with this client
         /// </summary>
-        public int MachineId
+        public int MachineID
         {
             // if SlotId is populated by a v7 client then also use it for the MachineId value
             get => SlotID > -1 ? SlotID : _machineId;
