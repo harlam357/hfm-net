@@ -85,9 +85,9 @@ namespace HFM.Forms
          queryColumn.Name = "Name";
          queryColumn.HeaderText = "Name";
          queryColumn.DataSource = columnChoices;
-         queryColumn.DisplayMember = "DisplayMember";
-         queryColumn.ValueMember = "ValueMember";
-         queryColumn.DataPropertyName = "Name";
+         queryColumn.DisplayMember = nameof(ListItem.DisplayMember);
+         queryColumn.ValueMember = nameof(ListItem.ValueMember);
+         queryColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Column);
          queryColumn.Width = 150;
          dataGridView1.Columns.Add(queryColumn);
 
@@ -96,16 +96,16 @@ namespace HFM.Forms
          queryColumn.Name = "Operator";
          queryColumn.HeaderText = "Operator";
          queryColumn.DataSource = columnChoices;
-         queryColumn.DisplayMember = "DisplayMember";
-         queryColumn.ValueMember = "ValueMember";
-         queryColumn.DataPropertyName = "Type";
+         queryColumn.DisplayMember = nameof(ListItem.DisplayMember);
+         queryColumn.ValueMember = nameof(ListItem.ValueMember);
+         queryColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Operator);
          queryColumn.Width = 175;
          dataGridView1.Columns.Add(queryColumn);
 
          var valueColumn = new DataGridViewQueryValueColumn();
          valueColumn.Name = "Value";
          valueColumn.HeaderText = "Value";
-         valueColumn.DataPropertyName = "Value";
+         valueColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Value);
          valueColumn.DefaultCellStyle.DataSourceNullValue = null;
          //valueColumn.Width = 200;
          valueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
