@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.IO;
 using System.Linq;
@@ -25,7 +7,6 @@ using NUnit.Framework;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
-using HFM.Core.DataTypes;
 
 namespace HFM.Core.WorkUnits
 {
@@ -33,7 +14,7 @@ namespace HFM.Core.WorkUnits
     public class ProteinBenchmarkServiceTests
     {
         [Test]
-        public void ProteinBenchmarkService_GetSlotIdentifiers_Test()
+        public void ProteinBenchmarkService_GetSlotIdentifiers_ReturnsDistinctValuesFromAllBenchmarks()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -43,8 +24,23 @@ namespace HFM.Core.WorkUnits
                 // Act
                 var identifiers = benchmarks.GetSlotIdentifiers();
                 // Assert
-                Assert.AreEqual(12, identifiers.Count);
+                Assert.AreEqual(11, identifiers.Count);
             }
+        }
+
+        [Test]
+        public void ProteinBenchmarkService_GetSlotIdentifiers_ReturnsDistinctValuesWithGuidFromBenchmarksWithAndWithoutSourceGuid()
+        {
+            // Arrange
+            var container = new ProteinBenchmarkDataContainer();
+            container.Data.Add(new ProteinBenchmark { SourceName = "Foo", SourcePath = "192.168.1.255:36330", SourceGuid = Guid.Empty });
+            container.Data.Add(new ProteinBenchmark { SourceName = "Foo", SourcePath = "192.168.1.255:36330", SourceGuid = Guid.NewGuid() });
+            var benchmarks = new ProteinBenchmarkService(container);
+            // Act
+            var identifiers = benchmarks.GetSlotIdentifiers();
+            // Assert
+            Assert.AreEqual(1, identifiers.Count);
+            Assert.IsTrue(identifiers.First().Client.HasGuid);
         }
 
         [Test]
@@ -175,9 +171,37 @@ namespace HFM.Core.WorkUnits
             Assert.AreEqual(slotID, benchmark.SourceSlotID);
         }
 
-        private static ProteinBenchmarkDataContainer CreateTestDataContainer(string path)
+        [Test]
+        public void ProteinBenchmarkService_ValidateProteinBenchmarkEqualityComparerMatchesWithoutConsideringClientIdentifierGuid()
         {
-            var source = Path.Combine("..\\..\\TestFiles", ProteinBenchmarkDataContainer.DefaultFileName);
+            using (var artifacts = new ArtifactFolder())
+            {
+                var container = CreateTestDataContainer(artifacts.GetRandomFilePath(), "BenchmarkCache_0_9_13.dat");
+
+                var benchmarksWithGuid = container.Data.Where(x => x.SlotIdentifier.Client.HasGuid).ToList();
+                var benchmarksWithGuidIdentifiers = benchmarksWithGuid.Select(x => x.SlotIdentifier).Distinct().ToList();
+                foreach (var identifier in benchmarksWithGuidIdentifiers)
+                {
+                    Console.WriteLine(identifier);
+                }
+
+                var identifierMatchesWhenGuidIsNotConsidered = new Func<ProteinBenchmark, bool>(b =>
+                    benchmarksWithGuidIdentifiers.Any(x => SlotIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier, x)));
+
+                var allBenchmarks = container.Data.Where(b => identifierMatchesWhenGuidIsNotConsidered(b)).ToList();
+                var benchmarksWithoutGuid = allBenchmarks.Where(b => !b.SlotIdentifier.Client.HasGuid).ToList();
+
+                Console.WriteLine($"Benchmarks with Guid: {benchmarksWithGuid.Count}");
+                Console.WriteLine($"Benchmarks without Guid: {benchmarksWithoutGuid.Count}");
+                Console.WriteLine($"All Benchmarks: {allBenchmarks.Count}");
+
+                Assert.AreEqual(benchmarksWithGuid.Count + benchmarksWithoutGuid.Count, allBenchmarks.Count);
+            }
+        }
+
+        private static ProteinBenchmarkDataContainer CreateTestDataContainer(string path, string fileName = ProteinBenchmarkDataContainer.DefaultFileName)
+        {
+            var source = Path.Combine("..\\..\\TestFiles", fileName);
             File.Copy(source, path, true);
 
             var dataContainer = new ProteinBenchmarkDataContainer { FilePath = path };

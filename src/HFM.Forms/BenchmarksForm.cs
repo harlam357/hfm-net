@@ -584,8 +584,12 @@ namespace HFM.Forms
 
         private void UpdateClientsComboBinding(int index)
         {
+            var slotIdentifiers = Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
+                .Concat(_benchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name))
+                .ToList();
+
             cboClients.DataBindings.Clear();
-            cboClients.DataSource = _benchmarkService.GetSlotIdentifiers();
+            cboClients.DataSource = slotIdentifiers;
             cboClients.DisplayMember = "Value";
             // TODO: Is this required for Mono compatibility?
             //cboClients.ValueMember = "Client";

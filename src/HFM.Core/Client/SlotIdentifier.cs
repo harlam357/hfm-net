@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using HFM.Core.Net;
@@ -37,7 +38,8 @@ namespace HFM.Core.Client
 
         public int SlotID { get; }
 
-        // TODO: Number of CPUs
+        // TODO: Number of CPU / GPU
+        // TODO: Number of CPU Threads
 
         public string Name => AppendSlotID(Client.Name, SlotID);
 
@@ -74,6 +76,27 @@ namespace HFM.Core.Client
                 return hashCode;
             }
         }
+
+        private sealed class ProteinBenchmarkSlotIdentifierEqualityComparer : IEqualityComparer<SlotIdentifier>
+        {
+            public bool Equals(SlotIdentifier x, SlotIdentifier y)
+            {
+                return x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Client, y.Client) && x.SlotID == y.SlotID;
+            }
+
+            public int GetHashCode(SlotIdentifier obj)
+            {
+                unchecked
+                {
+                    var hashCode = obj.Ordinal;
+                    hashCode = (hashCode * 397) ^ ClientIdentifier.ProteinBenchmarkEqualityComparer.GetHashCode(obj.Client);
+                    hashCode = (hashCode * 397) ^ obj.SlotID;
+                    return hashCode;
+                }
+            }
+        }
+
+        public static IEqualityComparer<SlotIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkSlotIdentifierEqualityComparer();
 
         public static bool operator ==(SlotIdentifier left, SlotIdentifier right)
         {

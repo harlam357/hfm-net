@@ -1,25 +1,6 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -60,9 +41,9 @@ namespace HFM.Core.WorkUnits
 
         public ICollection<SlotIdentifier> GetSlotIdentifiers()
         {
-            return Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
-                .Concat(DataContainer.Data.Select(x => x.SlotIdentifier).Distinct())
+            return DataContainer.Data.Select(x => x.SlotIdentifier)
                 .OrderBy(s => s)
+                .Distinct(SlotIdentifier.ProteinBenchmarkEqualityComparer)
                 .ToList();
         }
 
@@ -117,7 +98,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                DataContainer.Data.RemoveAll(b => b.SlotIdentifier.Equals(slotIdentifier));
+                DataContainer.Data.RemoveAll(b => SlotIdentifierEquals(b, slotIdentifier));
                 DataContainer.Write();
             }
             finally
@@ -145,12 +126,8 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterReadLock();
             try
             {
-                IEnumerable<ProteinBenchmark> benchmarkQuery = DataContainer.Data;
-                if (SlotIdentifier.AllSlots != slotIdentifier)
-                {
-                    benchmarkQuery = benchmarkQuery.Where(b => b.SlotIdentifier.Equals(slotIdentifier));
-                }
-                return benchmarkQuery.Select(b => b.ProjectID).Distinct().OrderBy(p => p).ToList();
+                return DataContainer.Data.Where(b => SlotIdentifierEquals(b, slotIdentifier))
+                    .Select(b => b.ProjectID).Distinct().OrderBy(p => p).ToList();
             }
             finally
             {
@@ -174,7 +151,21 @@ namespace HFM.Core.WorkUnits
 
         private static bool SlotIdentifierAndProjectEquals(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
         {
-            return b.ProjectID.Equals(projectID) && (SlotIdentifier.AllSlots.Equals(slotIdentifier) || b.SlotIdentifier.Equals(slotIdentifier));
+            return b.ProjectID.Equals(projectID) && SlotIdentifierEquals(b, slotIdentifier);
+        }
+
+        private static bool SlotIdentifierEquals(ProteinBenchmark b, SlotIdentifier slotIdentifier)
+        {
+            // when AllSlots is given, then all SlotIdentifiers match
+            if (SlotIdentifier.AllSlots.Equals(slotIdentifier)) return true;
+
+            // most specific, matches ClientIdentifier on Guid first... then Name, Server, and Port
+            if (b.SlotIdentifier.Equals(slotIdentifier)) return true;
+
+            // less specific, matches ClientIdentifier only on Name, Server, and Port
+            if (SlotIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier, slotIdentifier)) return true;
+
+            return false;
         }
 
         public void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID)

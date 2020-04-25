@@ -114,7 +114,9 @@
     </Compile>
     <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Client\ClientFactoryTests.cs" />
+    <Compile Include="Client\ClientIdentifierTests.cs" />
     <Compile Include="Client\FahClientMessagesTests.cs" />
+    <Compile Include="Client\SlotIdentifierTests.cs" />
     <Compile Include="Client\SlotModelTests.cs" />
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
@@ -175,6 +177,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="TestFiles\BenchmarkCache.dat" />
+    <None Include="TestFiles\BenchmarkCache_0_9_13.dat" />
     <None Include="TestFiles\ClientSettings_0_9_11.hfmx" />
     <None Include="TestFiles\TestData.db3" />
     <None Include="TestFiles\TestData2.db3" />

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -7,7 +8,7 @@ using HFM.Core.Net;
 
 namespace HFM.Core.Client
 {
-    public struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
+    public readonly struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
     {
         internal const int NoPort = 0;
 
@@ -41,9 +42,9 @@ namespace HFM.Core.Client
 
         public bool Equals(ClientIdentifier other)
         {
-            if (HasGuid && other.HasGuid)
+            if (HasGuid)
             {
-                return Guid.Equals(other.Guid);
+                return other.HasGuid && Guid.Equals(other.Guid);
             }
             return Name == other.Name && Server == other.Server && Port == other.Port;
         }
@@ -68,6 +69,27 @@ namespace HFM.Core.Client
             }
         }
 
+        private sealed class ProteinBenchmarkClientIdentifierEqualityComparer : IEqualityComparer<ClientIdentifier>
+        {
+            public bool Equals(ClientIdentifier x, ClientIdentifier y)
+            {
+                return x.Name == y.Name && x.Server == y.Server && x.Port == y.Port;
+            }
+
+            public int GetHashCode(ClientIdentifier obj)
+            {
+                unchecked
+                {
+                    var hashCode = (obj.Name != null ? obj.Name.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (obj.Server != null ? obj.Server.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ obj.Port;
+                    return hashCode;
+                }
+            }
+        }
+
+        public static IEqualityComparer<ClientIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkClientIdentifierEqualityComparer();
+
         public static bool operator ==(ClientIdentifier left, ClientIdentifier right)
         {
             return left.Equals(right);
@@ -80,13 +102,20 @@ namespace HFM.Core.Client
 
         public int CompareTo(ClientIdentifier other)
         {
+            if (HasGuid)
+            {
+                return other.HasGuid ? Guid.CompareTo(other.Guid) : -1;
+            }
+            if (other.HasGuid)
+            {
+                return 1;
+            }
+
             var nameComparison = String.Compare(Name, other.Name, StringComparison.Ordinal);
             if (nameComparison != 0) return nameComparison;
             var serverComparison = String.Compare(Server, other.Server, StringComparison.Ordinal);
             if (serverComparison != 0) return serverComparison;
-            var portComparison = Port.CompareTo(other.Port);
-            if (portComparison != 0) return portComparison;
-            return Guid.CompareTo(other.Guid);
+            return Port.CompareTo(other.Port);
         }
 
         public int CompareTo(object obj)
