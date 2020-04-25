@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -37,58 +19,67 @@ namespace HFM.Forms.Models
 
     public sealed class UserStatsDataModel : INotifyPropertyChanged
     {
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferenceSet _preferences;
         private readonly EocStatsScheduledTask _scheduledTask;
         private readonly IMapper _mapper;
 
-        public UserStatsDataModel(IPreferenceSet prefs, EocStatsScheduledTask scheduledTask)
+        public UserStatsDataModel(ISynchronizeInvoke synchronizeInvoke, IPreferenceSet preferences, EocStatsScheduledTask scheduledTask)
         {
-            _prefs = prefs;
+            _preferences = preferences;
             _scheduledTask = scheduledTask;
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<UserStatsDataModelProfile>()).CreateMapper();
 
-            _prefs.PreferenceChanged += (s, e) =>
-                                        {
-                                            if (e.Preference == Preference.EnableUserStats)
-                                            {
-                                                ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
-                                                if (ControlsVisible)
-                                                {
-                                                    RefreshFromData();
-                                                }
-                                            }
-                                        };
+            _preferences.PreferenceChanged += (s, e) =>
+            {
+                if (e.Preference == Preference.EnableUserStats)
+                {
+                    ControlsVisible = _preferences.Get<bool>(Preference.EnableUserStats);
+                    if (ControlsVisible)
+                    {
+                        RefreshFromData();
+                    }
+                }
+            };
 
             _scheduledTask.Changed += (s, e) =>
             {
                 switch (e.Action)
                 {
                     case ScheduledTaskChangedAction.Finished:
-                        RefreshFromData();
+                        // scheduled task completes on thread pool, but RefreshFromData will trigger UI control updates
+                        // provide the ISynchronizeInvoke instance for posting the updates back to the UI thread
+                        RefreshFromData(synchronizeInvoke);
                         break;
                 }
             };
 
-            ControlsVisible = _prefs.Get<bool>(Preference.EnableUserStats);
+            ControlsVisible = _preferences.Get<bool>(Preference.EnableUserStats);
             RefreshFromData();
         }
 
         public void SetViewStyle(bool showTeamStats)
         {
-            _prefs.Set(Preference.UserStatsType, showTeamStats ? StatsType.Team : StatsType.User);
+            _preferences.Set(Preference.UserStatsType, showTeamStats ? StatsType.Team : StatsType.User);
             OnPropertyChanged(null);
         }
 
         public void Refresh()
         {
             _scheduledTask.Run(false);
-            RefreshFromData();
         }
 
-        private void RefreshFromData()
+        private void RefreshFromData(ISynchronizeInvoke synchronizeInvoke = null)
         {
             _mapper.Map(_scheduledTask.DataContainer.Data, this);
-            OnPropertyChanged(null);
+            if (synchronizeInvoke is null)
+            {
+                OnPropertyChanged(null);
+            }
+            else
+            {
+                var action = new Action(() => OnPropertyChanged(null));
+                synchronizeInvoke.BeginInvoke(action, null);
+            }
         }
 
         private const string NumberFormat = "{0:###,###,##0}";
@@ -141,7 +132,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        private bool ShowTeamStats => _prefs.Get<StatsType>(Preference.UserStatsType) == StatsType.Team;
+        private bool ShowTeamStats => _preferences.Get<StatsType>(Preference.UserStatsType) == StatsType.Team;
 
         public bool OverallRankVisible => !ShowTeamStats && ControlsVisible;
 
