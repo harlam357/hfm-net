@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Work Unit History Database Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,7 +9,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Core.Client;
@@ -123,9 +104,10 @@ namespace HFM.Core.Data
                                  {
                                      Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
 
-                                     var workUnitModel = new WorkUnitModel();
+                                     var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+                                     var slotModel = new SlotModel(new NullClient { Settings = settings });
+                                     var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
                                      workUnitModel.CurrentProtein = BuildProtein1();
-                                     workUnitModel.Data = BuildWorkUnit1(i);
 
                                      _repository.Insert(workUnitModel);
                                  });
@@ -189,41 +171,46 @@ namespace HFM.Core.Data
         [Test]
         public void Insert_Test1()
         {
-            InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
         public void Insert_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
         public void Insert_Test2()
         {
-            InsertTestInternal(BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
+            var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
         public void Insert_Test3()
         {
-            InsertTestInternal(BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
         public void Insert_Test4()
         {
-            InsertTestInternal(BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
+            var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
+        private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
         {
             _repository.Initialize(TestScratchFile);
 
-            var workUnitModel = new WorkUnitModel();
+            var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
-            workUnitModel.Data = workUnit;
 
             _repository.Insert(workUnitModel);
 
@@ -250,7 +237,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = run;
             workUnit.ProjectClone = 2;
             workUnit.ProjectGen = 3;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -325,7 +311,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 4;
             workUnit.ProjectClone = 5;
             workUnit.ProjectGen = 6;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner's","The Path's"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357's";
             workUnit.Team = 100;
             workUnit.CoreVersion = 2.27f;
@@ -400,7 +385,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -475,7 +459,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner2","Path2"), 2);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.27f;

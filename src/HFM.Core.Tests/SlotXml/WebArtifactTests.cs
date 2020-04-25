@@ -21,7 +21,7 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, false);
 
-            var slots = CreateSlotModelCollection(preferences);
+            var slots = CreateSlotModelCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
@@ -39,7 +39,7 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, true);
 
-            var slots = CreateSlotModelCollection(preferences);
+            var slots = CreateSlotModelCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
@@ -63,7 +63,7 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection(preferences);
+                var slots = CreateSlotModelCollection();
                 foreach (var slot in slots)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
@@ -99,7 +99,7 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection(preferences);
+                var slots = CreateSlotModelCollection();
                 foreach (var slot in slots)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
@@ -155,7 +155,7 @@ namespace HFM.Core.SlotXml
             return preferences;
         }
 
-        private static ICollection<SlotModel> CreateSlotModelCollection(IPreferenceSet preferences)
+        private static ICollection<SlotModel> CreateSlotModelCollection()
         {
             var slots = new List<SlotModel>();
 
@@ -167,7 +167,7 @@ namespace HFM.Core.SlotXml
                 new Log.LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
             };
             slot.CurrentLogLines = logLines;
-            slot.WorkUnit.LogLines = logLines;
+            slot.WorkUnitModel.Data.LogLines = logLines;
             slots.Add(slot);
 
             // setup slot

@@ -19,13 +19,6 @@ namespace HFM.Core.Client
             ClientConfigurationChanged?.Invoke(this, e);
         }
 
-        public event EventHandler<ClientEditedEventArgs> ClientEdited;
-
-        protected virtual void OnClientEdited(ClientEditedEventArgs e)
-        {
-            ClientEdited?.Invoke(this, e);
-        }
-
         public bool IsDirty { get; set; }
 
         public ILogger Logger { get; }
@@ -128,7 +121,6 @@ namespace HFM.Core.Client
             Debug.Assert(!String.IsNullOrEmpty(settings.Name));
 
             IClient client;
-            ClientEditedEventArgs e;
 
             _syncLock.EnterWriteLock();
             try
@@ -143,8 +135,6 @@ namespace HFM.Core.Client
                 }
 
                 client = _clientDictionary[key];
-                string existingName = client.Settings.Name;
-                string existingPath = client.Settings.ClientPath;
 
                 client.SlotsChanged -= OnInvalidate;
                 client.RetrievalFinished -= OnInvalidate;
@@ -158,8 +148,6 @@ namespace HFM.Core.Client
                 }
                 client.SlotsChanged += OnInvalidate;
                 client.RetrievalFinished += OnInvalidate;
-
-                e = new ClientEditedEventArgs(existingName, settings.Name, existingPath, settings.ClientPath);
             }
             finally
             {
@@ -167,7 +155,6 @@ namespace HFM.Core.Client
             }
 
             IsDirty = true;
-            OnClientEdited(e);
             OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Edit, client));
         }
 
@@ -336,26 +323,6 @@ namespace HFM.Core.Client
         {
             Action = action;
             Client = client;
-        }
-    }
-
-    public class ClientEditedEventArgs : EventArgs
-    {
-        public string OldName { get; }
-
-        public string NewName { get; }
-
-        public string OldPath { get; }
-
-        public string NewPath { get; }
-
-        public ClientEditedEventArgs(string oldName, string newName,
-                                     string oldPath, string newPath)
-        {
-            OldName = oldName;
-            NewName = newName;
-            OldPath = oldPath;
-            NewPath = newPath;
         }
     }
 }

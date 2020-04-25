@@ -11,17 +11,11 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
-        public WorkUnit()
-        {
-            SlotIdentifier = SlotIdentifier.None;
-        }
-
         // TODO: Rename to Copy()
         public WorkUnit DeepClone()
         {
             var u = new WorkUnit
             {
-                SlotIdentifier = SlotIdentifier,
                 UnitRetrievalTime = UnitRetrievalTime,
                 FoldingID = FoldingID,
                 Team = Team,
@@ -48,8 +42,6 @@ namespace HFM.Core.WorkUnits
         }
 
         #region Properties
-
-        public SlotIdentifier SlotIdentifier { get; set; }
 
         /// <summary>
         /// Local time the logs used to generate this WorkUnit were retrieved

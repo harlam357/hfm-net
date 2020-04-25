@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -14,42 +15,64 @@ using HFM.Log.FahClient;
 
 namespace HFM.Core.Client
 {
+    // TODO: Rename to FahClientMessageAggregator
     [TestFixture]
     public class FahClientDataAggregatorTests
     {
-        private FahClientDataAggregator _dataAggregator;
-
-        [SetUp]
-        public void Init()
-        {
-            _dataAggregator = new FahClientDataAggregator();
-        }
-
         // ReSharper disable InconsistentNaming
 
-        [Test]
-        public void Client_v7_10_0()
+        private static FahClient CreateClient(ClientSettings settings)
         {
-            const int slotId = 0;
-            _dataAggregator.ClientName = "Client_v7_10";
+            var client = new FahClient(null, null, null, null, null);
+            client.Settings = settings;
+            return client;
+        }
 
-            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+        [Test]
+        public async Task FahClientDataAggregator_Client_v7_10_SlotID_0()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_10" };
+            var fahClient = CreateClient(settings);
 
+            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+            using (var reader = new FahClientLogTextReader(textReader))
+            {
+                await fahClient.Messages.Log.ReadAsync(reader);
+            }
+            
             var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
 
-            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
-            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
 
-            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+
+            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+
+            // Act
+            var result = aggregator.AggregateData();
+
+            // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
@@ -75,7 +98,6 @@ namespace HFM.Core.Client
             var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
             #region Check Unit Info Data Values
-            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
@@ -103,34 +125,51 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_v7_10_0_UnitDataOnly()
+        public async Task FahClientDataAggregator_Client_v7_10_SlotID_0_UnitDataOnly()
         {
-            const int slotId = 0;
-            _dataAggregator.ClientName = "Client_v7_10";
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_10" };
+            var fahClient = CreateClient(settings);
 
-            var fahLog = new FahClientLog();
             string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
             using (var textReader = new StringReader(filteredLogText))
             using (var reader = new FahClientLogTextReader(textReader))
             {
-                fahLog.Read(reader);
+                await fahClient.Messages.Log.ReadAsync(reader);
             }
-
+            
             var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
 
-            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt");
-            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
 
-            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+
+            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+
+            // Act
+            var result = aggregator.AggregateData();
+            
+            // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
@@ -148,7 +187,7 @@ namespace HFM.Core.Client
             Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
             {
-                Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahLog.ClientRuns.Last()));
+                Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahClient.Messages.Log.ClientRuns.Last()));
             }
 
             #endregion
@@ -156,7 +195,6 @@ namespace HFM.Core.Client
             var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
             #region Check Unit Info Data Values
-            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
@@ -180,28 +218,50 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_v7_10_1()
+        public async Task FahClientDataAggregator_Client_v7_10_SlotID_1()
         {
-            const int slotId = 1;
-            _dataAggregator.ClientName = "Client_v7_10";
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_10" };
+            var fahClient = CreateClient(settings);
 
-            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt");
+            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+            using (var reader = new FahClientLogTextReader(textReader))
+            {
+                await fahClient.Messages.Log.ReadAsync(reader);
+            }
             
             var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
 
-            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt");
-            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt");
-            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt");
-            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt");
-            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
 
-            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+
+            var slotModel = new SlotModel(fahClient) { SlotID = 1 };
+            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+
+            // Act
+            var result = aggregator.AggregateData();
+
+            // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
@@ -227,7 +287,6 @@ namespace HFM.Core.Client
             var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
             #region Check Unit Info Data Values
-            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
@@ -255,28 +314,46 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_v7_11_0()
+        public async Task FahClientDataAggregator_Client_v7_11_SlotID_0()
         {
-            const int slotId = 0;
-            _dataAggregator.ClientName = "Client_v7_11";
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_11" };
+            var fahClient = CreateClient(settings);
 
-            var fahLog = FahClientLog.Read("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt");
-
+            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"))
+            using (var reader = new FahClientLogTextReader(textReader))
+            {
+                await fahClient.Messages.Log.ReadAsync(reader);
+            }
+            
             var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt"))));
 
-            string message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt");
-            var unitCollection = UnitCollection.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt");
-            var info = Info.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt");
-            var options = Options.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slots.txt"))));
 
-            message = File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt");
-            var slotOptions = SlotOptions.Load(extractor.Extract(new StringBuilder(message)).MessageText);
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt"))));
 
-            var result = _dataAggregator.AggregateData(fahLog.ClientRuns.Last(), unitCollection, info, options, slotOptions, new WorkUnit(), slotId);
+            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+
+            // Act
+            var result = aggregator.AggregateData();
+
+            // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
@@ -302,7 +379,6 @@ namespace HFM.Core.Client
             var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
 
             #region Check Unit Info Data Values
-            Assert.AreEqual(SlotIdentifier.None, unitInfoData.SlotIdentifier);
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);

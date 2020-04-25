@@ -16,7 +16,7 @@ namespace HFM.Core.Client
     {
         public IClient Create()
         {
-            return new NullClient(null);
+            return new NullClient();
         }
     }
 

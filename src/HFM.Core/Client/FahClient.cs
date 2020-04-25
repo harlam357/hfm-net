@@ -21,6 +21,8 @@ namespace HFM.Core.Client
     {
         FahClientConnection Connection { get; }
 
+        FahClientMessages Messages { get; }
+
         /// <summary>
         /// Sends the Fold command to the FAH client.
         /// </summary>
@@ -83,9 +85,7 @@ namespace HFM.Core.Client
             }
         }
 
-        public IPreferenceSet Preferences { get; }
         public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
         public FahClientMessages Messages { get; }
         public FahClientConnection Connection { get; private set; }
@@ -93,12 +93,10 @@ namespace HFM.Core.Client
         private readonly List<SlotModel> _slots;
         private readonly ReaderWriterLockSlim _slotsLock;
 
-        public FahClient(ILogger logger, IPreferenceSet preferences, IProteinService proteinService,
-                         IProteinBenchmarkService benchmarkService, IWorkUnitRepository workUnitRepository) : base(logger, preferences)
+        public FahClient(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService, 
+            IProteinService proteinService, IWorkUnitRepository workUnitRepository) : base(logger, preferences, benchmarkService)
         {
-            Preferences = preferences;
             ProteinService = proteinService;
-            BenchmarkService = benchmarkService;
             WorkUnitRepository = workUnitRepository;
             Messages = new FahClientMessages(this);
 
@@ -154,8 +152,7 @@ namespace HFM.Core.Client
                         var slotModel = new SlotModel(this)
                         {
                             Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                            SlotID = slot.ID.GetValueOrDefault(),
-                            SlotOptions = slot.SlotOptions
+                            SlotID = slot.ID.GetValueOrDefault()
                         };
                         _slots.Add(slotModel);
                     }
@@ -244,9 +241,6 @@ namespace HFM.Core.Client
             // Set successful Last Retrieval Time
             LastRetrievalTime = DateTime.Now;
 
-            var options = Messages.Options;
-            var info = Messages.Info;
-
             _slotsLock.EnterReadLock();
             try
             {
@@ -256,16 +250,9 @@ namespace HFM.Core.Client
                     slotModel.Initialize();
 
                     // Run the Aggregator
-                    var dataAggregator = new FahClientDataAggregator { Logger = Logger };
-                    dataAggregator.ClientName = slotModel.Name;
-                    DataAggregatorResult result = dataAggregator.AggregateData(Messages.Log.ClientRuns.LastOrDefault(),
-                                                                               Messages.UnitCollection,
-                                                                               info,
-                                                                               options,
-                                                                               slotModel.SlotOptions,
-                                                                               slotModel.WorkUnit,
-                                                                               slotModel.SlotID);
-                    PopulateRunLevelData(result, info, slotModel);
+                    var dataAggregator = new FahClientDataAggregator(this, slotModel);
+                    DataAggregatorResult result = dataAggregator.AggregateData();
+                    PopulateRunLevelData(result, Messages.Info, slotModel);
 
                     slotModel.WorkUnitInfos = result.WorkUnitInfos;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
@@ -316,7 +303,6 @@ namespace HFM.Core.Client
             Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
-            workUnit.SlotIdentifier = slotModel.SlotIdentifier;
             workUnit.UnitRetrievalTime = LastRetrievalTime;
             if (workUnit.SlotType == SlotType.Unknown)
             {
@@ -327,9 +313,8 @@ namespace HFM.Core.Client
                 }
             }
 
-            var workUnitModel = new WorkUnitModel(BenchmarkService);
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
-            workUnitModel.Data = workUnit;
             return workUnitModel;
         }
 
@@ -371,7 +356,7 @@ namespace HFM.Core.Client
                     int count = model.FramesComplete - currentWorkUnit.FramesComplete;
                     var frameTimes = GetFrameTimes(model.Data, nextFrame, count);
                     // Update benchmarks
-                    BenchmarkService.Update(model.Data.SlotIdentifier, model.Data.ProjectID, frameTimes);
+                    BenchmarkService.Update(model.SlotModel.SlotIdentifier, model.Data.ProjectID, frameTimes);
                 }
                 // Update history database
                 if (model.Data.UnitResult != WorkUnitResult.Unknown)
@@ -393,7 +378,7 @@ namespace HFM.Core.Client
                         if (Logger.IsDebugEnabled)
                         {
                             string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
-                            Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.SlotIdentifier.Name, message));
+                            Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.SlotModel.SlotIdentifier.Name, message));
                         }
                     }
                 }

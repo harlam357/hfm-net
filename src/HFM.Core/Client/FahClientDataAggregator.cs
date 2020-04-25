@@ -12,53 +12,47 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
+    // TODO: Rename to FahClientMessageAggregator
     internal class FahClientDataAggregator
     {
-        /// <summary>
-        /// Client name.
-        /// </summary>
-        public string ClientName { get; set; }
+        public IFahClient FahClient { get; }
+        public SlotModel SlotModel { get; }
 
-        private ILogger _logger;
-
-        public ILogger Logger
+        public FahClientDataAggregator(IFahClient fahClient, SlotModel slotModel)
         {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
+            FahClient = fahClient;
+            SlotModel = slotModel;
         }
 
-        /// <summary>
-        /// Aggregate Data and return WorkUnit Dictionary.
-        /// </summary>
-        public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
-                                                  SlotOptions slotOptions, WorkUnit currentWorkUnit, int slotId)
+        public DataAggregatorResult AggregateData()
         {
-            if (clientRun == null) throw new ArgumentNullException(nameof(clientRun));
-            if (unitCollection == null) throw new ArgumentNullException(nameof(unitCollection));
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (slotOptions == null) throw new ArgumentNullException(nameof(slotOptions));
-            if (currentWorkUnit == null) throw new ArgumentNullException(nameof(currentWorkUnit));
-
             var result = new DataAggregatorResult();
             result.CurrentUnitIndex = -1;
 
+            ClientRun clientRun = FahClient.Messages.Log.ClientRuns.Last();
             SlotRun slotRun = null;
-            if (clientRun.SlotRuns.ContainsKey(slotId))
+            if (clientRun.SlotRuns.ContainsKey(SlotModel.SlotID))
             {
-                slotRun = clientRun.SlotRuns[slotId];
+                slotRun = clientRun.SlotRuns[SlotModel.SlotID];
             }
             result.StartTime = clientRun.Data.StartTime;
 
-            if (Logger.IsDebugEnabled)
+            if (FahClient.Logger.IsDebugEnabled)
             {
                 foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
                 {
-                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, $"Failed to parse log line: {s}"));
+                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, $"Failed to parse log line: {s}"));
                 }
             }
 
-            BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, slotId);
-            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, slotOptions, slotId);
+            var unitCollection = FahClient.Messages.UnitCollection;
+            var options = FahClient.Messages.Options;
+            var slotOptions = FahClient.Messages.SlotCollection.FirstOrDefault(x => x.ID == SlotModel.SlotID)?.SlotOptions;
+            var currentWorkUnit = SlotModel.WorkUnitModel.Data;
+            var info = FahClient.Messages.Info;
+
+            BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, SlotModel.SlotID);
+            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, slotOptions, SlotModel.SlotID);
 
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
             {
@@ -163,7 +157,7 @@ namespace HFM.Core.Client
                 if (unitRun == null)
                 {
                     string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
-                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, message));
+                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, message));
                 }
 
                 WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);

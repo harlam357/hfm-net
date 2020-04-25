@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
@@ -28,7 +27,7 @@ namespace HFM.Core.Client
     {
         #region IPreferenceSet
 
-        public IPreferenceSet Prefs => _client.Preferences;
+        public IPreferenceSet Prefs => Client.Preferences;
 
         private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
 
@@ -42,52 +41,21 @@ namespace HFM.Core.Client
 
         #endregion
 
-        #region Root Data Types
+        public WorkUnitModel WorkUnitModel { get; set; }
 
-        private WorkUnitModel _workUnitModel;
-        /// <summary>
-        /// Class member containing info specific to the current work unit
-        /// </summary>
-        public WorkUnitModel WorkUnitModel
-        {
-            get => _workUnitModel;
-            set
-            {
-                if (_workUnitModel != null)
-                {
-                    UpdateTimeOfLastProgress(value);
-                }
-                _workUnitModel = value;
-                _workUnit = null;
-            }
-        }
+        // TODO: Remove WorkUnit Property
+        private WorkUnit WorkUnit => WorkUnitModel.Data;
 
-        private WorkUnit _workUnit;
+        public ClientSettings Settings => Client.Settings;
 
-        public WorkUnit WorkUnit
-        {
-            get => _workUnit ?? WorkUnitModel.Data;
-            set => _workUnit = value;
-        }
-
-        public ClientSettings Settings => _client.Settings;
-
-        // HFM.Client data type
-        public SlotOptions SlotOptions { get; set; }
-
-        #endregion
-
-        private readonly IClient _client;
+        public IClient Client { get; }
 
         public SlotModel(IClient client)
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-
-            _workUnitModel = new WorkUnitModel();
+            Client = client ?? throw new ArgumentNullException(nameof(client));
+            WorkUnitModel = new WorkUnitModel(this);
 
             Initialize();
-            TimeOfLastUnitStart = DateTime.MinValue;
-            TimeOfLastFrameProgress = DateTime.MinValue;
         }
 
         private const int DefaultMachineID = 0;
@@ -323,51 +291,6 @@ namespace HFM.Core.Client
                 }
                 return WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
                        WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
-            }
-        }
-
-        #endregion
-
-        #region Slot Time Meta Data
-
-        /// <summary>
-        /// Local Time when this Client last detected Frame Progress
-        /// </summary>
-        public DateTime TimeOfLastUnitStart { get; set; } // should be init to DateTime.MinValue
-
-        /// <summary>
-        /// Local Time when this Client last detected Frame Progress
-        /// </summary>
-        public DateTime TimeOfLastFrameProgress { get; set; } // should be init to DateTime.MinValue
-
-        /// <summary>
-        /// Update Time of Last Frame Progress based on Current and Parsed WorkUnit
-        /// </summary>
-        private void UpdateTimeOfLastProgress(WorkUnitModel parsedWorkUnit)
-        {
-            // Matches the Current Project and Raw Download Time
-            if (WorkUnitModel.Data.EqualsProjectAndDownloadTime(parsedWorkUnit.Data))
-            {
-                // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
-                if (parsedWorkUnit.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    WorkUnitModel.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    parsedWorkUnit.Data.UnitStartTimeStamp.Equals(WorkUnitModel.Data.UnitStartTimeStamp) == false)
-                {
-                    TimeOfLastUnitStart = DateTime.Now;
-                }
-
-                // If the Frames Complete is greater than the UnitInfoLogic Frames Complete
-                if (parsedWorkUnit.FramesComplete > WorkUnitModel.FramesComplete)
-                {
-                    // Update the Time Of Last Frame Progress
-                    TimeOfLastFrameProgress = DateTime.Now;
-                }
-            }
-            else // Different WorkUnit - Update the Time Of Last 
-                 // Unit Start and Clear Frame Progress Value
-            {
-                TimeOfLastUnitStart = DateTime.Now;
-                TimeOfLastFrameProgress = DateTime.MinValue;
             }
         }
 

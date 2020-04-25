@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 
@@ -32,14 +14,6 @@ namespace HFM.Core.WorkUnits
     [TestFixture]
     public class WorkUnitModelTests
     {
-        private IProteinBenchmarkService _benchmarkService;
-
-        [SetUp]
-        public void Init()
-        {
-            _benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
-        }
-
         #region DownloadTime
 
         [Test]
@@ -678,9 +652,10 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void TimePerSectionTest5()
         {
+            var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
             var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
-            _benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), 0)).IgnoreArguments().Return(benchmark);
-            var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
+            benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), 0)).IgnoreArguments().Return(benchmark);
+            var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), benchmarkService);
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(TimeSpan.FromMinutes(10), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
@@ -689,7 +664,6 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void TimePerSectionTest6()
         {
-            _benchmarkService = null;
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
             workUnitModel.ClientTimeOffset = 0;
@@ -851,12 +825,12 @@ namespace HFM.Core.WorkUnits
 
         #region Helpers
 
-        private WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit)
+        private static WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit, IProteinBenchmarkService benchmarkService = null)
         {
-            return new WorkUnitModel(_benchmarkService)
+            var slotModel = new SlotModel(new NullClient(null, null, benchmarkService) { Settings = new ClientSettings() });
+            return new WorkUnitModel(slotModel, workUnit)
             {
-                CurrentProtein = protein,
-                Data = workUnit
+                CurrentProtein = protein ?? new Protein()
             };
         }
 
