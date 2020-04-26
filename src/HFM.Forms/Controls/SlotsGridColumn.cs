@@ -316,10 +316,10 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
+            var timeSpan = (TimeSpan)value;
             var timeFormatting = slotModel.Prefs.Get<TimeFormatting>(Preference.TimeFormatting);
             if (timeFormatting == TimeFormatting.Format1)
             {
-                var timeSpan = (TimeSpan)value;
                 string format = "{1:00}min {2:00}sec";
                 if (timeSpan.Hours > 0)
                 {
@@ -329,7 +329,9 @@ namespace HFM.Forms.Controls
                 return String.Format(format, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
             }
 
-            return base.OnGetCellText(value, slotModel);
+            return timeSpan.Hours > 0 
+                ? base.OnGetCellText(value, slotModel) 
+                : timeSpan.ToString(@"mm\:ss");
         }
     }
 
