@@ -35,7 +35,7 @@ namespace HFM.Core.Client
             var currentWorkUnit = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
             var slotIdentifier = currentWorkUnit.SlotModel.SlotIdentifier;
             
-            var workUnitCopy = workUnit.DeepClone();
+            var workUnitCopy = workUnit.Copy();
             workUnitCopy.FramesObserved = 4;
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
                .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },

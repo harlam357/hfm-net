@@ -11,8 +11,7 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
-        // TODO: Rename to Copy()
-        public WorkUnit DeepClone()
+        public WorkUnit Copy()
         {
             var u = new WorkUnit
             {

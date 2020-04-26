@@ -188,12 +188,12 @@ namespace HFM.Core.Client
                 var unitRun = GetUnitRun(slotRun, currentWorkUnit.QueueIndex, currentWorkUnit);
                 if (unitRun != null)
                 {
-                    // create a clone of the current WorkUnit object so we're not working with an
+                    // create a copy of the current WorkUnit object so we're not working with an
                     // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
-                    WorkUnit currentClone = currentWorkUnit.DeepClone();
+                    var workUnitCopy = currentWorkUnit.Copy();
 
-                    PopulateWorkUnitFromLogData(currentClone, unitRun);
-                    result.WorkUnits.Add(currentClone.QueueIndex, currentClone);
+                    PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
+                    result.WorkUnits.Add(workUnitCopy.QueueIndex, workUnitCopy);
                 }
             }
         }
