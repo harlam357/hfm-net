@@ -221,13 +221,13 @@ namespace HFM.Core.Data
 
         public bool Insert(WorkUnitModel workUnitModel)
         {
-            if (!ValidateWorkUnit(workUnitModel.Data))
+            if (!ValidateWorkUnit(workUnitModel.WorkUnit))
             {
                 return false;
             }
 
             // ensure the given work unit is not written more than once
-            if (WorkUnitExists(workUnitModel.Data))
+            if (WorkUnitExists(workUnitModel.WorkUnit))
             {
                 return false;
             }

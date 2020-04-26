@@ -17,9 +17,9 @@ namespace HFM.Core.Client
     public class FahClientTests
     {
         [Test]
-        public void FahClient_UpdateBenchmarkData_Test()
+        public void FahClient_UpdateWorkUnitBenchmarkAndRepository()
         {
-            // setup
+            // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var workUnitRepository = MockRepository.GenerateMock<IWorkUnitRepository>();
             var fahClient = new FahClient(null, new InMemoryPreferenceSet(), benchmarkService, null, workUnitRepository);
@@ -47,7 +47,6 @@ namespace HFM.Core.Client
 
             var parsedUnits = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
 
-            // Arrange
             workUnitRepository.Stub(x => x.Connected).Return(true);
             workUnitRepository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
@@ -57,7 +56,7 @@ namespace HFM.Core.Client
             Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, 2669));
 
             // Act
-            fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
+            fahClient.UpdateWorkUnitBenchmarkAndRepository(currentWorkUnit, parsedUnits);
 
             // Assert
             Assert.IsTrue(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));

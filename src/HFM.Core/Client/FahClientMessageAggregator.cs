@@ -47,7 +47,7 @@ namespace HFM.Core.Client
             var unitCollection = FahClient.Messages.UnitCollection;
             var options = FahClient.Messages.Options;
             var slotOptions = FahClient.Messages.SlotCollection.FirstOrDefault(x => x.ID == SlotModel.SlotID)?.SlotOptions;
-            var currentWorkUnit = SlotModel.WorkUnitModel.Data;
+            var currentWorkUnit = SlotModel.WorkUnitModel.WorkUnit;
             var info = FahClient.Messages.Info;
 
             BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, SlotModel.SlotID);

@@ -157,7 +157,7 @@ namespace HFM.Forms
 
                 var slotModel = _clientConfiguration.Slots.FirstOrDefault(x =>
                    x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
-                   x.WorkUnitModel.Data.ProjectID == benchmark.ProjectID);
+                   x.WorkUnitModel.WorkUnit.ProjectID == benchmark.ProjectID);
 
                 if (slotModel != null && slotModel.Status.IsRunning())
                 {

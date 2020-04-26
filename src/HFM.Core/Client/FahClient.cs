@@ -257,22 +257,22 @@ namespace HFM.Core.Client
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 
-                    var parsedUnits = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
+                    var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
                     foreach (int key in result.WorkUnits.Keys)
                     {
                         if (result.WorkUnits[key] != null)
                         {
-                            parsedUnits[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
+                            newWorkUnitModels[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
                         }
                     }
 
                     // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
-                    UpdateBenchmarkData(slotModel.WorkUnitModel, parsedUnits.Values);
+                    UpdateWorkUnitBenchmarkAndRepository(slotModel.WorkUnitModel, newWorkUnitModels.Values);
 
                     // Update the WorkUnitModel if we have a current unit index
-                    if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
+                    if (result.CurrentUnitIndex != -1 && newWorkUnitModels.ContainsKey(result.CurrentUnitIndex))
                     {
-                        slotModel.WorkUnitModel = parsedUnits[result.CurrentUnitIndex];
+                        slotModel.WorkUnitModel = newWorkUnitModels[result.CurrentUnitIndex];
                     }
 
                     SetSlotStatus(slotModel);
@@ -343,31 +343,34 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateBenchmarkData(WorkUnitModel currentWorkUnit, IEnumerable<WorkUnitModel> parsedUnits)
+        internal void UpdateWorkUnitBenchmarkAndRepository(WorkUnitModel workUnitModel, IEnumerable<WorkUnitModel> newWorkUnitModels)
         {
-            foreach (var model in parsedUnits.Where(x => x != null))
+            foreach (var m in newWorkUnitModels.Where(x => x != null))
             {
-                if (currentWorkUnit.Data.EqualsProjectAndDownloadTime(model.Data))
+                // find the WorkUnit in newWorkUnitModels that matches the current WorkUnit
+                if (workUnitModel.WorkUnit.EqualsProjectAndDownloadTime(m.WorkUnit))
                 {
-                    // found the current unit
-                    // current frame has already been recorded, increment to the next frame
-                    int nextFrame = currentWorkUnit.FramesComplete + 1;
-                    int count = model.FramesComplete - currentWorkUnit.FramesComplete;
-                    var frameTimes = GetFrameTimes(model.Data, nextFrame, count);
-                    // Update benchmarks
-                    BenchmarkService.Update(model.SlotModel.SlotIdentifier, model.Data.ProjectID, frameTimes);
+                    UpdateBenchmarkFrameTimes(workUnitModel, m);
                 }
-                // Update history database
-                if (model.Data.UnitResult != WorkUnitResult.Unknown)
+                if (m.WorkUnit.UnitResult != WorkUnitResult.Unknown)
                 {
-                    InsertCompletedWorkUnit(model);
+                    InsertCompletedWorkUnitIntoRepository(m);
                 }
             }
         }
 
-        private void InsertCompletedWorkUnit(WorkUnitModel workUnitModel)
+        private void UpdateBenchmarkFrameTimes(WorkUnitModel workUnitModel, WorkUnitModel newWorkUnitModel)
         {
-            // Update history database
+            // current frame has already been recorded, increment to the next frame
+            int nextFrame = workUnitModel.FramesComplete + 1;
+            int count = newWorkUnitModel.FramesComplete - workUnitModel.FramesComplete;
+            var frameTimes = GetFrameTimes(newWorkUnitModel.WorkUnit, nextFrame, count);
+            
+            BenchmarkService.Update(newWorkUnitModel.SlotModel.SlotIdentifier, newWorkUnitModel.WorkUnit.ProjectID, frameTimes);
+        }
+
+        private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
+        {
             if (WorkUnitRepository != null && WorkUnitRepository.Connected)
             {
                 try
@@ -376,7 +379,7 @@ namespace HFM.Core.Client
                     {
                         if (Logger.IsDebugEnabled)
                         {
-                            string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
+                            string message = $"Inserted {workUnitModel.WorkUnit.ToProjectString()} into database.";
                             Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.SlotModel.SlotIdentifier.Name, message));
                         }
                     }

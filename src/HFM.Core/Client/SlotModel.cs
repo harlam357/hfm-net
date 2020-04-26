@@ -44,7 +44,7 @@ namespace HFM.Core.Client
         public WorkUnitModel WorkUnitModel { get; set; }
 
         // TODO: Remove WorkUnit Property
-        private WorkUnit WorkUnit => WorkUnitModel.Data;
+        private WorkUnit WorkUnit => WorkUnitModel.WorkUnit;
 
         public ClientSettings Settings => Client.Settings;
 
@@ -301,14 +301,14 @@ namespace HFM.Core.Client
         /// </summary>
         public static void FindDuplicateProjects(ICollection<SlotModel> slots)
         {
-            var duplicates = slots.GroupBy(x => x.WorkUnitModel.Data.ToShortProjectString())
-                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.Data.HasProject())
+            var duplicates = slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
+                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.WorkUnit.HasProject())
                 .Select(g => g.Key)
                 .ToList();
 
             foreach (var slot in slots)
             {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.Data.ToShortProjectString());
+                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.WorkUnit.ToShortProjectString());
             }
         }
     }
