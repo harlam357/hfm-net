@@ -419,7 +419,7 @@ namespace HFM.Forms.Controls
 
         protected override string OnGetCellText(object value, SlotModel slotModel)
         {
-            if (!slotModel.WorkUnitModel.Data.ProjectIsKnown())
+            if (!slotModel.WorkUnitModel.Data.HasProject())
             {
                 return String.Empty;
             }

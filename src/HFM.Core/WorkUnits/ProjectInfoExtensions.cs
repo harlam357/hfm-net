@@ -27,26 +27,17 @@ namespace HFM.Core.WorkUnits
             };
         }
 
-        // TODO: Rename to HasProject()
         /// <summary>
-        /// Is the project information known?
+        /// Is the project information populated?
         /// </summary>
         /// <returns>true if Project (R/C/G) has been identified; otherwise, false.</returns>
-        public static bool ProjectIsKnown(this IProjectInfo projectInfo)
+        public static bool HasProject(this IProjectInfo projectInfo)
         {
-            return projectInfo != null && !projectInfo.ProjectIsUnknown();
-        }
-
-        /// <summary>
-        /// Is the project information unknown?
-        /// </summary>
-        /// <returns>true if Project (R/C/G) has not been identified; otherwise, false.</returns>
-        internal static bool ProjectIsUnknown(this IProjectInfo projectInfo)
-        {
-            return projectInfo == null || (projectInfo.ProjectID == 0 &&
-                                           projectInfo.ProjectRun == 0 &&
-                                           projectInfo.ProjectClone == 0 &&
-                                           projectInfo.ProjectGen == 0);
+            return projectInfo != null && 
+                  (projectInfo.ProjectID != 0 ||
+                   projectInfo.ProjectRun != 0 ||
+                   projectInfo.ProjectClone != 0 ||
+                   projectInfo.ProjectGen != 0);
         }
 
         /// <summary>

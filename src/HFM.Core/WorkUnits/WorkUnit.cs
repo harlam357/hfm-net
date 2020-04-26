@@ -201,7 +201,7 @@ namespace HFM.Core.WorkUnits
             }
 
             // if the Projects are known
-            if (!this.ProjectIsUnknown() && !other.ProjectIsUnknown())
+            if (this.HasProject() && other.HasProject())
             {
                 // equals the Project and Download Time
                 if (this.EqualsProject(other) && DownloadTime.Equals(other.DownloadTime))

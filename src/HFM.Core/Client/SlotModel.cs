@@ -302,7 +302,7 @@ namespace HFM.Core.Client
         public static void FindDuplicateProjects(ICollection<SlotModel> slots)
         {
             var duplicates = slots.GroupBy(x => x.WorkUnitModel.Data.ToShortProjectString())
-                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.Data.ProjectIsKnown())
+                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.Data.HasProject())
                 .Select(g => g.Key)
                 .ToList();
 
