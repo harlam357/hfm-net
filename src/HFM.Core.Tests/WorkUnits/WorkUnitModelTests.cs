@@ -17,7 +17,7 @@ namespace HFM.Core.WorkUnits
         #region DownloadTime
 
         [Test]
-        public void DownloadTimeTest1()
+        public void WorkUnitModel_DownloadTimeTest1()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -27,7 +27,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DownloadTimeTest2()
+        public void WorkUnitModel_DownloadTimeTest2()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -37,7 +37,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DownloadTimeTest3()
+        public void WorkUnitModel_DownloadTimeTest3()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -47,7 +47,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DownloadTimeTest4()
+        public void WorkUnitModel_DownloadTimeTest4()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -57,7 +57,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DownloadTimeTest5()
+        public void WorkUnitModel_DownloadTimeTest5()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -71,7 +71,7 @@ namespace HFM.Core.WorkUnits
         #region DueTime
 
         [Test]
-        public void DueTimeTest1()
+        public void WorkUnitModel_DueTimeTest1()
         {
             var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -81,7 +81,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DueTimeTest2()
+        public void WorkUnitModel_DueTimeTest2()
         {
             var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -91,7 +91,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DueTimeTest3()
+        public void WorkUnitModel_DueTimeTest3()
         {
             var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -101,7 +101,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DueTimeTest4()
+        public void WorkUnitModel_DueTimeTest4()
         {
             var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -111,7 +111,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void DueTimeTest5()
+        public void WorkUnitModel_DueTimeTest5()
         {
             var unitInfo = new WorkUnit {DueTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -125,7 +125,7 @@ namespace HFM.Core.WorkUnits
         #region FinishedTime
 
         [Test]
-        public void FinishedTimeTest1()
+        public void WorkUnitModel_FinishedTimeTest1()
         {
             var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -135,7 +135,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinishedTimeTest2()
+        public void WorkUnitModel_FinishedTimeTest2()
         {
             var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -145,7 +145,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinishedTimeTest3()
+        public void WorkUnitModel_FinishedTimeTest3()
         {
             var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -155,7 +155,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinishedTimeTest4()
+        public void WorkUnitModel_FinishedTimeTest4()
         {
             var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -165,7 +165,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinishedTimeTest5()
+        public void WorkUnitModel_FinishedTimeTest5()
         {
             var unitInfo = new WorkUnit {FinishedTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -179,7 +179,7 @@ namespace HFM.Core.WorkUnits
         #region PreferredDeadline
 
         [Test]
-        public void PreferredDeadlineTest1()
+        public void WorkUnitModel_PreferredDeadlineTest1()
         {
             var protein = new Protein {ProjectNumber = 1, PreferredDays = 3};
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
@@ -190,7 +190,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PreferredDeadlineTest2()
+        public void WorkUnitModel_PreferredDeadlineTest2()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5))};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -202,7 +202,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PreferredDeadlineTest3()
+        public void WorkUnitModel_PreferredDeadlineTest3()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -212,7 +212,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PreferredDeadlineTest4()
+        public void WorkUnitModel_PreferredDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
             var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
@@ -224,7 +224,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PreferredDeadlineTest5()
+        public void WorkUnitModel_PreferredDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
             var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
@@ -240,7 +240,7 @@ namespace HFM.Core.WorkUnits
         #region FinalDeadline
 
         [Test]
-        public void FinalDeadlineTest1()
+        public void WorkUnitModel_FinalDeadlineTest1()
         {
             var protein = new Protein {ProjectNumber = 1, MaximumDays = 6};
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
@@ -251,7 +251,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinalDeadlineTest2()
+        public void WorkUnitModel_FinalDeadlineTest2()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -261,7 +261,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinalDeadlineTest3()
+        public void WorkUnitModel_FinalDeadlineTest3()
         {
             var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
@@ -271,7 +271,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinalDeadlineTest4()
+        public void WorkUnitModel_FinalDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
             var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
@@ -283,7 +283,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FinalDeadlineTest5()
+        public void WorkUnitModel_FinalDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
             var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
@@ -299,7 +299,7 @@ namespace HFM.Core.WorkUnits
         #region CurrentProtein
 
         [Test]
-        public void CurrentProteinTest1()
+        public void WorkUnitModel_CurrentProteinTest1()
         {
             var protein = new Protein { ProjectNumber = 2669 };
             var workUnitModel = CreateWorkUnitModel(protein, new WorkUnit());
@@ -310,7 +310,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void CurrentProteinTest2()
+        public void WorkUnitModel_CurrentProteinTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             Assert.IsTrue(WorkUnitModel.ProteinIsUnknown(workUnitModel.CurrentProtein));
@@ -321,7 +321,7 @@ namespace HFM.Core.WorkUnits
         #region Frame and Percent Complete
 
         [Test]
-        public void FramesCompleteTest1()
+        public void WorkUnitModel_FramesCompleteTest1()
         {
             var unitInfo = new WorkUnit();
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -335,7 +335,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FramesCompleteTest2()
+        public void WorkUnitModel_FramesCompleteTest2()
         {
             var unitInfo = new WorkUnit();
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -349,7 +349,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FramesCompleteTest3()
+        public void WorkUnitModel_FramesCompleteTest3()
         {
             var unitInfo = new WorkUnit();
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -363,7 +363,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void FramesCompleteTest4()
+        public void WorkUnitModel_FramesCompleteTest4()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -373,7 +373,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PercentCompleteTest1()
+        public void WorkUnitModel_PercentCompleteTest1()
         {
             var unitInfo = new WorkUnit();
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -387,7 +387,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PercentCompleteTest2()
+        public void WorkUnitModel_PercentCompleteTest2()
         {
             var protein = new Protein { Frames = 200 };
             var unitInfo = new WorkUnit();
@@ -406,7 +406,7 @@ namespace HFM.Core.WorkUnits
         #region PerSectionTests
 
         [Test]
-        public void PerUnitDownloadTest1()
+        public void WorkUnitModel_PerUnitDownloadTest1()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
@@ -427,7 +427,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerUnitDownloadTest2()
+        public void WorkUnitModel_PerUnitDownloadTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -439,7 +439,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerUnitDownloadTest3()
+        public void WorkUnitModel_PerUnitDownloadTest3()
         {
             var unitInfo = new WorkUnit { FramesObserved = 4 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -458,7 +458,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerUnitDownloadTest4()
+        public void WorkUnitModel_PerUnitDownloadTest4()
         {
             var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -474,7 +474,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerAllSectionsTest1()
+        public void WorkUnitModel_PerAllSectionsTest1()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { FramesObserved = 5 };
@@ -495,7 +495,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerAllSectionsTest2()
+        public void WorkUnitModel_PerAllSectionsTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -507,7 +507,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerThreeSectionsTest1()
+        public void WorkUnitModel_PerThreeSectionsTest1()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { FramesObserved = 5 };
@@ -528,7 +528,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerThreeSectionsTest2()
+        public void WorkUnitModel_PerThreeSectionsTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -540,7 +540,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerLastSectionTest1()
+        public void WorkUnitModel_PerLastSectionTest1()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { FramesObserved = 5 };
@@ -561,7 +561,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void PerLastSectionTest2()
+        public void WorkUnitModel_PerLastSectionTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -573,7 +573,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest1()
+        public void WorkUnitModel_TimePerSectionTest1()
         {
             var unitInfo = new WorkUnit { FramesObserved = 5 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -592,7 +592,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest2()
+        public void WorkUnitModel_TimePerSectionTest2()
         {
             var unitInfo = new WorkUnit { FramesObserved = 5 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -611,7 +611,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest3()
+        public void WorkUnitModel_TimePerSectionTest3()
         {
             var unitInfo = new WorkUnit { FramesObserved = 5 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -630,7 +630,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest4()
+        public void WorkUnitModel_TimePerSectionTest4()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
@@ -650,7 +650,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest5()
+        public void WorkUnitModel_TimePerSectionTest5()
         {
             var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
             var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
@@ -662,7 +662,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void TimePerSectionTest6()
+        public void WorkUnitModel_TimePerSectionTest6()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;
@@ -675,7 +675,7 @@ namespace HFM.Core.WorkUnits
         #region Credit, UPD, PPD
 
         [Test]
-        public void CreditUPDAndPPDTest1()
+        public void WorkUnitModel_CreditUPDAndPPDTest1()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
             var utcNow = DateTime.UtcNow;
@@ -696,7 +696,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void CreditUPDAndPPDTest2()
+        public void WorkUnitModel_CreditUPDAndPPDTest2()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
             var utcNow = DateTime.UtcNow;
@@ -717,7 +717,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void CreditUPDAndPPDTest3()
+        public void WorkUnitModel_CreditUPDAndPPDTest3()
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var unitInfo = new WorkUnit { FramesObserved = 4 };
@@ -737,7 +737,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void CreditUPDAndPPDTest4()
+        public void WorkUnitModel_CreditUPDAndPPDTest4()
         {
             var unitInfo = new WorkUnit { FramesObserved = 4 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -760,7 +760,7 @@ namespace HFM.Core.WorkUnits
         #region ETA
 
         [Test]
-        public void EtaTest1()
+        public void WorkUnitModel_EtaTest1()
         {
             var unitInfo = new WorkUnit { FramesObserved = 4 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -777,7 +777,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void EtaTest2()
+        public void WorkUnitModel_EtaTest2()
         {
             var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, FramesObserved = 4 };
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -799,7 +799,7 @@ namespace HFM.Core.WorkUnits
         #region AllFramesCompleted
 
         [Test]
-        public void AllFramesCompleted1()
+        public void WorkUnitModel_AllFramesCompleted1()
         {
             var unitInfo = new WorkUnit();
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(CreateFrameData(TimeSpan.Zero, 100));
@@ -812,7 +812,7 @@ namespace HFM.Core.WorkUnits
         }
 
         [Test]
-        public void AllFramesCompleted2()
+        public void WorkUnitModel_AllFramesCompleted2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
             workUnitModel.UtcOffsetIsZero = false;

@@ -11,6 +11,9 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
+        /// <summary>
+        /// Returns a shallow copy of this <see cref="WorkUnit"/>.
+        /// </summary>
         public WorkUnit Copy()
         {
             var u = new WorkUnit
@@ -32,7 +35,6 @@ namespace HFM.Core.WorkUnits
                 ProteinTag = ProteinTag,
                 UnitResult = UnitResult,
                 FramesObserved = FramesObserved,
-                // TODO: LogLines is NOT a clone
                 LogLines = LogLines,
                 CoreID = CoreID,
                 QueueIndex = QueueIndex
