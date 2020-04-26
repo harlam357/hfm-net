@@ -133,7 +133,7 @@
     <Compile Include="Data\WorkUnitQueryTests.cs" />
     <Compile Include="WorkUnits\WorkUnitTests.cs" />
     <Compile Include="Client\ClientConfigurationTests.cs" />
-    <Compile Include="Client\FahClientDataAggregatorTests.cs" />
+    <Compile Include="Client\FahClientMessageAggregatorTests.cs" />
     <Compile Include="Client\FahClientTests.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="SlotXml\WebArtifactTests.cs" />

@@ -12,21 +12,20 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
-    // TODO: Rename to FahClientMessageAggregator
-    internal class FahClientDataAggregator
+    internal class FahClientMessageAggregator
     {
         public IFahClient FahClient { get; }
         public SlotModel SlotModel { get; }
 
-        public FahClientDataAggregator(IFahClient fahClient, SlotModel slotModel)
+        public FahClientMessageAggregator(IFahClient fahClient, SlotModel slotModel)
         {
             FahClient = fahClient;
             SlotModel = slotModel;
         }
 
-        public DataAggregatorResult AggregateData()
+        public ClientMessageAggregatorResult AggregateData()
         {
-            var result = new DataAggregatorResult();
+            var result = new ClientMessageAggregatorResult();
             result.CurrentUnitIndex = -1;
 
             ClientRun clientRun = FahClient.Messages.Log.ClientRuns.Last();
@@ -126,7 +125,7 @@ namespace HFM.Core.Client
                 : info.System.CPU;
         }
 
-        private void BuildWorkUnits(DataAggregatorResult result,
+        private void BuildWorkUnits(ClientMessageAggregatorResult result,
                                     SlotRun slotRun,
                                     ICollection<Unit> unitCollection,
                                     Options options,

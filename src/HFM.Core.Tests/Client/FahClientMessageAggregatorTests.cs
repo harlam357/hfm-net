@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 
 using HFM.Client;
-using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Log.FahClient;
 
 namespace HFM.Core.Client
 {
-    // TODO: Rename to FahClientMessageAggregator
     [TestFixture]
-    public class FahClientDataAggregatorTests
+    public class FahClientMessageAggregatorTests
     {
         // ReSharper disable InconsistentNaming
 
@@ -67,7 +65,7 @@ namespace HFM.Core.Client
                     File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
-            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
             var result = aggregator.AggregateData();
@@ -164,7 +162,7 @@ namespace HFM.Core.Client
                     File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
-            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
             var result = aggregator.AggregateData();
@@ -256,7 +254,7 @@ namespace HFM.Core.Client
                     File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 1 };
-            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
             var result = aggregator.AggregateData();
@@ -348,7 +346,7 @@ namespace HFM.Core.Client
                     File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
-            var aggregator = new FahClientDataAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
             var result = aggregator.AggregateData();

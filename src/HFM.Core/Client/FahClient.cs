@@ -249,9 +249,8 @@ namespace HFM.Core.Client
                     // Re-Init Slot Level Members Before Processing
                     slotModel.Initialize();
 
-                    // Run the Aggregator
-                    var dataAggregator = new FahClientDataAggregator(this, slotModel);
-                    DataAggregatorResult result = dataAggregator.AggregateData();
+                    var aggregator = new FahClientMessageAggregator(this, slotModel);
+                    var result = aggregator.AggregateData();
                     PopulateRunLevelData(result, Messages.Info, slotModel);
 
                     slotModel.WorkUnitInfos = result.WorkUnitInfos;
@@ -327,7 +326,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(DataAggregatorResult result, Info info, SlotModel slotModel)
+        private void PopulateRunLevelData(ClientMessageAggregatorResult result, Info info, SlotModel slotModel)
         {
             Debug.Assert(slotModel != null);
 
