@@ -17,11 +17,6 @@ namespace HFM.Core.WorkUnits
 
         public Protein CurrentProtein { get; set; } = new Protein();
 
-        public double ClientTimeOffset { get; set; }
-
-        // TODO: Remove WorkUnitModel.UtcOffsetIsZero
-        public bool UtcOffsetIsZero { get; set; }
-
         public WorkUnitModel(SlotModel slotModel) : this(slotModel, new WorkUnit())
         {
 
@@ -54,10 +49,7 @@ namespace HFM.Core.WorkUnits
         {
             if (dateTime.IsMinValue()) { return dateTime; }
 
-            var offset = TimeSpan.FromMinutes(ClientTimeOffset);
-            return UtcOffsetIsZero
-                      ? dateTime.Subtract(offset)
-                      : dateTime.ToLocalTime().Subtract(offset);
+            return dateTime.ToLocalTime();
         }
 
         /// <summary>

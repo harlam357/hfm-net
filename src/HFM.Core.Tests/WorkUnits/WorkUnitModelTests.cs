@@ -19,50 +19,16 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_DownloadTimeTest1()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime(), workUnitModel.DownloadTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DownloadTimeTest2()
-        {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 60;
-            Assert.AreEqual(unitInfo.DownloadTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.DownloadTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DownloadTimeTest3()
-        {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = 0;
-            Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.DownloadTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DownloadTimeTest4()
-        {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = -60;
-            Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.DownloadTime);
         }
 
         [Test]
         public void WorkUnitModel_DownloadTimeTest5()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.DownloadTime);
         }
 
@@ -73,50 +39,16 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_DueTimeTest1()
         {
-            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
+            var unitInfo = new WorkUnit { DueTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DueTime.ToLocalTime(), workUnitModel.DueTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DueTimeTest2()
-        {
-            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 60;
-            Assert.AreEqual(unitInfo.DueTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.DueTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DueTimeTest3()
-        {
-            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = 0;
-            Assert.AreEqual(unitInfo.DueTime, workUnitModel.DueTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_DueTimeTest4()
-        {
-            var unitInfo = new WorkUnit {DueTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = -60;
-            Assert.AreEqual(unitInfo.DueTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.DueTime);
         }
 
         [Test]
         public void WorkUnitModel_DueTimeTest5()
         {
-            var unitInfo = new WorkUnit {DueTime = DateTime.MinValue};
+            var unitInfo = new WorkUnit { DueTime = DateTime.MinValue };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DueTime, workUnitModel.DueTime);
         }
 
@@ -127,50 +59,16 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_FinishedTimeTest1()
         {
-            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
+            var unitInfo = new WorkUnit { FinishedTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime(), workUnitModel.FinishedTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_FinishedTimeTest2()
-        {
-            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 60;
-            Assert.AreEqual(unitInfo.FinishedTime.ToLocalTime().Subtract(TimeSpan.FromMinutes(60)), workUnitModel.FinishedTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_FinishedTimeTest3()
-        {
-            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = 0;
-            Assert.AreEqual(unitInfo.FinishedTime, workUnitModel.FinishedTime);
-        }
-
-        [Test]
-        public void WorkUnitModel_FinishedTimeTest4()
-        {
-            var unitInfo = new WorkUnit {FinishedTime = DateTime.UtcNow};
-            var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = -60;
-            Assert.AreEqual(unitInfo.FinishedTime.Add(TimeSpan.FromMinutes(60)), workUnitModel.FinishedTime);
         }
 
         [Test]
         public void WorkUnitModel_FinishedTimeTest5()
         {
-            var unitInfo = new WorkUnit {FinishedTime = DateTime.MinValue};
+            var unitInfo = new WorkUnit { FinishedTime = DateTime.MinValue };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.FinishedTime, workUnitModel.FinishedTime);
         }
 
@@ -181,33 +79,27 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_PreferredDeadlineTest1()
         {
-            var protein = new Protein {ProjectNumber = 1, PreferredDays = 3};
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
+            var protein = new Protein { ProjectNumber = 1, PreferredDays = 3 };
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(3).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         [Test]
         public void WorkUnitModel_PreferredDeadlineTest2()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5))};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow, DueTime = DateTime.UtcNow.Add(TimeSpan.FromDays(5)) };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
-            // PreferredDeadline comes from DueTime when Protein.IsUnknown
+            // PreferredDeadline comes from DueTime when ProteinIsUnknown
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(5).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
         [Test]
         public void WorkUnitModel_PreferredDeadlineTest3()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.PreferredDeadline);
         }
 
@@ -215,11 +107,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PreferredDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
-            var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
-            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 11, 1)};
+            var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
+            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
@@ -227,11 +117,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PreferredDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
-            var protein = new Protein {ProjectNumber = 1, PreferredDays = 7};
-            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 3, 9)};
+            var protein = new Protein { ProjectNumber = 1, PreferredDays = 7 };
+            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.PreferredDeadline);
         }
 
@@ -242,31 +130,25 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_FinalDeadlineTest1()
         {
-            var protein = new Protein {ProjectNumber = 1, MaximumDays = 6};
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
+            var protein = new Protein { ProjectNumber = 1, MaximumDays = 6 };
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(6).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
         [Test]
         public void WorkUnitModel_FinalDeadlineTest2()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.UtcNow};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.UtcNow };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(DateTime.MinValue, workUnitModel.FinalDeadline);
         }
 
         [Test]
         public void WorkUnitModel_FinalDeadlineTest3()
         {
-            var unitInfo = new WorkUnit {DownloadTime = DateTime.MinValue};
+            var unitInfo = new WorkUnit { DownloadTime = DateTime.MinValue };
             var workUnitModel = CreateWorkUnitModel(new Protein(), unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime, workUnitModel.FinalDeadline);
         }
 
@@ -274,11 +156,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FinalDeadlineTest4()
         {
             // daylight savings time test (in DST => Standard Time)
-            var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
-            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 11, 1)};
+            var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
+            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 11, 1) };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
@@ -286,11 +166,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FinalDeadlineTest5()
         {
             // daylight savings time test (in Standard Time => DST)
-            var protein = new Protein {ProjectNumber = 1, MaximumDays = 7};
-            var unitInfo = new WorkUnit {DownloadTime = new DateTime(2011, 3, 9)};
+            var protein = new Protein { ProjectNumber = 1, MaximumDays = 7 };
+            var unitInfo = new WorkUnit { DownloadTime = new DateTime(2011, 3, 9) };
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(unitInfo.DownloadTime.AddDays(7).ToLocalTime(), workUnitModel.FinalDeadline);
         }
 
@@ -303,8 +181,6 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 2669 };
             var workUnitModel = CreateWorkUnitModel(protein, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreSame(protein, workUnitModel.CurrentProtein);
         }
@@ -328,8 +204,6 @@ namespace HFM.Core.WorkUnits
                .With(new WorkUnitFrameData { ID = 1 });
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(1, workUnitModel.FramesComplete);
         }
@@ -342,8 +216,6 @@ namespace HFM.Core.WorkUnits
                .With(new WorkUnitFrameData { ID = -1 });
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.FramesComplete);
         }
@@ -356,8 +228,6 @@ namespace HFM.Core.WorkUnits
                .With(new WorkUnitFrameData { ID = 101 });
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(100, workUnitModel.FramesComplete);
         }
@@ -366,8 +236,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FramesCompleteTest4()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.FramesComplete);
         }
@@ -380,8 +248,6 @@ namespace HFM.Core.WorkUnits
                .With(new WorkUnitFrameData { ID = 5 });
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(5, workUnitModel.PercentComplete);
         }
@@ -395,8 +261,6 @@ namespace HFM.Core.WorkUnits
                .With(new WorkUnitFrameData { ID = 5 });
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(2, workUnitModel.PercentComplete);
         }
@@ -416,10 +280,8 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(5), 2),
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
-            unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
+            unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.ToLocalTime().Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(600, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(600), workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate));
@@ -430,8 +292,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerUnitDownloadTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate));
@@ -449,8 +309,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate));
@@ -465,8 +323,6 @@ namespace HFM.Core.WorkUnits
                .With(CreateFrameData(TimeSpan.Zero, -1));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate));
@@ -486,8 +342,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(360, workUnitModel.GetRawTime(PPDCalculation.AllFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(360), workUnitModel.GetFrameTime(PPDCalculation.AllFrames));
@@ -498,8 +352,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerAllSectionsTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.AllFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.AllFrames));
@@ -519,8 +371,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(376, workUnitModel.GetRawTime(PPDCalculation.LastThreeFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(376), workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames));
@@ -531,8 +381,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerThreeSectionsTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.LastThreeFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames));
@@ -552,8 +400,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(380, workUnitModel.GetRawTime(PPDCalculation.LastFrame));
             Assert.AreEqual(TimeSpan.FromSeconds(380), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
@@ -564,8 +410,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerLastSectionTest2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.LastFrame));
             Assert.AreEqual(TimeSpan.FromSeconds(0), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
@@ -584,8 +428,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(380, workUnitModel.GetRawTime(PPDCalculation.LastFrame));
             Assert.AreEqual(TimeSpan.FromSeconds(380), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
@@ -603,8 +445,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(376, workUnitModel.GetRawTime(PPDCalculation.LastThreeFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(376), workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames));
@@ -622,8 +462,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(new TimeSpan(0, 6, 20), 4));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(360, workUnitModel.GetRawTime(PPDCalculation.AllFrames));
             Assert.AreEqual(TimeSpan.FromSeconds(360), workUnitModel.GetFrameTime(PPDCalculation.AllFrames));
@@ -640,10 +478,8 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(5), 2),
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
-            unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
+            unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.ToLocalTime().Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = true;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(600, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
             Assert.AreEqual(TimeSpan.FromSeconds(600), workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate));
@@ -656,8 +492,7 @@ namespace HFM.Core.WorkUnits
             var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
             benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), 0)).IgnoreArguments().Return(benchmark);
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), benchmarkService);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
+            
             Assert.AreEqual(TimeSpan.FromMinutes(10), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
         }
 
@@ -665,8 +500,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_TimePerSectionTest6()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
             Assert.AreEqual(TimeSpan.Zero, workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
         }
 
@@ -687,8 +520,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(848.528, workUnitModel.GetCredit(SlotStatus.RunningNoFrameTimes, PPDCalculation.LastFrame, BonusCalculation.DownloadTime));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PPDCalculation.LastFrame));
@@ -708,8 +539,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(1897.367, workUnitModel.GetCredit(SlotStatus.Running, PPDCalculation.LastFrame, BonusCalculation.DownloadTime));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PPDCalculation.LastFrame));
@@ -728,8 +557,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(protein, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(100, workUnitModel.GetCredit(SlotStatus.Unknown, PPDCalculation.LastFrame, BonusCalculation.None));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PPDCalculation.LastFrame));
@@ -747,8 +574,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(0, workUnitModel.GetCredit(SlotStatus.Unknown, PPDCalculation.LastFrame, BonusCalculation.None));
             Assert.AreEqual(2.4, workUnitModel.GetUPD(PPDCalculation.LastFrame));
@@ -770,8 +595,6 @@ namespace HFM.Core.WorkUnits
                      CreateFrameData(TimeSpan.FromMinutes(6), 3));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(TimeSpan.FromMinutes(582), workUnitModel.GetEta(PPDCalculation.LastFrame));
         }
@@ -788,8 +611,6 @@ namespace HFM.Core.WorkUnits
             unitInfo.FrameData = frameDataDictionary;
             unitInfo.UnitRetrievalTime = unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.AreEqual(unitInfo.DownloadTime.Add(TimeSpan.FromMinutes(612)), workUnitModel.GetEtaDate(PPDCalculation.LastFrame));
         }
@@ -805,8 +626,6 @@ namespace HFM.Core.WorkUnits
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(CreateFrameData(TimeSpan.Zero, 100));
             unitInfo.FrameData = frameDataDictionary;
             var workUnitModel = CreateWorkUnitModel(null, unitInfo);
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
 
             Assert.IsTrue(workUnitModel.AllFramesCompleted);
         }
@@ -815,9 +634,6 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_AllFramesCompleted2()
         {
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit());
-            workUnitModel.UtcOffsetIsZero = false;
-            workUnitModel.ClientTimeOffset = 0;
-
             Assert.IsFalse(workUnitModel.AllFramesCompleted);
         }
 
