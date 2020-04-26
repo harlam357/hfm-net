@@ -332,6 +332,8 @@ namespace HFM.Core.Client
 
             if (info != null)
             {
+                // TODO: Surface client arguments?
+                //slotModel.Arguments = info.Client.Args;
                 slotModel.ClientVersion = info.Client.Version;
             }
             if (WorkUnitRepository.Connected)
