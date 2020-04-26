@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Query Parameters Class
- * Copyright (C) 2009-2013 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -185,8 +167,8 @@ namespace HFM.Core.Data
         private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitQueryParameter parameter)
         {
             string format = "[{0}] {1} @0";
-            if (parameter.Column.Equals(WorkUnitRowColumn.DownloadDateTime) ||
-                parameter.Column.Equals(WorkUnitRowColumn.CompletionDateTime))
+            if (parameter.Column.Equals(WorkUnitRowColumn.Assigned) ||
+                parameter.Column.Equals(WorkUnitRowColumn.Finished))
             {
                 format = "datetime([{0}]) {1} datetime(@0)";
             }
@@ -200,6 +182,8 @@ namespace HFM.Core.Data
         {
             { WorkUnitRowColumn.Name, "InstanceName" },
             { WorkUnitRowColumn.Path, "InstancePath" },
+            { WorkUnitRowColumn.Assigned, "DownloadDateTime" },
+            { WorkUnitRowColumn.Finished, "CompletionDateTime" },
             { WorkUnitRowColumn.Credit, "CalcCredit" },
         };
     }
@@ -308,8 +292,8 @@ namespace HFM.Core.Data
                 "Frames Completed",
                 "Frame Time (Seconds)",
                 "Unit Result",
-                "Download Date (UTC)",
-                "Completion Date (UTC)",
+                "Assigned (UTC)",
+                "Finished (UTC)",
                 "Work Unit Name",
                 "KFactor",
                 "Core Name",

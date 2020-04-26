@@ -19,7 +19,7 @@ namespace HFM.Core.Data
             var value = new List<WorkUnitRow>();
             value.Add(new WorkUnitRow());
             var serializer = new WorkUnitRowCsvFileSerializer();
-            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,DownloadDateTime,CompletionDateTime,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
+            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
             expected += Environment.NewLine;
             expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
             expected += Environment.NewLine;
@@ -42,7 +42,7 @@ namespace HFM.Core.Data
             var value = new List<WorkUnitRow>();
             value.Add(new WorkUnitRow());
             var serializer = new WorkUnitRowCsvFileSerializer();
-            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,DownloadDateTime,CompletionDateTime,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
+            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
             expected += Environment.NewLine;
             expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
             expected += Environment.NewLine;

@@ -146,7 +146,7 @@ namespace HFM.Core.Client
             {
                 var projectInfo = unit.ToProjectInfo();
                 if (projectInfo.EqualsProject(currentWorkUnit) &&
-                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.DownloadTime))
+                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.Assigned))
                 {
                     foundCurrentUnitInfo = true;
                 }
@@ -237,7 +237,7 @@ namespace HFM.Core.Client
             // available with v6.
             if (IsTerminating(workUnit))
             {
-                workUnit.FinishedTime = DateTime.UtcNow;
+                workUnit.Finished = DateTime.UtcNow;
             }
         }
 
@@ -281,11 +281,9 @@ namespace HFM.Core.Client
 
             workUnit.QueueIndex = unit.ID.GetValueOrDefault();
 
-            /* DownloadTime (AssignedDateTime from HFM.Client API) */
-            workUnit.DownloadTime = unit.AssignedDateTime.GetValueOrDefault();
+            workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
 
-            /* DueTime (TimeoutDateTime from HFM.Client API) */
-            workUnit.DueTime = unit.TimeoutDateTime.GetValueOrDefault();
+            workUnit.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
 
             /* Project (R/C/G) */
             workUnit.ProjectID = unit.Project.GetValueOrDefault();

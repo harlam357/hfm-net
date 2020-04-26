@@ -213,7 +213,7 @@ namespace HFM.Core.Client
                 ? String.Empty
                 : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.WorkUnit.FoldingID, WorkUnitModel.WorkUnit.Team);
 
-        public DateTime DownloadTime => WorkUnitModel.DownloadTime;
+        public DateTime Assigned => WorkUnitModel.Assigned;
 
         public DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
 

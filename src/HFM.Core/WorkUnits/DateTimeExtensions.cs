@@ -10,7 +10,7 @@ namespace HFM.Core.WorkUnits
             return dateTime.Equals(DateTime.MinValue);
         }
 
-        internal static string ToStringOrEmpty(this DateTime dateTime)
+        public static string ToShortStringOrEmpty(this DateTime dateTime)
         {
             return ToStringOrEmpty(dateTime, $"{dateTime.ToShortDateString()} {dateTime.ToShortTimeString()}");
         }

@@ -245,8 +245,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            workUnit.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+            workUnit.Assigned = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            workUnit.Finished = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
@@ -289,8 +289,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(600), row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
-                Assert.AreEqual(new DateTime(2010, 1, 1), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2010, 1, 2), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2010, 1, 1), row.Assigned);
+                Assert.AreEqual(new DateTime(2010, 1, 2), row.Finished);
                 Assert.AreEqual("TestUnit1", row.WorkUnitName);
                 Assert.AreEqual(1.0, row.KFactor);
                 Assert.AreEqual("GRO-A3", row.Core);
@@ -319,8 +319,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2009, 5, 5);
-            workUnit.FinishedTime = new DateTime(2009, 5, 6);
+            workUnit.Assigned = new DateTime(2009, 5, 5);
+            workUnit.Finished = new DateTime(2009, 5, 6);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
@@ -363,8 +363,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(56, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(1000), row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
-                Assert.AreEqual(new DateTime(2009, 5, 5), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2009, 5, 6), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2009, 5, 5), row.Assigned);
+                Assert.AreEqual(new DateTime(2009, 5, 6), row.Finished);
                 Assert.AreEqual("TestUnit2", row.WorkUnitName);
                 Assert.AreEqual(2.0, row.KFactor);
                 Assert.AreEqual("GRO-A4", row.Core);
@@ -393,8 +393,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2010, 2, 2);
-            workUnit.FinishedTime = new DateTime(2010, 2, 3);
+            workUnit.Assigned = new DateTime(2010, 2, 2);
+            workUnit.Finished = new DateTime(2010, 2, 3);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
@@ -437,8 +437,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
-                Assert.AreEqual(new DateTime(2010, 2, 2), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2010, 2, 3), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2010, 2, 2), row.Assigned);
+                Assert.AreEqual(new DateTime(2010, 2, 3), row.Finished);
                 Assert.AreEqual("TestUnit3", row.WorkUnitName);
                 Assert.AreEqual(3.0, row.KFactor);
                 Assert.AreEqual("GRO-A5", row.Core);
@@ -467,8 +467,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2012, 1, 2);
-            workUnit.FinishedTime = new DateTime(2012, 1, 5);
+            workUnit.Assigned = new DateTime(2012, 1, 2);
+            workUnit.Finished = new DateTime(2012, 1, 5);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
@@ -511,8 +511,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
-                Assert.AreEqual(new DateTime(2012, 1, 2), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2012, 1, 5), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2012, 1, 2), row.Assigned);
+                Assert.AreEqual(new DateTime(2012, 1, 5), row.Finished);
                 Assert.AreEqual("TestUnit4", row.WorkUnitName);
                 Assert.AreEqual(4.0, row.KFactor);
                 Assert.AreEqual("OPENMMGPU", row.Core);

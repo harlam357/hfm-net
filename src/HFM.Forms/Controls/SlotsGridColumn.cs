@@ -31,8 +31,8 @@ namespace HFM.Forms.Controls
                 new SlotsGridInt32Column("Completed", "Completed", nameof(SlotModel.Completed)),
                 new SlotsGridInt32Column("Failed", "Failed", nameof(SlotModel.Failed)),
                 new SlotsGridUsernameColumn(),
-                new SlotsGridDownloadColumn(),
-                new SlotsGridDeadlineColumn()
+                new SlotsGridAssignedColumn(),
+                new SlotsGridTimeoutColumn()
             })
         {
 
@@ -486,9 +486,9 @@ namespace HFM.Forms.Controls
         }
     }
 
-    public class SlotsGridDownloadColumn : SlotsGridColumn
+    public class SlotsGridAssignedColumn : SlotsGridColumn
     {
-        public SlotsGridDownloadColumn() : base("Download", "Download Time", nameof(SlotModel.DownloadTime))
+        public SlotsGridAssignedColumn() : base("Assigned", "Assigned", nameof(SlotModel.Assigned))
         {
 
         }
@@ -514,13 +514,14 @@ namespace HFM.Forms.Controls
                 return String.Format(format, timeSpan.Days, timeSpan.Hours, timeSpan.Minutes);
             }
 
-            return base.OnGetCellText(value, slotModel);
+            return dateTime.ToShortStringOrEmpty();
         }
     }
 
-    public class SlotsGridDeadlineColumn : SlotsGridColumn
+    public class SlotsGridTimeoutColumn : SlotsGridColumn
     {
-        public SlotsGridDeadlineColumn() : base("Deadline", "Deadline", nameof(SlotModel.PreferredDeadline))
+        // NOTE: still using HFM calculated PreferredDeadline value
+        public SlotsGridTimeoutColumn() : base("Timeout", "Timeout", nameof(SlotModel.PreferredDeadline))
         {
 
         }
@@ -546,7 +547,7 @@ namespace HFM.Forms.Controls
                 return String.Format(format, timeSpan.Days, timeSpan.Hours, timeSpan.Minutes);
             }
 
-            return base.OnGetCellText(value, slotModel);
+            return dateTime.ToShortStringOrEmpty();
         }
     }
 }

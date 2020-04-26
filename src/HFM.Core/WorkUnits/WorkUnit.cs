@@ -22,10 +22,10 @@ namespace HFM.Core.WorkUnits
                 FoldingID = FoldingID,
                 Team = Team,
                 SlotType = SlotType,
-                DownloadTime = DownloadTime,
-                DueTime = DueTime,
+                Assigned = Assigned,
+                Timeout = Timeout,
                 UnitStartTimeStamp = UnitStartTimeStamp,
-                FinishedTime = FinishedTime,
+                Finished = Finished,
                 CoreVersion = CoreVersion,
                 ProjectID = ProjectID,
                 ProjectRun = ProjectRun,
@@ -65,14 +65,14 @@ namespace HFM.Core.WorkUnits
         public SlotType SlotType { get; set; }
 
         /// <summary>
-        /// Date/time the unit was downloaded
+        /// Gets or sets the work unit assigned date and time.
         /// </summary>
-        public DateTime DownloadTime { get; set; }
+        public DateTime Assigned { get; set; }
 
         /// <summary>
-        /// Date/time the unit is due (preferred deadline)
+        /// Gets or sets the work unit timeout date and time.
         /// </summary>
-        public DateTime DueTime { get; set; }
+        public DateTime Timeout { get; set; }
 
         /// <summary>
         /// Unit Start Time Stamp
@@ -80,9 +80,9 @@ namespace HFM.Core.WorkUnits
         public TimeSpan UnitStartTimeStamp { get; set; }
 
         /// <summary>
-        /// Date/time the unit finished
+        /// Gets or sets the work unit finished date and time.
         /// </summary>
-        public DateTime FinishedTime { get; set; }
+        public DateTime Finished { get; set; }
 
         /// <summary>
         /// Core Version Number
@@ -204,8 +204,8 @@ namespace HFM.Core.WorkUnits
             // if the Projects are known
             if (this.HasProject() && other.HasProject())
             {
-                // equals the Project and Download Time
-                if (this.EqualsProject(other) && DownloadTime.Equals(other.DownloadTime))
+                // equals the Project and Assigned
+                if (this.EqualsProject(other) && Assigned.Equals(other.Assigned))
                 {
                     return true;
                 }

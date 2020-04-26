@@ -31,21 +31,21 @@ namespace HFM.Core.WorkUnits
         #region Unit Level Members
 
         /// <summary>
-        /// Date/time the unit was downloaded
+        /// Gets the work unit assigned date and time (Local).
         /// </summary>
-        public DateTime DownloadTime => GetTime(WorkUnit.DownloadTime);
+        public DateTime Assigned => GetTime(WorkUnit.Assigned);
 
         /// <summary>
-        /// Date/time the unit is due (preferred deadline)
+        /// Gets the work unit timeout date and time (Local).
         /// </summary>
-        public DateTime DueTime => GetTime(WorkUnit.DueTime);
+        public DateTime Timeout => GetTime(WorkUnit.Timeout);
 
         /// <summary>
-        /// Date/time the unit finished
+        /// Gets the work unit finished date and time (Local).
         /// </summary>
-        public DateTime FinishedTime => GetTime(WorkUnit.FinishedTime);
+        public DateTime Finished => GetTime(WorkUnit.Finished);
 
-        private DateTime GetTime(DateTime dateTime)
+        private static DateTime GetTime(DateTime dateTime)
         {
             if (dateTime.IsMinValue()) { return dateTime; }
 
@@ -59,10 +59,10 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (WorkUnit.DownloadTime.IsMinValue()) return WorkUnit.DownloadTime;
+                if (WorkUnit.Assigned.IsMinValue()) return WorkUnit.Assigned;
 
                 return ProteinIsUnknown(CurrentProtein)
-                          ? DueTime
+                          ? Timeout
                           : AdjustDeadlineForDaylightSavings(CurrentProtein.PreferredDays);
             }
         }
@@ -74,7 +74,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (WorkUnit.DownloadTime.IsMinValue()) return WorkUnit.DownloadTime;
+                if (WorkUnit.Assigned.IsMinValue()) return WorkUnit.Assigned;
 
                 return ProteinIsUnknown(CurrentProtein)
                           ? DateTime.MinValue
@@ -84,10 +84,10 @@ namespace HFM.Core.WorkUnits
 
         private DateTime AdjustDeadlineForDaylightSavings(double days)
         {
-            DateTime deadline = DownloadTime.AddDays(days);
+            DateTime deadline = Assigned.AddDays(days);
 
             // download time is DST
-            if (DownloadTime.IsDaylightSavingTime())
+            if (Assigned.IsDaylightSavingTime())
             {
                 if (!deadline.IsDaylightSavingTime())
                 {
@@ -161,10 +161,10 @@ namespace HFM.Core.WorkUnits
             if (WorkUnit.CurrentFrame == null) return 0;
 
             // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.IsMinValue() || WorkUnit.CurrentFrame.ID <= 0) { return 0; }
+            if (Assigned.IsMinValue() || WorkUnit.CurrentFrame.ID <= 0) { return 0; }
 
             // Issue 92
-            TimeSpan timeSinceUnitDownload = WorkUnit.UnitRetrievalTime.Subtract(DownloadTime);
+            TimeSpan timeSinceUnitDownload = WorkUnit.UnitRetrievalTime.Subtract(Assigned);
             return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / WorkUnit.CurrentFrame.ID);
         }
 
@@ -245,13 +245,13 @@ namespace HFM.Core.WorkUnits
 
         private TimeSpan GetUnitTimeByDownloadTime(TimeSpan frameTime)
         {
-            if (DownloadTime.IsMinValue())
+            if (Assigned.IsMinValue())
             {
                 return TimeSpan.Zero;
             }
-            if (!FinishedTime.IsMinValue())
+            if (!Finished.IsMinValue())
             {
-                return FinishedTime.Subtract(DownloadTime);
+                return Finished.Subtract(Assigned);
             }
 
             // If ETA is Zero and AllFramesAreCompleted == false, the Unit Time
@@ -263,7 +263,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.Zero;
             }
 
-            return WorkUnit.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
+            return WorkUnit.UnitRetrievalTime.Add(eta).Subtract(Assigned);
         }
 
         private TimeSpan GetUnitTimeByFrameTime(TimeSpan frameTime)

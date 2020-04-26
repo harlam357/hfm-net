@@ -261,8 +261,8 @@ namespace HFM.Core.Data
         private static bool ValidateWorkUnit(WorkUnit workUnit)
         {
             return workUnit.HasProject() &&
-                   !workUnit.DownloadTime.IsMinValue() &&
-                   !workUnit.FinishedTime.IsMinValue();
+                   !workUnit.Assigned.IsMinValue() &&
+                   !workUnit.Finished.IsMinValue();
         }
 
         private bool WorkUnitExists(WorkUnit workUnit)
@@ -278,7 +278,7 @@ namespace HFM.Core.Data
                 .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, workUnit.ProjectRun)
                 .AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, workUnit.ProjectClone)
                 .AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, workUnit.ProjectGen)
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, workUnit.DownloadTime);
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Equal, workUnit.Assigned);
         }
 
         #endregion
@@ -404,15 +404,15 @@ namespace HFM.Core.Data
             return Count(clientName, false, clientStartTime);
         }
 
-        private long Count(string clientName, bool completed, DateTime? clientStartTime)
+        private long Count(string clientName, bool finished, DateTime? clientStartTime)
         {
             var query = new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, clientName)
-                .AddParameter(WorkUnitRowColumn.Result, completed ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
+                .AddParameter(WorkUnitRowColumn.Result, finished ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {
-                query.AddParameter(completed ? WorkUnitRowColumn.CompletionDateTime : WorkUnitRowColumn.DownloadDateTime,
+                query.AddParameter(finished ? WorkUnitRowColumn.Finished : WorkUnitRowColumn.Assigned,
                     WorkUnitQueryOperator.GreaterThan, clientStartTime.Value);
             }
 

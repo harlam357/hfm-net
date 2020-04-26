@@ -20,10 +20,10 @@ namespace HFM.Core.WorkUnits
          Assert.IsNull(workUnit.FoldingID);
          Assert.AreEqual(0, workUnit.Team);
          Assert.AreEqual(SlotType.Unknown, workUnit.SlotType);
-         Assert.AreEqual(DateTime.MinValue, workUnit.DownloadTime);
-         Assert.AreEqual(DateTime.MinValue, workUnit.DueTime);
+         Assert.AreEqual(DateTime.MinValue, workUnit.Assigned);
+         Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
          Assert.AreEqual(TimeSpan.Zero, workUnit.UnitStartTimeStamp);
-         Assert.AreEqual(DateTime.MinValue, workUnit.FinishedTime);
+         Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
          Assert.AreEqual(0.0f, workUnit.CoreVersion);
          Assert.AreEqual(0, workUnit.ProjectID);
          Assert.AreEqual(0, workUnit.ProjectRun);

@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Work Unit History UI Form
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -180,8 +162,8 @@ namespace HFM.Forms
         {
             // do this manually... with a ton of items in the grid
             // this can take quite a while... should limit it to
-            // the visible entries if posssible... if not then some
-            // set number like 100 entires.
+            // the visible entries if possible... if not then some
+            // set number like 100 entries.
             dataGridView1.AutoResizeColumns();
         }
 
@@ -270,10 +252,10 @@ namespace HFM.Forms
             dataGridView1.Columns.Add(WorkUnitRowColumn.PPD.ToString(), names[(int)WorkUnitRowColumn.PPD]);
             dataGridView1.Columns[WorkUnitRowColumn.PPD.ToString()].DataPropertyName = WorkUnitRowColumn.PPD.ToString();
             dataGridView1.Columns[WorkUnitRowColumn.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dataGridView1.Columns.Add(WorkUnitRowColumn.DownloadDateTime.ToString(), names[(int)WorkUnitRowColumn.DownloadDateTime]);
-            dataGridView1.Columns[WorkUnitRowColumn.DownloadDateTime.ToString()].DataPropertyName = WorkUnitRowColumn.DownloadDateTime.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.CompletionDateTime.ToString(), names[(int)WorkUnitRowColumn.CompletionDateTime]);
-            dataGridView1.Columns[WorkUnitRowColumn.CompletionDateTime.ToString()].DataPropertyName = WorkUnitRowColumn.CompletionDateTime.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.Assigned.ToString(), names[(int)WorkUnitRowColumn.Assigned]);
+            dataGridView1.Columns[WorkUnitRowColumn.Assigned.ToString()].DataPropertyName = WorkUnitRowColumn.Assigned.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.Finished.ToString(), names[(int)WorkUnitRowColumn.Finished]);
+            dataGridView1.Columns[WorkUnitRowColumn.Finished.ToString()].DataPropertyName = WorkUnitRowColumn.Finished.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.Credit.ToString(), names[(int)WorkUnitRowColumn.Credit]);
             dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DataPropertyName = WorkUnitRowColumn.Credit.ToString();
             dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };

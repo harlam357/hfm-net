@@ -126,8 +126,8 @@ namespace HFM.Forms
             SlotsGridColumns.Find("Completed").AddToDataGridView(dgv);
             SlotsGridColumns.Find("Failed").AddToDataGridView(dgv);
             SlotsGridColumns.Find("Username").AddToDataGridView(dgv);
-            SlotsGridColumns.Find("Download").AddToDataGridView(dgv);
-            SlotsGridColumns.Find("Deadline").AddToDataGridView(dgv);
+            SlotsGridColumns.Find("Assigned").AddToDataGridView(dgv);
+            SlotsGridColumns.Find("Timeout").AddToDataGridView(dgv);
             dgv.Columns.Add(String.Empty, String.Empty);
         }
     }
