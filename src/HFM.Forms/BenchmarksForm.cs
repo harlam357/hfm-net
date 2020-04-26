@@ -276,7 +276,7 @@ namespace HFM.Forms
 
             lines.Add(String.Empty);
             lines.Add(String.Format(" Name: {0}", benchmark.SlotIdentifier.Name));
-            lines.Add(String.Format(" Path: {0}", benchmark.SlotIdentifier.Client.ToPath()));
+            lines.Add(String.Format(" Path: {0}", benchmark.SlotIdentifier.Client.ToServerPortString()));
             lines.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
             lines.Add(String.Empty);
             lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + numberFormat + "} PPD",

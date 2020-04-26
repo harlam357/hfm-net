@@ -79,7 +79,7 @@ namespace HFM.Core.WorkUnits
         public void UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
         {
             SourceName = slotIdentifier.Client.Name;
-            SourcePath = slotIdentifier.Client.ToPath();
+            SourcePath = slotIdentifier.Client.ToServerPortString();
             SourceGuid = slotIdentifier.Client.Guid;
             SourceSlotID = slotIdentifier.SlotID;
         }
@@ -89,7 +89,7 @@ namespace HFM.Core.WorkUnits
             return new ProteinBenchmark
             {
                 SourceName = slotIdentifier.Client.Name,
-                SourcePath = slotIdentifier.Client.ToPath(),
+                SourcePath = slotIdentifier.Client.ToServerPortString(),
                 SourceGuid = slotIdentifier.Client.Guid,
                 SourceSlotID = slotIdentifier.SlotID
             };

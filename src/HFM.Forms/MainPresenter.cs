@@ -385,8 +385,7 @@ namespace HFM.Forms
         {
             if (_gridModel.SelectedSlot != null)
             {
-                // TODO: StatusLabelLeftText for v7 client
-                //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
+                _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString();
 
                 _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
                                        _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.SlotType);

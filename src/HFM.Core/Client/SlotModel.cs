@@ -75,15 +75,6 @@ namespace HFM.Core.Client
         /// </summary>
         public string Arguments { get; set; }
 
-        // TODO: Do something similar for v7
-        ///// <summary>
-        ///// Client Path and Arguments (If Arguments Exist)
-        ///// </summary>
-        //public string ClientPathAndArguments
-        //{
-        //   get { return Arguments.Length == 0 ? Settings.Path : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Settings.Path, Arguments); }
-        //}
-
         private int _machineId;
         /// <summary>
         /// Machine ID associated with this client

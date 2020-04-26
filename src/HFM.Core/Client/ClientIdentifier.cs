@@ -144,9 +144,7 @@ namespace HFM.Core.Client
             return left.CompareTo(right) >= 0;
         }
 
-        // TODO: make ToPath() internal
-        // for persistence that combines Server and Port as Legacy client "Path"
-        public string ToPath()
+        public string ToServerPortString()
         {
             return TcpPort.Validate(Port) 
                 ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port) 
