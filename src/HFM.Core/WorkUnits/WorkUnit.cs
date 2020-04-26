@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using HFM.Core.Client;
 using HFM.Log;
 
 namespace HFM.Core.WorkUnits
@@ -21,7 +20,6 @@ namespace HFM.Core.WorkUnits
                 UnitRetrievalTime = UnitRetrievalTime,
                 FoldingID = FoldingID,
                 Team = Team,
-                SlotType = SlotType,
                 Assigned = Assigned,
                 Timeout = Timeout,
                 UnitStartTimeStamp = UnitStartTimeStamp,
@@ -58,11 +56,6 @@ namespace HFM.Core.WorkUnits
         /// The Team number attached to this work unit
         /// </summary>
         public int Team { get; set; }
-
-        /// <summary>
-        /// Client Type for this work unit
-        /// </summary>
-        public SlotType SlotType { get; set; }
 
         /// <summary>
         /// Gets or sets the work unit assigned date and time.

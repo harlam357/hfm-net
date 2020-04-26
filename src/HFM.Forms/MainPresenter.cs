@@ -390,7 +390,7 @@ namespace HFM.Forms
                 _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString();
 
                 _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
-                                       _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.SlotType);
+                                       _gridModel.SelectedSlot.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
@@ -444,7 +444,7 @@ namespace HFM.Forms
             // clear the log text
             _view.LogFileViewer.SetNoLogLines();
             // clear the queue control
-            _view.SetWorkUnitInfos(null);
+            _view.SetWorkUnitInfos(null, SlotType.Unknown);
         }
 
         private void SetLogLines(SlotModel instance, IList<LogLine> logLines)

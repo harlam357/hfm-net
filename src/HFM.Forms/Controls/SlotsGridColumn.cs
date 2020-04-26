@@ -20,7 +20,7 @@ namespace HFM.Forms.Controls
                 new SlotsGridStatusColumn(),
                 new SlotsGridProgressColumn(),
                 new SlotsGridDefaultColumn("Name", "Name", nameof(SlotModel.Name)),
-                new SlotsGridDefaultColumn("SlotType", "Slot Type", nameof(SlotModel.SlotType)),
+                new SlotsGridDefaultColumn("SlotType", "Slot Type", nameof(SlotModel.SlotTypeString)),
                 new SlotsGridTPFColumn(),
                 new SlotsGridPPDColumn(),
                 new SlotsGridETAColumn(),

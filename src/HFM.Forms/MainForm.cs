@@ -95,8 +95,6 @@ namespace HFM.Forms
 
         void ShowNotifyToolTip(string text);
 
-        void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos);
-
         void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType);
 
         void RefreshControlsWithTotalsData(SlotTotals totals);
@@ -570,17 +568,6 @@ namespace HFM.Forms
         public void ShowNotifyToolTip(string text)
         {
             toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
-        }
-
-        public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<SlotWorkUnitDictionary>(SetWorkUnitInfos), workUnitInfos);
-                return;
-            }
-
-            queueControl.SetWorkUnitInfos(workUnitInfos);
         }
 
         public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType)

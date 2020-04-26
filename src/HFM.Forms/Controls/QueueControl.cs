@@ -59,11 +59,6 @@ namespace HFM.Forms.Controls
             QueueIndexChanged?.Invoke(this, e);
         }
 
-        public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos)
-        {
-            SetWorkUnitInfos(workUnitInfos, SlotType.Unknown);
-        }
-
         public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType type)
         {
             if (workUnitInfos != null)

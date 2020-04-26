@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -137,7 +138,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void RefreshSlots()
+        internal void RefreshSlots()
         {
             _slotsLock.EnterWriteLock();
             try
@@ -148,11 +149,15 @@ namespace HFM.Core.Client
                     // iterate through slot collection
                     foreach (var slot in Messages.SlotCollection)
                     {
+                        var slotDescription = ParseSlotDescription(slot.Description);
                         // add slot model to the collection
                         var slotModel = new SlotModel(this)
                         {
                             Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                            SlotID = slot.ID.GetValueOrDefault()
+                            SlotID = slot.ID.GetValueOrDefault(),
+                            SlotType = slotDescription.SlotType,
+                            SlotThreads = slotDescription.SlotThreads,
+                            GPUIndex = slotDescription.GPUIndex
                         };
                         _slots.Add(slotModel);
                     }
@@ -164,6 +169,25 @@ namespace HFM.Core.Client
             }
 
             OnSlotsChanged(EventArgs.Empty);
+        }
+
+        private static (SlotType SlotType, int? SlotThreads, int? GPUIndex) ParseSlotDescription(string description)
+        {
+            if (description is null) return (SlotType.CPU, null, null);
+
+            var slotType = description.StartsWith("gpu", StringComparison.OrdinalIgnoreCase) 
+                ? SlotType.GPU
+                : SlotType.CPU;
+
+            int? slotThreads = null;
+            int? gpuIndex = null;
+            var match = Regex.Match(description, @"[cpu|smp|gpu]\:(?<Number>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            if (match.Success && Int32.TryParse(match.Groups["Number"].Value, out var result))
+            {
+                slotThreads = slotType == SlotType.CPU ? (int?)result : null;
+                gpuIndex = slotType == SlotType.GPU ? (int?)result : null;
+            }
+            return (slotType, slotThreads, gpuIndex);
         }
 
         public override void Abort()
@@ -303,15 +327,6 @@ namespace HFM.Core.Client
 
             // update the data
             workUnit.UnitRetrievalTime = LastRetrievalTime;
-            if (workUnit.SlotType == SlotType.Unknown)
-            {
-                workUnit.SlotType = SlotTypeConvert.FromCoreName(protein.Core);
-                if (workUnit.SlotType == SlotType.Unknown)
-                {
-                    workUnit.SlotType = SlotTypeConvert.FromCoreId(workUnit.CoreID);
-                }
-            }
-
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
             return workUnitModel;
@@ -335,6 +350,7 @@ namespace HFM.Core.Client
                 // TODO: Surface client arguments?
                 //slotModel.Arguments = info.Client.Args;
                 slotModel.ClientVersion = info.Client.Version;
+                slotModel.SlotProcessor = FahClientMessageAggregator.GetCPUString(info, slotModel);
             }
             if (WorkUnitRepository.Connected)
             {

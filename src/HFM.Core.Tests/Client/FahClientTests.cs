@@ -1,11 +1,15 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
@@ -64,6 +68,56 @@ namespace HFM.Core.Client
             Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
 
             workUnitRepository.VerifyAllExpectations();
+        }
+
+        [Test]
+        public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_10()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_10" };
+            var fahClient = CreateClient(settings);
+            var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+            // Act
+            fahClient.RefreshSlots();
+            // Assert
+            var slots = fahClient.Slots.ToList();
+            Assert.AreEqual(2, slots.Count);
+            Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
+            Assert.AreEqual(4, slots[0].SlotThreads);
+            Assert.AreEqual(null, slots[0].GPUIndex);
+            Assert.AreEqual(SlotType.GPU, slots[1].SlotType);
+            Assert.AreEqual(null, slots[1].SlotThreads);
+            Assert.AreEqual(0, slots[1].GPUIndex);
+        }
+
+        [Test]
+        public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_12()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_12" };
+            var fahClient = CreateClient(settings);
+            var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slots.txt"))));
+            // Act
+            fahClient.RefreshSlots();
+            // Assert
+            var slots = fahClient.Slots.ToList();
+            Assert.AreEqual(1, slots.Count);
+            Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
+            Assert.AreEqual(4, slots[0].SlotThreads);
+            Assert.AreEqual(null, slots[0].GPUIndex);
+        }
+
+        private static FahClient CreateClient(ClientSettings settings)
+        {
+            var client = new FahClient(null, null, null, null, null);
+            client.Settings = settings;
+            return client;
         }
     }
 }

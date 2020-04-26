@@ -99,7 +99,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
             Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.Assigned);
             Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.Timeout);
             Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
@@ -196,7 +195,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
             Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.Assigned);
             Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.Timeout);
             Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
@@ -288,7 +286,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
             Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), unitInfoData.Assigned);
             Assert.AreEqual(DateTime.MinValue, unitInfoData.Timeout);
             Assert.AreEqual(new TimeSpan(4, 21, 52), unitInfoData.UnitStartTimeStamp);
@@ -380,7 +377,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
             Assert.AreEqual("harlam357", unitInfoData.FoldingID);
             Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(SlotType.CPU, unitInfoData.SlotType);
             Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), unitInfoData.Assigned);
             Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.Timeout);
             Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);

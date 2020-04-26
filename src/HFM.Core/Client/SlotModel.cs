@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 using HFM.Core.WorkUnits;
 using HFM.Log;
@@ -108,27 +109,37 @@ namespace HFM.Core.Client
 
         public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
 
-        public string SlotType
+        public SlotType SlotType { get; set; }
+
+        public int? SlotThreads { get; set; }
+
+        public string ClientVersion { get; set; }
+
+        public string SlotTypeString
         {
             get
             {
-                if (WorkUnitModel.WorkUnit.SlotType == HFM.Core.Client.SlotType.Unknown)
+                if (SlotType == SlotType.Unknown)
                 {
                     return String.Empty;
                 }
-                string slotType = WorkUnitModel.WorkUnit.SlotType.ToString();
+
+                var sb = new StringBuilder(SlotType.ToString());
+                if (SlotThreads.HasValue)
+                {
+                    sb.AppendFormat(CultureInfo.InvariantCulture, ":{0}", SlotThreads);
+                }
                 if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
+                    sb.Append($" ({ClientVersion})");
                 }
-                return slotType;
+                return sb.ToString();
             }
         }
 
-        /// <summary>
-        /// Client Version
-        /// </summary>
-        public string ClientVersion { get; set; }
+        public int? GPUIndex { get; set; }
+
+        public string SlotProcessor { get; set; }
 
         public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
