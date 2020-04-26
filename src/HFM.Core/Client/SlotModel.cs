@@ -43,9 +43,6 @@ namespace HFM.Core.Client
 
         public WorkUnitModel WorkUnitModel { get; set; }
 
-        // TODO: Remove WorkUnit Property
-        private WorkUnit WorkUnit => WorkUnitModel.WorkUnit;
-
         public ClientSettings Settings => Client.Settings;
 
         public IClient Client { get; }
@@ -124,11 +121,11 @@ namespace HFM.Core.Client
         {
             get
             {
-                if (WorkUnit.SlotType == HFM.Core.Client.SlotType.Unknown)
+                if (WorkUnitModel.WorkUnit.SlotType == HFM.Core.Client.SlotType.Unknown)
                 {
                     return String.Empty;
                 }
-                string slotType = WorkUnit.SlotType.ToString();
+                string slotType = WorkUnitModel.WorkUnit.SlotType.ToString();
                 if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
                 {
                     return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
@@ -173,17 +170,17 @@ namespace HFM.Core.Client
         {
             get
             {
-                if (ShowVersions && Math.Abs(WorkUnit.CoreVersion) > Single.Epsilon)
+                if (ShowVersions && Math.Abs(WorkUnitModel.WorkUnit.CoreVersion) > Single.Epsilon)
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnit.CoreVersion);
+                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnitModel.WorkUnit.CoreVersion);
                 }
                 return WorkUnitModel.CurrentProtein.Core;
             }
         }
 
-        public string CoreID => WorkUnit.CoreID;
+        public string CoreID => WorkUnitModel.WorkUnit.CoreID;
 
-        public string ProjectRunCloneGen => WorkUnit.ToShortProjectString();
+        public string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
         public double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
@@ -221,9 +218,9 @@ namespace HFM.Core.Client
         /// Combined Folding ID and Team String
         /// </summary>
         public string Username => 
-            String.IsNullOrWhiteSpace(WorkUnit.FoldingID)
+            String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID)
                 ? String.Empty
-                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team);
+                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.WorkUnit.FoldingID, WorkUnitModel.WorkUnit.Team);
 
         public DateTime DownloadTime => WorkUnitModel.DownloadTime;
 
@@ -280,7 +277,7 @@ namespace HFM.Core.Client
             get
             {
                 // if these are the default assigned values, don't check the prefs and just return true
-                if ((String.IsNullOrWhiteSpace(WorkUnit.FoldingID) || WorkUnit.FoldingID == Unknown.Value) && WorkUnit.Team == default)
+                if ((String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID) || WorkUnitModel.WorkUnit.FoldingID == Unknown.Value) && WorkUnitModel.WorkUnit.Team == default)
                 {
                     return true;
                 }
@@ -289,8 +286,8 @@ namespace HFM.Core.Client
                 {
                     return true;
                 }
-                return WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
-                       WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
+                return WorkUnitModel.WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
+                       WorkUnitModel.WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
             }
         }
 
