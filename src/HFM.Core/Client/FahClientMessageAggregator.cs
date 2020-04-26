@@ -80,24 +80,24 @@ namespace HFM.Core.Client
                 }
 
                 var wui = new SlotWorkUnitInfo();
-                wui.State = unit.State;
-                wui.WaitingOn = unit.WaitingOn;
-                wui.Attempts = unit.Attempts.GetValueOrDefault();
-                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                wui.NumberOfSmpCores = info.System.CPUs.GetValueOrDefault();
-                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
                 wui.ProjectID = unit.Project.GetValueOrDefault();
                 wui.ProjectRun = unit.Run.GetValueOrDefault();
                 wui.ProjectClone = unit.Clone.GetValueOrDefault();
                 wui.ProjectGen = unit.Gen.GetValueOrDefault();
-                wui.SlotID = slotId;
+                wui.State = unit.State;
+                wui.WaitingOn = unit.WaitingOn;
+                wui.Attempts = unit.Attempts.GetValueOrDefault();
+                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
+                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
                 wui.CPU = GetCPUString(info, slotOptions);
                 wui.OperatingSystem = info.System.OS;
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
+                wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
+                wui.SlotID = slotId;
+                
                 d.Add(unit.ID.GetValueOrDefault(), wui);
-
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
                     d.CurrentWorkUnitKey = unit.ID.GetValueOrDefault();
@@ -203,14 +203,14 @@ namespace HFM.Core.Client
             return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
         }
 
-        private static WorkUnit BuildWorkUnit(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
+        private static WorkUnit BuildWorkUnit(Unit unit, Options options, SlotOptions slotOptions, UnitRun unitRun)
         {
-            Debug.Assert(queueEntry != null);
+            Debug.Assert(unit != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
             var workUnit = new WorkUnit();
-            PopulateWorkUnitFromFahClientData(workUnit, queueEntry, options, slotOptions);
+            PopulateWorkUnitFromFahClientData(workUnit, unit, options, slotOptions);
             if (unitRun != null)
             {
                 PopulateWorkUnitFromLogData(workUnit, unitRun);
@@ -272,26 +272,26 @@ namespace HFM.Core.Client
             return 0.0f;
         }
 
-        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit queueEntry, Options options, SlotOptions slotOptions)
+        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit unit, Options options, SlotOptions slotOptions)
         {
             Debug.Assert(workUnit != null);
-            Debug.Assert(queueEntry != null);
+            Debug.Assert(unit != null);
             Debug.Assert(options != null);
             Debug.Assert(slotOptions != null);
 
-            workUnit.QueueIndex = queueEntry.ID.GetValueOrDefault();
+            workUnit.QueueIndex = unit.ID.GetValueOrDefault();
 
             /* DownloadTime (AssignedDateTime from HFM.Client API) */
-            workUnit.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
+            workUnit.DownloadTime = unit.AssignedDateTime.GetValueOrDefault();
 
             /* DueTime (TimeoutDateTime from HFM.Client API) */
-            workUnit.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
+            workUnit.DueTime = unit.TimeoutDateTime.GetValueOrDefault();
 
             /* Project (R/C/G) */
-            workUnit.ProjectID = queueEntry.Project.GetValueOrDefault();
-            workUnit.ProjectRun = queueEntry.Run.GetValueOrDefault();
-            workUnit.ProjectClone = queueEntry.Clone.GetValueOrDefault();
-            workUnit.ProjectGen = queueEntry.Gen.GetValueOrDefault();
+            workUnit.ProjectID = unit.Project.GetValueOrDefault();
+            workUnit.ProjectRun = unit.Run.GetValueOrDefault();
+            workUnit.ProjectClone = unit.Clone.GetValueOrDefault();
+            workUnit.ProjectGen = unit.Gen.GetValueOrDefault();
 
             /* FoldingID and Team from Queue Entry */
             workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
@@ -299,7 +299,7 @@ namespace HFM.Core.Client
             workUnit.SlotType = SlotTypeConvert.FromSlotOptions(slotOptions);
 
             /* Core ID */
-            workUnit.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.CoreID = unit.Core.Replace("0x", String.Empty).ToUpperInvariant();
         }
 
         private static int? ToNullableInt32(string value)

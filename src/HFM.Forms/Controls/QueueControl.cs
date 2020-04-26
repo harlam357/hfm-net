@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -24,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
@@ -43,14 +24,14 @@ namespace HFM.Forms.Controls
             WaitingOn,
             Attempts,
             NextAttempt,
-            Credit,
+            BaseCredit,
             BeginDate,
-            Server,
-            CpuType,
+            WorkServer,
+            CPU,
             OS,
             Memory,
-            SmpCores,
-            MachineId
+            CPUThreads,
+            MachineID
         }
         // ReSharper restore UnusedMember.Local
 
@@ -111,9 +92,9 @@ namespace HFM.Forms.Controls
         {
             return slotWorkUnit.Select(kvp => new ListItem
             {
-                DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0} - {1}", kvp.Key, kvp.Value.ToShortProjectString()),
+                DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", kvp.Key, kvp.Value.ToShortProjectString()),
                 ValueMember = kvp.Key
-            }).ToList().AsReadOnly();
+            }).ToList();
         }
 
         private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
@@ -125,19 +106,19 @@ namespace HFM.Forms.Controls
                 SetControlsVisible(true);
 
                 SlotWorkUnitInfo info = _slotWorkUnitInfos[(int)cboQueueIndex.SelectedValue];
-                txtStatus.Text = info.State;
+                StatusTextBox.Text = info.State;
                 WaitingOnTextBox.Text = String.IsNullOrEmpty(info.WaitingOn) ? "(No Action)" : info.WaitingOn;
                 AttemptsTextBox.Text = info.Attempts.ToString();
                 NextAttemptTextBox.Text = info.NextAttempt.ToString();
                 var protein = _proteinService.Get(info.ProjectID);
-                txtCredit.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                txtBeginDate.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
-                txtServer.Text = info.WorkServer;
-                txtCpuType.Text = info.CPU;
-                txtOsType.Text = info.OperatingSystem;
-                txtMemory.Text = info.Memory.ToString(CultureInfo.CurrentCulture);
-                txtSmpCores.Text = info.NumberOfSmpCores.ToString(CultureInfo.CurrentCulture);
-                txtMachineID.Text = info.SlotID.ToString(CultureInfo.CurrentCulture);
+                BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
+                BeginDateTextBox.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
+                WorkServerTextBox.Text = info.WorkServer;
+                CPUTypeTextBox.Text = info.CPU;
+                OSTextBox.Text = info.OperatingSystem;
+                MemoryTextBox.Text = info.Memory.ToString(CultureInfo.CurrentCulture);
+                CPUThreadsTextBox.Text = info.CPUThreads.ToString(CultureInfo.CurrentCulture);
+                MachineIDTextBox.Text = info.SlotID.ToString(CultureInfo.CurrentCulture);
 
                 OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
             }
@@ -171,41 +152,41 @@ namespace HFM.Forms.Controls
                 cboQueueIndex.SelectedIndex = 0;
             }
 
-            txtStatus.Visible = visible;
+            StatusTextBox.Visible = visible;
             WaitingOnTextBox.Visible = visible;
             AttemptsTextBox.Visible = visible;
             NextAttemptTextBox.Visible = visible;
-            txtCredit.Visible = visible;
-            txtBeginDate.Visible = visible;
-            txtServer.Visible = visible;
-            txtCpuType.Visible = visible;
-            txtOsType.Visible = visible;
-            txtMemory.Visible = visible;
-            txtSmpCores.Visible = visible;
-            txtMachineID.Visible = visible;
+            BaseCreditTextBox.Visible = visible;
+            BeginDateTextBox.Visible = visible;
+            WorkServerTextBox.Visible = visible;
+            CPUTypeTextBox.Visible = visible;
+            OSTextBox.Visible = visible;
+            MemoryTextBox.Visible = visible;
+            CPUThreadsTextBox.Visible = visible;
+            MachineIDTextBox.Visible = visible;
 
             if (visible == false)
             {
-                tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+                tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
             }
             else
             {
                 switch (_slotType)
                 {
                     case SlotType.Unknown:
-                        lblCpuType.Text = "CPU Type:";
-                        txtSmpCores.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+                        CPULabel.Text = "CPU:";
+                        CPUThreadsTextBox.Visible = false;
+                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
                         break;
                     case SlotType.GPU:
-                        lblCpuType.Text = "GPU Type:";
-                        txtSmpCores.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = 0;
+                        CPULabel.Text = "GPU:";
+                        CPUThreadsTextBox.Visible = false;
+                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
                         break;
                     case SlotType.CPU:
-                        lblCpuType.Text = "CPU Type:";
-                        txtSmpCores.Visible = true;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.SmpCores].Height = DefaultRowHeight;
+                        CPULabel.Text = "CPU:";
+                        CPUThreadsTextBox.Visible = true;
+                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = DefaultRowHeight;
                         break;
                 }
             }
