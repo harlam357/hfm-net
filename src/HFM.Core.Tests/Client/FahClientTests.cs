@@ -54,18 +54,20 @@ namespace HFM.Core.Client
             workUnitRepository.Stub(x => x.Connected).Return(true);
             workUnitRepository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
+            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(2669);
+
             // Assert (pre-condition)
             Assert.IsFalse(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsFalse(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, 2669));
+            Assert.IsFalse(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
+            Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier));
 
             // Act
             fahClient.UpdateWorkUnitBenchmarkAndRepository(currentWorkUnit, parsedUnits);
 
             // Assert
             Assert.IsTrue(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsTrue(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
+            Assert.IsTrue(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
+            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier).AverageFrameTime);
 
             workUnitRepository.VerifyAllExpectations();
         }

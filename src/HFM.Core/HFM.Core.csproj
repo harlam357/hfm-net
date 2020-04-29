@@ -147,6 +147,7 @@
     <Compile Include="Client\ClientConfiguration.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Services\ProjectSummaryService.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkIdentifier.cs" />
     <Compile Include="WorkUnits\ProteinService.cs" />
     <Compile Include="Client\ClientSettingsFileSerializer.cs" />
     <Compile Include="Data\WorkUnitRowCsvFileSerializer.cs" />

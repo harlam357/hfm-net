@@ -24,9 +24,11 @@ namespace HFM.Core.WorkUnits
 
         public WorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
         {
-            SlotModel = slotModel;
-            WorkUnit = workUnit;
+            SlotModel = slotModel ?? throw new ArgumentNullException(nameof(slotModel));
+            WorkUnit = workUnit ?? throw new ArgumentNullException(nameof(workUnit));
         }
+
+        public ProteinBenchmarkIdentifier BenchmarkIdentifier => new ProteinBenchmarkIdentifier(WorkUnit.ProjectID, SlotModel.SlotProcessor, SlotModel.SlotThreads.GetValueOrDefault());
 
         #region Unit Level Members
 
@@ -184,7 +186,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = SlotModel.Client.BenchmarkService.GetBenchmark(SlotModel.SlotIdentifier, WorkUnit.ProjectID);
+            var benchmark = SlotModel.Client.BenchmarkService.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 

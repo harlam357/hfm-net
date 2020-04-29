@@ -131,6 +131,7 @@
     <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
     <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
     <Compile Include="Data\WorkUnitQueryTests.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkIdentifierTests.cs" />
     <Compile Include="WorkUnits\WorkUnitTests.cs" />
     <Compile Include="Client\ClientConfigurationTests.cs" />
     <Compile Include="Client\FahClientMessageAggregatorTests.cs" />

@@ -384,7 +384,9 @@ namespace HFM.Core.Client
             int count = newWorkUnitModel.FramesComplete - workUnitModel.FramesComplete;
             var frameTimes = GetFrameTimes(newWorkUnitModel.WorkUnit, nextFrame, count);
             
-            BenchmarkService.Update(newWorkUnitModel.SlotModel.SlotIdentifier, newWorkUnitModel.WorkUnit.ProjectID, frameTimes);
+            var slotIdentifier = newWorkUnitModel.SlotModel.SlotIdentifier;
+            var benchmarkIdentifier = newWorkUnitModel.BenchmarkIdentifier;
+            BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
         }
 
         private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)

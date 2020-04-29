@@ -490,7 +490,7 @@ namespace HFM.Core.WorkUnits
         {
             var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
             var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
-            benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), 0)).IgnoreArguments().Return(benchmark);
+            benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), new ProteinBenchmarkIdentifier())).IgnoreArguments().Return(benchmark);
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), benchmarkService);
             
             Assert.AreEqual(TimeSpan.FromMinutes(10), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
