@@ -103,7 +103,7 @@ namespace HFM.Core.Client
         /// </summary>
         public int PercentComplete => Status.IsRunning() || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ToClientIdentifier(), SlotID);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ClientIdentifier, SlotID);
 
         public string Name => SlotIdentifier.Name;
 

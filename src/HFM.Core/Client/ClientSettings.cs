@@ -25,6 +25,8 @@ namespace HFM.Core.Client
             Port = DefaultPort;
         }
 
+        public ClientIdentifier ClientIdentifier => new ClientIdentifier(Name, Server, Port, Guid);
+        
         /// <summary>
         /// Gets or sets the client type.
         /// </summary>
@@ -126,11 +128,6 @@ namespace HFM.Core.Client
             }
 
             return sb.ToString();
-        }
-
-        public ClientIdentifier ToClientIdentifier()
-        {
-            return new ClientIdentifier(Name, Server, Port, Guid);
         }
     }
 }
