@@ -10,9 +10,7 @@ namespace HFM.Core.Client
 {
     public readonly struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
     {
-        internal const int NoPort = 0;
-
-        public static ClientIdentifier None => new ClientIdentifier(null, null, NoPort, Guid.Empty);
+        public static ClientIdentifier None => new ClientIdentifier(null, null, ClientSettings.NoPort, Guid.Empty);
 
         public ClientIdentifier(string name, string server, int port, Guid guid)
         {
@@ -35,16 +33,14 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(Server)) return Name;
-            return TcpPort.Validate(Port) 
-                ? String.Format(CultureInfo.InvariantCulture, "{0} ({1}:{2})", Name, Server, Port) 
-                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Server);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ToServerPortString());
         }
 
         public bool Equals(ClientIdentifier other)
         {
-            if (HasGuid)
+            if (HasGuid || other.HasGuid)
             {
-                return other.HasGuid && Guid.Equals(other.Guid);
+                return Guid.Equals(other.Guid);
             }
             return Name == other.Name && Server == other.Server && Port == other.Port;
         }
@@ -153,17 +149,12 @@ namespace HFM.Core.Client
 
         internal static readonly Regex ServerPortRegex = new Regex(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
-        internal static ClientIdentifier FromPath(string name, string path)
-        {
-            return FromPath(name, path, Guid.Empty);
-        }
-
         internal static ClientIdentifier FromPath(string name, string path, Guid guid)
         {
             var match = path is null ? null : ServerPortRegex.Match(path);
             return match != null && match.Success 
                 ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid) 
-                : new ClientIdentifier(name, path, NoPort, guid);
+                : new ClientIdentifier(name, path, ClientSettings.NoPort, guid);
         }
     }
 }

@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-using HFM.Core.Net;
-
 namespace HFM.Core.Client
 {
     public readonly struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
@@ -13,7 +11,7 @@ namespace HFM.Core.Client
 
         public static SlotIdentifier None =>
             new SlotIdentifier(
-                new ClientIdentifier(null, null, ClientIdentifier.NoPort, Guid.Empty), 
+                new ClientIdentifier(null, null, ClientSettings.NoPort, Guid.Empty), 
                 NoSlotID);
         
         public static SlotIdentifier AllSlots => new SlotIdentifier(0, "All Slots");
@@ -21,7 +19,7 @@ namespace HFM.Core.Client
         private SlotIdentifier(int ordinal, string name)
         {
             Ordinal = ordinal;
-            Client = new ClientIdentifier(name, null, ClientIdentifier.NoPort, Guid.Empty);
+            Client = new ClientIdentifier(name, null, ClientSettings.NoPort, Guid.Empty);
             SlotID = NoSlotID;
         }
 
@@ -34,12 +32,10 @@ namespace HFM.Core.Client
 
         public int Ordinal { get; }
         
+        // TODO: Rename to ClientIdentifier
         public ClientIdentifier Client { get; }
 
         public int SlotID { get; }
-
-        // TODO: Number of CPU / GPU
-        // TODO: Number of CPU Threads
 
         public string Name => AppendSlotID(Client.Name, SlotID);
 
@@ -51,9 +47,7 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(Client.Server)) return Name;
-            return TcpPort.Validate(Client.Port) 
-                ? String.Format(CultureInfo.InvariantCulture, "{0} ({1}:{2})", Name, Client.Server, Client.Port) 
-                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Client.Server);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Client.ToServerPortString());
         }
 
         public bool Equals(SlotIdentifier other)
