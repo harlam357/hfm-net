@@ -7,8 +7,18 @@ namespace HFM.Core.WorkUnits
 {
     [DataContract]
     [DebuggerDisplay("{Duration}")]
-    public sealed class ProteinBenchmarkFrameTime
+    public class ProteinBenchmarkFrameTime
     {
+        public ProteinBenchmarkFrameTime()
+        {
+            
+        }
+
+        public ProteinBenchmarkFrameTime(TimeSpan duration)
+        {
+            Duration = duration;
+        }
+
         public TimeSpan Duration { get; set; }
 
         [DataMember(Order = 1)]
@@ -16,6 +26,11 @@ namespace HFM.Core.WorkUnits
         {
             get => Duration.Ticks;
             set => Duration = new TimeSpan(value);
+        }
+
+        internal static ProteinBenchmarkFrameTime FromMinutes(double value)
+        {
+            return new ProteinBenchmarkFrameTime(TimeSpan.FromMinutes(value));
         }
     }
 }
