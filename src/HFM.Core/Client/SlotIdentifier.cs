@@ -9,11 +9,6 @@ namespace HFM.Core.Client
     {
         internal const int NoSlotID = -1;
 
-        public static SlotIdentifier None =>
-            new SlotIdentifier(
-                new ClientIdentifier(null, null, ClientSettings.NoPort, Guid.Empty), 
-                NoSlotID);
-        
         public static SlotIdentifier AllSlots => new SlotIdentifier(0, "All Slots");
         
         private SlotIdentifier(int ordinal, string name)

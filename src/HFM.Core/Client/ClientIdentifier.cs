@@ -10,8 +10,6 @@ namespace HFM.Core.Client
 {
     public readonly struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
     {
-        public static ClientIdentifier None => new ClientIdentifier(null, null, ClientSettings.NoPort, Guid.Empty);
-
         public ClientIdentifier(string name, string server, int port, Guid guid)
         {
             Name = name;
