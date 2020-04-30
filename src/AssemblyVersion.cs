@@ -10,8 +10,8 @@
 
 [assembly: System.Reflection.AssemblyCompany("harlam357")]
 [assembly: System.Reflection.AssemblyProduct("HFM.NET")]
-[assembly: System.Reflection.AssemblyCopyright("Copyright © Ryan Harlamert 2009-2019.")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright © Ryan Harlamert 2009-2020.")]
 [assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
-[assembly: System.Reflection.AssemblyFileVersion("0.9.13.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.9.14.0")]
 
 

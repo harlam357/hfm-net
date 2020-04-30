@@ -291,5 +291,5 @@ Function Configure-Platform
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '0.9.13.0'
+Configure-Version -Version '0.9.14.0'
 Configure-Platform -Platform 'Any CPU'
