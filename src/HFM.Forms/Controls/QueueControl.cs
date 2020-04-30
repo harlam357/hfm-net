@@ -107,7 +107,7 @@ namespace HFM.Forms.Controls
                 NextAttemptTextBox.Text = info.NextAttempt.ToString();
                 var protein = _proteinService.Get(info.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                BeginDateTextBox.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
+                AssignedTextBox.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
                 WorkServerTextBox.Text = info.WorkServer;
                 CPUTypeTextBox.Text = info.CPU;
                 OSTextBox.Text = info.OperatingSystem;
@@ -152,7 +152,7 @@ namespace HFM.Forms.Controls
             AttemptsTextBox.Visible = visible;
             NextAttemptTextBox.Visible = visible;
             BaseCreditTextBox.Visible = visible;
-            BeginDateTextBox.Visible = visible;
+            AssignedTextBox.Visible = visible;
             WorkServerTextBox.Visible = visible;
             CPUTypeTextBox.Visible = visible;
             OSTextBox.Visible = visible;

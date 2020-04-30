@@ -59,10 +59,10 @@ namespace HFM.Forms.Controls
             this.MemoryTextBox = new System.Windows.Forms.TextBox();
             this.BaseCreditTextBox = new System.Windows.Forms.TextBox();
             this.OSTextBox = new System.Windows.Forms.TextBox();
-            this.BeginDateLabel = new System.Windows.Forms.Label();
+            this.AssignedLabel = new System.Windows.Forms.Label();
             this.MemoryLabel = new System.Windows.Forms.Label();
             this.CPUTypeTextBox = new System.Windows.Forms.TextBox();
-            this.BeginDateTextBox = new System.Windows.Forms.TextBox();
+            this.AssignedTextBox = new System.Windows.Forms.TextBox();
             this.OSLabel = new System.Windows.Forms.Label();
             this.CPULabel = new System.Windows.Forms.Label();
             this.WorkServerLabel = new System.Windows.Forms.Label();
@@ -93,10 +93,10 @@ namespace HFM.Forms.Controls
             this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 11);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditTextBox, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 10);
-            this.tableLayoutPanel1.Controls.Add(this.BeginDateLabel, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.AssignedLabel, 0, 7);
             this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 11);
             this.tableLayoutPanel1.Controls.Add(this.CPUTypeTextBox, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.BeginDateTextBox, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.AssignedTextBox, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.CPULabel, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.WorkServerLabel, 0, 8);
@@ -244,15 +244,15 @@ namespace HFM.Forms.Controls
             this.OSTextBox.TabIndex = 30;
             this.OSTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // BeginDateLabel
+            // AssignedLabel
             // 
-            this.BeginDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.BeginDateLabel.AutoSize = true;
-            this.BeginDateLabel.Location = new System.Drawing.Point(10, 160);
-            this.BeginDateLabel.Name = "BeginDateLabel";
-            this.BeginDateLabel.Size = new System.Drawing.Size(63, 13);
-            this.BeginDateLabel.TabIndex = 11;
-            this.BeginDateLabel.Text = "Begin Date:";
+            this.AssignedLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AssignedLabel.AutoSize = true;
+            this.AssignedLabel.Location = new System.Drawing.Point(10, 160);
+            this.AssignedLabel.Name = "AssignedLabel";
+            this.AssignedLabel.Size = new System.Drawing.Size(53, 13);
+            this.AssignedLabel.TabIndex = 11;
+            this.AssignedLabel.Text = "Assigned:";
             // 
             // MemoryLabel
             // 
@@ -274,15 +274,15 @@ namespace HFM.Forms.Controls
             this.CPUTypeTextBox.TabIndex = 28;
             this.CPUTypeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // BeginDateTextBox
+            // AssignedTextBox
             // 
-            this.BeginDateTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BeginDateTextBox.Location = new System.Drawing.Point(100, 158);
-            this.BeginDateTextBox.Name = "BeginDateTextBox";
-            this.BeginDateTextBox.ReadOnly = true;
-            this.BeginDateTextBox.Size = new System.Drawing.Size(124, 20);
-            this.BeginDateTextBox.TabIndex = 12;
-            this.BeginDateTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.AssignedTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AssignedTextBox.Location = new System.Drawing.Point(100, 158);
+            this.AssignedTextBox.Name = "AssignedTextBox";
+            this.AssignedTextBox.ReadOnly = true;
+            this.AssignedTextBox.Size = new System.Drawing.Size(124, 20);
+            this.AssignedTextBox.TabIndex = 12;
+            this.AssignedTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // OSLabel
             // 
@@ -405,13 +405,13 @@ namespace HFM.Forms.Controls
 
         private System.Windows.Forms.Label WorkServerLabel;
         private System.Windows.Forms.ComboBox cboQueueIndex;
-        private System.Windows.Forms.Label BeginDateLabel;
+        private System.Windows.Forms.Label AssignedLabel;
         private System.Windows.Forms.Label CPULabel;
         private System.Windows.Forms.Label OSLabel;
         private System.Windows.Forms.Label CPUThreadsLabel;
         private System.Windows.Forms.Label MemoryLabel;
         private System.Windows.Forms.TextBox WorkServerTextBox;
-        private System.Windows.Forms.TextBox BeginDateTextBox;
+        private System.Windows.Forms.TextBox AssignedTextBox;
         private System.Windows.Forms.TextBox CPUTypeTextBox;
         private System.Windows.Forms.TextBox OSTextBox;
         private System.Windows.Forms.TextBox CPUThreadsTextBox;
