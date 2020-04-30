@@ -368,11 +368,11 @@ namespace HFM.Forms
 
         private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (linkDescription.Tag == null)
+            if (DescriptionLinkLabel.Tag == null)
             {
                 return;
             }
-            string message = _processStarter.ShowWebBrowser(linkDescription.Tag.ToString());
+            string message = _processStarter.ShowWebBrowser(DescriptionLinkLabel.Tag.ToString());
             if (message != null)
             {
                 _messageBoxView.ShowError(this, message, Text);
@@ -542,18 +542,18 @@ namespace HFM.Forms
         {
             if (protein != null)
             {
-                txtProjectID.Text = protein.WorkUnitName;
-                txtCredit.Text = protein.Credit.ToString();
-                txtKFactor.Text = protein.KFactor.ToString();
-                txtFrames.Text = protein.Frames.ToString();
-                txtAtoms.Text = protein.NumberOfAtoms.ToString();
-                txtCore.Text = protein.Core;
-                linkDescription.Text = "Click to view online";
-                linkDescription.Tag = protein.Description;
-                txtPreferredDays.Text = protein.PreferredDays.ToString();
-                txtMaximumDays.Text = protein.MaximumDays.ToString();
-                txtContact.Text = protein.Contact;
-                txtServerIP.Text = protein.ServerIP;
+                ProjectIDTextBox.Text = protein.WorkUnitName;
+                CreditTextBox.Text = protein.Credit.ToString();
+                KFactorTextBox.Text = protein.KFactor.ToString();
+                FramesTextBox.Text = protein.Frames.ToString();
+                AtomsTextBox.Text = protein.NumberOfAtoms.ToString();
+                CoreTextBox.Text = protein.Core;
+                DescriptionLinkLabel.Text = "Click to view online";
+                DescriptionLinkLabel.Tag = protein.Description;
+                TimeoutTextBox.Text = protein.PreferredDays.ToString();
+                ExpirationTextBox.Text = protein.MaximumDays.ToString();
+                ContactTextBox.Text = protein.Contact;
+                WorkServerTextBox.Text = protein.ServerIP;
 
                 lines.Add(String.Format(" Project ID: {0}", protein.ProjectNumber));
                 lines.Add(String.Format(" Core: {0}", protein.Core));
@@ -563,18 +563,18 @@ namespace HFM.Forms
             }
             else
             {
-                txtProjectID.Text = String.Empty;
-                txtCredit.Text = String.Empty;
-                txtKFactor.Text = String.Empty;
-                txtFrames.Text = String.Empty;
-                txtAtoms.Text = String.Empty;
-                txtCore.Text = String.Empty;
-                linkDescription.Text = String.Empty;
-                linkDescription.Tag = null;
-                txtPreferredDays.Text = String.Empty;
-                txtMaximumDays.Text = String.Empty;
-                txtContact.Text = String.Empty;
-                txtServerIP.Text = String.Empty;
+                ProjectIDTextBox.Text = String.Empty;
+                CreditTextBox.Text = String.Empty;
+                KFactorTextBox.Text = String.Empty;
+                FramesTextBox.Text = String.Empty;
+                AtomsTextBox.Text = String.Empty;
+                CoreTextBox.Text = String.Empty;
+                DescriptionLinkLabel.Text = String.Empty;
+                DescriptionLinkLabel.Tag = null;
+                TimeoutTextBox.Text = String.Empty;
+                ExpirationTextBox.Text = String.Empty;
+                ContactTextBox.Text = String.Empty;
+                WorkServerTextBox.Text = String.Empty;
 
                 lines.Add(String.Format(" Project ID: {0} Not Found", projectID));
             }
