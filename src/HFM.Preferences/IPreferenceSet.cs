@@ -53,6 +53,7 @@ namespace HFM.Preferences
         [Obsolete("Do not use DuplicateUserIdCheck.")]
         DuplicateUserIdCheck,
         DuplicateProjectCheck,
+        [Obsolete("Do not use AllowRunningAsync.")]
         AllowRunningAsync,
         EnableUserStats,
         UserStatsType,

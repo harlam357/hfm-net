@@ -418,8 +418,6 @@ namespace HFM.Forms
             chkScheduled.BindChecked(_scheduledTasksModel, "SyncOnSchedule");
 
             chkSynchronous.BindChecked(_scheduledTasksModel, "SyncOnLoad");
-
-            chkAllowRunningAsync.BindChecked(_scheduledTasksModel, "AllowRunningAsync");
             #endregion
 
             #region Web Generation
