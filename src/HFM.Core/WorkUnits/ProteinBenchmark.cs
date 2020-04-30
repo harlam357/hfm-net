@@ -1,24 +1,7 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -28,6 +11,7 @@ namespace HFM.Core.WorkUnits
 {
     [Serializable]
     [DataContract]
+    [DebuggerDisplay("{SlotIdentifier} {BenchmarkIdentifier}")]
     public sealed class ProteinBenchmark
     {
         private const int DefaultMaxFrames = 300;
@@ -60,8 +44,16 @@ namespace HFM.Core.WorkUnits
         [DataMember(Order = 6, IsRequired = true)]
         public int SourceSlotID { get; set; }
 
+        public ProteinBenchmarkIdentifier BenchmarkIdentifier => new ProteinBenchmarkIdentifier(ProjectID, Processor, Threads);
+
         [DataMember(Order = 3)]
         public int ProjectID { get; set; }
+
+        [DataMember(Order = 8)]
+        public string Processor { get; set; }
+
+        [DataMember(Order = 9)]
+        public int Threads { get; set; }
 
         [DataMember(Order = 4)]
         public TimeSpan MinimumFrameTime { get; set; }
@@ -92,23 +84,21 @@ namespace HFM.Core.WorkUnits
             FrameTimes = new List<ProteinBenchmarkFrameTime>(DefaultMaxFrames);
         }
 
-        public void UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
+        public ProteinBenchmark UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
         {
             SourceName = slotIdentifier.Client.Name;
-            SourcePath = slotIdentifier.Client.ToPath();
+            SourcePath = slotIdentifier.Client.ToServerPortString();
             SourceGuid = slotIdentifier.Client.Guid;
             SourceSlotID = slotIdentifier.SlotID;
+            return this;
         }
 
-        public static ProteinBenchmark FromSlotIdentifier(SlotIdentifier slotIdentifier)
+        public ProteinBenchmark UpdateFromBenchmarkIdentifier(ProteinBenchmarkIdentifier benchmarkIdentifier)
         {
-            return new ProteinBenchmark
-            {
-                SourceName = slotIdentifier.Client.Name,
-                SourcePath = slotIdentifier.Client.ToPath(),
-                SourceGuid = slotIdentifier.Client.Guid,
-                SourceSlotID = slotIdentifier.SlotID
-            };
+            ProjectID = benchmarkIdentifier.ProjectID;
+            Processor = benchmarkIdentifier.Processor;
+            Threads = benchmarkIdentifier.Threads;
+            return this;
         }
 
         public void AddFrameTime(TimeSpan frameTime)

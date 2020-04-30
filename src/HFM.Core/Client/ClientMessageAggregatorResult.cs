@@ -7,7 +7,7 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
-    internal sealed class DataAggregatorResult
+    internal sealed class ClientMessageAggregatorResult
     {
         // ClientRun Values
         public DateTime StartTime { get; set; }

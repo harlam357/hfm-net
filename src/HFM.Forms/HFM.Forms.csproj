@@ -151,6 +151,7 @@
     <Compile Include="Controls\FormWrapper.Designer.cs">
       <DependentUpon>FormWrapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SlotsGridColumn.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FahClientSetupDialog.cs">
       <SubType>Form</SubType>
@@ -177,6 +178,7 @@
     </Compile>
     <Compile Include="Models\FahClientSettingsModelProfile.cs" />
     <Compile Include="Models\UserStatsDataModelProfile.cs" />
+    <Compile Include="ProteinBenchmarkIdentifierExtensions.cs" />
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>

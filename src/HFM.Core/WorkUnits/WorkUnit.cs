@@ -1,75 +1,29 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using HFM.Core.Client;
 using HFM.Log;
 
 namespace HFM.Core.WorkUnits
 {
     public class WorkUnit : IProjectInfo
     {
-        public const string DefaultFoldingID = Unknown.Value;
-        public const int DefaultTeam = 0;
-        public const string DefaultCoreID = Unknown.Value;
-
-        #region Constructor
-
-        public WorkUnit()
-        {
-            SlotIdentifier = SlotIdentifier.None;
-            UnitRetrievalTime = DateTime.MinValue;
-            FoldingID = DefaultFoldingID;
-            Team = DefaultTeam;
-            SlotType = SlotType.Unknown;
-            DownloadTime = DateTime.MinValue;
-            DueTime = DateTime.MinValue;
-            UnitStartTimeStamp = TimeSpan.Zero;
-            FinishedTime = DateTime.MinValue;
-            CoreVersion = 0;
-            ProteinName = String.Empty;
-            ProteinTag = String.Empty;
-            UnitResult = WorkUnitResult.Unknown;
-            CoreID = DefaultCoreID;
-            QueueIndex = -1;
-        }
-
-        #endregion
-
-        // TODO: Rename to Copy()
-        public WorkUnit DeepClone()
+        /// <summary>
+        /// Returns a shallow copy of this <see cref="WorkUnit"/>.
+        /// </summary>
+        public WorkUnit Copy()
         {
             var u = new WorkUnit
             {
-                SlotIdentifier = SlotIdentifier,
                 UnitRetrievalTime = UnitRetrievalTime,
                 FoldingID = FoldingID,
                 Team = Team,
-                SlotType = SlotType,
-                DownloadTime = DownloadTime,
-                DueTime = DueTime,
+                Assigned = Assigned,
+                Timeout = Timeout,
                 UnitStartTimeStamp = UnitStartTimeStamp,
-                FinishedTime = FinishedTime,
+                Finished = Finished,
                 CoreVersion = CoreVersion,
                 ProjectID = ProjectID,
                 ProjectRun = ProjectRun,
@@ -79,7 +33,6 @@ namespace HFM.Core.WorkUnits
                 ProteinTag = ProteinTag,
                 UnitResult = UnitResult,
                 FramesObserved = FramesObserved,
-                // TODO: LogLines is NOT a clone
                 LogLines = LogLines,
                 CoreID = CoreID,
                 QueueIndex = QueueIndex
@@ -88,8 +41,6 @@ namespace HFM.Core.WorkUnits
         }
 
         #region Properties
-
-        public SlotIdentifier SlotIdentifier { get; set; }
 
         /// <summary>
         /// Local time the logs used to generate this WorkUnit were retrieved
@@ -107,19 +58,14 @@ namespace HFM.Core.WorkUnits
         public int Team { get; set; }
 
         /// <summary>
-        /// Client Type for this work unit
+        /// Gets or sets the work unit assigned date and time.
         /// </summary>
-        public SlotType SlotType { get; set; }
+        public DateTime Assigned { get; set; }
 
         /// <summary>
-        /// Date/time the unit was downloaded
+        /// Gets or sets the work unit timeout date and time.
         /// </summary>
-        public DateTime DownloadTime { get; set; }
-
-        /// <summary>
-        /// Date/time the unit is due (preferred deadline)
-        /// </summary>
-        public DateTime DueTime { get; set; }
+        public DateTime Timeout { get; set; }
 
         /// <summary>
         /// Unit Start Time Stamp
@@ -127,9 +73,9 @@ namespace HFM.Core.WorkUnits
         public TimeSpan UnitStartTimeStamp { get; set; }
 
         /// <summary>
-        /// Date/time the unit finished
+        /// Gets or sets the work unit finished date and time.
         /// </summary>
-        public DateTime FinishedTime { get; set; }
+        public DateTime Finished { get; set; }
 
         /// <summary>
         /// Core Version Number
@@ -227,7 +173,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Unit Queue Index
         /// </summary>
-        public int QueueIndex { get; set; }
+        public int QueueIndex { get; set; } = -1;
 
         #endregion
 
@@ -249,10 +195,10 @@ namespace HFM.Core.WorkUnits
             }
 
             // if the Projects are known
-            if (!this.ProjectIsUnknown() && !other.ProjectIsUnknown())
+            if (this.HasProject() && other.HasProject())
             {
-                // equals the Project and Download Time
-                if (this.EqualsProject(other) && DownloadTime.Equals(other.DownloadTime))
+                // equals the Project and Assigned
+                if (this.EqualsProject(other) && Assigned.Equals(other.Assigned))
                 {
                     return true;
                 }

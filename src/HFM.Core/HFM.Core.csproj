@@ -133,7 +133,7 @@
     <Compile Include="Serializers\IFileSerializer.cs" />
     <Compile Include="Serializers\IFileSerializerExtensions.cs" />
     <Compile Include="Serializers\ISerializer.cs" />
-    <Compile Include="Client\DataAggregatorResult.cs" />
+    <Compile Include="Client\ClientMessageAggregatorResult.cs" />
     <Compile Include="Client\SlotStatus.cs" />
     <Compile Include="Internal\AsyncProcessorExtensions.cs" />
     <Compile Include="Internal\FileSystem.cs" />
@@ -143,10 +143,11 @@
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Client\SlotTotals.cs" />
     <Compile Include="Client\FahClient.cs" />
-    <Compile Include="Client\FahClientDataAggregator.cs" />
+    <Compile Include="Client\FahClientMessageAggregator.cs" />
     <Compile Include="Client\ClientConfiguration.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Services\ProjectSummaryService.cs" />
+    <Compile Include="WorkUnits\ProteinBenchmarkIdentifier.cs" />
     <Compile Include="WorkUnits\ProteinService.cs" />
     <Compile Include="Client\ClientSettingsFileSerializer.cs" />
     <Compile Include="Data\WorkUnitRowCsvFileSerializer.cs" />

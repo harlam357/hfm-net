@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
 
 using System;
 using System.Globalization;
@@ -43,6 +25,8 @@ namespace HFM.Core.Client
             Port = DefaultPort;
         }
 
+        public ClientIdentifier ClientIdentifier => new ClientIdentifier(Name, Server, Port, Guid);
+        
         /// <summary>
         /// Gets or sets the client type.
         /// </summary>
@@ -83,8 +67,7 @@ namespace HFM.Core.Client
 
         public string ClientLogFileName => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Name, FahClientLogFileName);
 
-        public string ClientPath => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Server, Port);
-
+        public const int NoPort = 0;
         /// <summary>
         /// The default Folding@Home client port.
         /// </summary>
@@ -145,11 +128,6 @@ namespace HFM.Core.Client
             }
 
             return sb.ToString();
-        }
-
-        public ClientIdentifier ToClientIdentifier()
-        {
-            return new ClientIdentifier(Name, Server, Port, Guid);
         }
     }
 }

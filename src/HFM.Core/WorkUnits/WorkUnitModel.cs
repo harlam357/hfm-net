@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Globalization;
 using System.Text;
@@ -29,66 +11,47 @@ namespace HFM.Core.WorkUnits
 {
     public class WorkUnitModel
     {
-        private readonly IProteinBenchmarkService _benchmarkService;
+        public SlotModel SlotModel { get; }
 
-        private WorkUnit _workUnit = new WorkUnit();
-        
-        public WorkUnit Data
-        {
-            get => _workUnit;
-            set => _workUnit = value ?? new WorkUnit();
-        }
+        public WorkUnit WorkUnit { get; }
 
-        private Protein _currentProtein = new Protein();
-        /// <summary>
-        /// Class member containing info on the currently running protein
-        /// </summary>
-        public Protein CurrentProtein
-        {
-            get => _currentProtein;
-            set => _currentProtein = value ?? new Protein();
-        }
+        public Protein CurrentProtein { get; set; } = new Protein();
 
-        public double ClientTimeOffset { get; set; }
-
-        // TODO: Remove WorkUnitModel.UtcOffsetIsZero
-        public bool UtcOffsetIsZero { get; set; }
-
-        internal WorkUnitModel()
+        public WorkUnitModel(SlotModel slotModel) : this(slotModel, new WorkUnit())
         {
 
         }
 
-        public WorkUnitModel(IProteinBenchmarkService benchmarkService)
+        public WorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
         {
-            _benchmarkService = benchmarkService;
+            SlotModel = slotModel ?? throw new ArgumentNullException(nameof(slotModel));
+            WorkUnit = workUnit ?? throw new ArgumentNullException(nameof(workUnit));
         }
+
+        public ProteinBenchmarkIdentifier BenchmarkIdentifier => new ProteinBenchmarkIdentifier(WorkUnit.ProjectID, SlotModel.SlotProcessor, SlotModel.SlotThreads.GetValueOrDefault());
 
         #region Unit Level Members
 
         /// <summary>
-        /// Date/time the unit was downloaded
+        /// Gets the work unit assigned date and time (Local).
         /// </summary>
-        public DateTime DownloadTime => GetTime(_workUnit.DownloadTime);
+        public DateTime Assigned => GetTime(WorkUnit.Assigned);
 
         /// <summary>
-        /// Date/time the unit is due (preferred deadline)
+        /// Gets the work unit timeout date and time (Local).
         /// </summary>
-        public DateTime DueTime => GetTime(_workUnit.DueTime);
+        public DateTime Timeout => GetTime(WorkUnit.Timeout);
 
         /// <summary>
-        /// Date/time the unit finished
+        /// Gets the work unit finished date and time (Local).
         /// </summary>
-        public DateTime FinishedTime => GetTime(_workUnit.FinishedTime);
+        public DateTime Finished => GetTime(WorkUnit.Finished);
 
-        private DateTime GetTime(DateTime dateTime)
+        private static DateTime GetTime(DateTime dateTime)
         {
             if (dateTime.IsMinValue()) { return dateTime; }
 
-            var offset = TimeSpan.FromMinutes(ClientTimeOffset);
-            return UtcOffsetIsZero
-                      ? dateTime.Subtract(offset)
-                      : dateTime.ToLocalTime().Subtract(offset);
+            return dateTime.ToLocalTime();
         }
 
         /// <summary>
@@ -98,10 +61,10 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_workUnit.DownloadTime.IsMinValue()) return _workUnit.DownloadTime;
+                if (WorkUnit.Assigned.IsMinValue()) return WorkUnit.Assigned;
 
                 return ProteinIsUnknown(CurrentProtein)
-                          ? DueTime
+                          ? Timeout
                           : AdjustDeadlineForDaylightSavings(CurrentProtein.PreferredDays);
             }
         }
@@ -113,7 +76,7 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_workUnit.DownloadTime.IsMinValue()) return _workUnit.DownloadTime;
+                if (WorkUnit.Assigned.IsMinValue()) return WorkUnit.Assigned;
 
                 return ProteinIsUnknown(CurrentProtein)
                           ? DateTime.MinValue
@@ -123,10 +86,10 @@ namespace HFM.Core.WorkUnits
 
         private DateTime AdjustDeadlineForDaylightSavings(double days)
         {
-            DateTime deadline = DownloadTime.AddDays(days);
+            DateTime deadline = Assigned.AddDays(days);
 
             // download time is DST
-            if (DownloadTime.IsDaylightSavingTime())
+            if (Assigned.IsDaylightSavingTime())
             {
                 if (!deadline.IsDaylightSavingTime())
                 {
@@ -155,8 +118,8 @@ namespace HFM.Core.WorkUnits
         {
             get
             {
-                if (_workUnit.CurrentFrame == null || _workUnit.CurrentFrame.ID < 0) return 0;
-                return _workUnit.CurrentFrame.ID <= CurrentProtein.Frames ? _workUnit.CurrentFrame.ID : CurrentProtein.Frames;
+                if (WorkUnit.CurrentFrame == null || WorkUnit.CurrentFrame.ID < 0) return 0;
+                return WorkUnit.CurrentFrame.ID <= CurrentProtein.Frames ? WorkUnit.CurrentFrame.ID : CurrentProtein.Frames;
             }
         }
 
@@ -177,11 +140,11 @@ namespace HFM.Core.WorkUnits
             switch (ppdCalculation)
             {
                 case PPDCalculation.LastFrame:
-                    return _workUnit.FramesObserved > 1 ? Convert.ToInt32(_workUnit.CurrentFrame.Duration.TotalSeconds) : 0;
+                    return WorkUnit.FramesObserved > 1 ? Convert.ToInt32(WorkUnit.CurrentFrame.Duration.TotalSeconds) : 0;
                 case PPDCalculation.LastThreeFrames:
-                    return _workUnit.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
+                    return WorkUnit.FramesObserved > 3 ? GetDurationInSeconds(3) : 0;
                 case PPDCalculation.AllFrames:
-                    return _workUnit.FramesObserved > 0 ? GetDurationInSeconds(_workUnit.FramesObserved) : 0;
+                    return WorkUnit.FramesObserved > 0 ? GetDurationInSeconds(WorkUnit.FramesObserved) : 0;
                 case PPDCalculation.EffectiveRate:
                     return GetRawTimePerUnitDownload();
             }
@@ -197,14 +160,14 @@ namespace HFM.Core.WorkUnits
             // attempt to validate that an object would be assigned to CurrentFrame.
             // if this is truly what we're trying to validate, it would make more sense
             // to simply check CurrentFrame for null - 2/7/11
-            if (_workUnit.CurrentFrame == null) return 0;
+            if (WorkUnit.CurrentFrame == null) return 0;
 
             // Make sure FrameID is greater than 0 to avoid DivideByZeroException - Issue 34
-            if (DownloadTime.IsMinValue() || _workUnit.CurrentFrame.ID <= 0) { return 0; }
+            if (Assigned.IsMinValue() || WorkUnit.CurrentFrame.ID <= 0) { return 0; }
 
             // Issue 92
-            TimeSpan timeSinceUnitDownload = _workUnit.UnitRetrievalTime.Subtract(DownloadTime);
-            return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / _workUnit.CurrentFrame.ID);
+            TimeSpan timeSinceUnitDownload = WorkUnit.UnitRetrievalTime.Subtract(Assigned);
+            return (Convert.ToInt32(timeSinceUnitDownload.TotalSeconds) / WorkUnit.CurrentFrame.ID);
         }
 
         public bool IsUsingBenchmarkFrameTime(PPDCalculation ppdCalculation)
@@ -223,7 +186,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = _benchmarkService?.GetBenchmark(Data.SlotIdentifier, Data.ProjectID);
+            var benchmark = SlotModel.Client.BenchmarkService.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 
@@ -274,7 +237,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public DateTime GetEtaDate(PPDCalculation ppdCalculation)
         {
-            return _workUnit.UnitRetrievalTime.Add(GetEta(ppdCalculation));
+            return WorkUnit.UnitRetrievalTime.Add(GetEta(ppdCalculation));
         }
 
         /// <summary>
@@ -284,13 +247,13 @@ namespace HFM.Core.WorkUnits
 
         private TimeSpan GetUnitTimeByDownloadTime(TimeSpan frameTime)
         {
-            if (DownloadTime.IsMinValue())
+            if (Assigned.IsMinValue())
             {
                 return TimeSpan.Zero;
             }
-            if (!FinishedTime.IsMinValue())
+            if (!Finished.IsMinValue())
             {
-                return FinishedTime.Subtract(DownloadTime);
+                return Finished.Subtract(Assigned);
             }
 
             // If ETA is Zero and AllFramesAreCompleted == false, the Unit Time
@@ -302,7 +265,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.Zero;
             }
 
-            return _workUnit.UnitRetrievalTime.Add(eta).Subtract(DownloadTime);
+            return WorkUnit.UnitRetrievalTime.Add(eta).Subtract(Assigned);
         }
 
         private TimeSpan GetUnitTimeByFrameTime(TimeSpan frameTime)
@@ -387,7 +350,7 @@ namespace HFM.Core.WorkUnits
             var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);
             TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
             var bonusByFrameValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByFrameTime);
-            logger.Debug(CreateProductionDebugOutput(Data.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
+            logger.Debug(CreateProductionDebugOutput(WorkUnit.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
                                                            unitTimeByDownloadTime, bonusByDownloadValues,
                                                            unitTimeByFrameTime, bonusByFrameValues));
         }
@@ -432,7 +395,7 @@ namespace HFM.Core.WorkUnits
         {
             // the numberOfFrames must be 1 or greater
             // if CurrentFrame is null then no frames have been captured yet
-            if (numberOfFrames < 1 || _workUnit.CurrentFrame == null)
+            if (numberOfFrames < 1 || WorkUnit.CurrentFrame == null)
             {
                 return 0;
             }
@@ -446,11 +409,11 @@ namespace HFM.Core.WorkUnits
             TimeSpan totalTime = TimeSpan.Zero;
             int countFrames = 0;
 
-            int frameId = _workUnit.CurrentFrame.ID;
+            int frameId = WorkUnit.CurrentFrame.ID;
             for (int i = 0; i < numberOfFrames; i++)
             {
                 // Issue 199
-                var frameData = _workUnit.GetFrameData(frameId);
+                var frameData = WorkUnit.GetFrameData(frameId);
                 if (frameData != null && frameData.Duration > TimeSpan.Zero)
                 {
                     totalTime = totalTime.Add(frameData.Duration);

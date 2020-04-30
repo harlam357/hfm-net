@@ -49,27 +49,27 @@ namespace HFM.Forms.Controls
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.cboQueueIndex = new System.Windows.Forms.ComboBox();
-            this.txtMachineID = new System.Windows.Forms.TextBox();
-            this.labelWrapper1 = new System.Windows.Forms.Label();
+            this.MachineIDTextBox = new System.Windows.Forms.TextBox();
+            this.StatusLabel = new System.Windows.Forms.Label();
             this.lblMachineID = new System.Windows.Forms.Label();
-            this.txtStatus = new System.Windows.Forms.TextBox();
-            this.txtSmpCores = new System.Windows.Forms.TextBox();
-            this.lblCredit = new System.Windows.Forms.Label();
-            this.lblSmpCores = new System.Windows.Forms.Label();
-            this.txtMemory = new System.Windows.Forms.TextBox();
-            this.txtCredit = new System.Windows.Forms.TextBox();
-            this.txtOsType = new System.Windows.Forms.TextBox();
-            this.lblBeginDate = new System.Windows.Forms.Label();
-            this.lblMemory = new System.Windows.Forms.Label();
-            this.txtCpuType = new System.Windows.Forms.TextBox();
-            this.txtBeginDate = new System.Windows.Forms.TextBox();
-            this.lblOsType = new System.Windows.Forms.Label();
-            this.lblCpuType = new System.Windows.Forms.Label();
-            this.lblServer = new System.Windows.Forms.Label();
-            this.txtServer = new System.Windows.Forms.TextBox();
-            this.labelWrapper2 = new System.Windows.Forms.Label();
+            this.StatusTextBox = new System.Windows.Forms.TextBox();
+            this.CPUThreadsTextBox = new System.Windows.Forms.TextBox();
+            this.BaseCreditLabel = new System.Windows.Forms.Label();
+            this.CPUThreadsLabel = new System.Windows.Forms.Label();
+            this.MemoryTextBox = new System.Windows.Forms.TextBox();
+            this.BaseCreditTextBox = new System.Windows.Forms.TextBox();
+            this.OSTextBox = new System.Windows.Forms.TextBox();
+            this.AssignedLabel = new System.Windows.Forms.Label();
+            this.MemoryLabel = new System.Windows.Forms.Label();
+            this.CPUTypeTextBox = new System.Windows.Forms.TextBox();
+            this.AssignedTextBox = new System.Windows.Forms.TextBox();
+            this.OSLabel = new System.Windows.Forms.Label();
+            this.CPULabel = new System.Windows.Forms.Label();
+            this.WorkServerLabel = new System.Windows.Forms.Label();
+            this.WorkServerTextBox = new System.Windows.Forms.TextBox();
+            this.WaitingOnLabel = new System.Windows.Forms.Label();
             this.labelWrapper3 = new System.Windows.Forms.Label();
-            this.labelWrapper4 = new System.Windows.Forms.Label();
+            this.NextAttemptLabel = new System.Windows.Forms.Label();
             this.WaitingOnTextBox = new System.Windows.Forms.TextBox();
             this.AttemptsTextBox = new System.Windows.Forms.TextBox();
             this.NextAttemptTextBox = new System.Windows.Forms.TextBox();
@@ -83,27 +83,27 @@ namespace HFM.Forms.Controls
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.cboQueueIndex, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtMachineID, 1, 13);
-            this.tableLayoutPanel1.Controls.Add(this.labelWrapper1, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.MachineIDTextBox, 1, 13);
+            this.tableLayoutPanel1.Controls.Add(this.StatusLabel, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 13);
-            this.tableLayoutPanel1.Controls.Add(this.txtStatus, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.txtSmpCores, 1, 12);
-            this.tableLayoutPanel1.Controls.Add(this.lblCredit, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.lblSmpCores, 0, 12);
-            this.tableLayoutPanel1.Controls.Add(this.txtMemory, 1, 11);
-            this.tableLayoutPanel1.Controls.Add(this.txtCredit, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.txtOsType, 1, 10);
-            this.tableLayoutPanel1.Controls.Add(this.lblBeginDate, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.lblMemory, 0, 11);
-            this.tableLayoutPanel1.Controls.Add(this.txtCpuType, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.txtBeginDate, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.lblOsType, 0, 10);
-            this.tableLayoutPanel1.Controls.Add(this.lblCpuType, 0, 9);
-            this.tableLayoutPanel1.Controls.Add(this.lblServer, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.txtServer, 1, 8);
-            this.tableLayoutPanel1.Controls.Add(this.labelWrapper2, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.StatusTextBox, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 12);
+            this.tableLayoutPanel1.Controls.Add(this.BaseCreditLabel, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsLabel, 0, 12);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 11);
+            this.tableLayoutPanel1.Controls.Add(this.BaseCreditTextBox, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this.AssignedLabel, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 11);
+            this.tableLayoutPanel1.Controls.Add(this.CPUTypeTextBox, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.AssignedTextBox, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 10);
+            this.tableLayoutPanel1.Controls.Add(this.CPULabel, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.WorkServerLabel, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.WorkServerTextBox, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.WaitingOnLabel, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.labelWrapper3, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.labelWrapper4, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.NextAttemptLabel, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.WaitingOnTextBox, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.AttemptsTextBox, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.NextAttemptTextBox, 1, 5);
@@ -144,25 +144,25 @@ namespace HFM.Forms.Controls
             this.cboQueueIndex.TabIndex = 0;
             this.cboQueueIndex.SelectedIndexChanged += new System.EventHandler(this.cboQueueIndex_SelectedIndexChanged);
             // 
-            // txtMachineID
+            // MachineIDTextBox
             // 
-            this.txtMachineID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtMachineID.Location = new System.Drawing.Point(100, 296);
-            this.txtMachineID.Name = "txtMachineID";
-            this.txtMachineID.ReadOnly = true;
-            this.txtMachineID.Size = new System.Drawing.Size(124, 20);
-            this.txtMachineID.TabIndex = 42;
-            this.txtMachineID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MachineIDTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MachineIDTextBox.Location = new System.Drawing.Point(100, 296);
+            this.MachineIDTextBox.Name = "MachineIDTextBox";
+            this.MachineIDTextBox.ReadOnly = true;
+            this.MachineIDTextBox.Size = new System.Drawing.Size(124, 20);
+            this.MachineIDTextBox.TabIndex = 42;
+            this.MachineIDTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // labelWrapper1
+            // StatusLabel
             // 
-            this.labelWrapper1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelWrapper1.AutoSize = true;
-            this.labelWrapper1.Location = new System.Drawing.Point(10, 45);
-            this.labelWrapper1.Name = "labelWrapper1";
-            this.labelWrapper1.Size = new System.Drawing.Size(40, 13);
-            this.labelWrapper1.TabIndex = 1;
-            this.labelWrapper1.Text = "Status:";
+            this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.StatusLabel.AutoSize = true;
+            this.StatusLabel.Location = new System.Drawing.Point(10, 45);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(40, 13);
+            this.StatusLabel.TabIndex = 1;
+            this.StatusLabel.Text = "Status:";
             // 
             // lblMachineID
             // 
@@ -174,165 +174,165 @@ namespace HFM.Forms.Controls
             this.lblMachineID.TabIndex = 41;
             this.lblMachineID.Text = "Machine ID:";
             // 
-            // txtStatus
+            // StatusTextBox
             // 
-            this.txtStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtStatus.Location = new System.Drawing.Point(100, 43);
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.ReadOnly = true;
-            this.txtStatus.Size = new System.Drawing.Size(124, 20);
-            this.txtStatus.TabIndex = 2;
-            this.txtStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.StatusTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StatusTextBox.Location = new System.Drawing.Point(100, 43);
+            this.StatusTextBox.Name = "StatusTextBox";
+            this.StatusTextBox.ReadOnly = true;
+            this.StatusTextBox.Size = new System.Drawing.Size(124, 20);
+            this.StatusTextBox.TabIndex = 2;
+            this.StatusTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // txtSmpCores
+            // CPUThreadsTextBox
             // 
-            this.txtSmpCores.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSmpCores.Location = new System.Drawing.Point(100, 273);
-            this.txtSmpCores.Name = "txtSmpCores";
-            this.txtSmpCores.ReadOnly = true;
-            this.txtSmpCores.Size = new System.Drawing.Size(124, 20);
-            this.txtSmpCores.TabIndex = 36;
-            this.txtSmpCores.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CPUThreadsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CPUThreadsTextBox.Location = new System.Drawing.Point(100, 273);
+            this.CPUThreadsTextBox.Name = "CPUThreadsTextBox";
+            this.CPUThreadsTextBox.ReadOnly = true;
+            this.CPUThreadsTextBox.Size = new System.Drawing.Size(124, 20);
+            this.CPUThreadsTextBox.TabIndex = 36;
+            this.CPUThreadsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lblCredit
+            // BaseCreditLabel
             // 
-            this.lblCredit.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblCredit.AutoSize = true;
-            this.lblCredit.Location = new System.Drawing.Point(10, 137);
-            this.lblCredit.Name = "lblCredit";
-            this.lblCredit.Size = new System.Drawing.Size(37, 13);
-            this.lblCredit.TabIndex = 9;
-            this.lblCredit.Text = "Credit:";
+            this.BaseCreditLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.BaseCreditLabel.AutoSize = true;
+            this.BaseCreditLabel.Location = new System.Drawing.Point(10, 137);
+            this.BaseCreditLabel.Name = "BaseCreditLabel";
+            this.BaseCreditLabel.Size = new System.Drawing.Size(64, 13);
+            this.BaseCreditLabel.TabIndex = 9;
+            this.BaseCreditLabel.Text = "Base Credit:";
             // 
-            // lblSmpCores
+            // CPUThreadsLabel
             // 
-            this.lblSmpCores.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblSmpCores.AutoSize = true;
-            this.lblSmpCores.Location = new System.Drawing.Point(10, 275);
-            this.lblSmpCores.Name = "lblSmpCores";
-            this.lblSmpCores.Size = new System.Drawing.Size(63, 13);
-            this.lblSmpCores.TabIndex = 35;
-            this.lblSmpCores.Text = "SMP Cores:";
+            this.CPUThreadsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CPUThreadsLabel.AutoSize = true;
+            this.CPUThreadsLabel.Location = new System.Drawing.Point(10, 275);
+            this.CPUThreadsLabel.Name = "CPUThreadsLabel";
+            this.CPUThreadsLabel.Size = new System.Drawing.Size(74, 13);
+            this.CPUThreadsLabel.TabIndex = 35;
+            this.CPUThreadsLabel.Text = "CPU Threads:";
             // 
-            // txtMemory
+            // MemoryTextBox
             // 
-            this.txtMemory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtMemory.Location = new System.Drawing.Point(100, 250);
-            this.txtMemory.Name = "txtMemory";
-            this.txtMemory.ReadOnly = true;
-            this.txtMemory.Size = new System.Drawing.Size(124, 20);
-            this.txtMemory.TabIndex = 32;
-            this.txtMemory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MemoryTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MemoryTextBox.Location = new System.Drawing.Point(100, 250);
+            this.MemoryTextBox.Name = "MemoryTextBox";
+            this.MemoryTextBox.ReadOnly = true;
+            this.MemoryTextBox.Size = new System.Drawing.Size(124, 20);
+            this.MemoryTextBox.TabIndex = 32;
+            this.MemoryTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // txtCredit
+            // BaseCreditTextBox
             // 
-            this.txtCredit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCredit.Location = new System.Drawing.Point(100, 135);
-            this.txtCredit.Name = "txtCredit";
-            this.txtCredit.ReadOnly = true;
-            this.txtCredit.Size = new System.Drawing.Size(124, 20);
-            this.txtCredit.TabIndex = 10;
-            this.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BaseCreditTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BaseCreditTextBox.Location = new System.Drawing.Point(100, 135);
+            this.BaseCreditTextBox.Name = "BaseCreditTextBox";
+            this.BaseCreditTextBox.ReadOnly = true;
+            this.BaseCreditTextBox.Size = new System.Drawing.Size(124, 20);
+            this.BaseCreditTextBox.TabIndex = 10;
+            this.BaseCreditTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // txtOsType
+            // OSTextBox
             // 
-            this.txtOsType.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOsType.Location = new System.Drawing.Point(100, 227);
-            this.txtOsType.Name = "txtOsType";
-            this.txtOsType.ReadOnly = true;
-            this.txtOsType.Size = new System.Drawing.Size(124, 20);
-            this.txtOsType.TabIndex = 30;
-            this.txtOsType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.OSTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OSTextBox.Location = new System.Drawing.Point(100, 227);
+            this.OSTextBox.Name = "OSTextBox";
+            this.OSTextBox.ReadOnly = true;
+            this.OSTextBox.Size = new System.Drawing.Size(124, 20);
+            this.OSTextBox.TabIndex = 30;
+            this.OSTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lblBeginDate
+            // AssignedLabel
             // 
-            this.lblBeginDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblBeginDate.AutoSize = true;
-            this.lblBeginDate.Location = new System.Drawing.Point(10, 160);
-            this.lblBeginDate.Name = "lblBeginDate";
-            this.lblBeginDate.Size = new System.Drawing.Size(63, 13);
-            this.lblBeginDate.TabIndex = 11;
-            this.lblBeginDate.Text = "Begin Date:";
+            this.AssignedLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AssignedLabel.AutoSize = true;
+            this.AssignedLabel.Location = new System.Drawing.Point(10, 160);
+            this.AssignedLabel.Name = "AssignedLabel";
+            this.AssignedLabel.Size = new System.Drawing.Size(53, 13);
+            this.AssignedLabel.TabIndex = 11;
+            this.AssignedLabel.Text = "Assigned:";
             // 
-            // lblMemory
+            // MemoryLabel
             // 
-            this.lblMemory.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblMemory.AutoSize = true;
-            this.lblMemory.Location = new System.Drawing.Point(10, 252);
-            this.lblMemory.Name = "lblMemory";
-            this.lblMemory.Size = new System.Drawing.Size(47, 13);
-            this.lblMemory.TabIndex = 31;
-            this.lblMemory.Text = "Memory:";
+            this.MemoryLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.MemoryLabel.AutoSize = true;
+            this.MemoryLabel.Location = new System.Drawing.Point(10, 252);
+            this.MemoryLabel.Name = "MemoryLabel";
+            this.MemoryLabel.Size = new System.Drawing.Size(47, 13);
+            this.MemoryLabel.TabIndex = 31;
+            this.MemoryLabel.Text = "Memory:";
             // 
-            // txtCpuType
+            // CPUTypeTextBox
             // 
-            this.txtCpuType.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCpuType.Location = new System.Drawing.Point(100, 204);
-            this.txtCpuType.Name = "txtCpuType";
-            this.txtCpuType.ReadOnly = true;
-            this.txtCpuType.Size = new System.Drawing.Size(124, 20);
-            this.txtCpuType.TabIndex = 28;
-            this.txtCpuType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CPUTypeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CPUTypeTextBox.Location = new System.Drawing.Point(100, 204);
+            this.CPUTypeTextBox.Name = "CPUTypeTextBox";
+            this.CPUTypeTextBox.ReadOnly = true;
+            this.CPUTypeTextBox.Size = new System.Drawing.Size(124, 20);
+            this.CPUTypeTextBox.TabIndex = 28;
+            this.CPUTypeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // txtBeginDate
+            // AssignedTextBox
             // 
-            this.txtBeginDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtBeginDate.Location = new System.Drawing.Point(100, 158);
-            this.txtBeginDate.Name = "txtBeginDate";
-            this.txtBeginDate.ReadOnly = true;
-            this.txtBeginDate.Size = new System.Drawing.Size(124, 20);
-            this.txtBeginDate.TabIndex = 12;
-            this.txtBeginDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.AssignedTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AssignedTextBox.Location = new System.Drawing.Point(100, 158);
+            this.AssignedTextBox.Name = "AssignedTextBox";
+            this.AssignedTextBox.ReadOnly = true;
+            this.AssignedTextBox.Size = new System.Drawing.Size(124, 20);
+            this.AssignedTextBox.TabIndex = 12;
+            this.AssignedTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lblOsType
+            // OSLabel
             // 
-            this.lblOsType.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblOsType.AutoSize = true;
-            this.lblOsType.Location = new System.Drawing.Point(10, 229);
-            this.lblOsType.Name = "lblOsType";
-            this.lblOsType.Size = new System.Drawing.Size(25, 13);
-            this.lblOsType.TabIndex = 29;
-            this.lblOsType.Text = "OS:";
+            this.OSLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.OSLabel.AutoSize = true;
+            this.OSLabel.Location = new System.Drawing.Point(10, 229);
+            this.OSLabel.Name = "OSLabel";
+            this.OSLabel.Size = new System.Drawing.Size(25, 13);
+            this.OSLabel.TabIndex = 29;
+            this.OSLabel.Text = "OS:";
             // 
-            // lblCpuType
+            // CPULabel
             // 
-            this.lblCpuType.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblCpuType.AutoSize = true;
-            this.lblCpuType.Location = new System.Drawing.Point(10, 206);
-            this.lblCpuType.Name = "lblCpuType";
-            this.lblCpuType.Size = new System.Drawing.Size(59, 13);
-            this.lblCpuType.TabIndex = 27;
-            this.lblCpuType.Text = "CPU Type:";
+            this.CPULabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CPULabel.AutoSize = true;
+            this.CPULabel.Location = new System.Drawing.Point(10, 206);
+            this.CPULabel.Name = "CPULabel";
+            this.CPULabel.Size = new System.Drawing.Size(32, 13);
+            this.CPULabel.TabIndex = 27;
+            this.CPULabel.Text = "CPU:";
             // 
-            // lblServer
+            // WorkServerLabel
             // 
-            this.lblServer.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblServer.AutoSize = true;
-            this.lblServer.Location = new System.Drawing.Point(10, 183);
-            this.lblServer.Name = "lblServer";
-            this.lblServer.Size = new System.Drawing.Size(41, 13);
-            this.lblServer.TabIndex = 21;
-            this.lblServer.Text = "Server:";
+            this.WorkServerLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.WorkServerLabel.AutoSize = true;
+            this.WorkServerLabel.Location = new System.Drawing.Point(10, 183);
+            this.WorkServerLabel.Name = "WorkServerLabel";
+            this.WorkServerLabel.Size = new System.Drawing.Size(70, 13);
+            this.WorkServerLabel.TabIndex = 21;
+            this.WorkServerLabel.Text = "Work Server:";
             // 
-            // txtServer
+            // WorkServerTextBox
             // 
-            this.txtServer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtServer.Location = new System.Drawing.Point(100, 181);
-            this.txtServer.Name = "txtServer";
-            this.txtServer.ReadOnly = true;
-            this.txtServer.Size = new System.Drawing.Size(124, 20);
-            this.txtServer.TabIndex = 22;
-            this.txtServer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.WorkServerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WorkServerTextBox.Location = new System.Drawing.Point(100, 181);
+            this.WorkServerTextBox.Name = "WorkServerTextBox";
+            this.WorkServerTextBox.ReadOnly = true;
+            this.WorkServerTextBox.Size = new System.Drawing.Size(124, 20);
+            this.WorkServerTextBox.TabIndex = 22;
+            this.WorkServerTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // labelWrapper2
+            // WaitingOnLabel
             // 
-            this.labelWrapper2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelWrapper2.AutoSize = true;
-            this.labelWrapper2.Location = new System.Drawing.Point(10, 68);
-            this.labelWrapper2.Name = "labelWrapper2";
-            this.labelWrapper2.Size = new System.Drawing.Size(63, 13);
-            this.labelWrapper2.TabIndex = 3;
-            this.labelWrapper2.Text = "Waiting On:";
+            this.WaitingOnLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.WaitingOnLabel.AutoSize = true;
+            this.WaitingOnLabel.Location = new System.Drawing.Point(10, 68);
+            this.WaitingOnLabel.Name = "WaitingOnLabel";
+            this.WaitingOnLabel.Size = new System.Drawing.Size(63, 13);
+            this.WaitingOnLabel.TabIndex = 3;
+            this.WaitingOnLabel.Text = "Waiting On:";
             // 
             // labelWrapper3
             // 
@@ -344,15 +344,15 @@ namespace HFM.Forms.Controls
             this.labelWrapper3.TabIndex = 5;
             this.labelWrapper3.Text = "Attempts:";
             // 
-            // labelWrapper4
+            // NextAttemptLabel
             // 
-            this.labelWrapper4.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelWrapper4.AutoSize = true;
-            this.labelWrapper4.Location = new System.Drawing.Point(10, 114);
-            this.labelWrapper4.Name = "labelWrapper4";
-            this.labelWrapper4.Size = new System.Drawing.Size(68, 13);
-            this.labelWrapper4.TabIndex = 7;
-            this.labelWrapper4.Text = "Next Attempt";
+            this.NextAttemptLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.NextAttemptLabel.AutoSize = true;
+            this.NextAttemptLabel.Location = new System.Drawing.Point(10, 114);
+            this.NextAttemptLabel.Name = "NextAttemptLabel";
+            this.NextAttemptLabel.Size = new System.Drawing.Size(68, 13);
+            this.NextAttemptLabel.TabIndex = 7;
+            this.NextAttemptLabel.Text = "Next Attempt";
             // 
             // WaitingOnTextBox
             // 
@@ -403,29 +403,29 @@ namespace HFM.Forms.Controls
 
         #endregion
 
-        private System.Windows.Forms.Label lblServer;
+        private System.Windows.Forms.Label WorkServerLabel;
         private System.Windows.Forms.ComboBox cboQueueIndex;
-        private System.Windows.Forms.Label lblBeginDate;
-        private System.Windows.Forms.Label lblCpuType;
-        private System.Windows.Forms.Label lblOsType;
-        private System.Windows.Forms.Label lblSmpCores;
-        private System.Windows.Forms.Label lblMemory;
-        private System.Windows.Forms.TextBox txtServer;
-        private System.Windows.Forms.TextBox txtBeginDate;
-        private System.Windows.Forms.TextBox txtCpuType;
-        private System.Windows.Forms.TextBox txtOsType;
-        private System.Windows.Forms.TextBox txtSmpCores;
-        private System.Windows.Forms.TextBox txtMemory;
-        private System.Windows.Forms.TextBox txtCredit;
-        private System.Windows.Forms.Label lblCredit;
-        private System.Windows.Forms.TextBox txtStatus;
-        private System.Windows.Forms.Label labelWrapper1;
-        private System.Windows.Forms.TextBox txtMachineID;
+        private System.Windows.Forms.Label AssignedLabel;
+        private System.Windows.Forms.Label CPULabel;
+        private System.Windows.Forms.Label OSLabel;
+        private System.Windows.Forms.Label CPUThreadsLabel;
+        private System.Windows.Forms.Label MemoryLabel;
+        private System.Windows.Forms.TextBox WorkServerTextBox;
+        private System.Windows.Forms.TextBox AssignedTextBox;
+        private System.Windows.Forms.TextBox CPUTypeTextBox;
+        private System.Windows.Forms.TextBox OSTextBox;
+        private System.Windows.Forms.TextBox CPUThreadsTextBox;
+        private System.Windows.Forms.TextBox MemoryTextBox;
+        private System.Windows.Forms.TextBox BaseCreditTextBox;
+        private System.Windows.Forms.Label BaseCreditLabel;
+        private System.Windows.Forms.TextBox StatusTextBox;
+        private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.TextBox MachineIDTextBox;
         private System.Windows.Forms.Label lblMachineID;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label labelWrapper2;
+        private System.Windows.Forms.Label WaitingOnLabel;
         private System.Windows.Forms.Label labelWrapper3;
-        private System.Windows.Forms.Label labelWrapper4;
+        private System.Windows.Forms.Label NextAttemptLabel;
         private System.Windows.Forms.TextBox WaitingOnTextBox;
         private System.Windows.Forms.TextBox AttemptsTextBox;
         private System.Windows.Forms.TextBox NextAttemptTextBox;

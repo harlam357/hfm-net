@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 
 using AutoMapper;
@@ -15,13 +16,20 @@ namespace HFM.Core.SlotXml
             CreateMap<SlotModel, SlotData>()
                 .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(src.Status.GetStatusColor())))
                 .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(src.Status))))
-                .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToStringOrUnknown() : src.ETA.ToString()))
-                .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.DownloadTime.ToStringOrUnknown()))
-                .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToStringOrUnknown()))
+                .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToShortStringOrEmpty() : src.ETA.ToString()))
+                .ForMember(dest => dest.Core, opt => opt.MapFrom(src => src.Core ?? String.Empty))
+                .ForMember(dest => dest.CoreId, opt => opt.MapFrom(src => src.CoreID ?? String.Empty))
+                .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.Assigned.ToShortStringOrEmpty()))
+                .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToShortStringOrEmpty()))
                 .ForMember(dest => dest.Protein, opt => opt.MapFrom(src => src.WorkUnitModel.CurrentProtein));
 
             CreateMap<Log.LogLine, LogLine>();
-            CreateMap<Proteins.Protein, Protein>();
+            CreateMap<Proteins.Protein, Protein>()
+                .ForMember(dest => dest.ServerIP, opt => opt.MapFrom(src => src.ServerIP ?? String.Empty))
+                .ForMember(dest => dest.WorkUnitName, opt => opt.MapFrom(src => src.WorkUnitName ?? String.Empty))
+                .ForMember(dest => dest.Core, opt => opt.MapFrom(src => src.Core ?? String.Empty))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description ?? String.Empty))
+                .ForMember(dest => dest.Contact, opt => opt.MapFrom(src => src.Contact ?? String.Empty));
         }
     }
 }

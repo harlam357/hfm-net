@@ -1,16 +1,19 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Rhino.Mocks;
 
+using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
-using HFM.Proteins;
 
 namespace HFM.Core.Client
 {
@@ -18,26 +21,25 @@ namespace HFM.Core.Client
     public class FahClientTests
     {
         [Test]
-        public void FahClient_UpdateBenchmarkData_Test()
+        public void FahClient_UpdateWorkUnitBenchmarkAndRepository()
         {
-            // setup
+            // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var workUnitRepository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), null, benchmarkService, workUnitRepository);
-
-            var slotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner", "Path"), SlotIdentifier.NoSlotID);
+            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), benchmarkService, null, workUnitRepository);
 
             var workUnit = new WorkUnit();
-            workUnit.SlotIdentifier = slotIdentifier;
             workUnit.ProjectID = 2669;
             workUnit.ProjectRun = 1;
             workUnit.ProjectClone = 2;
             workUnit.ProjectGen = 3;
-            workUnit.FinishedTime = new DateTime(2010, 1, 1);
+            workUnit.Finished = new DateTime(2010, 1, 1);
             workUnit.QueueIndex = 0;
-            var currentWorkUnit = new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnit };
-
-            var workUnitCopy = workUnit.DeepClone();
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            var currentWorkUnit = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
+            var slotIdentifier = currentWorkUnit.SlotModel.SlotIdentifier;
+            
+            var workUnitCopy = workUnit.Copy();
             workUnitCopy.FramesObserved = 4;
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
                .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
@@ -47,26 +49,77 @@ namespace HFM.Core.Client
             workUnitCopy.FrameData = frameDataDictionary;
             workUnitCopy.UnitResult = WorkUnitResult.FinishedUnit;
 
-            var parsedUnits = new[] { new WorkUnitModel { CurrentProtein = new Protein(), Data = workUnitCopy } };
+            var parsedUnits = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
 
-            // Arrange
             workUnitRepository.Stub(x => x.Connected).Return(true);
             workUnitRepository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
 
+            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(2669);
+
             // Assert (pre-condition)
             Assert.IsFalse(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsFalse(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, 2669));
+            Assert.IsFalse(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
+            Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier));
 
             // Act
-            fahClient.UpdateBenchmarkData(currentWorkUnit, parsedUnits);
+            fahClient.UpdateWorkUnitBenchmarkAndRepository(currentWorkUnit, parsedUnits);
 
             // Assert
             Assert.IsTrue(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
-            Assert.IsTrue(new List<int>(benchmarkService.GetBenchmarkProjects(slotIdentifier)).Contains(2669));
-            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, 2669).AverageFrameTime);
+            Assert.IsTrue(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
+            Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier).AverageFrameTime);
 
             workUnitRepository.VerifyAllExpectations();
+        }
+
+        [Test]
+        public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_10()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_10" };
+            var fahClient = CreateClient(settings);
+            var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+            // Act
+            fahClient.RefreshSlots();
+            // Assert
+            var slots = fahClient.Slots.ToList();
+            Assert.AreEqual(2, slots.Count);
+            Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
+            Assert.AreEqual(4, slots[0].SlotThreads);
+            Assert.AreEqual(null, slots[0].GPUIndex);
+            Assert.AreEqual(SlotType.GPU, slots[1].SlotType);
+            Assert.AreEqual(null, slots[1].SlotThreads);
+            Assert.AreEqual(0, slots[1].GPUIndex);
+        }
+
+        [Test]
+        public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_12()
+        {
+            // Arrange
+            var settings = new ClientSettings { Name = "Client_v7_12" };
+            var fahClient = CreateClient(settings);
+            var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(new StringBuilder(
+                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slots.txt"))));
+            // Act
+            fahClient.RefreshSlots();
+            // Assert
+            var slots = fahClient.Slots.ToList();
+            Assert.AreEqual(1, slots.Count);
+            Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
+            Assert.AreEqual(4, slots[0].SlotThreads);
+            Assert.AreEqual(null, slots[0].GPUIndex);
+        }
+
+        private static FahClient CreateClient(ClientSettings settings)
+        {
+            var client = new FahClient(null, null, null, null, null);
+            client.Settings = settings;
+            return client;
         }
     }
 }

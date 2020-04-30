@@ -385,11 +385,12 @@ namespace HFM.Forms
         {
             if (_gridModel.SelectedSlot != null)
             {
-                // TODO: StatusLabelLeftText for v7 client
-                //_view.StatusLabelLeftText = _gridModel.SelectedSlot.ClientPathAndArguments;
+                // TODO: Surface client arguments?
+                //_view.StatusLabelLeftText = $"{_gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString()} {_gridModel.SelectedSlot.Arguments}";
+                _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString();
 
                 _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
-                                       _gridModel.SelectedSlot.WorkUnit.SlotType);
+                                       _gridModel.SelectedSlot.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
@@ -443,7 +444,7 @@ namespace HFM.Forms
             // clear the log text
             _view.LogFileViewer.SetNoLogLines();
             // clear the queue control
-            _view.SetWorkUnitInfos(null);
+            _view.SetWorkUnitInfos(null, SlotType.Unknown);
         }
 
         private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
@@ -876,7 +877,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Fold(_gridModel.SelectedSlot.SlotId);
+                client.Fold(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -886,7 +887,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Pause(_gridModel.SelectedSlot.SlotId);
+                client.Pause(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -896,7 +897,7 @@ namespace HFM.Forms
 
             for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
             {
-                client.Finish(_gridModel.SelectedSlot.SlotId);
+                client.Finish(_gridModel.SelectedSlot.SlotID);
             }
         }
 
@@ -1110,7 +1111,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and if found... load its ProjectID.
             if (_gridModel.SelectedSlot != null)
             {
-                projectId = _gridModel.SelectedSlot.WorkUnit.ProjectID;
+                projectId = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
 
             var benchmarksView = _viewFactory.GetBenchmarksForm();
@@ -1266,13 +1267,5 @@ namespace HFM.Forms
         }
 
         #endregion
-
-        /// <summary>
-        /// Finds the SlotModel by key (Name).
-        /// </summary>
-        public SlotModel FindSlotModel(string key)
-        {
-            return _clientConfiguration.Slots.FirstOrDefault(slot => slot.Name == key);
-        }
     }
 }

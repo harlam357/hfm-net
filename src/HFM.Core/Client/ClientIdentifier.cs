@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -7,12 +8,8 @@ using HFM.Core.Net;
 
 namespace HFM.Core.Client
 {
-    public struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
+    public readonly struct ClientIdentifier : IEquatable<ClientIdentifier>, IComparable<ClientIdentifier>, IComparable
     {
-        internal const int NoPort = 0;
-
-        public static ClientIdentifier None => new ClientIdentifier(null, null, NoPort, Guid.Empty);
-
         public ClientIdentifier(string name, string server, int port, Guid guid)
         {
             Name = name;
@@ -34,14 +31,12 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(Server)) return Name;
-            return TcpPort.Validate(Port) 
-                ? String.Format(CultureInfo.InvariantCulture, "{0} ({1}:{2})", Name, Server, Port) 
-                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Server);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ToServerPortString());
         }
 
         public bool Equals(ClientIdentifier other)
         {
-            if (HasGuid && other.HasGuid)
+            if (HasGuid || other.HasGuid)
             {
                 return Guid.Equals(other.Guid);
             }
@@ -68,6 +63,27 @@ namespace HFM.Core.Client
             }
         }
 
+        private sealed class ProteinBenchmarkClientIdentifierEqualityComparer : IEqualityComparer<ClientIdentifier>
+        {
+            public bool Equals(ClientIdentifier x, ClientIdentifier y)
+            {
+                return x.Name == y.Name && x.Server == y.Server && x.Port == y.Port;
+            }
+
+            public int GetHashCode(ClientIdentifier obj)
+            {
+                unchecked
+                {
+                    var hashCode = (obj.Name != null ? obj.Name.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (obj.Server != null ? obj.Server.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ obj.Port;
+                    return hashCode;
+                }
+            }
+        }
+
+        public static IEqualityComparer<ClientIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkClientIdentifierEqualityComparer();
+
         public static bool operator ==(ClientIdentifier left, ClientIdentifier right)
         {
             return left.Equals(right);
@@ -80,13 +96,20 @@ namespace HFM.Core.Client
 
         public int CompareTo(ClientIdentifier other)
         {
+            if (HasGuid)
+            {
+                return other.HasGuid ? Guid.CompareTo(other.Guid) : -1;
+            }
+            if (other.HasGuid)
+            {
+                return 1;
+            }
+
             var nameComparison = String.Compare(Name, other.Name, StringComparison.Ordinal);
             if (nameComparison != 0) return nameComparison;
             var serverComparison = String.Compare(Server, other.Server, StringComparison.Ordinal);
             if (serverComparison != 0) return serverComparison;
-            var portComparison = Port.CompareTo(other.Port);
-            if (portComparison != 0) return portComparison;
-            return Guid.CompareTo(other.Guid);
+            return Port.CompareTo(other.Port);
         }
 
         public int CompareTo(object obj)
@@ -115,9 +138,7 @@ namespace HFM.Core.Client
             return left.CompareTo(right) >= 0;
         }
 
-        // TODO: make ToPath() internal
-        // for persistence that combines Server and Port as Legacy client "Path"
-        public string ToPath()
+        public string ToServerPortString()
         {
             return TcpPort.Validate(Port) 
                 ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port) 
@@ -126,17 +147,12 @@ namespace HFM.Core.Client
 
         internal static readonly Regex ServerPortRegex = new Regex(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
-        internal static ClientIdentifier FromPath(string name, string path)
-        {
-            return FromPath(name, path, Guid.Empty);
-        }
-
         internal static ClientIdentifier FromPath(string name, string path, Guid guid)
         {
             var match = path is null ? null : ServerPortRegex.Match(path);
             return match != null && match.Success 
                 ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid) 
-                : new ClientIdentifier(name, path, NoPort, guid);
+                : new ClientIdentifier(name, path, ClientSettings.NoPort, guid);
         }
     }
 }

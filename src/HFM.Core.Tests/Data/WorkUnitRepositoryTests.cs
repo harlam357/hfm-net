@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Work Unit History Database Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,7 +9,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
 using NUnit.Framework;
 
 using HFM.Core.Client;
@@ -123,9 +104,10 @@ namespace HFM.Core.Data
                                  {
                                      Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
 
-                                     var workUnitModel = new WorkUnitModel();
+                                     var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+                                     var slotModel = new SlotModel(new NullClient { Settings = settings });
+                                     var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
                                      workUnitModel.CurrentProtein = BuildProtein1();
-                                     workUnitModel.Data = BuildWorkUnit1(i);
 
                                      _repository.Insert(workUnitModel);
                                  });
@@ -189,41 +171,46 @@ namespace HFM.Core.Data
         [Test]
         public void Insert_Test1()
         {
-            InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
         public void Insert_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            InsertTestInternal(BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
         public void Insert_Test2()
         {
-            InsertTestInternal(BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
+            var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
         public void Insert_Test3()
         {
-            InsertTestInternal(BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
+            var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
         public void Insert_Test4()
         {
-            InsertTestInternal(BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
+            var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
+            InsertTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private void InsertTestInternal(WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
+        private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
         {
             _repository.Initialize(TestScratchFile);
 
-            var workUnitModel = new WorkUnitModel();
+            var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
-            workUnitModel.Data = workUnit;
 
             _repository.Insert(workUnitModel);
 
@@ -250,7 +237,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = run;
             workUnit.ProjectClone = 2;
             workUnit.ProjectGen = 3;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -259,8 +245,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            workUnit.FinishedTime = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+            workUnit.Assigned = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            workUnit.Finished = new DateTime(2010, 1, 2, 0, 0, 0, DateTimeKind.Utc);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
@@ -303,8 +289,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(600), row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
-                Assert.AreEqual(new DateTime(2010, 1, 1), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2010, 1, 2), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2010, 1, 1), row.Assigned);
+                Assert.AreEqual(new DateTime(2010, 1, 2), row.Finished);
                 Assert.AreEqual("TestUnit1", row.WorkUnitName);
                 Assert.AreEqual(1.0, row.KFactor);
                 Assert.AreEqual("GRO-A3", row.Core);
@@ -325,7 +311,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 4;
             workUnit.ProjectClone = 5;
             workUnit.ProjectGen = 6;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner's","The Path's"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357's";
             workUnit.Team = 100;
             workUnit.CoreVersion = 2.27f;
@@ -334,8 +319,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2009, 5, 5);
-            workUnit.FinishedTime = new DateTime(2009, 5, 6);
+            workUnit.Assigned = new DateTime(2009, 5, 5);
+            workUnit.Finished = new DateTime(2009, 5, 6);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
@@ -378,8 +363,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(56, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(1000), row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
-                Assert.AreEqual(new DateTime(2009, 5, 5), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2009, 5, 6), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2009, 5, 5), row.Assigned);
+                Assert.AreEqual(new DateTime(2009, 5, 6), row.Finished);
                 Assert.AreEqual("TestUnit2", row.WorkUnitName);
                 Assert.AreEqual(2.0, row.KFactor);
                 Assert.AreEqual("GRO-A4", row.Core);
@@ -400,7 +385,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner","Path"), SlotIdentifier.NoSlotID);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.09f;
@@ -409,8 +393,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2010, 2, 2);
-            workUnit.FinishedTime = new DateTime(2010, 2, 3);
+            workUnit.Assigned = new DateTime(2010, 2, 2);
+            workUnit.Finished = new DateTime(2010, 2, 3);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
@@ -453,8 +437,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
-                Assert.AreEqual(new DateTime(2010, 2, 2), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2010, 2, 3), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2010, 2, 2), row.Assigned);
+                Assert.AreEqual(new DateTime(2010, 2, 3), row.Finished);
                 Assert.AreEqual("TestUnit3", row.WorkUnitName);
                 Assert.AreEqual(3.0, row.KFactor);
                 Assert.AreEqual("GRO-A5", row.Core);
@@ -475,7 +459,6 @@ namespace HFM.Core.Data
             workUnit.ProjectRun = 2;
             workUnit.ProjectClone = 3;
             workUnit.ProjectGen = 4;
-            workUnit.SlotIdentifier = new SlotIdentifier(ClientIdentifier.FromPath("Owner2","Path2"), 2);
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
             workUnit.CoreVersion = 2.27f;
@@ -484,8 +467,8 @@ namespace HFM.Core.Data
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
             // connection string option to Utc will force SQLite to handle all DateTime 
             // values as Utc regardless of the DateTimeKind specified in the value.
-            workUnit.DownloadTime = new DateTime(2012, 1, 2);
-            workUnit.FinishedTime = new DateTime(2012, 1, 5);
+            workUnit.Assigned = new DateTime(2012, 1, 2);
+            workUnit.Finished = new DateTime(2012, 1, 5);
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
@@ -528,8 +511,8 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
-                Assert.AreEqual(new DateTime(2012, 1, 2), row.DownloadDateTime);
-                Assert.AreEqual(new DateTime(2012, 1, 5), row.CompletionDateTime);
+                Assert.AreEqual(new DateTime(2012, 1, 2), row.Assigned);
+                Assert.AreEqual(new DateTime(2012, 1, 5), row.Finished);
                 Assert.AreEqual("TestUnit4", row.WorkUnitName);
                 Assert.AreEqual(4.0, row.KFactor);
                 Assert.AreEqual("OPENMMGPU", row.Core);

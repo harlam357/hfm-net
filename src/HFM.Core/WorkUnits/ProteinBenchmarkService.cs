@@ -1,25 +1,6 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -32,17 +13,17 @@ namespace HFM.Core.WorkUnits
     {
         ICollection<SlotIdentifier> GetSlotIdentifiers();
 
-        void Update(SlotIdentifier slotIdentifier, int projectID, IEnumerable<TimeSpan> frameTimes);
+        ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
 
-        ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, int projectID);
+        ProteinBenchmark Update(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier, IEnumerable<TimeSpan> frameTimes);
+
+        ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
+
+        ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
         void RemoveAll(SlotIdentifier slotIdentifier);
 
         void RemoveAll(SlotIdentifier slotIdentifier, int projectID);
-
-        ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
-
-        ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
         void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID);
     }
@@ -60,35 +41,53 @@ namespace HFM.Core.WorkUnits
 
         public ICollection<SlotIdentifier> GetSlotIdentifiers()
         {
-            return Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
-                .Concat(DataContainer.Data.Select(x => x.SlotIdentifier).Distinct())
+            return DataContainer.Data.Select(x => x.SlotIdentifier)
                 .OrderBy(s => s)
+                .Distinct(SlotIdentifier.ProteinBenchmarkEqualityComparer)
                 .ToList();
         }
 
-        public void Update(SlotIdentifier slotIdentifier, int projectID, IEnumerable<TimeSpan> frameTimes)
+        public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
         {
+            _cacheLock.EnterReadLock();
+            try
+            {
+                return DataContainer.Data.Where(b => BenchmarkMatchesSlotIdentifier(b, slotIdentifier))
+                    .Select(b => b.ProjectID).Distinct().OrderBy(p => p).ToList();
+            }
+            finally
+            {
+                _cacheLock.ExitReadLock();
+            }
+        }
+
+        public ProteinBenchmark Update(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier, IEnumerable<TimeSpan> frameTimes)
+        {
+            if (slotIdentifier == SlotIdentifier.AllSlots) throw new ArgumentException("Cannot update all client slots.");
+            if (frameTimes == null) throw new ArgumentNullException(nameof(frameTimes));
+
             // GetBenchmark() BEFORE entering write lock because it uses a read lock
-            ProteinBenchmark benchmark = GetBenchmark(slotIdentifier, projectID);
+            var benchmark = GetBenchmark(slotIdentifier, benchmarkIdentifier);
             // write lock
             _cacheLock.EnterWriteLock();
             try
             {
-                if (benchmark == null)
+                if (benchmark is null)
                 {
-                    benchmark = ProteinBenchmark.FromSlotIdentifier(slotIdentifier);
-                    benchmark.ProjectID = projectID;
+                    benchmark = new ProteinBenchmark();
                     DataContainer.Data.Add(benchmark);
                 }
-                else
-                {
-                    benchmark.UpdateFromSlotIdentifier(slotIdentifier);
-                }
+                benchmark
+                    .UpdateFromSlotIdentifier(slotIdentifier)
+                    .UpdateFromBenchmarkIdentifier(benchmarkIdentifier);
+
                 foreach (var f in frameTimes)
                 {
                     benchmark.AddFrameTime(f);
                 }
                 DataContainer.Write();
+
+                return benchmark;
             }
             finally
             {
@@ -96,13 +95,39 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        // TODO: GetBenchmark or GetBenchmarks, one of the other, doesn't make sense to have both
-        public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, int projectID)
+        public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
         {
             _cacheLock.EnterReadLock();
             try
             {
-                return DataContainer.Data.Find(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
+                var benchmarks = DataContainer.Data.FindAll(b => BenchmarkMatchesSlotIdentifier(b, slotIdentifier));
+                return GetBenchmark(benchmarks, benchmarkIdentifier);
+            }
+            finally
+            {
+                _cacheLock.ExitReadLock();
+            }
+        }
+
+        private static ProteinBenchmark GetBenchmark(List<ProteinBenchmark> benchmarks, ProteinBenchmarkIdentifier benchmarkIdentifier)
+        {
+            // most specific, matches ProjectID, Processor, and Threads
+            var benchmark = benchmarks.Find(b => b.BenchmarkIdentifier.Equals(benchmarkIdentifier));
+            if (benchmark is null)
+            {
+                // less specific, matches only ProjectID... upgrade any existing benchmark for this slot
+                benchmarkIdentifier = new ProteinBenchmarkIdentifier(benchmarkIdentifier.ProjectID);
+                benchmark = benchmarks.Find(b => b.BenchmarkIdentifier.Equals(benchmarkIdentifier));
+            }
+            return benchmark;
+        }
+
+        public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+        {
+            _cacheLock.EnterReadLock();
+            try
+            {
+                return DataContainer.Data.FindAll(b => BenchmarkMatchesSlotIdentifierAndProject(b, slotIdentifier, projectID));
             }
             finally
             {
@@ -117,7 +142,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                DataContainer.Data.RemoveAll(b => b.SlotIdentifier.Equals(slotIdentifier));
+                DataContainer.Data.RemoveAll(b => BenchmarkMatchesSlotIdentifier(b, slotIdentifier));
                 DataContainer.Write();
             }
             finally
@@ -131,7 +156,7 @@ namespace HFM.Core.WorkUnits
             _cacheLock.EnterWriteLock();
             try
             {
-                DataContainer.Data.RemoveAll(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
+                DataContainer.Data.RemoveAll(b => BenchmarkMatchesSlotIdentifierAndProject(b, slotIdentifier, projectID));
                 DataContainer.Write();
             }
             finally
@@ -140,41 +165,23 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
+        private static bool BenchmarkMatchesSlotIdentifierAndProject(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
         {
-            _cacheLock.EnterReadLock();
-            try
-            {
-                IEnumerable<ProteinBenchmark> benchmarkQuery = DataContainer.Data;
-                if (SlotIdentifier.AllSlots != slotIdentifier)
-                {
-                    benchmarkQuery = benchmarkQuery.Where(b => b.SlotIdentifier.Equals(slotIdentifier));
-                }
-                return benchmarkQuery.Select(b => b.ProjectID).Distinct().OrderBy(p => p).ToList();
-            }
-            finally
-            {
-                _cacheLock.ExitReadLock();
-            }
+            return b.ProjectID.Equals(projectID) && BenchmarkMatchesSlotIdentifier(b, slotIdentifier);
         }
 
-        // TODO: GetBenchmark or GetBenchmarks, one of the other, doesn't make sense to have both
-        public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+        private static bool BenchmarkMatchesSlotIdentifier(ProteinBenchmark b, SlotIdentifier slotIdentifier)
         {
-            _cacheLock.EnterReadLock();
-            try
-            {
-                return DataContainer.Data.FindAll(b => SlotIdentifierAndProjectEquals(b, slotIdentifier, projectID));
-            }
-            finally
-            {
-                _cacheLock.ExitReadLock();
-            }
-        }
+            // when AllSlots is given, then all SlotIdentifiers match
+            if (SlotIdentifier.AllSlots.Equals(slotIdentifier)) return true;
 
-        private static bool SlotIdentifierAndProjectEquals(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
-        {
-            return b.ProjectID.Equals(projectID) && (SlotIdentifier.AllSlots.Equals(slotIdentifier) || b.SlotIdentifier.Equals(slotIdentifier));
+            // most specific, matches ClientIdentifier on Guid first... then Name, Server, and Port
+            if (b.SlotIdentifier.Equals(slotIdentifier)) return true;
+
+            // less specific, matches ClientIdentifier only on Name, Server, and Port
+            if (SlotIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier, slotIdentifier)) return true;
+
+            return false;
         }
 
         public void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID)

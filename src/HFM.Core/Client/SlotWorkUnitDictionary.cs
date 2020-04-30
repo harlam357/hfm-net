@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 
@@ -29,6 +11,14 @@ namespace HFM.Core.Client
     /// </summary>
     public class SlotWorkUnitInfo : IProjectInfo
     {
+        public int ProjectID { get; set; }
+
+        public int ProjectRun { get; set; }
+
+        public int ProjectClone { get; set; }
+
+        public int ProjectGen { get; set; }
+
         /// <summary>
         /// Get or sets the state of this work unit.
         /// </summary>
@@ -49,26 +39,10 @@ namespace HFM.Core.Client
         /// </summary>
         public TimeSpan NextAttempt { get; set; }
 
-        // TODO: Clarify is this is number of system CPUs or the number of cores used by a CPU client
-        public int NumberOfSmpCores { get; set; }
-
         /// <summary>
         /// Get or sets the date and time this work unit was assigned in UTC.
         /// </summary>
         public DateTime AssignedDateTimeUtc { get; set; }
-
-        public int ProjectID { get; set; }
-
-        public int ProjectRun { get; set; }
-
-        public int ProjectClone { get; set; }
-
-        public int ProjectGen { get; set; }
-
-        /// <summary>
-        /// Get or sets the slot ID where this work unit is assigned.
-        /// </summary>
-        public int SlotID { get; set; }
 
         /// <summary>
         /// Get or sets the work server IP address.
@@ -89,6 +63,16 @@ namespace HFM.Core.Client
         /// Gets or sets the installed memory on the system that is processing this work unit.
         /// </summary>
         public int Memory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of CPU threads.
+        /// </summary>
+        public int CPUThreads { get; set; }
+
+        /// <summary>
+        /// Get or sets the slot ID where this work unit is assigned.
+        /// </summary>
+        public int SlotID { get; set; }
     }
 
     public class SlotWorkUnitDictionary : Dictionary<int, SlotWorkUnitInfo>

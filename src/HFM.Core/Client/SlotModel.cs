@@ -1,28 +1,10 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
-using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
@@ -46,7 +28,7 @@ namespace HFM.Core.Client
     {
         #region IPreferenceSet
 
-        public IPreferenceSet Prefs { get; set; }
+        public IPreferenceSet Prefs => Client.Preferences;
 
         private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
 
@@ -60,50 +42,18 @@ namespace HFM.Core.Client
 
         #endregion
 
-        #region Root Data Types
+        public WorkUnitModel WorkUnitModel { get; set; }
 
-        private WorkUnitModel _workUnitModel;
-        /// <summary>
-        /// Class member containing info specific to the current work unit
-        /// </summary>
-        public WorkUnitModel WorkUnitModel
+        public ClientSettings Settings => Client.Settings;
+
+        public IClient Client { get; }
+
+        public SlotModel(IClient client)
         {
-            get => _workUnitModel;
-            set
-            {
-                if (_workUnitModel != null)
-                {
-                    UpdateTimeOfLastProgress(value);
-                }
-                _workUnitModel = value;
-                _workUnit = null;
-            }
-        }
-
-        private WorkUnit _workUnit;
-
-        public WorkUnit WorkUnit
-        {
-            get => _workUnit ?? WorkUnitModel.Data;
-            set => _workUnit = value;
-        }
-
-        public ClientSettings Settings { get; set; }
-
-        // HFM.Client data type
-        public SlotOptions SlotOptions { get; set; }
-
-        #endregion
-
-        #region Constructor
-
-        public SlotModel()
-        {
-            _workUnitModel = new WorkUnitModel();
+            Client = client ?? throw new ArgumentNullException(nameof(client));
+            WorkUnitModel = new WorkUnitModel(this);
 
             Initialize();
-            TimeOfLastUnitStart = DateTime.MinValue;
-            TimeOfLastFrameProgress = DateTime.MinValue;
         }
 
         private const int DefaultMachineID = 0;
@@ -111,15 +61,13 @@ namespace HFM.Core.Client
         public void Initialize()
         {
             Arguments = String.Empty;
-            MachineId = DefaultMachineID;
+            MachineID = DefaultMachineID;
             // Status = 
             ClientVersion = String.Empty;
             TotalRunCompletedUnits = 0;
             TotalCompletedUnits = 0;
             TotalRunFailedUnits = 0;
         }
-
-        #endregion
 
         #region Display Meta Data
 
@@ -128,23 +76,14 @@ namespace HFM.Core.Client
         /// </summary>
         public string Arguments { get; set; }
 
-        // TODO: Do something similar for v7
-        ///// <summary>
-        ///// Client Path and Arguments (If Arguments Exist)
-        ///// </summary>
-        //public string ClientPathAndArguments
-        //{
-        //   get { return Arguments.Length == 0 ? Settings.Path : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Settings.Path, Arguments); }
-        //}
-
         private int _machineId;
         /// <summary>
         /// Machine ID associated with this client
         /// </summary>
-        public int MachineId
+        public int MachineID
         {
             // if SlotId is populated by a v7 client then also use it for the MachineId value
-            get => SlotId > -1 ? SlotId : _machineId;
+            get => SlotID > -1 ? SlotID : _machineId;
             set => _machineId = value;
         }
 
@@ -162,77 +101,90 @@ namespace HFM.Core.Client
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        public int PercentComplete => ProductionValuesOk || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
+        public int PercentComplete => Status.IsRunning() || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ToClientIdentifier(), SlotId);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ClientIdentifier, SlotID);
 
         public string Name => SlotIdentifier.Name;
 
-        // TODO: Rename to SlotID
-        public int SlotId { get; set; } = SlotIdentifier.NoSlotID;
+        public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
 
-        public string SlotType
+        public SlotType SlotType { get; set; }
+
+        public int? SlotThreads { get; set; }
+
+        public string ClientVersion { get; set; }
+
+        public string SlotTypeString
         {
             get
             {
-                string slotType = WorkUnit.SlotType.ToString();
+                if (SlotType == SlotType.Unknown)
+                {
+                    return String.Empty;
+                }
+
+                var sb = new StringBuilder(SlotType.ToString());
+                if (SlotThreads.HasValue)
+                {
+                    sb.AppendFormat(CultureInfo.InvariantCulture, ":{0}", SlotThreads);
+                }
                 if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "{0} ({1})", slotType, ClientVersion);
+                    sb.Append($" ({ClientVersion})");
                 }
-                return slotType;
+                return sb.ToString();
             }
         }
 
-        /// <summary>
-        /// Client Version
-        /// </summary>
-        public string ClientVersion { get; set; }
+        public int? GPUIndex { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => ProductionValuesOk && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+        public string SlotProcessor { get; set; }
+
+        public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan TPF => ProductionValuesOk ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
+        public TimeSpan TPF => Status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public double PPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
+        public double PPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public double UPD => ProductionValuesOk ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
+        public double UPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public TimeSpan ETA => ProductionValuesOk ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
+        public TimeSpan ETA => Status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
-        /// Esimated time of arrival (ETA) for this protein
+        /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public DateTime ETADate => ProductionValuesOk ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
+        public DateTime ETADate => Status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
 
         public string Core
         {
             get
             {
-                if (ShowVersions && Math.Abs(WorkUnit.CoreVersion) > Single.Epsilon)
+                if (ShowVersions && Math.Abs(WorkUnitModel.WorkUnit.CoreVersion) > Single.Epsilon)
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnit.CoreVersion);
+                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnitModel.WorkUnit.CoreVersion);
                 }
                 return WorkUnitModel.CurrentProtein.Core;
             }
         }
 
-        public string CoreId => WorkUnit.CoreID;
+        public string CoreID => WorkUnitModel.WorkUnit.CoreID;
 
-        public string ProjectRunCloneGen => WorkUnit.ToShortProjectString();
+        public string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
-        public double Credit => ProductionValuesOk ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+        public double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public int Completed =>
            Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
@@ -267,19 +219,14 @@ namespace HFM.Core.Client
         /// <summary>
         /// Combined Folding ID and Team String
         /// </summary>
-        public string Username => String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnit.FoldingID, WorkUnit.Team);
+        public string Username => 
+            String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID)
+                ? String.Empty
+                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.WorkUnit.FoldingID, WorkUnitModel.WorkUnit.Team);
 
-        public DateTime DownloadTime => WorkUnitModel.DownloadTime;
+        public DateTime Assigned => WorkUnitModel.Assigned;
 
         public DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
-
-        /// <summary>
-        /// Flag denoting if Progress, Production, and Time based values are OK to Display
-        /// </summary>
-        public bool ProductionValuesOk =>
-            Status == SlotStatus.Running ||
-            Status == SlotStatus.RunningNoFrameTimes ||
-            Status == SlotStatus.Finishing;
 
         #endregion
 
@@ -332,7 +279,7 @@ namespace HFM.Core.Client
             get
             {
                 // if these are the default assigned values, don't check the prefs and just return true
-                if (WorkUnit.FoldingID == WorkUnit.DefaultFoldingID && WorkUnit.Team == WorkUnit.DefaultTeam)
+                if ((String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID) || WorkUnitModel.WorkUnit.FoldingID == Unknown.Value) && WorkUnitModel.WorkUnit.Team == default)
                 {
                     return true;
                 }
@@ -341,53 +288,8 @@ namespace HFM.Core.Client
                 {
                     return true;
                 }
-                return WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
-                       WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
-            }
-        }
-
-        #endregion
-
-        #region Slot Time Meta Data
-
-        /// <summary>
-        /// Local Time when this Client last detected Frame Progress
-        /// </summary>
-        public DateTime TimeOfLastUnitStart { get; set; } // should be init to DateTime.MinValue
-
-        /// <summary>
-        /// Local Time when this Client last detected Frame Progress
-        /// </summary>
-        public DateTime TimeOfLastFrameProgress { get; set; } // should be init to DateTime.MinValue
-
-        /// <summary>
-        /// Update Time of Last Frame Progress based on Current and Parsed WorkUnit
-        /// </summary>
-        private void UpdateTimeOfLastProgress(WorkUnitModel parsedWorkUnit)
-        {
-            // Matches the Current Project and Raw Download Time
-            if (WorkUnitModel.Data.EqualsProjectAndDownloadTime(parsedWorkUnit.Data))
-            {
-                // If the Unit Start Time Stamp is no longer the same as the UnitInfoLogic
-                if (parsedWorkUnit.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    WorkUnitModel.Data.UnitStartTimeStamp.Equals(TimeSpan.MinValue) == false &&
-                    parsedWorkUnit.Data.UnitStartTimeStamp.Equals(WorkUnitModel.Data.UnitStartTimeStamp) == false)
-                {
-                    TimeOfLastUnitStart = DateTime.Now;
-                }
-
-                // If the Frames Complete is greater than the UnitInfoLogic Frames Complete
-                if (parsedWorkUnit.FramesComplete > WorkUnitModel.FramesComplete)
-                {
-                    // Update the Time Of Last Frame Progress
-                    TimeOfLastFrameProgress = DateTime.Now;
-                }
-            }
-            else // Different WorkUnit - Update the Time Of Last 
-                 // Unit Start and Clear Frame Progress Value
-            {
-                TimeOfLastUnitStart = DateTime.Now;
-                TimeOfLastFrameProgress = DateTime.MinValue;
+                return WorkUnitModel.WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
+                       WorkUnitModel.WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
             }
         }
 
@@ -398,14 +300,14 @@ namespace HFM.Core.Client
         /// </summary>
         public static void FindDuplicateProjects(ICollection<SlotModel> slots)
         {
-            var duplicates = slots.GroupBy(x => x.WorkUnitModel.Data.ToShortProjectString())
-                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.Data.ProjectIsKnown())
+            var duplicates = slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
+                .Where(g => g.Count() > 1 && g.First().WorkUnitModel.WorkUnit.HasProject())
                 .Select(g => g.Key)
                 .ToList();
 
             foreach (var slot in slots)
             {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.Data.ToShortProjectString());
+                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.WorkUnit.ToShortProjectString());
             }
         }
     }

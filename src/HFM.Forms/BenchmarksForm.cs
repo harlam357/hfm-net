@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
@@ -174,10 +156,10 @@ namespace HFM.Forms
                 SlotStatus status = SlotStatus.Unknown;
 
                 var slotModel = _clientConfiguration.Slots.FirstOrDefault(x =>
-                   x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
-                   x.WorkUnitModel.Data.ProjectID == benchmark.ProjectID);
+                    x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
+                    x.WorkUnitModel.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
 
-                if (slotModel != null && slotModel.ProductionValuesOk)
+                if (slotModel != null && slotModel.Status.IsRunning())
                 {
                     workUnitModel = slotModel.WorkUnitModel;
                     status = slotModel.Status;
@@ -267,7 +249,7 @@ namespace HFM.Forms
 
         private void DrawGraphs(int tabIndex, IList<string> projectInfoLines, ICollection<ProteinBenchmark> benchmarks, Protein protein)
         {
-            _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors);
+            _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors, protein);
             _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), projectInfoLines, benchmarks, _graphColors,
                _prefs.Get<int>(Preference.DecimalPlaces), protein, IsEnabled(_prefs.Get<BonusCalculation>(Preference.BonusCalculation)));
         }
@@ -293,25 +275,30 @@ namespace HFM.Forms
             var calculateBonusEnabled = IsEnabled(calculateBonus);
 
             lines.Add(String.Empty);
-            lines.Add(String.Format(" Name: {0}", benchmark.SlotIdentifier.Name));
-            lines.Add(String.Format(" Path: {0}", benchmark.SlotIdentifier.Client.ToPath()));
-            lines.Add(String.Format(" Number of Frames Observed: {0}", benchmark.FrameTimes.Count));
+            lines.Add($" Name: {benchmark.SlotIdentifier.Name}");
+            lines.Add($" Path: {benchmark.SlotIdentifier.Client.ToServerPortString()}");
+            if (benchmark.BenchmarkIdentifier.HasProcessor)
+            {
+                var slotType = SlotTypeConvert.FromCoreName(protein.Core);
+                lines.Add($" Proc: {benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType)}");
+            }
+            lines.Add($" Number of Frames Observed: {benchmark.FrameTimes.Count}");
             lines.Add(String.Empty);
-            lines.Add(String.Format(" Min. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-               benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein, calculateBonusEnabled)));
-            lines.Add(String.Format(" Avg. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-               benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled)));
+            lines.Add(String.Format(" Min. Time / Frame : {0} - {1} PPD",
+               benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein, calculateBonusEnabled).ToString(numberFormat)));
+            lines.Add(String.Format(" Avg. Time / Frame : {0} - {1} PPD",
+               benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled).ToString(numberFormat)));
 
             if (workUnitModel != null)
             {
-                lines.Add(String.Format(" Cur. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.LastFrame), workUnitModel.GetPPD(status, PPDCalculation.LastFrame, calculateBonus)));
-                lines.Add(String.Format(" R3F. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames), workUnitModel.GetPPD(status, PPDCalculation.LastThreeFrames, calculateBonus)));
-                lines.Add(String.Format(" All  Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.AllFrames), workUnitModel.GetPPD(status, PPDCalculation.AllFrames, calculateBonus)));
-                lines.Add(String.Format(" Eff. Time / Frame : {0} - {1:" + numberFormat + "} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate), workUnitModel.GetPPD(status, PPDCalculation.EffectiveRate, calculateBonus)));
+                lines.Add(String.Format(" Cur. Time / Frame : {0} - {1} PPD",
+                   workUnitModel.GetFrameTime(PPDCalculation.LastFrame), workUnitModel.GetPPD(status, PPDCalculation.LastFrame, calculateBonus).ToString(numberFormat)));
+                lines.Add(String.Format(" R3F. Time / Frame : {0} - {1} PPD",
+                   workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames), workUnitModel.GetPPD(status, PPDCalculation.LastThreeFrames, calculateBonus).ToString(numberFormat)));
+                lines.Add(String.Format(" All  Time / Frame : {0} - {1} PPD",
+                   workUnitModel.GetFrameTime(PPDCalculation.AllFrames), workUnitModel.GetPPD(status, PPDCalculation.AllFrames, calculateBonus).ToString(numberFormat)));
+                lines.Add(String.Format(" Eff. Time / Frame : {0} - {1} PPD",
+                   workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate), workUnitModel.GetPPD(status, PPDCalculation.EffectiveRate, calculateBonus).ToString(numberFormat)));
             }
 
             lines.Add(String.Empty);
@@ -381,11 +368,11 @@ namespace HFM.Forms
 
         private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (linkDescription.Tag == null)
+            if (DescriptionLinkLabel.Tag == null)
             {
                 return;
             }
-            string message = _processStarter.ShowWebBrowser(linkDescription.Tag.ToString());
+            string message = _processStarter.ShowWebBrowser(DescriptionLinkLabel.Tag.ToString());
             if (message != null)
             {
                 _messageBoxView.ShowError(this, message, Text);
@@ -555,18 +542,18 @@ namespace HFM.Forms
         {
             if (protein != null)
             {
-                txtProjectID.Text = protein.WorkUnitName;
-                txtCredit.Text = protein.Credit.ToString();
-                txtKFactor.Text = protein.KFactor.ToString();
-                txtFrames.Text = protein.Frames.ToString();
-                txtAtoms.Text = protein.NumberOfAtoms.ToString();
-                txtCore.Text = protein.Core;
-                linkDescription.Text = "Click to view online";
-                linkDescription.Tag = protein.Description;
-                txtPreferredDays.Text = protein.PreferredDays.ToString();
-                txtMaximumDays.Text = protein.MaximumDays.ToString();
-                txtContact.Text = protein.Contact;
-                txtServerIP.Text = protein.ServerIP;
+                ProjectIDTextBox.Text = protein.WorkUnitName;
+                CreditTextBox.Text = protein.Credit.ToString();
+                KFactorTextBox.Text = protein.KFactor.ToString();
+                FramesTextBox.Text = protein.Frames.ToString();
+                AtomsTextBox.Text = protein.NumberOfAtoms.ToString();
+                CoreTextBox.Text = protein.Core;
+                DescriptionLinkLabel.Text = "Click to view online";
+                DescriptionLinkLabel.Tag = protein.Description;
+                TimeoutTextBox.Text = protein.PreferredDays.ToString();
+                ExpirationTextBox.Text = protein.MaximumDays.ToString();
+                ContactTextBox.Text = protein.Contact;
+                WorkServerTextBox.Text = protein.ServerIP;
 
                 lines.Add(String.Format(" Project ID: {0}", protein.ProjectNumber));
                 lines.Add(String.Format(" Core: {0}", protein.Core));
@@ -576,18 +563,18 @@ namespace HFM.Forms
             }
             else
             {
-                txtProjectID.Text = String.Empty;
-                txtCredit.Text = String.Empty;
-                txtKFactor.Text = String.Empty;
-                txtFrames.Text = String.Empty;
-                txtAtoms.Text = String.Empty;
-                txtCore.Text = String.Empty;
-                linkDescription.Text = String.Empty;
-                linkDescription.Tag = null;
-                txtPreferredDays.Text = String.Empty;
-                txtMaximumDays.Text = String.Empty;
-                txtContact.Text = String.Empty;
-                txtServerIP.Text = String.Empty;
+                ProjectIDTextBox.Text = String.Empty;
+                CreditTextBox.Text = String.Empty;
+                KFactorTextBox.Text = String.Empty;
+                FramesTextBox.Text = String.Empty;
+                AtomsTextBox.Text = String.Empty;
+                CoreTextBox.Text = String.Empty;
+                DescriptionLinkLabel.Text = String.Empty;
+                DescriptionLinkLabel.Tag = null;
+                TimeoutTextBox.Text = String.Empty;
+                ExpirationTextBox.Text = String.Empty;
+                ContactTextBox.Text = String.Empty;
+                WorkServerTextBox.Text = String.Empty;
 
                 lines.Add(String.Format(" Project ID: {0} Not Found", projectID));
             }
@@ -602,8 +589,12 @@ namespace HFM.Forms
 
         private void UpdateClientsComboBinding(int index)
         {
+            var slotIdentifiers = Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
+                .Concat(_benchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name))
+                .ToList();
+
             cboClients.DataBindings.Clear();
-            cboClients.DataSource = _benchmarkService.GetSlotIdentifiers();
+            cboClients.DataSource = slotIdentifiers;
             cboClients.DisplayMember = "Value";
             // TODO: Is this required for Mono compatibility?
             //cboClients.ValueMember = "Client";

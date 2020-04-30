@@ -175,8 +175,6 @@ namespace HFM.Core.Client
             configuration.Add("test", new NullClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
             ClientConfigurationChangedEventArgs changedEventArgs = null;
             configuration.ClientConfigurationChanged += (sender, e) => { changedEventArgs = e; };
-            ClientEditedEventArgs editedEventArgs = null;
-            configuration.ClientEdited += (sender, e) => editedEventArgs = e;
             // Act
             configuration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
             // Assert
@@ -184,11 +182,8 @@ namespace HFM.Core.Client
             Assert.IsTrue(configuration.ContainsKey("test2"));
             Assert.AreEqual(ClientConfigurationChangedAction.Edit, changedEventArgs.Action);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
-            Assert.AreEqual("server1-36331", changedEventArgs.Client.Settings.ClientPath);
-            Assert.AreEqual("test", editedEventArgs.OldName);
-            Assert.AreEqual("server-36330", editedEventArgs.OldPath);
-            Assert.AreEqual("test2", editedEventArgs.NewName);
-            Assert.AreEqual("server1-36331", editedEventArgs.NewPath);
+            Assert.AreEqual("server1", changedEventArgs.Client.Settings.Server);
+            Assert.AreEqual(36331, changedEventArgs.Client.Settings.Port);
         }
 
         [Test]

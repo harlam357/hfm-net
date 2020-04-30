@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -239,18 +221,18 @@ namespace HFM.Core.Data
 
         public bool Insert(WorkUnitModel workUnitModel)
         {
-            if (!ValidateWorkUnit(workUnitModel.Data))
+            if (!ValidateWorkUnit(workUnitModel.WorkUnit))
             {
                 return false;
             }
 
             // ensure the given work unit is not written more than once
-            if (WorkUnitExists(workUnitModel.Data))
+            if (WorkUnitExists(workUnitModel.WorkUnit))
             {
                 return false;
             }
 
-            var entry = _mapper.Map<WorkUnitRow>(workUnitModel.Data);
+            var entry = _mapper.Map<WorkUnitRow>(workUnitModel);
             // cannot map these two properties from a WorkUnit instance
             // they only live at the WorkUnitModel level
             entry.FramesCompleted = workUnitModel.FramesComplete;
@@ -278,9 +260,9 @@ namespace HFM.Core.Data
 
         private static bool ValidateWorkUnit(WorkUnit workUnit)
         {
-            return workUnit.ProjectIsKnown() &&
-                   !workUnit.DownloadTime.IsMinValue() &&
-                   !workUnit.FinishedTime.IsMinValue();
+            return workUnit.HasProject() &&
+                   !workUnit.Assigned.IsMinValue() &&
+                   !workUnit.Finished.IsMinValue();
         }
 
         private bool WorkUnitExists(WorkUnit workUnit)
@@ -296,7 +278,7 @@ namespace HFM.Core.Data
                 .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, workUnit.ProjectRun)
                 .AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, workUnit.ProjectClone)
                 .AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, workUnit.ProjectGen)
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, workUnit.DownloadTime);
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Equal, workUnit.Assigned);
         }
 
         #endregion
@@ -422,15 +404,15 @@ namespace HFM.Core.Data
             return Count(clientName, false, clientStartTime);
         }
 
-        private long Count(string clientName, bool completed, DateTime? clientStartTime)
+        private long Count(string clientName, bool finished, DateTime? clientStartTime)
         {
             var query = new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, clientName)
-                .AddParameter(WorkUnitRowColumn.Result, completed ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
+                .AddParameter(WorkUnitRowColumn.Result, finished ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
 
             if (clientStartTime.HasValue)
             {
-                query.AddParameter(completed ? WorkUnitRowColumn.CompletionDateTime : WorkUnitRowColumn.DownloadDateTime,
+                query.AddParameter(finished ? WorkUnitRowColumn.Finished : WorkUnitRowColumn.Assigned,
                     WorkUnitQueryOperator.GreaterThan, clientStartTime.Value);
             }
 

@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Work Unit History Database Tests
- * Copyright (C) 2009-2015 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.IO;
 using System.Threading;
@@ -108,8 +90,8 @@ namespace HFM.Core.Data
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
             new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.Equal, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Equal, "WorkUnitName") },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Equal, 2.3) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Equal, "GROGPU2") },
@@ -142,8 +124,8 @@ namespace HFM.Core.Data
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
             new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
-            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.NotEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotEqual, "WorkUnitName") },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotEqual, 2.3) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotEqual, "GROGPU2") },
@@ -176,8 +158,8 @@ namespace HFM.Core.Data
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
             new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
-            new object[] { 7,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 7,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.GreaterThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThan, "WorkUnitName") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThan, 2.3) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A3") },
@@ -210,8 +192,8 @@ namespace HFM.Core.Data
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
             new object[] { 35,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
-            new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 24,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 24,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThanOrEqual, "WorkUnitName") },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThanOrEqual, 2.3) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A3") },
@@ -244,8 +226,8 @@ namespace HFM.Core.Data
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
             new object[] { 9,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
-            new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.LessThan, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThan, "WorkUnitName") },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThan, 2.3) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A3") },
@@ -278,8 +260,8 @@ namespace HFM.Core.Data
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
             new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
-            new object[] { 37,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 37,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThanOrEqual, "WorkUnitName") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThanOrEqual, 2.3) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A3") },
@@ -312,8 +294,8 @@ namespace HFM.Core.Data
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Like, "1%") },
             new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Like, "4%")},     // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Like, "1%") },    // not a String value
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.Like, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Like, "Work%Name%") },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Like, "0%") },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
@@ -346,8 +328,8 @@ namespace HFM.Core.Data
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotLike, "1%") },
             new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotLike, "4%")},     // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotLike, "1%") },    // not a String value
-            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 22, 0, 42, 0)) },
-            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 21, 20, 57, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 22, 0, 42, 0)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.NotLike, new DateTime(2010, 8, 21, 20, 57, 0)) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotLike, "Work%Name%") },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotLike, "0%") },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
@@ -362,9 +344,9 @@ namespace HFM.Core.Data
         public void Fetch_Complex_Test1()
         {
             FetchTestData(33, new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan,
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2010, 8, 8))
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan,
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan,
                     new DateTime(2010, 8, 22)));
         }
 
@@ -408,8 +390,8 @@ namespace HFM.Core.Data
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
             new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 100)},  // not a TimeSpan value
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Equal, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Equal, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Equal, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.Equal, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Equal, "WorkUnitName3") },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Equal, 0.75) },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Equal, "GRO-A5") },
@@ -442,8 +424,8 @@ namespace HFM.Core.Data
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
             new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 100)},  // not a TimeSpan value
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
-            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.NotEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotEqual, "WorkUnitName3") },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotEqual, 0.75) },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotEqual, "GRO-A5") },
@@ -476,8 +458,8 @@ namespace HFM.Core.Data
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
             new object[] { 150,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 100)},  // not a TimeSpan value
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
-            new object[] { 42,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 42,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.GreaterThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThan, "WorkUnitName3") },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThan, 0.75) },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A4") },
@@ -510,8 +492,8 @@ namespace HFM.Core.Data
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
             new object[] { 164,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 100)},  // not a TimeSpan value
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
-            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 17,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 17,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.GreaterThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.GreaterThanOrEqual, "WorkUnitName3") },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.GreaterThanOrEqual, 0.75) },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A4") },
@@ -544,8 +526,8 @@ namespace HFM.Core.Data
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
             new object[] { 89,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 100)},  // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
-            new object[] { 210,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 236,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 210,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 236,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.LessThan, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThan, "WorkUnitName4") },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThan, 0.75) },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A4") },
@@ -578,8 +560,8 @@ namespace HFM.Core.Data
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
             new object[] { 103,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 100)},  // not a TimeSpan value
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
-            new object[] { 211,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 237,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 211,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 237,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.LessThanOrEqual, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.LessThanOrEqual, "WorkUnitName4") },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.LessThanOrEqual, 0.75) },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A4") },
@@ -612,8 +594,8 @@ namespace HFM.Core.Data
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Like, "1%") },
             new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Like, "3_")},     // not a TimeSpan value
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Like, "3%") },    // not a String value
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.Like, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.Like, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Like, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.Like, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.Like, "Work%Name%") },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.Like, "0%") },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
@@ -646,8 +628,8 @@ namespace HFM.Core.Data
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotLike, "1%") },
             new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotLike, "3_")},     // not a TimeSpan value
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotLike, "3%") },    // not a String value
-            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2012, 7, 5, 0, 25, 7)) },
-            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CompletionDateTime, WorkUnitQueryOperator.NotLike, new DateTime(2012, 11, 19, 6, 56, 47)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.NotLike, new DateTime(2012, 7, 5, 0, 25, 7)) },
+            new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Finished, WorkUnitQueryOperator.NotLike, new DateTime(2012, 11, 19, 6, 56, 47)) },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.WorkUnitName, WorkUnitQueryOperator.NotLike, "Work%Name%") },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.KFactor, WorkUnitQueryOperator.NotLike, "0%") },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
@@ -662,9 +644,9 @@ namespace HFM.Core.Data
         public void Fetch_Complex_Test3()
         {
             FetchTestData2(52, new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.GreaterThan,
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2012, 5, 29))
-                .AddParameter(WorkUnitRowColumn.DownloadDateTime, WorkUnitQueryOperator.LessThan,
+                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan,
                     new DateTime(2012, 11, 1)));
         }
 

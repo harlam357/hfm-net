@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace HFM.Core.Client
 {
     public interface IFahClient : IClient
     {
-        IPreferenceSet Preferences { get; }
-
         FahClientConnection Connection { get; }
+
+        FahClientMessages Messages { get; }
 
         /// <summary>
         /// Sends the Fold command to the FAH client.
@@ -75,7 +76,7 @@ namespace HFM.Core.Client
                 if (_slots.Count == 0)
                 {
                     // return default slot (for grid binding)
-                    return new[] { new SlotModel { Settings = Settings, Prefs = Preferences, Status = SlotStatus.Offline } };
+                    return new[] { new SlotModel(this) { Status = SlotStatus.Offline } };
                 }
                 return _slots.ToArray();
             }
@@ -85,9 +86,7 @@ namespace HFM.Core.Client
             }
         }
 
-        public IPreferenceSet Preferences { get; }
         public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
         public FahClientMessages Messages { get; }
         public FahClientConnection Connection { get; private set; }
@@ -95,12 +94,10 @@ namespace HFM.Core.Client
         private readonly List<SlotModel> _slots;
         private readonly ReaderWriterLockSlim _slotsLock;
 
-        public FahClient(ILogger logger, IPreferenceSet preferences, IProteinService proteinService,
-                         IProteinBenchmarkService benchmarkService, IWorkUnitRepository workUnitRepository) : base(logger)
+        public FahClient(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService, 
+            IProteinService proteinService, IWorkUnitRepository workUnitRepository) : base(logger, preferences, benchmarkService)
         {
-            Preferences = preferences;
             ProteinService = proteinService;
-            BenchmarkService = benchmarkService;
             WorkUnitRepository = workUnitRepository;
             Messages = new FahClientMessages(this);
 
@@ -141,7 +138,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void RefreshSlots()
+        internal void RefreshSlots()
         {
             _slotsLock.EnterWriteLock();
             try
@@ -152,14 +149,15 @@ namespace HFM.Core.Client
                     // iterate through slot collection
                     foreach (var slot in Messages.SlotCollection)
                     {
+                        var slotDescription = ParseSlotDescription(slot.Description);
                         // add slot model to the collection
-                        var slotModel = new SlotModel
+                        var slotModel = new SlotModel(this)
                         {
-                            Settings = Settings,
-                            Prefs = Preferences,
                             Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                            SlotId = slot.ID.GetValueOrDefault(),
-                            SlotOptions = slot.SlotOptions
+                            SlotID = slot.ID.GetValueOrDefault(),
+                            SlotType = slotDescription.SlotType,
+                            SlotThreads = slotDescription.SlotThreads,
+                            GPUIndex = slotDescription.GPUIndex
                         };
                         _slots.Add(slotModel);
                     }
@@ -171,6 +169,25 @@ namespace HFM.Core.Client
             }
 
             OnSlotsChanged(EventArgs.Empty);
+        }
+
+        private static (SlotType SlotType, int? SlotThreads, int? GPUIndex) ParseSlotDescription(string description)
+        {
+            if (description is null) return (SlotType.CPU, null, null);
+
+            var slotType = description.StartsWith("gpu", StringComparison.OrdinalIgnoreCase) 
+                ? SlotType.GPU
+                : SlotType.CPU;
+
+            int? slotThreads = null;
+            int? gpuIndex = null;
+            var match = Regex.Match(description, @"[cpu|smp|gpu]\:(?<Number>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            if (match.Success && Int32.TryParse(match.Groups["Number"].Value, out var result))
+            {
+                slotThreads = slotType == SlotType.CPU ? (int?)result : null;
+                gpuIndex = slotType == SlotType.GPU ? (int?)result : null;
+            }
+            return (slotType, slotThreads, gpuIndex);
         }
 
         public override void Abort()
@@ -248,9 +265,6 @@ namespace HFM.Core.Client
             // Set successful Last Retrieval Time
             LastRetrievalTime = DateTime.Now;
 
-            var options = Messages.Options;
-            var info = Messages.Info;
-
             _slotsLock.EnterReadLock();
             try
             {
@@ -259,38 +273,30 @@ namespace HFM.Core.Client
                     // Re-Init Slot Level Members Before Processing
                     slotModel.Initialize();
 
-                    // Run the Aggregator
-                    var dataAggregator = new FahClientDataAggregator { Logger = Logger };
-                    dataAggregator.ClientName = slotModel.Name;
-                    DataAggregatorResult result = dataAggregator.AggregateData(Messages.Log.ClientRuns.LastOrDefault(),
-                                                                               Messages.UnitCollection,
-                                                                               info,
-                                                                               options,
-                                                                               slotModel.SlotOptions,
-                                                                               slotModel.WorkUnit,
-                                                                               slotModel.SlotId);
-                    PopulateRunLevelData(result, info, slotModel);
+                    var aggregator = new FahClientMessageAggregator(this, slotModel);
+                    var result = aggregator.AggregateData();
+                    PopulateRunLevelData(result, Messages.Info, slotModel);
 
                     slotModel.WorkUnitInfos = result.WorkUnitInfos;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
                     //slotModel.UnitLogLines = result.UnitLogLines;
 
-                    var parsedUnits = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
+                    var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
                     foreach (int key in result.WorkUnits.Keys)
                     {
                         if (result.WorkUnits[key] != null)
                         {
-                            parsedUnits[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
+                            newWorkUnitModels[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
                         }
                     }
 
                     // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
-                    UpdateBenchmarkData(slotModel.WorkUnitModel, parsedUnits.Values);
+                    UpdateWorkUnitBenchmarkAndRepository(slotModel.WorkUnitModel, newWorkUnitModels.Values);
 
                     // Update the WorkUnitModel if we have a current unit index
-                    if (result.CurrentUnitIndex != -1 && parsedUnits.ContainsKey(result.CurrentUnitIndex))
+                    if (result.CurrentUnitIndex != -1 && newWorkUnitModels.ContainsKey(result.CurrentUnitIndex))
                     {
-                        slotModel.WorkUnitModel = parsedUnits[result.CurrentUnitIndex];
+                        slotModel.WorkUnitModel = newWorkUnitModels[result.CurrentUnitIndex];
                     }
 
                     SetSlotStatus(slotModel);
@@ -320,20 +326,9 @@ namespace HFM.Core.Client
             Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
-            workUnit.SlotIdentifier = slotModel.SlotIdentifier;
             workUnit.UnitRetrievalTime = LastRetrievalTime;
-            if (workUnit.SlotType == SlotType.Unknown)
-            {
-                workUnit.SlotType = SlotTypeConvert.FromCoreName(protein.Core);
-                if (workUnit.SlotType == SlotType.Unknown)
-                {
-                    workUnit.SlotType = SlotTypeConvert.FromCoreId(workUnit.CoreID);
-                }
-            }
-
-            var workUnitModel = new WorkUnitModel(BenchmarkService);
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
-            workUnitModel.Data = workUnit;
             return workUnitModel;
         }
 
@@ -346,13 +341,16 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(DataAggregatorResult result, Info info, SlotModel slotModel)
+        private void PopulateRunLevelData(ClientMessageAggregatorResult result, Info info, SlotModel slotModel)
         {
             Debug.Assert(slotModel != null);
 
             if (info != null)
             {
+                // TODO: Surface client arguments?
+                //slotModel.Arguments = info.Client.Args;
                 slotModel.ClientVersion = info.Client.Version;
+                slotModel.SlotProcessor = FahClientMessageAggregator.GetCPUString(info, slotModel);
             }
             if (WorkUnitRepository.Connected)
             {
@@ -363,31 +361,36 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateBenchmarkData(WorkUnitModel currentWorkUnit, IEnumerable<WorkUnitModel> parsedUnits)
+        internal void UpdateWorkUnitBenchmarkAndRepository(WorkUnitModel workUnitModel, IEnumerable<WorkUnitModel> newWorkUnitModels)
         {
-            foreach (var model in parsedUnits.Where(x => x != null))
+            foreach (var m in newWorkUnitModels.Where(x => x != null))
             {
-                if (currentWorkUnit.Data.EqualsProjectAndDownloadTime(model.Data))
+                // find the WorkUnit in newWorkUnitModels that matches the current WorkUnit
+                if (workUnitModel.WorkUnit.EqualsProjectAndDownloadTime(m.WorkUnit))
                 {
-                    // found the current unit
-                    // current frame has already been recorded, increment to the next frame
-                    int nextFrame = currentWorkUnit.FramesComplete + 1;
-                    int count = model.FramesComplete - currentWorkUnit.FramesComplete;
-                    var frameTimes = GetFrameTimes(model.Data, nextFrame, count);
-                    // Update benchmarks
-                    BenchmarkService.Update(model.Data.SlotIdentifier, model.Data.ProjectID, frameTimes);
+                    UpdateBenchmarkFrameTimes(workUnitModel, m);
                 }
-                // Update history database
-                if (model.Data.UnitResult != WorkUnitResult.Unknown)
+                if (m.WorkUnit.UnitResult != WorkUnitResult.Unknown)
                 {
-                    InsertCompletedWorkUnit(model);
+                    InsertCompletedWorkUnitIntoRepository(m);
                 }
             }
         }
 
-        private void InsertCompletedWorkUnit(WorkUnitModel workUnitModel)
+        private void UpdateBenchmarkFrameTimes(WorkUnitModel workUnitModel, WorkUnitModel newWorkUnitModel)
         {
-            // Update history database
+            // current frame has already been recorded, increment to the next frame
+            int nextFrame = workUnitModel.FramesComplete + 1;
+            int count = newWorkUnitModel.FramesComplete - workUnitModel.FramesComplete;
+            var frameTimes = GetFrameTimes(newWorkUnitModel.WorkUnit, nextFrame, count);
+            
+            var slotIdentifier = newWorkUnitModel.SlotModel.SlotIdentifier;
+            var benchmarkIdentifier = newWorkUnitModel.BenchmarkIdentifier;
+            BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
+        }
+
+        private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
+        {
             if (WorkUnitRepository != null && WorkUnitRepository.Connected)
             {
                 try
@@ -396,8 +399,8 @@ namespace HFM.Core.Client
                     {
                         if (Logger.IsDebugEnabled)
                         {
-                            string message = $"Inserted {workUnitModel.Data.ToProjectString()} into database.";
-                            Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.Data.SlotIdentifier.Name, message));
+                            string message = $"Inserted {workUnitModel.WorkUnit.ToProjectString()} into database.";
+                            Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.SlotModel.SlotIdentifier.Name, message));
                         }
                     }
                 }

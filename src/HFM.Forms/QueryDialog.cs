@@ -85,9 +85,9 @@ namespace HFM.Forms
          queryColumn.Name = "Name";
          queryColumn.HeaderText = "Name";
          queryColumn.DataSource = columnChoices;
-         queryColumn.DisplayMember = "DisplayMember";
-         queryColumn.ValueMember = "ValueMember";
-         queryColumn.DataPropertyName = "Name";
+         queryColumn.DisplayMember = nameof(ListItem.DisplayMember);
+         queryColumn.ValueMember = nameof(ListItem.ValueMember);
+         queryColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Column);
          queryColumn.Width = 150;
          dataGridView1.Columns.Add(queryColumn);
 
@@ -96,16 +96,16 @@ namespace HFM.Forms
          queryColumn.Name = "Operator";
          queryColumn.HeaderText = "Operator";
          queryColumn.DataSource = columnChoices;
-         queryColumn.DisplayMember = "DisplayMember";
-         queryColumn.ValueMember = "ValueMember";
-         queryColumn.DataPropertyName = "Type";
+         queryColumn.DisplayMember = nameof(ListItem.DisplayMember);
+         queryColumn.ValueMember = nameof(ListItem.ValueMember);
+         queryColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Operator);
          queryColumn.Width = 175;
          dataGridView1.Columns.Add(queryColumn);
 
          var valueColumn = new DataGridViewQueryValueColumn();
          valueColumn.Name = "Value";
          valueColumn.HeaderText = "Value";
-         valueColumn.DataPropertyName = "Value";
+         valueColumn.DataPropertyName = nameof(WorkUnitQueryParameter.Value);
          valueColumn.DefaultCellStyle.DataSourceNullValue = null;
          //valueColumn.Width = 200;
          valueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -131,8 +131,8 @@ namespace HFM.Forms
             columnChoices.Add(new ListItem(WorkUnitRowColumn.FrameTime.ToString(), WorkUnitRowColumn.FrameTime));
             columnChoices.Add(new ListItem(WorkUnitRowColumn.KFactor.ToString(), WorkUnitRowColumn.KFactor));
             columnChoices.Add(new ListItem(WorkUnitRowColumn.PPD.ToString(), WorkUnitRowColumn.PPD));
-            columnChoices.Add(new ListItem(WorkUnitRowColumn.DownloadDateTime.ToString(), WorkUnitRowColumn.DownloadDateTime));
-            columnChoices.Add(new ListItem(WorkUnitRowColumn.CompletionDateTime.ToString(), WorkUnitRowColumn.CompletionDateTime));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Assigned.ToString(), WorkUnitRowColumn.Assigned));
+            columnChoices.Add(new ListItem(WorkUnitRowColumn.Finished.ToString(), WorkUnitRowColumn.Finished));
             columnChoices.Add(new ListItem(WorkUnitRowColumn.Credit.ToString(), WorkUnitRowColumn.Credit));
             columnChoices.Add(new ListItem(WorkUnitRowColumn.Frames.ToString(), WorkUnitRowColumn.Frames));
             columnChoices.Add(new ListItem(WorkUnitRowColumn.FramesCompleted.ToString(), WorkUnitRowColumn.FramesCompleted));
@@ -157,8 +157,8 @@ namespace HFM.Forms
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FrameTime], WorkUnitRowColumn.FrameTime));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.KFactor], WorkUnitRowColumn.KFactor));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.PPD], WorkUnitRowColumn.PPD));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DownloadDateTime], WorkUnitRowColumn.DownloadDateTime));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.CompletionDateTime], WorkUnitRowColumn.CompletionDateTime));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Assigned], WorkUnitRowColumn.Assigned));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Finished], WorkUnitRowColumn.Finished));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Credit], WorkUnitRowColumn.Credit));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Frames], WorkUnitRowColumn.Frames));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FramesCompleted], WorkUnitRowColumn.FramesCompleted));

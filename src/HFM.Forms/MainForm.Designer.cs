@@ -441,7 +441,7 @@ namespace HFM.Forms
             // mnuEditPreferences
             // 
             this.mnuEditPreferences.Name = "mnuEditPreferences";
-            this.mnuEditPreferences.Size = new System.Drawing.Size(135, 22);
+            this.mnuEditPreferences.Size = new System.Drawing.Size(180, 22);
             this.mnuEditPreferences.Text = "&Preferences";
             this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
             // 
@@ -641,7 +641,7 @@ namespace HFM.Forms
             // 
             this.mnuToolsBenchmarks.Name = "mnuToolsBenchmarks";
             this.mnuToolsBenchmarks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuToolsBenchmarks.Size = new System.Drawing.Size(252, 22);
+            this.mnuToolsBenchmarks.Size = new System.Drawing.Size(249, 22);
             this.mnuToolsBenchmarks.Text = "&Benchmarks Viewer";
             this.mnuToolsBenchmarks.Click += new System.EventHandler(this.mnuToolsBenchmarks_Click);
             // 
@@ -649,29 +649,29 @@ namespace HFM.Forms
             // 
             this.mnuToolsHistory.Name = "mnuToolsHistory";
             this.mnuToolsHistory.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.mnuToolsHistory.Size = new System.Drawing.Size(252, 22);
+            this.mnuToolsHistory.Size = new System.Drawing.Size(249, 22);
             this.mnuToolsHistory.Text = "Work Unit &History Viewer";
             this.mnuToolsHistory.Click += new System.EventHandler(this.mnuToolsHistory_Click);
             // 
             // mnuToolsPointsCalculator
             // 
             this.mnuToolsPointsCalculator.Name = "mnuToolsPointsCalculator";
-            this.mnuToolsPointsCalculator.Size = new System.Drawing.Size(252, 22);
+            this.mnuToolsPointsCalculator.Size = new System.Drawing.Size(249, 22);
             this.mnuToolsPointsCalculator.Text = "Points Calculator";
             this.mnuToolsPointsCalculator.Click += new System.EventHandler(this.mnuToolsPointsCalculator_Click);
             // 
             // mnuToolsDownloadProjects
             // 
             this.mnuToolsDownloadProjects.Name = "mnuToolsDownloadProjects";
-            this.mnuToolsDownloadProjects.Size = new System.Drawing.Size(252, 22);
-            this.mnuToolsDownloadProjects.Text = "Download &Projects From Stanford";
+            this.mnuToolsDownloadProjects.Size = new System.Drawing.Size(249, 22);
+            this.mnuToolsDownloadProjects.Text = "Download &Projects";
             this.mnuToolsDownloadProjects.Click += new System.EventHandler(this.mnuToolsDownloadProjects_Click);
             // 
             // mnuWeb
             // 
             this.mnuWeb.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuWebEOCUser,
             this.mnuWebStanfordUser,
+            this.mnuWebEOCUser,
             this.mnuWebEOCTeam,
             this.mnuWebSep1,
             this.mnuWebRefreshUserStats,
@@ -685,7 +685,7 @@ namespace HFM.Forms
             // 
             this.mnuWebEOCUser.Name = "mnuWebEOCUser";
             this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.mnuWebEOCUser.Size = new System.Drawing.Size(221, 22);
+            this.mnuWebEOCUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebEOCUser.Text = "&EOC User Stats Page";
             this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
             // 
@@ -693,39 +693,39 @@ namespace HFM.Forms
             // 
             this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
             this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.mnuWebStanfordUser.Size = new System.Drawing.Size(221, 22);
-            this.mnuWebStanfordUser.Text = "&Stanford User Stats Page";
+            this.mnuWebStanfordUser.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebStanfordUser.Text = "&FAH User Stats Page";
             this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
             // 
             // mnuWebEOCTeam
             // 
             this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
             this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.mnuWebEOCTeam.Size = new System.Drawing.Size(221, 22);
+            this.mnuWebEOCTeam.Size = new System.Drawing.Size(204, 22);
             this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
             this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
             // 
             // mnuWebSep1
             // 
             this.mnuWebSep1.Name = "mnuWebSep1";
-            this.mnuWebSep1.Size = new System.Drawing.Size(218, 6);
+            this.mnuWebSep1.Size = new System.Drawing.Size(201, 6);
             // 
             // mnuWebRefreshUserStats
             // 
             this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
-            this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(221, 22);
+            this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(204, 22);
             this.mnuWebRefreshUserStats.Text = "Force &Refresh EOC Stats";
             this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
             // 
             // mnuWebSep2
             // 
             this.mnuWebSep2.Name = "mnuWebSep2";
-            this.mnuWebSep2.Size = new System.Drawing.Size(218, 6);
+            this.mnuWebSep2.Size = new System.Drawing.Size(201, 6);
             // 
             // mnuWebHFMGoogleCode
             // 
             this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-            this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(221, 22);
+            this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(204, 22);
             this.mnuWebHFMGoogleCode.Text = "HFM.NET on &GitHub";
             this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
             // 
@@ -804,7 +804,7 @@ namespace HFM.Forms
             this.mnuContextClientsPauseSlot,
             this.mnuContextClientsFinishSlot});
             this.gridContextMenuStrip.Name = "contextMenuStrip1";
-            this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 198);
+            this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 176);
             // 
             // mnuContextClientsRefreshSelected
             // 

@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +7,6 @@ using System.Linq;
 using NUnit.Framework;
 
 using HFM.Core.Client;
-using HFM.Core.DataTypes;
 using HFM.Log;
 using HFM.Preferences;
 
@@ -40,7 +21,7 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, false);
 
-            var slots = CreateSlotModelCollection(preferences);
+            var slots = CreateSlotModelCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
@@ -58,7 +39,7 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, true);
 
-            var slots = CreateSlotModelCollection(preferences);
+            var slots = CreateSlotModelCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
@@ -82,7 +63,7 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection(preferences);
+                var slots = CreateSlotModelCollection();
                 foreach (var slot in slots)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
@@ -118,7 +99,7 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection(preferences);
+                var slots = CreateSlotModelCollection();
                 foreach (var slot in slots)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
@@ -174,26 +155,24 @@ namespace HFM.Core.SlotXml
             return preferences;
         }
 
-        private static ICollection<SlotModel> CreateSlotModelCollection(IPreferenceSet preferences)
+        private static ICollection<SlotModel> CreateSlotModelCollection()
         {
             var slots = new List<SlotModel>();
 
             // setup slot
-            var slot = new SlotModel();
-            slot.Prefs = preferences;
-            slot.Settings = new ClientSettings {Name = "Test2"};
+            var client = new NullClient { Settings = new ClientSettings { Name = "Test2" } };
+            var slot = new SlotModel(client);
             var logLines = new List<Log.LogLine>
             {
-                new Log.LogLine {LineType = LogLineType.LogHeader, Index = 1, Raw = "Header"}
+                new Log.LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
             };
             slot.CurrentLogLines = logLines;
-            slot.WorkUnit.LogLines = logLines;
+            slot.WorkUnitModel.WorkUnit.LogLines = logLines;
             slots.Add(slot);
 
             // setup slot
-            slot = new SlotModel();
-            slot.Prefs = preferences;
-            slot.Settings = new ClientSettings {Name = "Test1"};
+            client = new NullClient { Settings = new ClientSettings { Name = "Test1" } };
+            slot = new SlotModel(client);
             slots.Add(slot);
 
             return slots;

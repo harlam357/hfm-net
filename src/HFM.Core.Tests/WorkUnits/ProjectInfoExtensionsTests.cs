@@ -9,24 +9,24 @@ namespace HFM.Core.WorkUnits
     public class ProjectInfoExtensionsTests
     {
         [Test]
-        public void IProjectInfo_ProjectIsUnknown_Test1()
+        public void IProjectInfo_HasProject_Test1()
         {
             var projectInfo = new ProjectInfo { ProjectID = 1 };
-            Assert.IsFalse(projectInfo.ProjectIsUnknown());
+            Assert.IsTrue(projectInfo.HasProject());
         }
 
         [Test]
-        public void IProjectInfo_ProjectIsUnknown_Test2()
+        public void IProjectInfo_HasProject_Test2()
         {
             var projectInfo = new ProjectInfo();
-            Assert.IsTrue(projectInfo.ProjectIsUnknown());
+            Assert.IsFalse(projectInfo.HasProject());
         }
 
         [Test]
-        public void IProjectInfo_ProjectIsUnknown_Test3()
+        public void IProjectInfo_HasProject_Test3()
         {
             IProjectInfo projectInfo = null;
-            Assert.IsTrue(projectInfo.ProjectIsUnknown());
+            Assert.IsFalse(projectInfo.HasProject());
         }
 
         [Test]

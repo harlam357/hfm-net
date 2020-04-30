@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET - Fah Client Data Aggregator Class
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,53 +12,45 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
-    internal class FahClientDataAggregator
+    internal class FahClientMessageAggregator
     {
-        /// <summary>
-        /// Client name.
-        /// </summary>
-        public string ClientName { get; set; }
+        public IFahClient FahClient { get; }
+        public SlotModel SlotModel { get; }
 
-        private ILogger _logger;
-
-        public ILogger Logger
+        public FahClientMessageAggregator(IFahClient fahClient, SlotModel slotModel)
         {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
+            FahClient = fahClient;
+            SlotModel = slotModel;
         }
 
-        /// <summary>
-        /// Aggregate Data and return WorkUnit Dictionary.
-        /// </summary>
-        public DataAggregatorResult AggregateData(ClientRun clientRun, UnitCollection unitCollection, Info info, Options options,
-                                                  SlotOptions slotOptions, WorkUnit currentWorkUnit, int slotId)
+        public ClientMessageAggregatorResult AggregateData()
         {
-            if (clientRun == null) throw new ArgumentNullException(nameof(clientRun));
-            if (unitCollection == null) throw new ArgumentNullException(nameof(unitCollection));
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (slotOptions == null) throw new ArgumentNullException(nameof(slotOptions));
-            if (currentWorkUnit == null) throw new ArgumentNullException(nameof(currentWorkUnit));
-
-            var result = new DataAggregatorResult();
+            var result = new ClientMessageAggregatorResult();
             result.CurrentUnitIndex = -1;
 
+            ClientRun clientRun = FahClient.Messages.Log.ClientRuns.Last();
             SlotRun slotRun = null;
-            if (clientRun.SlotRuns.ContainsKey(slotId))
+            if (clientRun.SlotRuns.ContainsKey(SlotModel.SlotID))
             {
-                slotRun = clientRun.SlotRuns[slotId];
+                slotRun = clientRun.SlotRuns[SlotModel.SlotID];
             }
             result.StartTime = clientRun.Data.StartTime;
 
-            if (Logger.IsDebugEnabled)
+            if (FahClient.Logger.IsDebugEnabled)
             {
                 foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
                 {
-                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, $"Failed to parse log line: {s}"));
+                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, $"Failed to parse log line: {s}"));
                 }
             }
 
-            BuildWorkUnits(result, slotRun, unitCollection, options, slotOptions, currentWorkUnit, slotId);
-            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, slotOptions, slotId);
+            var unitCollection = FahClient.Messages.UnitCollection;
+            var options = FahClient.Messages.Options;
+            var currentWorkUnit = SlotModel.WorkUnitModel.WorkUnit;
+            var info = FahClient.Messages.Info;
+
+            BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, SlotModel.SlotID);
+            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, SlotModel);
 
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
             {
@@ -94,10 +68,10 @@ namespace HFM.Core.Client
             return result;
         }
 
-        private static SlotWorkUnitDictionary BuildSlotWorkUnitInfos(IEnumerable<Unit> unitCollection, Info info, SlotOptions slotOptions, int slotId)
+        private static SlotWorkUnitDictionary BuildSlotWorkUnitInfos(IEnumerable<Unit> unitCollection, Info info, SlotModel slotModel)
         {
             SlotWorkUnitDictionary d = null;
-            foreach (var unit in unitCollection.Where(unit => unit.Slot == slotId))
+            foreach (var unit in unitCollection.Where(unit => unit.Slot == slotModel.SlotID))
             {
                 if (d == null)
                 {
@@ -105,24 +79,24 @@ namespace HFM.Core.Client
                 }
 
                 var wui = new SlotWorkUnitInfo();
-                wui.State = unit.State;
-                wui.WaitingOn = unit.WaitingOn;
-                wui.Attempts = unit.Attempts.GetValueOrDefault();
-                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                wui.NumberOfSmpCores = info.System.CPUs.GetValueOrDefault();
-                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
                 wui.ProjectID = unit.Project.GetValueOrDefault();
                 wui.ProjectRun = unit.Run.GetValueOrDefault();
                 wui.ProjectClone = unit.Clone.GetValueOrDefault();
                 wui.ProjectGen = unit.Gen.GetValueOrDefault();
-                wui.SlotID = slotId;
+                wui.State = unit.State;
+                wui.WaitingOn = unit.WaitingOn;
+                wui.Attempts = unit.Attempts.GetValueOrDefault();
+                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
+                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
-                wui.CPU = GetCPUString(info, slotOptions);
+                wui.CPU = GetCPUString(info, slotModel);
                 wui.OperatingSystem = info.System.OS;
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
+                wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
+                wui.SlotID = slotModel.SlotID;
+                
                 d.Add(unit.ID.GetValueOrDefault(), wui);
-
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
                     d.CurrentWorkUnitKey = unit.ID.GetValueOrDefault();
@@ -142,25 +116,22 @@ namespace HFM.Core.Client
             return d;
         }
 
-        private static string GetCPUString(Info info, SlotOptions slotOptions)
+        internal static string GetCPUString(Info info, SlotModel slotModel)
         {
-            var gpuIndex = slotOptions[Options.GPUIndex];
-            return gpuIndex != null 
-                ? Int32.TryParse(gpuIndex, out var i) ? info.System.GPUInfos[i].FriendlyName : String.Empty 
+            return slotModel.SlotType == SlotType.GPU
+                ? slotModel.GPUIndex.HasValue ? info.System.GPUInfos[slotModel.GPUIndex.Value].FriendlyName : String.Empty 
                 : info.System.CPU;
         }
 
-        private void BuildWorkUnits(DataAggregatorResult result,
+        private void BuildWorkUnits(ClientMessageAggregatorResult result,
                                     SlotRun slotRun,
                                     ICollection<Unit> unitCollection,
                                     Options options,
-                                    SlotOptions slotOptions,
                                     WorkUnit currentWorkUnit,
                                     int slotId)
         {
             Debug.Assert(unitCollection != null);
             Debug.Assert(options != null);
-            Debug.Assert(slotOptions != null);
             Debug.Assert(currentWorkUnit != null);
 
             result.WorkUnits = new Dictionary<int, WorkUnit>();
@@ -171,7 +142,7 @@ namespace HFM.Core.Client
             {
                 var projectInfo = unit.ToProjectInfo();
                 if (projectInfo.EqualsProject(currentWorkUnit) &&
-                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.DownloadTime))
+                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.Assigned))
                 {
                     foundCurrentUnitInfo = true;
                 }
@@ -181,10 +152,10 @@ namespace HFM.Core.Client
                 if (unitRun == null)
                 {
                     string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
-                    Logger.Debug(String.Format(Logging.Logger.NameFormat, ClientName, message));
+                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, message));
                 }
 
-                WorkUnit workUnit = BuildWorkUnit(unit, options, slotOptions, unitRun);
+                WorkUnit workUnit = BuildWorkUnit(unit, options, unitRun);
                 if (workUnit != null)
                 {
                     result.WorkUnits.Add(unit.ID.GetValueOrDefault(), workUnit);
@@ -213,12 +184,12 @@ namespace HFM.Core.Client
                 var unitRun = GetUnitRun(slotRun, currentWorkUnit.QueueIndex, currentWorkUnit);
                 if (unitRun != null)
                 {
-                    // create a clone of the current WorkUnit object so we're not working with an
+                    // create a copy of the current WorkUnit object so we're not working with an
                     // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
-                    WorkUnit currentClone = currentWorkUnit.DeepClone();
+                    var workUnitCopy = currentWorkUnit.Copy();
 
-                    PopulateWorkUnitFromLogData(currentClone, unitRun);
-                    result.WorkUnits.Add(currentClone.QueueIndex, currentClone);
+                    PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
+                    result.WorkUnits.Add(workUnitCopy.QueueIndex, workUnitCopy);
                 }
             }
         }
@@ -228,14 +199,13 @@ namespace HFM.Core.Client
             return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
         }
 
-        private static WorkUnit BuildWorkUnit(Unit queueEntry, Options options, SlotOptions slotOptions, UnitRun unitRun)
+        private static WorkUnit BuildWorkUnit(Unit unit, Options options, UnitRun unitRun)
         {
-            Debug.Assert(queueEntry != null);
+            Debug.Assert(unit != null);
             Debug.Assert(options != null);
-            Debug.Assert(slotOptions != null);
 
             var workUnit = new WorkUnit();
-            PopulateWorkUnitFromFahClientData(workUnit, queueEntry, options, slotOptions);
+            PopulateWorkUnitFromFahClientData(workUnit, unit, options);
             if (unitRun != null)
             {
                 PopulateWorkUnitFromLogData(workUnit, unitRun);
@@ -262,7 +232,7 @@ namespace HFM.Core.Client
             // available with v6.
             if (IsTerminating(workUnit))
             {
-                workUnit.FinishedTime = DateTime.UtcNow;
+                workUnit.Finished = DateTime.UtcNow;
             }
         }
 
@@ -297,34 +267,30 @@ namespace HFM.Core.Client
             return 0.0f;
         }
 
-        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit queueEntry, Options options, SlotOptions slotOptions)
+        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit unit, Options options)
         {
             Debug.Assert(workUnit != null);
-            Debug.Assert(queueEntry != null);
+            Debug.Assert(unit != null);
             Debug.Assert(options != null);
-            Debug.Assert(slotOptions != null);
 
-            workUnit.QueueIndex = queueEntry.ID.GetValueOrDefault();
+            workUnit.QueueIndex = unit.ID.GetValueOrDefault();
 
-            /* DownloadTime (AssignedDateTime from HFM.Client API) */
-            workUnit.DownloadTime = queueEntry.AssignedDateTime.GetValueOrDefault();
+            workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
 
-            /* DueTime (TimeoutDateTime from HFM.Client API) */
-            workUnit.DueTime = queueEntry.TimeoutDateTime.GetValueOrDefault();
+            workUnit.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
 
             /* Project (R/C/G) */
-            workUnit.ProjectID = queueEntry.Project.GetValueOrDefault();
-            workUnit.ProjectRun = queueEntry.Run.GetValueOrDefault();
-            workUnit.ProjectClone = queueEntry.Clone.GetValueOrDefault();
-            workUnit.ProjectGen = queueEntry.Gen.GetValueOrDefault();
+            workUnit.ProjectID = unit.Project.GetValueOrDefault();
+            workUnit.ProjectRun = unit.Run.GetValueOrDefault();
+            workUnit.ProjectClone = unit.Clone.GetValueOrDefault();
+            workUnit.ProjectGen = unit.Gen.GetValueOrDefault();
 
             /* FoldingID and Team from Queue Entry */
-            workUnit.FoldingID = options[Options.User] ?? WorkUnit.DefaultFoldingID;
-            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault(WorkUnit.DefaultTeam);
-            workUnit.SlotType = SlotTypeConvert.FromSlotOptions(slotOptions);
+            workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
+            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault();
 
             /* Core ID */
-            workUnit.CoreID = queueEntry.Core.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.CoreID = unit.Core.Replace("0x", String.Empty).ToUpperInvariant();
         }
 
         private static int? ToNullableInt32(string value)

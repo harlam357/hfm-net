@@ -139,7 +139,13 @@ namespace HFM.Core.Client
             foreach (var slot in SlotCollection)
             {
                 var slotOptionsCommandText = String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID);
-                await _client.Connection.CreateCommand(slotOptionsCommandText).ExecuteAsync().ConfigureAwait(false);
+                // not an expected situation at application runtime but when running some
+                // tests the Connection will be null and that's fine in those scenarios
+                var connection = _client.Connection;
+                if (connection != null)
+                {
+                    await connection.CreateCommand(slotOptionsCommandText).ExecuteAsync().ConfigureAwait(false);
+                }
             }
         }
 

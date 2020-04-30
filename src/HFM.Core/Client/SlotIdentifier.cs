@@ -1,26 +1,20 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-
-using HFM.Core.Net;
 
 namespace HFM.Core.Client
 {
-    public struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
+    public readonly struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
     {
         internal const int NoSlotID = -1;
 
-        public static SlotIdentifier None =>
-            new SlotIdentifier(
-                new ClientIdentifier(null, null, ClientIdentifier.NoPort, Guid.Empty), 
-                NoSlotID);
-        
         public static SlotIdentifier AllSlots => new SlotIdentifier(0, "All Slots");
         
         private SlotIdentifier(int ordinal, string name)
         {
             Ordinal = ordinal;
-            Client = new ClientIdentifier(name, null, ClientIdentifier.NoPort, Guid.Empty);
+            Client = new ClientIdentifier(name, null, ClientSettings.NoPort, Guid.Empty);
             SlotID = NoSlotID;
         }
 
@@ -33,11 +27,10 @@ namespace HFM.Core.Client
 
         public int Ordinal { get; }
         
+        // TODO: Rename to ClientIdentifier
         public ClientIdentifier Client { get; }
 
         public int SlotID { get; }
-
-        // TODO: Number of CPUs
 
         public string Name => AppendSlotID(Client.Name, SlotID);
 
@@ -49,9 +42,7 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(Client.Server)) return Name;
-            return TcpPort.Validate(Client.Port) 
-                ? String.Format(CultureInfo.InvariantCulture, "{0} ({1}:{2})", Name, Client.Server, Client.Port) 
-                : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Client.Server);
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Client.ToServerPortString());
         }
 
         public bool Equals(SlotIdentifier other)
@@ -74,6 +65,27 @@ namespace HFM.Core.Client
                 return hashCode;
             }
         }
+
+        private sealed class ProteinBenchmarkSlotIdentifierEqualityComparer : IEqualityComparer<SlotIdentifier>
+        {
+            public bool Equals(SlotIdentifier x, SlotIdentifier y)
+            {
+                return x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Client, y.Client) && x.SlotID == y.SlotID;
+            }
+
+            public int GetHashCode(SlotIdentifier obj)
+            {
+                unchecked
+                {
+                    var hashCode = obj.Ordinal;
+                    hashCode = (hashCode * 397) ^ ClientIdentifier.ProteinBenchmarkEqualityComparer.GetHashCode(obj.Client);
+                    hashCode = (hashCode * 397) ^ obj.SlotID;
+                    return hashCode;
+                }
+            }
+        }
+
+        public static IEqualityComparer<SlotIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkSlotIdentifierEqualityComparer();
 
         public static bool operator ==(SlotIdentifier left, SlotIdentifier right)
         {

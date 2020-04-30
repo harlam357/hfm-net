@@ -10,14 +10,14 @@ namespace HFM.Core.WorkUnits
             return dateTime.Equals(DateTime.MinValue);
         }
 
-        public static string ToStringOrUnknown(this DateTime dateTime)
+        public static string ToShortStringOrEmpty(this DateTime dateTime)
         {
-            return ToStringOrUnknown(dateTime, $"{dateTime.ToShortDateString()} {dateTime.ToShortTimeString()}");
+            return ToStringOrEmpty(dateTime, $"{dateTime.ToShortDateString()} {dateTime.ToShortTimeString()}");
         }
 
-        public static string ToStringOrUnknown(this IEquatable<DateTime> date, string formattedValue)
+        private static string ToStringOrEmpty(this IEquatable<DateTime> date, string formattedValue)
         {
-            return date.Equals(DateTime.MinValue) ? Unknown.Value : formattedValue;
+            return date.Equals(DateTime.MinValue) ? String.Empty : formattedValue;
         }
     }
 }
