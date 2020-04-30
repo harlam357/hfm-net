@@ -249,7 +249,7 @@ namespace HFM.Forms
 
         private void DrawGraphs(int tabIndex, IList<string> projectInfoLines, ICollection<ProteinBenchmark> benchmarks, Protein protein)
         {
-            _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors);
+            _zedGraphManager.CreateFrameTimeGraph(GetFrameTimeGraph(tabIndex), projectInfoLines, benchmarks, _graphColors, protein);
             _zedGraphManager.CreatePpdGraph(GetPpdGraph(tabIndex), projectInfoLines, benchmarks, _graphColors,
                _prefs.Get<int>(Preference.DecimalPlaces), protein, IsEnabled(_prefs.Get<BonusCalculation>(Preference.BonusCalculation)));
         }
@@ -280,14 +280,7 @@ namespace HFM.Forms
             if (benchmark.BenchmarkIdentifier.HasProcessor)
             {
                 var slotType = SlotTypeConvert.FromCoreName(protein.Core);
-                if (benchmark.BenchmarkIdentifier.HasThreads)
-                {
-                    lines.Add($" Proc: {slotType}:{benchmark.BenchmarkIdentifier.Threads} / {benchmark.BenchmarkIdentifier.Processor}");
-                }
-                else
-                {
-                    lines.Add($" Proc: {slotType} / {benchmark.BenchmarkIdentifier.Processor}");
-                }
+                lines.Add($" Proc: {benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType)}");
             }
             lines.Add($" Number of Frames Observed: {benchmark.FrameTimes.Count}");
             lines.Add(String.Empty);
