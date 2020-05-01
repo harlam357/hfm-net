@@ -330,7 +330,39 @@ namespace HFM.Forms.Models
 
         public Size FormSize { get; set; }
 
-        public string SortColumnName { get; set; }
+        private string _sortColumnName;
+
+        public string SortColumnName
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_sortColumnName))
+                {
+                    _sortColumnName = DefaultSortColumnName;
+                }
+                return _sortColumnName;
+            }
+            set
+            {
+                if (_sortColumnName != value)
+                {
+                    _sortColumnName = String.IsNullOrWhiteSpace(value)
+                        ? DefaultSortColumnName
+                        : ValidateSortColumnNameOrDefault(value);
+                }
+            }
+        }
+
+        // SortColumnName stores the actual WorkUnitRow property name
+        // this method guards against WorkUnitRow property name changes
+        private string ValidateSortColumnNameOrDefault(string name)
+        {
+            var properties = HistoryBindingSource.CurrencyManager.GetItemProperties();
+            var property = properties.Find(name, true);
+            return property is null ? DefaultSortColumnName : name;
+        }
+
+        private string DefaultSortColumnName { get; } = String.Empty;
 
         public ListSortDirection SortOrder { get; set; }
 

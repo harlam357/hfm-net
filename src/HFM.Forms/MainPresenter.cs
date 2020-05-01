@@ -1144,20 +1144,32 @@ namespace HFM.Forms
         {
             Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
 
-            if (_historyPresenter == null)
+            try
             {
-                _historyPresenter = _presenterFactory.GetHistoryPresenter();
-                _historyPresenter.Initialize();
-                _historyPresenter.PresenterClosed += (sender, args) =>
+                if (_historyPresenter is null)
+                {
+                    _historyPresenter = _presenterFactory.GetHistoryPresenter();
+                    _historyPresenter.Initialize();
+                    _historyPresenter.PresenterClosed += (sender, args) =>
+                    {
+                        _presenterFactory.Release(_historyPresenter);
+                        _historyPresenter = null;
+                    };
+                }
+
+                if (_historyPresenter != null)
+                {
+                    _historyPresenter.Show();
+                }
+            }
+            catch (Exception)
+            {
+                if (_historyPresenter != null)
                 {
                     _presenterFactory.Release(_historyPresenter);
                     _historyPresenter = null;
-                };
-            }
-
-            if (_historyPresenter != null)
-            {
-                _historyPresenter.Show();
+                }
+                throw;
             }
         }
 
