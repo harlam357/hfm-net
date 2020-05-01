@@ -146,7 +146,7 @@ namespace HFM.Forms
             PopulateProteinInformation(projectID, protein, projectInfoLines);
 
             var list = _benchmarkService.GetBenchmarks(_currentSlotIdentifier, projectID)
-                .OrderBy(x => x.SlotIdentifier)
+                .OrderBy(x => x.SlotIdentifier.Name).ThenBy(x => x.Threads)
                 .ToList();
 
             var benchmarkInfoLines = new List<string>(projectInfoLines);
