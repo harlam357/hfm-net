@@ -229,9 +229,10 @@ namespace HFM.Core.Client
                             await OnMessageRead(reader.Message).ConfigureAwait(false);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // connection died
+                        Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
                     }
                     Connection.Close();
                     await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
