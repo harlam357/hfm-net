@@ -53,11 +53,6 @@ namespace HFM.Preferences
 
         private PreferenceData Migrate()
         {
-            return OnMigrateFromUserSettings();
-        }
-
-        protected virtual PreferenceData OnMigrateFromUserSettings()
-        {
             return null;
         }
 
@@ -270,7 +265,7 @@ namespace HFM.Preferences
             }
             if (typeof(T).IsEnum && metadata.DataType == typeof(int))
             {
-                return (T)Enum.ToObject(typeof(T), ((IMetadata<int>) metadata).Data);
+                return (T)Enum.ToObject(typeof(T), ((IMetadata<int>)metadata).Data);
             }
 
             throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
