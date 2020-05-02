@@ -16,6 +16,7 @@ namespace HFM.Core.SlotXml
             CreateMap<SlotModel, SlotData>()
                 .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(src.Status.GetStatusColor())))
                 .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(src.Status))))
+                .ForMember(dest => dest.SlotType, opt => opt.MapFrom(src => src.SlotTypeString))
                 .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToShortStringOrEmpty() : src.ETA.ToString()))
                 .ForMember(dest => dest.Core, opt => opt.MapFrom(src => src.Core ?? String.Empty))
                 .ForMember(dest => dest.CoreId, opt => opt.MapFrom(src => src.CoreID ?? String.Empty))
