@@ -45,7 +45,7 @@ namespace HFM.Core.WorkUnits
 
         public ICollection<ClientIdentifier> GetClientIdentifiers()
         {
-            return DataContainer.Data.Select(x => x.SlotIdentifier.Client)
+            return DataContainer.Data.Select(x => x.SlotIdentifier.ClientIdentifier)
                 .OrderBy(c => c)
                 .Distinct(ClientIdentifier.ProteinBenchmarkEqualityComparer)
                 .ToList();
@@ -237,10 +237,10 @@ namespace HFM.Core.WorkUnits
         private static bool BenchmarkMatchesClientIdentifier(ProteinBenchmark b, ClientIdentifier clientIdentifier)
         {
             // most specific, matches ClientIdentifier on Guid first... then Name, Server, and Port
-            if (b.SlotIdentifier.Client.Equals(clientIdentifier)) return true;
+            if (b.SlotIdentifier.ClientIdentifier.Equals(clientIdentifier)) return true;
 
             // less specific, matches ClientIdentifier only on Name, Server, and Port
-            if (ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier.Client, clientIdentifier)) return true;
+            if (ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier.ClientIdentifier, clientIdentifier)) return true;
 
             return false;
         }

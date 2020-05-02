@@ -94,7 +94,7 @@ namespace HFM.Core.WorkUnits
 
         public ProteinBenchmark UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
         {
-            UpdateFromClientIdentifier(slotIdentifier.Client);
+            UpdateFromClientIdentifier(slotIdentifier.ClientIdentifier);
             SourceSlotID = slotIdentifier.SlotID;
             return this;
         }

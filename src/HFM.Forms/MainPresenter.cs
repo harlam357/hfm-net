@@ -386,8 +386,8 @@ namespace HFM.Forms
             if (_gridModel.SelectedSlot != null)
             {
                 // TODO: Surface client arguments?
-                //_view.StatusLabelLeftText = $"{_gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString()} {_gridModel.SelectedSlot.Arguments}";
-                _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.Client.ToServerPortString();
+                //_view.StatusLabelLeftText = $"{_gridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString()} {_gridModel.SelectedSlot.Arguments}";
+                _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
 
                 _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
                                        _gridModel.SelectedSlot.SlotType);

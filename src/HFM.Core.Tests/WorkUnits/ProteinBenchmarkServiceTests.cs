@@ -41,7 +41,7 @@ namespace HFM.Core.WorkUnits
             var identifiers = benchmarkService.GetSlotIdentifiers();
             // Assert
             Assert.AreEqual(1, identifiers.Count);
-            Assert.IsTrue(identifiers.First().Client.HasGuid);
+            Assert.IsTrue(identifiers.First().ClientIdentifier.HasGuid);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace HFM.Core.WorkUnits
                 var benchmark = benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier);
                 Assert.IsNotNull(benchmark);
                 Assert.AreEqual(slotIdentifier, benchmark.SlotIdentifier);
-                Assert.AreEqual(clientGuid, benchmark.SlotIdentifier.Client.Guid);
+                Assert.AreEqual(clientGuid, benchmark.SlotIdentifier.ClientIdentifier.Guid);
                 Assert.AreEqual(benchmarkIdentifier, benchmark.BenchmarkIdentifier);
 
                 Assert.AreEqual(3, benchmark.FrameTimes.Count);
@@ -415,9 +415,9 @@ namespace HFM.Core.WorkUnits
 
             // Assert
             Assert.IsNotNull(benchmark);
-            Assert.AreEqual(slotIdentifier.Client.Name, benchmark.SourceName);
-            Assert.AreEqual(slotIdentifier.Client.ToServerPortString(), benchmark.SourcePath);
-            Assert.AreNotEqual(slotIdentifier.Client.Guid, benchmark.SourceGuid);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.Name, benchmark.SourceName);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToServerPortString(), benchmark.SourcePath);
+            Assert.AreNotEqual(slotIdentifier.ClientIdentifier.Guid, benchmark.SourceGuid);
             Assert.AreEqual(slotIdentifier.SlotID, benchmark.SourceSlotID);
             Assert.AreEqual(guid, benchmark.SourceGuid);
             Assert.AreEqual(benchmarkIdentifier, benchmark.BenchmarkIdentifier);
@@ -450,9 +450,9 @@ namespace HFM.Core.WorkUnits
 
             // Assert
             Assert.IsNotNull(benchmark);
-            Assert.AreEqual(slotIdentifier.Client.Name, benchmark.SourceName);
-            Assert.AreEqual(slotIdentifier.Client.ToServerPortString(), benchmark.SourcePath);
-            Assert.AreNotEqual(slotIdentifier.Client.Guid, benchmark.SourceGuid);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.Name, benchmark.SourceName);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToServerPortString(), benchmark.SourcePath);
+            Assert.AreNotEqual(slotIdentifier.ClientIdentifier.Guid, benchmark.SourceGuid);
             Assert.AreEqual(slotIdentifier.SlotID, benchmark.SourceSlotID);
             Assert.AreEqual(benchmarkIdentifier, benchmark.BenchmarkIdentifier);
         }
@@ -604,7 +604,7 @@ namespace HFM.Core.WorkUnits
             {
                 var container = CreateTestDataContainer(artifacts.GetRandomFilePath(), "BenchmarkCache_0_9_13.dat");
 
-                var benchmarksWithGuid = container.Data.Where(x => x.SlotIdentifier.Client.HasGuid).ToList();
+                var benchmarksWithGuid = container.Data.Where(x => x.SlotIdentifier.ClientIdentifier.HasGuid).ToList();
                 var benchmarksWithGuidIdentifiers = benchmarksWithGuid.Select(x => x.SlotIdentifier).Distinct().ToList();
                 foreach (var identifier in benchmarksWithGuidIdentifiers)
                 {
@@ -615,7 +615,7 @@ namespace HFM.Core.WorkUnits
                     benchmarksWithGuidIdentifiers.Any(x => SlotIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier, x)));
 
                 var allBenchmarks = container.Data.Where(b => identifierMatchesWhenGuidIsNotConsidered(b)).ToList();
-                var benchmarksWithoutGuid = allBenchmarks.Where(b => !b.SlotIdentifier.Client.HasGuid).ToList();
+                var benchmarksWithoutGuid = allBenchmarks.Where(b => !b.SlotIdentifier.ClientIdentifier.HasGuid).ToList();
 
                 Console.WriteLine($"Benchmarks with Guid: {benchmarksWithGuid.Count}");
                 Console.WriteLine($"Benchmarks without Guid: {benchmarksWithoutGuid.Count}");

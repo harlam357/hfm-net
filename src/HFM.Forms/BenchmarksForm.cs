@@ -276,7 +276,7 @@ namespace HFM.Forms
 
             lines.Add(String.Empty);
             lines.Add($" Name: {benchmark.SlotIdentifier.Name}");
-            lines.Add($" Path: {benchmark.SlotIdentifier.Client.ToServerPortString()}");
+            lines.Add($" Path: {benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString()}");
             if (benchmark.BenchmarkIdentifier.HasProcessor)
             {
                 var slotType = SlotTypeConvert.FromCoreName(protein.Core);

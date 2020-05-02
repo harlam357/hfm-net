@@ -14,25 +14,24 @@ namespace HFM.Core.Client
         private SlotIdentifier(int ordinal, string name)
         {
             Ordinal = ordinal;
-            Client = new ClientIdentifier(name, null, ClientSettings.NoPort, Guid.Empty);
+            ClientIdentifier = new ClientIdentifier(name, null, ClientSettings.NoPort, Guid.Empty);
             SlotID = NoSlotID;
         }
 
-        public SlotIdentifier(ClientIdentifier client, int slotID)
+        public SlotIdentifier(ClientIdentifier clientIdentifier, int slotID)
         {
             Ordinal = Int32.MaxValue;
-            Client = client;
+            ClientIdentifier = clientIdentifier;
             SlotID = slotID;
         }
 
         public int Ordinal { get; }
         
-        // TODO: Rename to ClientIdentifier
-        public ClientIdentifier Client { get; }
+        public ClientIdentifier ClientIdentifier { get; }
 
         public int SlotID { get; }
 
-        public string Name => AppendSlotID(Client.Name, SlotID);
+        public string Name => AppendSlotID(ClientIdentifier.Name, SlotID);
 
         private static string AppendSlotID(string name, int slotId)
         {
@@ -41,13 +40,13 @@ namespace HFM.Core.Client
 
         public override string ToString()
         {
-            if (String.IsNullOrWhiteSpace(Client.Server)) return Name;
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, Client.ToServerPortString());
+            if (String.IsNullOrWhiteSpace(ClientIdentifier.Server)) return Name;
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ClientIdentifier.ToServerPortString());
         }
 
         public bool Equals(SlotIdentifier other)
         {
-            return Ordinal == other.Ordinal && Client.Equals(other.Client) && SlotID == other.SlotID;
+            return Ordinal == other.Ordinal && ClientIdentifier.Equals(other.ClientIdentifier) && SlotID == other.SlotID;
         }
 
         public override bool Equals(object obj)
@@ -60,7 +59,7 @@ namespace HFM.Core.Client
             unchecked
             {
                 var hashCode = Ordinal;
-                hashCode = (hashCode * 397) ^ Client.GetHashCode();
+                hashCode = (hashCode * 397) ^ ClientIdentifier.GetHashCode();
                 hashCode = (hashCode * 397) ^ SlotID;
                 return hashCode;
             }
@@ -70,7 +69,7 @@ namespace HFM.Core.Client
         {
             public bool Equals(SlotIdentifier x, SlotIdentifier y)
             {
-                return x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Client, y.Client) && x.SlotID == y.SlotID;
+                return x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.ClientIdentifier, y.ClientIdentifier) && x.SlotID == y.SlotID;
             }
 
             public int GetHashCode(SlotIdentifier obj)
@@ -78,7 +77,7 @@ namespace HFM.Core.Client
                 unchecked
                 {
                     var hashCode = obj.Ordinal;
-                    hashCode = (hashCode * 397) ^ ClientIdentifier.ProteinBenchmarkEqualityComparer.GetHashCode(obj.Client);
+                    hashCode = (hashCode * 397) ^ ClientIdentifier.ProteinBenchmarkEqualityComparer.GetHashCode(obj.ClientIdentifier);
                     hashCode = (hashCode * 397) ^ obj.SlotID;
                     return hashCode;
                 }
@@ -101,7 +100,7 @@ namespace HFM.Core.Client
         {
             var ordinalComparison = Ordinal.CompareTo(other.Ordinal);
             if (ordinalComparison != 0) return ordinalComparison;
-            var clientComparison = Client.CompareTo(other.Client);
+            var clientComparison = ClientIdentifier.CompareTo(other.ClientIdentifier);
             if (clientComparison != 0) return clientComparison;
             return SlotID.CompareTo(other.SlotID);
         }

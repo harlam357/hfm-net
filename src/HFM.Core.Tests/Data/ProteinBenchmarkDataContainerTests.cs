@@ -111,9 +111,9 @@ namespace HFM.Core.Data
             {
                 ProteinBenchmark benchmark = list[i];
                 Assert.AreEqual("TestOwner", benchmark.SlotIdentifier.Name);
-                Assert.AreEqual("TestOwner", benchmark.SlotIdentifier.Client.Name);
+                Assert.AreEqual("TestOwner", benchmark.SlotIdentifier.ClientIdentifier.Name);
                 Assert.AreEqual("TestOwner", benchmark.SourceName);
-                Assert.AreEqual("TestPath", benchmark.SlotIdentifier.Client.ToServerPortString());
+                Assert.AreEqual("TestPath", benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString());
                 Assert.AreEqual("TestPath", benchmark.SourcePath);
                 Assert.AreEqual(-1, benchmark.SlotIdentifier.SlotID);
                 Assert.AreEqual(-1, benchmark.SourceSlotID);
@@ -131,11 +131,11 @@ namespace HFM.Core.Data
             {
                 ProteinBenchmark benchmark = list[i];
                 Assert.AreEqual(String.Format(CultureInfo.InvariantCulture, "TestOwner2 Slot {0:00}", (i - 10)), benchmark.SlotIdentifier.Name);
-                Assert.AreEqual("TestOwner2", benchmark.SlotIdentifier.Client.Name);
+                Assert.AreEqual("TestOwner2", benchmark.SlotIdentifier.ClientIdentifier.Name);
                 Assert.AreEqual("TestOwner2", benchmark.SourceName);
-                Assert.AreEqual("TestPath2", benchmark.SlotIdentifier.Client.ToServerPortString());
+                Assert.AreEqual("TestPath2", benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString());
                 Assert.AreEqual("TestPath2", benchmark.SourcePath);
-                Assert.AreEqual(GuidFromInt32(i), benchmark.SlotIdentifier.Client.Guid);
+                Assert.AreEqual(GuidFromInt32(i), benchmark.SlotIdentifier.ClientIdentifier.Guid);
                 Assert.AreEqual(GuidFromInt32(i), benchmark.SourceGuid);
                 Assert.AreEqual(i - 10, benchmark.SlotIdentifier.SlotID);
                 Assert.AreEqual(i - 10, benchmark.SourceSlotID);
