@@ -25,7 +25,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total Folding Slots
+                     Total Slots
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalSlots"/>
@@ -41,7 +41,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Non-Working Slots
+                     Idle Slots
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalSlots - SlotTotals/WorkingSlots"/>
@@ -49,7 +49,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Total PPD
+                     Total PPD (Points per Day)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/>
@@ -57,7 +57,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total PPW
+                     Total PPW (Points per Week)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="format-number($PPW, NumberFormat)"/>
@@ -65,7 +65,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Total UPD
+                     Total UPD (Work Units per Day)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="format-number(SlotTotals/UPD, NumberFormat)"/>
@@ -73,7 +73,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Total UPW
+                     Total UPW (Work Units per Week)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="format-number($UPW, NumberFormat)"/>
@@ -81,7 +81,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Average PPD
+                     Average PPD (per Working Slot)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="format-number(SlotTotals/PPD div SlotTotals/WorkingSlots, NumberFormat)"/>
@@ -89,7 +89,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average PPW
+                     Average PPW (per Working Slot)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="format-number($PPW div SlotTotals/WorkingSlots, NumberFormat)"/>
@@ -97,7 +97,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Average UPD
+                     Average UPD (per Working Slot)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="format-number(SlotTotals/UPD div SlotTotals/WorkingSlots, NumberFormat)"/>
@@ -105,32 +105,32 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Average UPW
+                     Average UPW (per Working Slot)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="format-number($UPW div SlotTotals/WorkingSlots, NumberFormat)"/>
                   </td>
                </tr>
                <tr>
-                  <td class="AltLeftCol">Completed Units</td>
+                  <td class="AltLeftCol">Completed Work Units</td>
                   <td class="AltRightCol">
                      <xsl:value-of select="SlotTotals/TotalRunCompletedUnits"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">Failed Units</td>
+                  <td class="LeftCol">Failed Work Units</td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalRunFailedUnits"/>
                   </td>
                </tr>
                <tr>
-                  <td class="AltLeftCol">Total Completed Units</td>
+                  <td class="AltLeftCol">Total Completed Work Units</td>
                   <td class="AltRightCol">
                      <xsl:value-of select="SlotTotals/TotalCompletedUnits"/>
                   </td>
                </tr>
                <tr>
-                  <td class="LeftCol">Total Failed Units</td>
+                  <td class="LeftCol">Total Failed Work Units</td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotTotals/TotalFailedUnits"/>
                   </td>

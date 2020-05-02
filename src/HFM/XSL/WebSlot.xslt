@@ -28,12 +28,12 @@
                      Current Progress
                   </td>
                   <td class="AltRightCol">
-                     <xsl:value-of select="SlotData/PercentComplete"/> Percent Complete
+                     <xsl:value-of select="SlotData/PercentComplete"/>% Complete
                   </td>
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Time Per Frame
+                     TPF (Time per Frame)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotData/TPF"/>
@@ -41,7 +41,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     PPD
+                     PPD (Points per Day)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="format-number(SlotData/PPD, NumberFormat)"/> (<xsl:value-of select="format-number(SlotData/UPD, NumberFormat)"/> WUs)
@@ -49,7 +49,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     PPW
+                     PPW (Points per Week)
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="format-number(SlotData/PPD * 7, NumberFormat)"/> (<xsl:value-of select="format-number(SlotData/UPD * 7, NumberFormat)"/> WUs)
@@ -57,7 +57,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Work Units
+                     Work Unit Statistics for this Slot
                   </td>
                   <td class="AltRightCol">
                      Completed: <xsl:value-of select="TotalRunCompletedUnits"/> - Failed: <xsl:value-of select="TotalRunFailedUnits"/> - Total Completed: <xsl:value-of select="TotalCompletedUnits"/> - Total Failed: <xsl:value-of select="TotalFailedUnits"/>
@@ -65,7 +65,7 @@
                </tr>
                <tr>
                   <td class="LeftCol">
-                     Download Time
+                     Assigned
                   </td>
                   <td class="RightCol">
                      <xsl:value-of select="SlotData/DownloadTime"/>
@@ -73,7 +73,7 @@
                </tr>
                <tr>
                   <td class="AltLeftCol">
-                     Expected Completion
+                     ETA (Estimated Time of Arrival / Completion)
                   </td>
                   <td class="AltRightCol">
                      <xsl:value-of select="SlotData/ETA"/>
@@ -90,7 +90,7 @@
                   <td class="Plain">
                      <xsl:choose>
                         <xsl:when test="LogFileAvailable='true' and LogFileName!=''">
-                           <a><xsl:attribute name="href"><xsl:value-of select="LogFileName"/></xsl:attribute>Full Log File</a>
+                           <a><xsl:attribute name="href"><xsl:value-of select="LogFileName"/></xsl:attribute>Click here to view the client log file</a>
                         </xsl:when>
                      </xsl:choose>
                   </td>
@@ -140,7 +140,7 @@
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Credit</td>
+         <td class="AltLeftCol">Base Credit</td>
          <td class="AltRightCol">
             <xsl:value-of select="Credit"/>
          </td>
@@ -170,25 +170,25 @@
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Preferred Deadline</td>
+         <td class="LeftCol">Timeout</td>
          <td class="RightCol">
             <xsl:value-of select="PreferredDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Final Deadline</td>
+         <td class="AltLeftCol">Expiration</td>
          <td class="AltRightCol">
             <xsl:value-of select="MaximumDays"/> Days
          </td>
       </tr>
       <tr>
-         <td class="LeftCol">Contact Person</td>
+         <td class="LeftCol">Contact</td>
          <td class="RightCol">
             <xsl:value-of select="Contact"/>
          </td>
       </tr>
       <tr>
-         <td class="AltLeftCol">Server IP</td>
+         <td class="AltLeftCol">Work Server</td>
          <td class="AltRightCol">
             <xsl:value-of select="ServerIP"/>
          </td>

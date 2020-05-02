@@ -23,19 +23,19 @@
                   <td class="Heading">Status</td>
                   <td class="Heading">Progress</td>
                   <td class="Heading">Name</td>
-                  <td class="Heading">Client Type</td>
+                  <td class="Heading">Slot Type</td>
                   <td class="Heading">TPF</td>
                   <td class="Heading">PPD</td>
                   <td class="Heading">ETA</td>
                   <td class="Heading">Core</td>
-                  <td class="Heading">Core ID</td>
-                  <td class="Heading">Project (Run, Clone, Gen)</td>
+                  <td class="Heading">CoreID</td>
+                  <td class="Heading">Project (R,C,G)</td>
                   <td class="Heading">Credit</td>
                   <td class="Heading">Completed</td>
                   <td class="Heading">Failed</td>
-                  <td class="Heading">User Name</td>
-                  <td class="Heading">Download Time</td>
-                  <td class="Heading">Deadline</td>
+                  <td class="Heading">Username</td>
+                  <td class="Heading">Assigned</td>
+                  <td class="Heading">Timeout</td>
                </tr>
                <xsl:apply-templates select="Slots/SlotData">
                   <xsl:with-param name="NumberFormat" select="NumberFormat" />
@@ -51,7 +51,7 @@
                </tr>
                <tr>
                   <td class="RightCol" colspan="1">
-                     <xsl:value-of select="SlotTotals/WorkingSlots"/> Clients
+                     <xsl:value-of select="SlotTotals/WorkingSlots"/> Working Slots
                   </td>
                   <td class="RightCol" colspan="1">
                      <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
@@ -85,10 +85,10 @@
                <xsl:value-of select="Status"/>
             </font>
          </td>
-         <td width="3%" class="RightCol">
+         <td width="2%" class="RightCol">
             <xsl:value-of select="PercentComplete"/>%
          </td>
-         <td width="15%">
+         <td width="14%">
             <xsl:choose>
                <xsl:when test="UserIdIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -102,16 +102,16 @@
                <xsl:attribute name="href"><xsl:value-of select="Name"/>.html</xsl:attribute><xsl:value-of select="Name"/>
             </a>
          </td>
-         <td width="5%" class="RightCol">
+         <td width="6%" class="RightCol">
             <xsl:value-of select="SlotType"/>
          </td>
-         <td width="5%" class="RightCol">
+         <td width="4%" class="RightCol">
             <xsl:value-of select="TPF"/>
          </td>
          <td width="8%" class="RightCol">
             <xsl:value-of select="format-number(PPD, $NumberFormat)"/> (<xsl:value-of select="format-number(UPD, $NumberFormat)"/> WUs)
          </td>
-         <td width="8%" class="RightCol">
+         <td width="7%" class="RightCol">
             <xsl:value-of select="ETA"/>
          </td>
          <td width="8%" class="RightCol">
@@ -120,7 +120,7 @@
          <td width="2%" class="RightCol">
             <xsl:value-of select="CoreId"/>
          </td>
-         <td width="8%">
+         <td width="11%">
             <xsl:choose>
                <xsl:when test="ProjectIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
