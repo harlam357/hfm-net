@@ -84,11 +84,17 @@ namespace HFM.Core.WorkUnits
             FrameTimes = new List<ProteinBenchmarkFrameTime>(DefaultMaxFrames);
         }
 
+        public ProteinBenchmark UpdateFromClientIdentifier(ClientIdentifier clientIdentifier)
+        {
+            SourceName = clientIdentifier.Name;
+            SourcePath = clientIdentifier.ToServerPortString();
+            SourceGuid = clientIdentifier.Guid;
+            return this;
+        }
+
         public ProteinBenchmark UpdateFromSlotIdentifier(SlotIdentifier slotIdentifier)
         {
-            SourceName = slotIdentifier.Client.Name;
-            SourcePath = slotIdentifier.Client.ToServerPortString();
-            SourceGuid = slotIdentifier.Client.Guid;
+            UpdateFromClientIdentifier(slotIdentifier.Client);
             SourceSlotID = slotIdentifier.SlotID;
             return this;
         }

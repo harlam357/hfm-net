@@ -654,17 +654,7 @@ namespace HFM.Forms
             }
             else
             {
-                try
-                {
-                    _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), _settingsManager.FileName, _settingsManager.FilterIndex);
-                    _clientConfiguration.IsDirty = false;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                    _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                       "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
-                }
+                WriteClientConfiguration(_settingsManager.FileName, _settingsManager.FilterIndex);
             }
         }
 
@@ -680,20 +670,48 @@ namespace HFM.Forms
             saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
             if (saveFileDialogView.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    // Issue 75
-                    _settingsManager.Write(_clientConfiguration.GetClients().Select(x => x.Settings), saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
-                    _clientConfiguration.IsDirty = false;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                    _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                       "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
-                }
+                WriteClientConfiguration(saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
             }
             _viewFactory.Release(saveFileDialogView);
+        }
+
+        private void WriteClientConfiguration(string fileName, int filterIndex)
+        {
+            try
+            {
+                var clients = _clientConfiguration.GetClients();
+                _settingsManager.Write(clients.Select(x => x.Settings), fileName, filterIndex);
+                _clientConfiguration.IsDirty = false;
+
+                ApplyClientIdentifierToBenchmarks(clients);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                    "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+            }
+        }
+
+        private static void ApplyClientIdentifierToBenchmarks(ICollection<IClient> clients)
+        {
+            var benchmarkService = clients.FirstOrDefault()?.BenchmarkService;
+            if (benchmarkService is null)
+            {
+                return;
+            }
+
+            foreach (var benchmarkClientIdentifier in benchmarkService.GetClientIdentifiers())
+            {
+                var clientIdentifier = clients.Select(x => (ClientIdentifier?)x.Settings.ClientIdentifier)
+                    .FirstOrDefault(x => x.Value.Equals(benchmarkClientIdentifier) || 
+                                         ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Value, benchmarkClientIdentifier));
+
+                if (clientIdentifier.HasValue)
+                {
+                    benchmarkService.UpdateClientIdentifier(clientIdentifier.Value);
+                }
+            }
         }
 
         private bool CheckForConfigurationChanges()

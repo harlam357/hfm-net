@@ -232,7 +232,7 @@ namespace HFM.Core.Client
             return result;
         }
 
-        public IEnumerable<IClient> GetClients()
+        public ICollection<IClient> GetClients()
         {
             _syncLock.EnterReadLock();
             try

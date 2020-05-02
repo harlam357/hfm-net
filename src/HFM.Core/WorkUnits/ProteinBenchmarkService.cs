@@ -11,6 +11,8 @@ namespace HFM.Core.WorkUnits
 {
     public interface IProteinBenchmarkService
     {
+        ICollection<ClientIdentifier> GetClientIdentifiers();
+
         ICollection<SlotIdentifier> GetSlotIdentifiers();
 
         ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
@@ -26,6 +28,8 @@ namespace HFM.Core.WorkUnits
         void RemoveAll(SlotIdentifier slotIdentifier, int projectID);
 
         void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID);
+
+        void UpdateClientIdentifier(ClientIdentifier clientIdentifier);
     }
 
     public class ProteinBenchmarkService : IProteinBenchmarkService
@@ -37,6 +41,14 @@ namespace HFM.Core.WorkUnits
         {
             DataContainer = dataContainer;
             _cacheLock = new ReaderWriterLockSlim();
+        }
+
+        public ICollection<ClientIdentifier> GetClientIdentifiers()
+        {
+            return DataContainer.Data.Select(x => x.SlotIdentifier.Client)
+                .OrderBy(c => c)
+                .Distinct(ClientIdentifier.ProteinBenchmarkEqualityComparer)
+                .ToList();
         }
 
         public ICollection<SlotIdentifier> GetSlotIdentifiers()
@@ -202,6 +214,35 @@ namespace HFM.Core.WorkUnits
             {
                 _cacheLock.ExitWriteLock();
             }
+        }
+
+        public void UpdateClientIdentifier(ClientIdentifier clientIdentifier)
+        {
+            _cacheLock.EnterWriteLock();
+            try
+            {
+                var benchmarks = DataContainer.Data.Where(b => BenchmarkMatchesClientIdentifier(b, clientIdentifier));
+                foreach (var b in benchmarks)
+                {
+                    b.UpdateFromClientIdentifier(clientIdentifier);
+                }
+                DataContainer.Write();
+            }
+            finally
+            {
+                _cacheLock.ExitWriteLock();
+            }
+        }
+
+        private static bool BenchmarkMatchesClientIdentifier(ProteinBenchmark b, ClientIdentifier clientIdentifier)
+        {
+            // most specific, matches ClientIdentifier on Guid first... then Name, Server, and Port
+            if (b.SlotIdentifier.Client.Equals(clientIdentifier)) return true;
+
+            // less specific, matches ClientIdentifier only on Name, Server, and Port
+            if (ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier.Client, clientIdentifier)) return true;
+
+            return false;
         }
     }
 }
