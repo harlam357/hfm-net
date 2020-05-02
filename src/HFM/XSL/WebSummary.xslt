@@ -60,13 +60,6 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="18" align="center">
-                     <a href="mobilesummary.html">
-                        Mobile Version
-                     </a>
-                  </td>
-               </tr>
-               <tr>
-                  <td class="Plain" colspan="18" align="center">
                   </td>
                </tr>
                <tr>

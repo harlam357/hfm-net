@@ -180,12 +180,6 @@ namespace HFM.Forms
             this.lbl3Port = new System.Windows.Forms.Label();
             this.lbl3Proxy = new System.Windows.Forms.Label();
             this.tabVisStyles = new System.Windows.Forms.TabPage();
-            this.btnMobileSummaryBrowse = new System.Windows.Forms.Button();
-            this.txtMobileSummary = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.lblMobileSummary = new System.Windows.Forms.Label();
-            this.btnMobileOverviewBrowse = new System.Windows.Forms.Button();
-            this.txtMobileOverview = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.lblMobileOverview = new System.Windows.Forms.Label();
             this.btnInstanceBrowse = new System.Windows.Forms.Button();
             this.txtInstance = new harlam357.Windows.Forms.ValidatingTextBox();
             this.SlotXsltLabel = new System.Windows.Forms.Label();
@@ -1749,12 +1743,6 @@ namespace HFM.Forms
             // tabVisStyles
             // 
             this.tabVisStyles.BackColor = System.Drawing.Color.Transparent;
-            this.tabVisStyles.Controls.Add(this.btnMobileSummaryBrowse);
-            this.tabVisStyles.Controls.Add(this.txtMobileSummary);
-            this.tabVisStyles.Controls.Add(this.lblMobileSummary);
-            this.tabVisStyles.Controls.Add(this.btnMobileOverviewBrowse);
-            this.tabVisStyles.Controls.Add(this.txtMobileOverview);
-            this.tabVisStyles.Controls.Add(this.lblMobileOverview);
             this.tabVisStyles.Controls.Add(this.btnInstanceBrowse);
             this.tabVisStyles.Controls.Add(this.txtInstance);
             this.tabVisStyles.Controls.Add(this.SlotXsltLabel);
@@ -1775,83 +1763,9 @@ namespace HFM.Forms
             this.tabVisStyles.Text = "Web Visual Styles";
             this.tabVisStyles.UseVisualStyleBackColor = true;
             // 
-            // btnMobileSummaryBrowse
-            // 
-            this.btnMobileSummaryBrowse.Location = new System.Drawing.Point(466, 247);
-            this.btnMobileSummaryBrowse.Name = "btnMobileSummaryBrowse";
-            this.btnMobileSummaryBrowse.Size = new System.Drawing.Size(24, 23);
-            this.btnMobileSummaryBrowse.TabIndex = 15;
-            this.btnMobileSummaryBrowse.Text = "...";
-            this.btnMobileSummaryBrowse.UseVisualStyleBackColor = true;
-            this.btnMobileSummaryBrowse.Click += new System.EventHandler(this.btnMobileSummaryBrowse_Click);
-            // 
-            // txtMobileSummary
-            // 
-            this.txtMobileSummary.BackColor = System.Drawing.SystemColors.Control;
-            this.txtMobileSummary.DoubleBuffered = true;
-            this.txtMobileSummary.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtMobileSummary.ErrorState = false;
-            this.txtMobileSummary.ErrorToolTip = this.toolTipPrefs;
-            this.txtMobileSummary.ErrorToolTipDuration = 5000;
-            this.txtMobileSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtMobileSummary.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-            this.txtMobileSummary.Location = new System.Drawing.Point(132, 249);
-            this.txtMobileSummary.Name = "txtMobileSummary";
-            this.txtMobileSummary.ReadOnly = true;
-            this.txtMobileSummary.Size = new System.Drawing.Size(328, 20);
-            this.txtMobileSummary.TabIndex = 14;
-            this.txtMobileSummary.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-            // 
-            // lblMobileSummary
-            // 
-            this.lblMobileSummary.AutoSize = true;
-            this.lblMobileSummary.Location = new System.Drawing.Point(9, 252);
-            this.lblMobileSummary.Name = "lblMobileSummary";
-            this.lblMobileSummary.Size = new System.Drawing.Size(117, 13);
-            this.lblMobileSummary.TabIndex = 13;
-            this.lblMobileSummary.Text = "Mobile Summary XSLT:";
-            this.lblMobileSummary.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // btnMobileOverviewBrowse
-            // 
-            this.btnMobileOverviewBrowse.Location = new System.Drawing.Point(466, 195);
-            this.btnMobileOverviewBrowse.Name = "btnMobileOverviewBrowse";
-            this.btnMobileOverviewBrowse.Size = new System.Drawing.Size(24, 23);
-            this.btnMobileOverviewBrowse.TabIndex = 9;
-            this.btnMobileOverviewBrowse.Text = "...";
-            this.btnMobileOverviewBrowse.UseVisualStyleBackColor = true;
-            this.btnMobileOverviewBrowse.Click += new System.EventHandler(this.btnMobileOverviewBrowse_Click);
-            // 
-            // txtMobileOverview
-            // 
-            this.txtMobileOverview.BackColor = System.Drawing.SystemColors.Control;
-            this.txtMobileOverview.DoubleBuffered = true;
-            this.txtMobileOverview.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtMobileOverview.ErrorState = false;
-            this.txtMobileOverview.ErrorToolTip = this.toolTipPrefs;
-            this.txtMobileOverview.ErrorToolTipDuration = 5000;
-            this.txtMobileOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtMobileOverview.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-            this.txtMobileOverview.Location = new System.Drawing.Point(132, 197);
-            this.txtMobileOverview.Name = "txtMobileOverview";
-            this.txtMobileOverview.ReadOnly = true;
-            this.txtMobileOverview.Size = new System.Drawing.Size(328, 20);
-            this.txtMobileOverview.TabIndex = 8;
-            this.txtMobileOverview.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
-            // 
-            // lblMobileOverview
-            // 
-            this.lblMobileOverview.AutoSize = true;
-            this.lblMobileOverview.Location = new System.Drawing.Point(7, 200);
-            this.lblMobileOverview.Name = "lblMobileOverview";
-            this.lblMobileOverview.Size = new System.Drawing.Size(119, 13);
-            this.lblMobileOverview.TabIndex = 7;
-            this.lblMobileOverview.Text = "Mobile Overview XSLT:";
-            this.lblMobileOverview.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // btnInstanceBrowse
             // 
-            this.btnInstanceBrowse.Location = new System.Drawing.Point(466, 273);
+            this.btnInstanceBrowse.Location = new System.Drawing.Point(466, 221);
             this.btnInstanceBrowse.Name = "btnInstanceBrowse";
             this.btnInstanceBrowse.Size = new System.Drawing.Size(24, 23);
             this.btnInstanceBrowse.TabIndex = 18;
@@ -1869,7 +1783,7 @@ namespace HFM.Forms
             this.txtInstance.ErrorToolTipDuration = 5000;
             this.txtInstance.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtInstance.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-            this.txtInstance.Location = new System.Drawing.Point(132, 275);
+            this.txtInstance.Location = new System.Drawing.Point(132, 223);
             this.txtInstance.Name = "txtInstance";
             this.txtInstance.ReadOnly = true;
             this.txtInstance.Size = new System.Drawing.Size(328, 20);
@@ -1879,7 +1793,7 @@ namespace HFM.Forms
             // SlotXsltLabel
             // 
             this.SlotXsltLabel.AutoSize = true;
-            this.SlotXsltLabel.Location = new System.Drawing.Point(68, 278);
+            this.SlotXsltLabel.Location = new System.Drawing.Point(68, 226);
             this.SlotXsltLabel.Name = "SlotXsltLabel";
             this.SlotXsltLabel.Size = new System.Drawing.Size(58, 13);
             this.SlotXsltLabel.TabIndex = 16;
@@ -1888,7 +1802,7 @@ namespace HFM.Forms
             // 
             // btnSummaryBrowse
             // 
-            this.btnSummaryBrowse.Location = new System.Drawing.Point(466, 221);
+            this.btnSummaryBrowse.Location = new System.Drawing.Point(466, 195);
             this.btnSummaryBrowse.Name = "btnSummaryBrowse";
             this.btnSummaryBrowse.Size = new System.Drawing.Size(24, 23);
             this.btnSummaryBrowse.TabIndex = 12;
@@ -1906,7 +1820,7 @@ namespace HFM.Forms
             this.txtSummary.ErrorToolTipDuration = 5000;
             this.txtSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtSummary.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
-            this.txtSummary.Location = new System.Drawing.Point(132, 223);
+            this.txtSummary.Location = new System.Drawing.Point(132, 197);
             this.txtSummary.Name = "txtSummary";
             this.txtSummary.ReadOnly = true;
             this.txtSummary.Size = new System.Drawing.Size(328, 20);
@@ -1916,7 +1830,7 @@ namespace HFM.Forms
             // lblSummary
             // 
             this.lblSummary.AutoSize = true;
-            this.lblSummary.Location = new System.Drawing.Point(43, 226);
+            this.lblSummary.Location = new System.Drawing.Point(43, 200);
             this.lblSummary.Name = "lblSummary";
             this.lblSummary.Size = new System.Drawing.Size(83, 13);
             this.lblSummary.TabIndex = 10;
@@ -2170,12 +2084,6 @@ namespace HFM.Forms
       private System.Windows.Forms.Button btnOverviewBrowse;
       private ValidatingTextBox txtOverview;
       private System.Windows.Forms.Label lblOverview;
-      private System.Windows.Forms.Button btnMobileOverviewBrowse;
-      private ValidatingTextBox txtMobileOverview;
-      private System.Windows.Forms.Label lblMobileOverview;
-      private System.Windows.Forms.Button btnMobileSummaryBrowse;
-      private ValidatingTextBox txtMobileSummary;
-      private System.Windows.Forms.Label lblMobileSummary;
       private System.Windows.Forms.GroupBox grpShowStyle;
       private System.Windows.Forms.ComboBox cboShowStyle;
       private System.Windows.Forms.Label labelWrapper2;

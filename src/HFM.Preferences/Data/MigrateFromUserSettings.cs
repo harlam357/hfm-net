@@ -79,9 +79,7 @@ namespace HFM.Preferences.Data
          data.WebDeployment.LogSizeLimitedTo = Settings.Default.WebGenLimitLogSizeLength;
          data.WebRendering.StyleSheet = Settings.Default.CSSFile;
          data.WebRendering.OverviewTransform = Settings.Default.WebOverview;
-         data.WebRendering.MobileOverviewTransform = Settings.Default.WebMobileOverview;
          data.WebRendering.SummaryTransform = Settings.Default.WebSummary;
-         data.WebRendering.MobileSummaryTransform = Settings.Default.WebMobileSummary;
          data.WebRendering.SlotTransform = Settings.Default.WebSlot;
 
          data.Startup.RunMinimized = Settings.Default.RunMinimized;
@@ -101,8 +99,6 @@ namespace HFM.Preferences.Data
          data.ApplicationSettings.BonusCalculation = GetBonusCalculation();
          data.ApplicationSettings.LogFileViewer = Settings.Default.LogFileViewer;
          data.ApplicationSettings.FileExplorer = Settings.Default.FileExplorer;
-         data.ApplicationSettings.AllowRunningAsync = Settings.Default.AllowRunningAsync;
-         data.ApplicationSettings.DuplicateUserIdCheck = Settings.Default.DuplicateUserIDCheck;
          data.ApplicationSettings.DuplicateProjectCheck = Settings.Default.DuplicateProjectCheck;
 
          data.ClientRetrievalTask.Enabled = Settings.Default.SyncOnSchedule;
@@ -118,8 +114,7 @@ namespace HFM.Preferences.Data
          data.Email.SmtpServer.Username = Settings.Default.EmailReportingServerUsername;
          data.Email.SmtpServer.Password = Settings.Default.EmailReportingServerPassword;
 
-         data.Reporting.EuePauseEnabled = Settings.Default.ReportEuePause;
-         data.Reporting.ClientHungEnabled = Settings.Default.ReportHung;
+         // data.Reporting
 
          data.UserSettings.EocUserId = Settings.Default.EOCUserID;
          data.UserSettings.StanfordId = Settings.Default.StanfordID;

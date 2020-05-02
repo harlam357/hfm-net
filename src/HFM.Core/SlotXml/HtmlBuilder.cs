@@ -76,27 +76,11 @@ namespace HFM.Core.SlotXml
             }
             yield return filePath;
 
-            // Generate the mobile index page
-            filePath = Path.Combine(path, "mobile.html");
-            using (sw = new StreamWriter(filePath, false))
-            {
-                sw.Write(Transform(summaryXml, GetXsltFileName(Preference.WebMobileOverview), cssFileName));
-            }
-            yield return filePath;
-
             // Generate the summary page
             filePath = Path.Combine(path, "summary.html");
             using (sw = new StreamWriter(filePath, false))
             {
                 sw.Write(Transform(summaryXml, GetXsltFileName(Preference.WebSummary), cssFileName));
-            }
-            yield return filePath;
-
-            // Generate the mobile summary page
-            filePath = Path.Combine(path, "mobilesummary.html");
-            using (sw = new StreamWriter(filePath, false))
-            {
-                sw.Write(Transform(summaryXml, GetXsltFileName(Preference.WebMobileSummary), cssFileName));
             }
             yield return filePath;
         }

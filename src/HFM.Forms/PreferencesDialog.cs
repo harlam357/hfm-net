@@ -1,21 +1,3 @@
-/*
- * HFM.NET
-  * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.Collections.Generic;
@@ -190,7 +172,7 @@ namespace HFM.Forms
         private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
-            if (Core.Application.IsRunningOnMono && this.Enabled)
+            if (Core.Application.IsRunningOnMono && Enabled)
             {
                 HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
                 HandleScheduledTasksPropertyChangedForMono(e.PropertyName);
@@ -253,7 +235,7 @@ namespace HFM.Forms
 
         private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Core.Application.IsRunningOnMono && this.Enabled)
+            if (Core.Application.IsRunningOnMono && Enabled)
             {
                 HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
                 HandleStartupAndExternalPropertyChangedForMono(e.PropertyName);
@@ -290,7 +272,7 @@ namespace HFM.Forms
         private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
-            if (Core.Application.IsRunningOnMono && this.Enabled) HandleReportingPropertyEnabledForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled) HandleReportingPropertyEnabledForMono(e.PropertyName);
         }
 
         private void HandleReportingPropertyEnabledForMono(string propertyName)
@@ -314,7 +296,7 @@ namespace HFM.Forms
         private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
             SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
-            if (Core.Application.IsRunningOnMono && this.Enabled) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
         }
 
         private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
@@ -335,26 +317,20 @@ namespace HFM.Forms
 
         private void WebVisualStylesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Core.Application.IsRunningOnMono && this.Enabled) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
         }
 
         private void HandleWebVisualStylesPropertyChangedForMono(string propertyName)
         {
             switch (propertyName)
             {
-                case "WebOverview":
+                case nameof(WebVisualStylesModel.WebOverview):
                     txtOverview.Text = _webVisualStylesModel.WebOverview;
                     break;
-                case "WebMobileOverview":
-                    txtMobileOverview.Text = _webVisualStylesModel.WebMobileOverview;
-                    break;
-                case "WebSummary":
+                case nameof(WebVisualStylesModel.WebSummary):
                     txtSummary.Text = _webVisualStylesModel.WebSummary;
                     break;
-                case "WebMobileSummary":
-                    txtMobileSummary.Text = _webVisualStylesModel.WebMobileSummary;
-                    break;
-                case "WebSlot":
+                case nameof(WebVisualStylesModel.WebSlot):
                     txtInstance.Text = _webVisualStylesModel.WebSlot;
                     break;
             }
@@ -657,9 +633,7 @@ namespace HFM.Forms
             StyleList.DataBindings.Add("SelectedValue", _webVisualStylesModel, "CssFile", false, DataSourceUpdateMode.OnPropertyChanged);
 
             txtOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebOverview", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtMobileOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileOverview", false, DataSourceUpdateMode.OnPropertyChanged);
             txtSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtMobileSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebMobileSummary", false, DataSourceUpdateMode.OnPropertyChanged);
             txtInstance.DataBindings.Add("Text", _webVisualStylesModel, "WebSlot", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
@@ -1026,30 +1000,12 @@ namespace HFM.Forms
             }
         }
 
-        private void btnMobileOverviewBrowse_Click(object sender, EventArgs e)
-        {
-            string path = DoXsltBrowse(_webVisualStylesModel.WebMobileOverview, XsltExt, XsltFilter);
-            if (String.IsNullOrEmpty(path) == false)
-            {
-                _webVisualStylesModel.WebMobileOverview = path;
-            }
-        }
-
         private void btnSummaryBrowse_Click(object sender, EventArgs e)
         {
             string path = DoXsltBrowse(_webVisualStylesModel.WebSummary, XsltExt, XsltFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
                 _webVisualStylesModel.WebSummary = path;
-            }
-        }
-
-        private void btnMobileSummaryBrowse_Click(object sender, EventArgs e)
-        {
-            string path = DoXsltBrowse(_webVisualStylesModel.WebMobileSummary, XsltExt, XsltFilter);
-            if (String.IsNullOrEmpty(path) == false)
-            {
-                _webVisualStylesModel.WebMobileSummary = path;
             }
         }
 
@@ -1120,7 +1076,7 @@ namespace HFM.Forms
 
         private void TextBoxDigitsOnlyKeyPress(object sender, KeyPressEventArgs e)
         {
-            Debug.WriteLine(String.Format("Keystroke: {0}", (int)e.KeyChar));
+            Debug.WriteLine($"Keystroke: {(int)e.KeyChar}");
 
             // only allow digits special keystrokes - Issue 65
             if (char.IsDigit(e.KeyChar) == false &&

@@ -141,9 +141,7 @@ namespace HFM.Preferences
             prefs.AddReadOnly(Preference.ClientRetrievalTaskInterval, p => p.ClientRetrievalTask.Interval);
             prefs.AddReadOnly(Preference.ClientRetrievalTaskType, p => p.ClientRetrievalTask.ProcessingMode);
 
-            prefs.Add(Preference.DuplicateUserIdCheck, p => p.ApplicationSettings.DuplicateUserIdCheck);
             prefs.Add(Preference.DuplicateProjectCheck, p => p.ApplicationSettings.DuplicateProjectCheck);
-            prefs.Add(Preference.AllowRunningAsync, p => p.ApplicationSettings.AllowRunningAsync);
 
             prefs.Add(Preference.WebGenerationTask, p => p.WebGenerationTask);
             prefs.AddReadOnly(Preference.WebGenerationTaskEnabled, p => p.WebGenerationTask.Enabled);
@@ -163,9 +161,7 @@ namespace HFM.Preferences
             prefs.Add(Preference.WebGenLimitLogSizeLength, p => p.WebDeployment.LogSizeLimitedTo);
             prefs.Add(Preference.CssFile, p => p.WebRendering.StyleSheet);
             prefs.Add(Preference.WebOverview, p => p.WebRendering.OverviewTransform);
-            prefs.Add(Preference.WebMobileOverview, p => p.WebRendering.MobileOverviewTransform);
             prefs.Add(Preference.WebSummary, p => p.WebRendering.SummaryTransform);
-            prefs.Add(Preference.WebMobileSummary, p => p.WebRendering.MobileSummaryTransform);
             prefs.Add(Preference.WebSlot, p => p.WebRendering.SlotTransform);
 
             prefs.Add(Preference.RunMinimized, p => p.Startup.RunMinimized);
@@ -193,8 +189,8 @@ namespace HFM.Preferences
             prefs.Add(Preference.EmailReportingServerPort, p => p.Email.SmtpServer.Port);
             prefs.Add(Preference.EmailReportingServerUsername, p => p.Email.SmtpServer.Username);
             prefs.AddEncrypted(Preference.EmailReportingServerPassword, p => p.Email.SmtpServer.Password);
-            prefs.Add(Preference.ReportEuePause, p => p.Reporting.EuePauseEnabled);
-            prefs.Add(Preference.ReportHung, p => p.Reporting.ClientHungEnabled);
+
+            // p => p.Reporting.???
 
             prefs.Add(Preference.EocUserId, p => p.UserSettings.EocUserId);
             prefs.Add(Preference.StanfordId, p => p.UserSettings.StanfordId);

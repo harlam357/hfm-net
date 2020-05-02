@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.ComponentModel;
 
@@ -29,551 +11,534 @@ using HFM.Preferences.Data;
 
 namespace HFM.Forms.Models
 {
-   internal class ScheduledTasksModel : INotifyPropertyChanged
-   {
-      public bool Error
-      {
-         get
-         {
-            return SyncTimeMinutesError ||
-                   GenerateIntervalError ||
-                   WebRootError ||
-                   WebGenServerError ||
-                   WebGenPortError ||
-                   WebGenUsernameError ||
-                   WebGenPasswordError;
-         }
-      }
-
-      public ScheduledTasksModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
-
-      public void Load(IPreferenceSet prefs)
-      {
-         var clientRetrievalTask = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-         SyncTimeMinutes = clientRetrievalTask.Interval;
-         SyncOnSchedule = clientRetrievalTask.Enabled;
-         SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
-         AllowRunningAsync = prefs.Get<bool>(Preference.AllowRunningAsync);
-
-         var webGenerationTask = prefs.Get<WebGenerationTask>(Preference.WebGenerationTask);
-         GenerateWeb = webGenerationTask.Enabled;
-         GenerateInterval = webGenerationTask.Interval;
-         WebGenAfterRefresh = webGenerationTask.AfterClientRetrieval;
-
-         WebGenType = prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
-         WebRoot = prefs.Get<string>(Preference.WebDeploymentRoot);
-         WebGenServer = prefs.Get<string>(Preference.WebGenServer);
-         WebGenPort = prefs.Get<int>(Preference.WebGenPort);
-         WebGenUsername = prefs.Get<string>(Preference.WebGenUsername);
-         WebGenPassword = prefs.Get<string>(Preference.WebGenPassword);
-         CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
-         CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
-         CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
-         FtpMode = prefs.Get<FtpMode>(Preference.WebGenFtpMode);
-         LimitLogSize = prefs.Get<bool>(Preference.WebGenLimitLogSize);
-         LimitLogSizeLength = prefs.Get<int>(Preference.WebGenLimitLogSizeLength);
-      }
-
-      public void Update(IPreferenceSet prefs)
-      {
-         var clientRetrievalTask = new ClientRetrievalTask
-         {
-            Enabled = SyncOnSchedule,
-            Interval = SyncTimeMinutes,
-            ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
-         };
-         prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
-         prefs.Set(Preference.AllowRunningAsync, AllowRunningAsync);
-
-         var webGenerationTask = new WebGenerationTask
-         {
-            Enabled = GenerateWeb,
-            Interval = GenerateInterval,
-            AfterClientRetrieval = WebGenAfterRefresh
-         };
-         prefs.Set(Preference.WebGenerationTask, webGenerationTask);
-
-         prefs.Set(Preference.WebDeploymentType, WebGenType);
-         if (WebGenType == WebDeploymentType.Ftp)
-         {
-            prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddUnixTrailingSlash(WebRoot));
-         }
-         else
-         {
-            prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddTrailingSlash(WebRoot));
-         }
-         prefs.Set(Preference.WebGenServer, WebGenServer);
-         prefs.Set(Preference.WebGenPort, WebGenPort);
-         prefs.Set(Preference.WebGenUsername, WebGenUsername);
-         prefs.Set(Preference.WebGenPassword, WebGenPassword);
-         prefs.Set(Preference.WebGenCopyHtml, CopyHtml);
-         prefs.Set(Preference.WebGenCopyXml, CopyXml);
-         prefs.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
-         prefs.Set(Preference.WebGenFtpMode, FtpMode);
-         prefs.Set(Preference.WebGenLimitLogSize, LimitLogSize);
-         prefs.Set(Preference.WebGenLimitLogSizeLength, LimitLogSizeLength);
-      }
-
-      #region Refresh Data
-
-      private int _syncTimeMinutes;
-
-      public int SyncTimeMinutes
-      {
-         get { return _syncTimeMinutes; }
-         set
-         {
-            if (SyncTimeMinutes != value)
+    internal class ScheduledTasksModel : INotifyPropertyChanged
+    {
+        public bool Error
+        {
+            get
             {
-               _syncTimeMinutes = value;
-               OnPropertyChanged("SyncTimeMinutes");
+                return SyncTimeMinutesError ||
+                       GenerateIntervalError ||
+                       WebRootError ||
+                       WebGenServerError ||
+                       WebGenPortError ||
+                       WebGenUsernameError ||
+                       WebGenPasswordError;
             }
-         }
-      }
+        }
 
-      public bool SyncTimeMinutesError
-      {
-         get
-         {
-            if (SyncOnSchedule == false) return false;
-            return !ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
-         }
-      }
+        public ScheduledTasksModel(IPreferenceSet prefs)
+        {
+            Load(prefs);
+        }
 
-      private bool _syncOnSchedule;
+        public void Load(IPreferenceSet prefs)
+        {
+            var clientRetrievalTask = prefs.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
+            SyncTimeMinutes = clientRetrievalTask.Interval;
+            SyncOnSchedule = clientRetrievalTask.Enabled;
+            SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
 
-      public bool SyncOnSchedule
-      {
-         get { return _syncOnSchedule; }
-         set
-         {
-            if (SyncOnSchedule != value)
+            var webGenerationTask = prefs.Get<WebGenerationTask>(Preference.WebGenerationTask);
+            GenerateWeb = webGenerationTask.Enabled;
+            GenerateInterval = webGenerationTask.Interval;
+            WebGenAfterRefresh = webGenerationTask.AfterClientRetrieval;
+
+            WebGenType = prefs.Get<WebDeploymentType>(Preference.WebDeploymentType);
+            WebRoot = prefs.Get<string>(Preference.WebDeploymentRoot);
+            WebGenServer = prefs.Get<string>(Preference.WebGenServer);
+            WebGenPort = prefs.Get<int>(Preference.WebGenPort);
+            WebGenUsername = prefs.Get<string>(Preference.WebGenUsername);
+            WebGenPassword = prefs.Get<string>(Preference.WebGenPassword);
+            CopyHtml = prefs.Get<bool>(Preference.WebGenCopyHtml);
+            CopyXml = prefs.Get<bool>(Preference.WebGenCopyXml);
+            CopyFAHlog = prefs.Get<bool>(Preference.WebGenCopyFAHlog);
+            FtpMode = prefs.Get<FtpMode>(Preference.WebGenFtpMode);
+            LimitLogSize = prefs.Get<bool>(Preference.WebGenLimitLogSize);
+            LimitLogSizeLength = prefs.Get<int>(Preference.WebGenLimitLogSizeLength);
+        }
+
+        public void Update(IPreferenceSet prefs)
+        {
+            var clientRetrievalTask = new ClientRetrievalTask
             {
-               _syncOnSchedule = value;
-               OnPropertyChanged("SyncOnSchedule");
-            }
-         }
-      }
+                Enabled = SyncOnSchedule,
+                Interval = SyncTimeMinutes,
+                ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
+            };
+            prefs.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
 
-      private bool _syncLoad;
-
-      public bool SyncOnLoad
-      {
-         get { return _syncLoad; }
-         set
-         {
-            if (SyncOnLoad != value)
+            var webGenerationTask = new WebGenerationTask
             {
-               _syncLoad = value;
-               OnPropertyChanged("SyncOnLoad");
-            }
-         }
-      }
+                Enabled = GenerateWeb,
+                Interval = GenerateInterval,
+                AfterClientRetrieval = WebGenAfterRefresh
+            };
+            prefs.Set(Preference.WebGenerationTask, webGenerationTask);
 
-      private bool _allowRunningAsync;
-
-      public bool AllowRunningAsync
-      {
-         get { return _allowRunningAsync; }
-         set
-         {
-            if (AllowRunningAsync != value)
+            prefs.Set(Preference.WebDeploymentType, WebGenType);
+            if (WebGenType == WebDeploymentType.Ftp)
             {
-               _allowRunningAsync = value;
-               OnPropertyChanged("AllowRunningAsync");
+                prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddUnixTrailingSlash(WebRoot));
             }
-         }
-      }
-
-      #endregion
-
-      #region Web Generation
-
-      private WebDeploymentType _webGenType;
-
-      public WebDeploymentType WebGenType
-      {
-         get { return _webGenType; }
-         set
-         {
-            if (WebGenType != value)
+            else
             {
-               _webGenType = value;
-               OnPropertyChanged("WebGenType");
-               OnPropertyChanged("FtpModeEnabled");
-               OnPropertyChanged("BrowseLocalPathEnabled");
-               OnPropertyChanged("LimitLogSizeEnabled");
-               OnPropertyChanged("LimitLogSizeLengthEnabled");
+                prefs.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddTrailingSlash(WebRoot));
             }
-         }
-      }
+            prefs.Set(Preference.WebGenServer, WebGenServer);
+            prefs.Set(Preference.WebGenPort, WebGenPort);
+            prefs.Set(Preference.WebGenUsername, WebGenUsername);
+            prefs.Set(Preference.WebGenPassword, WebGenPassword);
+            prefs.Set(Preference.WebGenCopyHtml, CopyHtml);
+            prefs.Set(Preference.WebGenCopyXml, CopyXml);
+            prefs.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
+            prefs.Set(Preference.WebGenFtpMode, FtpMode);
+            prefs.Set(Preference.WebGenLimitLogSize, LimitLogSize);
+            prefs.Set(Preference.WebGenLimitLogSizeLength, LimitLogSizeLength);
+        }
 
-      private int _generateInterval;
+        #region Refresh Data
 
-      public int GenerateInterval
-      {
-         get { return _generateInterval; }
-         set
-         {
-            if (GenerateInterval != value)
+        private int _syncTimeMinutes;
+
+        public int SyncTimeMinutes
+        {
+            get { return _syncTimeMinutes; }
+            set
             {
-               _generateInterval = value;
-               OnPropertyChanged("GenerateInterval");
+                if (SyncTimeMinutes != value)
+                {
+                    _syncTimeMinutes = value;
+                    OnPropertyChanged("SyncTimeMinutes");
+                }
             }
-         }
-      }
+        }
 
-      public bool GenerateIntervalEnabled
-      {
-         get { return GenerateWeb && WebGenAfterRefresh == false; }
-      }
-
-      public bool GenerateIntervalError
-      {
-         get
-         {
-            if (GenerateIntervalEnabled == false) return false;
-            return !ClientScheduledTasks.ValidateInterval(GenerateInterval);
-         }
-      }
-
-      private bool _webGenAfterRefresh;
-
-      public bool WebGenAfterRefresh
-      {
-         get { return _webGenAfterRefresh; }
-         set
-         {
-            if (WebGenAfterRefresh != value)
+        public bool SyncTimeMinutesError
+        {
+            get
             {
-               _webGenAfterRefresh = value;
-               OnPropertyChanged("WebGenAfterRefresh");
-               OnPropertyChanged("GenerateIntervalEnabled");
+                if (SyncOnSchedule == false) return false;
+                return !ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
             }
-         }
-      }
+        }
 
-      private string _webRoot;
+        private bool _syncOnSchedule;
 
-      public string WebRoot
-      {
-         get { return _webRoot; }
-         set
-         {
-            if (WebRoot != value)
+        public bool SyncOnSchedule
+        {
+            get { return _syncOnSchedule; }
+            set
             {
-               _webRoot = value == null ? String.Empty : Internal.FileSystemPath.AddTrailingSlash(value.Trim());
-               OnPropertyChanged("WebRoot");
+                if (SyncOnSchedule != value)
+                {
+                    _syncOnSchedule = value;
+                    OnPropertyChanged("SyncOnSchedule");
+                }
             }
-         }
-      }
+        }
 
-      public bool WebRootError
-      {
-         get
-         {
-            if (GenerateWeb == false) return false;
+        private bool _syncLoad;
 
-            switch (WebGenType)
+        public bool SyncOnLoad
+        {
+            get { return _syncLoad; }
+            set
             {
-               case WebDeploymentType.Path:
-                  if (WebRoot.Length < 2)
-                  {
-                     return true;
-                  }
-                  return !FileSystemPath.Validate(WebRoot);
-               case WebDeploymentType.Ftp:
-                  return !FileSystemPath.ValidateUnix(WebRoot);
-               default:
-                  return true;
+                if (SyncOnLoad != value)
+                {
+                    _syncLoad = value;
+                    OnPropertyChanged("SyncOnLoad");
+                }
             }
-         }
-      }
+        }
 
-      private string _webGenServer;
+        #endregion
 
-      public string WebGenServer
-      {
-         get { return _webGenServer; }
-         set
-         {
-            if (WebGenServer != value)
+        #region Web Generation
+
+        private WebDeploymentType _webGenType;
+
+        public WebDeploymentType WebGenType
+        {
+            get { return _webGenType; }
+            set
             {
-               _webGenServer = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("WebGenServer");
+                if (WebGenType != value)
+                {
+                    _webGenType = value;
+                    OnPropertyChanged("WebGenType");
+                    OnPropertyChanged("FtpModeEnabled");
+                    OnPropertyChanged("BrowseLocalPathEnabled");
+                    OnPropertyChanged("LimitLogSizeEnabled");
+                    OnPropertyChanged("LimitLogSizeLengthEnabled");
+                }
             }
-         }
-      }
+        }
 
-      public bool WebGenServerError
-      {
-         get
-         {
-            switch (WebGenType)
+        private int _generateInterval;
+
+        public int GenerateInterval
+        {
+            get { return _generateInterval; }
+            set
             {
-               case WebDeploymentType.Ftp:
-                  return !HostName.Validate(WebGenServer);
-               default:
-                  return false;
+                if (GenerateInterval != value)
+                {
+                    _generateInterval = value;
+                    OnPropertyChanged("GenerateInterval");
+                }
             }
-         }
-      }
+        }
 
-      private int _webGenPort;
+        public bool GenerateIntervalEnabled
+        {
+            get { return GenerateWeb && WebGenAfterRefresh == false; }
+        }
 
-      public int WebGenPort
-      {
-         get { return _webGenPort; }
-         set
-         {
-            if (WebGenPort != value)
+        public bool GenerateIntervalError
+        {
+            get
             {
-               _webGenPort = value;
-               OnPropertyChanged("WebGenPort");
+                if (GenerateIntervalEnabled == false) return false;
+                return !ClientScheduledTasks.ValidateInterval(GenerateInterval);
             }
-         }
-      }
+        }
 
-      public bool WebGenPortError
-      {
-         get
-         {
-            switch (WebGenType)
+        private bool _webGenAfterRefresh;
+
+        public bool WebGenAfterRefresh
+        {
+            get { return _webGenAfterRefresh; }
+            set
             {
-               case WebDeploymentType.Ftp:
-                  return !TcpPort.Validate(WebGenPort);
-               default:
-                  return false;
+                if (WebGenAfterRefresh != value)
+                {
+                    _webGenAfterRefresh = value;
+                    OnPropertyChanged("WebGenAfterRefresh");
+                    OnPropertyChanged("GenerateIntervalEnabled");
+                }
             }
-         }
-      }
+        }
 
-      private string _webGenUsername;
+        private string _webRoot;
 
-      public string WebGenUsername
-      {
-         get { return _webGenUsername; }
-         set
-         {
-            if (WebGenUsername != value)
+        public string WebRoot
+        {
+            get { return _webRoot; }
+            set
             {
-               _webGenUsername = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("WebGenPassword");
-               OnPropertyChanged("WebGenUsername");
+                if (WebRoot != value)
+                {
+                    _webRoot = value == null ? String.Empty : Internal.FileSystemPath.AddTrailingSlash(value.Trim());
+                    OnPropertyChanged("WebRoot");
+                }
             }
-         }
-      }
+        }
 
-      public bool WebGenUsernameError
-      {
-         get { return CredentialsError; }
-      }
-
-      private string _webGenPassword;
-
-      public string WebGenPassword
-      {
-         get { return _webGenPassword; }
-         set
-         {
-            if (WebGenPassword != value)
+        public bool WebRootError
+        {
+            get
             {
-               _webGenPassword = value == null ? String.Empty : value.Trim();
-               OnPropertyChanged("WebGenUsername");
-               OnPropertyChanged("WebGenPassword");
+                if (GenerateWeb == false) return false;
+
+                switch (WebGenType)
+                {
+                    case WebDeploymentType.Path:
+                        if (WebRoot.Length < 2)
+                        {
+                            return true;
+                        }
+                        return !FileSystemPath.Validate(WebRoot);
+                    case WebDeploymentType.Ftp:
+                        return !FileSystemPath.ValidateUnix(WebRoot);
+                    default:
+                        return true;
+                }
             }
-         }
-      }
+        }
 
-      public bool WebGenPasswordError
-      {
-         get { return CredentialsError; }
-      }
+        private string _webGenServer;
 
-      public bool CredentialsError
-      {
-         get
-         {
-            switch (WebGenType)
+        public string WebGenServer
+        {
+            get { return _webGenServer; }
+            set
             {
-               case WebDeploymentType.Ftp:
-                  return HasCredentialsError();
-               default:
-                  return false;
+                if (WebGenServer != value)
+                {
+                    _webGenServer = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged("WebGenServer");
+                }
             }
-         }
-      }
+        }
 
-      private bool HasCredentialsError()
-      {
-         var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
-         CredentialsErrorMessage = result ? String.Empty : message;
-         return !result;
-      }
-
-      public string CredentialsErrorMessage { get; private set; }
-
-      private bool _copyHtml;
-
-      public bool CopyHtml
-      {
-         get { return _copyHtml; }
-         set
-         {
-            if (CopyHtml != value)
+        public bool WebGenServerError
+        {
+            get
             {
-               if (value == false && CopyXml == false)
-               {
-                  return;
-               }
-               _copyHtml = value;
-               OnPropertyChanged("CopyHtml");
+                switch (WebGenType)
+                {
+                    case WebDeploymentType.Ftp:
+                        return !HostName.Validate(WebGenServer);
+                    default:
+                        return false;
+                }
             }
-         }
-      }
+        }
 
-      private bool _copyXml;
+        private int _webGenPort;
 
-      public bool CopyXml
-      {
-         get { return _copyXml; }
-         set
-         {
-            if (CopyXml != value)
+        public int WebGenPort
+        {
+            get { return _webGenPort; }
+            set
             {
-               if (value == false && CopyHtml == false)
-               {
-                  CopyHtml = true;
-               }
-               _copyXml = value;
-               OnPropertyChanged("CopyXml");
+                if (WebGenPort != value)
+                {
+                    _webGenPort = value;
+                    OnPropertyChanged("WebGenPort");
+                }
             }
-         }
-      }
+        }
 
-      // ReSharper disable InconsistentNaming
-      private bool _copyFAHlog;
-
-      public bool CopyFAHlog
-      // ReSharper restore InconsistentNaming
-      {
-         get { return _copyFAHlog; }
-         set
-         {
-            if (CopyFAHlog != value)
+        public bool WebGenPortError
+        {
+            get
             {
-               _copyFAHlog = value;
-               OnPropertyChanged("CopyFAHlog");
-               OnPropertyChanged("LimitLogSizeEnabled");
-               OnPropertyChanged("LimitLogSizeLengthEnabled");
+                switch (WebGenType)
+                {
+                    case WebDeploymentType.Ftp:
+                        return !TcpPort.Validate(WebGenPort);
+                    default:
+                        return false;
+                }
             }
-         }
-      }
+        }
 
-      private FtpMode _ftpMode;
+        private string _webGenUsername;
 
-      public FtpMode FtpMode
-      {
-         get { return _ftpMode; }
-         set
-         {
-            if (FtpMode != value)
+        public string WebGenUsername
+        {
+            get { return _webGenUsername; }
+            set
             {
-               _ftpMode = value;
-               OnPropertyChanged("FtpMode");
+                if (WebGenUsername != value)
+                {
+                    _webGenUsername = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged("WebGenPassword");
+                    OnPropertyChanged("WebGenUsername");
+                }
             }
-         }
-      }
+        }
 
-      public bool FtpModeEnabled
-      {
-         get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp; }
-      }
+        public bool WebGenUsernameError
+        {
+            get { return CredentialsError; }
+        }
 
-      public bool BrowseLocalPathEnabled
-      {
-         get { return GenerateWeb && WebGenType == WebDeploymentType.Path; }
-      }
+        private string _webGenPassword;
 
-      private bool _limitLogSize;
-
-      public bool LimitLogSize
-      {
-         get { return _limitLogSize; }
-         set
-         {
-            if (LimitLogSize != value)
+        public string WebGenPassword
+        {
+            get { return _webGenPassword; }
+            set
             {
-               _limitLogSize = value;
-               OnPropertyChanged("LimitLogSize");
-               OnPropertyChanged("LimitLogSizeEnabled");
-               OnPropertyChanged("LimitLogSizeLengthEnabled");
+                if (WebGenPassword != value)
+                {
+                    _webGenPassword = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged("WebGenUsername");
+                    OnPropertyChanged("WebGenPassword");
+                }
             }
-         }
-      }
+        }
 
-      public bool LimitLogSizeEnabled
-      {
-         get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp && CopyFAHlog; }
-      }
+        public bool WebGenPasswordError
+        {
+            get { return CredentialsError; }
+        }
 
-      private int _limitLogSizeLength;
-
-      public int LimitLogSizeLength
-      {
-         get { return _limitLogSizeLength; }
-         set
-         {
-            if (LimitLogSizeLength != value)
+        public bool CredentialsError
+        {
+            get
             {
-               _limitLogSizeLength = value;
-               OnPropertyChanged("LimitLogSizeLength");
+                switch (WebGenType)
+                {
+                    case WebDeploymentType.Ftp:
+                        return HasCredentialsError();
+                    default:
+                        return false;
+                }
             }
-         }
-      }
+        }
 
-      public bool LimitLogSizeLengthEnabled
-      {
-         get { return LimitLogSizeEnabled && LimitLogSize; }
-      }
+        private bool HasCredentialsError()
+        {
+            var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
+            CredentialsErrorMessage = result ? String.Empty : message;
+            return !result;
+        }
 
-      private bool _generateWeb;
+        public string CredentialsErrorMessage { get; private set; }
 
-      public bool GenerateWeb
-      {
-         get { return _generateWeb; }
-         set
-         {
-            if (GenerateWeb != value)
+        private bool _copyHtml;
+
+        public bool CopyHtml
+        {
+            get { return _copyHtml; }
+            set
             {
-               _generateWeb = value;
-               OnPropertyChanged("GenerateWeb");
-               OnPropertyChanged("GenerateIntervalEnabled");
-               OnPropertyChanged("FtpModeEnabled");
-               OnPropertyChanged("BrowseLocalPathEnabled");
-               OnPropertyChanged("LimitLogSizeEnabled");
-               OnPropertyChanged("LimitLogSizeLengthEnabled");
+                if (CopyHtml != value)
+                {
+                    if (value == false && CopyXml == false)
+                    {
+                        return;
+                    }
+                    _copyHtml = value;
+                    OnPropertyChanged("CopyHtml");
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        private bool _copyXml;
 
-      #region INotifyPropertyChanged Members
+        public bool CopyXml
+        {
+            get { return _copyXml; }
+            set
+            {
+                if (CopyXml != value)
+                {
+                    if (value == false && CopyHtml == false)
+                    {
+                        CopyHtml = true;
+                    }
+                    _copyXml = value;
+                    OnPropertyChanged("CopyXml");
+                }
+            }
+        }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        // ReSharper disable InconsistentNaming
+        private bool _copyFAHlog;
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        public bool CopyFAHlog
+        // ReSharper restore InconsistentNaming
+        {
+            get { return _copyFAHlog; }
+            set
+            {
+                if (CopyFAHlog != value)
+                {
+                    _copyFAHlog = value;
+                    OnPropertyChanged("CopyFAHlog");
+                    OnPropertyChanged("LimitLogSizeEnabled");
+                    OnPropertyChanged("LimitLogSizeLengthEnabled");
+                }
+            }
+        }
 
-      #endregion
-   }
+        private FtpMode _ftpMode;
+
+        public FtpMode FtpMode
+        {
+            get { return _ftpMode; }
+            set
+            {
+                if (FtpMode != value)
+                {
+                    _ftpMode = value;
+                    OnPropertyChanged("FtpMode");
+                }
+            }
+        }
+
+        public bool FtpModeEnabled
+        {
+            get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp; }
+        }
+
+        public bool BrowseLocalPathEnabled
+        {
+            get { return GenerateWeb && WebGenType == WebDeploymentType.Path; }
+        }
+
+        private bool _limitLogSize;
+
+        public bool LimitLogSize
+        {
+            get { return _limitLogSize; }
+            set
+            {
+                if (LimitLogSize != value)
+                {
+                    _limitLogSize = value;
+                    OnPropertyChanged("LimitLogSize");
+                    OnPropertyChanged("LimitLogSizeEnabled");
+                    OnPropertyChanged("LimitLogSizeLengthEnabled");
+                }
+            }
+        }
+
+        public bool LimitLogSizeEnabled
+        {
+            get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp && CopyFAHlog; }
+        }
+
+        private int _limitLogSizeLength;
+
+        public int LimitLogSizeLength
+        {
+            get { return _limitLogSizeLength; }
+            set
+            {
+                if (LimitLogSizeLength != value)
+                {
+                    _limitLogSizeLength = value;
+                    OnPropertyChanged("LimitLogSizeLength");
+                }
+            }
+        }
+
+        public bool LimitLogSizeLengthEnabled
+        {
+            get { return LimitLogSizeEnabled && LimitLogSize; }
+        }
+
+        private bool _generateWeb;
+
+        public bool GenerateWeb
+        {
+            get { return _generateWeb; }
+            set
+            {
+                if (GenerateWeb != value)
+                {
+                    _generateWeb = value;
+                    OnPropertyChanged("GenerateWeb");
+                    OnPropertyChanged("GenerateIntervalEnabled");
+                    OnPropertyChanged("FtpModeEnabled");
+                    OnPropertyChanged("BrowseLocalPathEnabled");
+                    OnPropertyChanged("LimitLogSizeEnabled");
+                    OnPropertyChanged("LimitLogSizeLengthEnabled");
+                }
+            }
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+    }
 }

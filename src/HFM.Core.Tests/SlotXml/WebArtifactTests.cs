@@ -130,12 +130,12 @@ namespace HFM.Core.SlotXml
         {
             new object[] { false, false, false, 0 },
             new object[] { true, false, false, 3 },
-            new object[] { false, true, false, 7 },
+            new object[] { false, true, false, 5},
             new object[] { false, false, true, 2 },
-            new object[] { true, true, false, 10 },
-            new object[] { false, true, true, 9 },
+            new object[] { true, true, false, 8 },
+            new object[] { false, true, true, 7 },
             new object[] { true, false, true, 5 },
-            new object[] { true, true, true, 12 }
+            new object[] { true, true, true, 10 }
         };
 
         private static IPreferenceSet CreatePreferences()
@@ -148,9 +148,7 @@ namespace HFM.Core.SlotXml
             var preferences = new InMemoryPreferenceSet(@"..\..\..\HFM", applicationDataFolderPath, null);
             preferences.Set(Preference.DecimalPlaces, 0);
             preferences.Set(Preference.WebOverview, "WebOverview.xslt");
-            preferences.Set(Preference.WebMobileOverview, "WebMobileOverview.xslt");
             preferences.Set(Preference.WebSummary, "WebSummary.xslt");
-            preferences.Set(Preference.WebMobileSummary, "WebMobileSummary.xslt");
             preferences.Set(Preference.WebSlot, "WebSlot.xslt");
             return preferences;
         }

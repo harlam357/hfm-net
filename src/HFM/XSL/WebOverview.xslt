@@ -137,13 +137,6 @@
                </tr>
                <tr>
                   <td class="Plain" colspan="2" align="center">
-                     <a href="mobile.html">
-                        Mobile Version
-                     </a>
-                  </td>
-               </tr>
-               <tr>
-                  <td class="Plain" colspan="2" align="center">
                   </td>
                </tr>
                <tr>
