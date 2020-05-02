@@ -1,21 +1,3 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
 using System.ComponentModel;
@@ -641,12 +623,13 @@ namespace HFM.Forms
         public void RefreshControlsWithTotalsData(SlotTotals totals)
         {
             string numberFormat = NumberFormat.Get(_prefs.Get<int>(Preference.DecimalPlaces));
-            SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Non-Working Slots{3}{2:" + numberFormat + "} PPD",
-                                            totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD, Environment.NewLine));
 
-            string clientLabel = totals.WorkingSlots == 1 ? "Slot" : "Slots";
-            SetStatusLabelHostsText(String.Format(CultureInfo.CurrentCulture, "{0} {1}", totals.WorkingSlots, clientLabel));
-            SetStatusLabelPPDText(String.Format(CultureInfo.CurrentCulture, "{0:" + numberFormat + "} PPD", totals.PPD));
+            SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
+                totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine));
+
+            string slots = totals.WorkingSlots == 1 ? "Slot" : "Slots";
+            SetStatusLabelHostsText($"{totals.WorkingSlots} {slots}");
+            SetStatusLabelPPDText($"{totals.PPD.ToString(numberFormat)} PPD");
         }
 
         private void SetNotifyIconText(string val)
