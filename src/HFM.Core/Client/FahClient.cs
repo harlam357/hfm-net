@@ -378,16 +378,19 @@ namespace HFM.Core.Client
             }
         }
 
-        private void UpdateBenchmarkFrameTimes(WorkUnitModel workUnitModel, WorkUnitModel newWorkUnitModel)
+        internal void UpdateBenchmarkFrameTimes(WorkUnitModel workUnitModel, WorkUnitModel newWorkUnitModel)
         {
             // current frame has already been recorded, increment to the next frame
             int nextFrame = workUnitModel.FramesComplete + 1;
             int count = newWorkUnitModel.FramesComplete - workUnitModel.FramesComplete;
             var frameTimes = GetFrameTimes(newWorkUnitModel.WorkUnit, nextFrame, count);
-            
-            var slotIdentifier = newWorkUnitModel.SlotModel.SlotIdentifier;
-            var benchmarkIdentifier = newWorkUnitModel.BenchmarkIdentifier;
-            BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
+
+            if (frameTimes.Count > 0)
+            {
+                var slotIdentifier = newWorkUnitModel.SlotModel.SlotIdentifier;
+                var benchmarkIdentifier = newWorkUnitModel.BenchmarkIdentifier;
+                BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
+            }
         }
 
         private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
@@ -412,7 +415,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private static IEnumerable<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
+        private static ICollection<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
         {
             return Enumerable.Range(nextFrame, count)
                 .Select(workUnit.GetFrameData)

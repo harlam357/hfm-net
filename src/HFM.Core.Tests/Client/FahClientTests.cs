@@ -73,6 +73,30 @@ namespace HFM.Core.Client
         }
 
         [Test]
+        public void FahClient_UpdateBenchmarkFrameTimes_DoesNotUpdateBenchmarksWhenNoFramesAreComplete()
+        {
+            // Arrange
+            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), benchmarkService, null, null);
+
+            var workUnit = new WorkUnit();
+            workUnit.ProjectID = 12345;
+            workUnit.ProjectRun = 6;
+            workUnit.ProjectClone = 7;
+            workUnit.ProjectGen = 8;
+            workUnit.Assigned = DateTime.UtcNow;
+            var settings = new ClientSettings { Name = "Foo", Server = "Bar", Port = ClientSettings.DefaultPort };
+            var workUnitModel = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
+            var newWorkUnitModel = new WorkUnitModel(workUnitModel.SlotModel, workUnit.Copy());
+            
+            // Act
+            fahClient.UpdateBenchmarkFrameTimes(workUnitModel, newWorkUnitModel);
+
+            // Assert
+            Assert.IsNull(benchmarkService.GetBenchmark(newWorkUnitModel.SlotModel.SlotIdentifier, newWorkUnitModel.BenchmarkIdentifier));
+        }
+
+        [Test]
         public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_10()
         {
             // Arrange
