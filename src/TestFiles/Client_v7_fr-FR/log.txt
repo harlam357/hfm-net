@@ -1,0 +1,310 @@
+*********************** Log Started 2020-05-04T13:20:50Z ***********************
+13:20:50:****************************** FAHClient ******************************
+13:20:50:        Version: 7.6.9
+13:20:50:         Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+13:20:50:      Copyright: 2020 foldingathome.org
+13:20:50:       Homepage: https://foldingathome.org/
+13:20:50:           Date: Apr 17 2020
+13:20:50:           Time: 11:13:06
+13:20:50:       Revision: 398c2b17fa535e0cc6c9d10856b2154c32771646
+13:20:50:         Branch: master
+13:20:50:       Compiler: Visual C++ 2008
+13:20:50:        Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:20:50:       Platform: win32 10
+13:20:50:           Bits: 32
+13:20:50:           Mode: Release
+13:20:50:           Args: --open-web-control
+13:20:50:         Config: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData\\config.xml
+13:20:50:******************************** CBang ********************************
+13:20:50:           Date: Apr 17 2020
+13:20:50:           Time: 11:10:09
+13:20:50:       Revision: 2fb0be7809c5e45287a122ca5fbc15b5ae859a3b
+13:20:50:         Branch: master
+13:20:50:       Compiler: Visual C++ 2008
+13:20:50:        Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:20:50:       Platform: win32 10
+13:20:50:           Bits: 32
+13:20:50:           Mode: Release
+13:20:50:******************************* System ********************************
+13:20:50:            CPU: Intel(R) Core(TM)2 Quad CPU Q9650 @ 3.00GHz
+13:20:50:         CPU ID: GenuineIntel Family 6 Model 23 Stepping 10
+13:20:50:           CPUs: 4
+13:20:50:         Memory: 8.00GiB
+13:20:50:    Free Memory: 3.18GiB
+13:20:50:        Threads: WINDOWS_THREADS
+13:20:50:     OS Version: 6.2
+13:20:50:    Has Battery: false
+13:20:50:     On Battery: false
+13:20:50:     UTC Offset: 2
+13:20:50:            PID: 79232
+13:20:50:            CWD: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData
+13:20:50:             OS: Windows 10 Home
+13:20:50:        OS Arch: AMD64
+13:20:50:           GPUs: 1
+13:20:50:          GPU 0: Bus:1 Slot:0 Func:0 AMD:5 Baffin XT [Radeon RX 460]
+13:20:50:           CUDA: Not detected: Failed to open dynamic library 'nvcuda.dll': Le
+13:20:50:                 module sp\xe9cifi\xe9 est introuvable.
+13:20:50:
+13:20:50:OpenCL Device 0: Platform:0 Device:0 Bus:1 Slot:0 Compute:1.2 Driver:3004.8
+13:20:50:  Win32 Service: false
+13:20:50:******************************* libFAH ********************************
+13:20:50:           Date: Apr 15 2020
+13:20:50:           Time: 14:53:14
+13:20:50:       Revision: 216968bc7025029c841ed6e36e81a03a316890d3
+13:20:50:         Branch: master
+13:20:50:       Compiler: Visual C++ 2008
+13:20:50:        Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:20:50:       Platform: win32 10
+13:20:50:           Bits: 32
+13:20:50:           Mode: Release
+13:20:50:***********************************************************************
+13:20:50:<config>
+13:20:50:  <!-- Network -->
+13:20:50:  <proxy v=':8080'/>
+13:20:50:
+13:20:50:  <!-- Slot Control -->
+13:20:50:  <power v='FULL'/>
+13:20:50:
+13:20:50:  <!-- User Information -->
+13:20:50:  <passkey v='*****'/>
+13:20:50:  <team v='51'/>
+13:20:50:  <user v='JWhy'/>
+13:20:50:
+13:20:50:  <!-- Folding Slots -->
+13:20:50:  <slot id='0' type='CPU'>
+13:20:50:    <paused v='true'/>
+13:20:50:  </slot>
+13:20:50:</config>
+13:20:50:Trying to access database...
+13:20:50:Successfully acquired database lock
+13:20:50:Enabled folding slot 00: PAUSED cpu:4 (by user)
+13:20:50:Set client configured
+13:20:53:3:127.0.0.1:New Web session
+13:22:10:Adding folding slot 01: READY gpu:0:Baffin XT [Radeon RX 460]
+13:22:10:Saving configuration to config.xml
+13:22:10:<config>
+13:22:10:  <!-- Network -->
+13:22:10:  <proxy v=':8080'/>
+13:22:10:
+13:22:10:  <!-- Slot Control -->
+13:22:10:  <power v='FULL'/>
+13:22:10:
+13:22:10:  <!-- User Information -->
+13:22:10:  <passkey v='*****'/>
+13:22:10:  <team v='51'/>
+13:22:10:  <user v='JWhy'/>
+13:22:10:
+13:22:10:  <!-- Folding Slots -->
+13:22:10:  <slot id='1' type='GPU'/>
+13:22:10:</config>
+13:22:10:WU00:FS01:Connecting to 65.254.110.245:80
+13:22:11:WU00:FS01:Connecting to 65.254.110.245:80
+13:22:11:WU00:FS01:Assigned to work server 128.252.203.10
+13:22:11:WU00:FS01:Requesting new work unit for slot 01: READY gpu:0:Baffin XT [Radeon RX 460] from 128.252.203.10
+13:22:11:WU00:FS01:Connecting to 128.252.203.10:8080
+13:22:32:WARNING:WU00:FS01:WorkServer connection failed on port 8080 trying 80
+13:22:32:WU00:FS01:Connecting to 128.252.203.10:80
+13:22:52:Saving configuration to config.xml
+13:22:52:<config>
+13:22:52:  <!-- Network -->
+13:22:52:  <proxy v=':8080'/>
+13:22:52:
+13:22:52:  <!-- Slot Control -->
+13:22:52:  <power v='FULL'/>
+13:22:52:
+13:22:52:  <!-- User Information -->
+13:22:52:  <passkey v='*****'/>
+13:22:52:  <team v='51'/>
+13:22:52:  <user v='JWhy'/>
+13:22:52:
+13:22:52:  <!-- Folding Slots -->
+13:22:52:  <slot id='1' type='GPU'/>
+13:22:52:</config>
+13:22:53:ERROR:WU00:FS01:Exception: Failed to connect to 128.252.203.10:80: Une tentative de connexion a \xe9chou\xe9 car le parti connect\xe9 n\x19a pas r\xe9pondu convenablement au-del\xe0 d\x19une certaine dur\xe9e ou une connexion \xe9tablie a \xe9chou\xe9 car l\x19h\xf4te de connexion n\x19a pas r\xe9pondu.
+13:22:54:WU00:FS01:Connecting to 65.254.110.245:80
+13:22:54:WARNING:WU00:FS01:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:22:54:WU00:FS01:Connecting to 18.218.241.186:80
+13:22:55:WU00:FS01:Assigned to work server 13.82.98.119
+13:22:55:WU00:FS01:Requesting new work unit for slot 01: READY gpu:0:Baffin XT [Radeon RX 460] from 13.82.98.119
+13:22:55:WU00:FS01:Connecting to 13.82.98.119:8080
+13:23:26:ERROR:WU00:FS01:Exception: Server did not assign work unit
+13:23:31:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:23:48:Adding folding slot 00: READY cpu:3
+13:23:48:Saving configuration to config.xml
+13:23:48:<config>
+13:23:48:  <!-- Network -->
+13:23:48:  <proxy v=':8080'/>
+13:23:48:
+13:23:48:  <!-- Slot Control -->
+13:23:48:  <power v='FULL'/>
+13:23:48:
+13:23:48:  <!-- User Information -->
+13:23:48:  <passkey v='*****'/>
+13:23:48:  <team v='51'/>
+13:23:48:  <user v='JWhy'/>
+13:23:48:
+13:23:48:  <!-- Folding Slots -->
+13:23:48:  <slot id='1' type='GPU'/>
+13:23:48:  <slot id='0' type='CPU'/>
+13:23:48:</config>
+13:23:48:WU01:FS00:Connecting to 65.254.110.245:80
+13:23:49:WARNING:WU01:FS00:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:23:49:WU01:FS00:Connecting to 18.218.241.186:80
+13:23:49:WU01:FS00:Assigned to work server 40.114.52.201
+13:23:49:WU01:FS00:Requesting new work unit for slot 00: READY cpu:3 from 40.114.52.201
+13:23:49:WU01:FS00:Connecting to 40.114.52.201:8080
+13:23:50:WU01:FS00:Downloading 2.14MiB
+13:23:53:WU01:FS00:Download complete
+13:23:53:Saving configuration to config.xml
+13:23:53:<config>
+13:23:53:  <!-- Network -->
+13:23:53:  <proxy v=':8080'/>
+13:23:53:
+13:23:53:  <!-- Slot Control -->
+13:23:53:  <power v='FULL'/>
+13:23:53:
+13:23:53:  <!-- User Information -->
+13:23:53:  <passkey v='*****'/>
+13:23:53:  <team v='51'/>
+13:23:53:  <user v='JWhy'/>
+13:23:53:
+13:23:53:  <!-- Folding Slots -->
+13:23:53:  <slot id='1' type='GPU'/>
+13:23:53:  <slot id='0' type='CPU'/>
+13:23:53:</config>
+13:23:53:WU01:FS00:Received Unit: id:01 state:DOWNLOAD error:NO_ERROR project:13850 run:0 clone:8156 gen:82 core:0xa7 unit:0x00000065287234c95e72eb76dfe6bd4c
+13:23:53:WU01:FS00:Starting
+13:23:53:WU01:FS00:Running FahCore: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\App\\FAHClient/FAHCoreWrapper.exe C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData\\cores/cores.foldingathome.org/v7/win/64bit/Core_a7.fah/FahCore_a7.exe -dir 01 -suffix 01 -version 706 -lifeline 79232 -checkpoint 15 -np 3
+13:23:53:WU01:FS00:Started FahCore on PID 61648
+13:23:53:WU01:FS00:Core PID:80820
+13:23:53:WU01:FS00:FahCore 0xa7 started
+13:23:53:WU01:FS00:0xa7:*********************** Log Started 2020-05-04T13:23:53Z ***********************
+13:23:53:WU01:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+13:23:53:WU01:FS00:0xa7:       Type: 0xa7
+13:23:53:WU01:FS00:0xa7:       Core: Gromacs
+13:23:53:WU01:FS00:0xa7:       Args: -dir 01 -suffix 01 -version 706 -lifeline 61648 -checkpoint 15 -np
+13:23:53:WU01:FS00:0xa7:             3
+13:23:53:WU01:FS00:0xa7:************************************ CBang *************************************
+13:23:53:WU01:FS00:0xa7:       Date: Oct 26 2019
+13:23:53:WU01:FS00:0xa7:       Time: 01:38:35
+13:23:53:WU01:FS00:0xa7:   Revision: c46a1a011a24143739ac7218c5a435f66777f62f
+13:23:53:WU01:FS00:0xa7:     Branch: master
+13:23:53:WU01:FS00:0xa7:   Compiler: Visual C++ 2008
+13:23:53:WU01:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:23:53:WU01:FS00:0xa7:   Platform: win32 10
+13:23:53:WU01:FS00:0xa7:       Bits: 64
+13:23:53:WU01:FS00:0xa7:       Mode: Release
+13:23:53:WU01:FS00:0xa7:************************************ System ************************************
+13:23:53:WU01:FS00:0xa7:        CPU: Intel(R) Core(TM)2 Quad CPU Q9650 @ 3.00GHz
+13:23:53:WU01:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 23 Stepping 10
+13:23:53:WU01:FS00:0xa7:       CPUs: 4
+13:23:53:WU01:FS00:0xa7:     Memory: 8.00GiB
+13:23:53:WU01:FS00:0xa7:Free Memory: 3.10GiB
+13:23:53:WU01:FS00:0xa7:    Threads: WINDOWS_THREADS
+13:23:53:WU01:FS00:0xa7: OS Version: 6.2
+13:23:53:WU01:FS00:0xa7:Has Battery: false
+13:23:53:WU01:FS00:0xa7: On Battery: false
+13:23:53:WU01:FS00:0xa7: UTC Offset: 2
+13:23:53:WU01:FS00:0xa7:        PID: 80820
+13:23:53:WU01:FS00:0xa7:        CWD: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData\\work
+13:23:53:WU01:FS00:0xa7:******************************** Build - libFAH ********************************
+13:23:53:WU01:FS00:0xa7:    Version: 0.0.18
+13:23:53:WU01:FS00:0xa7:     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+13:23:53:WU01:FS00:0xa7:  Copyright: 2019 foldingathome.org
+13:23:53:WU01:FS00:0xa7:   Homepage: https://foldingathome.org/
+13:23:53:WU01:FS00:0xa7:       Date: Oct 26 2019
+13:23:53:WU01:FS00:0xa7:       Time: 01:52:44
+13:23:53:WU01:FS00:0xa7:   Revision: c1e3513b1bc0c16013668f2173ee969e5995b38e
+13:23:53:WU01:FS00:0xa7:     Branch: master
+13:23:53:WU01:FS00:0xa7:   Compiler: Visual C++ 2008
+13:23:53:WU01:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:23:53:WU01:FS00:0xa7:   Platform: win32 10
+13:23:53:WU01:FS00:0xa7:       Bits: 64
+13:23:53:WU01:FS00:0xa7:       Mode: Release
+13:23:53:WU01:FS00:0xa7:************************************ Build *************************************
+13:23:53:WU01:FS00:0xa7:       SIMD: sse2
+13:23:53:WU01:FS00:0xa7:********************************************************************************
+13:23:53:WU01:FS00:0xa7:Project: 13850 (Run 0, Clone 8156, Gen 82)
+13:23:53:WU01:FS00:0xa7:Unit: 0x00000065287234c95e72eb76dfe6bd4c
+13:23:53:WU01:FS00:0xa7:Reading tar file core.xml
+13:23:53:WU01:FS00:0xa7:Reading tar file frame82.tpr
+13:23:53:WU01:FS00:0xa7:Digital signatures verified
+13:23:53:WU01:FS00:0xa7:Calling: mdrun -s frame82.tpr -o frame82.trr -x frame82.xtc -e frame82.edr -cpt 15 -nt 3
+13:23:53:WU01:FS00:0xa7:Steps: first=41000000 total=500000
+13:23:54:WU00:FS01:Connecting to 65.254.110.245:80
+13:23:54:WARNING:WU00:FS01:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:23:54:WU00:FS01:Connecting to 18.218.241.186:80
+13:23:55:WARNING:WU00:FS01:Failed to get assignment from '18.218.241.186:80': No WUs available for this configuration
+13:23:55:WU00:FS01:Connecting to 65.254.110.245:80
+13:23:55:WARNING:WU00:FS01:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:23:55:WU00:FS01:Connecting to 18.218.241.186:80
+13:23:56:WARNING:WU00:FS01:Failed to get assignment from '18.218.241.186:80': No WUs available for this configuration
+13:23:56:ERROR:WU00:FS01:Exception: Could not get an assignment
+13:23:56:WU01:FS00:0xa7:Completed 1 out of 500000 steps (0%)
+13:24:34:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:24:34:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:24:34:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:24:34:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:24:37:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:25:31:WU00:FS01:Connecting to 65.254.110.245:80
+13:25:31:WARNING:WU00:FS01:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:25:31:WU00:FS01:Connecting to 18.218.241.186:80
+13:25:32:WARNING:WU00:FS01:Failed to get assignment from '18.218.241.186:80': No WUs available for this configuration
+13:25:32:WU00:FS01:Connecting to 65.254.110.245:80
+13:25:32:WARNING:WU00:FS01:Failed to get assignment from '65.254.110.245:80': No WUs available for this configuration
+13:25:32:WU00:FS01:Connecting to 18.218.241.186:80
+13:25:33:WU00:FS01:Assigned to work server 128.252.203.10
+13:25:33:WU00:FS01:Requesting new work unit for slot 01: READY gpu:0:Baffin XT [Radeon RX 460] from 128.252.203.10
+13:25:33:WU00:FS01:Connecting to 128.252.203.10:8080
+13:25:54:WARNING:WU00:FS01:WorkServer connection failed on port 8080 trying 80
+13:25:54:WU00:FS01:Connecting to 128.252.203.10:80
+13:26:15:ERROR:WU00:FS01:Exception: Failed to connect to 128.252.203.10:80: Une tentative de connexion a \xe9chou\xe9 car le parti connect\xe9 n\x19a pas r\xe9pondu convenablement au-del\xe0 d\x19une certaine dur\xe9e ou une connexion \xe9tablie a \xe9chou\xe9 car l\x19h\xf4te de connexion n\x19a pas r\xe9pondu.
+13:26:18:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:26:30:ERROR:Receive error: 10054: Une connexion existante a d\xfb \xeatre ferm\xe9e par l\x19h\xf4te distant.
+13:27:40:FS01:Paused
+13:27:40:FS00:Paused
+13:27:40:FS00:Shutting core down
+13:27:41:WU01:FS00:0xa7:WARNING:Console control signal 1 on PID 80820
+13:27:41:WU01:FS00:0xa7:Exiting, please wait. . .
+13:27:42:WU01:FS00:0xa7:Folding@home Core Shutdown: INTERRUPTED
+13:27:43:WU01:FS00:FahCore returned: INTERRUPTED (102 = 0x66)
+13:27:43:FS01:Unpaused
+13:27:43:FS00:Unpaused
+13:27:43:WU00:FS01:Connecting to 65.254.110.245:80
+13:27:43:WU01:FS00:Starting
+13:27:43:WU01:FS00:Running FahCore: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\App\\FAHClient/FAHCoreWrapper.exe C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData\\cores/cores.foldingathome.org/v7/win/64bit/Core_a7.fah/FahCore_a7.exe -dir 01 -suffix 01 -version 706 -lifeline 79232 -checkpoint 15 -np 3
+13:27:43:WU01:FS00:Started FahCore on PID 76292
+13:27:43:WU01:FS00:Core PID:74696
+13:27:43:WU01:FS00:FahCore 0xa7 started
+13:27:44:WU00:FS01:Assigned to work server 13.82.98.119
+13:27:44:WU00:FS01:Requesting new work unit for slot 01: READY gpu:0:Baffin XT [Radeon RX 460] from 13.82.98.119
+13:27:44:WU00:FS01:Connecting to 13.82.98.119:8080
+13:27:44:WU01:FS00:0xa7:*********************** Log Started 2020-05-04T13:27:43Z ***********************
+13:27:44:WU01:FS00:0xa7:************************** Gromacs Folding@home Core ***************************
+13:27:44:WU01:FS00:0xa7:       Type: 0xa7
+13:27:44:WU01:FS00:0xa7:       Core: Gromacs
+13:27:44:WU01:FS00:0xa7:       Args: -dir 01 -suffix 01 -version 706 -lifeline 76292 -checkpoint 15 -np
+13:27:44:WU01:FS00:0xa7:             3
+13:27:44:WU01:FS00:0xa7:************************************ CBang *************************************
+13:27:44:WU01:FS00:0xa7:       Date: Oct 26 2019
+13:27:44:WU01:FS00:0xa7:       Time: 01:38:35
+13:27:44:WU01:FS00:0xa7:   Revision: c46a1a011a24143739ac7218c5a435f66777f62f
+13:27:44:WU01:FS00:0xa7:     Branch: master
+13:27:44:WU01:FS00:0xa7:   Compiler: Visual C++ 2008
+13:27:44:WU01:FS00:0xa7:    Options: /TP /nologo /EHa /wd4297 /wd4103 /Ox /MT
+13:27:44:WU01:FS00:0xa7:   Platform: win32 10
+13:27:44:WU01:FS00:0xa7:       Bits: 64
+13:27:44:WU01:FS00:0xa7:       Mode: Release
+13:27:44:WU01:FS00:0xa7:************************************ System ************************************
+13:27:44:WU01:FS00:0xa7:        CPU: Intel(R) Core(TM)2 Quad CPU Q9650 @ 3.00GHz
+13:27:44:WU01:FS00:0xa7:     CPU ID: GenuineIntel Family 6 Model 23 Stepping 10
+13:27:44:WU01:FS00:0xa7:       CPUs: 4
+13:27:44:WU01:FS00:0xa7:     Memory: 8.00GiB
+13:27:44:WU01:FS00:0xa7:Free Memory: 3.24GiB
+13:27:44:WU01:FS00:0xa7:    Threads: WINDOWS_THREADS
+13:27:44:WU01:FS00:0xa7: OS Version: 6.2
+13:27:44:WU01:FS00:0xa7:Has Battery: false
+13:27:44:WU01:FS00:0xa7: On Battery: false
+13:27:44:WU01:FS00:0xa7: UTC Offset: 2
+13:27:44:WU01:FS00:0xa7:        PID: 74696
+13:27:44:WU01:FS00:0xa7:        CWD: C:\\Users\\jyb\\PortableApps\\FoldingAtHomePortable\\Data\\FAHData\\work
