@@ -76,7 +76,6 @@ Function Test-Build
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
     Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Log.Tests\bin\Release\HFM.Log.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Log.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
 }
@@ -168,7 +167,7 @@ Function Deploy-Build
     Copy-Item -Path '..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\Mono" -ErrorAction Stop -Verbose:$localVerbose
     # Tools Assemblies
     #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
+    #Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
