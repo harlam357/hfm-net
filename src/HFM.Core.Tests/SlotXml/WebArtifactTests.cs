@@ -162,7 +162,7 @@ namespace HFM.Core.SlotXml
             var slot = new SlotModel(client);
             var logLines = new List<Log.LogLine>
             {
-                new Log.LogLine { LineType = LogLineType.LogHeader, Index = 1, Raw = "Header" }
+                new Log.LogLine { LineType = LogLineType.LogOpen, Index = 1, Raw = "Open" }
             };
             slot.CurrentLogLines = logLines;
             slot.WorkUnitModel.WorkUnit.LogLines = logLines;

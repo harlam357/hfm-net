@@ -10,7 +10,6 @@ using NUnit.Framework;
 using HFM.Client;
 using HFM.Core.WorkUnits;
 using HFM.Log;
-using HFM.Log.FahClient;
 
 namespace HFM.Core.Client
 {
