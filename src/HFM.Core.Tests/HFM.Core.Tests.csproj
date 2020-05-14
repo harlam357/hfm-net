@@ -90,6 +90,9 @@
     <Reference Include="HFM.Client, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
       <HintPath>..\packages\HFM.Client.0.2.1\lib\net47\HFM.Client.dll</HintPath>
     </Reference>
+    <Reference Include="HFM.Log, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HFM.Log.0.1.0\lib\net45\HFM.Log.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -158,10 +161,6 @@
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
       <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
       <Name>HFM.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Log\HFM.Log.csproj">
-      <Project>{2C3EA8A1-D17F-419D-A76A-970550FB5A09}</Project>
-      <Name>HFM.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>

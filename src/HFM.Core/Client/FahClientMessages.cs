@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
-using HFM.Log.FahClient;
+using HFM.Log;
 using HFM.Preferences;
 
 namespace HFM.Core.Client
