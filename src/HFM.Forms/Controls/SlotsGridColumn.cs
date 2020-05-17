@@ -28,8 +28,8 @@ namespace HFM.Forms.Controls
                 new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)),
                 new SlotsGridProjectColumn(),
                 new SlotsGridCreditColumn(), 
-                new SlotsGridInt32Column("Completed", "Completed", nameof(SlotModel.Completed)),
-                new SlotsGridInt32Column("Failed", "Failed", nameof(SlotModel.Failed)),
+                new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(SlotModel.Completed)),
+                new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(SlotModel.Failed)),
                 new SlotsGridUsernameColumn(),
                 new SlotsGridAssignedColumn(),
                 new SlotsGridTimeoutColumn()
@@ -48,12 +48,14 @@ namespace HFM.Forms.Controls
     {
         public string ColumnName { get; }
         public string HeaderText { get; }
+        public string MouseOverHeaderText { get; }
         public string DataPropertyName { get; }
 
-        protected SlotsGridColumn(string columnName, string headerText, string dataPropertyName)
+        protected SlotsGridColumn(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName)
         {
             ColumnName = columnName;
             HeaderText = headerText;
+            MouseOverHeaderText = mouseOverHeaderText;
             DataPropertyName = dataPropertyName;
         }
 
@@ -81,6 +83,16 @@ namespace HFM.Forms.Controls
         protected virtual DataGridViewColumn OnCreateDataGridViewColumn()
         {
             return null;
+        }
+
+        public string GetMouseOverHeaderText()
+        {
+            return OnGetMouseOverHeaderText();
+        }
+
+        protected virtual string OnGetMouseOverHeaderText()
+        {
+            return MouseOverHeaderText;
         }
 
         public string GetMouseOverText(SlotModel slotModel)
@@ -216,7 +228,14 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridDefaultColumn : SlotsGridColumn
     {
-        public SlotsGridDefaultColumn(string columnName, string headerText, string dataPropertyName) : base(columnName, headerText, dataPropertyName)
+        public SlotsGridDefaultColumn(string columnName, string headerText, string dataPropertyName) 
+            : base(columnName, headerText, null, dataPropertyName)
+        {
+
+        }
+
+        public SlotsGridDefaultColumn(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName) 
+            : base(columnName, headerText, mouseOverHeaderText, dataPropertyName)
         {
 
         }
@@ -224,7 +243,8 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridInt32Column : SlotsGridColumn
     {
-        public SlotsGridInt32Column(string columnName, string headerText, string dataPropertyName) : base(columnName, headerText, dataPropertyName)
+        public SlotsGridInt32Column(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName) 
+            : base(columnName, headerText, mouseOverHeaderText, dataPropertyName)
         {
 
         }
@@ -238,7 +258,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridStatusColumn : SlotsGridColumn
     {
-        public SlotsGridStatusColumn() : base("Status", "Status", nameof(SlotModel.Status))
+        public SlotsGridStatusColumn() : base("Status", "Status", null, nameof(SlotModel.Status))
         {
 
         }
@@ -281,7 +301,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridProgressColumn : SlotsGridColumn
     {
-        public SlotsGridProgressColumn() : base("Progress", "Progress", nameof(SlotModel.Progress))
+        public SlotsGridProgressColumn() : base("Progress", "Progress", null, nameof(SlotModel.Progress))
         {
 
         }
@@ -304,7 +324,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridTPFColumn : SlotsGridColumn
     {
-        public SlotsGridTPFColumn() : base("TPF", "TPF", nameof(SlotModel.TPF))
+        public SlotsGridTPFColumn() : base("TPF", "TPF", "Time per frame (1% of progress)", nameof(SlotModel.TPF))
         {
 
         }
@@ -337,7 +357,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridPPDColumn : SlotsGridColumn
     {
-        public SlotsGridPPDColumn() : base("PPD", "PPD", nameof(SlotModel.PPD))
+        public SlotsGridPPDColumn() : base("PPD", "PPD", "Points per day", nameof(SlotModel.PPD))
         {
 
         }
@@ -370,7 +390,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridETAColumn : SlotsGridColumn
     {
-        public SlotsGridETAColumn() : base("ETA", "ETA", nameof(SlotModel.ETA))
+        public SlotsGridETAColumn() : base("ETA", "ETA", "Estimated completion of the work unit", nameof(SlotModel.ETA))
         {
 
         }
@@ -407,7 +427,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridProjectColumn : SlotsGridColumn
     {
-        public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", nameof(SlotModel.ProjectRunCloneGen))
+        public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", null, nameof(SlotModel.ProjectRunCloneGen))
         {
 
         }
@@ -437,7 +457,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridCreditColumn : SlotsGridColumn
     {
-        public SlotsGridCreditColumn() : base("Credit", "Credit", nameof(SlotModel.Credit))
+        public SlotsGridCreditColumn() : base("Credit", "Credit", "Estimated points for this work unit", nameof(SlotModel.Credit))
         {
 
         }
@@ -470,7 +490,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridUsernameColumn : SlotsGridColumn
     {
-        public SlotsGridUsernameColumn() : base("Username", "Username", nameof(SlotModel.Username))
+        public SlotsGridUsernameColumn() : base("Username", "Username", "Username and team number", nameof(SlotModel.Username))
         {
 
         }
@@ -490,7 +510,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridAssignedColumn : SlotsGridColumn
     {
-        public SlotsGridAssignedColumn() : base("Assigned", "Assigned", nameof(SlotModel.Assigned))
+        public SlotsGridAssignedColumn() : base("Assigned", "Assigned", "When this work unit was assigned", nameof(SlotModel.Assigned))
         {
 
         }
@@ -523,7 +543,7 @@ namespace HFM.Forms.Controls
     public class SlotsGridTimeoutColumn : SlotsGridColumn
     {
         // NOTE: still using HFM calculated PreferredDeadline value
-        public SlotsGridTimeoutColumn() : base("Timeout", "Timeout", nameof(SlotModel.PreferredDeadline))
+        public SlotsGridTimeoutColumn() : base("Timeout", "Timeout", "When this work unit must be completed to achieve bonus points", nameof(SlotModel.PreferredDeadline))
         {
 
         }

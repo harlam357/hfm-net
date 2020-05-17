@@ -26,16 +26,24 @@ namespace HFM.Forms
             _currentMouseOverRow = info.RowIndex;
             _currentMouseOverColumn = info.ColumnIndex;
 
+            string tooltipText;
             var column = SlotsGridColumns.Find(GetColumnName(info.ColumnIndex));
-            string text = column?.GetMouseOverText(GetRowSlotModel(info.RowIndex));
+            if (info.Type == DataGridViewHitTestType.ColumnHeader)
+            {
+                tooltipText = column?.MouseOverHeaderText;
+            }
+            else
+            {
+                tooltipText = column?.GetMouseOverText(GetRowSlotModel(info.RowIndex));
+            }
 
-            if (String.IsNullOrWhiteSpace(text))
+            if (String.IsNullOrWhiteSpace(tooltipText))
             {
                 toolTipGrid.Hide(dataGridView1);
             }
             else
             {
-                toolTipGrid.Show(text, dataGridView1, e.X + 15, e.Y);
+                toolTipGrid.Show(tooltipText, dataGridView1, e.X + 15, e.Y);
             }
         }
 
