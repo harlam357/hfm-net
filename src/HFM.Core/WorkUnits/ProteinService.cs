@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +33,7 @@ namespace HFM.Core.WorkUnits
         /// Gets a collection of all protein project ID numbers.
         /// </summary>
         /// <returns>A collection of all protein project ID numbers.</returns>
-        IEnumerable<int> GetProjects();
+        IReadOnlyCollection<int> GetProjects();
 
         /// <summary>
         /// Refreshes the service data from the project summary and returns a collection of objects detailing how the service data was changed.
@@ -99,7 +81,7 @@ namespace HFM.Core.WorkUnits
             return _dictionary.TryGetValue(projectID, out Protein p) ? p : null;
         }
 
-        public IEnumerable<int> GetProjects()
+        public IReadOnlyCollection<int> GetProjects()
         {
             return _dictionary.Keys;
         }

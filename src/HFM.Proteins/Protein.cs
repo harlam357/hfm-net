@@ -15,6 +15,28 @@ namespace HFM.Proteins
         }
 
         /// <summary>
+        /// Returns a new <see cref="Protein"/> object containing the data this object.
+        /// </summary>
+        public Protein Copy()
+        {
+            return new Protein
+            {
+                ProjectNumber = ProjectNumber,
+                ServerIP = ServerIP,
+                WorkUnitName = WorkUnitName,
+                NumberOfAtoms = NumberOfAtoms,
+                PreferredDays = PreferredDays,
+                MaximumDays = MaximumDays,
+                Credit = Credit,
+                Frames = Frames,
+                Core = Core,
+                Description = Description,
+                Contact = Contact,
+                KFactor = KFactor
+            };
+        }
+
+        /// <summary>
         /// Gets or sets the project number.
         /// </summary>
         public int ProjectNumber { get; set; }

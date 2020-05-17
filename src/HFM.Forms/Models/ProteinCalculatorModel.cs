@@ -1,25 +1,9 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
@@ -28,424 +12,405 @@ using HFM.Proteins;
 
 namespace HFM.Forms.Models
 {
-   public sealed class ProteinCalculatorModel : INotifyPropertyChanged
-   {
-      private readonly IPreferenceSet _prefs;
-      private readonly IProteinService _proteinService;
+    public sealed class ProteinCalculatorModel : INotifyPropertyChanged
+    {
+        private readonly IPreferenceSet _preferences;
+        private readonly IProteinService _proteinService;
 
-      public ProteinCalculatorModel(IPreferenceSet prefs, IProteinService proteinService)
-      {
-         _prefs = prefs;
-         _proteinService = proteinService;
-      }
+        public ProteinCalculatorModel(IPreferenceSet preferences, IProteinService proteinService)
+        {
+            _preferences = preferences;
+            _proteinService = proteinService;
+        }
 
-      public void Calculate()
-      {
-         Protein value = _proteinService.Get(SelectedProject);
-         if (value == null)
-         {
-            return;
-         }
-         Protein protein = CopyProtein(value);
-         if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
-         if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
-         if (KFactorChecked) protein.KFactor = KFactor;
-
-         TimeSpan frameTime = TimeSpan.FromMinutes(TpfMinutes).Add(TimeSpan.FromSeconds(TpfSeconds));
-         TimeSpan totalTimeByFrame = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
-         TimeSpan totalTimeByUser = totalTimeByFrame;
-         if (TotalWuTimeEnabled)
-         {
-            totalTimeByUser = TimeSpan.FromMinutes(TotalWuTimeMinutes).Add(TimeSpan.FromSeconds(TotalWuTimeSeconds));
-            // user time is less than total time by frame, not permitted
-            if (totalTimeByUser < totalTimeByFrame)
+        public void Calculate()
+        {
+            Protein value = _proteinService.Get(SelectedProject);
+            if (value == null)
             {
-               totalTimeByUser = totalTimeByFrame;
+                return;
             }
-         }
 
-         var decimalPlaces = _prefs.Get<int>(Preference.DecimalPlaces);
-         var noBonusValues = protein.GetProductionValues(frameTime, TimeSpan.Zero);
-         var bonusByUserSpecifiedTimeValues = protein.GetProductionValues(frameTime, totalTimeByUser);
-         var bonusByFrameTimeValues = protein.GetProductionValues(frameTime, totalTimeByFrame);
-         CoreName = protein.Core;
-         SlotType = SlotTypeConvert.FromCoreName(protein.Core).ToString();
-         NumberOfAtoms = protein.NumberOfAtoms;
-         CompletionTime = Math.Round((TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays), decimalPlaces);
-         PreferredDeadline = protein.PreferredDays;
-         FinalDeadline = protein.MaximumDays;
-         KFactor = protein.KFactor;
-         BonusMultiplier = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier), decimalPlaces);
-         BaseCredit = noBonusValues.Credit;
-         TotalCredit = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit), decimalPlaces);
-         BasePpd = noBonusValues.PPD;
-         TotalPpd = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD), decimalPlaces);
-      }
+            Protein protein = value.Copy();
+            if (PreferredDeadlineChecked) protein.PreferredDays = PreferredDeadline;
+            if (FinalDeadlineChecked) protein.MaximumDays = FinalDeadline;
+            if (KFactorChecked) protein.KFactor = KFactor;
 
-      /// <summary>
-      /// Returns a new <see cref="Protein"/> object containing the data copied from the given object.
-      /// </summary>
-      private static Protein CopyProtein(Protein p)
-      {
-         return new Protein
-         {
-            ProjectNumber = p.ProjectNumber,
-            ServerIP = p.ServerIP,
-            WorkUnitName = p.WorkUnitName,
-            NumberOfAtoms = p.NumberOfAtoms,
-            PreferredDays = p.PreferredDays,
-            MaximumDays = p.MaximumDays,
-            Credit = p.Credit,
-            Frames = p.Frames,
-            Core = p.Core,
-            Description = p.Description,
-            Contact = p.Contact,
-            KFactor = p.KFactor
-         };
-      }
-
-      #region Properties
-
-      public IEnumerable<int> Projects
-      {
-         get { return _proteinService.GetProjects(); }
-      }
-
-      private int _selectedProject;
-      public int SelectedProject
-      {
-         get { return _selectedProject; }
-         set
-         {
-            if (_selectedProject != value)
+            TimeSpan frameTime = TimeSpan.FromMinutes(TpfMinutes).Add(TimeSpan.FromSeconds(TpfSeconds));
+            TimeSpan totalTimeByFrame = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+            TimeSpan totalTimeByUser = totalTimeByFrame;
+            if (TotalWuTimeEnabled)
             {
-               _selectedProject = value;
-               OnPropertyChanged("SelectedProject");
+                totalTimeByUser = TimeSpan.FromMinutes(TotalWuTimeMinutes).Add(TimeSpan.FromSeconds(TotalWuTimeSeconds));
+                // user time is less than total time by frame, not permitted
+                if (totalTimeByUser < totalTimeByFrame)
+                {
+                    totalTimeByUser = totalTimeByFrame;
+                }
             }
-         }
-      }
 
-      private int _tpfMinutes;
-      public int TpfMinutes
-      {
-         get { return _tpfMinutes; }
-         set
-         {  
-            if (_tpfMinutes != value)
+            var decimalPlaces = _preferences.Get<int>(Preference.DecimalPlaces);
+            var noBonusValues = protein.GetProductionValues(frameTime, TimeSpan.Zero);
+            var bonusByUserSpecifiedTimeValues = protein.GetProductionValues(frameTime, totalTimeByUser);
+            var bonusByFrameTimeValues = protein.GetProductionValues(frameTime, totalTimeByFrame);
+            CoreName = protein.Core;
+            SlotType = SlotTypeConvert.FromCoreName(protein.Core).ToString();
+            NumberOfAtoms = protein.NumberOfAtoms;
+            CompletionTime = Math.Round((TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays), decimalPlaces);
+            PreferredDeadline = protein.PreferredDays;
+            FinalDeadline = protein.MaximumDays;
+            KFactor = protein.KFactor;
+            BonusMultiplier = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier), decimalPlaces);
+            BaseCredit = noBonusValues.Credit;
+            TotalCredit = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit), decimalPlaces);
+            BasePpd = noBonusValues.PPD;
+            TotalPpd = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD), decimalPlaces);
+        }
+
+        public ICollection<int> Projects
+        {
+            get { return _proteinService.GetProjects().OrderBy(x => x).ToList(); }
+        }
+
+        private int _selectedProject;
+
+        public int SelectedProject
+        {
+            get => _selectedProject;
+            set
             {
-               _tpfMinutes = value;
-               OnPropertyChanged("TpfMinutes");
+                if (_selectedProject != value)
+                {
+                    _selectedProject = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private int _tpfSeconds;
-      public int TpfSeconds
-      {
-         get { return _tpfSeconds; }
-         set
-         {
-            if (_tpfSeconds != value)
+        private int _tpfMinutes;
+
+        public int TpfMinutes
+        {
+            get => _tpfMinutes;
+            set
             {
-               _tpfSeconds = value;
-               OnPropertyChanged("TpfSeconds");
+                if (_tpfMinutes != value)
+                {
+                    _tpfMinutes = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _totalWuTimeEnabled;
-      public bool TotalWuTimeEnabled
-      {
-         get { return _totalWuTimeEnabled; }
-         set
-         {
-            if (_totalWuTimeEnabled != value)
+        private int _tpfSeconds;
+
+        public int TpfSeconds
+        {
+            get => _tpfSeconds;
+            set
             {
-               _totalWuTimeEnabled = value;
-               OnPropertyChanged("TotalWuTimeEnabled");
+                if (_tpfSeconds != value)
+                {
+                    _tpfSeconds = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private int _totalWuTimeMinutes;
-      public int TotalWuTimeMinutes
-      {
-         get { return _totalWuTimeMinutes; }
-         set
-         {
-            if (_totalWuTimeMinutes != value)
+        private bool _totalWuTimeEnabled;
+
+        public bool TotalWuTimeEnabled
+        {
+            get => _totalWuTimeEnabled;
+            set
             {
-               _totalWuTimeMinutes = value;
-               OnPropertyChanged("TotalWuTimeMinutes");
+                if (_totalWuTimeEnabled != value)
+                {
+                    _totalWuTimeEnabled = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private int _totalWuTimeSeconds;
-      public int TotalWuTimeSeconds
-      {
-         get { return _totalWuTimeSeconds; }
-         set
-         {
-            if (_totalWuTimeSeconds != value)
+        private int _totalWuTimeMinutes;
+
+        public int TotalWuTimeMinutes
+        {
+            get => _totalWuTimeMinutes;
+            set
             {
-               _totalWuTimeSeconds = value;
-               OnPropertyChanged("TotalWuTimeSeconds");
+                if (_totalWuTimeMinutes != value)
+                {
+                    _totalWuTimeMinutes = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private string _coreName;
-      public string CoreName
-      {
-         get { return _coreName; }
-         set
-         {
-            if (_coreName != value)
+        private int _totalWuTimeSeconds;
+
+        public int TotalWuTimeSeconds
+        {
+            get => _totalWuTimeSeconds;
+            set
             {
-               _coreName = value;
-               OnPropertyChanged("CoreName");
+                if (_totalWuTimeSeconds != value)
+                {
+                    _totalWuTimeSeconds = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private string _slotType;
-      public string SlotType
-      {
-         get { return _slotType; }
-         set
-         {
-            if (_slotType != value)
+        private string _coreName;
+
+        public string CoreName
+        {
+            get => _coreName;
+            set
             {
-               _slotType = value;
-               OnPropertyChanged("SlotType");
+                if (_coreName != value)
+                {
+                    _coreName = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private int _numberOfAtoms;
-      public int NumberOfAtoms
-      {
-         get { return _numberOfAtoms; }
-         set
-         {
-            if (_numberOfAtoms != value)
+        private string _slotType;
+
+        public string SlotType
+        {
+            get => _slotType;
+            set
             {
-               _numberOfAtoms = value;
-               OnPropertyChanged("NumberOfAtoms");
+                if (_slotType != value)
+                {
+                    _slotType = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private double _completionTime;
-      public double CompletionTime
-      {
-         get { return _completionTime; }
-         set
-         {
-            if (_completionTime != value)
+        private int _numberOfAtoms;
+
+        public int NumberOfAtoms
+        {
+            get => _numberOfAtoms;
+            set
             {
-               _completionTime = value;
-               OnPropertyChanged("CompletionTime");
+                if (_numberOfAtoms != value)
+                {
+                    _numberOfAtoms = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private double _preferredDeadline;
-      public double PreferredDeadline
-      {
-         get { return _preferredDeadline; }
-         set
-         {
-            if (_preferredDeadline != value)
+        private double _completionTime;
+
+        public double CompletionTime
+        {
+            get => _completionTime;
+            set
             {
-               _preferredDeadline = value;
-               OnPropertyChanged("PreferredDeadline");
+                if (_completionTime != value)
+                {
+                    _completionTime = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _preferredDeadlineChecked;
-      public bool PreferredDeadlineChecked
-      {
-         get { return _preferredDeadlineChecked; }
-         set
-         {
-            if (_preferredDeadlineChecked != value)
+        private double _preferredDeadline;
+
+        public double PreferredDeadline
+        {
+            get => _preferredDeadline;
+            set
             {
-               _preferredDeadlineChecked = value;
-               OnPropertyChanged("PreferredDeadlineChecked");
-               OnPropertyChanged("PreferredDeadlineIsReadOnly");
+                if (_preferredDeadline != value)
+                {
+                    _preferredDeadline = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool PreferredDeadlineIsReadOnly
-      {
-         get { return !PreferredDeadlineChecked; }
-      }
+        private bool _preferredDeadlineChecked;
 
-      private double _finalDeadline;
-      public double FinalDeadline
-      {
-         get { return _finalDeadline; }
-         set
-         {
-            if (_finalDeadline != value)
+        public bool PreferredDeadlineChecked
+        {
+            get => _preferredDeadlineChecked;
+            set
             {
-               _finalDeadline = value;
-               OnPropertyChanged("FinalDeadline");
+                if (_preferredDeadlineChecked != value)
+                {
+                    _preferredDeadlineChecked = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(PreferredDeadlineIsReadOnly));
+                }
             }
-         }
-      }
+        }
 
-      private bool _finalDeadlineChecked;
-      public bool FinalDeadlineChecked
-      {
-         get { return _finalDeadlineChecked; }
-         set
-         {
-            if (_finalDeadlineChecked != value)
+        public bool PreferredDeadlineIsReadOnly => !PreferredDeadlineChecked;
+
+        private double _finalDeadline;
+
+        public double FinalDeadline
+        {
+            get => _finalDeadline;
+            set
             {
-               _finalDeadlineChecked = value;
-               OnPropertyChanged("FinalDeadlineChecked");
-               OnPropertyChanged("FinalDeadlineIsReadOnly");
+                if (_finalDeadline != value)
+                {
+                    _finalDeadline = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool FinalDeadlineIsReadOnly
-      {
-         get { return !FinalDeadlineChecked; }
-      }
+        private bool _finalDeadlineChecked;
 
-      private double _kFactor;
-      public double KFactor
-      {
-         get { return _kFactor; }
-         set
-         {
-            if (_kFactor != value)
+        public bool FinalDeadlineChecked
+        {
+            get => _finalDeadlineChecked;
+            set
             {
-               _kFactor = value;
-               OnPropertyChanged("KFactor");
+                if (_finalDeadlineChecked != value)
+                {
+                    _finalDeadlineChecked = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(FinalDeadlineIsReadOnly));
+                }
             }
-         }
-      }
+        }
 
-      private bool _kFactorChecked;
-      public bool KFactorChecked
-      {
-         get { return _kFactorChecked; }
-         set
-         {
-            if (_kFactorChecked != value)
+        public bool FinalDeadlineIsReadOnly => !FinalDeadlineChecked;
+
+        private double _kFactor;
+
+        public double KFactor
+        {
+            get => _kFactor;
+            set
             {
-               _kFactorChecked = value;
-               OnPropertyChanged("KFactorChecked");
-               OnPropertyChanged("KFactorIsReadOnly");
+                if (_kFactor != value)
+                {
+                    _kFactor = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool KFactorIsReadOnly
-      {
-         get { return !KFactorChecked; }
-      }
+        private bool _kFactorChecked;
 
-      private double _bonusMultiplier;
-      public double BonusMultiplier
-      {
-         get { return _bonusMultiplier; }
-         set
-         {
-            if (_bonusMultiplier != value)
+        public bool KFactorChecked
+        {
+            get => _kFactorChecked;
+            set
             {
-               _bonusMultiplier = value;
-               OnPropertyChanged("BonusMultiplier");
+                if (_kFactorChecked != value)
+                {
+                    _kFactorChecked = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(KFactorIsReadOnly));
+                }
             }
-         }
-      }
+        }
 
-      private double _baseCredit;
-      public double BaseCredit
-      {
-         get { return _baseCredit; }
-         set
-         {
-            if (_baseCredit != value)
+        public bool KFactorIsReadOnly => !KFactorChecked;
+
+        private double _bonusMultiplier;
+
+        public double BonusMultiplier
+        {
+            get => _bonusMultiplier;
+            set
             {
-               _baseCredit = value;
-               OnPropertyChanged("BaseCredit");
+                if (_bonusMultiplier != value)
+                {
+                    _bonusMultiplier = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public double BonusCredit
-      {
-         get { return TotalCredit - BaseCredit; }
-      }
+        private double _baseCredit;
 
-      private double _totalCredit;
-      public double TotalCredit
-      {
-         get { return _totalCredit; }
-         set
-         {
-            if (_totalCredit != value)
+        public double BaseCredit
+        {
+            get => _baseCredit;
+            set
             {
-               _totalCredit = value;
-               OnPropertyChanged("BonusCredit");
-               OnPropertyChanged("TotalCredit");
+                if (_baseCredit != value)
+                {
+                    _baseCredit = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private double _basePpd;
-      public double BasePpd
-      {
-         get { return _basePpd; }
-         set
-         {
-            if (_basePpd != value)
+        public double BonusCredit => TotalCredit - BaseCredit;
+
+        private double _totalCredit;
+
+        public double TotalCredit
+        {
+            get => _totalCredit;
+            set
             {
-               _basePpd = value;
-               OnPropertyChanged("BasePpd");
+                if (_totalCredit != value)
+                {
+                    _totalCredit = value;
+                    OnPropertyChanged(nameof(BonusCredit));
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public double BonusPpd
-      {
-         get { return TotalPpd - BasePpd; }
-      }
+        private double _basePpd;
 
-      private double _totalPpd;
-      public double TotalPpd
-      {
-         get { return _totalPpd; }
-         set
-         {
-            if (_totalPpd != value)
+        public double BasePpd
+        {
+            get => _basePpd;
+            set
             {
-               _totalPpd = value;
-               OnPropertyChanged("BonusPpd");
-               OnPropertyChanged("TotalPpd");
+                if (_basePpd != value)
+                {
+                    _basePpd = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        public double BonusPpd => TotalPpd - BasePpd;
 
-      #region INotifyPropertyChanged Members
+        private double _totalPpd;
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        public double TotalPpd
+        {
+            get => _totalPpd;
+            set
+            {
+                if (_totalPpd != value)
+                {
+                    _totalPpd = value;
+                    OnPropertyChanged(nameof(BonusPpd));
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-      }
+        #region INotifyPropertyChanged Members
 
-      #endregion
-   }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }
