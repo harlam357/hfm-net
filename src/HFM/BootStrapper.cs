@@ -10,8 +10,6 @@ using System.Windows.Forms;
 
 using Castle.Windsor;
 
-using harlam357.Windows.Forms;
-
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -34,7 +32,6 @@ namespace HFM
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
-            Core.Internal.AsyncProcessorExtensions.ExecuteAsyncWithProgressAction = AsyncProcessorExtensions.ExecuteAsyncWithProgress;
 
             // Issue 180 - Restore the already running instance to the screen.
             using (var singleInstance = new SingleInstanceHelper())
@@ -73,7 +70,7 @@ namespace HFM
                     return;
                 }
 
-                ExceptionDialog.RegisterForUnhandledExceptions(
+                harlam357.Windows.Forms.ExceptionDialog.RegisterForUnhandledExceptions(
                    Core.Application.NameAndFullVersion,
                    Environment.OSVersion.VersionString,
                    ex => logger.Error(ex.Message, ex));
@@ -299,10 +296,25 @@ namespace HFM
             }
 
             mainView.WorkUnitHistoryMenuEnabled = false;
-            var repository = container.Resolve<IWorkUnitRepository>();
+            var repository = (WorkUnitRepository)container.Resolve<IWorkUnitRepository>();
             try
             {
                 repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
+                if (repository.RequiresUpgrade())
+                {
+                    using (var dialog = new ProgressDialogAsync((progress, token) => repository.Upgrade(progress), false))
+                    {
+                        dialog.Icon = Properties.Resources.hfm_48_48;
+                        dialog.Text = Core.Application.NameAndVersion;
+                        dialog.StartPosition = FormStartPosition.CenterScreen;
+                        dialog.ShowDialog();
+                        if (dialog.Exception != null)
+                        {
+                            ShowStartupError(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
+                        }
+                    }
+                }
+                
                 mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)
@@ -335,7 +347,7 @@ namespace HFM
 
         internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)
         {
-            ExceptionDialog.ShowErrorDialog(
+            harlam357.Windows.Forms.ExceptionDialog.ShowErrorDialog(
                ex,
                Core.Application.NameAndFullVersion,
                Environment.OSVersion.VersionString,

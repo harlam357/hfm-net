@@ -3,24 +3,22 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms
 {
-   public interface IViewFactory
-   {
-      IOpenFileDialogView GetOpenFileDialogView();
+    public interface IViewFactory
+    {
+        IOpenFileDialogView GetOpenFileDialogView();
 
-      ISaveFileDialogView GetSaveFileDialogView();
+        ISaveFileDialogView GetSaveFileDialogView();
 
-      IFolderBrowserView GetFolderBrowserView();
+        IFolderBrowserView GetFolderBrowserView();
 
-      IProgressDialogAsyncView GetProgressDialogAsync();
+        IQueryView GetQueryDialog();
 
-      IQueryView GetQueryDialog();
+        IBenchmarksView GetBenchmarksForm();
 
-      IBenchmarksView GetBenchmarksForm();
+        IPreferencesView GetPreferencesDialog();
 
-      IPreferencesView GetPreferencesDialog();
+        IProteinCalculatorView GetProteinCalculatorForm();
 
-      IProteinCalculatorView GetProteinCalculatorForm();
-
-      void Release(object view);
-   }
+        void Release(object view);
+    }
 }

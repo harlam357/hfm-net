@@ -16,8 +16,6 @@ using System.Windows.Forms;
 
 using AutoMapper;
 
-using harlam357.Core;
-using harlam357.Core.ComponentModel;
 using harlam357.Windows.Forms;
 
 using HFM.Core.Client;
@@ -1077,15 +1075,29 @@ namespace HFM.Forms
 
         #region Tools Menu Handling Methods
 
-        public async void ToolsDownloadProjectsClick()
+        public void ToolsDownloadProjectsClick()
         {
             try
             {
-                var downloader = new ProjectDownloader(_proteinService);
-                await downloader.ExecuteAsyncWithProgress(true);
-                if (downloader.Result != null)
+                IEnumerable<ProteinDictionaryChange> result = null;
+                using (var dialog = new ProgressDialogAsync((progress, token) =>
                 {
-                    var proteinChanges = downloader.Result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
+                    result = _proteinService.Refresh(progress);
+                }, false))
+                {
+                    dialog.Icon = Properties.Resources.hfm_48_48;
+                    dialog.Text = Core.Application.NameAndVersion;
+                    dialog.ShowDialog(_view);
+                    if (dialog.Exception != null)
+                    {
+                        Logger.Error(dialog.Exception.Message, dialog.Exception);
+                        _messageBoxView.ShowError(dialog.Exception.Message, Core.Application.NameAndVersion);
+                    }
+                }
+
+                if (result != null)
+                {
+                    var proteinChanges = result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
                     if (proteinChanges.Count > 0)
                     {
                         if (_clientConfiguration.Count > 0)
@@ -1103,22 +1115,6 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                 _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
-            }
-        }
-
-        private sealed class ProjectDownloader : AsyncProcessorBase<IEnumerable<ProteinDictionaryChange>>
-        {
-            private readonly IProteinService _proteinService;
-
-            public ProjectDownloader(IProteinService proteinService)
-            {
-                if (proteinService == null) throw new ArgumentNullException("proteinService");
-                _proteinService = proteinService;
-            }
-
-            protected override async Task<IEnumerable<ProteinDictionaryChange>> OnExecuteAsync(IProgress<ProgressInfo> progress)
-            {
-                return await Task.Run(() => _proteinService.Refresh(progress)).ConfigureAwait(false);
             }
         }
 

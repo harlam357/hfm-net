@@ -133,9 +133,17 @@ namespace HFM.Core.Data
         [Test]
         public void Upgrade_v092_Test1()
         {
+            // Assert (pre-condition)
             Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
+            // Arrange
             _repository.Initialize(_testDataFileCopy);
+            // Act
+            if (_repository.RequiresUpgrade())
+            {
+                _repository.Upgrade();
+            }
+            // Assert
             VerifyWuHistoryTableSchema(_testDataFileCopy);
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
             Assert.AreEqual(Application.ParseVersionNumber("0.9.2"), Application.ParseVersionNumber(_repository.GetDatabaseVersion()));
@@ -144,9 +152,15 @@ namespace HFM.Core.Data
         [Test]
         public void Upgrade_v092_AlreadyUpgraded_Test()
         {
+            // Assert (pre-condition)
             VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
+            // Arrange
             _repository.Initialize(_testDataFileUpgradedCopy);
+            // Act
+            var result = _repository.RequiresUpgrade();
+            // Assert
+            Assert.IsFalse(result);
             VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
             Assert.IsTrue(Application.ParseVersionNumber("0.9.2") <= Application.ParseVersionNumber(_repository.GetDatabaseVersion()));
@@ -155,9 +169,17 @@ namespace HFM.Core.Data
         [Test]
         public void Upgrade_v092_Test2()
         {
+            // Assert (pre-condition)
             Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
             Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
+            // Arrange
             _repository.Initialize(_testData2FileCopy);
+            // Act
+            if (_repository.RequiresUpgrade())
+            {
+                _repository.Upgrade();
+            }
+            // Assert
             VerifyWuHistoryTableSchema(_testData2FileCopy);
             // 32 duplicates deleted
             Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
@@ -532,10 +554,15 @@ namespace HFM.Core.Data
         [Test]
         public void Delete_Test()
         {
+            // Arrange
             _repository.Initialize(_testDataFileCopy);
+            _repository.Upgrade();
             var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+            // Assert (pre-condition)
             Assert.AreEqual(44, entries.Count);
+            // Act
             Assert.AreEqual(1, _repository.Delete(entries[14]));
+            // Assert
             entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(43, entries.Count);
         }

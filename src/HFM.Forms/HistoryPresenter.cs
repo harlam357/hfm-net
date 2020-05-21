@@ -1,27 +1,8 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using harlam357.Windows.Forms;
@@ -246,27 +227,27 @@ namespace HFM.Forms
             }
         }
 
-        public async void RefreshAllProjectDataClick()
+        public void RefreshAllProjectDataClick()
         {
-            await RefreshProjectData(WorkUnitProteinUpdateScope.All);
+            RefreshProjectData(WorkUnitProteinUpdateScope.All);
         }
 
-        public async void RefreshUnknownProjectDataClick()
+        public void RefreshUnknownProjectDataClick()
         {
-            await RefreshProjectData(WorkUnitProteinUpdateScope.Unknown);
+            RefreshProjectData(WorkUnitProteinUpdateScope.Unknown);
         }
 
-        public async void RefreshDataByProjectClick()
+        public void RefreshDataByProjectClick()
         {
-            await RefreshProjectData(WorkUnitProteinUpdateScope.Project);
+            RefreshProjectData(WorkUnitProteinUpdateScope.Project);
         }
 
-        public async void RefreshDataByIdClick()
+        public void RefreshDataByIdClick()
         {
-            await RefreshProjectData(WorkUnitProteinUpdateScope.Id);
+            RefreshProjectData(WorkUnitProteinUpdateScope.Id);
         }
 
-        private async Task RefreshProjectData(WorkUnitProteinUpdateScope scope)
+        private void RefreshProjectData(WorkUnitProteinUpdateScope scope)
         {
             var result = MessageBoxView.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
             if (result == DialogResult.No)
@@ -274,23 +255,33 @@ namespace HFM.Forms
                 return;
             }
 
-            long arg = 0;
+            long id = 0;
             if (scope == WorkUnitProteinUpdateScope.Project)
             {
-                arg = Model.SelectedWorkUnitRow.ProjectID;
+                id = Model.SelectedWorkUnitRow.ProjectID;
             }
             else if (scope == WorkUnitProteinUpdateScope.Id)
             {
-                arg = Model.SelectedWorkUnitRow.ID;
+                id = Model.SelectedWorkUnitRow.ID;
             }
+
+            var proteinDataUpdater = new ProteinDataUpdater(WorkUnitRepository);
 
             try
             {
-                bool updated = await WorkUnitRepository.UpdateProteinDataAsync(scope, arg).ConfigureAwait(false);
-                if (updated)
+                using (var dialog = new ProgressDialogAsync((progress, token) => proteinDataUpdater.Execute(progress, token, scope, id), true))
                 {
-                    Model.ResetBindings(true);
+                    dialog.Icon = Properties.Resources.hfm_48_48;
+                    dialog.Text = Core.Application.NameAndVersion;
+                    dialog.ShowDialog(HistoryView);
+                    if (dialog.Exception != null)
+                    {
+                        Logger.Error(dialog.Exception.Message, dialog.Exception);
+                        MessageBoxView.ShowError(HistoryView, dialog.Exception.Message, Core.Application.NameAndVersion);
+                    }
                 }
+
+                Model.ResetBindings(true);
             }
             catch (Exception ex)
             {

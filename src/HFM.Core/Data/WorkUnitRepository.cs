@@ -6,11 +6,10 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.Threading.Tasks;
+using System.Threading;
 
 using AutoMapper;
 
-using HFM.Core.Internal;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
@@ -29,7 +28,9 @@ namespace HFM.Core.Data
         /// </summary>
         bool Connected { get; }
 
-        void Initialize(string filePath);
+        IProteinService ProteinService { get; }
+
+        ILogger Logger { get; }
 
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         bool Insert(WorkUnitModel workUnitModel);
@@ -44,7 +45,9 @@ namespace HFM.Core.Data
 
         long CountFailed(string clientName, DateTime? clientStartTime);
 
-        Task<bool> UpdateProteinDataAsync(WorkUnitProteinUpdateScope scope, long arg);
+        SQLiteConnection CreateConnection();
+
+        DataTable Select(SQLiteConnection connection, string sql, params object[] args);
     }
 
     public partial class WorkUnitRepository : IWorkUnitRepository
@@ -59,9 +62,9 @@ namespace HFM.Core.Data
         public bool Connected { get; private set; }
 
         public IProteinService ProteinService { get; }
-        
+
         private ILogger _logger;
-        private ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
+        public ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
 
         private readonly IMapper _mapper;
 
@@ -107,7 +110,6 @@ namespace HFM.Core.Data
                 {
                     Debug.Assert(table != null);
                 }
-                Upgrade();
                 Connected = true;
             }
             catch (Exception ex)
@@ -118,63 +120,82 @@ namespace HFM.Core.Data
             }
         }
 
-        #region Upgrade
-
-        private void Upgrade()
+        public SQLiteConnection CreateConnection()
         {
-            string dbVersionString = "0.0.0.0";
-            if (TableExists(WorkUnitRepositoryTable.Version))
-            {
-                string versionFromTable = GetDatabaseVersion();
-                if (!String.IsNullOrEmpty(versionFromTable))
-                {
-                    dbVersionString = versionFromTable;
-                }
-            }
-            else
-            {
-                CreateTable(WorkUnitRepositoryTable.Version);
-            }
-            int dbVersion = Application.ParseVersionNumber(dbVersionString);
-            Logger.Info($"WU History database v{dbVersionString}");
-
-            UpgradeToVersion092(dbVersion);
+            return new SQLiteConnection(ConnectionString);
         }
 
-        private void UpgradeToVersion092(int dbVersion)
-        {
-            const string upgradeVersionString = "0.9.2";
-            if (dbVersion < Application.ParseVersionNumber(upgradeVersionString))
-            {
-                using (var connection = new SQLiteConnection(ConnectionString))
-                {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        try
-                        {
-                            Logger.Info($"Performing WU History database upgrade to v{upgradeVersionString}...");
-                            // delete duplicates
-                            var duplicateDeleter = new DuplicateDeleter(connection, Logger);
-                            duplicateDeleter.ExecuteAsyncWithProgress(true).Wait();
-                            // add columns to WuHistory table
-                            AddProteinColumns(connection);
-                            // update the WuHistory table with protein info
-                            var proteinDataUpdater = new ProteinDataUpdater(connection, ProteinService);
-                            proteinDataUpdater.ExecuteAsyncWithProgress(true).Wait();
-                            // set database version
-                            SetDatabaseVersion(connection, upgradeVersionString);
+        #region Upgrade
 
-                            transaction.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            throw new DataException("Database upgrade failed.", ex);
-                        }
+        public bool RequiresUpgrade()
+        {
+            if (!Connected) return false;
+
+            var version = GetDatabaseVersion();
+            Logger.Info($"WU History database v{version}");
+            return RequiresUpgrade(Application.ParseVersionNumber(version), VersionString092);
+        }
+
+        public void Upgrade()
+        {
+            Upgrade(null);
+        }
+
+        public void Upgrade(IProgress<ProgressInfo> progress)
+        {
+            if (!Connected) return;
+
+            int versionNumber = Application.ParseVersionNumber(GetDatabaseVersion());
+            try
+            {
+                UpgradeToVersion092(versionNumber, progress);
+            }
+            catch (Exception ex)
+            {
+                Connected = false;
+                throw new DataException("Database upgrade failed.", ex);
+            }
+        }
+
+        private const string VersionString092 = "0.9.2";
+
+        private void UpgradeToVersion092(int versionNumber, IProgress<ProgressInfo> progress)
+        {
+            if (!RequiresUpgrade(versionNumber, VersionString092)) return;
+
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        Logger.Info($"Performing WU History database upgrade to v{VersionString092}...");
+                        // delete duplicates
+                        var duplicateDeleter = new DuplicateDeleter(this, connection);
+                        duplicateDeleter.Execute(progress);
+                        // add columns to WuHistory table
+                        AddProteinColumns(connection);
+                        // update the WuHistory table with protein info
+                        var proteinDataUpdater = new ProteinDataUpdater(this, connection);
+                        proteinDataUpdater.Execute(progress, CancellationToken.None, default, default);
+                        // set database version
+                        SetDatabaseVersion(connection, VersionString092);
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
                     }
                 }
             }
+        }
+
+        private static bool RequiresUpgrade(int versionNumber, string upgradeVersionString)
+        {
+            return versionNumber < Application.ParseVersionNumber(upgradeVersionString);
         }
 
         private static void AddProteinColumns(SQLiteConnection connection)
@@ -195,7 +216,7 @@ namespace HFM.Core.Data
 
         private void SetDatabaseVersion(string version)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 SetDatabaseVersion(connection, version);
@@ -205,6 +226,11 @@ namespace HFM.Core.Data
         private void SetDatabaseVersion(SQLiteConnection connection, string version)
         {
             Debug.Assert(!String.IsNullOrWhiteSpace(version));
+
+            if (!TableExists(connection, WorkUnitRepositoryTable.Version))
+            {
+                CreateTable(connection, WorkUnitRepositoryTable.Version);
+            }
 
             Logger.Info($"Setting database version to: v{version}");
             using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
@@ -246,7 +272,7 @@ namespace HFM.Core.Data
             entry.BaseCredit = workUnitModel.CurrentProtein.Credit;
             entry.PreferredDays = workUnitModel.CurrentProtein.PreferredDays;
             entry.MaximumDays = workUnitModel.CurrentProtein.MaximumDays;
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
@@ -288,7 +314,7 @@ namespace HFM.Core.Data
         public int Delete(WorkUnitRow row)
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
@@ -322,7 +348,7 @@ namespace HFM.Core.Data
             var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
@@ -352,7 +378,7 @@ namespace HFM.Core.Data
             var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
@@ -369,14 +395,14 @@ namespace HFM.Core.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private DataTable Select(string sql, params object[] args)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 return Select(connection, sql, args);
             }
         }
 
-        private static DataTable Select(SQLiteConnection connection, string sql, params object[] args)
+        public DataTable Select(SQLiteConnection connection, string sql, params object[] args)
         {
             using (var database = new PetaPoco.Database(connection))
             using (var cmd = database.CreateCommand(database.Connection, sql, args))
@@ -420,7 +446,7 @@ namespace HFM.Core.Data
                .From("WuHistory")
                .Append(query);
 
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
@@ -431,37 +457,6 @@ namespace HFM.Core.Data
         }
 
         #endregion
-
-        public async Task<bool> UpdateProteinDataAsync(WorkUnitProteinUpdateScope scope, long arg)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        // update the WuHistory table with protein info
-                        var proteinDataUpdater = new ProteinDataUpdaterWithCancellation(connection, ProteinService);
-                        proteinDataUpdater.Scope = scope;
-                        proteinDataUpdater.Arg = arg;
-                        await proteinDataUpdater.ExecuteAsyncWithProgress(true, this).ConfigureAwait(false);
-                        if (proteinDataUpdater.IsCanceled)
-                        {
-                            transaction.Rollback();
-                            return false;
-                        }
-                        transaction.Commit();
-                        return true;
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
 
         #region IDisposable Members
 
@@ -491,33 +486,45 @@ namespace HFM.Core.Data
 
         internal bool TableExists(WorkUnitRepositoryTable databaseTable)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
-                using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[databaseTable].TableName, null }))
-                {
-                    return table.Rows.Count != 0;
-                }
+                return TableExists(connection, databaseTable);
+            }
+        }
+
+        internal bool TableExists(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        {
+            using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[databaseTable].TableName, null }))
+            {
+                return table.Rows.Count != 0;
             }
         }
 
         internal void CreateTable(WorkUnitRepositoryTable databaseTable)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = CreateConnection())
             {
                 connection.Open();
-                using (var command = SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
-                {
-                    command.ExecuteNonQuery();
-                }
+                CreateTable(connection, databaseTable);
             }
         }
+
+        internal void CreateTable(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        {
+            using (var command = SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private const string VersionStringDefault = "0.0.0";
 
         internal string GetDatabaseVersion()
         {
             if (!TableExists(WorkUnitRepositoryTable.Version))
             {
-                return null;
+                return VersionStringDefault;
             }
 
             using (var table = Select("SELECT * FROM [DbVersion] ORDER BY ID DESC LIMIT 1;"))
@@ -528,7 +535,7 @@ namespace HFM.Core.Data
                 }
             }
 
-            return null;
+            return VersionStringDefault;
         }
 
         #endregion

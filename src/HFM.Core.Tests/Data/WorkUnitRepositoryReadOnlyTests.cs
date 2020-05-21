@@ -662,13 +662,13 @@ namespace HFM.Core.Data
 
         private void FetchTestData(int count, WorkUnitQuery query)
         {
-            _database.Initialize(_testDataFileCopy);
+            Initialize(_testDataFileCopy);
             FetchInternal(count, query, BonusCalculation.DownloadTime);
         }
 
         private void FetchTestData2(int count, WorkUnitQuery query)
         {
-            _database.Initialize(_testData2FileCopy);
+            Initialize(_testData2FileCopy);
             FetchInternal(count, query, BonusCalculation.FrameTime);
         }
 
@@ -765,7 +765,7 @@ namespace HFM.Core.Data
         {
             const long itemsPerPage = 10;
 
-            _database.Initialize(_testDataFileCopy);
+            Initialize(_testDataFileCopy);
             var page = _database.Page(1, itemsPerPage, query, BonusCalculation.DownloadTime);
             int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
             Assert.AreEqual(totalItems, page.TotalItems);
@@ -779,7 +779,7 @@ namespace HFM.Core.Data
         [Test]
         public void CountCompleted_Test1()
         {
-            _database.Initialize(_testDataFileCopy);
+            Initialize(_testDataFileCopy);
             long count = _database.CountCompleted("nVidia GPU - GTX285 - 1", null);
             Assert.AreEqual(11, count);
         }
@@ -787,7 +787,7 @@ namespace HFM.Core.Data
         [Test]
         public void CountCompleted_Test2()
         {
-            _database.Initialize(_testDataFileCopy);
+            Initialize(_testDataFileCopy);
             long count = _database.CountCompleted("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
             Assert.AreEqual(6, count);
         }
@@ -795,7 +795,7 @@ namespace HFM.Core.Data
         [Test]
         public void CountFailed_Test1()
         {
-            _database.Initialize(_testData2FileCopy);
+            Initialize(_testData2FileCopy);
             long count = _database.CountFailed("nVidia GPU - GTX470", null);
             Assert.AreEqual(1, count);
         }
@@ -803,11 +803,17 @@ namespace HFM.Core.Data
         [Test]
         public void CountFailed_Test2()
         {
-            _database.Initialize(_testData2FileCopy);
+            Initialize(_testData2FileCopy);
             long count = _database.CountFailed("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
             Assert.AreEqual(0, count);
         }
 
         #endregion
+
+        private void Initialize(string path)
+        {
+            _database.Initialize(path);
+            _database.Upgrade();
+        }
     }
 }

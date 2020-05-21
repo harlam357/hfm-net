@@ -181,6 +181,12 @@
     </Compile>
     <Compile Include="Models\FahClientSettingsModelProfile.cs" />
     <Compile Include="Models\UserStatsDataModelProfile.cs" />
+    <Compile Include="ProgressDialogAsync.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressDialogAsync.designer.cs">
+      <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProteinBenchmarkIdentifierExtensions.cs" />
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
@@ -270,7 +276,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UpdatePresenter.cs" />
-    <Compile Include="Utilities\AsyncProcessorExtensions.cs" />
     <Compile Include="WindowPosition.cs" />
     <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
@@ -298,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PreferencesDialog.resx">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProgressDialogAsync.resx">
+      <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -426,6 +434,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DataContainer_MoveLastHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
