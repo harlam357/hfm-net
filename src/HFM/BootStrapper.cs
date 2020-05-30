@@ -70,7 +70,7 @@ namespace HFM
                     return;
                 }
 
-                harlam357.Windows.Forms.ExceptionDialog.RegisterForUnhandledExceptions(
+                ExceptionDialog.RegisterForUnhandledExceptions(
                    Core.Application.NameAndFullVersion,
                    Environment.OSVersion.VersionString,
                    ex => logger.Error(ex.Message, ex));
@@ -347,7 +347,7 @@ namespace HFM
 
         internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)
         {
-            harlam357.Windows.Forms.ExceptionDialog.ShowErrorDialog(
+            ExceptionDialog.ShowErrorDialog(
                ex,
                Core.Application.NameAndFullVersion,
                Environment.OSVersion.VersionString,
