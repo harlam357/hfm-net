@@ -112,6 +112,7 @@
     <Compile Include="SlotXml\WebArtifactDeployment.cs" />
     <Compile Include="SlotXml\XmlBuilder.cs" />
     <Compile Include="SlotXml\XmlBuilderProfile.cs" />
+    <Compile Include="SortComparer.cs" />
     <Compile Include="Unknown.cs" />
     <Compile Include="WorkUnits\BonusCalculation.cs" />
     <Compile Include="Client\SlotIdentifier.cs" />
