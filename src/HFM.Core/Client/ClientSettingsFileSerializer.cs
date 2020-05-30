@@ -1,22 +1,4 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,9 +7,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Xml;
 
-using harlam357.Core.Security;
-using harlam357.Core.Security.Cryptography;
-
+using HFM.Core.Internal;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
 
@@ -46,8 +26,8 @@ namespace HFM.Core.Client
         }
 
         // Encryption Key and Initialization Vector
-        private readonly SymmetricKeyData _iv = new SymmetricKeyData("CH/&QE;NsT.2z+Me");
-        private readonly SymmetricKeyData _symmetricKey = new SymmetricKeyData("usPP'/Cb5?NWC*60");
+        private const string IV = "CH/&QE;NsT.2z+Me";
+        private const string SymmetricKey = "usPP'/Cb5?NWC*60";
 
         #endregion
 
@@ -99,14 +79,14 @@ namespace HFM.Core.Client
 
         private void Encrypt(IEnumerable<ClientSettings> value)
         {
-            var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+            var cryptography = new Cryptography(SymmetricKey, IV);
             foreach (var settings in value)
             {
                 if (String.IsNullOrWhiteSpace(settings.Password)) continue;
 
                 try
                 {
-                    settings.Password = symmetricProvider.Encrypt(new harlam357.Core.Security.Data(settings.Password), _symmetricKey).Bytes.ToBase64();
+                    settings.Password = cryptography.EncryptValue(settings.Password);
                 }
                 catch (CryptographicException)
                 {
@@ -117,14 +97,14 @@ namespace HFM.Core.Client
 
         private void Decrypt(IEnumerable<ClientSettings> value)
         {
-            var symmetricProvider = new Symmetric(SymmetricProvider.Rijndael, false) { IntializationVector = _iv };
+            var cryptography = new Cryptography(SymmetricKey, IV);
             foreach (var settings in value)
             {
                 if (String.IsNullOrWhiteSpace(settings.Password)) continue;
 
                 try
                 {
-                    settings.Password = symmetricProvider.Decrypt(new harlam357.Core.Security.Data(settings.Password.FromBase64()), _symmetricKey).ToString();
+                    settings.Password = cryptography.DecryptValue(settings.Password);
                 }
                 catch (FormatException)
                 {

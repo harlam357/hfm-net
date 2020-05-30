@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using harlam357.Core;
-
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Services;

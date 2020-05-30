@@ -3,8 +3,6 @@ using System;
 using System.IO;
 using System.Net.Cache;
 
-using harlam357.Core;
-
 using HFM.Core.Net;
 using HFM.Preferences;
 
@@ -26,7 +24,7 @@ namespace HFM.Core.Services
         {
             _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
         }
-        
+
         public void CopyToStream(Stream stream, IProgress<ProgressInfo> progress)
         {
             var webOperation = WebOperation.Create(_preferences.Get<string>(Preference.ProjectDownloadUrl));
