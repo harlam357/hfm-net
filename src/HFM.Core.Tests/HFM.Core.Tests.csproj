@@ -118,6 +118,7 @@
     <Compile Include="Client\ClientSettingsTests.cs" />
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
     <Compile Include="Data\WorkUnitRowProfileTests.cs" />
+    <Compile Include="HashTests.cs" />
     <Compile Include="Net\HostNameTests.cs" />
     <Compile Include="Net\HttpUrlTests.cs" />
     <Compile Include="Net\NetworkCredentialFactoryTests.cs" />
@@ -173,6 +174,7 @@
     <None Include="TestFiles\BenchmarkCache.dat" />
     <None Include="TestFiles\BenchmarkCache_0_9_13.dat" />
     <None Include="TestFiles\ClientSettings_0_9_11.hfmx" />
+    <None Include="TestFiles\sample.doc" />
     <None Include="TestFiles\TestData.db3" />
     <None Include="TestFiles\TestData2.db3" />
     <None Include="TestFiles\TestData_1.db3" />

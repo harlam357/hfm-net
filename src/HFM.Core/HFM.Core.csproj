@@ -94,6 +94,7 @@
     <Compile Include="Client\StringBuilderReader.cs" />
     <Compile Include="Data\WorkUnitRowProfile.cs" />
     <Compile Include="FahUrl.cs" />
+    <Compile Include="Hash.cs" />
     <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
