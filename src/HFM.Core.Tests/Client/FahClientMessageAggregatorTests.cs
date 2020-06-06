@@ -26,7 +26,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientDataAggregator_Client_v7_10_SlotID_0()
+        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0()
         {
             // Arrange
             var settings = new ClientSettings { Name = "Client_v7_10" };
@@ -121,7 +121,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientDataAggregator_Client_v7_10_SlotID_0_UnitDataOnly()
+        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0_UnitDataOnly()
         {
             // Arrange
             var settings = new ClientSettings { Name = "Client_v7_10" };
@@ -213,7 +213,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientDataAggregator_Client_v7_10_SlotID_1()
+        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_1()
         {
             // Arrange
             var settings = new ClientSettings { Name = "Client_v7_10" };
@@ -308,7 +308,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientDataAggregator_Client_v7_11_SlotID_0()
+        public async Task FahClientMessageAggregator_Client_v7_11_SlotID_0()
         {
             // Arrange
             var settings = new ClientSettings { Name = "Client_v7_11" };
