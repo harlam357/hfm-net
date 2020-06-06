@@ -134,8 +134,11 @@ namespace HFM.Forms
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var selectedItem = listBox1.SelectedItem;
+            if (selectedItem is null) return;
+
             txtBenchmarks.Text = String.Empty;
-            int projectID = (int)listBox1.SelectedItem;
+            int projectID = (int)selectedItem;
             Protein protein = _proteinService.Get(projectID);
             if (protein == null)
             {
