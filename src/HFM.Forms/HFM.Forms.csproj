@@ -160,13 +160,13 @@
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Presenters\MessageBoxPresenter.cs" />
-    <Compile Include="FahClientSetupDialog.cs">
+    <Compile Include="Views\FahClientSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FahClientSetupDialog.Designer.cs">
-      <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
+    <Compile Include="Views\FahClientSettingsDialog.Designer.cs">
+      <DependentUpon>FahClientSettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="FahClientSetupPresenter.cs" />
+    <Compile Include="Presenters\FahClientSettingsPresenter.cs" />
     <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
     <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
     <Compile Include="Hyper\HyperTypeDescriptor.cs" />
@@ -298,8 +298,8 @@
     <EmbeddedResource Include="ExceptionDialog.resx">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FahClientSetupDialog.resx">
-      <DependentUpon>FahClientSetupDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Views\FahClientSettingsDialog.resx">
+      <DependentUpon>FahClientSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
