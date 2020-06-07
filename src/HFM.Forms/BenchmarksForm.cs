@@ -342,22 +342,22 @@ namespace HFM.Forms
 
         private void mnuContextRefreshMinimum_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-               "Are you sure you want to refresh {0} - Project {1} minimum frame time?",
-                  _currentSlotIdentifier, listBox1.SelectedItem),
-                     Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
+            if (_messageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
+                    "Are you sure you want to refresh {0} - Project {1} minimum frame time?",
+                    _currentSlotIdentifier, listBox1.SelectedItem), 
+                Text) == DialogResult.Yes)
             {
-                _benchmarkService.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
+                _benchmarkService.UpdateMinimumFrameTime(_currentSlotIdentifier, (int) listBox1.SelectedItem);
                 listBox1_SelectedIndexChanged(sender, e);
             }
         }
 
         private void mnuContextDeleteProject_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture,
-               "Are you sure you want to delete {0} - Project {1}?",
-                  _currentSlotIdentifier, listBox1.SelectedItem),
-                     Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
+            if (_messageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
+                    "Are you sure you want to delete {0} - Project {1}?",
+                    _currentSlotIdentifier, listBox1.SelectedItem), 
+                Text) == DialogResult.Yes)
             {
                 _benchmarkService.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
                 UpdateProjectListBoxBinding();
@@ -383,8 +383,8 @@ namespace HFM.Forms
 
         private void picDeleteClient_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete {0}?", _currentSlotIdentifier),
-                        Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
+            if (_messageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
+                    "Are you sure you want to delete {0}?", _currentSlotIdentifier), Text) == DialogResult.Yes)
             {
                 int currentIndex = cboClients.SelectedIndex;
                 _benchmarkService.RemoveAll(_currentSlotIdentifier);
