@@ -53,8 +53,6 @@ namespace HFM.Forms.Configuration
             container.Register(
                Component.For<IMessagesView>()
                   .ImplementedBy<MessagesForm>(),
-               Component.For<IMessageBoxView>()
-                  .ImplementedBy<MessageBoxView>(),
                Component.For<MessageBoxPresenter>()
                    .Instance(MessageBoxPresenter.Default));
 

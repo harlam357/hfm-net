@@ -14,6 +14,7 @@ using harlam357.Windows.Forms;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
+using HFM.Forms.Mocks;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -21,7 +22,7 @@ namespace HFM.Forms
     [TestFixture]
     public class HistoryPresenterTests
     {
-        private static HistoryPresenter CreatePresenter()
+        private static HistoryPresenter CreatePresenter(MessageBoxPresenter messageBox = null)
         {
             var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
             repository.Stub(x => x.Connected).Return(true);
@@ -30,7 +31,7 @@ namespace HFM.Forms
                                         new WorkUnitQueryDataContainer(), 
                                         MockRepository.GenerateMock<IHistoryView>(), 
                                         MockRepository.GenerateStub<IViewFactory>(), 
-                                        MockRepository.GenerateMock<IMessageBoxView>(), 
+                                        messageBox ?? new MockMessageBoxPresenter(), 
                                         repository);
         }
 
@@ -171,11 +172,11 @@ namespace HFM.Forms
             var presenter = CreatePresenter();
             var queryView = new QueryViewReturnsOkOnce();
             presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
-            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
             // Act
             presenter.NewQueryClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
+            Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
         [Test]
@@ -217,11 +218,11 @@ namespace HFM.Forms
             var presenter = CreatePresenter();
             var queryView = new QueryViewReturnsOkOnce();
             presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
-            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
             // Act
             presenter.EditQueryClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
+            Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
         private class QueryViewModifiesQueryAndReturnsOk : IQueryView
@@ -277,57 +278,56 @@ namespace HFM.Forms
         public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndDeletesQuery()
         {
             // Arrange
-            var presenter = CreatePresenter();
+            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
+            var presenter = CreatePresenter(messageBox);
             presenter.Model.AddQuery(new WorkUnitQuery("Test")
                 .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
             Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
-            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
             // Act
             presenter.DeleteQueryClick();
             // Assert
             Assert.AreEqual(1, presenter.Model.QueryBindingSource.Count);
-            presenter.MessageBoxView.VerifyAllExpectations();
+            Assert.AreEqual(1, messageBox.Invocations.Count);
         }
 
         [Test]
         public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndExitsAfterNoAnswer()
         {
             // Arrange
-            var presenter = CreatePresenter();
-            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.No);
+            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.No);
+            var presenter = CreatePresenter(messageBox);
             // Act
             presenter.DeleteQueryClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            Assert.AreEqual(1, messageBox.Invocations.Count);
         }
 
         [Test]
         public void HistoryPresenter_DeleteQueryClick_AsksYesNoQuestionAndFailsToDeleteSelectAllQuery()
         {
             // Arrange
-            var presenter = CreatePresenter();
-            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
-            presenter.MessageBoxView.Expect(x => x.ShowError(presenter.HistoryView, String.Empty, String.Empty)).IgnoreArguments();
+            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
+            var presenter = CreatePresenter(messageBox);
             // Act
             presenter.DeleteQueryClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            Assert.AreEqual(2, messageBox.Invocations.Count);
         }
 
         [Test]
         public void HistoryPresenter_DeleteWorkUnitClick_AsksYesNoQuestionAndDeletesSelectedRow()
         {
             // Arrange
-            var presenter = CreatePresenter();
+            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
+            var presenter = CreatePresenter(messageBox);
             presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
-            presenter.MessageBoxView.Expect(x => x.AskYesNoQuestion(null, String.Empty, String.Empty)).IgnoreArguments().Return(DialogResult.Yes);
             presenter.WorkUnitRepository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            Assert.AreEqual(1, messageBox.Invocations.Count);
             presenter.WorkUnitRepository.VerifyAllExpectations();
         }
 
@@ -336,11 +336,11 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.MessageBoxView.Expect(x => x.ShowInformation(null, String.Empty, String.Empty)).IgnoreArguments();
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
-            presenter.MessageBoxView.VerifyAllExpectations();
+            var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
+            Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
         [Test]
@@ -390,12 +390,12 @@ namespace HFM.Forms
 
             var logger = presenter.Logger;
             logger.Expect(x => x.Error("", null)).IgnoreArguments();
-            presenter.MessageBoxView.Expect(x => x.ShowError(null, null, null)).IgnoreArguments();
             // Act
             presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
             logger.VerifyAllExpectations();
-            presenter.MessageBoxView.VerifyAllExpectations();
+            var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
+            Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
         private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitRow>>

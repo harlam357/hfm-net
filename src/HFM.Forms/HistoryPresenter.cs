@@ -22,7 +22,7 @@ namespace HFM.Forms
         public WorkUnitQueryDataContainer QueryDataContainer { get; }
         public IHistoryView HistoryView { get; }
         public IViewFactory ViewFactory { get; }
-        public IMessageBoxView MessageBoxView { get; }
+        public MessageBoxPresenter MessageBox { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
         public HistoryPresenterModel Model { get; }
 
@@ -33,7 +33,7 @@ namespace HFM.Forms
                                 WorkUnitQueryDataContainer queryDataContainer,
                                 IHistoryView historyView,
                                 IViewFactory viewFactory,
-                                IMessageBoxView messageBoxView,
+                                MessageBoxPresenter messageBox,
                                 IWorkUnitRepository workUnitRepository)
         {
             Logger = logger;
@@ -41,7 +41,7 @@ namespace HFM.Forms
             QueryDataContainer = queryDataContainer;
             HistoryView = historyView;
             ViewFactory = viewFactory;
-            MessageBoxView = messageBoxView;
+            MessageBox = messageBox;
             WorkUnitRepository = workUnitRepository;
             Model = new HistoryPresenterModel(workUnitRepository);
         }
@@ -109,7 +109,7 @@ namespace HFM.Forms
                 catch (Exception ex)
                 {
                     Logger.Error(ex.Message, ex);
-                    MessageBoxView.ShowError(HistoryView, String.Format(CultureInfo.CurrentCulture,
+                    MessageBox.ShowError(HistoryView, String.Format(CultureInfo.CurrentCulture,
                        "The history data export failed.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
                 }
             }
@@ -155,7 +155,7 @@ namespace HFM.Forms
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBoxView.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
                 else
@@ -183,7 +183,7 @@ namespace HFM.Forms
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBoxView.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
                 else
@@ -196,7 +196,7 @@ namespace HFM.Forms
 
         public void DeleteQueryClick()
         {
-            var result = MessageBoxView.AskYesNoQuestion(HistoryView, "Are you sure?", Core.Application.NameAndVersion);
+            var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?", Core.Application.NameAndVersion);
             if (result == DialogResult.Yes)
             {
                 try
@@ -205,7 +205,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    MessageBoxView.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                    MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
                 }
             }
         }
@@ -215,11 +215,11 @@ namespace HFM.Forms
             var entry = Model.SelectedWorkUnitRow;
             if (entry == null)
             {
-                MessageBoxView.ShowInformation(HistoryView, "No work unit selected.", Core.Application.NameAndVersion);
+                MessageBox.ShowInformation(HistoryView, "No work unit selected.", Core.Application.NameAndVersion);
             }
             else
             {
-                var result = MessageBoxView.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
+                var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
                 if (result == DialogResult.Yes)
                 {
                     Model.DeleteHistoryEntry(entry);
@@ -249,7 +249,7 @@ namespace HFM.Forms
 
         private void RefreshProjectData(WorkUnitProteinUpdateScope scope)
         {
-            var result = MessageBoxView.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
+            var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
             if (result == DialogResult.No)
             {
                 return;
@@ -277,7 +277,7 @@ namespace HFM.Forms
                     if (dialog.Exception != null)
                     {
                         Logger.Error(dialog.Exception.Message, dialog.Exception);
-                        MessageBoxView.ShowError(HistoryView, dialog.Exception.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(HistoryView, dialog.Exception.Message, Core.Application.NameAndVersion);
                     }
                 }
 
@@ -286,7 +286,7 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                MessageBoxView.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
             }
         }
     }

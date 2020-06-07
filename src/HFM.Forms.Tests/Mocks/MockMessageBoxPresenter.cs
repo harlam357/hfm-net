@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -7,6 +8,18 @@ namespace HFM.Forms.Mocks
 {
     public class MockMessageBoxPresenter : MessageBoxPresenter
     {
+        private readonly Func<IWin32Window, string, string, DialogResult> _dialogResultProvider;
+
+        public MockMessageBoxPresenter()
+        {
+
+        }
+
+        public MockMessageBoxPresenter(Func<IWin32Window, string, string, DialogResult> dialogResultProvider)
+        {
+            _dialogResultProvider = dialogResultProvider;
+        }
+
         public ICollection<MockMessageBoxInvocation> Invocations { get; } = new List<MockMessageBoxInvocation>();
 
         public override void ShowError(string text, string caption)
@@ -32,25 +45,30 @@ namespace HFM.Forms.Mocks
         public override DialogResult AskYesNoQuestion(string text, string caption)
         {
             Invocations.Add(new MockMessageBoxInvocation(nameof(AskYesNoQuestion), null, text, caption));
-            return default;
+            return OnProvideDialogResult(null, text, caption);
         }
 
         public override DialogResult AskYesNoQuestion(IWin32Window owner, string text, string caption)
         {
             Invocations.Add(new MockMessageBoxInvocation(nameof(AskYesNoQuestion), owner, text, caption));
-            return default;
+            return OnProvideDialogResult(owner, text, caption);
         }
 
         public override DialogResult AskYesNoCancelQuestion(string text, string caption)
         {
             Invocations.Add(new MockMessageBoxInvocation(nameof(AskYesNoCancelQuestion), null, text, caption));
-            return default;
+            return OnProvideDialogResult(null, text, caption);
         }
 
         public override DialogResult AskYesNoCancelQuestion(IWin32Window owner, string text, string caption)
         {
             Invocations.Add(new MockMessageBoxInvocation(nameof(AskYesNoCancelQuestion), owner, text, caption));
-            return default;
+            return OnProvideDialogResult(owner, text, caption);
+        }
+
+        protected virtual DialogResult OnProvideDialogResult(IWin32Window owner, string text, string caption)
+        {
+            return _dialogResultProvider?.Invoke(owner, text, caption) ?? default;
         }
     }
 

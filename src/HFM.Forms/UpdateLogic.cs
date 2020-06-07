@@ -78,14 +78,14 @@ namespace HFM.Forms
       private IWebProxy _proxy;
       
       private readonly IPreferenceSet _preferences;
-      private readonly IMessageBoxView _messageBoxView;
+      private readonly MessageBoxPresenter _messageBox;
       
       #endregion
 
-      public UpdateLogic(IPreferenceSet preferences, IMessageBoxView messageBoxView)
+      public UpdateLogic(IPreferenceSet preferences, MessageBoxPresenter messageBox)
       {
          _preferences = preferences;
-         _messageBoxView = messageBoxView;
+         _messageBox = messageBox;
       }
 
       public void CheckForUpdate()
@@ -135,7 +135,7 @@ namespace HFM.Forms
                }
                else if (_userInvoked)
                {
-                  Owner.Invoke(new Action(() => _messageBoxView.ShowInformation(Owner, String.Format(CultureInfo.CurrentCulture,
+                  Owner.Invoke(new Action(() => _messageBox.ShowInformation(Owner, String.Format(CultureInfo.CurrentCulture,
                                                    "{0} is already up-to-date.", Application.NameAndVersion), Owner.Text)), null);
                }
             }
@@ -147,7 +147,7 @@ namespace HFM.Forms
             {
                string message = String.Format(CultureInfo.CurrentCulture, "{0} encountered the following error while checking for an update:{1}{1}{2}.",
                                               Application.NameAndVersion, Environment.NewLine, ex.Message);
-               Owner.Invoke(new Action(() => _messageBoxView.ShowError(Owner, message, Owner.Text)), null);
+               Owner.Invoke(new Action(() => _messageBox.ShowError(Owner, message, Owner.Text)), null);
             }
          }
          finally
@@ -199,7 +199,7 @@ namespace HFM.Forms
             string message = String.Format(CultureInfo.CurrentCulture,
                                            "{0} will install the new version when you exit the application.",
                                            Application.NameAndVersion);
-            _messageBoxView.ShowInformation(Owner, message, Owner.Text);
+            _messageBox.ShowInformation(Owner, message, Owner.Text);
             UpdateFilePath = presenter.LocalFilePath;
          }
       }

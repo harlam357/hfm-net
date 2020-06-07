@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using harlam357.Windows.Forms;
 using ZedGraph;
 
 using HFM.Core.Client;
@@ -70,7 +69,7 @@ namespace HFM.Forms
         private readonly IProteinBenchmarkService _benchmarkService;
         private readonly IList<Color> _graphColors;
         private readonly ClientConfiguration _clientConfiguration;
-        private readonly IMessageBoxView _messageBoxView;
+        private readonly MessageBoxPresenter _messageBox;
         private readonly IExternalProcessStarter _processStarter;
         private readonly ZedGraphManager _zedGraphManager;
 
@@ -81,14 +80,14 @@ namespace HFM.Forms
         #region Constructor
 
         public BenchmarksForm(IPreferenceSet prefs, IProteinService proteinService, IProteinBenchmarkService benchmarkService,
-                              ClientConfiguration clientConfiguration, IMessageBoxView messageBoxView, IExternalProcessStarter processStarter)
+                              ClientConfiguration clientConfiguration, MessageBoxPresenter messageBox, IExternalProcessStarter processStarter)
         {
             _prefs = prefs;
             _proteinService = proteinService;
             _benchmarkService = benchmarkService;
             _graphColors = _prefs.Get<List<Color>>(Preference.GraphColors);
             _clientConfiguration = clientConfiguration;
-            _messageBoxView = messageBoxView;
+            _messageBox = messageBox;
             _processStarter = processStarter;
             _zedGraphManager = new ZedGraphManager();
 
@@ -378,7 +377,7 @@ namespace HFM.Forms
             string message = _processStarter.ShowWebBrowser(DescriptionLinkLabel.Tag.ToString());
             if (message != null)
             {
-                _messageBoxView.ShowError(this, message, Text);
+                _messageBox.ShowError(this, message, Text);
             }
         }
 
@@ -404,7 +403,7 @@ namespace HFM.Forms
         {
             if (lstColors.SelectedIndex == -1)
             {
-                _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
+                _messageBox.ShowInformation(this, "No Color Selected.", Text);
                 return;
             }
 
@@ -422,7 +421,7 @@ namespace HFM.Forms
         {
             if (lstColors.SelectedIndex == -1)
             {
-                _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
+                _messageBox.ShowInformation(this, "No Color Selected.", Text);
                 return;
             }
 
@@ -444,7 +443,7 @@ namespace HFM.Forms
                 Color addColor = FindNearestKnown(dlg.Color);
                 if (_graphColors.Contains(addColor))
                 {
-                    _messageBoxView.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
+                    _messageBox.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
                        "{0} is already a graph color.", addColor.Name), Text);
                     return;
                 }
@@ -486,13 +485,13 @@ namespace HFM.Forms
         {
             if (lstColors.SelectedIndex == -1)
             {
-                _messageBoxView.ShowInformation(this, "No Color Selected.", Text);
+                _messageBox.ShowInformation(this, "No Color Selected.", Text);
                 return;
             }
 
             if (_graphColors.Count <= 3)
             {
-                _messageBoxView.ShowInformation(this, "Must have at least three colors.", Text);
+                _messageBox.ShowInformation(this, "Must have at least three colors.", Text);
                 return;
             }
 
