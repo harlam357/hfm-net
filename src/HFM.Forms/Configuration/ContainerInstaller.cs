@@ -10,124 +10,109 @@ using harlam357.Windows.Forms;
 
 namespace HFM.Forms.Configuration
 {
-   [ExcludeFromCodeCoverage]
-   public class ContainerInstaller : IWindsorInstaller
-   {
-      #region IWindsorInstaller Members
+    [ExcludeFromCodeCoverage]
+    public class ContainerInstaller : IWindsorInstaller
+    {
+        #region IWindsorInstaller Members
 
-      public void Install(IWindsorContainer container, IConfigurationStore store)
-      {
-         #region MVP
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            #region MVP
 
-         // MainPresenter - Singleton
-         container.Register(
-            Component.For<MainPresenter>(),
-            Component.For<IMainView, System.ComponentModel.ISynchronizeInvoke>()
-               .ImplementedBy<MainForm>(),
-            Component.For<Models.MainGridModel>(),
-            Component.For<Models.UserStatsDataModel>());
+            // MainPresenter - Singleton
+            container.Register(
+               Component.For<MainPresenter>(),
+               Component.For<IMainView, System.ComponentModel.ISynchronizeInvoke>()
+                  .ImplementedBy<MainForm>(),
+               Component.For<Models.MainGridModel>(),
+               Component.For<Models.UserStatsDataModel>());
 
-         // IFahClientSetupPresenter - Transient
-         container.Register(
-            Component.For<IFahClientSetupPresenter>()
-               .ImplementedBy<FahClientSetupPresenter>()
-                  .Named("FahClientSetupPresenter")
-                     .LifeStyle.Transient);
+            // HistoryPresenterModel - Transient
+            container.Register(
+                Component.For<HistoryPresenter>()
+                    .Named("HistoryPresenter")
+                    .LifeStyle.Transient,
+                Component.For<IHistoryView>()
+                    .ImplementedBy<HistoryForm>()
+                    .LifeStyle.Transient);
 
-         // HistoryPresenterModel - Transient
-         container.Register(
-             Component.For<HistoryPresenter>()
-                 .Named("HistoryPresenter")
-                 .LifeStyle.Transient,
-             Component.For<IHistoryView>()
-                 .ImplementedBy<HistoryForm>()
-                 .LifeStyle.Transient);
+            container.Register(
+               Component.For<IPresenterFactory>()
+                  .AsFactory());
 
-         container.Register(
-            Component.For<IPresenterFactory>()
-               .AsFactory());
+            // ProteinCalculatorModel - Transient
+            container.Register(
+               Component.For<Models.ProteinCalculatorModel>()
+                  .LifeStyle.Transient);
 
-         // ProteinCalculatorModel - Transient
-         container.Register(
-            Component.For<Models.ProteinCalculatorModel>()
-               .LifeStyle.Transient);
+            #endregion
 
-         #endregion
+            #region View Interfaces
 
-         #region View Interfaces
+            // Singleton Views
+            container.Register(
+               Component.For<IMessagesView>()
+                  .ImplementedBy<MessagesForm>(),
+               Component.For<IMessageBoxView>()
+                  .ImplementedBy<MessageBoxView>(),
+               Component.For<MessageBoxPresenter>()
+                   .Instance(MessageBoxPresenter.Default));
 
-         // IFahClientSetupView - Transient
-         container.Register(
-            Component.For<IFahClientSetupView>()
-               .ImplementedBy<FahClientSetupDialog>()
-               .LifeStyle.Transient);
+            // Transient Views
+            container.Register(
+               Component.For<IOpenFileDialogView>()
+                  .ImplementedBy<OpenFileDialogView>()
+                     .Named("OpenFileDialogView")
+                        .LifeStyle.Transient,
+               Component.For<ISaveFileDialogView>()
+                  .ImplementedBy<SaveFileDialogView>()
+                     .Named("SaveFileDialogView")
+                        .LifeStyle.Transient,
+               Component.For<IFolderBrowserView>()
+                  .ImplementedBy<FolderBrowserView>()
+                     .Named("FolderBrowserView")
+                        .LifeStyle.Transient,
+               Component.For<IQueryView>()
+                  .ImplementedBy<QueryDialog>()
+                     .Named("QueryDialog")
+                        .LifeStyle.Transient,
+               Component.For<IBenchmarksView>()
+                  .ImplementedBy<BenchmarksForm>()
+                     .Named("BenchmarksForm")
+                        .LifeStyle.Transient,
+               Component.For<IPreferencesView>()
+                  .ImplementedBy<PreferencesDialog>()
+                     .Named("PreferencesDialog")
+                        .LifeStyle.Transient,
+               Component.For<IProteinCalculatorView>()
+                  .ImplementedBy<ProteinCalculatorForm>()
+                     .Named("ProteinCalculatorForm")
+                        .LifeStyle.Transient,
+               Component.For<IViewFactory>()
+                  .AsFactory());
 
-         // Singleton Views
-         container.Register(
-            Component.For<IMessagesView>()
-               .ImplementedBy<MessagesForm>(),
-            Component.For<IMessageBoxView>()
-               .ImplementedBy<MessageBoxView>());
+            #endregion
 
-         // Transient Views
-         container.Register(
-            Component.For<IOpenFileDialogView>()
-               .ImplementedBy<OpenFileDialogView>()
-                  .Named("OpenFileDialogView")
-                     .LifeStyle.Transient,
-            Component.For<ISaveFileDialogView>()
-               .ImplementedBy<SaveFileDialogView>()
-                  .Named("SaveFileDialogView")
-                     .LifeStyle.Transient,
-            Component.For<IFolderBrowserView>()
-               .ImplementedBy<FolderBrowserView>()
-                  .Named("FolderBrowserView")
-                     .LifeStyle.Transient,
-            Component.For<IQueryView>()
-               .ImplementedBy<QueryDialog>()
-                  .Named("QueryDialog")
-                     .LifeStyle.Transient,
-            Component.For<IBenchmarksView>()
-               .ImplementedBy<BenchmarksForm>()
-                  .Named("BenchmarksForm")
-                     .LifeStyle.Transient,
-            Component.For<IPreferencesView>()
-               .ImplementedBy<PreferencesDialog>()
-                  .Named("PreferencesDialog")
-                     .LifeStyle.Transient,
-            Component.For<IProteinCalculatorView>()
-               .ImplementedBy<ProteinCalculatorForm>()
-                  .Named("ProteinCalculatorForm")
-                     .LifeStyle.Transient,
-            Component.For<IViewFactory>()
-               .AsFactory());
+            #region Service Interfaces
 
-         #endregion
+            // IAutoRun - Singleton
+            container.Register(
+               Component.For<IAutoRun>()
+                  .ImplementedBy<AutoRun>());
 
-         #region Service Interfaces
+            // IExternalProcessStarter - Singleton
+            container.Register(
+               Component.For<IExternalProcessStarter>()
+                  .ImplementedBy<ExternalProcessStarter>());
 
-         // IAutoRun - Singleton
-         container.Register(
-            Component.For<IAutoRun>()
-               .ImplementedBy<AutoRun>());
+            // IUpdateLogic - Singleton
+            container.Register(
+               Component.For<IUpdateLogic>()
+                  .ImplementedBy<UpdateLogic>());
 
-         // IExternalProcessStarter - Singleton
-         container.Register(
-            Component.For<IExternalProcessStarter>()
-               .ImplementedBy<ExternalProcessStarter>());
+            #endregion
+        }
 
-         // IUpdateLogic - Singleton
-         container.Register(
-            Component.For<IUpdateLogic>()
-               .ImplementedBy<UpdateLogic>());
-
-         #endregion
-
-         // ClientSettingsManager - Singleton
-         container.Register(
-            Component.For<ClientSettingsManager>());
-      }
-
-      #endregion
-   }
+        #endregion
+    }
 }

@@ -1,28 +1,11 @@
-﻿/*
- * HFM.NET - FAH Client Settings Model
- * Copyright (C) 2009-2014 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
+using HFM.Client;
 using HFM.Client.ObjectModel;
 using HFM.Core.Client;
 using HFM.Core.Net;
@@ -31,9 +14,25 @@ namespace HFM.Forms.Models
 {
     public class FahClientSettingsModel : INotifyPropertyChanged
     {
-        public FahClientSettingsModel()
+        private bool _connectEnabled = true;
+
+        public bool ConnectEnabled
         {
-            _slots = new List<FahClientSettingsSlotModel>();
+            get => _connectEnabled && !Error;
+            set
+            {
+                if (_connectEnabled != value)
+                {
+                    _connectEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool ValidateAcceptance()
+        {
+            OnPropertyChanged(String.Empty);
+            return !Error;
         }
 
         public bool Error =>
@@ -55,8 +54,6 @@ namespace HFM.Forms.Models
                 }
             }
         }
-
-        public bool NameEmpty => Name.Length == 0;
 
         public bool NameError => !ClientSettings.ValidateName(Name);
 
@@ -111,16 +108,14 @@ namespace HFM.Forms.Models
 
         public Guid Guid { get; set; }
 
-        private readonly List<FahClientSettingsSlotModel> _slots;
-
-        public IEnumerable<FahClientSettingsSlotModel> Slots => _slots.AsReadOnly();
+        public ICollection<FahClientSettingsSlotModel> Slots { get; } = new List<FahClientSettingsSlotModel>();
 
         public void RefreshSlots(SlotCollection slots)
         {
-            _slots.Clear();
+            Slots.Clear();
             foreach (var slot in slots)
             {
-                _slots.Add(new FahClientSettingsSlotModel
+                Slots.Add(new FahClientSettingsSlotModel
                 {
                     ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.ID),
                     SlotType = SlotTypeConvert.FromSlotOptions(slot.SlotOptions).ToString(),
@@ -131,16 +126,17 @@ namespace HFM.Forms.Models
             OnPropertyChanged(nameof(Slots));
         }
 
-        #region INotifyPropertyChanged Members
+        public virtual FahClientConnection CreateConnection()
+        {
+            return new FahClientConnection(Server, Port);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        #endregion
     }
 
     public class FahClientSettingsSlotModel

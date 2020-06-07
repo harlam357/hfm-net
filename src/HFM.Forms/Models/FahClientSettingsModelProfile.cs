@@ -9,7 +9,8 @@ namespace HFM.Forms.Models
     {
         public FahClientSettingsModelProfile()
         {
-            CreateMap<ClientSettings, FahClientSettingsModel>();
+            CreateMap<ClientSettings, FahClientSettingsModel>()
+                .ForMember(dest => dest.ConnectEnabled, opt => opt.Ignore());
             CreateMap<FahClientSettingsModel, ClientSettings>()
                 .ForMember(dest => dest.ClientType, opt => opt.UseValue(ClientType.FahClient));
         }

@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms
 {
-   partial class FahClientSetupDialog
+   partial class FahClientSettingsDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -29,7 +29,7 @@
       private void InitializeComponent()
       {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FahClientSetupDialog));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FahClientSettingsDialog));
             this.DummyTextBox = new System.Windows.Forms.TextBox();
             this.DialogCancelButton = new System.Windows.Forms.Button();
             this.DialogOkButton = new System.Windows.Forms.Button();
@@ -252,11 +252,11 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FahClientSetupDialog";
+            this.Name = "FahClientSettingsDialog";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Client Setup";
-            this.Shown += new System.EventHandler(this.FahClientSetupDialogShown);
+            this.Shown += new System.EventHandler(this.FahClientSettingsDialogShown);
             this.SetupTabControl.ResumeLayout(false);
             this.ConnectionTabPage.ResumeLayout(false);
             this.ConnectionTabPage.PerformLayout();

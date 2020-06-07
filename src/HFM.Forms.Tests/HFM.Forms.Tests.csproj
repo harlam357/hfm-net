@@ -114,9 +114,13 @@
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
+    <Compile Include="Mocks\MockMessageBoxPresenter.cs" />
+    <Compile Include="Mocks\MockWin32Dialog.cs" />
     <Compile Include="Models\FahClientSettingsModelProfileTests.cs" />
+    <Compile Include="Models\FahClientSettingsModelTests.cs" />
     <Compile Include="Models\HistoryPresenterModelTests.cs" />
     <Compile Include="Models\UserStatsDataModelProfileTests.cs" />
+    <Compile Include="Presenters\FahClientSettingsPresenterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AutoRunTests.cs" />
     <Compile Include="SetUpFixture.cs" />

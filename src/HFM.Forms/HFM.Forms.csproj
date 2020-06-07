@@ -159,6 +159,7 @@
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Presenters\MessageBoxPresenter.cs" />
     <Compile Include="FahClientSetupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +193,7 @@
       <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
     </Compile>
     <Compile Include="ProteinBenchmarkIdentifierExtensions.cs" />
+    <Compile Include="Views\IWin32Dialog.cs" />
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>

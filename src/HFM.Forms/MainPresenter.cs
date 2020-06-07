@@ -16,8 +16,6 @@ using System.Windows.Forms;
 
 using AutoMapper;
 
-using harlam357.Windows.Forms;
-
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -55,7 +53,7 @@ namespace HFM.Forms
 
         private readonly IMainView _view;
         private readonly IMessagesView _messagesView;
-        private readonly IMessageBoxView _messageBoxView;
+        private readonly MessageBoxPresenter _messageBox;
 
         private readonly IViewFactory _viewFactory;
         private readonly IPresenterFactory _presenterFactory;
@@ -76,10 +74,10 @@ namespace HFM.Forms
         #region Constructor
 
         public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
-                             IMessageBoxView messageBoxView, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
+                             MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                              ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
                              IExternalProcessStarter processStarter,
-                             IPreferenceSet prefs, ClientSettingsManager settingsManager)
+                             IPreferenceSet prefs)
         {
             _gridModel = mainGridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
@@ -108,7 +106,7 @@ namespace HFM.Forms
             // Views
             _view = view;
             _messagesView = messagesView;
-            _messageBoxView = messageBoxView;
+            _messageBox = messageBox;
             //
             _viewFactory = viewFactory;
             _presenterFactory = presenterFactory;
@@ -121,7 +119,7 @@ namespace HFM.Forms
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
-            _settingsManager = settingsManager;
+            _settingsManager = new ClientSettingsManager();
 
             _clientSettingsMapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
 
@@ -370,7 +368,7 @@ namespace HFM.Forms
                     string message = String.Format(CultureInfo.CurrentCulture,
                                                    "Update process failed to start with the following error:{0}{0}{1}",
                                                    Environment.NewLine, ex.Message);
-                    _messageBoxView.ShowError(_view, message, _view.Text);
+                    _messageBox.ShowError(_view, message, _view.Text);
                 }
             }
         }
@@ -619,13 +617,13 @@ namespace HFM.Forms
 
                 if (_clientConfiguration.Count == 0)
                 {
-                    _messageBoxView.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+                    _messageBox.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                _messageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                    "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
         }
@@ -686,7 +684,7 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                _messageBoxView.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                _messageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                     "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
         }
@@ -702,7 +700,7 @@ namespace HFM.Forms
             foreach (var benchmarkClientIdentifier in benchmarkService.GetClientIdentifiers())
             {
                 var clientIdentifier = clients.Select(x => (ClientIdentifier?)x.Settings.ClientIdentifier)
-                    .FirstOrDefault(x => x.Value.Equals(benchmarkClientIdentifier) || 
+                    .FirstOrDefault(x => x.Value.Equals(benchmarkClientIdentifier) ||
                                          ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Value, benchmarkClientIdentifier));
 
                 if (clientIdentifier.HasValue)
@@ -716,7 +714,7 @@ namespace HFM.Forms
         {
             if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
             {
-                DialogResult result = _messageBoxView.AskYesNoCancelQuestion(_view,
+                DialogResult result = _messageBox.AskYesNoCancelQuestion(_view,
                    String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
                    _view.Text);
 
@@ -782,30 +780,30 @@ namespace HFM.Forms
 
         internal void ClientsAddClick()
         {
-            var dialog = _presenterFactory.GetFahClientSetupPresenter();
-            dialog.SettingsModel = new FahClientSettingsModel();
-            while (dialog.ShowDialog(_view) == DialogResult.OK)
+            using (var dialog = new FahClientSettingsPresenter(Logger, new FahClientSettingsModel(), _messageBox))
             {
-                var settings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-                //if (_clientDictionary.ContainsKey(settings.Name))
-                //{
-                //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
-                //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
-                //   continue;
-                //}
-                // perform the add
-                try
+                while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
-                    _clientConfiguration.Add(settings);
-                    break;
-                }
-                catch (ArgumentException ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                    _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                    var settings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.Model);
+                    //if (_clientDictionary.ContainsKey(settings.Name))
+                    //{
+                    //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
+                    //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
+                    //   continue;
+                    //}
+                    // perform the add
+                    try
+                    {
+                        _clientConfiguration.Add(settings);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Logger.Error(ex.Message, ex);
+                        _messageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                    }
                 }
             }
-            _presenterFactory.Release(dialog);
         }
 
         public void ClientsEditClick()
@@ -823,24 +821,25 @@ namespace HFM.Forms
             ClientSettings originalSettings = client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
-            var dialog = _presenterFactory.GetFahClientSetupPresenter();
-            dialog.SettingsModel = _clientSettingsMapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
-            while (dialog.ShowDialog(_view) == DialogResult.OK)
+            var model = _clientSettingsMapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
+            using (var dialog = new FahClientSettingsPresenter(Logger, model, _messageBox))
             {
-                var newSettings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.SettingsModel);
-                // perform the edit
-                try
+                while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
-                    _clientConfiguration.Edit(originalSettings.Name, newSettings);
-                    break;
-                }
-                catch (ArgumentException ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                    _messageBoxView.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                    var newSettings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.Model);
+                    // perform the edit
+                    try
+                    {
+                        _clientConfiguration.Edit(originalSettings.Name, newSettings);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Logger.Error(ex.Message, ex);
+                        _messageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                    }
                 }
             }
-            _presenterFactory.Release(dialog);
         }
 
         public void ClientsDeleteClick()
@@ -879,7 +878,7 @@ namespace HFM.Forms
             {
                 string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.",
                                                _gridModel.SelectedSlot.Settings.Name);
-                _messageBoxView.ShowInformation(_view, message, _view.Text);
+                _messageBox.ShowInformation(_view, message, _view.Text);
             }
         }
 
@@ -1091,7 +1090,7 @@ namespace HFM.Forms
                     if (dialog.Exception != null)
                     {
                         Logger.Error(dialog.Exception.Message, dialog.Exception);
-                        _messageBoxView.ShowError(dialog.Exception.Message, Core.Application.NameAndVersion);
+                        _messageBox.ShowError(dialog.Exception.Message, Core.Application.NameAndVersion);
                     }
                 }
 
@@ -1114,7 +1113,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                _messageBoxView.ShowError(ex.Message, Core.Application.NameAndVersion);
+                _messageBox.ShowError(ex.Message, Core.Application.NameAndVersion);
             }
         }
 
@@ -1283,7 +1282,7 @@ namespace HFM.Forms
         {
             if (message != null)
             {
-                _messageBoxView.ShowError(_view, message, _view.Text);
+                _messageBox.ShowError(_view, message, _view.Text);
             }
         }
 

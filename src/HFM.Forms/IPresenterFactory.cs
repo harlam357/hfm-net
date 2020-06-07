@@ -1,12 +1,10 @@
 ﻿
 namespace HFM.Forms
 {
-   public interface IPresenterFactory
-   {
-      IFahClientSetupPresenter GetFahClientSetupPresenter();
+    public interface IPresenterFactory
+    {
+        HistoryPresenter GetHistoryPresenter();
 
-      HistoryPresenter GetHistoryPresenter();
-
-      void Release(object presenter);
-   }
+        void Release(object presenter);
+    }
 }
