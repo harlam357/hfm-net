@@ -126,6 +126,9 @@
     <Compile Include="ClientSettingsManager.cs" />
     <Compile Include="Configuration\ContainerInstaller.cs" />
     <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
+    <Compile Include="Controls\BindableToolStripStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>
