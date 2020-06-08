@@ -1,4 +1,3 @@
-using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
@@ -63,7 +62,7 @@ namespace HFM.Forms
             this.txtBenchmarks = new System.Windows.Forms.TextBox();
             this.tabGraphConfig = new System.Windows.Forms.TabPage();
             this.grpClientLayout = new System.Windows.Forms.GroupBox();
-            this.pnlClientLayout = new harlam357.Windows.Forms.RadioPanel();
+            this.pnlClientLayout = new HFM.Forms.Controls.RadioPanel();
             this.udClientsPerGraph = new System.Windows.Forms.NumericUpDown();
             this.rdoClientsPerGraph = new System.Windows.Forms.RadioButton();
             this.rdoSingleGraph = new System.Windows.Forms.RadioButton();
@@ -812,7 +811,7 @@ namespace HFM.Forms
       private System.Windows.Forms.Label KFactorLabel;
       private System.Windows.Forms.GroupBox grpColors;
       private System.Windows.Forms.GroupBox grpClientLayout;
-      private harlam357.Windows.Forms.RadioPanel pnlClientLayout;
+      private HFM.Forms.Controls.RadioPanel pnlClientLayout;
       private System.Windows.Forms.RadioButton rdoClientsPerGraph;
       private System.Windows.Forms.RadioButton rdoSingleGraph;
       private System.Windows.Forms.NumericUpDown udClientsPerGraph;

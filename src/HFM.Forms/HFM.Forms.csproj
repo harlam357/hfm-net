@@ -132,6 +132,9 @@
     <Compile Include="Controls\DataGridViewColumnSelector.cs" />
     <Compile Include="Controls\DataGridViewQueryValueColumn.cs" />
     <Compile Include="Controls\DataGridViewQueryValueTextBoxCell.cs" />
+    <Compile Include="Controls\RadioPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\RichTextBoxExt.cs">
       <SubType>Component</SubType>
     </Compile>

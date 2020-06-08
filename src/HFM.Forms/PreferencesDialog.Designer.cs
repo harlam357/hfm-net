@@ -1,28 +1,5 @@
-/*
- * HFM.NET - User Preferences Form
- * Copyright (C) 2006-2007 David Rawling
- * Copyright (C) 2009-2010 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
-using System;
 
 using harlam357.Windows.Forms;
-
-using HFM.Forms.Controls;
 
 namespace HFM.Forms
 {
@@ -73,14 +50,14 @@ namespace HFM.Forms
             this.WebSitePasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
             this.WebSiteUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
             this.WebSiteServerTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.WebGenTypePanel = new harlam357.Windows.Forms.RadioPanel();
+            this.WebGenTypePanel = new HFM.Forms.Controls.RadioPanel();
             this.UploadTypeLabel = new System.Windows.Forms.Label();
             this.WebGenTypeFtpRadioButton = new System.Windows.Forms.RadioButton();
             this.WebGenTypePathRadioButton = new System.Windows.Forms.RadioButton();
             this.WebSitePasswordLabel = new System.Windows.Forms.Label();
             this.WebSiteUsernameLabel = new System.Windows.Forms.Label();
             this.WebSiteServerLabel = new System.Windows.Forms.Label();
-            this.FtpModePanel = new harlam357.Windows.Forms.RadioPanel();
+            this.FtpModePanel = new HFM.Forms.Controls.RadioPanel();
             this.radioActive = new System.Windows.Forms.RadioButton();
             this.radioPassive = new System.Windows.Forms.RadioButton();
             this.lblFtpMode = new System.Windows.Forms.Label();
@@ -2103,13 +2080,13 @@ namespace HFM.Forms
       private System.Windows.Forms.CheckBox chkXml;
       private System.Windows.Forms.NumericUpDown udLimitSize;
       private System.Windows.Forms.CheckBox chkLimitSize;
-      private RadioPanel FtpModePanel;
+      private HFM.Forms.Controls.RadioPanel FtpModePanel;
       private System.Windows.Forms.CheckBox chkEtaAsDate;
       private System.Windows.Forms.Label WebSiteServerLabel;
       private System.Windows.Forms.Label WebSitePasswordLabel;
       private System.Windows.Forms.Label WebSiteUsernameLabel;
       private System.Windows.Forms.CheckBox DuplicateProjectCheckBox;
-      private RadioPanel WebGenTypePanel;
+      private HFM.Forms.Controls.RadioPanel WebGenTypePanel;
       private ValidatingTextBox WebSitePasswordTextBox;
       private ValidatingTextBox WebSiteUsernameTextBox;
       private ValidatingTextBox WebSiteServerTextBox;

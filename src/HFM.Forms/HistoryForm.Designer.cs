@@ -56,7 +56,7 @@ namespace HFM.Forms
          this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
          this.ResultsTextBox = new System.Windows.Forms.TextBox();
          this.PpdCalculationLabel = new System.Windows.Forms.Label();
-         this.rdoPanelProduction = new harlam357.Windows.Forms.RadioPanel();
+         this.rdoPanelProduction = new HFM.Forms.Controls.RadioPanel();
          this.PpdCalculationStandardRadioButton = new System.Windows.Forms.RadioButton();
          this.PpdCalculationBonusFrameTimeRadioButton = new System.Windows.Forms.RadioButton();
          this.PpdCalculationBonusDownloadTimeRadioButton = new System.Windows.Forms.RadioButton();
@@ -551,7 +551,7 @@ namespace HFM.Forms
       private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
       private System.Windows.Forms.TextBox ResultsTextBox;
       private System.Windows.Forms.Label PpdCalculationLabel;
-      private harlam357.Windows.Forms.RadioPanel rdoPanelProduction;
+      private HFM.Forms.Controls.RadioPanel rdoPanelProduction;
       private System.Windows.Forms.RadioButton PpdCalculationStandardRadioButton;
       private System.Windows.Forms.RadioButton PpdCalculationBonusFrameTimeRadioButton;
       private System.Windows.Forms.RadioButton PpdCalculationBonusDownloadTimeRadioButton;
