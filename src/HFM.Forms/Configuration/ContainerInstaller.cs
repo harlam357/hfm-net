@@ -6,8 +6,6 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-using harlam357.Windows.Forms;
-
 namespace HFM.Forms.Configuration
 {
     [ExcludeFromCodeCoverage]
@@ -58,10 +56,6 @@ namespace HFM.Forms.Configuration
 
             // Transient Views
             container.Register(
-               Component.For<IFolderBrowserView>()
-                  .ImplementedBy<FolderBrowserView>()
-                     .Named("FolderBrowserView")
-                        .LifeStyle.Transient,
                Component.For<IQueryView>()
                   .ImplementedBy<QueryDialog>()
                      .Named("QueryDialog")
