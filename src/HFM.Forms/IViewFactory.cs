@@ -5,10 +5,6 @@ namespace HFM.Forms
 {
     public interface IViewFactory
     {
-        IOpenFileDialogView GetOpenFileDialogView();
-
-        ISaveFileDialogView GetSaveFileDialogView();
-
         IFolderBrowserView GetFolderBrowserView();
 
         IQueryView GetQueryDialog();

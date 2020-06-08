@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
+    <Compile Include="Mocks\MockFileDialogPresenter.cs" />
     <Compile Include="Mocks\MockMessageBoxPresenter.cs" />
     <Compile Include="Mocks\MockWin32Dialog.cs" />
     <Compile Include="Models\FahClientSettingsModelProfileTests.cs" />

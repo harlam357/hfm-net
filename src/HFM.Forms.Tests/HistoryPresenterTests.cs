@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-using harlam357.Windows.Forms;
-
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
@@ -348,12 +346,12 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.ViewFactory.Stub(x => x.GetSaveFileDialogView()).Return(CreateSaveFileDialogView());
             var workUnitRows = new[] { new WorkUnitRow() };
             presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(workUnitRows);
+            var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
-            presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
             // Assert
             Assert.AreEqual("test.csv", serializer.FileName);
             Assert.IsTrue(workUnitRows.SequenceEqual(serializer.Rows));
@@ -385,13 +383,12 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.ViewFactory.Stub(x => x.GetSaveFileDialogView()).Return(CreateSaveFileDialogView());
             presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
-
             var logger = presenter.Logger;
             logger.Expect(x => x.Error("", null)).IgnoreArguments();
+            var saveFile = CreateSaveFileDialogView();
             // Act
-            presenter.ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
             logger.VerifyAllExpectations();
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
@@ -414,13 +411,12 @@ namespace HFM.Forms
             }
         }
 
-        private static ISaveFileDialogView CreateSaveFileDialogView()
+        private static FileDialogPresenter CreateSaveFileDialogView()
         {
-            var saveFileDialogView = MockRepository.GenerateStub<ISaveFileDialogView>();
-            saveFileDialogView.FileName = "test.csv";
-            saveFileDialogView.Stub(x => x.FilterIndex).Return(1);
-            saveFileDialogView.Stub(x => x.ShowDialog()).Return(DialogResult.OK);
-            return saveFileDialogView;
+            var saveFile = new MockFileDialogPresenter(owner => DialogResult.OK);
+            saveFile.FileName = "test.csv";
+            saveFile.FilterIndex = 1;
+            return saveFile;
         }
     }
 }

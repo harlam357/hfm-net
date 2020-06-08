@@ -58,14 +58,6 @@ namespace HFM.Forms.Configuration
 
             // Transient Views
             container.Register(
-               Component.For<IOpenFileDialogView>()
-                  .ImplementedBy<OpenFileDialogView>()
-                     .Named("OpenFileDialogView")
-                        .LifeStyle.Transient,
-               Component.For<ISaveFileDialogView>()
-                  .ImplementedBy<SaveFileDialogView>()
-                     .Named("SaveFileDialogView")
-                        .LifeStyle.Transient,
                Component.For<IFolderBrowserView>()
                   .ImplementedBy<FolderBrowserView>()
                      .Named("FolderBrowserView")

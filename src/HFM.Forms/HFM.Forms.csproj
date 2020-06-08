@@ -159,6 +159,7 @@
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Presenters\FileDialogPresenter.cs" />
     <Compile Include="Presenters\MessageBoxPresenter.cs" />
     <Compile Include="Views\FahClientSettingsDialog.cs">
       <SubType>Form</SubType>

@@ -583,19 +583,25 @@ namespace HFM.Forms
 
         public void FileOpenClick()
         {
+            using (var openFile = DefaultFileDialogPresenter.OpenFile())
+            {
+                FileOpenClick(openFile);
+            }
+        }
+
+        public void FileOpenClick(FileDialogPresenter openFile)
+        {
             if (CheckForConfigurationChanges())
             {
-                var openFileDialogView = _viewFactory.GetOpenFileDialogView();
-                openFileDialogView.DefaultExt = _settingsManager.FileExtension;
-                openFileDialogView.Filter = _settingsManager.FileTypeFilters;
-                openFileDialogView.FileName = _settingsManager.FileName;
-                openFileDialogView.RestoreDirectory = true;
-                if (openFileDialogView.ShowDialog() == DialogResult.OK)
+                openFile.DefaultExt = _settingsManager.FileExtension;
+                openFile.Filter = _settingsManager.FileTypeFilters;
+                openFile.FileName = _settingsManager.FileName;
+                openFile.RestoreDirectory = true;
+                if (openFile.ShowDialog() == DialogResult.OK)
                 {
                     ClearConfiguration();
-                    LoadConfigFile(openFileDialogView.FileName, openFileDialogView.FilterIndex);
+                    LoadConfigFile(openFile.FileName, openFile.FilterIndex);
                 }
-                _viewFactory.Release(openFileDialogView);
             }
         }
 
@@ -656,19 +662,25 @@ namespace HFM.Forms
 
         public void FileSaveAsClick()
         {
+            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+            {
+                FileSaveAsClick(saveFile);
+            }
+        }
+        
+        public void FileSaveAsClick(FileDialogPresenter saveFile)
+        {
             if (_clientConfiguration.Count == 0)
             {
                 return;
             }
 
-            var saveFileDialogView = _viewFactory.GetSaveFileDialogView();
-            saveFileDialogView.DefaultExt = _settingsManager.FileExtension;
-            saveFileDialogView.Filter = _settingsManager.FileTypeFilters;
-            if (saveFileDialogView.ShowDialog() == DialogResult.OK)
+            saveFile.DefaultExt = _settingsManager.FileExtension;
+            saveFile.Filter = _settingsManager.FileTypeFilters;
+            if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                WriteClientConfiguration(saveFileDialogView.FileName, saveFileDialogView.FilterIndex);
+                WriteClientConfiguration(saveFile.FileName, saveFile.FilterIndex);
             }
-            _viewFactory.Release(saveFileDialogView);
         }
 
         private void WriteClientConfiguration(string fileName, int filterIndex)

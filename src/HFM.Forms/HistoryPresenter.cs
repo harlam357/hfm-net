@@ -90,21 +90,23 @@ namespace HFM.Forms
             Model.Update(Preferences, QueryDataContainer);
         }
 
-        internal void ExportClick()
+        public void ExportClick()
         {
-            ExportClick(new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
+            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+            {
+                ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
+            }
         }
 
-        internal void ExportClick(IList<IFileSerializer<List<WorkUnitRow>>> serializers)
+        internal void ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitRow>>> serializers)
         {
-            var saveFileDialogView = ViewFactory.GetSaveFileDialogView();
-            saveFileDialogView.Filter = serializers.GetFileTypeFilters();
-            if (saveFileDialogView.ShowDialog() == DialogResult.OK)
+            saveFile.Filter = serializers.GetFileTypeFilters();
+            if (saveFile.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    var serializer = serializers[saveFileDialogView.FilterIndex - 1];
-                    serializer.Serialize(saveFileDialogView.FileName, Model.Repository.Fetch(Model.SelectedWorkUnitQuery, Model.BonusCalculation).ToList());
+                    var serializer = serializers[saveFile.FilterIndex - 1];
+                    serializer.Serialize(saveFile.FileName, Model.Repository.Fetch(Model.SelectedWorkUnitQuery, Model.BonusCalculation).ToList());
                 }
                 catch (Exception ex)
                 {
@@ -113,7 +115,6 @@ namespace HFM.Forms
                        "The history data export failed.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
                 }
             }
-            ViewFactory.Release(saveFileDialogView);
         }
 
         public void FirstPageClicked()

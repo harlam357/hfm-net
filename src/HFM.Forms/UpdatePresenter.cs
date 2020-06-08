@@ -20,7 +20,6 @@ namespace HFM.Forms
         private readonly ApplicationUpdate _updateData;
         private readonly IWebProxy _proxy;
         private readonly IUpdateView _updateView;
-        private readonly harlam357.Windows.Forms.ISaveFileDialogView _saveFileView;
 
         #endregion
 
@@ -44,16 +43,13 @@ namespace HFM.Forms
         #endregion
 
         /// <summary>
-        /// Raises when the download process is finished, regardless of whether is was successful, errored, or canceled.
+        /// Raises when the download process is finished.
         /// </summary>
         public event EventHandler DownloadFinished;
 
         private void OnDownloadFinished(EventArgs e)
         {
-            if (DownloadFinished != null)
-            {
-                DownloadFinished(this, e);
-            }
+            DownloadFinished?.Invoke(this, e);
         }
 
         #region Constructors
@@ -65,19 +61,16 @@ namespace HFM.Forms
             _updateData = updateData;
             _proxy = proxy;
             _updateView = new UpdateDialog(updateData, applicationName, applicationVersion);
-            _saveFileView = new harlam357.Windows.Forms.SaveFileDialogView();
             _updateView.AttachPresenter(this);
         }
 
         public UpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData,
-                               IWebProxy proxy, IUpdateView updateView, harlam357.Windows.Forms.ISaveFileDialogView saveFileView,
-                               WebOperation webOperation)
+                               IWebProxy proxy, IUpdateView updateView, WebOperation webOperation)
         {
             _exceptionLogger = exceptionLogger;
             _updateData = updateData;
             _proxy = proxy;
             _updateView = updateView;
-            _saveFileView = saveFileView;
             _webOperation = webOperation;
             _updateView.AttachPresenter(this);
         }
@@ -98,11 +91,19 @@ namespace HFM.Forms
 
         private bool ShowSaveFileView(int index)
         {
-            _saveFileView.FileName = _updateData.UpdateFiles[index].Name;
-            if (_saveFileView.ShowDialog().Equals(DialogResult.OK))
+            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+            {
+                return ShowSaveFileView(saveFile, index);
+            }
+        }
+
+        private bool ShowSaveFileView(FileDialogPresenter saveFile, int index)
+        {
+            saveFile.FileName = _updateData.UpdateFiles[index].Name;
+            if (saveFile.ShowDialog() == DialogResult.OK)
             {
                 SelectedUpdate = _updateData.UpdateFiles[index];
-                LocalFilePath = _saveFileView.FileName;
+                LocalFilePath = saveFile.FileName;
                 return true;
             }
 
