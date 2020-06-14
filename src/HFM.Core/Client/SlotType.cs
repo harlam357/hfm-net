@@ -51,6 +51,7 @@ namespace HFM.Core.Client
                 case "GRO_A5":
                 case "GRO-A6":
                 case "GRO_A7":
+                case "GRO_A8":
                     return SlotType.CPU;
                 case "GROGPU2":
                 case "GROGPU2-MT":
@@ -92,7 +93,8 @@ namespace HFM.Core.Client
                 case "A3": // Gromacs SMP2
                 case "A5": // Gromacs SMP2
                 case "A6": // Gromacs SMP2
-                case "A7":
+                case "A7": // Gromacs A7
+                case "A8": // Gromacs A8
                     return SlotType.CPU;
                 case "11": // GPU2 - GROGPU2
                 case "12": // GPU2 - ATI-DEV
