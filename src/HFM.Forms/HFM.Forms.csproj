@@ -129,6 +129,9 @@
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\DataErrorTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DataGridViewCalendarEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>

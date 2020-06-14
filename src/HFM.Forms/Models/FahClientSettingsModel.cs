@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 using HFM.Client;
@@ -12,13 +13,13 @@ using HFM.Core.Net;
 
 namespace HFM.Forms.Models
 {
-    public class FahClientSettingsModel : INotifyPropertyChanged
+    public class FahClientSettingsModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private bool _connectEnabled = true;
 
         public bool ConnectEnabled
         {
-            get => _connectEnabled && !Error;
+            get => _connectEnabled && !HasError;
             set
             {
                 if (_connectEnabled != value)
@@ -32,13 +33,38 @@ namespace HFM.Forms.Models
         public bool ValidateAcceptance()
         {
             OnPropertyChanged(String.Empty);
-            return !Error;
+            return !HasError;
         }
 
-        public bool Error =>
-            NameError ||
-            ServerError ||
-            PortError;
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case nameof(Name):
+                        return ClientSettings.ValidateName(Name) ? null : NameError;
+                    case nameof(Server):
+                        return HostName.Validate(Server) ? null : ServerError;
+                    case nameof(Port):
+                        return TcpPort.Validate(Port) ? null : PortError;
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                var names = new[] { nameof(Name), nameof(Server), nameof(Port) };
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
+            }
+        }
+
+        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         private string _name = String.Empty;
 
@@ -55,7 +81,9 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool NameError => !ClientSettings.ValidateName(Name);
+        private const string NameError = "Client name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[]). I" +
+                                         "t must be at\r\nleast three characters long and must not begin or\r\nend with a dot " +
+                                         "(.) or a space.";
 
         private string _server = String.Empty;
 
@@ -72,7 +100,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool ServerError => !HostName.Validate(Server);
+        private const string ServerError = "Must be a valid host name or IP address.";
 
         private int _port = ClientSettings.DefaultPort;
 
@@ -89,7 +117,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool PortError => !TcpPort.Validate(Port);
+        private static readonly string PortError = $"Must be greater than zero and less than {UInt16.MaxValue}";
 
         private string _password = String.Empty;
 

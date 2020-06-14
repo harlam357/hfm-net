@@ -36,7 +36,7 @@ namespace HFM.Forms
 
         protected void ConnectIfModelHasNoError()
         {
-            if (!Model.Error)
+            if (!Model.HasError)
             {
                 try
                 {
@@ -96,6 +96,12 @@ namespace HFM.Forms
                     }
 
                     Model.RefreshSlots(slotCollection);
+                }
+                else
+                {
+                    MessageBox.ShowError(Dialog, "Connected to the FAHClient but did not read any slot information.  Are you missing a password?", Core.Application.NameAndVersion);
+                    Connection.Close();
+                    Model.ConnectEnabled = !Connection.Connected;
                 }
             }
         }

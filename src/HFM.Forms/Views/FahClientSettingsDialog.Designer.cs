@@ -37,15 +37,15 @@
             this.ConnectionTabPage = new System.Windows.Forms.TabPage();
             this.SlotsDataGridView = new System.Windows.Forms.DataGridView();
             this.ConnectButton = new System.Windows.Forms.Button();
-            this.AddressPortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.AddressPortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.PasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.PasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.AddressPortLabel = new System.Windows.Forms.Label();
             this.AddressLabel = new System.Windows.Forms.Label();
-            this.AddressTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.AddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.ClientNameLabel = new System.Windows.Forms.Label();
-            this.ClientNameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.ClientNameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.SetupTabControl.SuspendLayout();
             this.ConnectionTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SlotsDataGridView)).BeginInit();
@@ -140,7 +140,6 @@
             this.AddressPortTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.AddressPortTextBox.DoubleBuffered = true;
             this.AddressPortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.AddressPortTextBox.ErrorState = false;
             this.AddressPortTextBox.ErrorToolTip = this.toolTip1;
             this.AddressPortTextBox.ErrorToolTipDuration = 5000;
             this.AddressPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -149,14 +148,12 @@
             this.AddressPortTextBox.Name = "AddressPortTextBox";
             this.AddressPortTextBox.Size = new System.Drawing.Size(61, 20);
             this.AddressPortTextBox.TabIndex = 5;
-            this.AddressPortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // PasswordTextBox
             // 
             this.PasswordTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.PasswordTextBox.DoubleBuffered = true;
             this.PasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.PasswordTextBox.ErrorState = false;
             this.PasswordTextBox.ErrorToolTip = this.toolTip1;
             this.PasswordTextBox.ErrorToolTipDuration = 5000;
             this.PasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -166,7 +163,6 @@
             this.PasswordTextBox.Size = new System.Drawing.Size(139, 20);
             this.PasswordTextBox.TabIndex = 7;
             this.PasswordTextBox.UseSystemPasswordChar = true;
-            this.PasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // PasswordLabel
             // 
@@ -200,16 +196,14 @@
             this.AddressTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.AddressTextBox.DoubleBuffered = true;
             this.AddressTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.AddressTextBox.ErrorState = false;
             this.AddressTextBox.ErrorToolTip = this.toolTip1;
             this.AddressTextBox.ErrorToolTipDuration = 5000;
             this.AddressTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.AddressTextBox.ErrorToolTipText = "Must be a valid host name or IP address.";
+            this.AddressTextBox.ErrorToolTipText = "";
             this.AddressTextBox.Location = new System.Drawing.Point(99, 44);
             this.AddressTextBox.Name = "AddressTextBox";
             this.AddressTextBox.Size = new System.Drawing.Size(139, 20);
             this.AddressTextBox.TabIndex = 3;
-            this.AddressTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // ClientNameLabel
             // 
@@ -225,19 +219,15 @@
             this.ClientNameTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.ClientNameTextBox.DoubleBuffered = true;
             this.ClientNameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.ClientNameTextBox.ErrorState = false;
             this.ClientNameTextBox.ErrorToolTip = this.toolTip1;
             this.ClientNameTextBox.ErrorToolTipDuration = 5000;
             this.ClientNameTextBox.ErrorToolTipPoint = new System.Drawing.Point(230, -20);
-            this.ClientNameTextBox.ErrorToolTipText = "Client name can contain only letters, numbers,\r\nand basic symbols (+=-_$&^.[]). I" +
-    "t must be at\r\nleast three characters long and must not begin or\r\nend with a dot " +
-    "(.) or a space.";
+            this.ClientNameTextBox.ErrorToolTipText = "";
             this.ClientNameTextBox.Location = new System.Drawing.Point(99, 18);
             this.ClientNameTextBox.MaxLength = 100;
             this.ClientNameTextBox.Name = "ClientNameTextBox";
             this.ClientNameTextBox.Size = new System.Drawing.Size(251, 20);
             this.ClientNameTextBox.TabIndex = 1;
-            this.ClientNameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // FahClientSetupDialog
             // 
@@ -274,13 +264,13 @@
       private System.Windows.Forms.TabControl SetupTabControl;
       private System.Windows.Forms.TabPage ConnectionTabPage;
       private System.Windows.Forms.Label ClientNameLabel;
-      private harlam357.Windows.Forms.ValidatingTextBox ClientNameTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox ClientNameTextBox;
       private System.Windows.Forms.Label AddressLabel;
-      private harlam357.Windows.Forms.ValidatingTextBox AddressTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox AddressTextBox;
       private System.Windows.Forms.Label AddressPortLabel;
-      private harlam357.Windows.Forms.ValidatingTextBox PasswordTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox PasswordTextBox;
       private System.Windows.Forms.Label PasswordLabel;
-      private harlam357.Windows.Forms.ValidatingTextBox AddressPortTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox AddressPortTextBox;
       private System.Windows.Forms.ToolTip toolTip1;
       private System.Windows.Forms.Button ConnectButton;
       private System.Windows.Forms.DataGridView SlotsDataGridView;

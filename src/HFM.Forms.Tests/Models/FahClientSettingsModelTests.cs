@@ -26,6 +26,31 @@ namespace HFM.Forms.Models
         }
 
         [Test]
+        public void FahClientSettingsModel_Name_HasError()
+        {
+            var model = new FahClientSettingsModel();
+            string error = model[nameof(FahClientSettingsModel.Name)];
+            Assert.IsNotNull(error);
+        }
+
+        [Test]
+        public void FahClientSettingsModel_Server_HasError()
+        {
+            var model = new FahClientSettingsModel();
+            string error = model[nameof(FahClientSettingsModel.Server)];
+            Assert.IsNotNull(error);
+        }
+
+        [Test]
+        public void FahClientSettingsModel_Port_HasError()
+        {
+            var model = new FahClientSettingsModel();
+            model.Port = 0;
+            string error = model[nameof(FahClientSettingsModel.Port)];
+            Assert.IsNotNull(error);
+        }
+
+        [Test]
         public void FahClientSettingsModel_ConnectEnabled_ReturnsTrueWhenModelHasNoError()
         {
             var model = new FahClientSettingsModel();

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_ShowDialog_AttemptsConnectionWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel {Name = "foo", Server = "bar"}))
+            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
             {
                 // Act
                 presenter.ShowDialog(null);
@@ -46,14 +47,18 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_ShowDialog_ConnectsWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new MockConnectionFahClientSettingsModel {Name = "foo", Server = "bar"}))
+            using (var connection = new MockFahClientConnectionWithMessages())
             {
-                // Act
-                presenter.ShowDialog(null);
-                // Assert
-                Assert.IsNotNull(presenter.Connection);
-                Assert.IsTrue(presenter.Connection.Connected);
-                Assert.AreEqual(1, presenter.Model.Slots.Count);
+                var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
+                using (var presenter = new NoDialogFahClientSettingsPresenter(model))
+                {
+                    // Act
+                    presenter.ShowDialog(null);
+                    // Assert
+                    Assert.IsNotNull(presenter.Connection);
+                    Assert.IsTrue(presenter.Connection.Connected);
+                    Assert.AreEqual(1, presenter.Model.Slots.Count);
+                }
             }
         }
 
@@ -62,7 +67,7 @@ namespace HFM.Forms
         {
             // Arrange
             var messageBox = new MockMessageBoxPresenter();
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel {Name = "foo", Server = "bar"}, messageBox))
+            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }, messageBox))
             {
                 // Act
                 presenter.ConnectClicked();
@@ -72,17 +77,43 @@ namespace HFM.Forms
         }
 
         [Test]
+        public void FahClientSettingsPresenter_ConnectClicked_ConnectsAndShowsMessageBoxWhenFahClientReaderFailsToRead()
+        {
+            // Arrange
+            var messageBox = new MockMessageBoxPresenter();
+            using (var connection = new MockFahClientConnection())
+            {
+                var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
+                using (var presenter = new NoDialogFahClientSettingsPresenter(model, messageBox))
+                {
+                    // Act
+                    presenter.ConnectClicked();
+                    // Assert
+                    Assert.AreEqual(1, messageBox.Invocations.Count);
+                    Assert.IsNotNull(presenter.Connection);
+                    Assert.IsFalse(presenter.Connection.Connected);
+                    Assert.IsTrue(presenter.Model.ConnectEnabled);
+                    Assert.AreEqual(0, presenter.Model.Slots.Count);
+                }
+            }
+        }
+
+        [Test]
         public void FahClientSettingsPresenter_ConnectClicked_ConnectsWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new MockConnectionFahClientSettingsModel {Name = "foo", Server = "bar"}))
+            using (var connection = new MockFahClientConnectionWithMessages())
             {
-                // Act
-                presenter.ConnectClicked();
-                // Assert
-                Assert.IsNotNull(presenter.Connection);
-                Assert.IsTrue(presenter.Connection.Connected);
-                Assert.AreEqual(1, presenter.Model.Slots.Count);
+                var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
+                using (var presenter = new NoDialogFahClientSettingsPresenter(model))
+                {
+                    // Act
+                    presenter.ConnectClicked();
+                    // Assert
+                    Assert.IsNotNull(presenter.Connection);
+                    Assert.IsTrue(presenter.Connection.Connected);
+                    Assert.AreEqual(1, presenter.Model.Slots.Count);
+                }
             }
         }
 
@@ -107,7 +138,7 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_OKClicked_SetsDialogResultAndClosesDialogWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel {Name = "foo", Server = "bar"}))
+            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
             {
                 presenter.ShowDialog(null);
                 Assert.IsTrue(presenter.MockDialog.Shown);
@@ -142,9 +173,16 @@ namespace HFM.Forms
 
         private class MockConnectionFahClientSettingsModel : FahClientSettingsModel
         {
+            private readonly FahClientConnection _connection;
+
+            public MockConnectionFahClientSettingsModel(FahClientConnection connection)
+            {
+                _connection = connection;
+            }
+
             public override FahClientConnection CreateConnection()
             {
-                return new MockFahClientConnection();
+                return _connection;
             }
         }
 
@@ -170,6 +208,19 @@ namespace HFM.Forms
                 _connected = false;
             }
 
+            protected override FahClientCommand OnCreateCommand()
+            {
+                return new MockFahClientCommand(this);
+            }
+
+            protected override FahClientReader OnCreateReader()
+            {
+                return new MockFahClientReader(this);
+            }
+        }
+
+        private class MockFahClientConnectionWithMessages : MockFahClientConnection
+        {
             public FahClientCommand LastCommand { get; private set; }
 
             protected override FahClientCommand OnCreateCommand()
@@ -179,7 +230,7 @@ namespace HFM.Forms
 
             protected override FahClientReader OnCreateReader()
             {
-                return new MockFahClientReader(this);
+                return new MockFahClientReaderWithMessages(this);
             }
         }
 
@@ -203,9 +254,26 @@ namespace HFM.Forms
 
         private class MockFahClientReader : FahClientReader
         {
-            private readonly MockFahClientConnection _connection;
+            public MockFahClientReader(FahClientConnection connection) : base(connection)
+            {
+            }
 
-            public MockFahClientReader(MockFahClientConnection connection) : base(connection)
+            public override bool Read()
+            {
+                return false;
+            }
+
+            public override Task<bool> ReadAsync()
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        private class MockFahClientReaderWithMessages : FahClientReader
+        {
+            private readonly MockFahClientConnectionWithMessages _connection;
+
+            public MockFahClientReaderWithMessages(MockFahClientConnectionWithMessages connection) : base(connection)
             {
                 _connection = connection;
             }
