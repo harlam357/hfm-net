@@ -8,10 +8,10 @@ using HFM.Core.Logging;
 namespace HFM.Forms
 {
    [TestFixture]
-   public class AutoRunTests
+   public class RegistryAutoRunTests
    {
       [Test]
-      public void AutoRun_SetFilePath_Test()
+      public void RegistryAutoRun_Test()
       {
          var autoRun = new RegistryAutoRun(NullLogger.Instance);
          autoRun.SetFilePath(System.Reflection.Assembly.GetExecutingAssembly().Location);
