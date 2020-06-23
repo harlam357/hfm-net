@@ -22,21 +22,16 @@ namespace HFM.Forms
         void SetFilePath(string filePath);
     }
 
-    public class AutoRun : IAutoRun
+    public class RegistryAutoRun : IAutoRun
     {
-        #region Constants
-
         private const string AutoRunKeyName = "HFM.NET";
         private const string HkCuAutoRunSubKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
 
-        #endregion
+        private readonly ILogger _logger;
 
-        private ILogger _logger;
-
-        public ILogger Logger
+        public RegistryAutoRun(ILogger logger)
         {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
+            _logger = logger ?? NullLogger.Instance;
         }
 
         /// <summary>
@@ -103,9 +98,6 @@ namespace HFM.Forms
             return create ? Registry.CurrentUser.CreateSubKey(HkCuAutoRunSubKey, RegistryKeyPermissionCheck.ReadWriteSubTree) : null;
         }
 
-        /// <summary>
-        /// Wraps the given string in quotes.
-        /// </summary>
         private static string WrapInQuotes(string value)
         {
             return String.Concat("\"", value, "\"");

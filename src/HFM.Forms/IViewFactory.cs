@@ -7,8 +7,6 @@ namespace HFM.Forms
 
         IBenchmarksView GetBenchmarksForm();
 
-        IPreferencesView GetPreferencesDialog();
-
         IProteinCalculatorView GetProteinCalculatorForm();
 
         void Release(object view);

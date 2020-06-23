@@ -64,10 +64,6 @@ namespace HFM.Forms.Configuration
                   .ImplementedBy<BenchmarksForm>()
                      .Named("BenchmarksForm")
                         .LifeStyle.Transient,
-               Component.For<IPreferencesView>()
-                  .ImplementedBy<PreferencesDialog>()
-                     .Named("PreferencesDialog")
-                        .LifeStyle.Transient,
                Component.For<IProteinCalculatorView>()
                   .ImplementedBy<ProteinCalculatorForm>()
                      .Named("ProteinCalculatorForm")
@@ -78,11 +74,6 @@ namespace HFM.Forms.Configuration
             #endregion
 
             #region Service Interfaces
-
-            // IAutoRun - Singleton
-            container.Register(
-               Component.For<IAutoRun>()
-                  .ImplementedBy<AutoRun>());
 
             // IExternalProcessStarter - Singleton
             container.Register(

@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,8 +8,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using harlam357.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
@@ -22,12 +19,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms
 {
-    public interface IPreferencesView
-    {
-        DialogResult ShowDialog(IWin32Window owner);
-    }
-
-    public partial class PreferencesDialog : FormWrapper, IPreferencesView
+    public partial class PreferencesDialog : FormWrapper, IWin32Dialog
     {
         /// <summary>
         /// Tab Name Enumeration (maintain in same order as tab pages)
@@ -51,12 +43,9 @@ namespace HFM.Forms
         private const string ExeExt = "exe";
         private const string ExeFilter = "Program Files|*.exe";
 
-        private readonly IPreferenceSet _prefs;
-        private readonly IAutoRun _autoRun;
+        private readonly PreferencesPresenter _presenter;
         private readonly IFtpService _ftpService;
 
-        private readonly List<IValidatingControl>[] _validatingControls;
-        private readonly PropertyDescriptorCollection[] _propertyCollection;
         private readonly object[] _models;
 
         private readonly WebBrowser _cssSampleBrowser;
@@ -69,23 +58,15 @@ namespace HFM.Forms
             set { _logger = value; }
         }
 
-        private readonly ScheduledTasksModel _scheduledTasksModel;
-        private readonly StartupAndExternalModel _startupAndExternalModel;
-        private readonly OptionsModel _optionsModel;
-        private readonly ReportingModel _reportingModel;
-        private readonly WebSettingsModel _webSettingsModel;
-        private readonly WebVisualStylesModel _webVisualStylesModel;
-
         #endregion
 
         private const int MaxDecimalPlaces = 5;
 
         #region Constructor And Binding/Load Methods
 
-        public PreferencesDialog(IPreferenceSet prefs, IAutoRun autoRun)
+        public PreferencesDialog(PreferencesPresenter presenter)
         {
-            _prefs = prefs ?? throw new ArgumentNullException(nameof(prefs));
-            _autoRun = autoRun ?? throw new ArgumentNullException(nameof(autoRun));
+            _presenter = presenter;
             _ftpService = new FtpService();
 
             InitializeComponent();
@@ -93,8 +74,6 @@ namespace HFM.Forms
             udDecimalPlaces.Minimum = 0;
             udDecimalPlaces.Maximum = MaxDecimalPlaces;
 
-            _validatingControls = new List<IValidatingControl>[tabControl1.TabCount];
-            _propertyCollection = new PropertyDescriptorCollection[tabControl1.TabCount];
             _models = new object[tabControl1.TabCount];
             if (!Core.Application.IsRunningOnMono)
             {
@@ -113,13 +92,6 @@ namespace HFM.Forms
 
             txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
             txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
-
-            _scheduledTasksModel = new ScheduledTasksModel(prefs);
-            _startupAndExternalModel = new StartupAndExternalModel(prefs);
-            _optionsModel = new OptionsModel(prefs);
-            _reportingModel = new ReportingModel(prefs);
-            _webSettingsModel = new WebSettingsModel(prefs);
-            _webVisualStylesModel = new WebVisualStylesModel(prefs);
         }
 
         private void PreferencesDialogLoad(object sender, EventArgs e)
@@ -139,39 +111,19 @@ namespace HFM.Forms
                 {
                     ShowCssPreview();
                 }
-                _validatingControls[i] = FindValidatingControls(tabControl1.SelectedTab.Controls);
             }
             tabControl1.SelectTab(0);
 
-            _scheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
-            _startupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
-            //_optionsModel.PropertyChanged += OptionsPropertyChanged;
-            _reportingModel.PropertyChanged += ReportingPropertyChanged;
-            _webSettingsModel.PropertyChanged += WebSettingsChanged;
-            _webVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
-        }
-
-        private static List<IValidatingControl> FindValidatingControls(Control.ControlCollection controls)
-        {
-            var validatingControls = new List<IValidatingControl>();
-
-            foreach (Control control in controls)
-            {
-                var validatingControl = control as IValidatingControl;
-                if (validatingControl != null)
-                {
-                    validatingControls.Add(validatingControl);
-                }
-
-                validatingControls.AddRange(FindValidatingControls(control.Controls));
-            }
-
-            return validatingControls;
+            _presenter.Model.ScheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
+            _presenter.Model.StartupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
+            //_presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
+            _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
+            _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsChanged;
+            _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
         }
 
         private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            SetPropertyErrorState((int)TabName.ScheduledTasks, e.PropertyName, true);
             if (Core.Application.IsRunningOnMono && Enabled)
             {
                 HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
@@ -184,41 +136,41 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "SyncOnSchedule":
-                    txtCollectMinutes.Enabled = _scheduledTasksModel.SyncOnSchedule;
+                    txtCollectMinutes.Enabled = _presenter.Model.ScheduledTasksModel.SyncOnSchedule;
                     break;
                 case "GenerateWeb":
-                    radioSchedule.Enabled = _scheduledTasksModel.GenerateWeb;
-                    lbl2MinutesToGen.Enabled = _scheduledTasksModel.GenerateWeb;
-                    radioFullRefresh.Enabled = _scheduledTasksModel.GenerateWeb;
-                    WebSiteTargetPathTextBox.Enabled = _scheduledTasksModel.GenerateWeb;
-                    chkHtml.Enabled = _scheduledTasksModel.GenerateWeb;
-                    chkXml.Enabled = _scheduledTasksModel.GenerateWeb;
-                    chkFAHlog.Enabled = _scheduledTasksModel.GenerateWeb;
-                    TestConnectionButton.Enabled = _scheduledTasksModel.GenerateWeb;
-                    WebGenTypePanel.Enabled = _scheduledTasksModel.GenerateWeb;
+                    radioSchedule.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    lbl2MinutesToGen.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    radioFullRefresh.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    WebSiteTargetPathTextBox.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    chkHtml.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    chkXml.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    chkFAHlog.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    TestConnectionButton.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    WebGenTypePanel.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
                     break;
                 case "GenerateIntervalEnabled":
-                    txtWebGenMinutes.Enabled = _scheduledTasksModel.GenerateIntervalEnabled;
+                    txtWebGenMinutes.Enabled = _presenter.Model.ScheduledTasksModel.GenerateIntervalEnabled;
                     break;
                 case "FtpModeEnabled":
-                    WebSiteServerTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSiteServerLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSitePortTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSitePortLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSiteUsernameTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSiteUsernameLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSitePasswordTextBox.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    WebSitePasswordLabel.Enabled = _scheduledTasksModel.FtpModeEnabled;
-                    FtpModePanel.Enabled = _scheduledTasksModel.FtpModeEnabled;
+                    WebSiteServerTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSiteServerLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSitePortTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSitePortLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSiteUsernameTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSiteUsernameLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSitePasswordTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSitePasswordLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    FtpModePanel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
                     break;
                 case "BrowseLocalPathEnabled":
-                    btnBrowseWebFolder.Enabled = _scheduledTasksModel.BrowseLocalPathEnabled;
+                    btnBrowseWebFolder.Enabled = _presenter.Model.ScheduledTasksModel.BrowseLocalPathEnabled;
                     break;
                 case "LimitLogSizeEnabled":
-                    chkLimitSize.Enabled = _scheduledTasksModel.LimitLogSizeEnabled;
+                    chkLimitSize.Enabled = _presenter.Model.ScheduledTasksModel.LimitLogSizeEnabled;
                     break;
                 case "LimitLogSizeLengthEnabled":
-                    udLimitSize.Enabled = _scheduledTasksModel.LimitLogSizeLengthEnabled;
+                    udLimitSize.Enabled = _presenter.Model.ScheduledTasksModel.LimitLogSizeLengthEnabled;
                     break;
             }
         }
@@ -228,7 +180,7 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "WebRoot":
-                    WebSiteTargetPathTextBox.Text = _scheduledTasksModel.WebRoot;
+                    WebSiteTargetPathTextBox.Text = _presenter.Model.ScheduledTasksModel.WebRoot;
                     break;
             }
         }
@@ -247,8 +199,8 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "UseDefaultConfigFile":
-                    txtDefaultConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
-                    btnBrowseConfigFile.Enabled = _startupAndExternalModel.UseDefaultConfigFile;
+                    txtDefaultConfigFile.Enabled = _presenter.Model.StartupAndExternalModel.UseDefaultConfigFile;
+                    btnBrowseConfigFile.Enabled = _presenter.Model.StartupAndExternalModel.UseDefaultConfigFile;
                     break;
             }
         }
@@ -258,20 +210,19 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "DefaultConfigFile":
-                    txtDefaultConfigFile.Text = _startupAndExternalModel.DefaultConfigFile;
+                    txtDefaultConfigFile.Text = _presenter.Model.StartupAndExternalModel.DefaultConfigFile;
                     break;
                 case "LogFileViewer":
-                    txtLogFileViewer.Text = _startupAndExternalModel.LogFileViewer;
+                    txtLogFileViewer.Text = _presenter.Model.StartupAndExternalModel.LogFileViewer;
                     break;
                 case "FileExplorer":
-                    txtFileExplorer.Text = _startupAndExternalModel.FileExplorer;
+                    txtFileExplorer.Text = _presenter.Model.StartupAndExternalModel.FileExplorer;
                     break;
             }
         }
 
         private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            SetPropertyErrorState((int)TabName.Reporting, e.PropertyName, true);
             if (Core.Application.IsRunningOnMono && Enabled) HandleReportingPropertyEnabledForMono(e.PropertyName);
         }
 
@@ -280,22 +231,21 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "ReportingEnabled":
-                    chkEmailSecure.Enabled = _reportingModel.ReportingEnabled;
-                    btnTestEmail.Enabled = _reportingModel.ReportingEnabled;
-                    txtToEmailAddress.Enabled = _reportingModel.ReportingEnabled;
-                    txtFromEmailAddress.Enabled = _reportingModel.ReportingEnabled;
-                    txtSmtpServer.Enabled = _reportingModel.ReportingEnabled;
-                    txtSmtpServerPort.Enabled = _reportingModel.ReportingEnabled;
-                    txtSmtpUsername.Enabled = _reportingModel.ReportingEnabled;
-                    txtSmtpPassword.Enabled = _reportingModel.ReportingEnabled;
-                    grpReportSelections.Enabled = _reportingModel.ReportingEnabled;
+                    chkEmailSecure.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    btnTestEmail.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtToEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtFromEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtSmtpServer.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtSmtpServerPort.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtSmtpUsername.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    txtSmtpPassword.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    grpReportSelections.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     break;
             }
         }
 
         private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            SetPropertyErrorState((int)TabName.WebSettings, e.PropertyName, true);
             if (Core.Application.IsRunningOnMono && Enabled) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
         }
 
@@ -304,13 +254,13 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "UseProxy":
-                    txtProxyServer.Enabled = _webSettingsModel.UseProxy;
-                    txtProxyPort.Enabled = _webSettingsModel.UseProxy;
-                    chkUseProxyAuth.Enabled = _webSettingsModel.UseProxy;
+                    txtProxyServer.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
+                    txtProxyPort.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
+                    chkUseProxyAuth.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
                     break;
                 case "ProxyAuthEnabled":
-                    txtProxyUser.Enabled = _webSettingsModel.ProxyAuthEnabled;
-                    txtProxyPass.Enabled = _webSettingsModel.ProxyAuthEnabled;
+                    txtProxyUser.Enabled = _presenter.Model.WebSettingsModel.ProxyAuthEnabled;
+                    txtProxyPass.Enabled = _presenter.Model.WebSettingsModel.ProxyAuthEnabled;
                     break;
             }
         }
@@ -325,147 +275,104 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case nameof(WebVisualStylesModel.WebOverview):
-                    txtOverview.Text = _webVisualStylesModel.WebOverview;
+                    txtOverview.Text = _presenter.Model.WebVisualStylesModel.WebOverview;
                     break;
                 case nameof(WebVisualStylesModel.WebSummary):
-                    txtSummary.Text = _webVisualStylesModel.WebSummary;
+                    txtSummary.Text = _presenter.Model.WebVisualStylesModel.WebSummary;
                     break;
                 case nameof(WebVisualStylesModel.WebSlot):
-                    txtInstance.Text = _webVisualStylesModel.WebSlot;
+                    txtInstance.Text = _presenter.Model.WebVisualStylesModel.WebSlot;
                     break;
             }
-        }
-
-        private void SetPropertyErrorState()
-        {
-            for (int index = 0; index < _propertyCollection.Length; index++)
-            {
-                foreach (PropertyDescriptor property in _propertyCollection[index])
-                {
-                    SetPropertyErrorState(index, property.DisplayName, false);
-                }
-            }
-        }
-
-        private void SetPropertyErrorState(int index, string boundProperty, bool showToolTip)
-        {
-            var errorProperty = _propertyCollection[index].Find(boundProperty + "Error", false);
-            if (errorProperty != null)
-            {
-                SetPropertyErrorState(index, boundProperty, errorProperty, showToolTip);
-            }
-        }
-
-        private void SetPropertyErrorState(int index, string boundProperty, PropertyDescriptor errorProperty, bool showToolTip)
-        {
-            IEnumerable<IValidatingControl> validatingControls = FindBoundControls(index, boundProperty);
-            var errorState = (bool)errorProperty.GetValue(_models[index]);
-            foreach (var control in validatingControls)
-            {
-                control.ErrorState = errorState;
-                if (showToolTip) control.ShowToolTip();
-            }
-        }
-
-        private IEnumerable<IValidatingControl> FindBoundControls(int index, string propertyName)
-        {
-            //foreach (var control in _validatingControls[index])
-            //{
-            //   Debug.WriteLine(control.DataBindings["Text"].BindingMemberInfo.BindingField);
-            //}
-
-            return _validatingControls[index].FindAll(x => x.DataBindings["Text"].BindingMemberInfo.BindingField == propertyName).AsReadOnly();
         }
 
         private void LoadScheduledTasksTab()
         {
-            _propertyCollection[(int)TabName.ScheduledTasks] = TypeDescriptor.GetProperties(_scheduledTasksModel);
-            _models[(int)TabName.ScheduledTasks] = _scheduledTasksModel;
+            _models[(int)TabName.ScheduledTasks] = _presenter.Model.ScheduledTasksModel;
 
             #region Refresh Data
             // Always Add Bindings for CheckBoxes that control input TextBoxes after
             // the data has been bound to the TextBox
 
             // Add the CheckBox.Checked => TextBox.Enabled Binding
-            txtCollectMinutes.BindEnabled(_scheduledTasksModel, "SyncOnSchedule");
+            txtCollectMinutes.BindEnabled(_presenter.Model.ScheduledTasksModel, "SyncOnSchedule");
             // Bind the value to the TextBox
-            txtCollectMinutes.BindText(_scheduledTasksModel, "SyncTimeMinutes");
+            txtCollectMinutes.BindText(_presenter.Model.ScheduledTasksModel, "SyncTimeMinutes");
             // Finally, add the CheckBox.Checked Binding
-            chkScheduled.BindChecked(_scheduledTasksModel, "SyncOnSchedule");
+            chkScheduled.BindChecked(_presenter.Model.ScheduledTasksModel, "SyncOnSchedule");
 
-            chkSynchronous.BindChecked(_scheduledTasksModel, "SyncOnLoad");
+            chkSynchronous.BindChecked(_presenter.Model.ScheduledTasksModel, "SyncOnLoad");
             #endregion
 
             #region Web Generation
             // Always Add Bindings for CheckBoxes that control input TextBoxes after
             // the data has been bound to the TextBox
 
-            radioSchedule.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            lbl2MinutesToGen.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+            radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
             // Bind the value to the TextBox
-            txtWebGenMinutes.BindText(_scheduledTasksModel, "GenerateInterval");
-            txtWebGenMinutes.DataBindings.Add("Enabled", _scheduledTasksModel, "GenerateIntervalEnabled", false, DataSourceUpdateMode.OnValidation);
+            txtWebGenMinutes.BindText(_presenter.Model.ScheduledTasksModel, "GenerateInterval");
+            txtWebGenMinutes.DataBindings.Add("Enabled", _presenter.Model.ScheduledTasksModel, "GenerateIntervalEnabled", false, DataSourceUpdateMode.OnValidation);
             // Finally, add the RadioButton.Checked Binding
-            radioFullRefresh.BindChecked(_scheduledTasksModel, "WebGenAfterRefresh");
-            radioFullRefresh.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+            radioFullRefresh.BindChecked(_presenter.Model.ScheduledTasksModel, "WebGenAfterRefresh");
+            radioFullRefresh.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
 
-            WebGenTypePanel.DataSource = _scheduledTasksModel;
+            WebGenTypePanel.DataSource = _presenter.Model.ScheduledTasksModel;
             WebGenTypePanel.ValueMember = "WebGenType";
-            WebGenTypePanel.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+            WebGenTypePanel.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
 
-            WebSiteTargetPathTextBox.BindText(_scheduledTasksModel, "WebRoot");
-            WebSiteTargetPathTextBox.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            WebSiteTargetPathLabel.BindEnabled(_scheduledTasksModel, "GenerateWeb");
+            WebSiteTargetPathTextBox.BindText(_presenter.Model.ScheduledTasksModel, "WebRoot");
+            WebSiteTargetPathTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            WebSiteTargetPathLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
 
-            WebSiteServerTextBox.BindText(_scheduledTasksModel, "WebGenServer");
-            WebSiteServerTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
-            WebSiteServerLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+            WebSiteServerTextBox.BindText(_presenter.Model.ScheduledTasksModel, "WebGenServer");
+            WebSiteServerTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
+            WebSiteServerLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
 
-            WebSitePortTextBox.BindText(_scheduledTasksModel, "WebGenPort");
-            WebSitePortTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
-            WebSitePortLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+            WebSitePortTextBox.BindText(_presenter.Model.ScheduledTasksModel, "WebGenPort");
+            WebSitePortTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
+            WebSitePortLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
 
-            WebSiteUsernameTextBox.BindText(_scheduledTasksModel, "WebGenUsername");
-            WebSiteUsernameTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
-            WebSiteUsernameTextBox.DataBindings.Add("ErrorToolTipText", _scheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSiteUsernameLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+            WebSiteUsernameTextBox.BindText(_presenter.Model.ScheduledTasksModel, "WebGenUsername");
+            WebSiteUsernameTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
+            WebSiteUsernameTextBox.DataBindings.Add("ErrorToolTipText", _presenter.Model.ScheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            WebSiteUsernameLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
 
-            WebSitePasswordTextBox.BindText(_scheduledTasksModel, "WebGenPassword");
-            WebSitePasswordTextBox.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
-            WebSitePasswordTextBox.DataBindings.Add("ErrorToolTipText", _scheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSitePasswordLabel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
+            WebSitePasswordTextBox.BindText(_presenter.Model.ScheduledTasksModel, "WebGenPassword");
+            WebSitePasswordTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
+            WebSitePasswordTextBox.DataBindings.Add("ErrorToolTipText", _presenter.Model.ScheduledTasksModel, "CredentialsErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            WebSitePasswordLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
 
-            chkHtml.BindChecked(_scheduledTasksModel, "CopyHtml");
-            chkHtml.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            chkXml.BindChecked(_scheduledTasksModel, "CopyXml");
-            chkXml.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            chkFAHlog.BindChecked(_scheduledTasksModel, "CopyFAHlog");
-            chkFAHlog.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            FtpModePanel.DataSource = _scheduledTasksModel;
+            chkHtml.BindChecked(_presenter.Model.ScheduledTasksModel, "CopyHtml");
+            chkHtml.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            chkXml.BindChecked(_presenter.Model.ScheduledTasksModel, "CopyXml");
+            chkXml.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            chkFAHlog.BindChecked(_presenter.Model.ScheduledTasksModel, "CopyFAHlog");
+            chkFAHlog.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            FtpModePanel.DataSource = _presenter.Model.ScheduledTasksModel;
             FtpModePanel.ValueMember = "FtpMode";
-            FtpModePanel.BindEnabled(_scheduledTasksModel, "FtpModeEnabled");
-            chkLimitSize.BindChecked(_scheduledTasksModel, "LimitLogSize");
-            chkLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeEnabled");
-            udLimitSize.DataBindings.Add("Value", _scheduledTasksModel, "LimitLogSizeLength", false, DataSourceUpdateMode.OnPropertyChanged);
-            udLimitSize.BindEnabled(_scheduledTasksModel, "LimitLogSizeLengthEnabled");
+            FtpModePanel.BindEnabled(_presenter.Model.ScheduledTasksModel, "FtpModeEnabled");
+            chkLimitSize.BindChecked(_presenter.Model.ScheduledTasksModel, "LimitLogSize");
+            chkLimitSize.BindEnabled(_presenter.Model.ScheduledTasksModel, "LimitLogSizeEnabled");
+            udLimitSize.DataBindings.Add("Value", _presenter.Model.ScheduledTasksModel, "LimitLogSizeLength", false, DataSourceUpdateMode.OnPropertyChanged);
+            udLimitSize.BindEnabled(_presenter.Model.ScheduledTasksModel, "LimitLogSizeLengthEnabled");
 
             // Finally, add the CheckBox.Checked Binding
-            TestConnectionButton.BindEnabled(_scheduledTasksModel, "GenerateWeb");
-            btnBrowseWebFolder.BindEnabled(_scheduledTasksModel, "BrowseLocalPathEnabled");
-            chkWebSiteGenerator.BindChecked(_scheduledTasksModel, "GenerateWeb");
+            TestConnectionButton.BindEnabled(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
+            btnBrowseWebFolder.BindEnabled(_presenter.Model.ScheduledTasksModel, "BrowseLocalPathEnabled");
+            chkWebSiteGenerator.BindChecked(_presenter.Model.ScheduledTasksModel, "GenerateWeb");
             #endregion
         }
 
         private void LoadStartupTab()
         {
-            _propertyCollection[(int)TabName.StartupAndExternal] = TypeDescriptor.GetProperties(_startupAndExternalModel);
-            _models[(int)TabName.StartupAndExternal] = _startupAndExternalModel;
+            _models[(int)TabName.StartupAndExternal] = _presenter.Model.StartupAndExternalModel;
 
             #region Startup
             /*** Auto-Run Is Not DataBound ***/
             if (!Core.Application.IsRunningOnMono)
             {
-                chkAutoRun.Checked = _autoRun.IsEnabled();
+                chkAutoRun.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.AutoRun));
             }
             else
             {
@@ -473,168 +380,164 @@ namespace HFM.Forms
                 chkAutoRun.Enabled = false;
             }
 
-            chkRunMinimized.BindChecked(_startupAndExternalModel, "RunMinimized");
-            chkCheckForUpdate.BindChecked(_startupAndExternalModel, "StartupCheckForUpdate");
+            chkRunMinimized.BindChecked(_presenter.Model.StartupAndExternalModel, "RunMinimized");
+            chkCheckForUpdate.BindChecked(_presenter.Model.StartupAndExternalModel, "StartupCheckForUpdate");
             #endregion
 
             #region Configuration File
-            txtDefaultConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
-            btnBrowseConfigFile.BindEnabled(_startupAndExternalModel, "UseDefaultConfigFile");
-            txtDefaultConfigFile.BindText(_startupAndExternalModel, "DefaultConfigFile");
+            txtDefaultConfigFile.BindEnabled(_presenter.Model.StartupAndExternalModel, "UseDefaultConfigFile");
+            btnBrowseConfigFile.BindEnabled(_presenter.Model.StartupAndExternalModel, "UseDefaultConfigFile");
+            txtDefaultConfigFile.BindText(_presenter.Model.StartupAndExternalModel, "DefaultConfigFile");
 
-            chkDefaultConfig.BindChecked(_startupAndExternalModel, "UseDefaultConfigFile");
+            chkDefaultConfig.BindChecked(_presenter.Model.StartupAndExternalModel, "UseDefaultConfigFile");
             #endregion
 
             #region External Programs
-            txtLogFileViewer.BindText(_startupAndExternalModel, "LogFileViewer");
-            txtFileExplorer.BindText(_startupAndExternalModel, "FileExplorer");
+            txtLogFileViewer.BindText(_presenter.Model.StartupAndExternalModel, "LogFileViewer");
+            txtFileExplorer.BindText(_presenter.Model.StartupAndExternalModel, "FileExplorer");
             #endregion
         }
 
         private void LoadOptionsTab()
         {
-            _propertyCollection[(int)TabName.Options] = TypeDescriptor.GetProperties(_optionsModel);
-            _models[(int)TabName.Options] = _optionsModel;
+            _models[(int)TabName.Options] = _presenter.Model.OptionsModel;
 
             #region Interactive Options
-            chkOffline.BindChecked(_optionsModel, "OfflineLast");
-            chkColorLog.BindChecked(_optionsModel, "ColorLogFile");
-            chkAutoSave.BindChecked(_optionsModel, "AutoSaveConfig");
-            DuplicateProjectCheckBox.BindChecked(_optionsModel, "DuplicateProjectCheck");
-            ShowUserStatsCheckBox.BindChecked(_optionsModel, "ShowXmlStats");
+            chkOffline.BindChecked(_presenter.Model.OptionsModel, "OfflineLast");
+            chkColorLog.BindChecked(_presenter.Model.OptionsModel, "ColorLogFile");
+            chkAutoSave.BindChecked(_presenter.Model.OptionsModel, "AutoSaveConfig");
+            DuplicateProjectCheckBox.BindChecked(_presenter.Model.OptionsModel, "DuplicateProjectCheck");
+            ShowUserStatsCheckBox.BindChecked(_presenter.Model.OptionsModel, "ShowXmlStats");
 
             PpdCalculationComboBox.DataSource = OptionsModel.PpdCalculationList;
             PpdCalculationComboBox.DisplayMember = "DisplayMember";
             PpdCalculationComboBox.ValueMember = "ValueMember";
-            PpdCalculationComboBox.DataBindings.Add("SelectedValue", _optionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
+            PpdCalculationComboBox.DataBindings.Add("SelectedValue", _presenter.Model.OptionsModel, "PpdCalculation", false, DataSourceUpdateMode.OnPropertyChanged);
             BonusCalculationComboBox.DataSource = OptionsModel.BonusCalculationList;
             BonusCalculationComboBox.DisplayMember = "DisplayMember";
             BonusCalculationComboBox.ValueMember = "ValueMember";
-            BonusCalculationComboBox.DataBindings.Add("SelectedValue", _optionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
-            udDecimalPlaces.DataBindings.Add("Value", _optionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
-            chkEtaAsDate.BindChecked(_optionsModel, "EtaDate");
+            BonusCalculationComboBox.DataBindings.Add("SelectedValue", _presenter.Model.OptionsModel, "CalculateBonus", false, DataSourceUpdateMode.OnPropertyChanged);
+            udDecimalPlaces.DataBindings.Add("Value", _presenter.Model.OptionsModel, "DecimalPlaces", false, DataSourceUpdateMode.OnPropertyChanged);
+            chkEtaAsDate.BindChecked(_presenter.Model.OptionsModel, "EtaDate");
             #endregion
 
             #region Debug Message Level
             cboMessageLevel.DataSource = OptionsModel.DebugList;
             cboMessageLevel.DisplayMember = "DisplayMember";
             cboMessageLevel.ValueMember = "ValueMember";
-            cboMessageLevel.DataBindings.Add("SelectedValue", _optionsModel, "MessageLevel", false, DataSourceUpdateMode.OnPropertyChanged);
+            cboMessageLevel.DataBindings.Add("SelectedValue", _presenter.Model.OptionsModel, "MessageLevel", false, DataSourceUpdateMode.OnPropertyChanged);
             #endregion
 
             #region Form Docking Style
             cboShowStyle.DataSource = OptionsModel.DockingStyleList;
             cboShowStyle.DisplayMember = "DisplayMember";
             cboShowStyle.ValueMember = "ValueMember";
-            cboShowStyle.DataBindings.Add("SelectedValue", _optionsModel, "FormShowStyle", false, DataSourceUpdateMode.OnPropertyChanged);
+            cboShowStyle.DataBindings.Add("SelectedValue", _presenter.Model.OptionsModel, "FormShowStyle", false, DataSourceUpdateMode.OnPropertyChanged);
             #endregion
         }
 
         private void LoadReportingTab()
         {
-            _propertyCollection[(int)TabName.Reporting] = TypeDescriptor.GetProperties(_reportingModel);
-            _models[(int)TabName.Reporting] = _reportingModel;
+            _models[(int)TabName.Reporting] = _presenter.Model.ReportingModel;
 
             #region Email Settings
-            chkEmailSecure.BindChecked(_reportingModel, "ServerSecure");
-            chkEmailSecure.BindEnabled(_reportingModel, "ReportingEnabled");
+            chkEmailSecure.BindChecked(_presenter.Model.ReportingModel, "ServerSecure");
+            chkEmailSecure.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            btnTestEmail.BindEnabled(_reportingModel, "ReportingEnabled");
+            btnTestEmail.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtToEmailAddress.BindText(_reportingModel, "ToAddress");
-            txtToEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtToEmailAddress.BindText(_presenter.Model.ReportingModel, "ToAddress");
+            txtToEmailAddress.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtFromEmailAddress.BindText(_reportingModel, "FromAddress");
-            txtFromEmailAddress.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtFromEmailAddress.BindText(_presenter.Model.ReportingModel, "FromAddress");
+            txtFromEmailAddress.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtSmtpServer.BindText(_reportingModel, "ServerAddress");
-            txtSmtpServer.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpServer.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtSmtpServer.BindText(_presenter.Model.ReportingModel, "ServerAddress");
+            txtSmtpServer.DataBindings.Add("ErrorToolTipText", _presenter.Model.ReportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtSmtpServer.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtSmtpServerPort.BindText(_reportingModel, "ServerPort");
-            txtSmtpServerPort.DataBindings.Add("ErrorToolTipText", _reportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpServerPort.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtSmtpServerPort.BindText(_presenter.Model.ReportingModel, "ServerPort");
+            txtSmtpServerPort.DataBindings.Add("ErrorToolTipText", _presenter.Model.ReportingModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtSmtpServerPort.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtSmtpUsername.BindText(_reportingModel, "ServerUsername");
-            txtSmtpUsername.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpUsername.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtSmtpUsername.BindText(_presenter.Model.ReportingModel, "ServerUsername");
+            txtSmtpUsername.DataBindings.Add("ErrorToolTipText", _presenter.Model.ReportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtSmtpUsername.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            txtSmtpPassword.BindText(_reportingModel, "ServerPassword");
-            txtSmtpPassword.DataBindings.Add("ErrorToolTipText", _reportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpPassword.BindEnabled(_reportingModel, "ReportingEnabled");
+            txtSmtpPassword.BindText(_presenter.Model.ReportingModel, "ServerPassword");
+            txtSmtpPassword.DataBindings.Add("ErrorToolTipText", _presenter.Model.ReportingModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtSmtpPassword.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
 
-            chkEnableEmail.BindChecked(_reportingModel, "ReportingEnabled");
+            chkEnableEmail.BindChecked(_presenter.Model.ReportingModel, "ReportingEnabled");
             #endregion
 
             #region Report Selections
-            grpReportSelections.BindEnabled(_reportingModel, "ReportingEnabled");
-            //chkClientEuePause.BindChecked(_reportingModel, "ReportEuePause");
-            //chkClientHung.BindChecked(_reportingModel, "ReportHung");
+            grpReportSelections.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
+            //chkClientEuePause.BindChecked(_presenter.Model.ReportingModel, "ReportEuePause");
+            //chkClientHung.BindChecked(_presenter.Model.ReportingModel, "ReportHung");
             #endregion
         }
 
         private void LoadWebSettingsTab()
         {
-            _propertyCollection[(int)TabName.WebSettings] = TypeDescriptor.GetProperties(_webSettingsModel);
-            _models[(int)TabName.WebSettings] = _webSettingsModel;
+            _models[(int)TabName.WebSettings] = _presenter.Model.WebSettingsModel;
 
             #region Web Statistics
-            txtEOCUserID.BindText(_webSettingsModel, "EocUserId");
-            txtStanfordUserID.BindText(_webSettingsModel, "StanfordId");
-            txtStanfordTeamID.BindText(_webSettingsModel, "TeamId");
+            txtEOCUserID.BindText(_presenter.Model.WebSettingsModel, "EocUserId");
+            txtStanfordUserID.BindText(_presenter.Model.WebSettingsModel, "StanfordId");
+            txtStanfordTeamID.BindText(_presenter.Model.WebSettingsModel, "TeamId");
             #endregion
 
             #region Project Download URL
-            txtProjectDownloadUrl.BindText(_webSettingsModel, "ProjectDownloadUrl");
+            txtProjectDownloadUrl.BindText(_presenter.Model.WebSettingsModel, "ProjectDownloadUrl");
             #endregion
 
             #region Web Proxy Settings
             // Always Add Bindings for CheckBoxes that control input TextBoxes after
             // the data has been bound to the TextBox
-            txtProxyServer.BindText(_webSettingsModel, "ProxyServer");
-            txtProxyServer.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyServer.BindEnabled(_webSettingsModel, "UseProxy");
+            txtProxyServer.BindText(_presenter.Model.WebSettingsModel, "ProxyServer");
+            txtProxyServer.DataBindings.Add("ErrorToolTipText", _presenter.Model.WebSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyServer.BindEnabled(_presenter.Model.WebSettingsModel, "UseProxy");
 
-            txtProxyPort.BindText(_webSettingsModel, "ProxyPort");
-            txtProxyPort.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPort.BindEnabled(_webSettingsModel, "UseProxy");
+            txtProxyPort.BindText(_presenter.Model.WebSettingsModel, "ProxyPort");
+            txtProxyPort.DataBindings.Add("ErrorToolTipText", _presenter.Model.WebSettingsModel, "ServerPortPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyPort.BindEnabled(_presenter.Model.WebSettingsModel, "UseProxy");
 
             // Finally, add the CheckBox.Checked Binding
-            chkUseProxy.BindChecked(_webSettingsModel, "UseProxy");
-            chkUseProxyAuth.BindEnabled(_webSettingsModel, "UseProxy");
+            chkUseProxy.BindChecked(_presenter.Model.WebSettingsModel, "UseProxy");
+            chkUseProxyAuth.BindEnabled(_presenter.Model.WebSettingsModel, "UseProxy");
 
             // Always Add Bindings for CheckBoxes that control input TextBoxes after
             // the data has been bound to the TextBox
-            txtProxyUser.BindText(_webSettingsModel, "ProxyUser");
-            txtProxyUser.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyUser.BindEnabled(_webSettingsModel, "ProxyAuthEnabled");
+            txtProxyUser.BindText(_presenter.Model.WebSettingsModel, "ProxyUser");
+            txtProxyUser.DataBindings.Add("ErrorToolTipText", _presenter.Model.WebSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyUser.BindEnabled(_presenter.Model.WebSettingsModel, "ProxyAuthEnabled");
 
-            txtProxyPass.BindText(_webSettingsModel, "ProxyPass");
-            txtProxyPass.DataBindings.Add("ErrorToolTipText", _webSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPass.BindEnabled(_webSettingsModel, "ProxyAuthEnabled");
+            txtProxyPass.BindText(_presenter.Model.WebSettingsModel, "ProxyPass");
+            txtProxyPass.DataBindings.Add("ErrorToolTipText", _presenter.Model.WebSettingsModel, "UsernamePasswordPairErrorMessage", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyPass.BindEnabled(_presenter.Model.WebSettingsModel, "ProxyAuthEnabled");
 
             // Finally, add the CheckBox.Checked Binding
-            chkUseProxyAuth.BindChecked(_webSettingsModel, "UseProxyAuth");
+            chkUseProxyAuth.BindChecked(_presenter.Model.WebSettingsModel, "UseProxyAuth");
             #endregion
         }
 
         private void LoadVisualStylesTab()
         {
-            _propertyCollection[(int)TabName.WebVisualStyles] = TypeDescriptor.GetProperties(_webVisualStylesModel);
-            _models[(int)TabName.WebVisualStyles] = _webVisualStylesModel;
+            _models[(int)TabName.WebVisualStyles] = _presenter.Model.WebVisualStylesModel;
 
             if (Core.Application.IsRunningOnMono)
             {
                 StyleList.Sorted = false;
             }
-            StyleList.DataSource = _webVisualStylesModel.CssFileList;
+            StyleList.DataSource = _presenter.Model.WebVisualStylesModel.CssFileList;
             StyleList.DisplayMember = "DisplayMember";
             StyleList.ValueMember = "ValueMember";
-            StyleList.DataBindings.Add("SelectedValue", _webVisualStylesModel, "CssFile", false, DataSourceUpdateMode.OnPropertyChanged);
+            StyleList.DataBindings.Add("SelectedValue", _presenter.Model.WebVisualStylesModel, "CssFile", false, DataSourceUpdateMode.OnPropertyChanged);
 
-            txtOverview.DataBindings.Add("Text", _webVisualStylesModel, "WebOverview", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSummary.DataBindings.Add("Text", _webVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
-            txtInstance.DataBindings.Add("Text", _webVisualStylesModel, "WebSlot", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtOverview.DataBindings.Add("Text", _presenter.Model.WebVisualStylesModel, "WebOverview", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtSummary.DataBindings.Add("Text", _presenter.Model.WebVisualStylesModel, "WebSummary", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtInstance.DataBindings.Add("Text", _presenter.Model.WebVisualStylesModel, "WebSlot", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -653,13 +556,13 @@ namespace HFM.Forms
 
         private void btnBrowseWebFolder_Click(object sender, EventArgs e)
         {
-            if (_scheduledTasksModel.WebRoot.Length != 0)
+            if (_presenter.Model.ScheduledTasksModel.WebRoot.Length != 0)
             {
-                locateWebFolder.SelectedPath = _scheduledTasksModel.WebRoot;
+                locateWebFolder.SelectedPath = _presenter.Model.ScheduledTasksModel.WebRoot;
             }
             if (locateWebFolder.ShowDialog() == DialogResult.OK)
             {
-                _scheduledTasksModel.WebRoot = locateWebFolder.SelectedPath;
+                _presenter.Model.ScheduledTasksModel.WebRoot = locateWebFolder.SelectedPath;
             }
         }
 
@@ -678,7 +581,7 @@ namespace HFM.Forms
 
         private void btnTestEmail_Click(object sender, EventArgs e)
         {
-            if (_reportingModel.Error)
+            if (_presenter.Model.ReportingModel.Error)
             {
                 MessageBox.Show(this, "Please correct error conditions before sending a Test Email.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -767,7 +670,7 @@ namespace HFM.Forms
         {
             if (Core.Application.IsRunningOnMono) return;
 
-            string sStylesheet = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Core.Application.CssFolderName, _webVisualStylesModel.CssFile);
+            string sStylesheet = Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.CssFolderName, _presenter.Model.WebVisualStylesModel.CssFile);
             var sb = new StringBuilder();
 
             sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
@@ -813,7 +716,7 @@ namespace HFM.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                if (!_scheduledTasksModel.FtpModeEnabled)
+                if (!_presenter.Model.ScheduledTasksModel.FtpModeEnabled)
                 {
                     if (Directory.Exists(WebSiteTargetPathTextBox.Text))
                     {
@@ -826,13 +729,13 @@ namespace HFM.Forms
                 }
                 else
                 {
-                    string host = _scheduledTasksModel.WebGenServer;
-                    int port = _scheduledTasksModel.WebGenPort;
-                    string path = _scheduledTasksModel.WebRoot;
-                    string username = _scheduledTasksModel.WebGenUsername;
-                    string password = _scheduledTasksModel.WebGenPassword;
+                    string host = _presenter.Model.ScheduledTasksModel.WebGenServer;
+                    int port = _presenter.Model.ScheduledTasksModel.WebGenPort;
+                    string path = _presenter.Model.ScheduledTasksModel.WebRoot;
+                    string username = _presenter.Model.ScheduledTasksModel.WebGenUsername;
+                    string password = _presenter.Model.ScheduledTasksModel.WebGenPassword;
 
-                    await Task.Run(() => _ftpService.CheckConnection(host, port, path, username, password, _scheduledTasksModel.FtpMode));
+                    await Task.Run(() => _ftpService.CheckConnection(host, port, path, username, password, _presenter.Model.ScheduledTasksModel.FtpMode));
                     ShowConnectionSucceededMessage();
                 }
             }
@@ -864,56 +767,29 @@ namespace HFM.Forms
         {
             if (CheckForErrorConditions() == false)
             {
-                SetAutoRun();
-                _scheduledTasksModel.Update(_prefs);
-                _startupAndExternalModel.Update(_prefs);
-                _optionsModel.Update(_prefs);
-                _reportingModel.Update(_prefs);
-                _webSettingsModel.Update(_prefs);
-                _webVisualStylesModel.Update(_prefs);
-                _prefs.Save();
-
-                DialogResult = DialogResult.OK;
-                Close();
+                _presenter.OKClicked();
             }
         }
 
         private bool CheckForErrorConditions()
         {
-            SetPropertyErrorState();
-            if (_scheduledTasksModel.Error)
+            if (_presenter.Model.ScheduledTasksModel.Error)
             {
                 tabControl1.SelectedTab = tabSchdTasks;
                 return true;
             }
-            if (_reportingModel.Error)
+            if (_presenter.Model.ReportingModel.Error)
             {
                 tabControl1.SelectedTab = tabReporting;
                 return true;
             }
-            if (_webSettingsModel.Error)
+            if (_presenter.Model.WebSettingsModel.Error)
             {
                 tabControl1.SelectedTab = tabWeb;
                 return true;
             }
 
             return false;
-        }
-
-        private void SetAutoRun()
-        {
-            if (Core.Application.IsRunningOnMono) return;
-
-            try
-            {
-                _autoRun.SetFilePath(chkAutoRun.Checked ? System.Windows.Forms.Application.ExecutablePath : null);
-            }
-            catch (InvalidOperationException ex)
-            {
-                Logger.Error(ex.Message, ex);
-                MessageBox.Show(this, "Failed to save HFM.NET Auto Run Registry Value.  Please see the Messages Windows for detailed error information.",
-                   Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -925,28 +801,28 @@ namespace HFM.Forms
 
         private void btnBrowseConfigFile_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_startupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
+            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _startupAndExternalModel.DefaultConfigFile = path;
+                _presenter.Model.StartupAndExternalModel.DefaultConfigFile = path;
             }
         }
 
         private void btnBrowseLogViewer_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_startupAndExternalModel.LogFileViewer, ExeExt, ExeFilter);
+            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.LogFileViewer, ExeExt, ExeFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _startupAndExternalModel.LogFileViewer = path;
+                _presenter.Model.StartupAndExternalModel.LogFileViewer = path;
             }
         }
 
         private void btnBrowseFileExplorer_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_startupAndExternalModel.FileExplorer, ExeExt, ExeFilter);
+            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.FileExplorer, ExeExt, ExeFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _startupAndExternalModel.FileExplorer = path;
+                _presenter.Model.StartupAndExternalModel.FileExplorer = path;
             }
         }
 
@@ -993,28 +869,28 @@ namespace HFM.Forms
 
         private void btnOverviewBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_webVisualStylesModel.WebOverview, XsltExt, XsltFilter);
+            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebOverview, XsltExt, XsltFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _webVisualStylesModel.WebOverview = path;
+                _presenter.Model.WebVisualStylesModel.WebOverview = path;
             }
         }
 
         private void btnSummaryBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_webVisualStylesModel.WebSummary, XsltExt, XsltFilter);
+            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebSummary, XsltExt, XsltFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _webVisualStylesModel.WebSummary = path;
+                _presenter.Model.WebVisualStylesModel.WebSummary = path;
             }
         }
 
         private void btnInstanceBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_webVisualStylesModel.WebSlot, XsltExt, XsltFilter);
+            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebSlot, XsltExt, XsltFilter);
             if (String.IsNullOrEmpty(path) == false)
             {
-                _webVisualStylesModel.WebSlot = path;
+                _presenter.Model.WebVisualStylesModel.WebSlot = path;
             }
         }
 
@@ -1023,7 +899,7 @@ namespace HFM.Forms
             if (String.IsNullOrEmpty(path) == false)
             {
                 var fileInfo = new FileInfo(path);
-                string xsltPath = Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName);
+                string xsltPath = Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName);
 
                 if (fileInfo.Exists)
                 {
@@ -1056,7 +932,7 @@ namespace HFM.Forms
             if (openConfigDialog.ShowDialog() == DialogResult.OK)
             {
                 // Check to see if the path for the file returned is the \HFM\XSL path
-                if (Path.Combine(_prefs.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
+                if (Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
                 {
                     // If so, return the file name only
                     return Path.GetFileName(openConfigDialog.FileName);

@@ -752,11 +752,12 @@ namespace HFM.Forms
 
         public void EditPreferencesClick()
         {
-            var prefDialog = _viewFactory.GetPreferencesDialog();
-            prefDialog.ShowDialog(_view);
-            _viewFactory.Release(prefDialog);
+            using (var dialog = new PreferencesPresenter(Logger, new PreferencesModel(_prefs, new RegistryAutoRun(Logger)), _messageBox))
+            {
+                dialog.ShowDialog(_view);
 
-            _view.DataGridView.Invalidate();
+                _view.DataGridView.Invalidate();
+            }
         }
 
         #endregion

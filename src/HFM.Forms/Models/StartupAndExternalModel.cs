@@ -1,178 +1,184 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   internal class StartupAndExternalModel : INotifyPropertyChanged
-   {
-      public StartupAndExternalModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
+    public class StartupAndExternalModel : INotifyPropertyChanged
+    {
+        public IPreferenceSet Preferences { get; }
+        public IAutoRun AutoRunConfiguration { get; }
 
-      public void Load(IPreferenceSet prefs)
-      {
-         RunMinimized = prefs.Get<bool>(Preference.RunMinimized);
-         StartupCheckForUpdate = prefs.Get<bool>(Preference.StartupCheckForUpdate);
-         DefaultConfigFile = prefs.Get<string>(Preference.DefaultConfigFile);
-         UseDefaultConfigFile = prefs.Get<bool>(Preference.UseDefaultConfigFile);
-         LogFileViewer = prefs.Get<string>(Preference.LogFileViewer);
-         FileExplorer = prefs.Get<string>(Preference.FileExplorer);
-      }
+        public StartupAndExternalModel(IPreferenceSet preferences, IAutoRun autoRunConfiguration)
+        {
+            Preferences = preferences;
+            AutoRunConfiguration = autoRunConfiguration;
+            Load();
+        }
 
-      public void Update(IPreferenceSet prefs)
-      {
-         prefs.Set(Preference.RunMinimized, RunMinimized);
-         prefs.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
-         prefs.Set(Preference.DefaultConfigFile, DefaultConfigFile);
-         prefs.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
-         prefs.Set(Preference.LogFileViewer, LogFileViewer);
-         prefs.Set(Preference.FileExplorer, FileExplorer);
-      }
+        public void Load()
+        {
+            AutoRun = AutoRunConfiguration.IsEnabled();
+            RunMinimized = Preferences.Get<bool>(Preference.RunMinimized);
+            StartupCheckForUpdate = Preferences.Get<bool>(Preference.StartupCheckForUpdate);
+            DefaultConfigFile = Preferences.Get<string>(Preference.DefaultConfigFile);
+            UseDefaultConfigFile = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
+            LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
+            FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
+        }
 
-      #region Startup
+        public void Update()
+        {
+            Preferences.Set(Preference.RunMinimized, RunMinimized);
+            Preferences.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
+            Preferences.Set(Preference.DefaultConfigFile, DefaultConfigFile);
+            Preferences.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
+            Preferences.Set(Preference.LogFileViewer, LogFileViewer);
+            Preferences.Set(Preference.FileExplorer, FileExplorer);
+        }
 
-      private bool _runMinimized;
+        public void UpdateAutoRun()
+        {
+            AutoRunConfiguration.SetFilePath(AutoRun ? System.Windows.Forms.Application.ExecutablePath : null);
+        }
 
-      public bool RunMinimized
-      {
-         get { return _runMinimized; }
-         set
-         {
-            if (RunMinimized != value)
+        #region Startup
+
+        private bool _autoRun;
+
+        public bool AutoRun
+        {
+            get => _autoRun;
+            set
             {
-               _runMinimized = value;
-               OnPropertyChanged("RunMinimized");
+                if (_autoRun != value)
+                {
+                    _autoRun = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _startupCheckForUpdate;
+        private bool _runMinimized;
 
-      public bool StartupCheckForUpdate
-      {
-         get { return _startupCheckForUpdate; }
-         set
-         {
-            if (StartupCheckForUpdate != value)
+        public bool RunMinimized
+        {
+            get { return _runMinimized; }
+            set
             {
-               _startupCheckForUpdate = value;
-               OnPropertyChanged("StartupCheckForUpdate");
+                if (RunMinimized != value)
+                {
+                    _runMinimized = value;
+                    OnPropertyChanged("RunMinimized");
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region Configuration File
+        private bool _startupCheckForUpdate;
 
-      private string _defaultConfigFile;
-
-      public string DefaultConfigFile
-      {
-         get { return _defaultConfigFile; }
-         set
-         {
-            if (DefaultConfigFile != value)
+        public bool StartupCheckForUpdate
+        {
+            get { return _startupCheckForUpdate; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _defaultConfigFile = newValue;
-               OnPropertyChanged("DefaultConfigFile");
-               
-               if (newValue.Length == 0)
-               {
-                  UseDefaultConfigFile = false;
-               }
+                if (StartupCheckForUpdate != value)
+                {
+                    _startupCheckForUpdate = value;
+                    OnPropertyChanged("StartupCheckForUpdate");
+                }
             }
-         }
-      }
+        }
 
-      private bool _useDefaultConfigFile;
+        #endregion
 
-      public bool UseDefaultConfigFile
-      {
-         get { return _useDefaultConfigFile; }
-         set
-         {
-            if (UseDefaultConfigFile != value)
+        #region Configuration File
+
+        private string _defaultConfigFile;
+
+        public string DefaultConfigFile
+        {
+            get { return _defaultConfigFile; }
+            set
             {
-               _useDefaultConfigFile = value;
-               OnPropertyChanged("UseDefaultConfigFile");
+                if (DefaultConfigFile != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _defaultConfigFile = newValue;
+                    OnPropertyChanged("DefaultConfigFile");
+
+                    if (newValue.Length == 0)
+                    {
+                        UseDefaultConfigFile = false;
+                    }
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region External Programs
+        private bool _useDefaultConfigFile;
 
-      private string _logFileViewer;
-
-      public string LogFileViewer
-      {
-         get { return _logFileViewer; }
-         set
-         {
-            if (LogFileViewer != value)
+        public bool UseDefaultConfigFile
+        {
+            get { return _useDefaultConfigFile; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _logFileViewer = newValue;
-               OnPropertyChanged("LogFileViewer");
+                if (UseDefaultConfigFile != value)
+                {
+                    _useDefaultConfigFile = value;
+                    OnPropertyChanged("UseDefaultConfigFile");
+                }
             }
-         }
-      }
+        }
 
-      private string _fileExplorer;
+        #endregion
 
-      public string FileExplorer
-      {
-         get { return _fileExplorer; }
-         set
-         {
-            if (FileExplorer != value)
+        #region External Programs
+
+        private string _logFileViewer;
+
+        public string LogFileViewer
+        {
+            get { return _logFileViewer; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _fileExplorer = newValue;
-               OnPropertyChanged("FileExplorer");
+                if (LogFileViewer != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _logFileViewer = newValue;
+                    OnPropertyChanged("LogFileViewer");
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        private string _fileExplorer;
 
-      #region INotifyPropertyChanged Members
+        public string FileExplorer
+        {
+            get { return _fileExplorer; }
+            set
+            {
+                if (FileExplorer != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _fileExplorer = newValue;
+                    OnPropertyChanged("FileExplorer");
+                }
+            }
+        }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #region INotifyPropertyChanged Members
 
-      #endregion
-   }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }

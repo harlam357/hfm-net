@@ -10,7 +10,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    internal class WebVisualStylesModel : INotifyPropertyChanged
+    public class WebVisualStylesModel : INotifyPropertyChanged
     {
         private const string CssExtension = ".css";
 

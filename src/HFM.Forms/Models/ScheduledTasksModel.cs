@@ -11,7 +11,7 @@ using HFM.Preferences.Data;
 
 namespace HFM.Forms.Models
 {
-    internal class ScheduledTasksModel : INotifyPropertyChanged
+    public class ScheduledTasksModel : INotifyPropertyChanged
     {
         public bool Error
         {
