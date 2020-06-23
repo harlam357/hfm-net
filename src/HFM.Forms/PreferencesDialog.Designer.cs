@@ -39,17 +39,17 @@ namespace HFM.Forms
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSchdTasks = new System.Windows.Forms.TabPage();
             this.grpUpdateData = new System.Windows.Forms.GroupBox();
-            this.txtCollectMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtCollectMinutes = new HFM.Forms.Controls.DataErrorTextBox();
             this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
             this.lbl2SchedExplain = new System.Windows.Forms.Label();
             this.chkScheduled = new System.Windows.Forms.CheckBox();
             this.chkSynchronous = new System.Windows.Forms.CheckBox();
             this.grpHTMLOutput = new System.Windows.Forms.GroupBox();
-            this.WebSitePortTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.WebSitePortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSitePortLabel = new System.Windows.Forms.Label();
-            this.WebSitePasswordTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.WebSiteUsernameTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.WebSiteServerTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.WebSitePasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.WebSiteUsernameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.WebSiteServerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebGenTypePanel = new HFM.Forms.Controls.RadioPanel();
             this.UploadTypeLabel = new System.Windows.Forms.Label();
             this.WebGenTypeFtpRadioButton = new System.Windows.Forms.RadioButton();
@@ -69,25 +69,25 @@ namespace HFM.Forms
             this.chkFAHlog = new System.Windows.Forms.CheckBox();
             this.radioFullRefresh = new System.Windows.Forms.RadioButton();
             this.radioSchedule = new System.Windows.Forms.RadioButton();
-            this.txtWebGenMinutes = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtWebGenMinutes = new HFM.Forms.Controls.DataErrorTextBox();
             this.lbl2MinutesToGen = new System.Windows.Forms.Label();
             this.btnBrowseWebFolder = new System.Windows.Forms.Button();
-            this.WebSiteTargetPathTextBox = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.WebSiteTargetPathTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSiteTargetPathLabel = new System.Windows.Forms.Label();
             this.chkWebSiteGenerator = new System.Windows.Forms.CheckBox();
             this.tabStartup = new System.Windows.Forms.TabPage();
             this.grpFileExplorer = new System.Windows.Forms.GroupBox();
             this.btnBrowseFileExplorer = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtFileExplorer = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtFileExplorer = new HFM.Forms.Controls.DataErrorTextBox();
             this.grpLogFileViewer = new System.Windows.Forms.GroupBox();
             this.btnBrowseLogViewer = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtLogFileViewer = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtLogFileViewer = new HFM.Forms.Controls.DataErrorTextBox();
             this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
             this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
             this.btnBrowseConfigFile = new System.Windows.Forms.Button();
-            this.txtDefaultConfigFile = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtDefaultConfigFile = new HFM.Forms.Controls.DataErrorTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.grpStartup = new System.Windows.Forms.GroupBox();
             this.chkCheckForUpdate = new System.Windows.Forms.CheckBox();
@@ -116,55 +116,55 @@ namespace HFM.Forms
             this.tabReporting = new System.Windows.Forms.TabPage();
             this.grpReportSelections = new System.Windows.Forms.GroupBox();
             this.grpEmailSettings = new System.Windows.Forms.GroupBox();
-            this.txtSmtpServerPort = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtSmtpServerPort = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper3 = new System.Windows.Forms.Label();
             this.chkEmailSecure = new System.Windows.Forms.CheckBox();
             this.btnTestEmail = new System.Windows.Forms.Button();
-            this.txtSmtpPassword = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.txtSmtpUsername = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtSmtpPassword = new HFM.Forms.Controls.DataErrorTextBox();
+            this.txtSmtpUsername = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper4 = new System.Windows.Forms.Label();
             this.labelWrapper5 = new System.Windows.Forms.Label();
             this.lblFromEmailAddress = new System.Windows.Forms.Label();
-            this.txtFromEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtFromEmailAddress = new HFM.Forms.Controls.DataErrorTextBox();
             this.chkEnableEmail = new System.Windows.Forms.CheckBox();
             this.lblSmtpServer = new System.Windows.Forms.Label();
             this.lblToAddress = new System.Windows.Forms.Label();
-            this.txtSmtpServer = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.txtToEmailAddress = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtSmtpServer = new HFM.Forms.Controls.DataErrorTextBox();
+            this.txtToEmailAddress = new HFM.Forms.Controls.DataErrorTextBox();
             this.tabWeb = new System.Windows.Forms.TabPage();
             this.grpProjectDownload = new System.Windows.Forms.GroupBox();
-            this.txtProjectDownloadUrl = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtProjectDownloadUrl = new HFM.Forms.Controls.DataErrorTextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.grpWebStats = new System.Windows.Forms.GroupBox();
             this.EOCUserIDLabel = new System.Windows.Forms.Label();
             this.FahUserIDLabel = new System.Windows.Forms.Label();
             this.TestFAHTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.txtEOCUserID = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.txtStanfordTeamID = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtEOCUserID = new HFM.Forms.Controls.DataErrorTextBox();
+            this.txtStanfordTeamID = new HFM.Forms.Controls.DataErrorTextBox();
             this.FAHTeamIDLabel = new System.Windows.Forms.Label();
             this.TestFAHUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.txtStanfordUserID = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtStanfordUserID = new HFM.Forms.Controls.DataErrorTextBox();
             this.TestEOCUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.grpWebProxy = new System.Windows.Forms.GroupBox();
             this.chkUseProxy = new System.Windows.Forms.CheckBox();
             this.chkUseProxyAuth = new System.Windows.Forms.CheckBox();
-            this.txtProxyPass = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.txtProxyUser = new harlam357.Windows.Forms.ValidatingTextBox();
-            this.txtProxyPort = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtProxyPass = new HFM.Forms.Controls.DataErrorTextBox();
+            this.txtProxyUser = new HFM.Forms.Controls.DataErrorTextBox();
+            this.txtProxyPort = new HFM.Forms.Controls.DataErrorTextBox();
             this.lbl3ProxyPass = new System.Windows.Forms.Label();
-            this.txtProxyServer = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtProxyServer = new HFM.Forms.Controls.DataErrorTextBox();
             this.lbl3ProxyUser = new System.Windows.Forms.Label();
             this.lbl3Port = new System.Windows.Forms.Label();
             this.lbl3Proxy = new System.Windows.Forms.Label();
             this.tabVisStyles = new System.Windows.Forms.TabPage();
             this.btnInstanceBrowse = new System.Windows.Forms.Button();
-            this.txtInstance = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtInstance = new HFM.Forms.Controls.DataErrorTextBox();
             this.SlotXsltLabel = new System.Windows.Forms.Label();
             this.btnSummaryBrowse = new System.Windows.Forms.Button();
-            this.txtSummary = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtSummary = new HFM.Forms.Controls.DataErrorTextBox();
             this.lblSummary = new System.Windows.Forms.Label();
             this.btnOverviewBrowse = new System.Windows.Forms.Button();
-            this.txtOverview = new harlam357.Windows.Forms.ValidatingTextBox();
+            this.txtOverview = new HFM.Forms.Controls.DataErrorTextBox();
             this.lblOverview = new System.Windows.Forms.Label();
             this.lbl1Preview = new System.Windows.Forms.Label();
             this.lbl1Style = new System.Windows.Forms.Label();
@@ -264,7 +264,6 @@ namespace HFM.Forms
             this.txtCollectMinutes.DoubleBuffered = true;
             this.txtCollectMinutes.Enabled = false;
             this.txtCollectMinutes.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtCollectMinutes.ErrorState = false;
             this.txtCollectMinutes.ErrorToolTip = this.toolTipPrefs;
             this.txtCollectMinutes.ErrorToolTipDuration = 5000;
             this.txtCollectMinutes.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -277,7 +276,6 @@ namespace HFM.Forms
             this.txtCollectMinutes.TabIndex = 4;
             this.txtCollectMinutes.Text = "15";
             this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCollectMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // lbl2SchedExplain
@@ -348,7 +346,6 @@ namespace HFM.Forms
             this.WebSitePortTextBox.DoubleBuffered = true;
             this.WebSitePortTextBox.Enabled = false;
             this.WebSitePortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSitePortTextBox.ErrorState = false;
             this.WebSitePortTextBox.ErrorToolTip = null;
             this.WebSitePortTextBox.ErrorToolTipDuration = 5000;
             this.WebSitePortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -358,7 +355,6 @@ namespace HFM.Forms
             this.WebSitePortTextBox.ReadOnly = true;
             this.WebSitePortTextBox.Size = new System.Drawing.Size(54, 20);
             this.WebSitePortTextBox.TabIndex = 13;
-            this.WebSitePortTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // WebSitePortLabel
             // 
@@ -375,7 +371,6 @@ namespace HFM.Forms
             this.WebSitePasswordTextBox.DoubleBuffered = true;
             this.WebSitePasswordTextBox.Enabled = false;
             this.WebSitePasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSitePasswordTextBox.ErrorState = false;
             this.WebSitePasswordTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSitePasswordTextBox.ErrorToolTipDuration = 5000;
             this.WebSitePasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -386,7 +381,6 @@ namespace HFM.Forms
             this.WebSitePasswordTextBox.Size = new System.Drawing.Size(187, 20);
             this.WebSitePasswordTextBox.TabIndex = 17;
             this.WebSitePasswordTextBox.UseSystemPasswordChar = true;
-            this.WebSitePasswordTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // WebSiteUsernameTextBox
             // 
@@ -394,7 +388,6 @@ namespace HFM.Forms
             this.WebSiteUsernameTextBox.DoubleBuffered = true;
             this.WebSiteUsernameTextBox.Enabled = false;
             this.WebSiteUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSiteUsernameTextBox.ErrorState = false;
             this.WebSiteUsernameTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSiteUsernameTextBox.ErrorToolTipDuration = 5000;
             this.WebSiteUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -404,7 +397,6 @@ namespace HFM.Forms
             this.WebSiteUsernameTextBox.ReadOnly = true;
             this.WebSiteUsernameTextBox.Size = new System.Drawing.Size(187, 20);
             this.WebSiteUsernameTextBox.TabIndex = 15;
-            this.WebSiteUsernameTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // WebSiteServerTextBox
             // 
@@ -412,7 +404,6 @@ namespace HFM.Forms
             this.WebSiteServerTextBox.DoubleBuffered = true;
             this.WebSiteServerTextBox.Enabled = false;
             this.WebSiteServerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSiteServerTextBox.ErrorState = false;
             this.WebSiteServerTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSiteServerTextBox.ErrorToolTipDuration = 5000;
             this.WebSiteServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -422,7 +413,6 @@ namespace HFM.Forms
             this.WebSiteServerTextBox.ReadOnly = true;
             this.WebSiteServerTextBox.Size = new System.Drawing.Size(187, 20);
             this.WebSiteServerTextBox.TabIndex = 11;
-            this.WebSiteServerTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // WebGenTypePanel
             // 
@@ -648,7 +638,6 @@ namespace HFM.Forms
             this.txtWebGenMinutes.DoubleBuffered = true;
             this.txtWebGenMinutes.Enabled = false;
             this.txtWebGenMinutes.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtWebGenMinutes.ErrorState = false;
             this.txtWebGenMinutes.ErrorToolTip = this.toolTipPrefs;
             this.txtWebGenMinutes.ErrorToolTipDuration = 5000;
             this.txtWebGenMinutes.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -661,7 +650,6 @@ namespace HFM.Forms
             this.txtWebGenMinutes.TabIndex = 2;
             this.txtWebGenMinutes.Text = "15";
             this.txtWebGenMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtWebGenMinutes.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtWebGenMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // lbl2MinutesToGen
@@ -691,7 +679,6 @@ namespace HFM.Forms
             this.WebSiteTargetPathTextBox.DoubleBuffered = true;
             this.WebSiteTargetPathTextBox.Enabled = false;
             this.WebSiteTargetPathTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSiteTargetPathTextBox.ErrorState = false;
             this.WebSiteTargetPathTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSiteTargetPathTextBox.ErrorToolTipDuration = 5000;
             this.WebSiteTargetPathTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
@@ -702,7 +689,6 @@ namespace HFM.Forms
             this.WebSiteTargetPathTextBox.ReadOnly = true;
             this.WebSiteTargetPathTextBox.Size = new System.Drawing.Size(374, 20);
             this.WebSiteTargetPathTextBox.TabIndex = 8;
-            this.WebSiteTargetPathTextBox.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // WebSiteTargetPathLabel
             // 
@@ -773,7 +759,6 @@ namespace HFM.Forms
             this.txtFileExplorer.BackColor = System.Drawing.SystemColors.Window;
             this.txtFileExplorer.DoubleBuffered = true;
             this.txtFileExplorer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtFileExplorer.ErrorState = false;
             this.txtFileExplorer.ErrorToolTip = null;
             this.txtFileExplorer.ErrorToolTipDuration = 5000;
             this.txtFileExplorer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -782,7 +767,6 @@ namespace HFM.Forms
             this.txtFileExplorer.Name = "txtFileExplorer";
             this.txtFileExplorer.Size = new System.Drawing.Size(384, 20);
             this.txtFileExplorer.TabIndex = 1;
-            this.txtFileExplorer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // grpLogFileViewer
             // 
@@ -820,7 +804,6 @@ namespace HFM.Forms
             this.txtLogFileViewer.BackColor = System.Drawing.SystemColors.Window;
             this.txtLogFileViewer.DoubleBuffered = true;
             this.txtLogFileViewer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtLogFileViewer.ErrorState = false;
             this.txtLogFileViewer.ErrorToolTip = null;
             this.txtLogFileViewer.ErrorToolTipDuration = 5000;
             this.txtLogFileViewer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -829,7 +812,6 @@ namespace HFM.Forms
             this.txtLogFileViewer.Name = "txtLogFileViewer";
             this.txtLogFileViewer.Size = new System.Drawing.Size(384, 20);
             this.txtLogFileViewer.TabIndex = 1;
-            this.txtLogFileViewer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // grpDefaultConfig
             // 
@@ -871,7 +853,6 @@ namespace HFM.Forms
             this.txtDefaultConfigFile.DoubleBuffered = true;
             this.txtDefaultConfigFile.Enabled = false;
             this.txtDefaultConfigFile.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtDefaultConfigFile.ErrorState = false;
             this.txtDefaultConfigFile.ErrorToolTip = null;
             this.txtDefaultConfigFile.ErrorToolTipDuration = 5000;
             this.txtDefaultConfigFile.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -881,7 +862,6 @@ namespace HFM.Forms
             this.txtDefaultConfigFile.ReadOnly = true;
             this.txtDefaultConfigFile.Size = new System.Drawing.Size(384, 20);
             this.txtDefaultConfigFile.TabIndex = 2;
-            this.txtDefaultConfigFile.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // label1
             // 
@@ -1189,7 +1169,6 @@ namespace HFM.Forms
             this.txtSmtpServerPort.DoubleBuffered = true;
             this.txtSmtpServerPort.Enabled = false;
             this.txtSmtpServerPort.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpServerPort.ErrorState = false;
             this.txtSmtpServerPort.ErrorToolTip = this.toolTipPrefs;
             this.txtSmtpServerPort.ErrorToolTipDuration = 5000;
             this.txtSmtpServerPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1200,7 +1179,6 @@ namespace HFM.Forms
             this.txtSmtpServerPort.ReadOnly = true;
             this.txtSmtpServerPort.Size = new System.Drawing.Size(54, 20);
             this.txtSmtpServerPort.TabIndex = 9;
-            this.txtSmtpServerPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // labelWrapper3
@@ -1240,7 +1218,6 @@ namespace HFM.Forms
             this.txtSmtpPassword.DoubleBuffered = true;
             this.txtSmtpPassword.Enabled = false;
             this.txtSmtpPassword.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpPassword.ErrorState = false;
             this.txtSmtpPassword.ErrorToolTip = this.toolTipPrefs;
             this.txtSmtpPassword.ErrorToolTipDuration = 5000;
             this.txtSmtpPassword.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1252,7 +1229,6 @@ namespace HFM.Forms
             this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
             this.txtSmtpPassword.TabIndex = 13;
             this.txtSmtpPassword.UseSystemPasswordChar = true;
-            this.txtSmtpPassword.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // txtSmtpUsername
             // 
@@ -1260,7 +1236,6 @@ namespace HFM.Forms
             this.txtSmtpUsername.DoubleBuffered = true;
             this.txtSmtpUsername.Enabled = false;
             this.txtSmtpUsername.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpUsername.ErrorState = false;
             this.txtSmtpUsername.ErrorToolTip = this.toolTipPrefs;
             this.txtSmtpUsername.ErrorToolTipDuration = 5000;
             this.txtSmtpUsername.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1271,7 +1246,6 @@ namespace HFM.Forms
             this.txtSmtpUsername.ReadOnly = true;
             this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
             this.txtSmtpUsername.TabIndex = 11;
-            this.txtSmtpUsername.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // labelWrapper4
             // 
@@ -1306,7 +1280,6 @@ namespace HFM.Forms
             this.txtFromEmailAddress.DoubleBuffered = true;
             this.txtFromEmailAddress.Enabled = false;
             this.txtFromEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtFromEmailAddress.ErrorState = false;
             this.txtFromEmailAddress.ErrorToolTip = this.toolTipPrefs;
             this.txtFromEmailAddress.ErrorToolTipDuration = 5000;
             this.txtFromEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1317,7 +1290,6 @@ namespace HFM.Forms
             this.txtFromEmailAddress.ReadOnly = true;
             this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
             this.txtFromEmailAddress.TabIndex = 5;
-            this.txtFromEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
             // 
             // chkEnableEmail
@@ -1354,7 +1326,6 @@ namespace HFM.Forms
             this.txtSmtpServer.DoubleBuffered = true;
             this.txtSmtpServer.Enabled = false;
             this.txtSmtpServer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpServer.ErrorState = false;
             this.txtSmtpServer.ErrorToolTip = this.toolTipPrefs;
             this.txtSmtpServer.ErrorToolTipDuration = 5000;
             this.txtSmtpServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1365,7 +1336,6 @@ namespace HFM.Forms
             this.txtSmtpServer.ReadOnly = true;
             this.txtSmtpServer.Size = new System.Drawing.Size(282, 20);
             this.txtSmtpServer.TabIndex = 7;
-            this.txtSmtpServer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // txtToEmailAddress
             // 
@@ -1373,7 +1343,6 @@ namespace HFM.Forms
             this.txtToEmailAddress.DoubleBuffered = true;
             this.txtToEmailAddress.Enabled = false;
             this.txtToEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtToEmailAddress.ErrorState = false;
             this.txtToEmailAddress.ErrorToolTip = this.toolTipPrefs;
             this.txtToEmailAddress.ErrorToolTipDuration = 5000;
             this.txtToEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1384,7 +1353,6 @@ namespace HFM.Forms
             this.txtToEmailAddress.ReadOnly = true;
             this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
             this.txtToEmailAddress.TabIndex = 3;
-            this.txtToEmailAddress.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // tabWeb
             // 
@@ -1416,7 +1384,6 @@ namespace HFM.Forms
             this.txtProjectDownloadUrl.BackColor = System.Drawing.SystemColors.Window;
             this.txtProjectDownloadUrl.DoubleBuffered = true;
             this.txtProjectDownloadUrl.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProjectDownloadUrl.ErrorState = false;
             this.txtProjectDownloadUrl.ErrorToolTip = this.toolTipPrefs;
             this.txtProjectDownloadUrl.ErrorToolTipDuration = 5000;
             this.txtProjectDownloadUrl.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1425,7 +1392,6 @@ namespace HFM.Forms
             this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
             this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
             this.txtProjectDownloadUrl.TabIndex = 1;
-            this.txtProjectDownloadUrl.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // label5
             // 
@@ -1488,7 +1454,6 @@ namespace HFM.Forms
             this.txtEOCUserID.BackColor = System.Drawing.SystemColors.Window;
             this.txtEOCUserID.DoubleBuffered = true;
             this.txtEOCUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtEOCUserID.ErrorState = false;
             this.txtEOCUserID.ErrorToolTip = null;
             this.txtEOCUserID.ErrorToolTipDuration = 5000;
             this.txtEOCUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1498,7 +1463,6 @@ namespace HFM.Forms
             this.txtEOCUserID.Name = "txtEOCUserID";
             this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
             this.txtEOCUserID.TabIndex = 3;
-            this.txtEOCUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // txtStanfordTeamID
@@ -1506,7 +1470,6 @@ namespace HFM.Forms
             this.txtStanfordTeamID.BackColor = System.Drawing.SystemColors.Window;
             this.txtStanfordTeamID.DoubleBuffered = true;
             this.txtStanfordTeamID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordTeamID.ErrorState = false;
             this.txtStanfordTeamID.ErrorToolTip = null;
             this.txtStanfordTeamID.ErrorToolTipDuration = 5000;
             this.txtStanfordTeamID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1516,7 +1479,6 @@ namespace HFM.Forms
             this.txtStanfordTeamID.Name = "txtStanfordTeamID";
             this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
             this.txtStanfordTeamID.TabIndex = 5;
-            this.txtStanfordTeamID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // FAHTeamIDLabel
@@ -1544,7 +1506,6 @@ namespace HFM.Forms
             this.txtStanfordUserID.BackColor = System.Drawing.SystemColors.Window;
             this.txtStanfordUserID.DoubleBuffered = true;
             this.txtStanfordUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordUserID.ErrorState = false;
             this.txtStanfordUserID.ErrorToolTip = null;
             this.txtStanfordUserID.ErrorToolTipDuration = 5000;
             this.txtStanfordUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1553,7 +1514,6 @@ namespace HFM.Forms
             this.txtStanfordUserID.Name = "txtStanfordUserID";
             this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
             this.txtStanfordUserID.TabIndex = 4;
-            this.txtStanfordUserID.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // TestEOCUserIDLinkLabel
             // 
@@ -1612,7 +1572,6 @@ namespace HFM.Forms
             this.txtProxyPass.DoubleBuffered = true;
             this.txtProxyPass.Enabled = false;
             this.txtProxyPass.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyPass.ErrorState = false;
             this.txtProxyPass.ErrorToolTip = this.toolTipPrefs;
             this.txtProxyPass.ErrorToolTipDuration = 5000;
             this.txtProxyPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1623,7 +1582,6 @@ namespace HFM.Forms
             this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
             this.txtProxyPass.TabIndex = 9;
             this.txtProxyPass.UseSystemPasswordChar = true;
-            this.txtProxyPass.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // txtProxyUser
             // 
@@ -1631,7 +1589,6 @@ namespace HFM.Forms
             this.txtProxyUser.DoubleBuffered = true;
             this.txtProxyUser.Enabled = false;
             this.txtProxyUser.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyUser.ErrorState = false;
             this.txtProxyUser.ErrorToolTip = this.toolTipPrefs;
             this.txtProxyUser.ErrorToolTipDuration = 5000;
             this.txtProxyUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1641,7 +1598,6 @@ namespace HFM.Forms
             this.txtProxyUser.ReadOnly = true;
             this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
             this.txtProxyUser.TabIndex = 7;
-            this.txtProxyUser.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // txtProxyPort
             // 
@@ -1649,7 +1605,6 @@ namespace HFM.Forms
             this.txtProxyPort.DoubleBuffered = true;
             this.txtProxyPort.Enabled = false;
             this.txtProxyPort.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyPort.ErrorState = false;
             this.txtProxyPort.ErrorToolTip = this.toolTipPrefs;
             this.txtProxyPort.ErrorToolTipDuration = 5000;
             this.txtProxyPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1660,7 +1615,6 @@ namespace HFM.Forms
             this.txtProxyPort.ReadOnly = true;
             this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
             this.txtProxyPort.TabIndex = 4;
-            this.txtProxyPort.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // lbl3ProxyPass
@@ -1678,7 +1632,6 @@ namespace HFM.Forms
             this.txtProxyServer.DoubleBuffered = true;
             this.txtProxyServer.Enabled = false;
             this.txtProxyServer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyServer.ErrorState = false;
             this.txtProxyServer.ErrorToolTip = this.toolTipPrefs;
             this.txtProxyServer.ErrorToolTipDuration = 5000;
             this.txtProxyServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1688,7 +1641,6 @@ namespace HFM.Forms
             this.txtProxyServer.ReadOnly = true;
             this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
             this.txtProxyServer.TabIndex = 2;
-            this.txtProxyServer.ValidationType = harlam357.Windows.Forms.ValidationType.None;
             // 
             // lbl3ProxyUser
             // 
@@ -1755,7 +1707,6 @@ namespace HFM.Forms
             this.txtInstance.BackColor = System.Drawing.SystemColors.Control;
             this.txtInstance.DoubleBuffered = true;
             this.txtInstance.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtInstance.ErrorState = false;
             this.txtInstance.ErrorToolTip = this.toolTipPrefs;
             this.txtInstance.ErrorToolTipDuration = 5000;
             this.txtInstance.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1765,7 +1716,6 @@ namespace HFM.Forms
             this.txtInstance.ReadOnly = true;
             this.txtInstance.Size = new System.Drawing.Size(328, 20);
             this.txtInstance.TabIndex = 17;
-            this.txtInstance.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
             // 
             // SlotXsltLabel
             // 
@@ -1792,7 +1742,6 @@ namespace HFM.Forms
             this.txtSummary.BackColor = System.Drawing.SystemColors.Control;
             this.txtSummary.DoubleBuffered = true;
             this.txtSummary.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSummary.ErrorState = false;
             this.txtSummary.ErrorToolTip = this.toolTipPrefs;
             this.txtSummary.ErrorToolTipDuration = 5000;
             this.txtSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1802,7 +1751,6 @@ namespace HFM.Forms
             this.txtSummary.ReadOnly = true;
             this.txtSummary.Size = new System.Drawing.Size(328, 20);
             this.txtSummary.TabIndex = 11;
-            this.txtSummary.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
             // 
             // lblSummary
             // 
@@ -1829,7 +1777,6 @@ namespace HFM.Forms
             this.txtOverview.BackColor = System.Drawing.SystemColors.Control;
             this.txtOverview.DoubleBuffered = true;
             this.txtOverview.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtOverview.ErrorState = false;
             this.txtOverview.ErrorToolTip = this.toolTipPrefs;
             this.txtOverview.ErrorToolTipDuration = 5000;
             this.txtOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
@@ -1839,7 +1786,6 @@ namespace HFM.Forms
             this.txtOverview.ReadOnly = true;
             this.txtOverview.Size = new System.Drawing.Size(328, 20);
             this.txtOverview.TabIndex = 5;
-            this.txtOverview.ValidationType = harlam357.Windows.Forms.ValidationType.Custom;
             // 
             // lblOverview
             // 
@@ -1977,28 +1923,28 @@ namespace HFM.Forms
       private System.Windows.Forms.TabPage tabWeb;
       private System.Windows.Forms.TabPage tabVisStyles;
       private System.Windows.Forms.TabPage tabSchdTasks;
-      private ValidatingTextBox txtStanfordUserID;
-      private ValidatingTextBox txtEOCUserID;
+      private HFM.Forms.Controls.DataErrorTextBox txtStanfordUserID;
+      private HFM.Forms.Controls.DataErrorTextBox txtEOCUserID;
       private System.Windows.Forms.Label FahUserIDLabel;
       private System.Windows.Forms.Label EOCUserIDLabel;
       private System.Windows.Forms.LinkLabel TestEOCUserIDLinkLabel;
       private System.Windows.Forms.LinkLabel TestFAHUserIDLinkLabel;
       private System.Windows.Forms.LinkLabel TestFAHTeamIDLinkLabel;
-      private ValidatingTextBox txtStanfordTeamID;
+      private HFM.Forms.Controls.DataErrorTextBox txtStanfordTeamID;
       private System.Windows.Forms.Label FAHTeamIDLabel;
-      private ValidatingTextBox txtCollectMinutes;
+      private HFM.Forms.Controls.DataErrorTextBox txtCollectMinutes;
       private System.Windows.Forms.CheckBox chkScheduled;
       private System.Windows.Forms.CheckBox chkSynchronous;
-      private ValidatingTextBox txtWebGenMinutes;
+      private HFM.Forms.Controls.DataErrorTextBox txtWebGenMinutes;
       private System.Windows.Forms.CheckBox chkWebSiteGenerator;
-      private ValidatingTextBox WebSiteTargetPathTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox WebSiteTargetPathTextBox;
       private System.Windows.Forms.GroupBox grpWebStats;
       private System.Windows.Forms.GroupBox grpWebProxy;
-      private ValidatingTextBox txtProxyServer;
+      private HFM.Forms.Controls.DataErrorTextBox txtProxyServer;
       private System.Windows.Forms.Label lbl3Proxy;
-      private ValidatingTextBox txtProxyPass;
-      private ValidatingTextBox txtProxyUser;
-      private ValidatingTextBox txtProxyPort;
+      private HFM.Forms.Controls.DataErrorTextBox txtProxyPass;
+      private HFM.Forms.Controls.DataErrorTextBox txtProxyUser;
+      private HFM.Forms.Controls.DataErrorTextBox txtProxyPort;
       private System.Windows.Forms.Label lbl3ProxyPass;
       private System.Windows.Forms.Label lbl3ProxyUser;
       private System.Windows.Forms.Label lbl3Port;
@@ -2007,7 +1953,7 @@ namespace HFM.Forms
       private System.Windows.Forms.TabPage tabOptions;
       private System.Windows.Forms.OpenFileDialog openConfigDialog;
       private System.Windows.Forms.GroupBox grpProjectDownload;
-      private ValidatingTextBox txtProjectDownloadUrl;
+      private HFM.Forms.Controls.DataErrorTextBox txtProjectDownloadUrl;
       private System.Windows.Forms.Label label5;
       private System.Windows.Forms.RadioButton radioSchedule;
       private System.Windows.Forms.RadioButton radioFullRefresh;
@@ -2021,13 +1967,13 @@ namespace HFM.Forms
       private System.Windows.Forms.GroupBox grpEmailSettings;
       private System.Windows.Forms.Label lblSmtpServer;
       private System.Windows.Forms.Label lblToAddress;
-      private ValidatingTextBox txtSmtpServer;
-      private ValidatingTextBox txtToEmailAddress;
+      private HFM.Forms.Controls.DataErrorTextBox txtSmtpServer;
+      private HFM.Forms.Controls.DataErrorTextBox txtToEmailAddress;
       private System.Windows.Forms.CheckBox chkEnableEmail;
       private System.Windows.Forms.Label lblFromEmailAddress;
-      private ValidatingTextBox txtFromEmailAddress;
-      private ValidatingTextBox txtSmtpPassword;
-      private ValidatingTextBox txtSmtpUsername;
+      private HFM.Forms.Controls.DataErrorTextBox txtFromEmailAddress;
+      private HFM.Forms.Controls.DataErrorTextBox txtSmtpPassword;
+      private HFM.Forms.Controls.DataErrorTextBox txtSmtpUsername;
       private System.Windows.Forms.Label labelWrapper4;
       private System.Windows.Forms.Label labelWrapper5;
       private System.Windows.Forms.Button btnTestEmail;
@@ -2040,7 +1986,7 @@ namespace HFM.Forms
       private System.Windows.Forms.GroupBox grpDefaultConfig;
       private System.Windows.Forms.CheckBox chkDefaultConfig;
       private System.Windows.Forms.Button btnBrowseConfigFile;
-      private ValidatingTextBox txtDefaultConfigFile;
+      private HFM.Forms.Controls.DataErrorTextBox txtDefaultConfigFile;
       private System.Windows.Forms.Label label1;
       private System.Windows.Forms.GroupBox grpInteractiveOptions;
       private System.Windows.Forms.CheckBox chkAutoSave;
@@ -2053,29 +1999,29 @@ namespace HFM.Forms
       private System.Windows.Forms.Label lblFtpMode;
       private System.Windows.Forms.Button TestConnectionButton;
       private System.Windows.Forms.Button btnInstanceBrowse;
-      private ValidatingTextBox txtInstance;
+      private HFM.Forms.Controls.DataErrorTextBox txtInstance;
       private System.Windows.Forms.Label SlotXsltLabel;
       private System.Windows.Forms.Button btnSummaryBrowse;
-      private ValidatingTextBox txtSummary;
+      private HFM.Forms.Controls.DataErrorTextBox txtSummary;
       private System.Windows.Forms.Label lblSummary;
       private System.Windows.Forms.Button btnOverviewBrowse;
-      private ValidatingTextBox txtOverview;
+      private HFM.Forms.Controls.DataErrorTextBox txtOverview;
       private System.Windows.Forms.Label lblOverview;
       private System.Windows.Forms.GroupBox grpShowStyle;
       private System.Windows.Forms.ComboBox cboShowStyle;
       private System.Windows.Forms.Label labelWrapper2;
       private System.Windows.Forms.CheckBox chkEmailSecure;
-      private ValidatingTextBox txtSmtpServerPort;
+      private HFM.Forms.Controls.DataErrorTextBox txtSmtpServerPort;
       private System.Windows.Forms.Label labelWrapper3;
       private System.Windows.Forms.CheckBox chkCheckForUpdate;
       private System.Windows.Forms.GroupBox grpFileExplorer;
       private System.Windows.Forms.Button btnBrowseFileExplorer;
       private System.Windows.Forms.Label label4;
-      private ValidatingTextBox txtFileExplorer;
+      private HFM.Forms.Controls.DataErrorTextBox txtFileExplorer;
       private System.Windows.Forms.GroupBox grpLogFileViewer;
       private System.Windows.Forms.Button btnBrowseLogViewer;
       private System.Windows.Forms.Label label3;
-      private ValidatingTextBox txtLogFileViewer;
+      private HFM.Forms.Controls.DataErrorTextBox txtLogFileViewer;
       private System.Windows.Forms.CheckBox chkHtml;
       private System.Windows.Forms.CheckBox chkXml;
       private System.Windows.Forms.NumericUpDown udLimitSize;
@@ -2087,14 +2033,14 @@ namespace HFM.Forms
       private System.Windows.Forms.Label WebSiteUsernameLabel;
       private System.Windows.Forms.CheckBox DuplicateProjectCheckBox;
       private HFM.Forms.Controls.RadioPanel WebGenTypePanel;
-      private ValidatingTextBox WebSitePasswordTextBox;
-      private ValidatingTextBox WebSiteUsernameTextBox;
-      private ValidatingTextBox WebSiteServerTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox WebSitePasswordTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox WebSiteUsernameTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox WebSiteServerTextBox;
       private System.Windows.Forms.CheckBox ShowUserStatsCheckBox;
       private System.Windows.Forms.Label UploadTypeLabel;
       private System.Windows.Forms.RadioButton WebGenTypeFtpRadioButton;
       private System.Windows.Forms.RadioButton WebGenTypePathRadioButton;
-      private ValidatingTextBox WebSitePortTextBox;
+      private HFM.Forms.Controls.DataErrorTextBox WebSitePortTextBox;
       private System.Windows.Forms.Label WebSitePortLabel;
       private System.Windows.Forms.Label labelWrapper6;
       private System.Windows.Forms.ComboBox BonusCalculationComboBox;
