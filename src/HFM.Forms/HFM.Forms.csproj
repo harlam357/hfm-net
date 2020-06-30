@@ -77,9 +77,6 @@
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="harlam357.Windows.Forms">
-      <HintPath>..\..\lib\harlam357-net\harlam357.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="HFM.Client, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
       <HintPath>..\packages\HFM.Client.0.2.1\lib\net47\HFM.Client.dll</HintPath>
     </Reference>

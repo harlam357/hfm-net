@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using harlam357.Windows.Forms;
-
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
