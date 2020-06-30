@@ -1,6 +1,4 @@
 
-using harlam357.Windows.Forms;
-
 namespace HFM.Forms
 {
    partial class PreferencesDialog
@@ -407,7 +405,7 @@ namespace HFM.Forms
             this.WebSiteServerTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSiteServerTextBox.ErrorToolTipDuration = 5000;
             this.WebSiteServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.WebSiteServerTextBox.ErrorToolTipText = "FTP server must be a valid host name or IP address.";
+            this.WebSiteServerTextBox.ErrorToolTipText = "";
             this.WebSiteServerTextBox.Location = new System.Drawing.Point(79, 105);
             this.WebSiteServerTextBox.Name = "WebSiteServerTextBox";
             this.WebSiteServerTextBox.ReadOnly = true;
@@ -682,8 +680,7 @@ namespace HFM.Forms
             this.WebSiteTargetPathTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSiteTargetPathTextBox.ErrorToolTipDuration = 5000;
             this.WebSiteTargetPathTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -40);
-            this.WebSiteTargetPathTextBox.ErrorToolTipText = "Web Generation target path must be a valid local path, network (UNC) path,\r\nor Un" +
-    "ix style path when the upload type is FTP server.";
+            this.WebSiteTargetPathTextBox.ErrorToolTipText = "";
             this.WebSiteTargetPathTextBox.Location = new System.Drawing.Point(79, 78);
             this.WebSiteTargetPathTextBox.Name = "WebSiteTargetPathTextBox";
             this.WebSiteTargetPathTextBox.ReadOnly = true;
@@ -1283,7 +1280,7 @@ namespace HFM.Forms
             this.txtFromEmailAddress.ErrorToolTip = this.toolTipPrefs;
             this.txtFromEmailAddress.ErrorToolTipDuration = 5000;
             this.txtFromEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtFromEmailAddress.ErrorToolTipText = "Must be a valid e-mail address.";
+            this.txtFromEmailAddress.ErrorToolTipText = "";
             this.txtFromEmailAddress.Location = new System.Drawing.Point(92, 77);
             this.txtFromEmailAddress.MaxLength = 200;
             this.txtFromEmailAddress.Name = "txtFromEmailAddress";
@@ -1329,7 +1326,7 @@ namespace HFM.Forms
             this.txtSmtpServer.ErrorToolTip = this.toolTipPrefs;
             this.txtSmtpServer.ErrorToolTipDuration = 5000;
             this.txtSmtpServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSmtpServer.ErrorToolTipText = "Must be a valid server name.";
+            this.txtSmtpServer.ErrorToolTipText = "";
             this.txtSmtpServer.Location = new System.Drawing.Point(92, 103);
             this.txtSmtpServer.MaxLength = 200;
             this.txtSmtpServer.Name = "txtSmtpServer";
@@ -1346,7 +1343,7 @@ namespace HFM.Forms
             this.txtToEmailAddress.ErrorToolTip = this.toolTipPrefs;
             this.txtToEmailAddress.ErrorToolTipDuration = 5000;
             this.txtToEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtToEmailAddress.ErrorToolTipText = "Must be a valid e-mail address.";
+            this.txtToEmailAddress.ErrorToolTipText = "";
             this.txtToEmailAddress.Location = new System.Drawing.Point(92, 51);
             this.txtToEmailAddress.MaxLength = 200;
             this.txtToEmailAddress.Name = "txtToEmailAddress";
@@ -1387,7 +1384,7 @@ namespace HFM.Forms
             this.txtProjectDownloadUrl.ErrorToolTip = this.toolTipPrefs;
             this.txtProjectDownloadUrl.ErrorToolTipDuration = 5000;
             this.txtProjectDownloadUrl.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProjectDownloadUrl.ErrorToolTipText = "URL must be a valid URL and the path to a valid Stanford Project Summary page.";
+            this.txtProjectDownloadUrl.ErrorToolTipText = "";
             this.txtProjectDownloadUrl.Location = new System.Drawing.Point(56, 19);
             this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
             this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
@@ -1710,7 +1707,7 @@ namespace HFM.Forms
             this.txtInstance.ErrorToolTip = this.toolTipPrefs;
             this.txtInstance.ErrorToolTipDuration = 5000;
             this.txtInstance.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtInstance.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+            this.txtInstance.ErrorToolTipText = "";
             this.txtInstance.Location = new System.Drawing.Point(132, 223);
             this.txtInstance.Name = "txtInstance";
             this.txtInstance.ReadOnly = true;
@@ -1745,7 +1742,7 @@ namespace HFM.Forms
             this.txtSummary.ErrorToolTip = this.toolTipPrefs;
             this.txtSummary.ErrorToolTipDuration = 5000;
             this.txtSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSummary.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+            this.txtSummary.ErrorToolTipText = "";
             this.txtSummary.Location = new System.Drawing.Point(132, 197);
             this.txtSummary.Name = "txtSummary";
             this.txtSummary.ReadOnly = true;
@@ -1780,7 +1777,7 @@ namespace HFM.Forms
             this.txtOverview.ErrorToolTip = this.toolTipPrefs;
             this.txtOverview.ErrorToolTipDuration = 5000;
             this.txtOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtOverview.ErrorToolTipText = "HTML Output Folder must be a valid local path, network (UNC) path, or FTP URL.";
+            this.txtOverview.ErrorToolTipText = "";
             this.txtOverview.Location = new System.Drawing.Point(132, 171);
             this.txtOverview.Name = "txtOverview";
             this.txtOverview.ReadOnly = true;

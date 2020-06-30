@@ -1,6 +1,8 @@
 ﻿
 using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 using HFM.Core.Net;
 using HFM.Core.Services;
@@ -8,301 +10,302 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   public class ReportingModel : INotifyPropertyChanged
-   {
-      public bool Error
-      {
-         get
-         {
-            return ToAddressError ||
-                   FromAddressError ||
-                   ServerPortPairError ||
-                   UsernamePasswordPairError;
-         }
-      }
-   
-      public ReportingModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
+    public class ReportingModel : INotifyPropertyChanged
+    {
+        public IPreferenceSet Preferences { get; }
 
-      public void Load(IPreferenceSet prefs)
-      {
-         ServerSecure = prefs.Get<bool>(Preference.EmailReportingServerSecure);
-         ToAddress = prefs.Get<string>(Preference.EmailReportingToAddress);
-         FromAddress = prefs.Get<string>(Preference.EmailReportingFromAddress);
-         ServerAddress = prefs.Get<string>(Preference.EmailReportingServerAddress);
-         ServerPort = prefs.Get<int>(Preference.EmailReportingServerPort);
-         ServerUsername = prefs.Get<string>(Preference.EmailReportingServerUsername);
-         ServerPassword = prefs.Get<string>(Preference.EmailReportingServerPassword);
-         ReportingEnabled = prefs.Get<bool>(Preference.EmailReportingEnabled);
-         //ReportEuePause = prefs.Get<bool>(Preference.ReportEuePause);
-         //ReportHung = prefs.Get<bool>(Preference.ReportHung);
-      }
+        public ReportingModel(IPreferenceSet preferences)
+        {
+            Preferences = preferences;
+            Load();
+        }
 
-      public void Update(IPreferenceSet prefs)
-      {
-         prefs.Set(Preference.EmailReportingServerSecure, ServerSecure);
-         prefs.Set(Preference.EmailReportingToAddress, ToAddress);
-         prefs.Set(Preference.EmailReportingFromAddress, FromAddress);
-         prefs.Set(Preference.EmailReportingServerAddress, ServerAddress);
-         prefs.Set(Preference.EmailReportingServerPort, ServerPort);
-         prefs.Set(Preference.EmailReportingServerUsername, ServerUsername);
-         prefs.Set(Preference.EmailReportingServerPassword, ServerPassword);
-         prefs.Set(Preference.EmailReportingEnabled, ReportingEnabled);
-         //prefs.Set(Preference.ReportEuePause, ReportEuePause);
-         //prefs.Set(Preference.ReportHung, ReportHung);
-      }
+        public void Load()
+        {
+            ServerSecure = Preferences.Get<bool>(Preference.EmailReportingServerSecure);
+            ToAddress = Preferences.Get<string>(Preference.EmailReportingToAddress);
+            FromAddress = Preferences.Get<string>(Preference.EmailReportingFromAddress);
+            ServerAddress = Preferences.Get<string>(Preference.EmailReportingServerAddress);
+            ServerPort = Preferences.Get<int>(Preference.EmailReportingServerPort);
+            ServerUsername = Preferences.Get<string>(Preference.EmailReportingServerUsername);
+            ServerPassword = Preferences.Get<string>(Preference.EmailReportingServerPassword);
+            ReportingEnabled = Preferences.Get<bool>(Preference.EmailReportingEnabled);
+            //ReportEuePause = Preferences.Get<bool>(Preference.ReportEuePause);
+            //ReportHung = Preferences.Get<bool>(Preference.ReportHung);
+        }
 
-      #region Email Settings
+        public void Update()
+        {
+            Preferences.Set(Preference.EmailReportingServerSecure, ServerSecure);
+            Preferences.Set(Preference.EmailReportingToAddress, ToAddress);
+            Preferences.Set(Preference.EmailReportingFromAddress, FromAddress);
+            Preferences.Set(Preference.EmailReportingServerAddress, ServerAddress);
+            Preferences.Set(Preference.EmailReportingServerPort, ServerPort);
+            Preferences.Set(Preference.EmailReportingServerUsername, ServerUsername);
+            Preferences.Set(Preference.EmailReportingServerPassword, ServerPassword);
+            Preferences.Set(Preference.EmailReportingEnabled, ReportingEnabled);
+            //Preferences.Set(Preference.ReportEuePause, ReportEuePause);
+            //Preferences.Set(Preference.ReportHung, ReportHung);
+        }
 
-      private bool _serverSecure;
-
-      public bool ServerSecure
-      {
-         get { return _serverSecure; }
-         set
-         {
-            if (ServerSecure != value)
+        public string this[string columnName]
+        {
+            get
             {
-               _serverSecure = value;
-               OnPropertyChanged("ServerSecure");
+                switch (columnName)
+                {
+                    case nameof(ToAddress):
+                        return ValidateToAddress() ? null : ToAddressError;
+                    case nameof(FromAddress):
+                        return ValidateFromAddress() ? null : FromAddressError;
+                    case nameof(ServerAddress):
+                    case nameof(ServerPort):
+                        return ValidateServerAddressPort() ? null : ServerAddressPortError;
+                    case nameof(ServerUsername):
+                    case nameof(ServerPassword):
+                        return ValidateServerUsernamePassword() ? null : ServerUsernamePasswordError;
+                    default:
+                        return null;
+                }
             }
-         }
-      }
+        }
 
-      private string _toAddress;
-
-      public string ToAddress
-      {
-         get { return _toAddress; }
-         set
-         {
-            if (ToAddress != value)
+        public string Error
+        {
+            get
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _toAddress = newValue;
-               OnPropertyChanged("ToAddress");
+                var names = new[]
+                {
+                    nameof(ToAddress),
+                    nameof(FromAddress),
+                    nameof(ServerAddress),
+                    nameof(ServerUsername)
+                };
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
             }
-         }
-      }
-      
-      public bool ToAddressError
-      {
-         get
-         {
-            if (ReportingEnabled == false) return false;
-            if (ToAddress.Length == 0) return true;
+        }
 
-            return !SendMailService.ValidateEmail(ToAddress);
-         }
-      }
+        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
-      private string _fromAddress;
+        #region Email Settings
 
-      public string FromAddress
-      {
-         get { return _fromAddress; }
-         set
-         {
-            if (FromAddress != value)
+        private bool _serverSecure;
+
+        public bool ServerSecure
+        {
+            get { return _serverSecure; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _fromAddress = newValue;
-               OnPropertyChanged("FromAddress");
+                if (ServerSecure != value)
+                {
+                    _serverSecure = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool FromAddressError
-      {
-         get
-         {
-            if (ReportingEnabled == false) return false;
-            if (FromAddress.Length == 0) return true;
+        private string _toAddress;
 
-            return !SendMailService.ValidateEmail(FromAddress);
-         }
-      }
-
-      private string _serverAddress;
-
-      public string ServerAddress
-      {
-         get { return _serverAddress; }
-         set
-         {
-            if (ServerAddress != value)
+        public string ToAddress
+        {
+            get { return _toAddress; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _serverAddress = newValue;
-               OnPropertyChanged("ServerPort");
-               OnPropertyChanged("ServerAddress");
+                if (ToAddress != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _toAddress = newValue;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ServerAddressError
-      {
-         get { return ServerPortPairError; }
-      }
+        private const string ToAddressError = "Must be a valid e-mail address.";
 
-      private int _serverPort;
+        public bool ValidateToAddress()
+        {
+            if (ReportingEnabled == false) return true;
+            if (ToAddress.Length == 0) return false;
 
-      public int ServerPort
-      {
-         get { return _serverPort; }
-         set
-         {
-            if (ServerPort != value)
+            return SendMailService.ValidateEmail(ToAddress);
+        }
+
+        private string _fromAddress;
+
+        public string FromAddress
+        {
+            get { return _fromAddress; }
+            set
             {
-               _serverPort = value;
-               OnPropertyChanged("ServerAddress");
-               OnPropertyChanged("ServerPort");
+                if (FromAddress != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _fromAddress = newValue;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ServerPortError
-      {
-         get { return ServerPortPairError; }
-      }
-      
-      private bool ServerPortPairError
-      {
-         get
-         {
-            if (ReportingEnabled == false) return false;
+        private const string FromAddressError = "Must be a valid e-mail address.";
+
+        public bool ValidateFromAddress()
+        {
+            if (ReportingEnabled == false) return true;
+            if (FromAddress.Length == 0) return false;
+
+            return SendMailService.ValidateEmail(FromAddress);
+        }
+
+        private string _serverAddress;
+
+        public string ServerAddress
+        {
+            get { return _serverAddress; }
+            set
+            {
+                if (ServerAddress != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _serverAddress = newValue;
+                    OnPropertyChanged(nameof(ServerPort));
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _serverPort;
+
+        public int ServerPort
+        {
+            get { return _serverPort; }
+            set
+            {
+                if (ServerPort != value)
+                {
+                    _serverPort = value;
+                    OnPropertyChanged(nameof(ServerAddress));
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string ServerAddressPortError { get; private set; }
+
+        private bool ValidateServerAddressPort()
+        {
+            if (ReportingEnabled == false) return true;
 
             var result = HostName.ValidateNameAndPort(ServerAddress, ServerPort, out var message);
-            ServerPortPairErrorMessage = result ? String.Empty : message;
+            ServerAddressPortError = result ? String.Empty : message;
             return !result;
-         }
-      }
-      
-      public string ServerPortPairErrorMessage { get; private set; }
+        }
 
-      private string _serverUsername;
+        private string _serverUsername;
 
-      public string ServerUsername
-      {
-         get { return _serverUsername; }
-         set
-         {
-            if (ServerUsername != value)
+        public string ServerUsername
+        {
+            get { return _serverUsername; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _serverUsername = newValue;
-               OnPropertyChanged("ServerPassword");
-               OnPropertyChanged("ServerUsername");
+                if (ServerUsername != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _serverUsername = newValue;
+                    OnPropertyChanged(nameof(ServerPassword));
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ServerUsernameError
-      {
-         get { return UsernamePasswordPairError; }
-      }
+        private string _serverPassword;
 
-      private string _serverPassword;
-
-      public string ServerPassword
-      {
-         get { return _serverPassword; }
-         set
-         {
-            if (ServerPassword != value)
+        public string ServerPassword
+        {
+            get { return _serverPassword; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _serverPassword = newValue;
-               OnPropertyChanged("ServerUsername");
-               OnPropertyChanged("ServerPassword");
+                if (ServerPassword != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _serverPassword = newValue;
+                    OnPropertyChanged(nameof(ServerUsername));
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ServerPasswordError
-      {
-         get { return UsernamePasswordPairError; }
-      }
+        public string ServerUsernamePasswordError { get; private set; }
 
-      private bool UsernamePasswordPairError
-      {
-         get
-         {
-            if (ReportingEnabled == false) return false;
+        private bool ValidateServerUsernamePassword()
+        {
+            if (ReportingEnabled == false) return true;
 
             var result = NetworkCredentialFactory.ValidateOrEmpty(ServerUsername, ServerPassword, out var message);
-            UsernamePasswordPairErrorMessage = result ? String.Empty : message;
+            ServerUsernamePasswordError = result ? String.Empty : message;
             return !result;
-         }
-      }
+        }
 
-      public string UsernamePasswordPairErrorMessage { get; private set; }
+        private bool _reportingEnabled;
 
-      private bool _reportingEnabled;
-
-      public bool ReportingEnabled
-      {
-         get { return _reportingEnabled; }
-         set
-         {
-            if (ReportingEnabled != value)
+        public bool ReportingEnabled
+        {
+            get { return _reportingEnabled; }
+            set
             {
-               _reportingEnabled = value;
-               OnPropertyChanged("ReportingEnabled");
+                if (ReportingEnabled != value)
+                {
+                    _reportingEnabled = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      //#region Report Selections
-      //
-      //private bool _reportEuePause;
-      //
-      //public bool ReportEuePause
-      //{
-      //   get { return _reportEuePause; }
-      //   set
-      //   {
-      //      if (ReportEuePause != value)
-      //      {
-      //         _reportEuePause = value;
-      //         OnPropertyChanged("ReportEuePause");
-      //      }
-      //   }
-      //}
-      //
-      //private bool _reportHung;
-      //
-      //public bool ReportHung
-      //{
-      //   get { return _reportHung; }
-      //   set
-      //   {
-      //      if (ReportHung != value)
-      //      {
-      //         _reportHung = value;
-      //         OnPropertyChanged("ReportHung");
-      //      }
-      //   }
-      //}
-      //
-      //#endregion
-   
-      #region INotifyPropertyChanged Members
+        #endregion
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        //#region Report Selections
+        //
+        //private bool _reportEuePause;
+        //
+        //public bool ReportEuePause
+        //{
+        //   get { return _reportEuePause; }
+        //   set
+        //   {
+        //      if (ReportEuePause != value)
+        //      {
+        //         _reportEuePause = value;
+        //         OnPropertyChanged("ReportEuePause");
+        //      }
+        //   }
+        //}
+        //
+        //private bool _reportHung;
+        //
+        //public bool ReportHung
+        //{
+        //   get { return _reportHung; }
+        //   set
+        //   {
+        //      if (ReportHung != value)
+        //      {
+        //         _reportHung = value;
+        //         OnPropertyChanged("ReportHung");
+        //      }
+        //   }
+        //}
+        //
+        //#endregion
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #region INotifyPropertyChanged Members
 
-      #endregion
-   }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }

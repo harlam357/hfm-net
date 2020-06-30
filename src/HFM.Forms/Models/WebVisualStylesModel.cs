@@ -4,37 +4,66 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 using HFM.Core;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class WebVisualStylesModel : INotifyPropertyChanged
+    public class WebVisualStylesModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private const string CssExtension = ".css";
 
-        public WebVisualStylesModel(IPreferenceSet prefs)
+        public IPreferenceSet Preferences { get; }
+
+        public WebVisualStylesModel(IPreferenceSet preferences)
         {
-            Load(prefs);
+            Preferences = preferences;
+            Load();
         }
 
-        public void Load(IPreferenceSet prefs)
+        public void Load()
         {
-            ApplicationPath = prefs.Get<string>(Preference.ApplicationPath);
-            CssFile = prefs.Get<string>(Preference.CssFile);
-            WebOverview = prefs.Get<string>(Preference.WebOverview);
-            WebSummary = prefs.Get<string>(Preference.WebSummary);
-            WebSlot = prefs.Get<string>(Preference.WebSlot);
+            ApplicationPath = Preferences.Get<string>(Preference.ApplicationPath);
+            CssFile = Preferences.Get<string>(Preference.CssFile);
+            WebOverview = Preferences.Get<string>(Preference.WebOverview);
+            WebSummary = Preferences.Get<string>(Preference.WebSummary);
+            WebSlot = Preferences.Get<string>(Preference.WebSlot);
         }
 
-        public void Update(IPreferenceSet prefs)
+        public void Update()
         {
-            prefs.Set(Preference.CssFile, CssFile);
-            prefs.Set(Preference.WebOverview, WebOverview);
-            prefs.Set(Preference.WebSummary, WebSummary);
-            prefs.Set(Preference.WebSlot, WebSlot);
+            Preferences.Set(Preference.CssFile, CssFile);
+            Preferences.Set(Preference.WebOverview, WebOverview);
+            Preferences.Set(Preference.WebSummary, WebSummary);
+            Preferences.Set(Preference.WebSlot, WebSlot);
         }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                var names = new string[0];
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
+            }
+        }
+
+        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         private string ApplicationPath { get; set; }
 
@@ -70,7 +99,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _cssFile = newValue;
-                    OnPropertyChanged("CssFile");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -86,7 +115,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _webOverview = newValue;
-                    OnPropertyChanged("WebOverview");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -102,7 +131,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _webSummary = newValue;
-                    OnPropertyChanged("WebSummary");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -118,7 +147,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _webSlot = newValue;
-                    OnPropertyChanged("WebSlot");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -127,12 +156,9 @@ namespace HFM.Forms.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

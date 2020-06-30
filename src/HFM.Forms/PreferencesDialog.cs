@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Forms.Models;
@@ -89,9 +88,6 @@ namespace HFM.Forms
                 _cssSampleBrowser.TabIndex = 0;
                 _cssSampleBrowser.TabStop = false;
             }
-
-            txtCollectMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
-            txtWebGenMinutes.ErrorToolTipText = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
         }
 
         private void PreferencesDialogLoad(object sender, EventArgs e)
@@ -581,7 +577,7 @@ namespace HFM.Forms
 
         private void btnTestEmail_Click(object sender, EventArgs e)
         {
-            if (_presenter.Model.ReportingModel.Error)
+            if (_presenter.Model.ReportingModel.HasError)
             {
                 MessageBox.Show(this, "Please correct error conditions before sending a Test Email.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -773,17 +769,17 @@ namespace HFM.Forms
 
         private bool CheckForErrorConditions()
         {
-            if (_presenter.Model.ScheduledTasksModel.Error)
+            if (_presenter.Model.ScheduledTasksModel.HasError)
             {
                 tabControl1.SelectedTab = tabSchdTasks;
                 return true;
             }
-            if (_presenter.Model.ReportingModel.Error)
+            if (_presenter.Model.ReportingModel.HasError)
             {
                 tabControl1.SelectedTab = tabReporting;
                 return true;
             }
-            if (_presenter.Model.WebSettingsModel.Error)
+            if (_presenter.Model.WebSettingsModel.HasError)
             {
                 tabControl1.SelectedTab = tabWeb;
                 return true;

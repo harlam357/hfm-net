@@ -239,7 +239,7 @@ namespace HFM.Core.Client
 
         public static bool ValidateInterval(int interval)
         {
-            return interval <= MaxInterval && interval >= MinInterval;
+            return MinInterval <= interval && interval <= MaxInterval;
         }
 
         public const int MinInterval = 1;

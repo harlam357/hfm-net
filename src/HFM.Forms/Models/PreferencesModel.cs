@@ -28,13 +28,14 @@ namespace HFM.Forms.Models
         public WebSettingsModel WebSettingsModel { get; set; }
         public WebVisualStylesModel WebVisualStylesModel { get; set; }
 
-        public string Error
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public string Error =>
+            String.Join(Environment.NewLine, 
+                        ScheduledTasksModel.Error, 
+                        StartupAndExternalModel.Error,
+                        OptionsModel.Error,
+                        ReportingModel.Error,
+                        WebSettingsModel.Error,
+                        WebVisualStylesModel.Error);
 
         public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
@@ -46,12 +47,13 @@ namespace HFM.Forms.Models
 
         public void Update()
         {
-            ScheduledTasksModel.Update(Preferences);
+            ScheduledTasksModel.Update();
             StartupAndExternalModel.Update();
-            OptionsModel.Update(Preferences);
-            ReportingModel.Update(Preferences);
-            WebSettingsModel.Update(Preferences);
-            WebVisualStylesModel.Update(Preferences);
+            StartupAndExternalModel.UpdateAutoRun();
+            OptionsModel.Update();
+            ReportingModel.Update();
+            WebSettingsModel.Update();
+            WebVisualStylesModel.Update();
             Preferences.Save();
         }
         

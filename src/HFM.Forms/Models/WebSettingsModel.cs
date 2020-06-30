@@ -1,318 +1,335 @@
 ﻿
 using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 using HFM.Core.Net;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   public class WebSettingsModel : INotifyPropertyChanged
-   {
-      public bool Error
-      {
-         get
-         {
-            return EocUserIdError ||
-                   StanfordIdError ||
-                   TeamIdError ||
-                   ProjectDownloadUrlError ||
-                   ServerPortPairError ||
-                   UsernamePasswordPairError;
-         }
-      }
-   
-      public WebSettingsModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
+    public class WebSettingsModel : INotifyPropertyChanged
+    {
+        public IPreferenceSet Preferences { get; }
 
-      public void Load(IPreferenceSet prefs)
-      {
-         EocUserId = prefs.Get<int>(Preference.EocUserId);
-         StanfordId = prefs.Get<string>(Preference.StanfordId);
-         TeamId = prefs.Get<int>(Preference.TeamId);
-         ProjectDownloadUrl = prefs.Get<string>(Preference.ProjectDownloadUrl);
-         ProxyServer = prefs.Get<string>(Preference.ProxyServer);
-         ProxyPort = prefs.Get<int>(Preference.ProxyPort);
-         UseProxy = prefs.Get<bool>(Preference.UseProxy);
-         ProxyUser = prefs.Get<string>(Preference.ProxyUser);
-         ProxyPass = prefs.Get<string>(Preference.ProxyPass);
-         UseProxyAuth = prefs.Get<bool>(Preference.UseProxyAuth);
-      }
+        public WebSettingsModel(IPreferenceSet preferences)
+        {
+            Preferences = preferences;
+            Load();
+        }
 
-      public void Update(IPreferenceSet prefs)
-      {
-         prefs.Set(Preference.EocUserId, EocUserId);
-         prefs.Set(Preference.StanfordId, StanfordId);
-         prefs.Set(Preference.TeamId, TeamId);
-         prefs.Set(Preference.ProjectDownloadUrl, ProjectDownloadUrl);
-         prefs.Set(Preference.ProxyServer, ProxyServer);
-         prefs.Set(Preference.ProxyPort, ProxyPort);
-         prefs.Set(Preference.UseProxy, UseProxy);
-         prefs.Set(Preference.ProxyUser, ProxyUser);
-         prefs.Set(Preference.ProxyPass, ProxyPass);
-         prefs.Set(Preference.UseProxyAuth, UseProxyAuth);
-      }
+        public void Load()
+        {
+            EocUserId = Preferences.Get<int>(Preference.EocUserId);
+            StanfordId = Preferences.Get<string>(Preference.StanfordId);
+            TeamId = Preferences.Get<int>(Preference.TeamId);
+            ProjectDownloadUrl = Preferences.Get<string>(Preference.ProjectDownloadUrl);
+            ProxyServer = Preferences.Get<string>(Preference.ProxyServer);
+            ProxyPort = Preferences.Get<int>(Preference.ProxyPort);
+            UseProxy = Preferences.Get<bool>(Preference.UseProxy);
+            ProxyUser = Preferences.Get<string>(Preference.ProxyUser);
+            ProxyPass = Preferences.Get<string>(Preference.ProxyPass);
+            UseProxyAuth = Preferences.Get<bool>(Preference.UseProxyAuth);
+        }
 
-      #region Web Statistics
+        public void Update()
+        {
+            Preferences.Set(Preference.EocUserId, EocUserId);
+            Preferences.Set(Preference.StanfordId, StanfordId);
+            Preferences.Set(Preference.TeamId, TeamId);
+            Preferences.Set(Preference.ProjectDownloadUrl, ProjectDownloadUrl);
+            Preferences.Set(Preference.ProxyServer, ProxyServer);
+            Preferences.Set(Preference.ProxyPort, ProxyPort);
+            Preferences.Set(Preference.UseProxy, UseProxy);
+            Preferences.Set(Preference.ProxyUser, ProxyUser);
+            Preferences.Set(Preference.ProxyPass, ProxyPass);
+            Preferences.Set(Preference.UseProxyAuth, UseProxyAuth);
+        }
 
-      private int _eocUserId;
-
-      public int EocUserId
-      {
-         get { return _eocUserId; }
-         set
-         {
-            if (EocUserId != value)
+        public string this[string columnName]
+        {
+            get
             {
-               _eocUserId = value;
-               OnPropertyChanged("EocUserId");
+                switch (columnName)
+                {
+                    case nameof(EocUserId):
+                        return ValidateEocUserId() ? null : EocUserIdError;
+                    case nameof(StanfordId):
+                        return ValidateStanfordId() ? null : StanfordIdError;
+                    case nameof(TeamId):
+                        return ValidateTeamId() ? null : TeamIdError;
+                    case nameof(ProjectDownloadUrl):
+                        return ValidateProjectDownloadUrl() ? null : ProjectDownloadUrlError;
+                    case nameof(ProxyServer):
+                    case nameof(ProxyPort):
+                        return ValidateProxyServerPort() ? null : ProxyServerPortError;
+                    case nameof(ProxyUser):
+                    case nameof(ProxyPass):
+                        return ValidateProxyUserPass() ? null : ProxyUserPassError;
+                    default:
+                        return null;
+                }
             }
-         }
-      }
-      
-      public bool EocUserIdError
-      {
-         get { return EocUserId < 0; }
-      }
+        }
 
-      private string _stanfordId;
-
-      public string StanfordId
-      {
-         get { return _stanfordId; }
-         set
-         {
-            if (StanfordId != value)
+        public string Error
+        {
+            get
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _stanfordId = newValue;
-               OnPropertyChanged("StanfordId");
+                var names = new[]
+                {
+                    nameof(EocUserId),
+                    nameof(StanfordId),
+                    nameof(TeamId),
+                    nameof(ProjectDownloadUrl),
+                    nameof(ProxyServer),
+                    nameof(ProxyUser)
+                };
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
             }
-         }
-      }
+        }
 
-      public bool StanfordIdError
-      {
-         get { return StanfordId.Length == 0; }
-      }
+        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
-      private int _teamId;
+        #region Web Statistics
 
-      public int TeamId
-      {
-         get { return _teamId; }
-         set
-         {
-            if (TeamId != value)
+        private int _eocUserId;
+
+        public int EocUserId
+        {
+            get { return _eocUserId; }
+            set
             {
-               _teamId = value;
-               OnPropertyChanged("TeamId");
+                if (EocUserId != value)
+                {
+                    _eocUserId = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool TeamIdError
-      {
-         get { return TeamId < 0; }
-      }
-      
-      #endregion
+        private const string EocUserIdError = "Provide EOC user ID.";
 
-      #region Project Download URL
+        private bool ValidateEocUserId()
+        {
+            return EocUserId >= 0;
+        }
 
-      private string _projectDownloadUrl;
+        private string _stanfordId;
 
-      public string ProjectDownloadUrl
-      {
-         get { return _projectDownloadUrl; }
-         set
-         {
-            if (ProjectDownloadUrl != value)
+        public string StanfordId
+        {
+            get { return _stanfordId; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _projectDownloadUrl = newValue;
-               OnPropertyChanged("ProjectDownloadUrl");
+                if (StanfordId != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _stanfordId = newValue;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ProjectDownloadUrlError
-      {
-         get { return !HttpUrl.Validate(ProjectDownloadUrl); }
-      }
-      
-      #endregion
+        private const string StanfordIdError = "Provide FAH user ID.";
 
-      #region Web Proxy Settings
+        private bool ValidateStanfordId()
+        {
+            return StanfordId.Length != 0;
+        }
 
-      private string _proxyServer;
+        private int _teamId;
 
-      public string ProxyServer
-      {
-         get { return _proxyServer; }
-         set
-         {
-            if (ProxyServer != value)
+        public int TeamId
+        {
+            get { return _teamId; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _proxyServer = newValue;
-               OnPropertyChanged("ProxyPort");
-               OnPropertyChanged("ProxyServer");
+                if (TeamId != value)
+                {
+                    _teamId = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ProxyServerError
-      {
-         get { return ServerPortPairError; }
-      }
+        private const string TeamIdError = "Provide FAH team number.";
 
-      private int _proxyPort;
+        private bool ValidateTeamId()
+        {
+            return TeamId >= 0;
+        }
 
-      public int ProxyPort
-      {
-         get { return _proxyPort; }
-         set
-         {
-            if (ProxyPort != value)
+        #endregion
+
+        #region Project Download URL
+
+        private string _projectDownloadUrl;
+
+        public string ProjectDownloadUrl
+        {
+            get { return _projectDownloadUrl; }
+            set
             {
-               _proxyPort = value;
-               OnPropertyChanged("ProxyServer");
-               OnPropertyChanged("ProxyPort");
+                if (ProjectDownloadUrl != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _projectDownloadUrl = newValue;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ProxyPortError
-      {
-         get { return ServerPortPairError; }
-      }
+        private const string ProjectDownloadUrlError = "Provide project summary URL.";
 
-      private bool ServerPortPairError
-      {
-         get
-         {
-            if (UseProxy == false) return false;
+        private bool ValidateProjectDownloadUrl()
+        {
+            return HttpUrl.Validate(ProjectDownloadUrl);
+        }
+
+        #endregion
+
+        #region Web Proxy Settings
+
+        private string _proxyServer;
+
+        public string ProxyServer
+        {
+            get { return _proxyServer; }
+            set
+            {
+                if (ProxyServer != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _proxyServer = newValue;
+                    OnPropertyChanged(nameof(ProxyPort));
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _proxyPort;
+
+        public int ProxyPort
+        {
+            get { return _proxyPort; }
+            set
+            {
+                if (ProxyPort != value)
+                {
+                    _proxyPort = value;
+                    OnPropertyChanged(nameof(ProxyServer));
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string ProxyServerPortError { get; set; }
+
+        private bool ValidateProxyServerPort()
+        {
+            if (UseProxy == false) return true;
 
             var result = HostName.ValidateNameAndPort(ProxyServer, ProxyPort, out var message);
-            ServerPortPairErrorMessage = result ? String.Empty : message;
-            return !result;
-         }
-      }
+            ProxyServerPortError = result ? String.Empty : message;
+            return result;
+        }
 
-      public string ServerPortPairErrorMessage { get; private set; }
+        private bool _useProxy;
 
-      private bool _useProxy;
-
-      public bool UseProxy
-      {
-         get { return _useProxy; }
-         set
-         {
-            if (UseProxy != value)
+        public bool UseProxy
+        {
+            get { return _useProxy; }
+            set
             {
-               _useProxy = value;
-               OnPropertyChanged("UseProxy");
-               OnPropertyChanged("ProxyAuthEnabled");
+                if (UseProxy != value)
+                {
+                    _useProxy = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(ProxyAuthEnabled));
+                }
             }
-         }
-      }
+        }
 
-      private string _proxyUser;
+        private string _proxyUser;
 
-      public string ProxyUser
-      {
-         get { return _proxyUser; }
-         set
-         {
-            if (ProxyUser != value)
+        public string ProxyUser
+        {
+            get { return _proxyUser; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _proxyUser = newValue;
-               OnPropertyChanged("ProxyPass");
-               OnPropertyChanged("ProxyUser");
+                if (ProxyUser != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _proxyUser = newValue;
+                    OnPropertyChanged(nameof(ProxyPass));
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ProxyUserError
-      {
-         get { return UsernamePasswordPairError; }
-      }
+        private string _proxyPass;
 
-      private string _proxyPass;
-
-      public string ProxyPass
-      {
-         get { return _proxyPass; }
-         set
-         {
-            if (ProxyPass != value)
+        public string ProxyPass
+        {
+            get { return _proxyPass; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _proxyPass = newValue;
-               OnPropertyChanged("ProxyUser");
-               OnPropertyChanged("ProxyPass");
+                if (ProxyPass != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _proxyPass = newValue;
+                    OnPropertyChanged(nameof(ProxyUser));
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      public bool ProxyPassError
-      {
-         get { return UsernamePasswordPairError; }
-      }
-
-      private bool UsernamePasswordPairError
-      {
-         get
-         {
-            if (ProxyAuthEnabled == false) return false;
+        private string ProxyUserPassError { get; set; }
+        
+        private bool ValidateProxyUserPass()
+        {
+            if (ProxyAuthEnabled == false) return true;
 
             var result = NetworkCredentialFactory.ValidateRequired(ProxyUser, ProxyPass, out var message);
-            UsernamePasswordPairErrorMessage = result ? String.Empty : message;
-            return !result;
-         }
-      }
+            ProxyUserPassError = result ? String.Empty : message;
+            return result;
+        }
 
-      public string UsernamePasswordPairErrorMessage { get; private set; }
+        private bool _useProxyAuth;
 
-      private bool _useProxyAuth;
-
-      public bool UseProxyAuth
-      {
-         get { return _useProxyAuth; }
-         set
-         {
-            if (UseProxyAuth != value)
+        public bool UseProxyAuth
+        {
+            get { return _useProxyAuth; }
+            set
             {
-               _useProxyAuth = value;
-               OnPropertyChanged("UseProxyAuth");
-               OnPropertyChanged("ProxyAuthEnabled");
+                if (UseProxyAuth != value)
+                {
+                    _useProxyAuth = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(ProxyAuthEnabled));
+                }
             }
-         }
-      }
-      
-      public bool ProxyAuthEnabled
-      {
-         get { return UseProxy && UseProxyAuth; }
-      }
-      
-      #endregion
-   
-      #region INotifyPropertyChanged Members
+        }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        public bool ProxyAuthEnabled
+        {
+            get { return UseProxy && UseProxyAuth; }
+        }
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #endregion
 
-      #endregion
-   }
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }

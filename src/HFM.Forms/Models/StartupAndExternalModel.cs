@@ -1,13 +1,14 @@
 ﻿
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class StartupAndExternalModel : INotifyPropertyChanged
+    public class StartupAndExternalModel : INotifyPropertyChanged, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
         public IAutoRun AutoRunConfiguration { get; }
@@ -45,6 +46,30 @@ namespace HFM.Forms.Models
             AutoRunConfiguration.SetFilePath(AutoRun ? System.Windows.Forms.Application.ExecutablePath : null);
         }
 
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                var names = new string[0];
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
+            }
+        }
+
+        public bool HasError => !String.IsNullOrWhiteSpace(Error);
+
         #region Startup
 
         private bool _autoRun;
@@ -72,7 +97,7 @@ namespace HFM.Forms.Models
                 if (RunMinimized != value)
                 {
                     _runMinimized = value;
-                    OnPropertyChanged("RunMinimized");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -87,7 +112,7 @@ namespace HFM.Forms.Models
                 if (StartupCheckForUpdate != value)
                 {
                     _startupCheckForUpdate = value;
-                    OnPropertyChanged("StartupCheckForUpdate");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -107,7 +132,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _defaultConfigFile = newValue;
-                    OnPropertyChanged("DefaultConfigFile");
+                    OnPropertyChanged();
 
                     if (newValue.Length == 0)
                     {
@@ -127,7 +152,7 @@ namespace HFM.Forms.Models
                 if (UseDefaultConfigFile != value)
                 {
                     _useDefaultConfigFile = value;
-                    OnPropertyChanged("UseDefaultConfigFile");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -147,7 +172,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _logFileViewer = newValue;
-                    OnPropertyChanged("LogFileViewer");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -163,7 +188,7 @@ namespace HFM.Forms.Models
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
                     _fileExplorer = newValue;
-                    OnPropertyChanged("FileExplorer");
+                    OnPropertyChanged();
                 }
             }
         }
