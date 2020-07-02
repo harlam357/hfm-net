@@ -235,10 +235,10 @@
     <Compile Include="Controls\QueueControl.Designer.cs">
       <DependentUpon>QueueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="PreferencesDialog.cs">
+    <Compile Include="Views\PreferencesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PreferencesDialog.Designer.cs">
+    <Compile Include="Views\PreferencesDialog.Designer.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -319,7 +319,7 @@
     <EmbeddedResource Include="MessagesForm.resx">
       <DependentUpon>MessagesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PreferencesDialog.resx">
+    <EmbeddedResource Include="Views\PreferencesDialog.resx">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressDialogAsync.resx">
