@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using HFM.Core;
-using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
@@ -25,12 +24,12 @@ namespace HFM.Forms
         /// </summary>
         private enum TabName
         {
-            ScheduledTasks,
-            StartupAndExternal,
-            Options,
-            Reporting,
-            WebSettings,
-            WebVisualStyles
+            //ScheduledTasks = 0,
+            //StartupAndExternal = 1,
+            //Options = 2,
+            //Reporting = 3,
+            //WebSettings = 4,
+            WebVisualStyles = 5
         }
 
         #region Fields
@@ -45,17 +44,7 @@ namespace HFM.Forms
         private readonly PreferencesPresenter _presenter;
         private readonly IFtpService _ftpService;
 
-        private readonly object[] _models;
-
         private readonly WebBrowser _cssSampleBrowser;
-
-        private ILogger _logger;
-
-        public ILogger Logger
-        {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
-        }
 
         #endregion
 
@@ -73,7 +62,6 @@ namespace HFM.Forms
             udDecimalPlaces.Minimum = 0;
             udDecimalPlaces.Maximum = MaxDecimalPlaces;
 
-            _models = new object[tabControl1.TabCount];
             if (!Core.Application.IsRunningOnMono)
             {
                 _cssSampleBrowser = new WebBrowser();
@@ -83,7 +71,7 @@ namespace HFM.Forms
                 _cssSampleBrowser.Dock = DockStyle.Fill;
                 _cssSampleBrowser.Location = new Point(0, 0);
                 _cssSampleBrowser.MinimumSize = new Size(20, 20);
-                _cssSampleBrowser.Name = "_cssSampleBrowser";
+                _cssSampleBrowser.Name = nameof(_cssSampleBrowser);
                 _cssSampleBrowser.Size = new Size(354, 208);
                 _cssSampleBrowser.TabIndex = 0;
                 _cssSampleBrowser.TabStop = false;
@@ -219,7 +207,10 @@ namespace HFM.Forms
 
         private void ReportingPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Core.Application.IsRunningOnMono && Enabled) HandleReportingPropertyEnabledForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled)
+            {
+                HandleReportingPropertyEnabledForMono(e.PropertyName);
+            }
         }
 
         private void HandleReportingPropertyEnabledForMono(string propertyName)
@@ -242,7 +233,10 @@ namespace HFM.Forms
 
         private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Core.Application.IsRunningOnMono && Enabled) HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled)
+            {
+                HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+            }
         }
 
         private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
@@ -263,7 +257,10 @@ namespace HFM.Forms
 
         private void WebVisualStylesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Core.Application.IsRunningOnMono && Enabled) HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+            if (Core.Application.IsRunningOnMono && Enabled)
+            {
+                HandleWebVisualStylesPropertyChangedForMono(e.PropertyName);
+            }
         }
 
         private void HandleWebVisualStylesPropertyChangedForMono(string propertyName)
@@ -284,8 +281,6 @@ namespace HFM.Forms
 
         private void LoadScheduledTasksTab()
         {
-            _models[(int)TabName.ScheduledTasks] = _presenter.Model.ScheduledTasksModel;
-
             #region Refresh Data
             // Always Add Bindings for CheckBoxes that control input TextBoxes after
             // the data has been bound to the TextBox
@@ -362,8 +357,6 @@ namespace HFM.Forms
 
         private void LoadStartupTab()
         {
-            _models[(int)TabName.StartupAndExternal] = _presenter.Model.StartupAndExternalModel;
-
             #region Startup
             /*** Auto-Run Is Not DataBound ***/
             if (!Core.Application.IsRunningOnMono)
@@ -396,8 +389,6 @@ namespace HFM.Forms
 
         private void LoadOptionsTab()
         {
-            _models[(int)TabName.Options] = _presenter.Model.OptionsModel;
-
             #region Interactive Options
             chkOffline.BindChecked(_presenter.Model.OptionsModel, "OfflineLast");
             chkColorLog.BindChecked(_presenter.Model.OptionsModel, "ColorLogFile");
@@ -434,8 +425,6 @@ namespace HFM.Forms
 
         private void LoadReportingTab()
         {
-            _models[(int)TabName.Reporting] = _presenter.Model.ReportingModel;
-
             #region Email Settings
             chkEmailSecure.BindChecked(_presenter.Model.ReportingModel, "ServerSecure");
             chkEmailSecure.BindEnabled(_presenter.Model.ReportingModel, "ReportingEnabled");
@@ -476,8 +465,6 @@ namespace HFM.Forms
 
         private void LoadWebSettingsTab()
         {
-            _models[(int)TabName.WebSettings] = _presenter.Model.WebSettingsModel;
-
             #region Web Statistics
             txtEOCUserID.BindText(_presenter.Model.WebSettingsModel, "EocUserId");
             txtStanfordUserID.BindText(_presenter.Model.WebSettingsModel, "StanfordId");
@@ -520,8 +507,6 @@ namespace HFM.Forms
 
         private void LoadVisualStylesTab()
         {
-            _models[(int)TabName.WebVisualStyles] = _presenter.Model.WebVisualStylesModel;
-
             if (Core.Application.IsRunningOnMono)
             {
                 StyleList.Sorted = false;
@@ -592,7 +577,7 @@ namespace HFM.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex.Message, ex);
+                    _presenter.Logger.Warn(ex.Message, ex);
                     MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message),
                        Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -622,7 +607,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message, ex);
+                _presenter.Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
             }
         }
@@ -635,7 +620,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message, ex);
+                _presenter.Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
             }
         }
@@ -648,7 +633,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message, ex);
+                _presenter.Logger.Error(ex.Message, ex);
                 MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
             }
         }
@@ -737,7 +722,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message, ex);
+                _presenter.Logger.Error(ex.Message, ex);
                 ShowConnectionFailedMessage(ex.Message);
             }
             finally
