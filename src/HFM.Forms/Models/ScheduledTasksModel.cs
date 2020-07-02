@@ -395,7 +395,7 @@ namespace HFM.Forms.Models
         {
             var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
             CredentialsError = result ? String.Empty : message;
-            return !result;
+            return result;
         }
 
         private bool _copyHtml;

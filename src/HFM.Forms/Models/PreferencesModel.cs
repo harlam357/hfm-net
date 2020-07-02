@@ -42,6 +42,7 @@ namespace HFM.Forms.Models
         public bool ValidateAcceptance()
         {
             OnPropertyChanged(String.Empty);
+            // TODO: Need a ValidateAcceptance() method for each Model
             return !HasError;
         }
 

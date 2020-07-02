@@ -198,7 +198,7 @@ namespace HFM.Forms.Models
 
             var result = HostName.ValidateNameAndPort(ServerAddress, ServerPort, out var message);
             ServerAddressPortError = result ? String.Empty : message;
-            return !result;
+            return result;
         }
 
         private string _serverUsername;
@@ -243,7 +243,7 @@ namespace HFM.Forms.Models
 
             var result = NetworkCredentialFactory.ValidateOrEmpty(ServerUsername, ServerPassword, out var message);
             ServerUsernamePasswordError = result ? String.Empty : message;
-            return !result;
+            return result;
         }
 
         private bool _reportingEnabled;

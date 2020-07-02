@@ -125,10 +125,10 @@ namespace HFM.Forms
             // Web Generation
             radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
             lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            
+
             txtWebGenMinutes.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateInterval));
             txtWebGenMinutes.DataBindings.Add(EnabledPropertyName, _presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateIntervalEnabled), false, DataSourceUpdateMode.OnValidation);
-            
+
             radioFullRefresh.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenAfterRefresh));
             radioFullRefresh.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
 
@@ -344,8 +344,7 @@ namespace HFM.Forms
 
         #endregion
 
-        #region Scheduled Tasks Tab
-
+        // Scheduled Tasks Tab
         private void btnBrowseWebFolder_Click(object sender, EventArgs e)
         {
             if (_presenter.Model.ScheduledTasksModel.WebRoot.Length != 0)
@@ -358,10 +357,7 @@ namespace HFM.Forms
             }
         }
 
-        #endregion
-
-        #region Reporting Tab
-
+        // Reporting Tab
         private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
         {
             if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
@@ -406,10 +402,7 @@ namespace HFM.Forms
             }
         }
 
-        #endregion
-
-        #region Web Tab
-
+        // Web Tab
         private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -449,10 +442,7 @@ namespace HFM.Forms
             }
         }
 
-        #endregion
-
-        #region Visual Style Tab
-
+        // Visual Style Tab
         private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
         {
             ShowCssPreview();
@@ -499,10 +489,7 @@ namespace HFM.Forms
             _cssSampleBrowser.DocumentText = sb.ToString();
         }
 
-        #endregion
-
-        #region Button Click Event Handlers
-
+        // Button Click Event Handlers
         private async void TestConnectionButtonClick(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
@@ -557,31 +544,24 @@ namespace HFM.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (CheckForErrorConditions() == false)
-            {
-                _presenter.OKClicked();
-            }
+            SetSelectedTabWithError();
+            _presenter.OKClicked();
         }
 
-        private bool CheckForErrorConditions()
+        private void SetSelectedTabWithError()
         {
             if (_presenter.Model.ScheduledTasksModel.HasError)
             {
                 tabControl1.SelectedTab = tabSchdTasks;
-                return true;
             }
-            if (_presenter.Model.ReportingModel.HasError)
+            else if (_presenter.Model.ReportingModel.HasError)
             {
                 tabControl1.SelectedTab = tabReporting;
-                return true;
             }
-            if (_presenter.Model.WebSettingsModel.HasError)
+            else if (_presenter.Model.WebSettingsModel.HasError)
             {
                 tabControl1.SelectedTab = tabWeb;
-                return true;
             }
-
-            return false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -589,8 +569,7 @@ namespace HFM.Forms
 
         }
 
-        #region Folder Browsing
-
+        // Folder Browsing
         private void btnBrowseConfigFile_Click(object sender, EventArgs e)
         {
             string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
@@ -735,10 +714,6 @@ namespace HFM.Forms
 
             return null;
         }
-
-        #endregion
-
-        #endregion
 
         #region TextBox KeyPress Event Handler (to enforce digits only)
 

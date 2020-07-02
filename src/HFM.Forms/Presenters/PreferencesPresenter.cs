@@ -32,6 +32,7 @@ namespace HFM.Forms
         {
             if (Model.ValidateAcceptance())
             {
+                Model.Update();
                 Dialog.DialogResult = DialogResult.OK;
                 Dialog.Close();
             }
