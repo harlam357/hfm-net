@@ -226,7 +226,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        private string ProxyServerPortError { get; set; }
+        public string ProxyServerPortError { get; private set; }
 
         private bool ValidateProxyServerPort()
         {
@@ -287,7 +287,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        private string ProxyUserPassError { get; set; }
+        public string ProxyUserPassError { get; private set; }
         
         private bool ValidateProxyUserPass()
         {
