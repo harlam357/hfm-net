@@ -203,6 +203,9 @@
     </Compile>
     <Compile Include="ProteinBenchmarkIdentifierExtensions.cs" />
     <Compile Include="Views\IWin32Dialog.cs" />
+    <Compile Include="Views\PreferencesDialog.IsRunningOnMono.cs">
+      <DependentUpon>PreferencesDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
       <SubType>Component</SubType>
