@@ -1,13 +1,13 @@
 ﻿
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Linq;
 
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class PreferencesModel : INotifyPropertyChanged
+    public class PreferencesModel : ViewModelBase
     {
         public PreferencesModel(IPreferenceSet preferences, IAutoRun autoRunConfiguration)
         {
@@ -28,21 +28,34 @@ namespace HFM.Forms.Models
         public WebSettingsModel WebSettingsModel { get; set; }
         public WebVisualStylesModel WebVisualStylesModel { get; set; }
 
-        public string Error =>
-            String.Join(Environment.NewLine, 
-                        ScheduledTasksModel.Error, 
-                        StartupAndExternalModel.Error,
-                        OptionsModel.Error,
-                        ReportingModel.Error,
-                        WebSettingsModel.Error,
-                        WebVisualStylesModel.Error);
+        public override string Error
+        {
+            get
+            {
+                var errors = EnumerateErrors().Where(x => !String.IsNullOrEmpty(x));
+                return String.Join(Environment.NewLine, errors);
+            }
+        }
 
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
+        private IEnumerable<string> EnumerateErrors()
+        {
+            yield return ScheduledTasksModel.Error;
+            yield return StartupAndExternalModel.Error;
+            yield return OptionsModel.Error;
+            yield return ReportingModel.Error;
+            yield return WebSettingsModel.Error;
+            yield return WebVisualStylesModel.Error;
+        }
 
-        public bool ValidateAcceptance()
+        public override bool ValidateAcceptance()
         {
             OnPropertyChanged(String.Empty);
-            // TODO: Need a ValidateAcceptance() method for each Model
+            ScheduledTasksModel.ValidateAcceptance();
+            StartupAndExternalModel.ValidateAcceptance();
+            OptionsModel.ValidateAcceptance();
+            ReportingModel.ValidateAcceptance();
+            WebSettingsModel.ValidateAcceptance();
+            WebVisualStylesModel.ValidateAcceptance();
             return !HasError;
         }
 
@@ -50,19 +63,13 @@ namespace HFM.Forms.Models
         {
             ScheduledTasksModel.Update();
             StartupAndExternalModel.Update();
-            StartupAndExternalModel.UpdateAutoRun();
             OptionsModel.Update();
             ReportingModel.Update();
             WebSettingsModel.Update();
             WebVisualStylesModel.Update();
+            
             Preferences.Save();
-        }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            StartupAndExternalModel.UpdateAutoRun();
         }
     }
 }

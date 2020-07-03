@@ -5,14 +5,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using HFM.Core;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class WebVisualStylesModel : INotifyPropertyChanged, IDataErrorInfo
+    public class WebVisualStylesModel : ViewModelBase, IDataErrorInfo
     {
         private const string CssExtension = ".css";
 
@@ -53,7 +52,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -62,8 +61,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         private string ApplicationPath { get; set; }
 
@@ -151,16 +148,5 @@ namespace HFM.Forms.Models
                 }
             }
         }
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }

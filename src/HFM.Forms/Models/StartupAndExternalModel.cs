@@ -2,13 +2,12 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class StartupAndExternalModel : INotifyPropertyChanged, IDataErrorInfo
+    public class StartupAndExternalModel : ViewModelBase, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
         public IAutoRun AutoRunConfiguration { get; }
@@ -58,7 +57,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -67,8 +66,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         #region Startup
 
@@ -191,17 +188,6 @@ namespace HFM.Forms.Models
                     OnPropertyChanged();
                 }
             }
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

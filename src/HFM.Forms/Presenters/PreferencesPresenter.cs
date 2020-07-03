@@ -32,7 +32,14 @@ namespace HFM.Forms
         {
             if (Model.ValidateAcceptance())
             {
-                Model.Update();
+                try
+                {
+                    Model.Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.ShowError(Dialog, ex.Message, Core.Application.NameAndVersion);
+                }
                 Dialog.DialogResult = DialogResult.OK;
                 Dialog.Close();
             }

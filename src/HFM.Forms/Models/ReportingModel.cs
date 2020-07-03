@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using HFM.Core.Net;
 using HFM.Core.Services;
@@ -10,7 +9,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public class ReportingModel : INotifyPropertyChanged
+    public class ReportingModel : ViewModelBase, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
 
@@ -70,7 +69,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -85,8 +84,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         #region Email Settings
 
@@ -296,16 +293,5 @@ namespace HFM.Forms.Models
         //}
         //
         //#endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }

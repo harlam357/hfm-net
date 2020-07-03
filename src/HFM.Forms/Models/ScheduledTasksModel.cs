@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using HFM.Core;
 using HFM.Core.Client;
@@ -13,7 +12,7 @@ using HFM.Preferences.Data;
 
 namespace HFM.Forms.Models
 {
-    public class ScheduledTasksModel : INotifyPropertyChanged, IDataErrorInfo
+    public class ScheduledTasksModel : ViewModelBase, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
 
@@ -113,7 +112,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -130,8 +129,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         #region Refresh Data
 
@@ -540,17 +537,6 @@ namespace HFM.Forms.Models
                     OnPropertyChanged(nameof(LimitLogSizeLengthEnabled));
                 }
             }
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

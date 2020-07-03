@@ -165,6 +165,7 @@
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Models\PreferencesModel.cs" />
     <Compile Include="Presenters\FileDialogPresenter.cs" />
     <Compile Include="Presenters\MessageBoxPresenter.cs" />
