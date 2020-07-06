@@ -29,12 +29,6 @@ namespace HFM.Forms.Models
             }
         }
 
-        public override bool ValidateAcceptance()
-        {
-            OnPropertyChanged(String.Empty);
-            return !HasError;
-        }
-
         public string this[string columnName]
         {
             get
