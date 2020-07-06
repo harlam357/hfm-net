@@ -554,6 +554,14 @@ namespace HFM.Forms
             {
                 tabControl1.SelectedTab = tabSchdTasks;
             }
+            else if (_presenter.Model.StartupAndExternalModel.HasError)
+            {
+                tabControl1.SelectedTab = tabStartup;
+            }
+            else if (_presenter.Model.OptionsModel.HasError)
+            {
+                tabControl1.SelectedTab = tabOptions;
+            }
             else if (_presenter.Model.ReportingModel.HasError)
             {
                 tabControl1.SelectedTab = tabReporting;
@@ -561,6 +569,10 @@ namespace HFM.Forms
             else if (_presenter.Model.WebSettingsModel.HasError)
             {
                 tabControl1.SelectedTab = tabWeb;
+            }
+            else if (_presenter.Model.WebVisualStylesModel.HasError)
+            {
+                tabControl1.SelectedTab = tabVisStyles;
             }
         }
 

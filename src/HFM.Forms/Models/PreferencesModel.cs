@@ -9,7 +9,7 @@ namespace HFM.Forms.Models
 {
     public class PreferencesModel : ViewModelBase
     {
-        public PreferencesModel(IPreferenceSet preferences, IAutoRun autoRunConfiguration)
+        public PreferencesModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences;
             ScheduledTasksModel = new ScheduledTasksModel(preferences);
@@ -59,17 +59,27 @@ namespace HFM.Forms.Models
             return !HasError;
         }
 
-        public void Update()
+        public override void Load()
         {
-            ScheduledTasksModel.Update();
-            StartupAndExternalModel.Update();
-            OptionsModel.Update();
-            ReportingModel.Update();
-            WebSettingsModel.Update();
-            WebVisualStylesModel.Update();
+            ScheduledTasksModel.Load();
+            StartupAndExternalModel.Load();
+            OptionsModel.Load();
+            ReportingModel.Load();
+            WebSettingsModel.Load();
+            WebVisualStylesModel.Load();
+        }
+
+        public override void Save()
+        {
+            ScheduledTasksModel.Save();
+            StartupAndExternalModel.Save();
+            OptionsModel.Save();
+            ReportingModel.Save();
+            WebSettingsModel.Save();
+            WebVisualStylesModel.Save();
             
             Preferences.Save();
-            StartupAndExternalModel.UpdateAutoRun();
+            StartupAndExternalModel.SaveAutoRunConfiguration();
         }
     }
 }

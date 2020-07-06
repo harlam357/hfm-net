@@ -746,7 +746,9 @@ namespace HFM.Forms
 
         public void EditPreferencesClick()
         {
-            using (var dialog = new PreferencesPresenter(Logger, new PreferencesModel(_prefs, new RegistryAutoRun(Logger)), _messageBox))
+            var model = new PreferencesModel(_prefs, new RegistryAutoRunConfiguration(Logger));
+            model.Load();
+            using (var dialog = new PreferencesPresenter(Logger, model, _messageBox))
             {
                 dialog.ShowDialog(_view);
 

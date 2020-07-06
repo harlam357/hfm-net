@@ -170,6 +170,7 @@
     <Compile Include="Presenters\FileDialogPresenter.cs" />
     <Compile Include="Presenters\MessageBoxPresenter.cs" />
     <Compile Include="Presenters\PreferencesPresenter.cs" />
+    <Compile Include="Services\IAutoRunConfiguration.cs" />
     <Compile Include="Views\FahClientSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -268,7 +269,7 @@
     <Compile Include="QueryDialog.Designer.cs">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Services\RegistryAutoRun.cs" />
+    <Compile Include="Services\RegistryAutoRunConfiguration.cs" />
     <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />

@@ -10,16 +10,15 @@ namespace HFM.Forms.Models
     public class StartupAndExternalModel : ViewModelBase, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
-        public IAutoRun AutoRunConfiguration { get; }
+        public IAutoRunConfiguration AutoRunConfiguration { get; }
 
-        public StartupAndExternalModel(IPreferenceSet preferences, IAutoRun autoRunConfiguration)
+        public StartupAndExternalModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences;
             AutoRunConfiguration = autoRunConfiguration;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             AutoRun = AutoRunConfiguration.IsEnabled();
             RunMinimized = Preferences.Get<bool>(Preference.RunMinimized);
@@ -30,7 +29,7 @@ namespace HFM.Forms.Models
             FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
         }
 
-        public void Update()
+        public override void Save()
         {
             Preferences.Set(Preference.RunMinimized, RunMinimized);
             Preferences.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
@@ -40,7 +39,7 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.FileExplorer, FileExplorer);
         }
 
-        public void UpdateAutoRun()
+        public void SaveAutoRunConfiguration()
         {
             AutoRunConfiguration.SetFilePath(AutoRun ? System.Windows.Forms.Application.ExecutablePath : null);
         }

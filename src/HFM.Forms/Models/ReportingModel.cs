@@ -16,10 +16,9 @@ namespace HFM.Forms.Models
         public ReportingModel(IPreferenceSet preferences)
         {
             Preferences = preferences;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             ServerSecure = Preferences.Get<bool>(Preference.EmailReportingServerSecure);
             ToAddress = Preferences.Get<string>(Preference.EmailReportingToAddress);
@@ -33,7 +32,7 @@ namespace HFM.Forms.Models
             //ReportHung = Preferences.Get<bool>(Preference.ReportHung);
         }
 
-        public void Update()
+        public override void Save()
         {
             Preferences.Set(Preference.EmailReportingServerSecure, ServerSecure);
             Preferences.Set(Preference.EmailReportingToAddress, ToAddress);

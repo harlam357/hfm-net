@@ -7,29 +7,14 @@ using HFM.Core.Logging;
 
 namespace HFM.Forms
 {
-    public interface IAutoRun
-    {
-        /// <summary>
-        /// Is auto run enabled?
-        /// </summary>
-        bool IsEnabled();
-
-        /// <summary>
-        /// Sets the HFM.NET auto run value.
-        /// </summary>
-        /// <param name="filePath">The file path to HFM.exe executable.</param>
-        /// <exception cref="InvalidOperationException">Auto run value cannot be set.</exception>
-        void SetFilePath(string filePath);
-    }
-
-    public class RegistryAutoRun : IAutoRun
+    public class RegistryAutoRunConfiguration : IAutoRunConfiguration
     {
         private const string AutoRunKeyName = "HFM.NET";
         private const string HkCuAutoRunSubKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
 
         private readonly ILogger _logger;
 
-        public RegistryAutoRun(ILogger logger)
+        public RegistryAutoRunConfiguration(ILogger logger)
         {
             _logger = logger ?? NullLogger.Instance;
         }

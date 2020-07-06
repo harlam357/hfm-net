@@ -19,10 +19,9 @@ namespace HFM.Forms.Models
         public ScheduledTasksModel(IPreferenceSet preferences)
         {
             Preferences = preferences;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             var clientRetrievalTask = Preferences.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
             SyncTimeMinutes = clientRetrievalTask.Interval;
@@ -48,7 +47,7 @@ namespace HFM.Forms.Models
             LimitLogSizeLength = Preferences.Get<int>(Preference.WebGenLimitLogSizeLength);
         }
 
-        public void Update()
+        public override void Save()
         {
             var clientRetrievalTask = new ClientRetrievalTask
             {

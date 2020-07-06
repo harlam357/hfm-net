@@ -15,10 +15,9 @@ namespace HFM.Forms.Models
         public WebSettingsModel(IPreferenceSet preferences)
         {
             Preferences = preferences;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             EocUserId = Preferences.Get<int>(Preference.EocUserId);
             StanfordId = Preferences.Get<string>(Preference.StanfordId);
@@ -32,7 +31,7 @@ namespace HFM.Forms.Models
             UseProxyAuth = Preferences.Get<bool>(Preference.UseProxyAuth);
         }
 
-        public void Update()
+        public override void Save()
         {
             Preferences.Set(Preference.EocUserId, EocUserId);
             Preferences.Set(Preference.StanfordId, StanfordId);
@@ -134,7 +133,7 @@ namespace HFM.Forms.Models
 
         private bool ValidateStanfordId()
         {
-            return StanfordId.Length != 0;
+            return StanfordId is null || StanfordId.Length != 0;
         }
 
         private int _teamId;
@@ -183,7 +182,7 @@ namespace HFM.Forms.Models
 
         private bool ValidateProjectDownloadUrl()
         {
-            return HttpUrl.Validate(ProjectDownloadUrl);
+            return ProjectDownloadUrl is null || HttpUrl.Validate(ProjectDownloadUrl);
         }
 
         #endregion

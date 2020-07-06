@@ -34,7 +34,7 @@ namespace HFM.Forms
             {
                 try
                 {
-                    Model.Update();
+                    Model.Save();
                 }
                 catch (Exception ex)
                 {

@@ -8,12 +8,12 @@ using HFM.Core.Logging;
 namespace HFM.Forms
 {
    [TestFixture]
-   public class RegistryAutoRunTests
+   public class RegistryAutoRunConfigurationTests
    {
       [Test]
-      public void RegistryAutoRun_Test()
+      public void RegistryAutoRunConfiguration_Test()
       {
-         var autoRun = new RegistryAutoRun(NullLogger.Instance);
+         var autoRun = new RegistryAutoRunConfiguration(NullLogger.Instance);
          autoRun.SetFilePath(System.Reflection.Assembly.GetExecutingAssembly().Location);
          Assert.AreEqual(true, autoRun.IsEnabled());
          autoRun.SetFilePath(String.Empty);

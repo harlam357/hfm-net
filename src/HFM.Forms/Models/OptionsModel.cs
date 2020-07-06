@@ -18,10 +18,9 @@ namespace HFM.Forms.Models
         public OptionsModel(IPreferenceSet preferences)
         {
             Preferences = preferences;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             OfflineLast = Preferences.Get<bool>(Preference.OfflineLast);
             ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
@@ -36,7 +35,7 @@ namespace HFM.Forms.Models
             FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
         }
 
-        public void Update()
+        public override void Save()
         {
             Preferences.Set(Preference.OfflineLast, OfflineLast);
             Preferences.Set(Preference.ColorLogFile, ColorLogFile);

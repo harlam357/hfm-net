@@ -20,10 +20,9 @@ namespace HFM.Forms.Models
         public WebVisualStylesModel(IPreferenceSet preferences)
         {
             Preferences = preferences;
-            Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             ApplicationPath = Preferences.Get<string>(Preference.ApplicationPath);
             CssFile = Preferences.Get<string>(Preference.CssFile);
@@ -32,7 +31,7 @@ namespace HFM.Forms.Models
             WebSlot = Preferences.Get<string>(Preference.WebSlot);
         }
 
-        public void Update()
+        public override void Save()
         {
             Preferences.Set(Preference.CssFile, CssFile);
             Preferences.Set(Preference.WebOverview, WebOverview);
