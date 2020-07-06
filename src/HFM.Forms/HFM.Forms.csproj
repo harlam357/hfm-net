@@ -158,10 +158,10 @@
       <DependentUpon>FormWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SlotsGridColumn.cs" />
-    <Compile Include="ExceptionDialog.cs">
+    <Compile Include="Views\ExceptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExceptionDialog.Designer.cs">
+    <Compile Include="Views\ExceptionDialog.Designer.cs">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
@@ -309,7 +309,7 @@
     <EmbeddedResource Include="Controls\QueueControl.resx">
       <DependentUpon>QueueControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExceptionDialog.resx">
+    <EmbeddedResource Include="Views\ExceptionDialog.resx">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FahClientSettingsDialog.resx">
