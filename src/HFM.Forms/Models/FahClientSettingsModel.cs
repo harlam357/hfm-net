@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
@@ -13,7 +12,7 @@ using HFM.Core.Net;
 
 namespace HFM.Forms.Models
 {
-    public class FahClientSettingsModel : INotifyPropertyChanged, IDataErrorInfo
+    public class FahClientSettingsModel : ViewModelBase, IDataErrorInfo
     {
         private bool _connectEnabled = true;
 
@@ -30,7 +29,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool ValidateAcceptance()
+        public override bool ValidateAcceptance()
         {
             OnPropertyChanged(String.Empty);
             return !HasError;
@@ -54,7 +53,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -63,8 +62,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
 
         private string _name = String.Empty;
 
@@ -157,13 +154,6 @@ namespace HFM.Forms.Models
         public virtual FahClientConnection CreateConnection()
         {
             return new FahClientConnection(Server, Port);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
