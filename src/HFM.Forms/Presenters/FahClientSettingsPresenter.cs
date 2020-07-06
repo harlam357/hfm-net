@@ -116,7 +116,7 @@ namespace HFM.Forms
             else
             {
                 MessageBox.ShowError(Dialog,
-                    "There are validation errors.  Please correct the yellow highlighted fields.",
+                    "There are validation errors.  Please correct the highlighted fields.",
                     Core.Application.NameAndVersion);
             }
         }

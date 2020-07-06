@@ -180,7 +180,6 @@ namespace HFM.Forms
         private void LoadStartupTab()
         {
             // Startup
-            /*** Auto-Run Is Not DataBound ***/
             if (!Core.Application.IsRunningOnMono)
             {
                 chkAutoRun.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.AutoRun));
