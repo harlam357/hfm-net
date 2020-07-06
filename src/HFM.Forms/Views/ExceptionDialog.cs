@@ -9,107 +9,17 @@ using HFM.Forms.Internal;
 
 namespace HFM.Forms
 {
-    public partial class ExceptionDialog : Form
+    public partial class ExceptionDialog : Form, IWin32Dialog
     {
-        public delegate void LogException(Exception ex);
-
-        private static bool _registered;
-        private static string _applicationIdStatic;
-        private static string _osVersionStatic;
-        private static LogException _exceptionLogger;
-
-        public static void RegisterForUnhandledExceptions(string applicationId)
+        private readonly ExceptionPresenter _presenter;
+        
+        public ExceptionDialog(ExceptionPresenter presenter)
         {
-            RegisterForUnhandledExceptions(applicationId, null);
-        }
-
-        public static void RegisterForUnhandledExceptions(string applicationId, string osVersion)
-        {
-            RegisterForUnhandledExceptions(applicationId, osVersion, null);
-        }
-
-        public static void RegisterForUnhandledExceptions(string applicationId, string osVersion, LogException exceptionLogger)
-        {
-            if (_registered)
-            {
-                throw new InvalidOperationException("Exception Dialog is already registered.");
-            }
-            _applicationIdStatic = applicationId;
-            _osVersionStatic = osVersion;
-            _exceptionLogger = exceptionLogger;
-            Application.ThreadException += ShowErrorDialog;
-            _registered = true;
-        }
-
-        private static void ShowErrorDialog(object sender, ThreadExceptionEventArgs e)
-        {
-            ShowErrorDialog(e.Exception, _applicationIdStatic, _osVersionStatic, null);
-        }
-
-        public static void ShowErrorDialog(Exception exception, string applicationId, string osVersion, string message)
-        {
-            ShowErrorDialog(exception, applicationId, osVersion, message, false);
-        }
-
-        public static void ShowErrorDialog(Exception exception, string applicationId, string osVersion, string message, bool mustTerminate)
-        {
-            ShowErrorDialog(exception, applicationId, osVersion, message, null, mustTerminate);
-        }
-
-        public static void ShowErrorDialog(Exception exception, string applicationId, string osVersion, string message, string reportUrl)
-        {
-            ShowErrorDialog(exception, applicationId, osVersion, message, reportUrl, false);
-        }
-
-        public static void ShowErrorDialog(Exception exception, string applicationId, string osVersion, string message, string reportUrl, bool mustTerminate)
-        {
-            if (_exceptionLogger != null) _exceptionLogger(exception);
-            try
-            {
-                using (ExceptionDialog box = new ExceptionDialog(exception, applicationId, osVersion, message, reportUrl, mustTerminate))
-                {
-                    box.ShowDialog();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (_exceptionLogger != null) _exceptionLogger(exception);
-                MessageBox.Show(ex.ToString(), message, MessageBoxButtons.OK, MessageBoxIcon.Error,
-                   MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-            }
-        }
-
-        private readonly Exception _exceptionThrown;
-        private readonly string _applicationId;
-        private readonly string _osVersion;
-        private readonly string _message;
-        private readonly string _reportUrl;
-
-        public ExceptionDialog()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Creates a new ExceptionDialog instance.
-        /// </summary>
-        /// <param name="exception">The exception to display</param>
-        /// <param name="applicationId">The application name and version to display</param>
-        /// <param name="osVersion">The operating system version to display</param>
-        /// <param name="message">An additional message to display</param>
-        /// <param name="reportUrl">Override configured target URL for report button</param>
-        /// <param name="mustTerminate">If <paramref name="mustTerminate"/> is true, the continue button is not available.</param>
-        public ExceptionDialog(Exception exception, string applicationId, string osVersion, string message, string reportUrl, bool mustTerminate)
-        {
-            _exceptionThrown = exception;
-            _applicationId = applicationId;
-            _osVersion = osVersion;
-            _message = message;
-            _reportUrl = reportUrl;
+            _presenter = presenter;
 
             InitializeComponent();
 
-            if (mustTerminate)
+            if (_presenter.MustTerminate)
             {
                 btnExit.Visible = false;
                 btnContinue.Text = btnExit.Text;
@@ -120,34 +30,27 @@ namespace HFM.Forms
             exceptionTextBox.Text = GetClipboardString();
         }
 
-        string GetClipboardString()
+        private string GetClipboardString()
         {
             StringBuilder sb = new StringBuilder();
-            if (_applicationId != null)
+            if (_presenter.Properties != null)
             {
-                sb.AppendLine(_applicationId);
-                sb.AppendLine();
-            }
-            if (_osVersion != null)
-            {
-                sb.AppendLine(_osVersion);
-                sb.AppendLine();
-            }
-            if (_message != null)
-            {
-                sb.AppendLine(_message);
-                sb.AppendLine();
+                foreach (var property in _presenter.Properties)
+                {
+                    sb.AppendLine($"{property.Key}: {property.Value}");
+                    sb.AppendLine();
+                }
             }
             sb.AppendLine("Exception Thrown:");
-            sb.AppendLine(_exceptionThrown.ToString());
+            sb.AppendLine(_presenter.Exception.ToString());
             return sb.ToString();
         }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
             CopyInfoToClipboard();
-            string reportUrl = String.IsNullOrEmpty(_reportUrl) ? Properties.Settings.Default.ReportUrl : _reportUrl;
-            if (String.IsNullOrEmpty(reportUrl) == false)
+            string reportUrl = _presenter.ReportUrl;
+            if (!String.IsNullOrEmpty(reportUrl))
             {
                 StartUrl(reportUrl);
             }
@@ -164,7 +67,7 @@ namespace HFM.Forms
                 }
                 else
                 {
-                    Thread th = new Thread((ThreadStart)delegate
+                    var th = new Thread((ThreadStart)delegate
                     {
                         ClipboardWrapper.SetText(exceptionText);
                     });
@@ -183,7 +86,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                if (_exceptionLogger != null) _exceptionLogger(ex);
+                _presenter.Logger.Error(ex.Message, ex);
                 MessageBox.Show(ex.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error,
                    MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }

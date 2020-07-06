@@ -143,11 +143,7 @@ namespace HFM.Forms
             InitializeComponent();
 
             // Set Main Form Text
-#if BETA
-         base.Text = String.Format("HFM.NET v{0} - Beta", Core.Application.Version);
-#else
             base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
-#endif
         }
 
         #endregion
