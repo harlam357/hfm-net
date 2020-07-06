@@ -17,6 +17,16 @@ namespace HFM.Forms.Models
             return !HasError;
         }
 
+        public virtual void Load()
+        {
+
+        }
+
+        public virtual void Save()
+        {
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

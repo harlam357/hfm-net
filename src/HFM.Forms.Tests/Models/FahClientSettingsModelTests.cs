@@ -26,6 +26,54 @@ namespace HFM.Forms.Models
         }
 
         [Test]
+        public void FahClientSettingsModel_Load_FromClientSettings()
+        {
+            // Arrange
+            var guid = Guid.NewGuid();
+            var settings = new ClientSettings
+            {
+                Name = "Foo",
+                Server = "Bar",
+                Port = 12345,
+                Password = "fizzbizz",
+                Guid = guid
+            };
+            var model = new FahClientSettingsModel(settings);
+            // Act
+            model.Load();
+            // Assert
+            Assert.AreEqual("Foo", model.Name);
+            Assert.AreEqual("Bar", model.Server);
+            Assert.AreEqual(12345, model.Port);
+            Assert.AreEqual("fizzbizz", model.Password);
+            Assert.AreEqual(guid, model.Guid);
+        }
+
+        [Test]
+        public void FahClientSettingsModel_Save_ToClientSettings()
+        {
+            // Arrange
+            var guid = Guid.NewGuid();
+            var model = new FahClientSettingsModel
+            {
+                Name = "Foo",
+                Server = "Bar",
+                Port = 12345,
+                Password = "fizzbizz",
+                Guid = guid
+            };
+            // Act
+            model.Save();
+            // Assert
+            Assert.AreEqual(ClientType.FahClient, model.ClientSettings.ClientType);
+            Assert.AreEqual("Foo", model.ClientSettings.Name);
+            Assert.AreEqual("Bar", model.ClientSettings.Server);
+            Assert.AreEqual(12345, model.ClientSettings.Port);
+            Assert.AreEqual("fizzbizz", model.ClientSettings.Password);
+            Assert.AreEqual(guid, model.ClientSettings.Guid);
+        }
+
+        [Test]
         public void FahClientSettingsModel_Name_HasError()
         {
             var model = new FahClientSettingsModel();

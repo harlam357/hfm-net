@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
+using AutoMapper;
+
 using HFM.Client;
 using HFM.Client.ObjectModel;
 using HFM.Core.Client;
@@ -14,19 +16,16 @@ namespace HFM.Forms.Models
 {
     public class FahClientSettingsModel : ViewModelBase, IDataErrorInfo
     {
-        private bool _connectEnabled = true;
+        public ClientSettings ClientSettings { get; private set; }
 
-        public bool ConnectEnabled
+        public FahClientSettingsModel()
         {
-            get => _connectEnabled && !HasError;
-            set
-            {
-                if (_connectEnabled != value)
-                {
-                    _connectEnabled = value;
-                    OnPropertyChanged();
-                }
-            }
+
+        }
+
+        public FahClientSettingsModel(ClientSettings clientSettings)
+        {
+            ClientSettings = clientSettings;
         }
 
         public string this[string columnName]
@@ -54,6 +53,36 @@ namespace HFM.Forms.Models
                 var names = new[] { nameof(Name), nameof(Server), nameof(Port) };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
+            }
+        }
+
+        public override void Load()
+        {
+            if (ClientSettings != null)
+            {
+                var mapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
+                mapper.Map(ClientSettings, this);
+            }
+        }
+
+        public override void Save()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
+            ClientSettings = mapper.Map<FahClientSettingsModel, ClientSettings>(this);
+        }
+
+        private bool _connectEnabled = true;
+
+        public bool ConnectEnabled
+        {
+            get => _connectEnabled && !HasError;
+            set
+            {
+                if (_connectEnabled != value)
+                {
+                    _connectEnabled = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
