@@ -119,6 +119,7 @@
     <Compile Include="Models\HistoryPresenterModelTests.cs" />
     <Compile Include="Models\PreferencesModelTests.cs" />
     <Compile Include="Models\UserStatsDataModelProfileTests.cs" />
+    <Compile Include="Presenters\ExceptionPresenterTests.cs" />
     <Compile Include="Presenters\FahClientSettingsPresenterTests.cs" />
     <Compile Include="Presenters\PreferencesPresenterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
