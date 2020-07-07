@@ -23,8 +23,6 @@
       <ComponentRef Id="comp_FB6EB2967B7047C08D4E8ECC2A8420FA" />
       <ComponentRef Id="comp_A0D08FBAE6B9421A95914545909E7B04" />
       <ComponentRef Id="comp_4708AFECC92043EDB1FA603FC1E3F356" />
-      <ComponentRef Id="comp_0D6225B0614B47B4A9A2D5CF6519BE31" />
-      <ComponentRef Id="comp_BA006321A3504D7E933515C488DC92F8" />
       <ComponentRef Id="comp_0CA147C9E6BD465D80BB63E597EF1476" />
       <ComponentRef Id="comp_54DBCE5548D24F17AAC498BDB77BB59E" />
       <ComponentRef Id="comp_E65543BCFFFD4D7595A9EB28D978F06C" />
@@ -71,12 +69,6 @@
       </Component>
       <Component Id="comp_4708AFECC92043EDB1FA603FC1E3F356" DiskId="1" Guid="7ABC71EB-8064-40A5-915B-D2BFC08743A9">
         <File Id="file_701A637B06914B8088E310106BA1B5A0" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\Castle.Windsor.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="comp_0D6225B0614B47B4A9A2D5CF6519BE31" Guid="47FC75CB-9BDF-4E09-BDBF-57CCAC69A6CA">
-        <File Id="file_688615B9487D498584983BDCFF914A0F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\harlam357.Core.dll" />
-      </Component>
-      <Component Id="comp_BA006321A3504D7E933515C488DC92F8" DiskId="1" Guid="FCCA2B71-B968-4262-991F-D9344D635C2E">
-        <File Id="file_90365CE517214AE39DC735DD4673BCCF" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\harlam357.Windows.Forms.dll" KeyPath="yes" />
       </Component>
       <Component Id="comp_0CA147C9E6BD465D80BB63E597EF1476" Guid="D9F20814-2493-424D-BDFE-936E97312AF9">
         <File Id="file_DAEA573D97E84D9DBE58519618CFDE17" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\HFM.NET\HFM.Client.dll" />

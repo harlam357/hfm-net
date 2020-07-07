@@ -134,8 +134,6 @@ Function Deploy-Build
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        "harlam357.Core.dll",
-        "harlam357.Windows.Forms.dll",
         "ZedGraph.dll",
         "Castle.Core.dll",
         "Castle.Windsor.dll",
