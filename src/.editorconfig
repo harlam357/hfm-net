@@ -1,0 +1,157 @@
+# You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+
+###############################
+# Core EditorConfig Options   #
+###############################
+
+root = true
+
+# All files
+[*]
+indent_style = space
+
+[*.{cs,vb}]
+
+# Default severity for analyzer diagnostics - Requires **VS2019 16.5** or later
+dotnet_analyzer_diagnostic.severity = warning
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
+# CA1056: URI properties should not be strings
+dotnet_diagnostic.CA1056.severity = none
+# CA1062: Validate arguments of public methods (NOISE REDUCTION: TURN BACK ON LATER)
+dotnet_diagnostic.CA1062.severity = none
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = none
+# CA1307: Specify StringComparison (NOISE REDUCTION: TURN BACK ON LATER)
+dotnet_diagnostic.CA1307.severity = none
+# CA1305: Specify IFormatProvider (NOISE REDUCTION: TURN BACK ON LATER)
+dotnet_diagnostic.CA1305.severity = none
+# CA1720: Identifiers should not contain type names
+dotnet_diagnostic.CA1720.severity = none
+
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
+trim_trailing_whitespace = true
+
+###############################
+# .NET Coding Conventions     #
+###############################
+
+# Organize usings
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# this. preferences
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# Language keywords vs BCL types preferences
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = false:suggestion
+
+# Parentheses preferences
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:suggestion
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:suggestion
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:suggestion
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+
+# Modifier preferences
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+
+# Expression-level preferences
+dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+
+###############################
+# Naming Conventions          #
+###############################
+
+# Style Definitions
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+dotnet_naming_style.underscore_pascal_case_style.capitalization = pascal_case
+dotnet_naming_style.underscore_pascal_case_style.required_prefix = _
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case_style.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case_style.required_prefix = _
+
+# Types must be pascal_case_style
+dotnet_naming_rule.types_naming_rule.severity = warning
+dotnet_naming_rule.types_naming_rule.symbols = types_naming_symbols
+dotnet_naming_rule.types_naming_rule.style = pascal_case_style
+dotnet_naming_symbols.types_naming_symbols.applicable_kinds = class,struct,interface,enum,delegate
+dotnet_naming_symbols.types_naming_symbols.applicable_accessibilities = *
+
+# Public members must be pascal_case_style
+dotnet_naming_rule.public_members_naming_rule.severity = warning
+dotnet_naming_rule.public_members_naming_rule.symbols = public_members_naming_symbols
+dotnet_naming_rule.public_members_naming_rule.style = pascal_case_style
+dotnet_naming_symbols.public_members_naming_symbols.applicable_kinds = property,method,field,event
+dotnet_naming_symbols.public_members_naming_symbols.applicable_accessibilities = public
+
+# Constant fields must be pascal_case_style
+dotnet_naming_rule.const_fields_naming_rule.severity = warning
+dotnet_naming_rule.const_fields_naming_rule.symbols = const_fields_naming_symbols
+dotnet_naming_rule.const_fields_naming_rule.style = pascal_case_style
+dotnet_naming_symbols.const_fields_naming_symbols.applicable_kinds = field
+dotnet_naming_symbols.const_fields_naming_symbols.applicable_accessibilities = *
+dotnet_naming_symbols.const_fields_naming_symbols.required_modifiers = const
+
+# Private static fields must be underscore_pascal_case_style
+dotnet_naming_rule.private_static_field_naming_rule.severity = warning
+dotnet_naming_rule.private_static_field_naming_rule.symbols = private_static_field_naming_symbols
+dotnet_naming_rule.private_static_field_naming_rule.style = underscore_pascal_case_style
+dotnet_naming_symbols.private_static_field_naming_symbols.applicable_kinds = field
+dotnet_naming_symbols.private_static_field_naming_symbols.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_field_naming_symbols.required_modifiers = static
+
+# Local variables must be camel_case_style
+dotnet_naming_rule.local_variables_naming_rule.severity = warning
+dotnet_naming_rule.local_variables_naming_rule.symbols = local_variables_naming_symbols
+dotnet_naming_rule.local_variables_naming_rule.style = camel_case_style
+dotnet_naming_symbols.local_variables_naming_symbols.applicable_kinds = local
+dotnet_naming_symbols.local_variables_naming_symbols.applicable_accessibilities = *
+
+# Parameters must be camel_case_style
+dotnet_naming_rule.parameters_naming_rule.severity = warning
+dotnet_naming_rule.parameters_naming_rule.symbols = parameters_naming_symbols
+dotnet_naming_rule.parameters_naming_rule.style = camel_case_style
+dotnet_naming_symbols.parameters_naming_symbols.applicable_kinds = parameter
+dotnet_naming_symbols.parameters_naming_symbols.applicable_accessibilities = *
+
+# Private fields must be underscore_camel_case_style
+dotnet_naming_rule.private_field_naming_rule.severity = warning
+dotnet_naming_rule.private_field_naming_rule.symbols = private_field_naming_symbols
+dotnet_naming_rule.private_field_naming_rule.style = underscore_camel_case_style
+dotnet_naming_symbols.private_field_naming_symbols.applicable_kinds = field
+dotnet_naming_symbols.private_field_naming_symbols.applicable_accessibilities = private
+
+###############################
+# C# Code Style Rules         #
+###############################
+
+[*.cs]
+# var preferences
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+# Expression-bodied members
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_indexers = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+
+###############################
+# C# Formatting Rules         #
+###############################
+
+# Taking all Visual Studio defaults
+
+# Specific Code files
+[HyperTypeDescriptor.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[PetaPoco.cs]
+dotnet_analyzer_diagnostic.severity = none

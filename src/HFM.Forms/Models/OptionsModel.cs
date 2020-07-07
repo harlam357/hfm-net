@@ -1,25 +1,9 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -27,239 +11,249 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   internal class OptionsModel : INotifyPropertyChanged
-   {
-      public OptionsModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
+    public class OptionsModel : ViewModelBase, IDataErrorInfo
+    {
+        public IPreferenceSet Preferences { get; }
 
-      public void Load(IPreferenceSet prefs)
-      {
-         OfflineLast = prefs.Get<bool>(Preference.OfflineLast);
-         ColorLogFile = prefs.Get<bool>(Preference.ColorLogFile);
-         AutoSaveConfig = prefs.Get<bool>(Preference.AutoSaveConfig);
-         PpdCalculation = prefs.Get<PPDCalculation>(Preference.PPDCalculation);
-         DecimalPlaces = prefs.Get<int>(Preference.DecimalPlaces);
-         CalculateBonus = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
-         EtaDate = prefs.Get<bool>(Preference.DisplayEtaAsDate);
-         DuplicateProjectCheck = prefs.Get<bool>(Preference.DuplicateProjectCheck);
-         ShowXmlStats = prefs.Get<bool>(Preference.EnableUserStats);
-         MessageLevel = (LoggerLevel)prefs.Get<int>(Preference.MessageLevel);
-         FormShowStyle = prefs.Get<MinimizeToOption>(Preference.MinimizeTo);
-      }
+        public OptionsModel(IPreferenceSet preferences)
+        {
+            Preferences = preferences;
+        }
 
-      public void Update(IPreferenceSet prefs)
-      {
-         prefs.Set(Preference.OfflineLast, OfflineLast);
-         prefs.Set(Preference.ColorLogFile, ColorLogFile);
-         prefs.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-         prefs.Set(Preference.PPDCalculation, PpdCalculation);
-         prefs.Set(Preference.DecimalPlaces, DecimalPlaces);
-         prefs.Set(Preference.BonusCalculation, CalculateBonus);
-         prefs.Set(Preference.DisplayEtaAsDate, EtaDate);
-         prefs.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-         prefs.Set(Preference.EnableUserStats, ShowXmlStats);
-         prefs.Set(Preference.MessageLevel, (int)MessageLevel);
-         prefs.Set(Preference.MinimizeTo, FormShowStyle);
-      }
+        public override void Load()
+        {
+            OfflineLast = Preferences.Get<bool>(Preference.OfflineLast);
+            ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
+            AutoSaveConfig = Preferences.Get<bool>(Preference.AutoSaveConfig);
+            PpdCalculation = Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
+            DecimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
+            CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
+            EtaDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+            DuplicateProjectCheck = Preferences.Get<bool>(Preference.DuplicateProjectCheck);
+            ShowXmlStats = Preferences.Get<bool>(Preference.EnableUserStats);
+            MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
+            FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
+        }
 
-      #region Interactive Options
+        public override void Save()
+        {
+            Preferences.Set(Preference.OfflineLast, OfflineLast);
+            Preferences.Set(Preference.ColorLogFile, ColorLogFile);
+            Preferences.Set(Preference.AutoSaveConfig, AutoSaveConfig);
+            Preferences.Set(Preference.PPDCalculation, PpdCalculation);
+            Preferences.Set(Preference.DecimalPlaces, DecimalPlaces);
+            Preferences.Set(Preference.BonusCalculation, CalculateBonus);
+            Preferences.Set(Preference.DisplayEtaAsDate, EtaDate);
+            Preferences.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
+            Preferences.Set(Preference.EnableUserStats, ShowXmlStats);
+            Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
+            Preferences.Set(Preference.MinimizeTo, FormShowStyle);
+        }
 
-      private bool _offlineLast;
-
-      public bool OfflineLast
-      {
-         get { return _offlineLast; }
-         set
-         {
-            if (OfflineLast != value)
+        public string this[string columnName]
+        {
+            get
             {
-               _offlineLast = value;
-               OnPropertyChanged("OfflineLast");
+                switch (columnName)
+                {
+                    default:
+                        return null;
+                }
             }
-         }
-      }
+        }
 
-      private bool _colorLogFile;
-
-      public bool ColorLogFile
-      {
-         get { return _colorLogFile; }
-         set
-         {
-            if (ColorLogFile != value)
+        public override string Error
+        {
+            get
             {
-               _colorLogFile = value;
-               OnPropertyChanged("ColorLogFile");
+                var names = new string[0];
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
             }
-         }
-      }
+        }
 
-      private bool _autoSaveConfig;
+        #region Interactive Options
 
-      public bool AutoSaveConfig
-      {
-         get { return _autoSaveConfig; }
-         set
-         {
-            if (AutoSaveConfig != value)
+        private bool _offlineLast;
+
+        public bool OfflineLast
+        {
+            get { return _offlineLast; }
+            set
             {
-               _autoSaveConfig = value;
-               OnPropertyChanged("AutoSaveConfig");
+                if (OfflineLast != value)
+                {
+                    _offlineLast = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private PPDCalculation _ppdCalculation;
-      
-      public PPDCalculation PpdCalculation
-      {
-         get { return _ppdCalculation; }
-         set
-         {
-            if (PpdCalculation != value)
+        private bool _colorLogFile;
+
+        public bool ColorLogFile
+        {
+            get { return _colorLogFile; }
+            set
             {
-               _ppdCalculation = value;
-               OnPropertyChanged("PpdCalculation");
+                if (ColorLogFile != value)
+                {
+                    _colorLogFile = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private int _decimalPlaces;
+        private bool _autoSaveConfig;
 
-      public int DecimalPlaces
-      {
-         get { return _decimalPlaces; }
-         set
-         {
-            if (DecimalPlaces != value)
+        public bool AutoSaveConfig
+        {
+            get { return _autoSaveConfig; }
+            set
             {
-               _decimalPlaces = value;
-               OnPropertyChanged("DecimalPlaces");
+                if (AutoSaveConfig != value)
+                {
+                    _autoSaveConfig = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private BonusCalculation _calculateBonus;
+        private PPDCalculation _ppdCalculation;
 
-      public BonusCalculation CalculateBonus
-      {
-         get { return _calculateBonus; }
-         set
-         {
-            if (CalculateBonus != value)
+        public PPDCalculation PpdCalculation
+        {
+            get { return _ppdCalculation; }
+            set
             {
-               _calculateBonus = value;
-               OnPropertyChanged("CalculateBonus");
+                if (PpdCalculation != value)
+                {
+                    _ppdCalculation = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _etaDate;
-      
-      public bool EtaDate
-      {
-         get { return _etaDate; }
-         set
-         {
-            if (EtaDate != value)
+        private int _decimalPlaces;
+
+        public int DecimalPlaces
+        {
+            get { return _decimalPlaces; }
+            set
             {
-               _etaDate = value;
-               OnPropertyChanged("EtaDate");
+                if (DecimalPlaces != value)
+                {
+                    _decimalPlaces = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _duplicateProjectCheck;
+        private BonusCalculation _calculateBonus;
 
-      public bool DuplicateProjectCheck
-      {
-         get { return _duplicateProjectCheck; }
-         set
-         {
-            if (DuplicateProjectCheck != value)
+        public BonusCalculation CalculateBonus
+        {
+            get { return _calculateBonus; }
+            set
             {
-               _duplicateProjectCheck = value;
-               OnPropertyChanged("DuplicateProjectCheck");
+                if (CalculateBonus != value)
+                {
+                    _calculateBonus = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _showXmlStats;
+        private bool _etaDate;
 
-      public bool ShowXmlStats
-      {
-         get { return _showXmlStats; }
-         set
-         {
-            if (ShowXmlStats != value)
+        public bool EtaDate
+        {
+            get { return _etaDate; }
+            set
             {
-               _showXmlStats = value;
-               OnPropertyChanged("ShowXmlStats");
+                if (EtaDate != value)
+                {
+                    _etaDate = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region Debug Message Level
+        private bool _duplicateProjectCheck;
 
-      private LoggerLevel _messageLevel;
-
-      public LoggerLevel MessageLevel
-      {
-         get { return _messageLevel; }
-         set
-         {
-            if (MessageLevel != value)
+        public bool DuplicateProjectCheck
+        {
+            get { return _duplicateProjectCheck; }
+            set
             {
-               _messageLevel = value;
-               OnPropertyChanged("MessageLevel");
+                if (DuplicateProjectCheck != value)
+                {
+                    _duplicateProjectCheck = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region Form Docking Style
+        private bool _showXmlStats;
 
-      private MinimizeToOption _formShowStyle;
-
-      public MinimizeToOption FormShowStyle
-      {
-         get { return _formShowStyle; }
-         set
-         {
-            if (FormShowStyle != value)
+        public bool ShowXmlStats
+        {
+            get { return _showXmlStats; }
+            set
             {
-               _formShowStyle = value;
-               OnPropertyChanged("FormShowStyle");
+                if (ShowXmlStats != value)
+                {
+                    _showXmlStats = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
-      
-      #endregion
-   
-      #region INotifyPropertyChanged Members
+        }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #region Debug Message Level
 
-      #endregion
+        private LoggerLevel _messageLevel;
 
-      public static ReadOnlyCollection<ListItem> PpdCalculationList
-      {
-         get
-         {
-            var list = new List<ListItem>
+        public LoggerLevel MessageLevel
+        {
+            get { return _messageLevel; }
+            set
+            {
+                if (MessageLevel != value)
+                {
+                    _messageLevel = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Form Docking Style
+
+        private MinimizeToOption _formShowStyle;
+
+        public MinimizeToOption FormShowStyle
+        {
+            get { return _formShowStyle; }
+            set
+            {
+                if (FormShowStyle != value)
+                {
+                    _formShowStyle = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        public static ReadOnlyCollection<ListItem> PpdCalculationList
+        {
+            get
+            {
+                var list = new List<ListItem>
                        {
                           new ListItem
                           { DisplayMember = "Last Frame", ValueMember = PPDCalculation.LastFrame },
@@ -270,15 +264,15 @@ namespace HFM.Forms.Models
                           new ListItem
                           { DisplayMember = "Effective Rate", ValueMember = PPDCalculation.EffectiveRate }
                        };
-            return list.AsReadOnly();
-         }
-      }
+                return list.AsReadOnly();
+            }
+        }
 
-      public static ReadOnlyCollection<ListItem> BonusCalculationList
-      {
-         get
-         {
-            var list = new List<ListItem>
+        public static ReadOnlyCollection<ListItem> BonusCalculationList
+        {
+            get
+            {
+                var list = new List<ListItem>
                        {
                           new ListItem
                           { DisplayMember = "Download Time", ValueMember = BonusCalculation.DownloadTime },
@@ -287,15 +281,15 @@ namespace HFM.Forms.Models
                           new ListItem
                           { DisplayMember = "None", ValueMember = BonusCalculation.None },
                        };
-            return list.AsReadOnly();
-         }
-      }
+                return list.AsReadOnly();
+            }
+        }
 
-      public static ReadOnlyCollection<ListItem> DebugList
-      {
-         get
-         {
-            var list = new List<ListItem>
+        public static ReadOnlyCollection<ListItem> DebugList
+        {
+            get
+            {
+                var list = new List<ListItem>
                        {
                           //new ListItem
                           //{ DisplayMember = LoggerLevel.Off.ToString(), ValueMember = LoggerLevel.Off },
@@ -310,15 +304,15 @@ namespace HFM.Forms.Models
                           new ListItem
                           { DisplayMember = LoggerLevel.Debug.ToString(), ValueMember = LoggerLevel.Debug }
                        };
-            return list.AsReadOnly();
-         }
-      }
+                return list.AsReadOnly();
+            }
+        }
 
-      public static ReadOnlyCollection<ListItem> DockingStyleList
-      {
-         get
-         {
-            var list = new List<ListItem>
+        public static ReadOnlyCollection<ListItem> DockingStyleList
+        {
+            get
+            {
+                var list = new List<ListItem>
                        {
                           new ListItem
                           { DisplayMember = "System Tray", ValueMember = MinimizeToOption.SystemTray },
@@ -327,8 +321,8 @@ namespace HFM.Forms.Models
                           new ListItem
                           { DisplayMember = "Both", ValueMember = MinimizeToOption.Both }
                        };
-            return list.AsReadOnly();
-         }
-      }
-   }
+                return list.AsReadOnly();
+            }
+        }
+    }
 }

@@ -1,178 +1,194 @@
-﻿/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-   internal class StartupAndExternalModel : INotifyPropertyChanged
-   {
-      public StartupAndExternalModel(IPreferenceSet prefs)
-      {
-         Load(prefs);
-      }
+    public class StartupAndExternalModel : ViewModelBase, IDataErrorInfo
+    {
+        public IPreferenceSet Preferences { get; }
+        public IAutoRunConfiguration AutoRunConfiguration { get; }
 
-      public void Load(IPreferenceSet prefs)
-      {
-         RunMinimized = prefs.Get<bool>(Preference.RunMinimized);
-         StartupCheckForUpdate = prefs.Get<bool>(Preference.StartupCheckForUpdate);
-         DefaultConfigFile = prefs.Get<string>(Preference.DefaultConfigFile);
-         UseDefaultConfigFile = prefs.Get<bool>(Preference.UseDefaultConfigFile);
-         LogFileViewer = prefs.Get<string>(Preference.LogFileViewer);
-         FileExplorer = prefs.Get<string>(Preference.FileExplorer);
-      }
+        public StartupAndExternalModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
+        {
+            Preferences = preferences;
+            AutoRunConfiguration = autoRunConfiguration;
+        }
 
-      public void Update(IPreferenceSet prefs)
-      {
-         prefs.Set(Preference.RunMinimized, RunMinimized);
-         prefs.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
-         prefs.Set(Preference.DefaultConfigFile, DefaultConfigFile);
-         prefs.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
-         prefs.Set(Preference.LogFileViewer, LogFileViewer);
-         prefs.Set(Preference.FileExplorer, FileExplorer);
-      }
+        public override void Load()
+        {
+            AutoRun = AutoRunConfiguration.IsEnabled();
+            RunMinimized = Preferences.Get<bool>(Preference.RunMinimized);
+            StartupCheckForUpdate = Preferences.Get<bool>(Preference.StartupCheckForUpdate);
+            DefaultConfigFile = Preferences.Get<string>(Preference.DefaultConfigFile);
+            UseDefaultConfigFile = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
+            LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
+            FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
+        }
 
-      #region Startup
+        public override void Save()
+        {
+            Preferences.Set(Preference.RunMinimized, RunMinimized);
+            Preferences.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
+            Preferences.Set(Preference.DefaultConfigFile, DefaultConfigFile);
+            Preferences.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
+            Preferences.Set(Preference.LogFileViewer, LogFileViewer);
+            Preferences.Set(Preference.FileExplorer, FileExplorer);
+        }
 
-      private bool _runMinimized;
+        public void SaveAutoRunConfiguration()
+        {
+            AutoRunConfiguration.SetFilePath(AutoRun ? System.Windows.Forms.Application.ExecutablePath : null);
+        }
 
-      public bool RunMinimized
-      {
-         get { return _runMinimized; }
-         set
-         {
-            if (RunMinimized != value)
+        public string this[string columnName]
+        {
+            get
             {
-               _runMinimized = value;
-               OnPropertyChanged("RunMinimized");
+                switch (columnName)
+                {
+                    default:
+                        return null;
+                }
             }
-         }
-      }
+        }
 
-      private bool _startupCheckForUpdate;
-
-      public bool StartupCheckForUpdate
-      {
-         get { return _startupCheckForUpdate; }
-         set
-         {
-            if (StartupCheckForUpdate != value)
+        public override string Error
+        {
+            get
             {
-               _startupCheckForUpdate = value;
-               OnPropertyChanged("StartupCheckForUpdate");
+                var names = new string[0];
+                var errors = names.Select(x => this[x]).Where(x => x != null);
+                return String.Join(Environment.NewLine, errors);
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region Configuration File
+        #region Startup
 
-      private string _defaultConfigFile;
+        private bool _autoRun;
 
-      public string DefaultConfigFile
-      {
-         get { return _defaultConfigFile; }
-         set
-         {
-            if (DefaultConfigFile != value)
+        public bool AutoRun
+        {
+            get => _autoRun;
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _defaultConfigFile = newValue;
-               OnPropertyChanged("DefaultConfigFile");
-               
-               if (newValue.Length == 0)
-               {
-                  UseDefaultConfigFile = false;
-               }
+                if (_autoRun != value)
+                {
+                    _autoRun = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private bool _useDefaultConfigFile;
+        private bool _runMinimized;
 
-      public bool UseDefaultConfigFile
-      {
-         get { return _useDefaultConfigFile; }
-         set
-         {
-            if (UseDefaultConfigFile != value)
+        public bool RunMinimized
+        {
+            get { return _runMinimized; }
+            set
             {
-               _useDefaultConfigFile = value;
-               OnPropertyChanged("UseDefaultConfigFile");
+                if (RunMinimized != value)
+                {
+                    _runMinimized = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
-      
-      #endregion
+        }
 
-      #region External Programs
+        private bool _startupCheckForUpdate;
 
-      private string _logFileViewer;
-
-      public string LogFileViewer
-      {
-         get { return _logFileViewer; }
-         set
-         {
-            if (LogFileViewer != value)
+        public bool StartupCheckForUpdate
+        {
+            get { return _startupCheckForUpdate; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _logFileViewer = newValue;
-               OnPropertyChanged("LogFileViewer");
+                if (StartupCheckForUpdate != value)
+                {
+                    _startupCheckForUpdate = value;
+                    OnPropertyChanged();
+                }
             }
-         }
-      }
+        }
 
-      private string _fileExplorer;
+        #endregion
 
-      public string FileExplorer
-      {
-         get { return _fileExplorer; }
-         set
-         {
-            if (FileExplorer != value)
+        #region Configuration File
+
+        private string _defaultConfigFile;
+
+        public string DefaultConfigFile
+        {
+            get { return _defaultConfigFile; }
+            set
             {
-               string newValue = value == null ? String.Empty : value.Trim();
-               _fileExplorer = newValue;
-               OnPropertyChanged("FileExplorer");
+                if (DefaultConfigFile != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _defaultConfigFile = newValue;
+                    OnPropertyChanged();
+
+                    if (newValue.Length == 0)
+                    {
+                        UseDefaultConfigFile = false;
+                    }
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        private bool _useDefaultConfigFile;
 
-      #region INotifyPropertyChanged Members
+        public bool UseDefaultConfigFile
+        {
+            get { return _useDefaultConfigFile; }
+            set
+            {
+                if (UseDefaultConfigFile != value)
+                {
+                    _useDefaultConfigFile = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-      private void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
+        #region External Programs
 
-      #endregion
-   }
+        private string _logFileViewer;
+
+        public string LogFileViewer
+        {
+            get { return _logFileViewer; }
+            set
+            {
+                if (LogFileViewer != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _logFileViewer = newValue;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _fileExplorer;
+
+        public string FileExplorer
+        {
+            get { return _fileExplorer; }
+            set
+            {
+                if (FileExplorer != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _fileExplorer = newValue;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+    }
 }

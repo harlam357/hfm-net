@@ -122,5 +122,23 @@ namespace HFM.Forms.Controls
 
             BackColor = newColor;
         }
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            ReadOnly = !Enabled;
+            CausesValidation = Enabled;
+
+            if (!Enabled && ErrorToolTip?.Tag != null && ErrorToolTip.Tag.Equals(Name))
+            {
+                ErrorToolTip.RemoveAll();
+            }
+            base.OnEnabledChanged(e);
+        }
+
+        protected override void OnReadOnlyChanged(EventArgs e)
+        {
+            BackColor = ReadOnly ? SystemColors.Control : SystemColors.Window;
+            base.OnReadOnlyChanged(e);
+        }
     }
 }

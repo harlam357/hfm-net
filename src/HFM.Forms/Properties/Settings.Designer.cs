@@ -31,14 +31,5 @@ namespace HFM.Forms.Properties {
                 return ((string)(this["UpdateUrl"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ReportUrl {
-            get {
-                return ((string)(this["ReportUrl"]));
-            }
-        }
     }
 }

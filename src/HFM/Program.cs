@@ -1,23 +1,6 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2016 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 
 using System;
+using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
 
 using Castle.Facilities.TypedFactory;
@@ -35,31 +18,38 @@ namespace HFM
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 #if DEBUG
             // for manually testing different cultures
             //SetupCulture("de-DE");
 #endif
             Core.Net.SecurityProtocol.Setup();
             Core.Application.SetPaths(
-                Application.StartupPath, 
+                Application.StartupPath,
                 System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));
 
-            try
+            using (var container = new WindsorContainer())
             {
-                using (var container = new WindsorContainer())
+                var bootStrapper = new BootStrapper(args, container);
+                try
                 {
                     container.AddFacility<TypedFactoryFacility>();
                     container.Install(new Core.Configuration.ContainerInstaller(), new Forms.Configuration.ContainerInstaller());
 
-                    // Setup TypeDescriptor
                     Forms.Configuration.TypeDescriptionProviderSetup.Execute();
 
-                    BootStrapper.Execute(args, container);
+                    bootStrapper.Execute();
                 }
-            }
-            catch (Exception ex)
-            {
-                BootStrapper.ShowStartupError(ex, null);
+                catch (Exception ex)
+                {
+                    bootStrapper.ShowStartupException(ex);
+                    return;
+                }
+
+                if (bootStrapper.MainForm != null)
+                {
+                    Application.Run(bootStrapper.MainForm);
+                }
             }
         }
 

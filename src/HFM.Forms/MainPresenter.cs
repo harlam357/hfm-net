@@ -14,8 +14,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using AutoMapper;
-
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -48,38 +46,32 @@ namespace HFM.Forms
         #region Fields
 
         private HistoryPresenter _historyPresenter;
+        
         private readonly MainGridModel _gridModel;
-        private readonly UserStatsDataModel _userStatsDataModel;
-
         private readonly IMainView _view;
         private readonly IMessagesView _messagesView;
-        private readonly MessageBoxPresenter _messageBox;
-
         private readonly IViewFactory _viewFactory;
+        private readonly MessageBoxPresenter _messageBox;
+        private readonly UserStatsDataModel _userStatsDataModel;
         private readonly IPresenterFactory _presenterFactory;
-
         private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
-
         private readonly IUpdateLogic _updateLogic;
         private readonly IExternalProcessStarter _processStarter;
-
         private readonly IPreferenceSet _prefs;
+        private readonly ExceptionPresenter _exceptionPresenter;
         private readonly ClientSettingsManager _settingsManager;
-
-        private readonly IMapper _clientSettingsMapper;
 
         #endregion
 
         #region Constructor
 
-        public MainPresenter(MainGridModel mainGridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
+        public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                              ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                             IExternalProcessStarter processStarter,
-                             IPreferenceSet prefs)
+                             IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenter exceptionPresenter)
         {
-            _gridModel = mainGridModel;
+            _gridModel = gridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
             {
                 // run asynchronously so binding operation can finish
@@ -119,9 +111,8 @@ namespace HFM.Forms
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
+            _exceptionPresenter = exceptionPresenter;
             _settingsManager = new ClientSettingsManager();
-
-            _clientSettingsMapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
 
             _clientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
         }
@@ -752,11 +743,14 @@ namespace HFM.Forms
 
         public void EditPreferencesClick()
         {
-            var prefDialog = _viewFactory.GetPreferencesDialog();
-            prefDialog.ShowDialog(_view);
-            _viewFactory.Release(prefDialog);
+            var model = new PreferencesModel(_prefs, new RegistryAutoRunConfiguration(Logger));
+            model.Load();
+            using (var dialog = new PreferencesPresenter(model, Logger, _messageBox, _exceptionPresenter))
+            {
+                dialog.ShowDialog(_view);
 
-            _view.DataGridView.Invalidate();
+                _view.DataGridView.Invalidate();
+            }
         }
 
         #endregion
@@ -792,11 +786,12 @@ namespace HFM.Forms
 
         internal void ClientsAddClick()
         {
-            using (var dialog = new FahClientSettingsPresenter(Logger, new FahClientSettingsModel(), _messageBox))
+            using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, _messageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
-                    var settings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.Model);
+                    dialog.Model.Save();
+                    var settings = dialog.Model.ClientSettings;
                     //if (_clientDictionary.ContainsKey(settings.Name))
                     //{
                     //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
@@ -833,12 +828,14 @@ namespace HFM.Forms
             ClientSettings originalSettings = client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
-            var model = _clientSettingsMapper.Map<ClientSettings, FahClientSettingsModel>(originalSettings);
-            using (var dialog = new FahClientSettingsPresenter(Logger, model, _messageBox))
+            var model = new FahClientSettingsModel(originalSettings);
+            model.Load();
+            using (var dialog = new FahClientSettingsPresenter(model, Logger, _messageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
-                    var newSettings = _clientSettingsMapper.Map<FahClientSettingsModel, ClientSettings>(dialog.Model);
+                    dialog.Model.Save();
+                    var newSettings = dialog.Model.ClientSettings;
                     // perform the edit
                     try
                     {
@@ -1167,8 +1164,6 @@ namespace HFM.Forms
 
         public void ToolsHistoryClick()
         {
-            Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
-
             try
             {
                 if (_historyPresenter is null)

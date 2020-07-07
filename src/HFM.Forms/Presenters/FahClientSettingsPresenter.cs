@@ -17,10 +17,10 @@ namespace HFM.Forms
         public FahClientSettingsModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public FahClientSettingsPresenter(ILogger logger, FahClientSettingsModel model, MessageBoxPresenter messageBox)
+        public FahClientSettingsPresenter(FahClientSettingsModel model, ILogger logger, MessageBoxPresenter messageBox)
         {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
-            Model = model;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
@@ -116,7 +116,7 @@ namespace HFM.Forms
             else
             {
                 MessageBox.ShowError(Dialog,
-                    "There are validation errors.  Please correct the yellow highlighted fields.",
+                    "There are validation errors.  Please correct the highlighted fields.",
                     Core.Application.NameAndVersion);
             }
         }

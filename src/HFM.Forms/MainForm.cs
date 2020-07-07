@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Core.Client;
@@ -39,8 +38,6 @@ namespace HFM.Forms
 
         string StatusLabelLeftText { get; set; }
 
-        bool WorkUnitHistoryMenuEnabled { get; set; }
-
         ILogFileViewer LogFileViewer { get; }
 
         IDataGridView DataGridView { get; }
@@ -57,11 +54,7 @@ namespace HFM.Forms
 
         #region Methods
 
-        void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel, string openFile);
-
         void SetGridDataSource(object dataSource);
-
-        void SecondInstanceStarted(string[] args);
 
         void SetManualStartPosition();
 
@@ -143,11 +136,7 @@ namespace HFM.Forms
             InitializeComponent();
 
             // Set Main Form Text
-#if BETA
-         base.Text = String.Format("HFM.NET v{0} - Beta", Core.Application.Version);
-#else
             base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
-#endif
         }
 
         #endregion

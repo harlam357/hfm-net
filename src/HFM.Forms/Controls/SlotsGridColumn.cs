@@ -85,16 +85,6 @@ namespace HFM.Forms.Controls
             return null;
         }
 
-        public string GetMouseOverHeaderText()
-        {
-            return OnGetMouseOverHeaderText();
-        }
-
-        protected virtual string OnGetMouseOverHeaderText()
-        {
-            return MouseOverHeaderText;
-        }
-
         public string GetMouseOverText(SlotModel slotModel)
         {
             if (slotModel is null) return null;

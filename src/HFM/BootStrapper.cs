@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
+using System.Threading;
 using System.Windows.Forms;
 
 using Castle.Windsor;
@@ -19,11 +20,23 @@ using HFM.Preferences;
 
 namespace HFM
 {
-    internal static class BootStrapper
+    internal class BootStrapper
     {
-        internal static void Execute(string[] args, IWindsorContainer container)
+        public string[] Args { get; }
+        public IWindsorContainer Container { get; }
+        public Logger Logger { get; private set; }
+        public IPreferenceSet Preferences { get; private set; }
+        public Form MainForm { get; private set; }
+
+        public BootStrapper(string[] args, IWindsorContainer container)
         {
-            var arguments = Arguments.Parse(args);
+            Args = args;
+            Container = container;
+        }
+
+        internal void Execute()
+        {
+            var arguments = Arguments.Parse(Args);
             var errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error).ToList();
             if (errorArguments.Count != 0)
             {
@@ -31,88 +44,52 @@ namespace HFM
                 return;
             }
 
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) => CustomResolve(e, container);
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             // Issue 180 - Restore the already running instance to the screen.
             using (var singleInstance = new SingleInstanceHelper())
             {
-                if (!CheckSingleInstance(args, singleInstance))
-                {
-                    return;
-                }
+                CheckSingleInstance(singleInstance);
+                Logger = InitializeLogging();
+                CheckMonoVersion();
+                Preferences = InitializePreferences(arguments);
+                ClearCacheFolder();
+                MainForm = InitializeMainForm(arguments);
+                RegisterForUnhandledExceptions();
 
-                var logger = InitializeLogging(container);
-                if (!CheckMonoVersion(logger))
-                {
-                    return;
-                }
-
-                var prefs = container.Resolve<IPreferenceSet>();
-                if (!InitializePreferences(prefs, logger, arguments.Any(x => x.Type == ArgumentType.ResetPrefs)))
-                {
-                    return;
-                }
-
-                if (!ClearCacheFolder(prefs.Get<string>(Preference.CacheDirectory), logger))
-                {
-                    return;
-                }
-
-                if (!RegisterIpcChannel(container))
-                {
-                    return;
-                }
-
-                var appDataPath = prefs.Get<string>(Preference.ApplicationDataFolderPath);
-                var mainView = container.Resolve<IMainView>();
-                if (!InitializeMainView(appDataPath, container, arguments, mainView))
-                {
-                    return;
-                }
-
-                ExceptionDialog.RegisterForUnhandledExceptions(
-                   Core.Application.NameAndFullVersion,
-                   Environment.OSVersion.VersionString,
-                   ex => logger.Error(ex.Message, ex));
-
-                Application.ApplicationExit += (s, e) => prefs.Save();
-                Application.Run((Form)mainView);
+                Application.ApplicationExit += (s, e) => Preferences.Save();
             }
         }
 
-        private static bool CheckSingleInstance(string[] args, SingleInstanceHelper singleInstance)
+        private void CheckSingleInstance(SingleInstanceHelper singleInstance)
         {
             try
             {
                 if (!singleInstance.Start())
                 {
-                    SingleInstanceHelper.SignalFirstInstance(args);
-                    return false;
+                    SingleInstanceHelper.SignalFirstInstance(Args);
                 }
             }
             catch (RemotingException ex)
             {
-                DialogResult result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion,
+                var result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion,
                    Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.No)
                 {
-                    ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
-                    return false;
+                    throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
                 }
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.RemotingCallFailed);
-                return false;
+                throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
             }
-            return true;
         }
 
-        private static Logger InitializeLogging(IWindsorContainer container)
+        private Logger InitializeLogging()
         {
             // create messages view (hooks into logging messages)
-            container.Resolve<IMessagesView>();
-            var logger = (Logger)container.Resolve<ILogger>();
+            Container.Resolve<IMessagesView>();
+            var logger = (Logger)Container.Resolve<ILogger>();
             // write log header
             logger.Info(String.Empty);
             logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.FullVersion));
@@ -127,12 +104,12 @@ namespace HFM
             return logger;
         }
 
-        private static bool CheckMonoVersion(ILogger logger)
+        private void CheckMonoVersion()
         {
             // check for Mono runtime
             if (!Core.Application.IsRunningOnMono)
             {
-                return true;
+                return;
             }
 
             Version monoVersion = null;
@@ -142,28 +119,28 @@ namespace HFM
             }
             catch (Exception ex)
             {
-                logger.Warn(Properties.Resources.MonoDetectFailed, ex);
+                Logger.Warn(Properties.Resources.MonoDetectFailed, ex);
             }
 
             if (monoVersion != null)
             {
                 if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
                 {
-                    var ex = new InvalidOperationException(Properties.Resources.MonoTooOld);
-                    ShowStartupError(ex);
-                    return false;
+                    throw new StartupException(Properties.Resources.MonoTooOld);
                 }
-                logger.Info($"Running on Mono v{monoVersion}...");
+                Logger.Info($"Running on Mono v{monoVersion}...");
             }
             else
             {
-                logger.Info("Running on Mono...");
+                Logger.Info("Running on Mono...");
             }
-            return true;
         }
 
-        private static bool InitializePreferences(IPreferenceSet preferences, Logger logger, bool reset)
+        private IPreferenceSet InitializePreferences(ICollection<Argument> arguments)
         {
+            bool reset = arguments.Any(x => x.Type == ArgumentType.ResetPrefs);
+            var preferences = Container.Resolve<IPreferenceSet>();
+
             try
             {
                 if (reset)
@@ -178,12 +155,11 @@ namespace HFM
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.UserPreferencesFailed);
-                return false;
+                throw new StartupException(Properties.Resources.UserPreferencesFailed, ex);
             }
 
             // set logging level from preferences
-            logger.Level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
+            Logger.Level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
 
             // process logging level changes
             preferences.PreferenceChanged += (s, e) =>
@@ -191,15 +167,15 @@ namespace HFM
                 if (e.Preference == Preference.MessageLevel)
                 {
                     var newLevel = preferences.Get<LoggerLevel>(Preference.MessageLevel);
-                    if (newLevel != logger.Level)
+                    if (newLevel != Logger.Level)
                     {
-                        logger.Level = newLevel;
-                        logger.Info($"Logging Level Changed: {newLevel}");
+                        Logger.Level = newLevel;
+                        Logger.Info($"Logging Level Changed: {newLevel}");
                     }
                 }
             };
 
-            return true;
+            return preferences;
         }
 
         private static void ValidatePreferences(IPreferenceSet preferences)
@@ -231,8 +207,10 @@ namespace HFM
             }
         }
 
-        private static bool ClearCacheFolder(string cacheDirectory, ILogger logger)
+        private void ClearCacheFolder()
         {
+            var cacheDirectory = Preferences.Get<string>(Preference.CacheDirectory);
+
             try
             {
                 var di = new DirectoryInfo(cacheDirectory);
@@ -250,55 +228,51 @@ namespace HFM
                         }
                         catch (Exception ex)
                         {
-                            logger.Warn(String.Format(Properties.Resources.CacheFileDeleteFailed, fi.Name), ex);
+                            Logger.Warn(String.Format(Properties.Resources.CacheFileDeleteFailed, fi.Name), ex);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.CacheSetupFailed);
-                return false;
+                throw new StartupException(Properties.Resources.CacheSetupFailed, ex);
             }
-            return true;
         }
 
-        private static bool RegisterIpcChannel(IWindsorContainer container)
+        private static void RegisterIpcChannel(MainForm mainForm)
         {
             try
             {
                 SingleInstanceHelper.RegisterIpcChannel((s, e) =>
                 {
-                    var mainView = container.Resolve<IMainView>();
-                    mainView.SecondInstanceStarted(e.Args);
+                    mainForm.SecondInstanceStarted(e.Args);
                 });
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.IpcRegisterFailed);
-                return false;
+                throw new StartupException(Properties.Resources.IpcRegisterFailed, ex);
             }
-            return true;
         }
 
-        private static bool InitializeMainView(string appDataPath, IWindsorContainer container, ICollection<Argument> arguments, IMainView mainView)
+        private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
-            var mainPresenter = container.Resolve<MainPresenter>();
+            var mainForm = (MainForm)Container.Resolve<IMainView>();
+            var mainPresenter = Container.Resolve<MainPresenter>();
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainView.Initialize(mainPresenter, container.Resolve<IProteinService>(), container.Resolve<UserStatsDataModel>(), openFile);
+                mainForm.Initialize(mainPresenter, Container.Resolve<IProteinService>(), Container.Resolve<UserStatsDataModel>(), openFile);
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.FailedToInitUI);
-                return false;
+                throw new StartupException(Properties.Resources.FailedToInitUI, ex);
             }
 
-            mainView.WorkUnitHistoryMenuEnabled = false;
-            var repository = (WorkUnitRepository)container.Resolve<IWorkUnitRepository>();
+            mainForm.WorkUnitHistoryMenuEnabled = false;
+            var repository = (WorkUnitRepository)Container.Resolve<IWorkUnitRepository>();
             try
             {
+                string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
                 repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
                 if (repository.RequiresUpgrade())
                 {
@@ -310,22 +284,25 @@ namespace HFM
                         dialog.ShowDialog();
                         if (dialog.Exception != null)
                         {
-                            ShowStartupError(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
+                            ShowStartupException(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
                         }
                     }
                 }
-                
-                mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
+
+                mainForm.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)
             {
-                ShowStartupError(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
+                ShowStartupException(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
             }
-            return true;
+
+            RegisterIpcChannel(mainForm);
+
+            return mainForm;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]
-        private static System.Reflection.Assembly CustomResolve(ResolveEventArgs args, IWindsorContainer container)
+        private System.Reflection.Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             const string sqliteDll = "System.Data.SQLite";
             if (args.Name.StartsWith(sqliteDll, StringComparison.Ordinal))
@@ -334,7 +311,7 @@ namespace HFM
                 if (platform != null)
                 {
                     string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, "SQLite", platform, String.Concat(sqliteDll, ".dll")));
-                    var logger = container.Resolve<ILogger>();
+                    var logger = Container.Resolve<ILogger>();
                     logger.Info($"SQLite DLL Path: {filePath}");
                     if (File.Exists(filePath))
                     {
@@ -345,15 +322,40 @@ namespace HFM
             return null;
         }
 
-        internal static void ShowStartupError(Exception ex, string message = null, bool mustTerminate = true)
+        public void RegisterForUnhandledExceptions()
         {
-            ExceptionDialog.ShowErrorDialog(
-               ex,
-               Core.Application.NameAndFullVersion,
-               Environment.OSVersion.VersionString,
-               message,
-               Core.Application.SupportForumUrl,
-               mustTerminate);
+            Application.ThreadException += (s, e) => ShowThreadExceptionDialog(e);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => ShowUnhandledExceptionDialog(e);
+        }
+
+        private void ShowThreadExceptionDialog(ThreadExceptionEventArgs e)
+        {
+            var presenter = Container.Resolve<ExceptionPresenter>();
+            presenter.ShowDialog(null, e.Exception, false);
+        }
+
+        private void ShowUnhandledExceptionDialog(UnhandledExceptionEventArgs e)
+        {
+            var presenter = Container.Resolve<ExceptionPresenter>();
+            presenter.ShowDialog(null, (Exception)e.ExceptionObject, e.IsTerminating);
+        }
+
+        internal void ShowStartupException(Exception exception, string message = null, bool mustTerminate = true)
+        {
+            var properties = new Dictionary<string, string>
+            {
+                { "Application", Core.Application.NameAndFullVersion },
+                { "OS Version", Environment.OSVersion.VersionString }
+            };
+            if (!String.IsNullOrEmpty(message))
+            {
+                properties.Add("Startup Error", message);
+            }
+
+            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, Core.Application.SupportForumUrl))
+            {
+                presenter.ShowDialog(null, exception, mustTerminate);
+            }
         }
     }
 }

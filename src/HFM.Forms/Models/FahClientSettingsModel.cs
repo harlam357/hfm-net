@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
+
+using AutoMapper;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
@@ -13,27 +14,18 @@ using HFM.Core.Net;
 
 namespace HFM.Forms.Models
 {
-    public class FahClientSettingsModel : INotifyPropertyChanged, IDataErrorInfo
+    public class FahClientSettingsModel : ViewModelBase, IDataErrorInfo
     {
-        private bool _connectEnabled = true;
+        public ClientSettings ClientSettings { get; private set; }
 
-        public bool ConnectEnabled
+        public FahClientSettingsModel()
         {
-            get => _connectEnabled && !HasError;
-            set
-            {
-                if (_connectEnabled != value)
-                {
-                    _connectEnabled = value;
-                    OnPropertyChanged();
-                }
-            }
+
         }
 
-        public bool ValidateAcceptance()
+        public FahClientSettingsModel(ClientSettings clientSettings)
         {
-            OnPropertyChanged(String.Empty);
-            return !HasError;
+            ClientSettings = clientSettings;
         }
 
         public string this[string columnName]
@@ -54,7 +46,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public string Error
+        public override string Error
         {
             get
             {
@@ -64,7 +56,35 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool HasError => !String.IsNullOrWhiteSpace(Error);
+        public override void Load()
+        {
+            if (ClientSettings != null)
+            {
+                var mapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
+                mapper.Map(ClientSettings, this);
+            }
+        }
+
+        public override void Save()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.AddProfile<FahClientSettingsModelProfile>()).CreateMapper();
+            ClientSettings = mapper.Map<FahClientSettingsModel, ClientSettings>(this);
+        }
+
+        private bool _connectEnabled = true;
+
+        public bool ConnectEnabled
+        {
+            get => _connectEnabled && !HasError;
+            set
+            {
+                if (_connectEnabled != value)
+                {
+                    _connectEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         private string _name = String.Empty;
 
@@ -157,13 +177,6 @@ namespace HFM.Forms.Models
         public virtual FahClientConnection CreateConnection()
         {
             return new FahClientConnection(Server, Port);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
