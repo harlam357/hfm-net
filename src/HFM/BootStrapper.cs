@@ -324,7 +324,7 @@ namespace HFM
                         }
                     }
                 }
-                
+
                 mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)
@@ -355,48 +355,37 @@ namespace HFM
             return null;
         }
 
-        public string ApplicationName { get; } = Core.Application.NameAndFullVersion;
-        public string OSVersion { get; } = Environment.OSVersion.VersionString;
-        public string ReportUrl { get; } = Core.Application.SupportForumUrl;
-
         public void RegisterForUnhandledExceptions()
         {
-            var properties = new Dictionary<string, string>
-            {
-                { "Application", ApplicationName }, 
-                { "OS Version", OSVersion }
-            };
-            
-            Application.ThreadException += (s, e) => ShowThreadExceptionDialog(e, properties);
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => ShowUnhandledExceptionDialog(e, properties);
+            Application.ThreadException += (s, e) => ShowThreadExceptionDialog(e);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => ShowUnhandledExceptionDialog(e);
         }
 
-        private void ShowThreadExceptionDialog(ThreadExceptionEventArgs e, IDictionary<string, string> properties)
+        private void ShowThreadExceptionDialog(ThreadExceptionEventArgs e)
         {
-            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, ReportUrl))
-            {
-                presenter.ShowDialog(null, e.Exception, false);
-            }
+            var presenter = Container.Resolve<ExceptionPresenter>();
+            presenter.ShowDialog(null, e.Exception, false);
         }
 
-        private void ShowUnhandledExceptionDialog(UnhandledExceptionEventArgs e, IDictionary<string, string> properties)
+        private void ShowUnhandledExceptionDialog(UnhandledExceptionEventArgs e)
         {
-            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, ReportUrl))
-            {
-                presenter.ShowDialog(null, (Exception)e.ExceptionObject, e.IsTerminating);
-            }
+            var presenter = Container.Resolve<ExceptionPresenter>();
+            presenter.ShowDialog(null, (Exception)e.ExceptionObject, e.IsTerminating);
         }
 
         internal void ShowStartupException(Exception exception, string message = null, bool mustTerminate = true)
         {
             var properties = new Dictionary<string, string>
             {
-                { "Application", ApplicationName }, 
-                { "OS Version", OSVersion },
-                { "Startup Error", message }
+                { "Application", Core.Application.NameAndFullVersion },
+                { "OS Version", Environment.OSVersion.VersionString }
             };
+            if (!String.IsNullOrEmpty(message))
+            {
+                properties.Add("Startup Error", message);
+            }
 
-            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, ReportUrl))
+            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, Core.Application.SupportForumUrl))
             {
                 presenter.ShowDialog(null, exception, mustTerminate);
             }

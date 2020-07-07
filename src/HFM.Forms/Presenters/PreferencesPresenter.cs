@@ -12,12 +12,14 @@ namespace HFM.Forms
         public ILogger Logger { get; }
         public PreferencesModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
+        public ExceptionPresenter ExceptionPresenter { get; }
 
-        public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox)
+        public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox, ExceptionPresenter exceptionPresenter)
         {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
-            Model = model;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            ExceptionPresenter = exceptionPresenter ?? NullExceptionPresenter.Instance;
         }
 
         public IWin32Dialog Dialog { get; protected set; }
@@ -35,12 +37,12 @@ namespace HFM.Forms
                 try
                 {
                     Model.Save();
+                    Dialog.DialogResult = DialogResult.OK;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.ShowError(Dialog, ex.Message, Core.Application.NameAndVersion);
+                    Dialog.DialogResult = ExceptionPresenter.ShowDialog(Dialog, ex, false);
                 }
-                Dialog.DialogResult = DialogResult.OK;
                 Dialog.Close();
             }
         }

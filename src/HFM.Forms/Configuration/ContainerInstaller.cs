@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 using Castle.Facilities.TypedFactory;
@@ -6,13 +8,13 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
+using HFM.Core.Logging;
+
 namespace HFM.Forms.Configuration
 {
     [ExcludeFromCodeCoverage]
     public class ContainerInstaller : IWindsorInstaller
     {
-        #region IWindsorInstaller Members
-
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             #region MVP
@@ -49,27 +51,39 @@ namespace HFM.Forms.Configuration
 
             // Singleton Views
             container.Register(
-               Component.For<IMessagesView>()
-                  .ImplementedBy<MessagesForm>(),
-               Component.For<MessageBoxPresenter>()
-                   .Instance(MessageBoxPresenter.Default));
+                Component.For<IMessagesView>()
+                    .ImplementedBy<MessagesForm>(),
+                Component.For<MessageBoxPresenter>()
+                    .Instance(MessageBoxPresenter.Default),
+                Component.For<ExceptionPresenter>()
+                    .UsingFactoryMethod(kernel =>
+                    {
+                        var logger = kernel.Resolve<ILogger>();
+                        var messageBox = kernel.Resolve<MessageBoxPresenter>();
+                        var properties = new Dictionary<string, string>
+                        {
+                            { "Application", Core.Application.NameAndFullVersion }, 
+                            { "OS Version", Environment.OSVersion.VersionString }
+                        };
+                        return new ExceptionPresenter(logger, messageBox, properties, Core.Application.SupportForumUrl);
+                    }));
 
             // Transient Views
             container.Register(
-               Component.For<IQueryView>()
-                  .ImplementedBy<QueryDialog>()
-                     .Named("QueryDialog")
-                        .LifeStyle.Transient,
-               Component.For<IBenchmarksView>()
-                  .ImplementedBy<BenchmarksForm>()
-                     .Named("BenchmarksForm")
-                        .LifeStyle.Transient,
-               Component.For<IProteinCalculatorView>()
-                  .ImplementedBy<ProteinCalculatorForm>()
-                     .Named("ProteinCalculatorForm")
-                        .LifeStyle.Transient,
-               Component.For<IViewFactory>()
-                  .AsFactory());
+                Component.For<IQueryView>()
+                    .ImplementedBy<QueryDialog>()
+                    .Named("QueryDialog")
+                    .LifeStyle.Transient,
+                Component.For<IBenchmarksView>()
+                    .ImplementedBy<BenchmarksForm>()
+                    .Named("BenchmarksForm")
+                    .LifeStyle.Transient,
+                Component.For<IProteinCalculatorView>()
+                    .ImplementedBy<ProteinCalculatorForm>()
+                    .Named("ProteinCalculatorForm")
+                    .LifeStyle.Transient,
+                Component.For<IViewFactory>()
+                    .AsFactory());
 
             #endregion
 
@@ -77,17 +91,15 @@ namespace HFM.Forms.Configuration
 
             // IExternalProcessStarter - Singleton
             container.Register(
-               Component.For<IExternalProcessStarter>()
-                  .ImplementedBy<ExternalProcessStarter>());
+                Component.For<IExternalProcessStarter>()
+                    .ImplementedBy<ExternalProcessStarter>());
 
             // IUpdateLogic - Singleton
             container.Register(
-               Component.For<IUpdateLogic>()
-                  .ImplementedBy<UpdateLogic>());
+                Component.For<IUpdateLogic>()
+                    .ImplementedBy<UpdateLogic>());
 
             #endregion
         }
-
-        #endregion
     }
 }

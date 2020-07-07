@@ -122,4 +122,21 @@ namespace HFM.Forms
             }
         }
     }
+
+    public class NullExceptionPresenter : ExceptionPresenter
+    {
+        public static NullExceptionPresenter Instance { get; } = new NullExceptionPresenter();
+
+        public NullExceptionPresenter() : base(null, null, null, null)
+        {
+        }
+
+        public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
+        {
+            Exception = exception;
+            MustTerminate = mustTerminate;
+
+            return DialogResult.Ignore;
+        }
+    }
 }

@@ -19,8 +19,8 @@ namespace HFM.Forms
 
         public FahClientSettingsPresenter(FahClientSettingsModel model, ILogger logger, MessageBoxPresenter messageBox)
         {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
-            Model = model;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
