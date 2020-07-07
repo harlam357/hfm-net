@@ -152,11 +152,11 @@ namespace HFM.Forms
 
         private class NoDialogFahClientSettingsPresenter : FahClientSettingsPresenter
         {
-            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model) : base(null, model, null)
+            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model) : base(model, null, null)
             {
             }
 
-            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model, MessageBoxPresenter messageBox) : base(null, model, messageBox)
+            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model, MessageBoxPresenter messageBox) : base(model, null, messageBox)
             {
             }
 

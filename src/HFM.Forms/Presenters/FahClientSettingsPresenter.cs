@@ -17,7 +17,7 @@ namespace HFM.Forms
         public FahClientSettingsModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public FahClientSettingsPresenter(ILogger logger, FahClientSettingsModel model, MessageBoxPresenter messageBox)
+        public FahClientSettingsPresenter(FahClientSettingsModel model, ILogger logger, MessageBoxPresenter messageBox)
         {
             Logger = logger ?? NullLogger.Instance;
             Model = model;

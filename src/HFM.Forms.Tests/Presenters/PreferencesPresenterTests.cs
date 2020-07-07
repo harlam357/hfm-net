@@ -47,11 +47,11 @@ namespace HFM.Forms
 
         private class NoDialogPreferencesPresenter : PreferencesPresenter
         {
-            public NoDialogPreferencesPresenter(PreferencesModel model) : base(null, model, null)
+            public NoDialogPreferencesPresenter(PreferencesModel model) : base(model, null, null)
             {
             }
 
-            public NoDialogPreferencesPresenter(PreferencesModel model, MessageBoxPresenter messageBox) : base(null, model, messageBox)
+            public NoDialogPreferencesPresenter(PreferencesModel model, MessageBoxPresenter messageBox) : base(model, null, messageBox)
             {
             }
 

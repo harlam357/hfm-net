@@ -13,7 +13,7 @@ namespace HFM.Forms
         public PreferencesModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public PreferencesPresenter(ILogger logger, PreferencesModel model, MessageBoxPresenter messageBox)
+        public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox)
         {
             Logger = logger ?? NullLogger.Instance;
             Model = model;

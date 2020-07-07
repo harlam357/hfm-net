@@ -748,7 +748,7 @@ namespace HFM.Forms
         {
             var model = new PreferencesModel(_prefs, new RegistryAutoRunConfiguration(Logger));
             model.Load();
-            using (var dialog = new PreferencesPresenter(Logger, model, _messageBox))
+            using (var dialog = new PreferencesPresenter(model, Logger, _messageBox))
             {
                 dialog.ShowDialog(_view);
 
@@ -789,7 +789,7 @@ namespace HFM.Forms
 
         internal void ClientsAddClick()
         {
-            using (var dialog = new FahClientSettingsPresenter(Logger, new FahClientSettingsModel(), _messageBox))
+            using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, _messageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
@@ -833,7 +833,7 @@ namespace HFM.Forms
 
             var model = new FahClientSettingsModel(originalSettings);
             model.Load();
-            using (var dialog = new FahClientSettingsPresenter(Logger, model, _messageBox))
+            using (var dialog = new FahClientSettingsPresenter(model, Logger, _messageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
