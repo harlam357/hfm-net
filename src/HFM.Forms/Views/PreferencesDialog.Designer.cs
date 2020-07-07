@@ -1,4 +1,4 @@
-
+﻿
 namespace HFM.Forms
 {
    partial class PreferencesDialog
@@ -344,7 +344,7 @@ namespace HFM.Forms
             this.WebSitePortTextBox.DoubleBuffered = true;
             this.WebSitePortTextBox.Enabled = false;
             this.WebSitePortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.WebSitePortTextBox.ErrorToolTip = null;
+            this.WebSitePortTextBox.ErrorToolTip = this.toolTipPrefs;
             this.WebSitePortTextBox.ErrorToolTipDuration = 5000;
             this.WebSitePortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.WebSitePortTextBox.ErrorToolTipText = "";
@@ -756,7 +756,7 @@ namespace HFM.Forms
             this.txtFileExplorer.BackColor = System.Drawing.SystemColors.Window;
             this.txtFileExplorer.DoubleBuffered = true;
             this.txtFileExplorer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtFileExplorer.ErrorToolTip = null;
+            this.txtFileExplorer.ErrorToolTip = this.toolTipPrefs;
             this.txtFileExplorer.ErrorToolTipDuration = 5000;
             this.txtFileExplorer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtFileExplorer.ErrorToolTipText = "";
@@ -801,7 +801,7 @@ namespace HFM.Forms
             this.txtLogFileViewer.BackColor = System.Drawing.SystemColors.Window;
             this.txtLogFileViewer.DoubleBuffered = true;
             this.txtLogFileViewer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtLogFileViewer.ErrorToolTip = null;
+            this.txtLogFileViewer.ErrorToolTip = this.toolTipPrefs;
             this.txtLogFileViewer.ErrorToolTipDuration = 5000;
             this.txtLogFileViewer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtLogFileViewer.ErrorToolTipText = "";
@@ -850,7 +850,7 @@ namespace HFM.Forms
             this.txtDefaultConfigFile.DoubleBuffered = true;
             this.txtDefaultConfigFile.Enabled = false;
             this.txtDefaultConfigFile.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtDefaultConfigFile.ErrorToolTip = null;
+            this.txtDefaultConfigFile.ErrorToolTip = this.toolTipPrefs;
             this.txtDefaultConfigFile.ErrorToolTipDuration = 5000;
             this.txtDefaultConfigFile.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtDefaultConfigFile.ErrorToolTipText = "";
@@ -1451,7 +1451,7 @@ namespace HFM.Forms
             this.txtEOCUserID.BackColor = System.Drawing.SystemColors.Window;
             this.txtEOCUserID.DoubleBuffered = true;
             this.txtEOCUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtEOCUserID.ErrorToolTip = null;
+            this.txtEOCUserID.ErrorToolTip = this.toolTipPrefs;
             this.txtEOCUserID.ErrorToolTipDuration = 5000;
             this.txtEOCUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtEOCUserID.ErrorToolTipText = "";
@@ -1467,7 +1467,7 @@ namespace HFM.Forms
             this.txtStanfordTeamID.BackColor = System.Drawing.SystemColors.Window;
             this.txtStanfordTeamID.DoubleBuffered = true;
             this.txtStanfordTeamID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordTeamID.ErrorToolTip = null;
+            this.txtStanfordTeamID.ErrorToolTip = this.toolTipPrefs;
             this.txtStanfordTeamID.ErrorToolTipDuration = 5000;
             this.txtStanfordTeamID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtStanfordTeamID.ErrorToolTipText = "";
@@ -1503,7 +1503,7 @@ namespace HFM.Forms
             this.txtStanfordUserID.BackColor = System.Drawing.SystemColors.Window;
             this.txtStanfordUserID.DoubleBuffered = true;
             this.txtStanfordUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordUserID.ErrorToolTip = null;
+            this.txtStanfordUserID.ErrorToolTip = this.toolTipPrefs;
             this.txtStanfordUserID.ErrorToolTipDuration = 5000;
             this.txtStanfordUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtStanfordUserID.ErrorToolTipText = "";
