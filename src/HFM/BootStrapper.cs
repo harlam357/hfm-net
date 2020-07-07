@@ -49,73 +49,40 @@ namespace HFM
             // Issue 180 - Restore the already running instance to the screen.
             using (var singleInstance = new SingleInstanceHelper())
             {
-                if (!CheckSingleInstance(singleInstance))
-                {
-                    return;
-                }
-
+                CheckSingleInstance(singleInstance);
                 Logger = InitializeLogging();
-                if (!CheckMonoVersion())
-                {
-                    return;
-                }
-
-                Preferences = Container.Resolve<IPreferenceSet>();
-                if (!InitializePreferences(arguments.Any(x => x.Type == ArgumentType.ResetPrefs)))
-                {
-                    return;
-                }
-
-                if (!ClearCacheFolder(Preferences.Get<string>(Preference.CacheDirectory)))
-                {
-                    return;
-                }
-
-                if (!RegisterIpcChannel())
-                {
-                    return;
-                }
-
-                var appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
-                var mainView = Container.Resolve<IMainView>();
-                if (!InitializeMainView(appDataPath, arguments, mainView))
-                {
-                    return;
-                }
-
+                CheckMonoVersion();
+                Preferences = InitializePreferences(arguments);
+                ClearCacheFolder();
+                MainForm = InitializeMainForm(arguments);
                 RegisterForUnhandledExceptions();
 
                 Application.ApplicationExit += (s, e) => Preferences.Save();
-                MainForm = (Form)mainView;
             }
         }
 
-        private bool CheckSingleInstance(SingleInstanceHelper singleInstance)
+        private void CheckSingleInstance(SingleInstanceHelper singleInstance)
         {
             try
             {
                 if (!singleInstance.Start())
                 {
                     SingleInstanceHelper.SignalFirstInstance(Args);
-                    return false;
                 }
             }
             catch (RemotingException ex)
             {
-                DialogResult result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion,
+                var result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion,
                    Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.No)
                 {
-                    ShowStartupException(ex, Properties.Resources.RemotingCallFailed);
-                    return false;
+                    throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
                 }
             }
             catch (Exception ex)
             {
-                ShowStartupException(ex, Properties.Resources.RemotingCallFailed);
-                return false;
+                throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
             }
-            return true;
         }
 
         private Logger InitializeLogging()
@@ -137,12 +104,12 @@ namespace HFM
             return logger;
         }
 
-        private bool CheckMonoVersion()
+        private void CheckMonoVersion()
         {
             // check for Mono runtime
             if (!Core.Application.IsRunningOnMono)
             {
-                return true;
+                return;
             }
 
             Version monoVersion = null;
@@ -159,9 +126,7 @@ namespace HFM
             {
                 if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
                 {
-                    var ex = new InvalidOperationException(Properties.Resources.MonoTooOld);
-                    ShowStartupException(ex);
-                    return false;
+                    throw new StartupException(Properties.Resources.MonoTooOld);
                 }
                 Logger.Info($"Running on Mono v{monoVersion}...");
             }
@@ -169,38 +134,39 @@ namespace HFM
             {
                 Logger.Info("Running on Mono...");
             }
-            return true;
         }
 
-        private bool InitializePreferences(bool reset)
+        private IPreferenceSet InitializePreferences(ICollection<Argument> arguments)
         {
+            bool reset = arguments.Any(x => x.Type == ArgumentType.ResetPrefs);
+            var preferences = Container.Resolve<IPreferenceSet>();
+
             try
             {
                 if (reset)
                 {
-                    Preferences.Reset();
+                    preferences.Reset();
                 }
                 else
                 {
-                    Preferences.Load();
-                    ValidatePreferences();
+                    preferences.Load();
+                    ValidatePreferences(preferences);
                 }
             }
             catch (Exception ex)
             {
-                ShowStartupException(ex, Properties.Resources.UserPreferencesFailed);
-                return false;
+                throw new StartupException(Properties.Resources.UserPreferencesFailed, ex);
             }
 
             // set logging level from preferences
-            Logger.Level = Preferences.Get<LoggerLevel>(Preference.MessageLevel);
+            Logger.Level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
 
             // process logging level changes
-            Preferences.PreferenceChanged += (s, e) =>
+            preferences.PreferenceChanged += (s, e) =>
             {
                 if (e.Preference == Preference.MessageLevel)
                 {
-                    var newLevel = Preferences.Get<LoggerLevel>(Preference.MessageLevel);
+                    var newLevel = preferences.Get<LoggerLevel>(Preference.MessageLevel);
                     if (newLevel != Logger.Level)
                     {
                         Logger.Level = newLevel;
@@ -209,13 +175,13 @@ namespace HFM
                 }
             };
 
-            return true;
+            return preferences;
         }
 
-        private void ValidatePreferences()
+        private static void ValidatePreferences(IPreferenceSet preferences)
         {
             // MessageLevel
-            var level = Preferences.Get<LoggerLevel>(Preference.MessageLevel);
+            var level = preferences.Get<LoggerLevel>(Preference.MessageLevel);
             if (level < LoggerLevel.Info)
             {
                 level = LoggerLevel.Info;
@@ -224,25 +190,27 @@ namespace HFM
             {
                 level = LoggerLevel.Debug;
             }
-            Preferences.Set(Preference.MessageLevel, level);
+            preferences.Set(Preference.MessageLevel, level);
 
             const int defaultInterval = 15;
-            var clientRetrievalTask = Preferences.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
+            var clientRetrievalTask = preferences.Get<Preferences.Data.ClientRetrievalTask>(Preference.ClientRetrievalTask);
             if (!Core.Client.ClientScheduledTasks.ValidateInterval(clientRetrievalTask.Interval))
             {
                 clientRetrievalTask.Interval = defaultInterval;
-                Preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
+                preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
             }
-            var webGenerationTask = Preferences.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
+            var webGenerationTask = preferences.Get<Preferences.Data.WebGenerationTask>(Preference.WebGenerationTask);
             if (!Core.Client.ClientScheduledTasks.ValidateInterval(webGenerationTask.Interval))
             {
                 webGenerationTask.Interval = defaultInterval;
-                Preferences.Set(Preference.WebGenerationTask, webGenerationTask);
+                preferences.Set(Preference.WebGenerationTask, webGenerationTask);
             }
         }
 
-        private bool ClearCacheFolder(string cacheDirectory)
+        private void ClearCacheFolder()
         {
+            var cacheDirectory = Preferences.Get<string>(Preference.CacheDirectory);
+
             try
             {
                 var di = new DirectoryInfo(cacheDirectory);
@@ -267,48 +235,44 @@ namespace HFM
             }
             catch (Exception ex)
             {
-                ShowStartupException(ex, Properties.Resources.CacheSetupFailed);
-                return false;
+                throw new StartupException(Properties.Resources.CacheSetupFailed, ex);
             }
-            return true;
         }
 
-        private bool RegisterIpcChannel()
+        private static void RegisterIpcChannel(MainForm mainForm)
         {
             try
             {
                 SingleInstanceHelper.RegisterIpcChannel((s, e) =>
                 {
-                    var mainView = Container.Resolve<IMainView>();
-                    mainView.SecondInstanceStarted(e.Args);
+                    mainForm.SecondInstanceStarted(e.Args);
                 });
             }
             catch (Exception ex)
             {
-                ShowStartupException(ex, Properties.Resources.IpcRegisterFailed);
-                return false;
+                throw new StartupException(Properties.Resources.IpcRegisterFailed, ex);
             }
-            return true;
         }
 
-        private bool InitializeMainView(string appDataPath, ICollection<Argument> arguments, IMainView mainView)
+        private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
+            var mainForm = (MainForm)Container.Resolve<IMainView>();
             var mainPresenter = Container.Resolve<MainPresenter>();
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainView.Initialize(mainPresenter, Container.Resolve<IProteinService>(), Container.Resolve<UserStatsDataModel>(), openFile);
+                mainForm.Initialize(mainPresenter, Container.Resolve<IProteinService>(), Container.Resolve<UserStatsDataModel>(), openFile);
             }
             catch (Exception ex)
             {
-                ShowStartupException(ex, Properties.Resources.FailedToInitUI);
-                return false;
+                throw new StartupException(Properties.Resources.FailedToInitUI, ex);
             }
 
-            mainView.WorkUnitHistoryMenuEnabled = false;
+            mainForm.WorkUnitHistoryMenuEnabled = false;
             var repository = (WorkUnitRepository)Container.Resolve<IWorkUnitRepository>();
             try
             {
+                string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
                 repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
                 if (repository.RequiresUpgrade())
                 {
@@ -325,13 +289,16 @@ namespace HFM
                     }
                 }
 
-                mainView.WorkUnitHistoryMenuEnabled = repository.Connected;
+                mainForm.WorkUnitHistoryMenuEnabled = repository.Connected;
             }
             catch (Exception ex)
             {
                 ShowStartupException(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
             }
-            return true;
+
+            RegisterIpcChannel(mainForm);
+
+            return mainForm;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]

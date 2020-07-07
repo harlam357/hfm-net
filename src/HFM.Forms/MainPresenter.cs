@@ -1164,8 +1164,6 @@ namespace HFM.Forms
 
         public void ToolsHistoryClick()
         {
-            Debug.Assert(_view.WorkUnitHistoryMenuEnabled);
-
             try
             {
                 if (_historyPresenter is null)

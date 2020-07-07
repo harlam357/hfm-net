@@ -80,21 +80,6 @@ Function Test-Build
     Exec { & $NUnitPath .\HFM.Proteins.Tests\bin\Release\HFM.Proteins.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Proteins.Tests.Results.xml }
 }
 
-Function Analyze-Build
-{
-    param([string]$ArtifactsPath=$Global:ArtifactsPath,
-          [string]$ArtifactsBin=$Global:ArtifactsBin)
-
-    Write-Host "---------------------------------------------------"
-    Write-Host "Analyzing Build"
-    Write-Host " ArtifactsPath: $ArtifactsPath"
-    Write-Host " ArtifactsBin: $ArtifactsBin"
-    Write-Host "---------------------------------------------------"
-
-    $FxCopPath = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe"
-    Exec { & $FxCopPath /f:$ArtifactsBin\HFM.exe /f:$ArtifactsBin\HFM.*.dll /rs:=HFM.ruleset /dic:CustomDictionary.xml /d:..\lib\System.Data.SQLite\bin /out:$ArtifactsPath\FxCopReport.xml /gac }
-}
-
 Function Clean-Artifacts
 {
     [CmdletBinding()]
