@@ -415,7 +415,7 @@ namespace HFM.Forms
             | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveas.Size = new System.Drawing.Size(263, 22);
             this.mnuFileSaveas.Text = "Save Configuration &As";
-            this.mnuFileSaveas.Click += new System.EventHandler(this.mnuFileSaveas_Click);
+            this.mnuFileSaveas.Click += new System.EventHandler(this.mnuFileSaveAs_Click);
             // 
             // mnuFileSep1
             // 

@@ -88,12 +88,9 @@ namespace HFM.Forms
             Model.Update(Preferences, QueryDataContainer);
         }
 
-        public void ExportClick()
+        public void ExportClick(FileDialogPresenter saveFile)
         {
-            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
-            {
-                ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
-            }
+            ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
         }
 
         internal void ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitRow>>> serializers)

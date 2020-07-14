@@ -79,21 +79,13 @@ namespace HFM.Forms
 
         #region Download
 
-        public void DownloadClick(int index)
+        public void DownloadClick(FileDialogPresenter saveFile, int index)
         {
-            if (ShowSaveFileView(index))
+            if (ShowSaveFileView(saveFile, index))
             {
                 Action<string> performDownloadAction = PerformDownload;
                 performDownloadAction.BeginInvoke(
                    _updateData.UpdateFiles[index].HttpAddress, PerformDownloadCallback, performDownloadAction);
-            }
-        }
-
-        private bool ShowSaveFileView(int index)
-        {
-            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
-            {
-                return ShowSaveFileView(saveFile, index);
             }
         }
 

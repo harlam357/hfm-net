@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -369,7 +369,10 @@ namespace HFM.Forms
 
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
-            _presenter.FileOpenClick();
+            using (var openFile = DefaultFileDialogPresenter.OpenFile())
+            {
+                _presenter.FileOpenClick(openFile);
+            }
         }
 
         private void mnuFileSave_Click(object sender, EventArgs e)
@@ -377,9 +380,12 @@ namespace HFM.Forms
             _presenter.FileSaveClick();
         }
 
-        private void mnuFileSaveas_Click(object sender, EventArgs e)
+        private void mnuFileSaveAs_Click(object sender, EventArgs e)
         {
-            _presenter.FileSaveAsClick();
+            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+            {
+                _presenter.FileSaveAsClick(saveFile);
+            }
         }
 
         private void mnuFileQuit_Click(object sender, EventArgs e)

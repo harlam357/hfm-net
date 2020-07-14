@@ -150,7 +150,10 @@ namespace HFM.Forms
 
         private void mnuFileExport_Click(object sender, EventArgs e)
         {
-            _presenter.ExportClick();
+            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+            {
+                _presenter.ExportClick(saveFile);
+            }
         }
 
         private void mnuFileExit_Click(object sender, EventArgs e)

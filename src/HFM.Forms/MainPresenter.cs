@@ -46,7 +46,7 @@ namespace HFM.Forms
         #region Fields
 
         private HistoryPresenter _historyPresenter;
-        
+
         private readonly MainGridModel _gridModel;
         private readonly IMainView _view;
         private readonly IMessagesView _messagesView;
@@ -572,14 +572,6 @@ namespace HFM.Forms
             }
         }
 
-        public void FileOpenClick()
-        {
-            using (var openFile = DefaultFileDialogPresenter.OpenFile())
-            {
-                FileOpenClick(openFile);
-            }
-        }
-
         public void FileOpenClick(FileDialogPresenter openFile)
         {
             if (CheckForConfigurationChanges())
@@ -643,7 +635,11 @@ namespace HFM.Forms
 
             if (String.IsNullOrEmpty(_settingsManager.FileName))
             {
-                FileSaveAsClick();
+                // TODO: Fix dependency on DefaultFileDialogPresenter
+                using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+                {
+                    FileSaveAsClick(saveFile);
+                }
             }
             else
             {
@@ -651,14 +647,6 @@ namespace HFM.Forms
             }
         }
 
-        public void FileSaveAsClick()
-        {
-            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
-            {
-                FileSaveAsClick(saveFile);
-            }
-        }
-        
         public void FileSaveAsClick(FileDialogPresenter saveFile)
         {
             if (_clientConfiguration.Count == 0)
@@ -718,7 +706,7 @@ namespace HFM.Forms
             if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
             {
                 DialogResult result = _messageBox.AskYesNoCancelQuestion(_view,
-                   String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes / No - Continue and do not save the changes / Cancel - Do not continue", Environment.NewLine),
+                   String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes{0}No - Continue and do not save the changes{0}Cancel - Do not continue", Environment.NewLine),
                    _view.Text);
 
                 switch (result)
