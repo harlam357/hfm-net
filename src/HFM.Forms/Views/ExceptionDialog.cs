@@ -7,7 +7,7 @@ namespace HFM.Forms
     public partial class ExceptionDialog : Form, IWin32Dialog
     {
         private readonly ExceptionPresenter _presenter;
-        
+
         public ExceptionDialog(ExceptionPresenter presenter)
         {
             _presenter = presenter;

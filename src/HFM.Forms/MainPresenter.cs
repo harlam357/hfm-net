@@ -59,7 +59,7 @@ namespace HFM.Forms
         private readonly IUpdateLogic _updateLogic;
         private readonly IExternalProcessStarter _processStarter;
         private readonly IPreferenceSet _prefs;
-        private readonly ExceptionPresenter _exceptionPresenter;
+        private readonly ExceptionPresenterFactory _exceptionPresenter;
         private readonly ClientSettingsManager _settingsManager;
 
         #endregion
@@ -69,7 +69,7 @@ namespace HFM.Forms
         public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
                              ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
-                             IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenter exceptionPresenter)
+                             IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenterFactory exceptionPresenter)
         {
             _gridModel = gridModel;
             _gridModel.AfterResetBindings += (sender, e) =>

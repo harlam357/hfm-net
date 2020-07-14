@@ -330,13 +330,13 @@ namespace HFM
 
         private void ShowThreadExceptionDialog(ThreadExceptionEventArgs e)
         {
-            var presenter = Container.Resolve<ExceptionPresenter>();
+            var presenter = Container.Resolve<ExceptionPresenterFactory>();
             presenter.ShowDialog(null, e.Exception, false);
         }
 
         private void ShowUnhandledExceptionDialog(UnhandledExceptionEventArgs e)
         {
-            var presenter = Container.Resolve<ExceptionPresenter>();
+            var presenter = Container.Resolve<ExceptionPresenterFactory>();
             presenter.ShowDialog(null, (Exception)e.ExceptionObject, e.IsTerminating);
         }
 
@@ -352,10 +352,8 @@ namespace HFM
                 properties.Add("Startup Error", message);
             }
 
-            using (var presenter = new ExceptionPresenter(Logger, MessageBoxPresenter.Default, properties, Core.Application.SupportForumUrl))
-            {
-                presenter.ShowDialog(null, exception, mustTerminate);
-            }
+            var presenter = new DefaultExceptionPresenterFactory(Logger, MessageBoxPresenter.Default, properties, Core.Application.SupportForumUrl);
+            presenter.ShowDialog(null, exception, mustTerminate);
         }
     }
 }

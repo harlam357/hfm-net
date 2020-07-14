@@ -11,6 +11,57 @@ using HFM.Forms.Internal;
 
 namespace HFM.Forms
 {
+    public abstract class ExceptionPresenterFactory
+    {
+        public ILogger Logger { get; }
+        public MessageBoxPresenter MessageBox { get; }
+        public IDictionary<string, string> Properties { get; }
+        public string ReportUrl { get; }
+
+        protected ExceptionPresenterFactory(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+        {
+            Logger = logger ?? NullLogger.Instance;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            Properties = properties;
+            ReportUrl = reportUrl;
+        }
+
+        public abstract DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate);
+    }
+
+    public class DefaultExceptionPresenterFactory : ExceptionPresenterFactory
+    {
+        public DefaultExceptionPresenterFactory(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+            : base(logger, messageBox, properties, reportUrl)
+        {
+
+        }
+
+        public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
+        {
+            using (var presenter = new ExceptionPresenter(Logger, MessageBox, Properties, ReportUrl))
+            {
+                return presenter.ShowDialog(owner, exception, mustTerminate);
+            }
+        }
+    }
+
+    public class NullExceptionPresenterFactory : ExceptionPresenterFactory
+    {
+        public static NullExceptionPresenterFactory Instance { get; } = new NullExceptionPresenterFactory();
+
+        public NullExceptionPresenterFactory() : base(null, null, null, null)
+        {
+
+        }
+
+        public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
+        {
+            var presenter = NullExceptionPresenter.Instance;
+            return presenter.ShowDialog(owner, exception, mustTerminate);
+        }
+    }
+
     public class ExceptionPresenter : IDisposable
     {
         public ILogger Logger { get; }
@@ -74,7 +125,7 @@ namespace HFM.Forms
             if (!copyToClipboard) return;
 
             // TODO: Replace ClipboardWrapper.SetText() with abstraction
-            
+
             string exceptionText = BuildExceptionText();
             if (Application.OleRequired() == ApartmentState.STA)
             {

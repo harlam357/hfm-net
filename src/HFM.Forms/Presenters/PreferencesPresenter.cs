@@ -12,14 +12,14 @@ namespace HFM.Forms
         public ILogger Logger { get; }
         public PreferencesModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
-        public ExceptionPresenter ExceptionPresenter { get; }
+        public ExceptionPresenterFactory ExceptionPresenter { get; }
 
-        public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox, ExceptionPresenter exceptionPresenter)
+        public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox, ExceptionPresenterFactory exceptionPresenter)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
-            ExceptionPresenter = exceptionPresenter ?? NullExceptionPresenter.Instance;
+            ExceptionPresenter = exceptionPresenter ?? NullExceptionPresenterFactory.Instance;
         }
 
         public IWin32Dialog Dialog { get; protected set; }

@@ -55,7 +55,7 @@ namespace HFM.Forms.Configuration
                     .ImplementedBy<MessagesForm>(),
                 Component.For<MessageBoxPresenter>()
                     .Instance(MessageBoxPresenter.Default),
-                Component.For<ExceptionPresenter>()
+                Component.For<ExceptionPresenterFactory>()
                     .UsingFactoryMethod(kernel =>
                     {
                         var logger = kernel.Resolve<ILogger>();
@@ -65,7 +65,7 @@ namespace HFM.Forms.Configuration
                             { "Application", Core.Application.NameAndFullVersion }, 
                             { "OS Version", Environment.OSVersion.VersionString }
                         };
-                        return new ExceptionPresenter(logger, messageBox, properties, Core.Application.SupportForumUrl);
+                        return new DefaultExceptionPresenterFactory(logger, messageBox, properties, Core.Application.SupportForumUrl);
                     }));
 
             // Transient Views
