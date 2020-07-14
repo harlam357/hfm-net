@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -346,13 +346,9 @@ namespace HFM.Forms
         // Scheduled Tasks Tab
         private void btnBrowseWebFolder_Click(object sender, EventArgs e)
         {
-            if (_presenter.Model.ScheduledTasksModel.WebRoot.Length != 0)
+            using (var dialog = DefaultFolderDialogPresenter.BrowseFolder())
             {
-                locateWebFolder.SelectedPath = _presenter.Model.ScheduledTasksModel.WebRoot;
-            }
-            if (locateWebFolder.ShowDialog() == DialogResult.OK)
-            {
-                _presenter.Model.ScheduledTasksModel.WebRoot = locateWebFolder.SelectedPath;
+                _presenter.BrowseWebFolderClicked(dialog);
             }
         }
 

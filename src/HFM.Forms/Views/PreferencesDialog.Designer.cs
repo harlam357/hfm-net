@@ -33,7 +33,6 @@ namespace HFM.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreferencesDialog));
             this.pnl1CSSSample = new System.Windows.Forms.Panel();
             this.StyleList = new System.Windows.Forms.ListBox();
-            this.locateWebFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSchdTasks = new System.Windows.Forms.TabPage();
             this.grpUpdateData = new System.Windows.Forms.GroupBox();
@@ -1915,7 +1914,6 @@ namespace HFM.Forms
       private System.Windows.Forms.Label WebSiteTargetPathLabel;
       private System.Windows.Forms.Button btnBrowseWebFolder;
       private System.Windows.Forms.Label lbl2MinutesToGen;
-      private System.Windows.Forms.FolderBrowserDialog locateWebFolder;
       private System.Windows.Forms.TabControl tabControl1;
       private System.Windows.Forms.TabPage tabWeb;
       private System.Windows.Forms.TabPage tabVisStyles;

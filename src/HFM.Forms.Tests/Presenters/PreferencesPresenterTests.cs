@@ -61,6 +61,50 @@ namespace HFM.Forms
             }
         }
 
+        [Test]
+        public void PreferencesPresenter_BrowseWebFolderClicked_SetsFolderDialogSelectedPathWhenModelPathIsSet()
+        {
+            // Arrange
+            using (var presenter = new NoDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            {
+                presenter.Model.ScheduledTasksModel.WebRoot = @"foo\";
+                var dialog = new MockFolderDialogPresenter(window => default);
+                // Act
+                presenter.BrowseWebFolderClicked(dialog);
+                // Assert
+                Assert.AreEqual(@"foo\", dialog.SelectedPath);
+            }
+        }
+
+        [Test]
+        public void PreferencesPresenter_BrowseWebFolderClicked_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
+        {
+            // Arrange
+            using (var presenter = new NoDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            {
+                var dialog = new MockFolderDialogPresenter(window => default);
+                // Act
+                presenter.BrowseWebFolderClicked(dialog);
+                // Assert
+                Assert.IsNull(dialog.SelectedPath);
+            }
+        }
+
+        [Test]
+        public void PreferencesPresenter_BrowseWebFolderClicked_SetsModelPathWhenDialogResultIsOK()
+        {
+            // Arrange
+            using (var presenter = new NoDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            {
+                var dialog = new MockFolderDialogPresenter(window => DialogResult.OK);
+                dialog.SelectedPath = @"foo\";
+                // Act
+                presenter.BrowseWebFolderClicked(dialog);
+                // Assert
+                Assert.AreEqual(@"foo\", presenter.Model.ScheduledTasksModel.WebRoot);
+            }
+        }
+
         private class NoDialogPreferencesPresenter : PreferencesPresenter
         {
             public NoDialogPreferencesPresenter(PreferencesModel model) : base(model, null, null, null)

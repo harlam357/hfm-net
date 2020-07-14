@@ -51,5 +51,17 @@ namespace HFM.Forms
         {
             Dialog?.Dispose();
         }
+
+        public void BrowseWebFolderClicked(FolderDialogPresenter dialog)
+        {
+            if (!String.IsNullOrWhiteSpace(Model.ScheduledTasksModel.WebRoot))
+            {
+                dialog.SelectedPath = Model.ScheduledTasksModel.WebRoot;
+            }
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Model.ScheduledTasksModel.WebRoot = dialog.SelectedPath;
+            }
+        }
     }
 }
