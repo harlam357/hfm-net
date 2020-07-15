@@ -355,7 +355,11 @@ namespace HFM.Forms
         // Reporting Tab
         private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
         {
-            if (txtFromEmailAddress.BackColor.Equals(Color.Yellow)) return;
+            var fromAddressError = _presenter.Model.ReportingModel[nameof(ReportingModel.FromAddress)];
+            if (!String.IsNullOrEmpty(fromAddressError))
+            {
+                return;
+            }
 
             toolTipPrefs.RemoveAll();
             toolTipPrefs.Show(String.Format("Depending on your SMTP server, this 'From Address' field may or may not be of consequence.{0}If you are required to enter credentials to send Email through the SMTP server, the server will{0}likely use the Email Address tied to those credentials as the sender or 'From Address'.{0}Regardless of this limitation, a valid Email Address must still be specified here.", Environment.NewLine),
@@ -364,26 +368,7 @@ namespace HFM.Forms
 
         private void btnTestEmail_Click(object sender, EventArgs e)
         {
-            if (_presenter.Model.ReportingModel.HasError)
-            {
-                MessageBox.Show(this, "Please correct error conditions before sending a Test Email.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                try
-                {
-                    var sendMailService = new SendMailService();
-                    sendMailService.SendEmail(txtFromEmailAddress.Text, txtToEmailAddress.Text, "HFM.NET - Test Email",
-                       "HFM.NET - Test Email", txtSmtpServer.Text, int.Parse(txtSmtpServerPort.Text), txtSmtpUsername.Text, txtSmtpPassword.Text, chkEmailSecure.Checked);
-                    MessageBox.Show(this, "Test Email sent successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    _presenter.Logger.Warn(ex.Message, ex);
-                    MessageBox.Show(this, String.Format("Test Email failed to send.  Please check your Email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message),
-                       Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
+            _presenter.TestEmailClicked(new SmtpClientSendMailService());
         }
 
         private void grpReportSelections_EnabledChanged(object sender, EventArgs e)

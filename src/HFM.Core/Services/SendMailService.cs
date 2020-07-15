@@ -7,27 +7,16 @@ using HFM.Core.Net;
 
 namespace HFM.Core.Services
 {
-    public class SendMailService
+    public abstract class SendMailService
     {
         /// <summary>
         /// Sends an e-mail message.
         /// </summary>
-        public void SendEmail(string mailFrom, string mailTo, string subject, string body, 
-            string host, int port, string username, string password, bool enableSsl)
-        {
-            using (var message = new MailMessage(mailFrom, mailTo, subject, body))
-            {
-                var client = new SmtpClient(host, port)
-                {
-                    Credentials = NetworkCredentialFactory.Create(username, password),
-                    EnableSsl = enableSsl
-                };
-                client.Send(message);
-            }
-        }
+        public abstract void SendEmail(string mailFrom, string mailTo, string subject, string body,
+            string host, int port, string username, string password, bool enableSsl);
 
         private const string EmailAddressPattern = @"^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$";
-        
+
         /// <summary>
         /// Validates an email address.
         /// </summary>
@@ -37,6 +26,37 @@ namespace HFM.Core.Services
 
             var validEmailAddress = new Regex(EmailAddressPattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
             return validEmailAddress.IsMatch(emailAddress);
+        }
+    }
+
+    public class SmtpClientSendMailService : SendMailService
+    {
+        /// <summary>
+        /// Sends an e-mail message using an <see cref="SmtpClient"/>.
+        /// </summary>
+        public override void SendEmail(string mailFrom, string mailTo, string subject, string body,
+            string host, int port, string username, string password, bool enableSsl)
+        {
+            using (var message = new MailMessage(mailFrom, mailTo, subject, body))
+            {
+                using (var client = new SmtpClient(host, port))
+                {
+                    client.Credentials = NetworkCredentialFactory.Create(username, password);
+                    client.EnableSsl = enableSsl;
+                    client.Send(message);
+                }
+            }
+        }
+    }
+
+    public class NullSendMailService : SendMailService
+    {
+        public static NullSendMailService Instance { get; } = new NullSendMailService();
+
+        public override void SendEmail(string mailFrom, string mailTo, string subject, string body,
+            string host, int port, string username, string password, bool enableSsl)
+        {
+            // do nothing
         }
     }
 }

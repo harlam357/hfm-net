@@ -1,9 +1,11 @@
 ﻿
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 using NUnit.Framework;
 
+using HFM.Core.Services;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Preferences;
@@ -105,9 +107,72 @@ namespace HFM.Forms
             }
         }
 
+        [Test]
+        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenModelHasError()
+        {
+            // Arrange
+            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var messageBox = new MockMessageBoxPresenter();
+            using (var presenter = new NoDialogPreferencesPresenter(model, messageBox))
+            {
+                presenter.Model.ReportingModel.ReportingEnabled = true;
+                // Act
+                presenter.TestEmailClicked(NullSendMailService.Instance);
+                // Assert
+                Assert.AreEqual(1, messageBox.Invocations.Count);
+                Assert.AreEqual(nameof(MessageBoxPresenter.ShowError), messageBox.Invocations.First().Name);
+            }
+        }
+
+        [Test]
+        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenTestEmailSucceeds()
+        {
+            // Arrange
+            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var messageBox = new MockMessageBoxPresenter();
+            using (var presenter = new NoDialogPreferencesPresenter(model, messageBox))
+            {
+                presenter.Model.ReportingModel.ReportingEnabled = true;
+                presenter.Model.ReportingModel.FromAddress = "me@home.com";
+                presenter.Model.ReportingModel.ToAddress = "you@yourhouse.com";
+                presenter.Model.ReportingModel.ServerAddress = "foo";
+                presenter.Model.ReportingModel.ServerPort = 25;
+                // Act
+                presenter.TestEmailClicked(NullSendMailService.Instance);
+                // Assert
+                Assert.AreEqual(1, messageBox.Invocations.Count);
+                Assert.AreEqual(nameof(MessageBoxPresenter.ShowInformation), messageBox.Invocations.First().Name);
+            }
+        }
+
+        [Test]
+        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenTestEmailFails()
+        {
+            // Arrange
+            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var messageBox = new MockMessageBoxPresenter();
+            using (var presenter = new NoDialogPreferencesPresenter(model, messageBox))
+            {
+                presenter.Model.ReportingModel.ReportingEnabled = true;
+                presenter.Model.ReportingModel.FromAddress = "me@home.com";
+                presenter.Model.ReportingModel.ToAddress = "you@yourhouse.com";
+                presenter.Model.ReportingModel.ServerAddress = "foo";
+                presenter.Model.ReportingModel.ServerPort = 25;
+                // Act
+                presenter.TestEmailClicked(new SendMailServiceThrows());
+                // Assert
+                Assert.AreEqual(1, messageBox.Invocations.Count);
+                Assert.AreEqual(nameof(MessageBoxPresenter.ShowError), messageBox.Invocations.First().Name);
+            }
+        }
+
         private class NoDialogPreferencesPresenter : PreferencesPresenter
         {
             public NoDialogPreferencesPresenter(PreferencesModel model) : base(model, null, null, null)
+            {
+            }
+
+            public NoDialogPreferencesPresenter(PreferencesModel model, MessageBoxPresenter messageBox) : base(model, null, messageBox, null)
             {
             }
 
@@ -129,6 +194,15 @@ namespace HFM.Forms
             public override void Save()
             {
                 throw new Exception("Save failed.");
+            }
+        }
+
+        private class SendMailServiceThrows : SendMailService
+        {
+            public override void SendEmail(string mailFrom, string mailTo, string subject, string body,
+                string host, int port, string username, string password, bool enableSsl)
+            {
+                throw new Exception("Send mail failed.");
             }
         }
     }

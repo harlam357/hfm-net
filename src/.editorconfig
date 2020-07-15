@@ -30,11 +30,6 @@ dotnet_diagnostic.CA1305.severity = none
 # CA1720: Identifiers should not contain type names
 dotnet_diagnostic.CA1720.severity = none
 
-# IDE0008: Use explicit type
-csharp_style_var_elsewhere = true:none
-# IDE0058: Expression value is never used
-csharp_style_unused_value_expression_statement_preference = discard_variable:none
-
 indent_size = 4
 insert_final_newline = true
 charset = utf-8-bom
@@ -141,7 +136,12 @@ dotnet_naming_symbols.private_field_naming_symbols.applicable_accessibilities = 
 
 [*.cs]
 # var preferences
+# IDE0008: Use explicit type
 csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = false:none
+csharp_style_var_for_built_in_types = false:none
+# IDE0058: Expression value is never used
+csharp_style_unused_value_expression_statement_preference = discard_variable:none
 
 # Expression-bodied members
 csharp_style_expression_bodied_properties = true:suggestion

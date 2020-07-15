@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 
 using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Forms.Models;
 
 namespace HFM.Forms
@@ -61,6 +62,30 @@ namespace HFM.Forms
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Model.ScheduledTasksModel.WebRoot = dialog.SelectedPath;
+            }
+        }
+
+        public void TestEmailClicked(SendMailService sendMailService)
+        {
+            if (Model.ReportingModel.HasError)
+            {
+                MessageBox.ShowError(Dialog, "Please correct error conditions before sending a test email.", Core.Application.NameAndVersion);
+            }
+            else
+            {
+                try
+                {
+                    var m = Model.ReportingModel;
+                    sendMailService.SendEmail(m.FromAddress, m.ToAddress, "HFM.NET - Test Email",
+                        "HFM.NET - Test Email", m.ServerAddress, m.ServerPort, m.ServerUsername, m.ServerPassword, m.ServerSecure);
+                    MessageBox.ShowInformation(Dialog, "Test email sent successfully.", Core.Application.NameAndVersion);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.Message, ex);
+                    var text = String.Format("Test email failed to send.  Please check your email settings.{0}{0}Error: {1}", Environment.NewLine, ex.Message);
+                    MessageBox.ShowError(Dialog, text, Core.Application.NameAndVersion);
+                }
             }
         }
     }

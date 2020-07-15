@@ -122,7 +122,7 @@ namespace HFM.Forms.Models
         public bool ValidateToAddress()
         {
             if (ReportingEnabled == false) return true;
-            if (ToAddress.Length == 0) return false;
+            if (String.IsNullOrEmpty(ToAddress)) return false;
 
             return SendMailService.ValidateEmail(ToAddress);
         }
@@ -148,7 +148,7 @@ namespace HFM.Forms.Models
         public bool ValidateFromAddress()
         {
             if (ReportingEnabled == false) return true;
-            if (FromAddress.Length == 0) return false;
+            if (String.IsNullOrEmpty(FromAddress)) return false;
 
             return SendMailService.ValidateEmail(FromAddress);
         }
