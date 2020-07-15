@@ -35,7 +35,7 @@ namespace HFM.Forms
         {
             MessageBox.Show(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-      
+
         public override void ShowInformation(string text, string caption)
         {
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -78,7 +78,7 @@ namespace HFM.Forms
         public override void ShowError(IWin32Window owner, string text, string caption)
         {
         }
-      
+
         public override void ShowInformation(string text, string caption)
         {
         }
