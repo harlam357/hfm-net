@@ -5,7 +5,13 @@ namespace HFM.Forms
 {
     public abstract class MessageBoxPresenter
     {
-        public static MessageBoxPresenter Default { get; } = new DefaultMessageBoxPresenter();
+        public static MessageBoxPresenter Default { get; } = DefaultMessageBoxPresenter.Instance;
+
+        // ReSharper disable once EmptyConstructor
+        protected MessageBoxPresenter()
+        {
+
+        }
 
         public abstract void ShowError(string text, string caption);
 
@@ -26,6 +32,13 @@ namespace HFM.Forms
 
     public class DefaultMessageBoxPresenter : MessageBoxPresenter
     {
+        public static DefaultMessageBoxPresenter Instance { get; } = new DefaultMessageBoxPresenter();
+
+        protected DefaultMessageBoxPresenter()
+        {
+
+        }
+
         public override void ShowError(string text, string caption)
         {
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -70,6 +83,11 @@ namespace HFM.Forms
     public class NullMessageBoxPresenter : MessageBoxPresenter
     {
         public static NullMessageBoxPresenter Instance { get; } = new NullMessageBoxPresenter();
+
+        protected NullMessageBoxPresenter()
+        {
+
+        }
 
         public override void ShowError(string text, string caption)
         {

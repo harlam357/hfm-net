@@ -39,7 +39,7 @@ namespace HFM.Forms
 
         public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
         {
-            using (var presenter = new ExceptionPresenter(Logger, MessageBox, Properties, ReportUrl))
+            using (var presenter = new DefaultExceptionPresenter(Logger, MessageBox, Properties, ReportUrl))
             {
                 return presenter.ShowDialog(owner, exception, mustTerminate);
             }
@@ -50,7 +50,7 @@ namespace HFM.Forms
     {
         public static NullExceptionPresenterFactory Instance { get; } = new NullExceptionPresenterFactory();
 
-        public NullExceptionPresenterFactory() : base(null, null, null, null)
+        protected NullExceptionPresenterFactory() : base(null, null, null, null)
         {
 
         }
@@ -62,14 +62,14 @@ namespace HFM.Forms
         }
     }
 
-    public class ExceptionPresenter : IDisposable
+    public abstract class ExceptionPresenter
     {
         public ILogger Logger { get; }
         public MessageBoxPresenter MessageBox { get; }
         public IDictionary<string, string> Properties { get; }
         public string ReportUrl { get; }
 
-        public ExceptionPresenter(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+        protected ExceptionPresenter(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
         {
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
@@ -81,7 +81,28 @@ namespace HFM.Forms
         public bool MustTerminate { get; protected set; }
         public IWin32Dialog Dialog { get; protected set; }
 
-        public virtual DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
+        public abstract DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate);
+
+        public abstract string BuildExceptionText();
+
+        public abstract void ReportClicked(bool copyToClipboard);
+
+        protected DialogResult ContinueDialogResult { get; } = DialogResult.Ignore;
+
+        public abstract void ContinueClicked();
+
+        public abstract void ExitClicked();
+    }
+
+    public class DefaultExceptionPresenter : ExceptionPresenter, IDisposable
+    {
+        public DefaultExceptionPresenter(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+            : base(logger, messageBox, properties, reportUrl)
+        {
+
+        }
+
+        public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
         {
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             MustTerminate = mustTerminate;
@@ -95,7 +116,7 @@ namespace HFM.Forms
             Dialog?.Dispose();
         }
 
-        public string BuildExceptionText()
+        public override string BuildExceptionText()
         {
             var sb = new StringBuilder();
             if (Properties != null)
@@ -111,7 +132,7 @@ namespace HFM.Forms
             return sb.ToString();
         }
 
-        public void ReportClicked(bool copyToClipboard)
+        public override void ReportClicked(bool copyToClipboard)
         {
             CopyInfoToClipboard(copyToClipboard);
             if (!String.IsNullOrEmpty(ReportUrl))
@@ -157,13 +178,13 @@ namespace HFM.Forms
             }
         }
 
-        public void ContinueClicked()
+        public override void ContinueClicked()
         {
-            Dialog.DialogResult = DialogResult.Ignore;
+            Dialog.DialogResult = ContinueDialogResult;
             Dialog.Close();
         }
 
-        public void ExitClicked()
+        public override void ExitClicked()
         {
             var result = MessageBox.AskYesNoQuestion(Dialog, "Are you sure you want to exit the application?", Core.Application.NameAndVersion);
             if (result == DialogResult.Yes)
@@ -178,7 +199,7 @@ namespace HFM.Forms
     {
         public static NullExceptionPresenter Instance { get; } = new NullExceptionPresenter();
 
-        public NullExceptionPresenter() : base(null, null, null, null)
+        protected NullExceptionPresenter() : base(null, null, null, null)
         {
         }
 
@@ -187,7 +208,27 @@ namespace HFM.Forms
             Exception = exception;
             MustTerminate = mustTerminate;
 
-            return DialogResult.Ignore;
+            return ContinueDialogResult;
+        }
+
+        public override string BuildExceptionText()
+        {
+            return default;
+        }
+
+        public override void ReportClicked(bool copyToClipboard)
+        {
+            // do nothing
+        }
+
+        public override void ContinueClicked()
+        {
+            // do nothing
+        }
+
+        public override void ExitClicked()
+        {
+            // do nothing
         }
     }
 }

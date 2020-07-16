@@ -6,6 +6,12 @@ namespace HFM.Forms
 {
     public abstract class FileDialogPresenter
     {
+        // ReSharper disable once EmptyConstructor
+        protected FileDialogPresenter()
+        {
+
+        }
+
         public virtual string DefaultExt { get; set; }
 
         public virtual string FileName { get; set; }
@@ -18,22 +24,16 @@ namespace HFM.Forms
 
         public virtual bool RestoreDirectory { get; set; }
 
-        public virtual DialogResult ShowDialog()
-        {
-            return default;
-        }
+        public abstract DialogResult ShowDialog();
 
-        public virtual DialogResult ShowDialog(IWin32Window owner)
-        {
-            return default;
-        }
+        public abstract DialogResult ShowDialog(IWin32Window owner);
     }
 
     public class DefaultFileDialogPresenter : FileDialogPresenter, IDisposable
     {
         private readonly FileDialog _dialog;
 
-        public DefaultFileDialogPresenter(FileDialog dialog)
+        protected DefaultFileDialogPresenter(FileDialog dialog)
         {
             _dialog = dialog;
         }
@@ -100,26 +100,32 @@ namespace HFM.Forms
 
         public static DefaultFileDialogPresenter OpenFile()
         {
-            return new OpenFileDialogPresenter();
+            return new DefaultFileDialogPresenter(new OpenFileDialog());
         }
 
         public static DefaultFileDialogPresenter SaveFile()
         {
-            return new SaveFileDialogPresenter();
+            return new DefaultFileDialogPresenter(new SaveFileDialog());
+        }
+    }
+
+    public class NullFileDialogPresenter : FileDialogPresenter
+    {
+        public static NullFileDialogPresenter Instance { get; } = new NullFileDialogPresenter();
+
+        protected NullFileDialogPresenter()
+        {
+
         }
 
-        private class OpenFileDialogPresenter : DefaultFileDialogPresenter
+        public override DialogResult ShowDialog()
         {
-            public OpenFileDialogPresenter() : base(new OpenFileDialog())
-            {
-            }
+            return default;
         }
 
-        private class SaveFileDialogPresenter : DefaultFileDialogPresenter
+        public override DialogResult ShowDialog(IWin32Window owner)
         {
-            public SaveFileDialogPresenter() : base(new SaveFileDialog())
-            {
-            }
+            return default;
         }
     }
 }

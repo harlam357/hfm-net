@@ -6,24 +6,24 @@ namespace HFM.Forms
 {
     public abstract class FolderDialogPresenter
     {
+        // ReSharper disable once EmptyConstructor
+        protected FolderDialogPresenter()
+        {
+
+        }
+
         public virtual string SelectedPath { get; set; }
 
-        public virtual DialogResult ShowDialog()
-        {
-            return default;
-        }
+        public abstract DialogResult ShowDialog();
 
-        public virtual DialogResult ShowDialog(IWin32Window owner)
-        {
-            return default;
-        }
+        public abstract DialogResult ShowDialog(IWin32Window owner);
     }
 
     public class DefaultFolderDialogPresenter : FolderDialogPresenter, IDisposable
     {
         private readonly FolderBrowserDialog _dialog;
 
-        public DefaultFolderDialogPresenter(FolderBrowserDialog dialog)
+        protected DefaultFolderDialogPresenter(FolderBrowserDialog dialog)
         {
             _dialog = dialog;
         }
@@ -61,6 +61,26 @@ namespace HFM.Forms
         public static DefaultFolderDialogPresenter BrowseFolder()
         {
             return new DefaultFolderDialogPresenter(new FolderBrowserDialog());
+        }
+    }
+
+    public class NullFolderDialogPresenter : FolderDialogPresenter
+    {
+        public static NullFolderDialogPresenter Instance { get; } = new NullFolderDialogPresenter();
+
+        protected NullFolderDialogPresenter()
+        {
+
+        }
+
+        public override DialogResult ShowDialog()
+        {
+            return default;
+        }
+
+        public override DialogResult ShowDialog(IWin32Window owner)
+        {
+            return default;
         }
     }
 }
