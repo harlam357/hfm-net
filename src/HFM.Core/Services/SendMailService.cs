@@ -9,6 +9,14 @@ namespace HFM.Core.Services
 {
     public abstract class SendMailService
     {
+        public static SendMailService Default { get; } = DefaultSendMailService.Instance;
+
+        // ReSharper disable once EmptyConstructor
+        protected SendMailService()
+        {
+
+        }
+
         /// <summary>
         /// Sends an e-mail message.
         /// </summary>
@@ -29,8 +37,15 @@ namespace HFM.Core.Services
         }
     }
 
-    public class SmtpClientSendMailService : SendMailService
+    public class DefaultSendMailService : SendMailService
     {
+        public static DefaultSendMailService Instance { get; } = new DefaultSendMailService();
+
+        protected DefaultSendMailService()
+        {
+
+        }
+
         /// <summary>
         /// Sends an e-mail message using an <see cref="SmtpClient"/>.
         /// </summary>
@@ -52,6 +67,11 @@ namespace HFM.Core.Services
     public class NullSendMailService : SendMailService
     {
         public static NullSendMailService Instance { get; } = new NullSendMailService();
+
+        protected NullSendMailService()
+        {
+
+        }
 
         public override void SendEmail(string mailFrom, string mailTo, string subject, string body,
             string host, int port, string username, string password, bool enableSsl)
