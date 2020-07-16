@@ -17,7 +17,7 @@ namespace HFM.Forms
         {
             // Arrange
             var properties = new Dictionary<string, string> { { "Fizz", "Bizz" } };
-            using (var presenter = new NoDialogExceptionPresenter(properties))
+            using (var presenter = new MockDialogExceptionPresenter(properties))
             {
                 presenter.ShowDialog(null, new Exception("Foo"), false);
                 // Act
@@ -31,7 +31,7 @@ namespace HFM.Forms
         public void ExceptionPresenter_ContinueClicked_SetsDialogResultAndClosesDialog()
         {
             // Arrange
-            using (var presenter = new NoDialogExceptionPresenter(null))
+            using (var presenter = new MockDialogExceptionPresenter(null))
             {
                 presenter.ShowDialog(null, new Exception("Foo"), false);
                 Assert.IsTrue(presenter.MockDialog.Shown);
@@ -43,9 +43,9 @@ namespace HFM.Forms
             }
         }
 
-        private class NoDialogExceptionPresenter : ExceptionPresenter
+        private class MockDialogExceptionPresenter : DefaultExceptionPresenter
         {
-            public NoDialogExceptionPresenter(IDictionary<string, string> properties) : base(null, null, properties, null)
+            public MockDialogExceptionPresenter(IDictionary<string, string> properties) : base(null, null, properties, null)
             {
             }
 
