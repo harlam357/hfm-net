@@ -46,7 +46,7 @@ namespace HFM.Forms
 
         public override void ShowError(IWin32Window owner, string text, string caption)
         {
-            MessageBox.Show(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(GetOwnerOrNull(owner), text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public override void ShowInformation(string text, string caption)
@@ -56,7 +56,7 @@ namespace HFM.Forms
 
         public override void ShowInformation(IWin32Window owner, string text, string caption)
         {
-            MessageBox.Show(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(GetOwnerOrNull(owner), text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public override DialogResult AskYesNoQuestion(string text, string caption)
@@ -66,7 +66,7 @@ namespace HFM.Forms
 
         public override DialogResult AskYesNoQuestion(IWin32Window owner, string text, string caption)
         {
-            return MessageBox.Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return MessageBox.Show(GetOwnerOrNull(owner), text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
         public override DialogResult AskYesNoCancelQuestion(string text, string caption)
@@ -76,7 +76,12 @@ namespace HFM.Forms
 
         public override DialogResult AskYesNoCancelQuestion(IWin32Window owner, string text, string caption)
         {
-            return MessageBox.Show(owner, text, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            return MessageBox.Show(GetOwnerOrNull(owner), text, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        }
+
+        private static IWin32Window GetOwnerOrNull(IWin32Window owner)
+        {
+            return owner is Control control && control.IsDisposed ? null : owner;
         }
     }
 

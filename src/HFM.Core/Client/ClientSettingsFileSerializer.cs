@@ -31,9 +31,13 @@ namespace HFM.Core.Client
 
         #endregion
 
-        public string FileExtension => "hfmx";
+        public const string DefaultFileExtension = "hfmx";
 
-        public string FileTypeFilter => "HFM Configuration Files|*.hfmx";
+        public string FileExtension => DefaultFileExtension;
+
+        public const string DefaultFileTypeFilter = "HFM Configuration Files|*.hfmx";
+
+        public string FileTypeFilter => DefaultFileTypeFilter;
 
         public List<ClientSettings> Deserialize(string path)
         {

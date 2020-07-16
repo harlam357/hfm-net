@@ -64,7 +64,7 @@ namespace HFM.Core.SlotXml
                 case WebDeploymentType.Path:
                     return new PathDeployment(logger, preferences);
                 case WebDeploymentType.Ftp:
-                    return new FtpDeployment(logger, preferences);
+                    return new FtpDeployment(logger, preferences, FtpService.Default);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(deploymentType), deploymentType, null);
             }
@@ -93,14 +93,9 @@ namespace HFM.Core.SlotXml
 
     public class FtpDeployment : WebArtifactDeployment
     {
-        public IFtpService FtpService { get; }
+        public FtpService FtpService { get; }
 
-        public FtpDeployment(ILogger logger, IPreferenceSet preferences) : this(logger, preferences, new FtpService())
-        {
-
-        }
-
-        public FtpDeployment(ILogger logger, IPreferenceSet preferences, IFtpService ftpService) : base(logger, preferences)
+        public FtpDeployment(ILogger logger, IPreferenceSet preferences, FtpService ftpService) : base(logger, preferences)
         {
             FtpService = ftpService;
         }

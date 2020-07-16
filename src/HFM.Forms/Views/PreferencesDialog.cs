@@ -2,13 +2,10 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using HFM.Core;
 using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Controls;
@@ -33,15 +30,7 @@ namespace HFM.Forms
 
         #region Fields
 
-        private const string XsltExt = "xslt";
-        private const string XsltFilter = "XML Transform (*.xslt;*.xsl)|*.xslt;*.xsl";
-        private const string HfmExt = "hfmx";
-        private const string HfmFilter = "HFM Configuration Files|*.hfmx";
-        private const string ExeExt = "exe";
-        private const string ExeFilter = "Program Files|*.exe";
-
         private readonly PreferencesPresenter _presenter;
-        private readonly IFtpService _ftpService;
 
         private readonly WebBrowser _cssSampleBrowser;
 
@@ -54,7 +43,6 @@ namespace HFM.Forms
         public PreferencesDialog(PreferencesPresenter presenter)
         {
             _presenter = presenter;
-            _ftpService = new FtpService();
 
             InitializeComponent();
 
@@ -368,7 +356,7 @@ namespace HFM.Forms
 
         private void btnTestEmail_Click(object sender, EventArgs e)
         {
-            _presenter.TestEmailClicked(new SmtpClientSendMailService());
+            _presenter.TestEmailClicked(SendMailService.Default);
         }
 
         private void grpReportSelections_EnabledChanged(object sender, EventArgs e)
@@ -385,41 +373,17 @@ namespace HFM.Forms
         // Web Tab
         private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(String.Concat(EocStatsService.UserBaseUrl, txtEOCUserID.Text));
-            }
-            catch (Exception ex)
-            {
-                _presenter.Logger.Error(ex.Message, ex);
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC User Stats page"));
-            }
+            _presenter.TestExtremeOverclockingUserClicked(LocalProcessService.Default);
         }
 
         private void linkStanford_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(String.Concat(FahUrl.UserBaseUrl, txtStanfordUserID.Text));
-            }
-            catch (Exception ex)
-            {
-                _presenter.Logger.Error(ex.Message, ex);
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "Stanford User Stats page"));
-            }
+            _presenter.TestFoldingAtHomeUserClicked(LocalProcessService.Default);
         }
 
         private void linkTeam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(String.Concat(EocStatsService.TeamBaseUrl, txtStanfordTeamID.Text));
-            }
-            catch (Exception ex)
-            {
-                _presenter.Logger.Error(ex.Message, ex);
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "EOC Team Stats page"));
-            }
+            _presenter.TestExtremeOverclockingTeamClicked(LocalProcessService.Default);
         }
 
         // Visual Style Tab
@@ -461,7 +425,7 @@ namespace HFM.Forms
             sb.Append("<td class=\"AltRightCol\">Right Column</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
-            sb.Append(String.Format("<td class=\"Plain\" colspan=\"2\" align=\"center\">Last updated {0} at {1}</td>", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString()));
+            sb.Append($"<td class=\"Plain\" colspan=\"2\" align=\"center\">Last updated {DateTime.Now.ToLongDateString()} at {DateTime.Now.ToLongTimeString()}</td>");
             sb.Append("</tr>");
             sb.Append("</table>");
             sb.Append("</BODY></HTML>");
@@ -475,51 +439,17 @@ namespace HFM.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                if (!_presenter.Model.ScheduledTasksModel.FtpModeEnabled)
-                {
-                    if (Directory.Exists(WebSiteTargetPathTextBox.Text))
-                    {
-                        ShowConnectionSucceededMessage();
-                    }
-                    else
-                    {
-                        ShowConnectionFailedMessage($"{WebSiteTargetPathTextBox.Text} does not exist.");
-                    }
-                }
-                else
-                {
-                    string host = _presenter.Model.ScheduledTasksModel.WebGenServer;
-                    int port = _presenter.Model.ScheduledTasksModel.WebGenPort;
-                    string path = _presenter.Model.ScheduledTasksModel.WebRoot;
-                    string username = _presenter.Model.ScheduledTasksModel.WebGenUsername;
-                    string password = _presenter.Model.ScheduledTasksModel.WebGenPassword;
-
-                    await Task.Run(() => _ftpService.CheckConnection(host, port, path, username, password, _presenter.Model.ScheduledTasksModel.FtpMode));
-                    ShowConnectionSucceededMessage();
-                }
+                await _presenter.TestWebGenerationConnection(FtpService.Default).ConfigureAwait(true);
+                _presenter.ShowTestWebGenerationConnectionSucceededMessage();
             }
             catch (Exception ex)
             {
-                _presenter.Logger.Error(ex.Message, ex);
-                ShowConnectionFailedMessage(ex.Message);
+                _presenter.ShowTestWebGenerationConnectionFailedMessage(ex);
             }
             finally
             {
                 Cursor = Cursors.Default;
             }
-        }
-
-        private void ShowConnectionSucceededMessage()
-        {
-            MessageBox.Show(this, "Test Connection Succeeded", Core.Application.NameAndVersion,
-               MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ShowConnectionFailedMessage(string message)
-        {
-            MessageBox.Show(this, String.Format(CultureInfo.CurrentCulture, "Test Connection Failed{0}{0}{1}",
-               Environment.NewLine, message), Core.Application.NameAndVersion, MessageBoxButtons.OK,
-                  MessageBoxIcon.Error);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -564,147 +494,50 @@ namespace HFM.Forms
         // Folder Browsing
         private void btnBrowseConfigFile_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.DefaultConfigFile, HfmExt, HfmFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.StartupAndExternalModel.DefaultConfigFile = path;
+                _presenter.BrowseForConfigurationFileClicked(dialog);
             }
         }
 
         private void btnBrowseLogViewer_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.LogFileViewer, ExeExt, ExeFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.StartupAndExternalModel.LogFileViewer = path;
+                _presenter.BrowseForLogViewerClicked(dialog);
             }
         }
 
         private void btnBrowseFileExplorer_Click(object sender, EventArgs e)
         {
-            string path = DoFolderBrowse(_presenter.Model.StartupAndExternalModel.FileExplorer, ExeExt, ExeFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.StartupAndExternalModel.FileExplorer = path;
+                _presenter.BrowseForFileExplorerClicked(dialog);
             }
-        }
-
-        private string DoFolderBrowse(string path, string extension, string filter)
-        {
-            if (String.IsNullOrEmpty(path) == false)
-            {
-                var fileInfo = new FileInfo(path);
-                if (fileInfo.Exists)
-                {
-                    openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
-                    openConfigDialog.FileName = fileInfo.Name;
-                }
-                else
-                {
-                    var dirInfo = new DirectoryInfo(path);
-                    if (dirInfo.Exists)
-                    {
-                        openConfigDialog.InitialDirectory = dirInfo.FullName;
-                        openConfigDialog.FileName = String.Empty;
-                    }
-                    else
-                    {
-                        openConfigDialog.InitialDirectory = String.Empty;
-                        openConfigDialog.FileName = String.Empty;
-                    }
-                }
-            }
-            else
-            {
-                openConfigDialog.InitialDirectory = String.Empty;
-                openConfigDialog.FileName = String.Empty;
-            }
-
-            openConfigDialog.DefaultExt = extension;
-            openConfigDialog.Filter = filter;
-            if (openConfigDialog.ShowDialog() == DialogResult.OK)
-            {
-                return openConfigDialog.FileName;
-            }
-
-            return null;
         }
 
         private void btnOverviewBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebOverview, XsltExt, XsltFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.WebVisualStylesModel.WebOverview = path;
+                _presenter.BrowseForOverviewTransform(dialog);
             }
         }
 
         private void btnSummaryBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebSummary, XsltExt, XsltFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.WebVisualStylesModel.WebSummary = path;
+                _presenter.BrowseForSummaryTransform(dialog);
             }
         }
 
         private void btnInstanceBrowse_Click(object sender, EventArgs e)
         {
-            string path = DoXsltBrowse(_presenter.Model.WebVisualStylesModel.WebSlot, XsltExt, XsltFilter);
-            if (String.IsNullOrEmpty(path) == false)
+            using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.Model.WebVisualStylesModel.WebSlot = path;
+                _presenter.BrowseForSlotTransform(dialog);
             }
-        }
-
-        private string DoXsltBrowse(string path, string extension, string filter)
-        {
-            if (String.IsNullOrEmpty(path) == false)
-            {
-                var fileInfo = new FileInfo(path);
-                string xsltPath = Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName);
-
-                if (fileInfo.Exists)
-                {
-                    openConfigDialog.InitialDirectory = fileInfo.DirectoryName;
-                    openConfigDialog.FileName = fileInfo.Name;
-                }
-                else if (File.Exists(Path.Combine(xsltPath, path)))
-                {
-                    openConfigDialog.InitialDirectory = xsltPath;
-                    openConfigDialog.FileName = path;
-                }
-                else
-                {
-                    var dirInfo = new DirectoryInfo(path);
-                    if (dirInfo.Exists)
-                    {
-                        openConfigDialog.InitialDirectory = dirInfo.FullName;
-                        openConfigDialog.FileName = String.Empty;
-                    }
-                }
-            }
-            else
-            {
-                openConfigDialog.InitialDirectory = String.Empty;
-                openConfigDialog.FileName = String.Empty;
-            }
-
-            openConfigDialog.DefaultExt = extension;
-            openConfigDialog.Filter = filter;
-            if (openConfigDialog.ShowDialog() == DialogResult.OK)
-            {
-                // Check to see if the path for the file returned is the \HFM\XSL path
-                if (Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.XsltFolderName).Equals(Path.GetDirectoryName(openConfigDialog.FileName)))
-                {
-                    // If so, return the file name only
-                    return Path.GetFileName(openConfigDialog.FileName);
-                }
-
-                return openConfigDialog.FileName;
-            }
-
-            return null;
         }
 
         #region TextBox KeyPress Event Handler (to enforce digits only)
@@ -714,7 +547,7 @@ namespace HFM.Forms
             Debug.WriteLine($"Keystroke: {(int)e.KeyChar}");
 
             // only allow digits special keystrokes - Issue 65
-            if (char.IsDigit(e.KeyChar) == false &&
+            if (Char.IsDigit(e.KeyChar) == false &&
                   e.KeyChar != 8 &&       // backspace
                   e.KeyChar != 26 &&      // Ctrl+Z
                   e.KeyChar != 24 &&      // Ctrl+X

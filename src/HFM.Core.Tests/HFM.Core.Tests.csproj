@@ -119,6 +119,7 @@
     <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
     <Compile Include="Data\WorkUnitRowProfileTests.cs" />
     <Compile Include="HashTests.cs" />
+    <Compile Include="Mocks\MockLocalProcessService.cs" />
     <Compile Include="Net\HostNameTests.cs" />
     <Compile Include="Net\HttpUrlTests.cs" />
     <Compile Include="Net\NetworkCredentialFactoryTests.cs" />

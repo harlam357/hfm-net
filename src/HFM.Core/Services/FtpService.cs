@@ -1,22 +1,4 @@
-/*
- * HFM.NET
- * Copyright (C) 2009-2017 Ryan Harlamert (harlam357)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License. See the included file GPLv2.TXT.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
+﻿
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -28,18 +10,33 @@ using HFM.Core.Net;
 
 namespace HFM.Core.Services
 {
-    public interface IFtpService
+    public abstract class FtpService
     {
-        void Upload(string host, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode);
+        public static FtpService Default { get; } = DefaultFtpService.Instance;
 
-        void Upload(string host, int port, string ftpPath, string remoteFileName, Stream stream, int maximumLength, string username, string password, FtpMode ftpMode);
+        // ReSharper disable once EmptyConstructor
+        protected FtpService()
+        {
 
-        void CheckConnection(string host, int port, string ftpPath, string username, string password, FtpMode ftpMode);
+        }
+
+        public abstract void Upload(string host, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode);
+
+        public abstract void Upload(string host, int port, string ftpPath, string remoteFileName, Stream stream, int maximumLength, string username, string password, FtpMode ftpMode);
+
+        public abstract void CheckConnection(string host, int port, string ftpPath, string username, string password, FtpMode ftpMode);
     }
 
-    public class FtpService : IFtpService
+    public class DefaultFtpService : FtpService
     {
-        public void Upload(string host, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode)
+        public static DefaultFtpService Instance { get; } = new DefaultFtpService();
+
+        protected DefaultFtpService()
+        {
+
+        }
+
+        public override void Upload(string host, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode)
         {
             if (host == null) throw new ArgumentNullException(nameof(host));
             if (ftpPath == null) throw new ArgumentNullException(nameof(ftpPath));
@@ -50,7 +47,7 @@ namespace HFM.Core.Services
             webOperation.Upload(localFilePath);
         }
 
-        public void Upload(string host, int port, string ftpPath, string remoteFileName, Stream stream, int maximumLength, string username, string password, FtpMode ftpMode)
+        public override void Upload(string host, int port, string ftpPath, string remoteFileName, Stream stream, int maximumLength, string username, string password, FtpMode ftpMode)
         {
             if (host == null) throw new ArgumentNullException(nameof(host));
             if (ftpPath == null) throw new ArgumentNullException(nameof(ftpPath));
@@ -71,7 +68,7 @@ namespace HFM.Core.Services
             return String.Format(CultureInfo.InvariantCulture, "ftp://{0}:{1}{2}{3}", server, port, ftpPath, Path.GetFileName(filePath));
         }
 
-        public void CheckConnection(string host, int port, string ftpPath, string username, string password, FtpMode ftpMode)
+        public override void CheckConnection(string host, int port, string ftpPath, string username, string password, FtpMode ftpMode)
         {
             if (host == null) throw new ArgumentNullException(nameof(host));
             if (ftpPath == null) throw new ArgumentNullException(nameof(ftpPath));
@@ -117,6 +114,31 @@ namespace HFM.Core.Services
             {
                 request.Credentials = credentials;
             }
+        }
+    }
+
+    public class NullFtpService : FtpService
+    {
+        public static NullFtpService Instance { get; } = new NullFtpService();
+
+        protected NullFtpService()
+        {
+
+        }
+
+        public override void Upload(string host, int port, string ftpPath, string localFilePath, string username, string password, FtpMode ftpMode)
+        {
+            // do nothing
+        }
+
+        public override void Upload(string host, int port, string ftpPath, string remoteFileName, Stream stream, int maximumLength, string username, string password, FtpMode ftpMode)
+        {
+            // do nothing
+        }
+
+        public override void CheckConnection(string host, int port, string ftpPath, string username, string password, FtpMode ftpMode)
+        {
+            // do nothing
         }
     }
 }
