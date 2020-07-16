@@ -115,6 +115,7 @@
     <Compile Include="Net\SecurityProtocol.cs" />
     <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="ProgressInfo.cs" />
+    <Compile Include="Services\LocalProcessService.cs" />
     <Compile Include="Services\SendMailService.cs" />
     <Compile Include="SlotXml\HtmlBuilder.cs" />
     <Compile Include="SlotXml\WebArtifactDeployment.cs" />
