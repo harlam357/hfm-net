@@ -41,7 +41,8 @@ namespace HFM.Forms
             this.lbl2SchedExplain = new System.Windows.Forms.Label();
             this.chkScheduled = new System.Windows.Forms.CheckBox();
             this.chkSynchronous = new System.Windows.Forms.CheckBox();
-            this.grpHTMLOutput = new System.Windows.Forms.GroupBox();
+            this.WebGenerationGroupBox = new System.Windows.Forms.GroupBox();
+            this.CopyLabel = new System.Windows.Forms.Label();
             this.WebSitePortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSitePortLabel = new System.Windows.Forms.Label();
             this.WebSitePasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
@@ -97,7 +98,6 @@ namespace HFM.Forms
             this.grpInteractiveOptions = new System.Windows.Forms.GroupBox();
             this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper6 = new System.Windows.Forms.Label();
-            this.ShowUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.DuplicateProjectCheckBox = new System.Windows.Forms.CheckBox();
             this.chkEtaAsDate = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -168,11 +168,12 @@ namespace HFM.Forms
             this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.CopyLabel = new System.Windows.Forms.Label();
+            this.EocUserStatsGroupBox = new System.Windows.Forms.GroupBox();
+            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabSchdTasks.SuspendLayout();
             this.grpUpdateData.SuspendLayout();
-            this.grpHTMLOutput.SuspendLayout();
+            this.WebGenerationGroupBox.SuspendLayout();
             this.WebGenTypePanel.SuspendLayout();
             this.FtpModePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
@@ -193,6 +194,7 @@ namespace HFM.Forms
             this.grpWebStats.SuspendLayout();
             this.grpWebProxy.SuspendLayout();
             this.tabVisStyles.SuspendLayout();
+            this.EocUserStatsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnl1CSSSample
@@ -233,8 +235,9 @@ namespace HFM.Forms
             // tabSchdTasks
             // 
             this.tabSchdTasks.BackColor = System.Drawing.Color.Transparent;
+            this.tabSchdTasks.Controls.Add(this.EocUserStatsGroupBox);
             this.tabSchdTasks.Controls.Add(this.grpUpdateData);
-            this.tabSchdTasks.Controls.Add(this.grpHTMLOutput);
+            this.tabSchdTasks.Controls.Add(this.WebGenerationGroupBox);
             this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
             this.tabSchdTasks.Name = "tabSchdTasks";
             this.tabSchdTasks.Padding = new System.Windows.Forms.Padding(3);
@@ -251,7 +254,7 @@ namespace HFM.Forms
             this.grpUpdateData.Controls.Add(this.chkSynchronous);
             this.grpUpdateData.Location = new System.Drawing.Point(6, 9);
             this.grpUpdateData.Name = "grpUpdateData";
-            this.grpUpdateData.Size = new System.Drawing.Size(489, 51);
+            this.grpUpdateData.Size = new System.Drawing.Size(240, 76);
             this.grpUpdateData.TabIndex = 0;
             this.grpUpdateData.TabStop = false;
             this.grpUpdateData.Text = "Refresh Client Data";
@@ -298,46 +301,55 @@ namespace HFM.Forms
             // chkSynchronous
             // 
             this.chkSynchronous.AutoSize = true;
-            this.chkSynchronous.Location = new System.Drawing.Point(153, 22);
+            this.chkSynchronous.Location = new System.Drawing.Point(10, 46);
             this.chkSynchronous.Name = "chkSynchronous";
             this.chkSynchronous.Size = new System.Drawing.Size(176, 17);
             this.chkSynchronous.TabIndex = 0;
             this.chkSynchronous.Text = "In Series (synchronous retrieval)";
             this.chkSynchronous.UseVisualStyleBackColor = true;
             // 
-            // grpHTMLOutput
+            // WebGenerationGroupBox
             // 
-            this.grpHTMLOutput.Controls.Add(this.CopyLabel);
-            this.grpHTMLOutput.Controls.Add(this.WebSitePortTextBox);
-            this.grpHTMLOutput.Controls.Add(this.WebSitePortLabel);
-            this.grpHTMLOutput.Controls.Add(this.WebSitePasswordTextBox);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteUsernameTextBox);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteServerTextBox);
-            this.grpHTMLOutput.Controls.Add(this.WebGenTypePanel);
-            this.grpHTMLOutput.Controls.Add(this.WebSitePasswordLabel);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteUsernameLabel);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteServerLabel);
-            this.grpHTMLOutput.Controls.Add(this.FtpModePanel);
-            this.grpHTMLOutput.Controls.Add(this.udLimitSize);
-            this.grpHTMLOutput.Controls.Add(this.chkLimitSize);
-            this.grpHTMLOutput.Controls.Add(this.chkXml);
-            this.grpHTMLOutput.Controls.Add(this.chkHtml);
-            this.grpHTMLOutput.Controls.Add(this.TestConnectionButton);
-            this.grpHTMLOutput.Controls.Add(this.chkFAHlog);
-            this.grpHTMLOutput.Controls.Add(this.radioFullRefresh);
-            this.grpHTMLOutput.Controls.Add(this.radioSchedule);
-            this.grpHTMLOutput.Controls.Add(this.txtWebGenMinutes);
-            this.grpHTMLOutput.Controls.Add(this.lbl2MinutesToGen);
-            this.grpHTMLOutput.Controls.Add(this.BrowseWebFolderButton);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteTargetPathTextBox);
-            this.grpHTMLOutput.Controls.Add(this.WebSiteTargetPathLabel);
-            this.grpHTMLOutput.Controls.Add(this.chkWebSiteGenerator);
-            this.grpHTMLOutput.Location = new System.Drawing.Point(6, 66);
-            this.grpHTMLOutput.Name = "grpHTMLOutput";
-            this.grpHTMLOutput.Size = new System.Drawing.Size(489, 227);
-            this.grpHTMLOutput.TabIndex = 0;
-            this.grpHTMLOutput.TabStop = false;
-            this.grpHTMLOutput.Text = "Web Generation";
+            this.WebGenerationGroupBox.Controls.Add(this.CopyLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSitePortTextBox);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSitePortLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSitePasswordTextBox);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteUsernameTextBox);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteServerTextBox);
+            this.WebGenerationGroupBox.Controls.Add(this.WebGenTypePanel);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSitePasswordLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteUsernameLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteServerLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.FtpModePanel);
+            this.WebGenerationGroupBox.Controls.Add(this.udLimitSize);
+            this.WebGenerationGroupBox.Controls.Add(this.chkLimitSize);
+            this.WebGenerationGroupBox.Controls.Add(this.chkXml);
+            this.WebGenerationGroupBox.Controls.Add(this.chkHtml);
+            this.WebGenerationGroupBox.Controls.Add(this.TestConnectionButton);
+            this.WebGenerationGroupBox.Controls.Add(this.chkFAHlog);
+            this.WebGenerationGroupBox.Controls.Add(this.radioFullRefresh);
+            this.WebGenerationGroupBox.Controls.Add(this.radioSchedule);
+            this.WebGenerationGroupBox.Controls.Add(this.txtWebGenMinutes);
+            this.WebGenerationGroupBox.Controls.Add(this.lbl2MinutesToGen);
+            this.WebGenerationGroupBox.Controls.Add(this.BrowseWebFolderButton);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteTargetPathTextBox);
+            this.WebGenerationGroupBox.Controls.Add(this.WebSiteTargetPathLabel);
+            this.WebGenerationGroupBox.Controls.Add(this.chkWebSiteGenerator);
+            this.WebGenerationGroupBox.Location = new System.Drawing.Point(6, 91);
+            this.WebGenerationGroupBox.Name = "WebGenerationGroupBox";
+            this.WebGenerationGroupBox.Size = new System.Drawing.Size(489, 188);
+            this.WebGenerationGroupBox.TabIndex = 0;
+            this.WebGenerationGroupBox.TabStop = false;
+            this.WebGenerationGroupBox.Text = "Web Generation";
+            // 
+            // CopyLabel
+            // 
+            this.CopyLabel.AutoSize = true;
+            this.CopyLabel.Location = new System.Drawing.Point(7, 163);
+            this.CopyLabel.Name = "CopyLabel";
+            this.CopyLabel.Size = new System.Drawing.Size(34, 13);
+            this.CopyLabel.TabIndex = 24;
+            this.CopyLabel.Text = "Copy:";
             // 
             // WebSitePortTextBox
             // 
@@ -957,7 +969,6 @@ namespace HFM.Forms
             // 
             this.grpInteractiveOptions.Controls.Add(this.BonusCalculationComboBox);
             this.grpInteractiveOptions.Controls.Add(this.labelWrapper6);
-            this.grpInteractiveOptions.Controls.Add(this.ShowUserStatsCheckBox);
             this.grpInteractiveOptions.Controls.Add(this.DuplicateProjectCheckBox);
             this.grpInteractiveOptions.Controls.Add(this.chkEtaAsDate);
             this.grpInteractiveOptions.Controls.Add(this.label2);
@@ -991,16 +1002,6 @@ namespace HFM.Forms
             this.labelWrapper6.Size = new System.Drawing.Size(134, 13);
             this.labelWrapper6.TabIndex = 13;
             this.labelWrapper6.Text = "Calculate Bonus based on:";
-            // 
-            // ShowUserStatsCheckBox
-            // 
-            this.ShowUserStatsCheckBox.AutoSize = true;
-            this.ShowUserStatsCheckBox.Location = new System.Drawing.Point(256, 124);
-            this.ShowUserStatsCheckBox.Name = "ShowUserStatsCheckBox";
-            this.ShowUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
-            this.ShowUserStatsCheckBox.TabIndex = 12;
-            this.ShowUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
-            this.ShowUserStatsCheckBox.UseVisualStyleBackColor = true;
             // 
             // DuplicateProjectCheckBox
             // 
@@ -1820,7 +1821,7 @@ namespace HFM.Forms
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(366, 353);
+            this.btnOK.Location = new System.Drawing.Point(366, 352);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -1832,7 +1833,7 @@ namespace HFM.Forms
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(447, 353);
+            this.btnCancel.Location = new System.Drawing.Point(447, 352);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -1840,14 +1841,25 @@ namespace HFM.Forms
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // CopyLabel
+            // EocUserStatsGroupBox
             // 
-            this.CopyLabel.AutoSize = true;
-            this.CopyLabel.Location = new System.Drawing.Point(7, 163);
-            this.CopyLabel.Name = "CopyLabel";
-            this.CopyLabel.Size = new System.Drawing.Size(34, 13);
-            this.CopyLabel.TabIndex = 24;
-            this.CopyLabel.Text = "Copy:";
+            this.EocUserStatsGroupBox.Controls.Add(this.EocUserStatsCheckBox);
+            this.EocUserStatsGroupBox.Location = new System.Drawing.Point(255, 9);
+            this.EocUserStatsGroupBox.Name = "EocUserStatsGroupBox";
+            this.EocUserStatsGroupBox.Size = new System.Drawing.Size(240, 76);
+            this.EocUserStatsGroupBox.TabIndex = 1;
+            this.EocUserStatsGroupBox.TabStop = false;
+            this.EocUserStatsGroupBox.Text = "EOC User Stats";
+            // 
+            // ShowUserStatsCheckBox
+            // 
+            this.EocUserStatsCheckBox.AutoSize = true;
+            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(10, 22);
+            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
+            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.EocUserStatsCheckBox.TabIndex = 13;
+            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
+            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
             // 
             // PreferencesDialog
             // 
@@ -1871,8 +1883,8 @@ namespace HFM.Forms
             this.tabSchdTasks.ResumeLayout(false);
             this.grpUpdateData.ResumeLayout(false);
             this.grpUpdateData.PerformLayout();
-            this.grpHTMLOutput.ResumeLayout(false);
-            this.grpHTMLOutput.PerformLayout();
+            this.WebGenerationGroupBox.ResumeLayout(false);
+            this.WebGenerationGroupBox.PerformLayout();
             this.WebGenTypePanel.ResumeLayout(false);
             this.WebGenTypePanel.PerformLayout();
             this.FtpModePanel.ResumeLayout(false);
@@ -1907,6 +1919,8 @@ namespace HFM.Forms
             this.grpWebProxy.PerformLayout();
             this.tabVisStyles.ResumeLayout(false);
             this.tabVisStyles.PerformLayout();
+            this.EocUserStatsGroupBox.ResumeLayout(false);
+            this.EocUserStatsGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1921,7 +1935,7 @@ namespace HFM.Forms
         private System.Windows.Forms.ListBox StyleList;
         private System.Windows.Forms.Label lbl1Style;
         private System.Windows.Forms.Label lbl1Preview;
-        private System.Windows.Forms.GroupBox grpHTMLOutput;
+        private System.Windows.Forms.GroupBox WebGenerationGroupBox;
         private System.Windows.Forms.Label WebSiteTargetPathLabel;
         private System.Windows.Forms.Button BrowseWebFolderButton;
         private System.Windows.Forms.Label lbl2MinutesToGen;
@@ -2042,7 +2056,6 @@ namespace HFM.Forms
         private HFM.Forms.Controls.DataErrorTextBox WebSitePasswordTextBox;
         private HFM.Forms.Controls.DataErrorTextBox WebSiteUsernameTextBox;
         private HFM.Forms.Controls.DataErrorTextBox WebSiteServerTextBox;
-        private System.Windows.Forms.CheckBox ShowUserStatsCheckBox;
         private System.Windows.Forms.Label UploadTypeLabel;
         private System.Windows.Forms.RadioButton WebGenTypeFtpRadioButton;
         private System.Windows.Forms.RadioButton WebGenTypePathRadioButton;
@@ -2051,5 +2064,7 @@ namespace HFM.Forms
         private System.Windows.Forms.Label labelWrapper6;
         private System.Windows.Forms.ComboBox BonusCalculationComboBox;
         private System.Windows.Forms.Label CopyLabel;
+        private System.Windows.Forms.GroupBox EocUserStatsGroupBox;
+        private System.Windows.Forms.CheckBox EocUserStatsCheckBox;
     }
 }

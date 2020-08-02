@@ -30,7 +30,6 @@ namespace HFM.Forms.Models
             CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             EtaDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
             DuplicateProjectCheck = Preferences.Get<bool>(Preference.DuplicateProjectCheck);
-            ShowXmlStats = Preferences.Get<bool>(Preference.EnableUserStats);
             MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
             FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
         }
@@ -45,7 +44,6 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.BonusCalculation, CalculateBonus);
             Preferences.Set(Preference.DisplayEtaAsDate, EtaDate);
             Preferences.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-            Preferences.Set(Preference.EnableUserStats, ShowXmlStats);
             Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
             Preferences.Set(Preference.MinimizeTo, FormShowStyle);
         }
@@ -189,21 +187,6 @@ namespace HFM.Forms.Models
                 if (DuplicateProjectCheck != value)
                 {
                     _duplicateProjectCheck = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _showXmlStats;
-
-        public bool ShowXmlStats
-        {
-            get { return _showXmlStats; }
-            set
-            {
-                if (ShowXmlStats != value)
-                {
-                    _showXmlStats = value;
                     OnPropertyChanged();
                 }
             }

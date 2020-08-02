@@ -110,6 +110,9 @@ namespace HFM.Forms
 
             chkSynchronous.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncOnLoad));
 
+            // User Stats
+            EocUserStatsCheckBox.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.ShowXmlStats));
+
             // Web Generation
             radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
             lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
@@ -200,7 +203,6 @@ namespace HFM.Forms
             chkColorLog.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.ColorLogFile));
             chkAutoSave.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoSaveConfig));
             DuplicateProjectCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.DuplicateProjectCheck));
-            ShowUserStatsCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.ShowXmlStats));
 
             PpdCalculationComboBox.DataSource = OptionsModel.PpdCalculationList;
             PpdCalculationComboBox.DisplayMember = "DisplayMember";
