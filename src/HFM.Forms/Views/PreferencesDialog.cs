@@ -161,7 +161,7 @@ namespace HFM.Forms
             udLimitSize.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.LimitLogSizeLengthEnabled));
 
             TestConnectionButton.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            btnBrowseWebFolder.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.BrowseLocalPathEnabled));
+            BrowseWebFolderButton.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.BrowseLocalPathEnabled));
             chkWebSiteGenerator.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
         }
 
@@ -332,7 +332,7 @@ namespace HFM.Forms
         #endregion
 
         // Scheduled Tasks Tab
-        private void btnBrowseWebFolder_Click(object sender, EventArgs e)
+        private void BrowseWebFolderButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFolderDialogPresenter.BrowseFolder())
             {

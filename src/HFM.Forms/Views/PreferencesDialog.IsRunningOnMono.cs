@@ -49,7 +49,7 @@ namespace HFM.Forms
                     FtpModePanel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
                     break;
                 case "BrowseLocalPathEnabled":
-                    btnBrowseWebFolder.Enabled = _presenter.Model.ScheduledTasksModel.BrowseLocalPathEnabled;
+                    BrowseWebFolderButton.Enabled = _presenter.Model.ScheduledTasksModel.BrowseLocalPathEnabled;
                     break;
                 case "LimitLogSizeEnabled":
                     chkLimitSize.Enabled = _presenter.Model.ScheduledTasksModel.LimitLogSizeEnabled;
