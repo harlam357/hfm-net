@@ -87,7 +87,7 @@ namespace HFM.Forms
 
             _presenter.Model.ScheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
             _presenter.Model.StartupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
-            //_presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
+            _presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
             _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
             _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsChanged;
             _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
@@ -184,16 +184,21 @@ namespace HFM.Forms
             chkRunMinimized.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.RunMinimized));
             chkCheckForUpdate.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.StartupCheckForUpdate));
 
-            // Configuration File
-            txtDefaultConfigFile.BindEnabled(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.UseDefaultConfigFile));
-            btnBrowseConfigFile.BindEnabled(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.UseDefaultConfigFile));
-            txtDefaultConfigFile.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.DefaultConfigFile));
-
-            chkDefaultConfig.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.UseDefaultConfigFile));
-
             // External Programs
-            txtLogFileViewer.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.LogFileViewer));
-            txtFileExplorer.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.FileExplorer));
+            LogFileViewerTextBox.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.LogFileViewer));
+            FileExplorerTextBox.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.FileExplorer));
+
+            // Debug Message Level
+            cboMessageLevel.DataSource = StartupAndExternalModel.DebugList;
+            cboMessageLevel.DisplayMember = "DisplayMember";
+            cboMessageLevel.ValueMember = "ValueMember";
+            cboMessageLevel.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            // Form Docking Style
+            cboShowStyle.DataSource = StartupAndExternalModel.DockingStyleList;
+            cboShowStyle.DisplayMember = "DisplayMember";
+            cboShowStyle.ValueMember = "ValueMember";
+            cboShowStyle.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.FormShowStyle), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void LoadOptionsTab()
@@ -215,17 +220,12 @@ namespace HFM.Forms
             udDecimalPlaces.DataBindings.Add(ValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
             chkEtaAsDate.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.EtaDate));
 
-            // Debug Message Level
-            cboMessageLevel.DataSource = OptionsModel.DebugList;
-            cboMessageLevel.DisplayMember = "DisplayMember";
-            cboMessageLevel.ValueMember = "ValueMember";
-            cboMessageLevel.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
+            // Configuration File
+            txtDefaultConfigFile.BindEnabled(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
+            btnBrowseConfigFile.BindEnabled(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
+            txtDefaultConfigFile.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.DefaultConfigFile));
 
-            // Form Docking Style
-            cboShowStyle.DataSource = OptionsModel.DockingStyleList;
-            cboShowStyle.DisplayMember = "DisplayMember";
-            cboShowStyle.ValueMember = "ValueMember";
-            cboShowStyle.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.FormShowStyle), false, DataSourceUpdateMode.OnPropertyChanged);
+            chkDefaultConfig.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
         }
 
         private void LoadReportingTab()

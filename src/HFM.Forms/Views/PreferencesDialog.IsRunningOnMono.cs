@@ -81,27 +81,48 @@ namespace HFM.Forms
 
         private void HandleStartupAndExternalPropertyEnabledForMono(string propertyName)
         {
-            switch (propertyName)
-            {
-                case "UseDefaultConfigFile":
-                    txtDefaultConfigFile.Enabled = _presenter.Model.StartupAndExternalModel.UseDefaultConfigFile;
-                    btnBrowseConfigFile.Enabled = _presenter.Model.StartupAndExternalModel.UseDefaultConfigFile;
-                    break;
-            }
+
         }
 
         private void HandleStartupAndExternalPropertyChangedForMono(string propertyName)
         {
             switch (propertyName)
             {
-                case "DefaultConfigFile":
-                    txtDefaultConfigFile.Text = _presenter.Model.StartupAndExternalModel.DefaultConfigFile;
-                    break;
                 case "LogFileViewer":
-                    txtLogFileViewer.Text = _presenter.Model.StartupAndExternalModel.LogFileViewer;
+                    LogFileViewerTextBox.Text = _presenter.Model.StartupAndExternalModel.LogFileViewer;
                     break;
                 case "FileExplorer":
-                    txtFileExplorer.Text = _presenter.Model.StartupAndExternalModel.FileExplorer;
+                    FileExplorerTextBox.Text = _presenter.Model.StartupAndExternalModel.FileExplorer;
+                    break;
+            }
+        }
+
+        private void OptionsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Core.Application.IsRunningOnMono && Enabled)
+            {
+                HandleOptionsPropertyEnabledForMono(e.PropertyName);
+                HandleOptionsPropertyChangedForMono(e.PropertyName);
+            }
+        }
+
+        private void HandleOptionsPropertyEnabledForMono(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "UseDefaultConfigFile":
+                    txtDefaultConfigFile.Enabled = _presenter.Model.OptionsModel.UseDefaultConfigFile;
+                    btnBrowseConfigFile.Enabled = _presenter.Model.OptionsModel.UseDefaultConfigFile;
+                    break;
+            }
+        }
+
+        private void HandleOptionsPropertyChangedForMono(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "DefaultConfigFile":
+                    txtDefaultConfigFile.Text = _presenter.Model.OptionsModel.DefaultConfigFile;
                     break;
             }
         }

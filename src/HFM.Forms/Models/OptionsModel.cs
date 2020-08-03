@@ -30,8 +30,8 @@ namespace HFM.Forms.Models
             CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             EtaDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
             DuplicateProjectCheck = Preferences.Get<bool>(Preference.DuplicateProjectCheck);
-            MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
-            FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
+            DefaultConfigFile = Preferences.Get<string>(Preference.DefaultConfigFile);
+            UseDefaultConfigFile = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
         }
 
         public override void Save()
@@ -44,8 +44,8 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.BonusCalculation, CalculateBonus);
             Preferences.Set(Preference.DisplayEtaAsDate, EtaDate);
             Preferences.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-            Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
-            Preferences.Set(Preference.MinimizeTo, FormShowStyle);
+            Preferences.Set(Preference.DefaultConfigFile, DefaultConfigFile);
+            Preferences.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
         }
 
         public string this[string columnName]
@@ -194,37 +194,39 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        #region Debug Message Level
+        #region Configuration File
 
-        private LoggerLevel _messageLevel;
+        private string _defaultConfigFile;
 
-        public LoggerLevel MessageLevel
+        public string DefaultConfigFile
         {
-            get { return _messageLevel; }
+            get { return _defaultConfigFile; }
             set
             {
-                if (MessageLevel != value)
+                if (DefaultConfigFile != value)
                 {
-                    _messageLevel = value;
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _defaultConfigFile = newValue;
                     OnPropertyChanged();
+
+                    if (newValue.Length == 0)
+                    {
+                        UseDefaultConfigFile = false;
+                    }
                 }
             }
         }
 
-        #endregion
+        private bool _useDefaultConfigFile;
 
-        #region Form Docking Style
-
-        private MinimizeToOption _formShowStyle;
-
-        public MinimizeToOption FormShowStyle
+        public bool UseDefaultConfigFile
         {
-            get { return _formShowStyle; }
+            get { return _useDefaultConfigFile; }
             set
             {
-                if (FormShowStyle != value)
+                if (UseDefaultConfigFile != value)
                 {
-                    _formShowStyle = value;
+                    _useDefaultConfigFile = value;
                     OnPropertyChanged();
                 }
             }
@@ -263,46 +265,6 @@ namespace HFM.Forms.Models
                           { DisplayMember = "Frame Time", ValueMember = BonusCalculation.FrameTime },
                           new ListItem
                           { DisplayMember = "None", ValueMember = BonusCalculation.None },
-                       };
-                return list.AsReadOnly();
-            }
-        }
-
-        public static ReadOnlyCollection<ListItem> DebugList
-        {
-            get
-            {
-                var list = new List<ListItem>
-                       {
-                          //new ListItem
-                          //{ DisplayMember = LoggerLevel.Off.ToString(), ValueMember = LoggerLevel.Off },
-                          //new ListItem
-                          //{ DisplayMember = LoggerLevel.Fatal.ToString(), ValueMember = LoggerLevel.Fatal },
-                          //new ListItem
-                          //{ DisplayMember = LoggerLevel.Error.ToString(), ValueMember = LoggerLevel.Error },
-                          //new ListItem
-                          //{ DisplayMember = LoggerLevel.Warn.ToString(), ValueMember = LoggerLevel.Warn },
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Info.ToString(), ValueMember = LoggerLevel.Info },
-                          new ListItem
-                          { DisplayMember = LoggerLevel.Debug.ToString(), ValueMember = LoggerLevel.Debug }
-                       };
-                return list.AsReadOnly();
-            }
-        }
-
-        public static ReadOnlyCollection<ListItem> DockingStyleList
-        {
-            get
-            {
-                var list = new List<ListItem>
-                       {
-                          new ListItem
-                          { DisplayMember = "System Tray", ValueMember = MinimizeToOption.SystemTray },
-                          new ListItem
-                          { DisplayMember = "Task Bar", ValueMember = MinimizeToOption.TaskBar },
-                          new ListItem
-                          { DisplayMember = "Both", ValueMember = MinimizeToOption.Both }
                        };
                 return list.AsReadOnly();
             }

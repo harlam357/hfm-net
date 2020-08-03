@@ -281,7 +281,7 @@ namespace HFM.Forms
                 {
                     string path = artifacts.GetRandomFilePath();
                     File.WriteAllText(path, String.Empty);
-                    presenter.Model.StartupAndExternalModel.DefaultConfigFile = path;
+                    presenter.Model.OptionsModel.DefaultConfigFile = path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
                     presenter.BrowseForConfigurationFileClicked(dialog);
@@ -300,7 +300,7 @@ namespace HFM.Forms
             {
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.StartupAndExternalModel.DefaultConfigFile = artifacts.Path;
+                    presenter.Model.OptionsModel.DefaultConfigFile = artifacts.Path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
                     presenter.BrowseForConfigurationFileClicked(dialog);
@@ -323,7 +323,7 @@ namespace HFM.Forms
                 // Act
                 presenter.BrowseForConfigurationFileClicked(dialog);
                 // Assert
-                Assert.AreEqual(path, presenter.Model.StartupAndExternalModel.DefaultConfigFile);
+                Assert.AreEqual(path, presenter.Model.OptionsModel.DefaultConfigFile);
             }
         }
 

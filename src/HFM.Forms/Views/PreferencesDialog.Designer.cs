@@ -35,6 +35,8 @@ namespace HFM.Forms
             this.StyleList = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSchdTasks = new System.Windows.Forms.TabPage();
+            this.EocUserStatsGroupBox = new System.Windows.Forms.GroupBox();
+            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.grpUpdateData = new System.Windows.Forms.GroupBox();
             this.txtCollectMinutes = new HFM.Forms.Controls.DataErrorTextBox();
             this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
@@ -74,27 +76,29 @@ namespace HFM.Forms
             this.WebSiteTargetPathLabel = new System.Windows.Forms.Label();
             this.chkWebSiteGenerator = new System.Windows.Forms.CheckBox();
             this.tabStartup = new System.Windows.Forms.TabPage();
-            this.grpFileExplorer = new System.Windows.Forms.GroupBox();
+            this.grpShowStyle = new System.Windows.Forms.GroupBox();
+            this.cboShowStyle = new System.Windows.Forms.ComboBox();
+            this.labelWrapper2 = new System.Windows.Forms.Label();
+            this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
+            this.cboMessageLevel = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ExternalProgramsGroupBox = new System.Windows.Forms.GroupBox();
             this.btnBrowseFileExplorer = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtFileExplorer = new HFM.Forms.Controls.DataErrorTextBox();
-            this.grpLogFileViewer = new System.Windows.Forms.GroupBox();
+            this.FileExplorerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.btnBrowseLogViewer = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtLogFileViewer = new HFM.Forms.Controls.DataErrorTextBox();
-            this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
-            this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
-            this.btnBrowseConfigFile = new System.Windows.Forms.Button();
-            this.txtDefaultConfigFile = new HFM.Forms.Controls.DataErrorTextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LogFileViewerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.grpStartup = new System.Windows.Forms.GroupBox();
             this.chkCheckForUpdate = new System.Windows.Forms.CheckBox();
             this.chkAutoRun = new System.Windows.Forms.CheckBox();
             this.chkRunMinimized = new System.Windows.Forms.CheckBox();
             this.tabOptions = new System.Windows.Forms.TabPage();
-            this.grpShowStyle = new System.Windows.Forms.GroupBox();
-            this.cboShowStyle = new System.Windows.Forms.ComboBox();
-            this.labelWrapper2 = new System.Windows.Forms.Label();
+            this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
+            this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
+            this.btnBrowseConfigFile = new System.Windows.Forms.Button();
+            this.txtDefaultConfigFile = new HFM.Forms.Controls.DataErrorTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.grpInteractiveOptions = new System.Windows.Forms.GroupBox();
             this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper6 = new System.Windows.Forms.Label();
@@ -107,9 +111,6 @@ namespace HFM.Forms
             this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
             this.chkAutoSave = new System.Windows.Forms.CheckBox();
             this.labelWrapper1 = new System.Windows.Forms.Label();
-            this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
-            this.cboMessageLevel = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.tabReporting = new System.Windows.Forms.TabPage();
             this.grpReportSelections = new System.Windows.Forms.GroupBox();
             this.grpEmailSettings = new System.Windows.Forms.GroupBox();
@@ -168,25 +169,23 @@ namespace HFM.Forms
             this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.EocUserStatsGroupBox = new System.Windows.Forms.GroupBox();
-            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabSchdTasks.SuspendLayout();
+            this.EocUserStatsGroupBox.SuspendLayout();
             this.grpUpdateData.SuspendLayout();
             this.WebGenerationGroupBox.SuspendLayout();
             this.WebGenTypePanel.SuspendLayout();
             this.FtpModePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
             this.tabStartup.SuspendLayout();
-            this.grpFileExplorer.SuspendLayout();
-            this.grpLogFileViewer.SuspendLayout();
-            this.grpDefaultConfig.SuspendLayout();
+            this.grpShowStyle.SuspendLayout();
+            this.LoggingGroupBox.SuspendLayout();
+            this.ExternalProgramsGroupBox.SuspendLayout();
             this.grpStartup.SuspendLayout();
             this.tabOptions.SuspendLayout();
-            this.grpShowStyle.SuspendLayout();
+            this.grpDefaultConfig.SuspendLayout();
             this.grpInteractiveOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
-            this.LoggingGroupBox.SuspendLayout();
             this.tabReporting.SuspendLayout();
             this.grpEmailSettings.SuspendLayout();
             this.tabWeb.SuspendLayout();
@@ -194,7 +193,6 @@ namespace HFM.Forms
             this.grpWebStats.SuspendLayout();
             this.grpWebProxy.SuspendLayout();
             this.tabVisStyles.SuspendLayout();
-            this.EocUserStatsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnl1CSSSample
@@ -245,6 +243,26 @@ namespace HFM.Forms
             this.tabSchdTasks.TabIndex = 2;
             this.tabSchdTasks.Text = "Scheduled Tasks";
             this.tabSchdTasks.UseVisualStyleBackColor = true;
+            // 
+            // EocUserStatsGroupBox
+            // 
+            this.EocUserStatsGroupBox.Controls.Add(this.EocUserStatsCheckBox);
+            this.EocUserStatsGroupBox.Location = new System.Drawing.Point(255, 9);
+            this.EocUserStatsGroupBox.Name = "EocUserStatsGroupBox";
+            this.EocUserStatsGroupBox.Size = new System.Drawing.Size(240, 76);
+            this.EocUserStatsGroupBox.TabIndex = 1;
+            this.EocUserStatsGroupBox.TabStop = false;
+            this.EocUserStatsGroupBox.Text = "EOC User Stats";
+            // 
+            // EocUserStatsCheckBox
+            // 
+            this.EocUserStatsCheckBox.AutoSize = true;
+            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(10, 22);
+            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
+            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.EocUserStatsCheckBox.TabIndex = 13;
+            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
+            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
             // 
             // grpUpdateData
             // 
@@ -721,9 +739,9 @@ namespace HFM.Forms
             // 
             // tabStartup
             // 
-            this.tabStartup.Controls.Add(this.grpFileExplorer);
-            this.tabStartup.Controls.Add(this.grpLogFileViewer);
-            this.tabStartup.Controls.Add(this.grpDefaultConfig);
+            this.tabStartup.Controls.Add(this.grpShowStyle);
+            this.tabStartup.Controls.Add(this.LoggingGroupBox);
+            this.tabStartup.Controls.Add(this.ExternalProgramsGroupBox);
             this.tabStartup.Controls.Add(this.grpStartup);
             this.tabStartup.Location = new System.Drawing.Point(4, 22);
             this.tabStartup.Name = "tabStartup";
@@ -733,24 +751,85 @@ namespace HFM.Forms
             this.tabStartup.Text = "Startup & External";
             this.tabStartup.UseVisualStyleBackColor = true;
             // 
-            // grpFileExplorer
+            // grpShowStyle
             // 
-            this.grpFileExplorer.Controls.Add(this.btnBrowseFileExplorer);
-            this.grpFileExplorer.Controls.Add(this.label4);
-            this.grpFileExplorer.Controls.Add(this.txtFileExplorer);
-            this.grpFileExplorer.Location = new System.Drawing.Point(6, 215);
-            this.grpFileExplorer.Name = "grpFileExplorer";
-            this.grpFileExplorer.Size = new System.Drawing.Size(489, 54);
-            this.grpFileExplorer.TabIndex = 6;
-            this.grpFileExplorer.TabStop = false;
-            this.grpFileExplorer.Text = "External File Explorer";
+            this.grpShowStyle.Controls.Add(this.cboShowStyle);
+            this.grpShowStyle.Controls.Add(this.labelWrapper2);
+            this.grpShowStyle.Location = new System.Drawing.Point(254, 151);
+            this.grpShowStyle.Name = "grpShowStyle";
+            this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
+            this.grpShowStyle.TabIndex = 7;
+            this.grpShowStyle.TabStop = false;
+            this.grpShowStyle.Text = "Docking Style";
+            // 
+            // cboShowStyle
+            // 
+            this.cboShowStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboShowStyle.FormattingEnabled = true;
+            this.cboShowStyle.Location = new System.Drawing.Point(132, 19);
+            this.cboShowStyle.Name = "cboShowStyle";
+            this.cboShowStyle.Size = new System.Drawing.Size(89, 21);
+            this.cboShowStyle.TabIndex = 1;
+            // 
+            // labelWrapper2
+            // 
+            this.labelWrapper2.AutoSize = true;
+            this.labelWrapper2.Location = new System.Drawing.Point(9, 24);
+            this.labelWrapper2.Name = "labelWrapper2";
+            this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
+            this.labelWrapper2.TabIndex = 0;
+            this.labelWrapper2.Text = "Show HFM.NET in the:";
+            // 
+            // LoggingGroupBox
+            // 
+            this.LoggingGroupBox.Controls.Add(this.cboMessageLevel);
+            this.LoggingGroupBox.Controls.Add(this.label6);
+            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 151);
+            this.LoggingGroupBox.Name = "LoggingGroupBox";
+            this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
+            this.LoggingGroupBox.TabIndex = 6;
+            this.LoggingGroupBox.TabStop = false;
+            this.LoggingGroupBox.Text = "Logging";
+            // 
+            // cboMessageLevel
+            // 
+            this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboMessageLevel.FormattingEnabled = true;
+            this.cboMessageLevel.Location = new System.Drawing.Point(92, 19);
+            this.cboMessageLevel.Name = "cboMessageLevel";
+            this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
+            this.cboMessageLevel.TabIndex = 1;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 24);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(77, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Logging Level:";
+            // 
+            // ExternalProgramsGroupBox
+            // 
+            this.ExternalProgramsGroupBox.Controls.Add(this.btnBrowseFileExplorer);
+            this.ExternalProgramsGroupBox.Controls.Add(this.label4);
+            this.ExternalProgramsGroupBox.Controls.Add(this.FileExplorerTextBox);
+            this.ExternalProgramsGroupBox.Controls.Add(this.btnBrowseLogViewer);
+            this.ExternalProgramsGroupBox.Controls.Add(this.label3);
+            this.ExternalProgramsGroupBox.Controls.Add(this.LogFileViewerTextBox);
+            this.ExternalProgramsGroupBox.Location = new System.Drawing.Point(6, 65);
+            this.ExternalProgramsGroupBox.Name = "ExternalProgramsGroupBox";
+            this.ExternalProgramsGroupBox.Size = new System.Drawing.Size(489, 84);
+            this.ExternalProgramsGroupBox.TabIndex = 5;
+            this.ExternalProgramsGroupBox.TabStop = false;
+            this.ExternalProgramsGroupBox.Text = "External Programs";
             // 
             // btnBrowseFileExplorer
             // 
-            this.btnBrowseFileExplorer.Location = new System.Drawing.Point(456, 19);
+            this.btnBrowseFileExplorer.Location = new System.Drawing.Point(456, 49);
             this.btnBrowseFileExplorer.Name = "btnBrowseFileExplorer";
             this.btnBrowseFileExplorer.Size = new System.Drawing.Size(24, 23);
-            this.btnBrowseFileExplorer.TabIndex = 2;
+            this.btnBrowseFileExplorer.TabIndex = 5;
             this.btnBrowseFileExplorer.Text = "...";
             this.btnBrowseFileExplorer.UseVisualStyleBackColor = true;
             this.btnBrowseFileExplorer.Click += new System.EventHandler(this.btnBrowseFileExplorer_Click);
@@ -758,37 +837,25 @@ namespace HFM.Forms
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 24);
+            this.label4.Location = new System.Drawing.Point(9, 55);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Filename:";
+            this.label4.Size = new System.Drawing.Size(67, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "File Explorer:";
             // 
-            // txtFileExplorer
+            // FileExplorerTextBox
             // 
-            this.txtFileExplorer.BackColor = System.Drawing.SystemColors.Window;
-            this.txtFileExplorer.DoubleBuffered = true;
-            this.txtFileExplorer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtFileExplorer.ErrorToolTip = this.toolTipPrefs;
-            this.txtFileExplorer.ErrorToolTipDuration = 5000;
-            this.txtFileExplorer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtFileExplorer.ErrorToolTipText = "";
-            this.txtFileExplorer.Location = new System.Drawing.Point(66, 21);
-            this.txtFileExplorer.Name = "txtFileExplorer";
-            this.txtFileExplorer.Size = new System.Drawing.Size(384, 20);
-            this.txtFileExplorer.TabIndex = 1;
-            // 
-            // grpLogFileViewer
-            // 
-            this.grpLogFileViewer.Controls.Add(this.btnBrowseLogViewer);
-            this.grpLogFileViewer.Controls.Add(this.label3);
-            this.grpLogFileViewer.Controls.Add(this.txtLogFileViewer);
-            this.grpLogFileViewer.Location = new System.Drawing.Point(6, 157);
-            this.grpLogFileViewer.Name = "grpLogFileViewer";
-            this.grpLogFileViewer.Size = new System.Drawing.Size(489, 54);
-            this.grpLogFileViewer.TabIndex = 5;
-            this.grpLogFileViewer.TabStop = false;
-            this.grpLogFileViewer.Text = "External Log File Viewer";
+            this.FileExplorerTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.FileExplorerTextBox.DoubleBuffered = true;
+            this.FileExplorerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.FileExplorerTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.FileExplorerTextBox.ErrorToolTipDuration = 5000;
+            this.FileExplorerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.FileExplorerTextBox.ErrorToolTipText = "";
+            this.FileExplorerTextBox.Location = new System.Drawing.Point(96, 51);
+            this.FileExplorerTextBox.Name = "FileExplorerTextBox";
+            this.FileExplorerTextBox.Size = new System.Drawing.Size(354, 20);
+            this.FileExplorerTextBox.TabIndex = 4;
             // 
             // btnBrowseLogViewer
             // 
@@ -805,23 +872,76 @@ namespace HFM.Forms
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(8, 24);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(52, 13);
+            this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 0;
-            this.label3.Text = "Filename:";
+            this.label3.Text = "Log File Viewer:";
             // 
-            // txtLogFileViewer
+            // LogFileViewerTextBox
             // 
-            this.txtLogFileViewer.BackColor = System.Drawing.SystemColors.Window;
-            this.txtLogFileViewer.DoubleBuffered = true;
-            this.txtLogFileViewer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtLogFileViewer.ErrorToolTip = this.toolTipPrefs;
-            this.txtLogFileViewer.ErrorToolTipDuration = 5000;
-            this.txtLogFileViewer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtLogFileViewer.ErrorToolTipText = "";
-            this.txtLogFileViewer.Location = new System.Drawing.Point(66, 21);
-            this.txtLogFileViewer.Name = "txtLogFileViewer";
-            this.txtLogFileViewer.Size = new System.Drawing.Size(384, 20);
-            this.txtLogFileViewer.TabIndex = 1;
+            this.LogFileViewerTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.LogFileViewerTextBox.DoubleBuffered = true;
+            this.LogFileViewerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.LogFileViewerTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.LogFileViewerTextBox.ErrorToolTipDuration = 5000;
+            this.LogFileViewerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.LogFileViewerTextBox.ErrorToolTipText = "";
+            this.LogFileViewerTextBox.Location = new System.Drawing.Point(96, 21);
+            this.LogFileViewerTextBox.Name = "LogFileViewerTextBox";
+            this.LogFileViewerTextBox.Size = new System.Drawing.Size(354, 20);
+            this.LogFileViewerTextBox.TabIndex = 1;
+            // 
+            // grpStartup
+            // 
+            this.grpStartup.Controls.Add(this.chkCheckForUpdate);
+            this.grpStartup.Controls.Add(this.chkAutoRun);
+            this.grpStartup.Controls.Add(this.chkRunMinimized);
+            this.grpStartup.Location = new System.Drawing.Point(6, 9);
+            this.grpStartup.Name = "grpStartup";
+            this.grpStartup.Size = new System.Drawing.Size(489, 50);
+            this.grpStartup.TabIndex = 3;
+            this.grpStartup.TabStop = false;
+            this.grpStartup.Text = "Startup";
+            // 
+            // chkCheckForUpdate
+            // 
+            this.chkCheckForUpdate.AutoSize = true;
+            this.chkCheckForUpdate.Location = new System.Drawing.Point(310, 20);
+            this.chkCheckForUpdate.Name = "chkCheckForUpdate";
+            this.chkCheckForUpdate.Size = new System.Drawing.Size(115, 17);
+            this.chkCheckForUpdate.TabIndex = 2;
+            this.chkCheckForUpdate.Text = "Check for Updates";
+            this.chkCheckForUpdate.UseVisualStyleBackColor = true;
+            // 
+            // chkAutoRun
+            // 
+            this.chkAutoRun.AutoSize = true;
+            this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
+            this.chkAutoRun.Name = "chkAutoRun";
+            this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
+            this.chkAutoRun.TabIndex = 0;
+            this.chkAutoRun.Text = "Auto Run on Windows Startup";
+            this.chkAutoRun.UseVisualStyleBackColor = true;
+            // 
+            // chkRunMinimized
+            // 
+            this.chkRunMinimized.AutoSize = true;
+            this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
+            this.chkRunMinimized.Name = "chkRunMinimized";
+            this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
+            this.chkRunMinimized.TabIndex = 1;
+            this.chkRunMinimized.Text = "Run Minimized";
+            this.chkRunMinimized.UseVisualStyleBackColor = true;
+            // 
+            // tabOptions
+            // 
+            this.tabOptions.Controls.Add(this.grpDefaultConfig);
+            this.tabOptions.Controls.Add(this.grpInteractiveOptions);
+            this.tabOptions.Location = new System.Drawing.Point(4, 22);
+            this.tabOptions.Name = "tabOptions";
+            this.tabOptions.Size = new System.Drawing.Size(501, 303);
+            this.tabOptions.TabIndex = 4;
+            this.tabOptions.Text = "Options";
+            this.tabOptions.UseVisualStyleBackColor = true;
             // 
             // grpDefaultConfig
             // 
@@ -829,10 +949,10 @@ namespace HFM.Forms
             this.grpDefaultConfig.Controls.Add(this.btnBrowseConfigFile);
             this.grpDefaultConfig.Controls.Add(this.txtDefaultConfigFile);
             this.grpDefaultConfig.Controls.Add(this.label1);
-            this.grpDefaultConfig.Location = new System.Drawing.Point(6, 65);
+            this.grpDefaultConfig.Location = new System.Drawing.Point(6, 166);
             this.grpDefaultConfig.Name = "grpDefaultConfig";
             this.grpDefaultConfig.Size = new System.Drawing.Size(489, 86);
-            this.grpDefaultConfig.TabIndex = 4;
+            this.grpDefaultConfig.TabIndex = 5;
             this.grpDefaultConfig.TabStop = false;
             this.grpDefaultConfig.Text = "Configuration File";
             // 
@@ -881,89 +1001,6 @@ namespace HFM.Forms
             this.label1.Size = new System.Drawing.Size(52, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Filename:";
-            // 
-            // grpStartup
-            // 
-            this.grpStartup.Controls.Add(this.chkCheckForUpdate);
-            this.grpStartup.Controls.Add(this.chkAutoRun);
-            this.grpStartup.Controls.Add(this.chkRunMinimized);
-            this.grpStartup.Location = new System.Drawing.Point(6, 9);
-            this.grpStartup.Name = "grpStartup";
-            this.grpStartup.Size = new System.Drawing.Size(489, 50);
-            this.grpStartup.TabIndex = 3;
-            this.grpStartup.TabStop = false;
-            this.grpStartup.Text = "Startup";
-            // 
-            // chkCheckForUpdate
-            // 
-            this.chkCheckForUpdate.AutoSize = true;
-            this.chkCheckForUpdate.Location = new System.Drawing.Point(310, 20);
-            this.chkCheckForUpdate.Name = "chkCheckForUpdate";
-            this.chkCheckForUpdate.Size = new System.Drawing.Size(115, 17);
-            this.chkCheckForUpdate.TabIndex = 2;
-            this.chkCheckForUpdate.Text = "Check for Updates";
-            this.chkCheckForUpdate.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoRun
-            // 
-            this.chkAutoRun.AutoSize = true;
-            this.chkAutoRun.Location = new System.Drawing.Point(10, 20);
-            this.chkAutoRun.Name = "chkAutoRun";
-            this.chkAutoRun.Size = new System.Drawing.Size(170, 17);
-            this.chkAutoRun.TabIndex = 0;
-            this.chkAutoRun.Text = "Auto Run on Windows Startup";
-            this.chkAutoRun.UseVisualStyleBackColor = true;
-            // 
-            // chkRunMinimized
-            // 
-            this.chkRunMinimized.AutoSize = true;
-            this.chkRunMinimized.Location = new System.Drawing.Point(196, 20);
-            this.chkRunMinimized.Name = "chkRunMinimized";
-            this.chkRunMinimized.Size = new System.Drawing.Size(95, 17);
-            this.chkRunMinimized.TabIndex = 1;
-            this.chkRunMinimized.Text = "Run Minimized";
-            this.chkRunMinimized.UseVisualStyleBackColor = true;
-            // 
-            // tabOptions
-            // 
-            this.tabOptions.Controls.Add(this.grpShowStyle);
-            this.tabOptions.Controls.Add(this.grpInteractiveOptions);
-            this.tabOptions.Controls.Add(this.LoggingGroupBox);
-            this.tabOptions.Location = new System.Drawing.Point(4, 22);
-            this.tabOptions.Name = "tabOptions";
-            this.tabOptions.Size = new System.Drawing.Size(501, 303);
-            this.tabOptions.TabIndex = 4;
-            this.tabOptions.Text = "Options";
-            this.tabOptions.UseVisualStyleBackColor = true;
-            // 
-            // grpShowStyle
-            // 
-            this.grpShowStyle.Controls.Add(this.cboShowStyle);
-            this.grpShowStyle.Controls.Add(this.labelWrapper2);
-            this.grpShowStyle.Location = new System.Drawing.Point(254, 166);
-            this.grpShowStyle.Name = "grpShowStyle";
-            this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
-            this.grpShowStyle.TabIndex = 4;
-            this.grpShowStyle.TabStop = false;
-            this.grpShowStyle.Text = "Docking Style";
-            // 
-            // cboShowStyle
-            // 
-            this.cboShowStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboShowStyle.FormattingEnabled = true;
-            this.cboShowStyle.Location = new System.Drawing.Point(136, 19);
-            this.cboShowStyle.Name = "cboShowStyle";
-            this.cboShowStyle.Size = new System.Drawing.Size(89, 21);
-            this.cboShowStyle.TabIndex = 1;
-            // 
-            // labelWrapper2
-            // 
-            this.labelWrapper2.AutoSize = true;
-            this.labelWrapper2.Location = new System.Drawing.Point(13, 24);
-            this.labelWrapper2.Name = "labelWrapper2";
-            this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
-            this.labelWrapper2.TabIndex = 0;
-            this.labelWrapper2.Text = "Show HFM.NET in the:";
             // 
             // grpInteractiveOptions
             // 
@@ -1086,35 +1123,6 @@ namespace HFM.Forms
             this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
             this.labelWrapper1.TabIndex = 6;
             this.labelWrapper1.Text = "PPD Decimal Places:";
-            // 
-            // LoggingGroupBox
-            // 
-            this.LoggingGroupBox.Controls.Add(this.cboMessageLevel);
-            this.LoggingGroupBox.Controls.Add(this.label6);
-            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 166);
-            this.LoggingGroupBox.Name = "LoggingGroupBox";
-            this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
-            this.LoggingGroupBox.TabIndex = 3;
-            this.LoggingGroupBox.TabStop = false;
-            this.LoggingGroupBox.Text = "Logging";
-            // 
-            // cboMessageLevel
-            // 
-            this.cboMessageLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboMessageLevel.FormattingEnabled = true;
-            this.cboMessageLevel.Location = new System.Drawing.Point(99, 19);
-            this.cboMessageLevel.Name = "cboMessageLevel";
-            this.cboMessageLevel.Size = new System.Drawing.Size(75, 21);
-            this.cboMessageLevel.TabIndex = 1;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 24);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 13);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "Logging Level:";
             // 
             // tabReporting
             // 
@@ -1841,26 +1849,6 @@ namespace HFM.Forms
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // EocUserStatsGroupBox
-            // 
-            this.EocUserStatsGroupBox.Controls.Add(this.EocUserStatsCheckBox);
-            this.EocUserStatsGroupBox.Location = new System.Drawing.Point(255, 9);
-            this.EocUserStatsGroupBox.Name = "EocUserStatsGroupBox";
-            this.EocUserStatsGroupBox.Size = new System.Drawing.Size(240, 76);
-            this.EocUserStatsGroupBox.TabIndex = 1;
-            this.EocUserStatsGroupBox.TabStop = false;
-            this.EocUserStatsGroupBox.Text = "EOC User Stats";
-            // 
-            // ShowUserStatsCheckBox
-            // 
-            this.EocUserStatsCheckBox.AutoSize = true;
-            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(10, 22);
-            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
-            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
-            this.EocUserStatsCheckBox.TabIndex = 13;
-            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
-            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
-            // 
             // PreferencesDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1881,6 +1869,8 @@ namespace HFM.Forms
             this.Load += new System.EventHandler(this.PreferencesDialogLoad);
             this.tabControl1.ResumeLayout(false);
             this.tabSchdTasks.ResumeLayout(false);
+            this.EocUserStatsGroupBox.ResumeLayout(false);
+            this.EocUserStatsGroupBox.PerformLayout();
             this.grpUpdateData.ResumeLayout(false);
             this.grpUpdateData.PerformLayout();
             this.WebGenerationGroupBox.ResumeLayout(false);
@@ -1891,22 +1881,20 @@ namespace HFM.Forms
             this.FtpModePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
             this.tabStartup.ResumeLayout(false);
-            this.grpFileExplorer.ResumeLayout(false);
-            this.grpFileExplorer.PerformLayout();
-            this.grpLogFileViewer.ResumeLayout(false);
-            this.grpLogFileViewer.PerformLayout();
-            this.grpDefaultConfig.ResumeLayout(false);
-            this.grpDefaultConfig.PerformLayout();
+            this.grpShowStyle.ResumeLayout(false);
+            this.grpShowStyle.PerformLayout();
+            this.LoggingGroupBox.ResumeLayout(false);
+            this.LoggingGroupBox.PerformLayout();
+            this.ExternalProgramsGroupBox.ResumeLayout(false);
+            this.ExternalProgramsGroupBox.PerformLayout();
             this.grpStartup.ResumeLayout(false);
             this.grpStartup.PerformLayout();
             this.tabOptions.ResumeLayout(false);
-            this.grpShowStyle.ResumeLayout(false);
-            this.grpShowStyle.PerformLayout();
+            this.grpDefaultConfig.ResumeLayout(false);
+            this.grpDefaultConfig.PerformLayout();
             this.grpInteractiveOptions.ResumeLayout(false);
             this.grpInteractiveOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
-            this.LoggingGroupBox.ResumeLayout(false);
-            this.LoggingGroupBox.PerformLayout();
             this.tabReporting.ResumeLayout(false);
             this.grpEmailSettings.ResumeLayout(false);
             this.grpEmailSettings.PerformLayout();
@@ -1919,8 +1907,6 @@ namespace HFM.Forms
             this.grpWebProxy.PerformLayout();
             this.tabVisStyles.ResumeLayout(false);
             this.tabVisStyles.PerformLayout();
-            this.EocUserStatsGroupBox.ResumeLayout(false);
-            this.EocUserStatsGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1977,9 +1963,6 @@ namespace HFM.Forms
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RadioButton radioSchedule;
         private System.Windows.Forms.RadioButton radioFullRefresh;
-        private System.Windows.Forms.GroupBox LoggingGroupBox;
-        private System.Windows.Forms.ComboBox cboMessageLevel;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ToolTip toolTipPrefs;
         private System.Windows.Forms.Label labelWrapper1;
         private System.Windows.Forms.NumericUpDown udDecimalPlaces;
@@ -2003,11 +1986,6 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox chkRunMinimized;
         private System.Windows.Forms.CheckBox chkAutoRun;
         private System.Windows.Forms.CheckBox chkFAHlog;
-        private System.Windows.Forms.GroupBox grpDefaultConfig;
-        private System.Windows.Forms.CheckBox chkDefaultConfig;
-        private System.Windows.Forms.Button btnBrowseConfigFile;
-        private HFM.Forms.Controls.DataErrorTextBox txtDefaultConfigFile;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox grpInteractiveOptions;
         private System.Windows.Forms.CheckBox chkAutoSave;
         private System.Windows.Forms.CheckBox chkColorLog;
@@ -2027,21 +2005,14 @@ namespace HFM.Forms
         private System.Windows.Forms.Button btnOverviewBrowse;
         private HFM.Forms.Controls.DataErrorTextBox txtOverview;
         private System.Windows.Forms.Label lblOverview;
-        private System.Windows.Forms.GroupBox grpShowStyle;
-        private System.Windows.Forms.ComboBox cboShowStyle;
-        private System.Windows.Forms.Label labelWrapper2;
         private System.Windows.Forms.CheckBox chkEmailSecure;
         private HFM.Forms.Controls.DataErrorTextBox txtSmtpServerPort;
         private System.Windows.Forms.Label labelWrapper3;
         private System.Windows.Forms.CheckBox chkCheckForUpdate;
-        private System.Windows.Forms.GroupBox grpFileExplorer;
-        private System.Windows.Forms.Button btnBrowseFileExplorer;
-        private System.Windows.Forms.Label label4;
-        private HFM.Forms.Controls.DataErrorTextBox txtFileExplorer;
-        private System.Windows.Forms.GroupBox grpLogFileViewer;
+        private System.Windows.Forms.GroupBox ExternalProgramsGroupBox;
         private System.Windows.Forms.Button btnBrowseLogViewer;
         private System.Windows.Forms.Label label3;
-        private HFM.Forms.Controls.DataErrorTextBox txtLogFileViewer;
+        private HFM.Forms.Controls.DataErrorTextBox LogFileViewerTextBox;
         private System.Windows.Forms.CheckBox chkHtml;
         private System.Windows.Forms.CheckBox chkXml;
         private System.Windows.Forms.NumericUpDown udLimitSize;
@@ -2066,5 +2037,19 @@ namespace HFM.Forms
         private System.Windows.Forms.Label CopyLabel;
         private System.Windows.Forms.GroupBox EocUserStatsGroupBox;
         private System.Windows.Forms.CheckBox EocUserStatsCheckBox;
+        private System.Windows.Forms.Button btnBrowseFileExplorer;
+        private System.Windows.Forms.Label label4;
+        private Controls.DataErrorTextBox FileExplorerTextBox;
+        private System.Windows.Forms.GroupBox grpShowStyle;
+        private System.Windows.Forms.ComboBox cboShowStyle;
+        private System.Windows.Forms.Label labelWrapper2;
+        private System.Windows.Forms.GroupBox LoggingGroupBox;
+        private System.Windows.Forms.ComboBox cboMessageLevel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox grpDefaultConfig;
+        private System.Windows.Forms.CheckBox chkDefaultConfig;
+        private System.Windows.Forms.Button btnBrowseConfigFile;
+        private Controls.DataErrorTextBox txtDefaultConfigFile;
+        private System.Windows.Forms.Label label1;
     }
 }

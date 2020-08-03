@@ -172,13 +172,13 @@ namespace HFM.Forms
 
         public void BrowseForConfigurationFileClicked(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileName(Model.StartupAndExternalModel.DefaultConfigFile);
+            var x = GetInitialDirectoryAndFileName(Model.OptionsModel.DefaultConfigFile);
             string extension = Core.Client.ClientSettingsFileSerializer.DefaultFileExtension;
             string filter = Core.Client.ClientSettingsFileSerializer.DefaultFileTypeFilter;
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, extension, filter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.StartupAndExternalModel.DefaultConfigFile = result;
+                Model.OptionsModel.DefaultConfigFile = result;
             }
         }
 
