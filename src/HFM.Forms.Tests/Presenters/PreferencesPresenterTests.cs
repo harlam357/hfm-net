@@ -337,7 +337,7 @@ namespace HFM.Forms
                 {
                     string path = artifacts.GetRandomFilePath();
                     File.WriteAllText(path, String.Empty);
-                    presenter.Model.WebVisualStylesModel.WebOverview = path;
+                    presenter.Model.WebVisualStylesModel.OverviewXsltPath = path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
@@ -362,7 +362,7 @@ namespace HFM.Forms
                     string path = Path.Combine(defaultXsltPath, "foo.xslt");
                     File.WriteAllText(path, String.Empty);
 
-                    presenter.Model.WebVisualStylesModel.WebOverview = Path.GetFileName(path);
+                    presenter.Model.WebVisualStylesModel.OverviewXsltPath = Path.GetFileName(path);
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
@@ -381,7 +381,7 @@ namespace HFM.Forms
             {
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.WebVisualStylesModel.WebOverview = artifacts.Path;
+                    presenter.Model.WebVisualStylesModel.OverviewXsltPath = artifacts.Path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
@@ -404,7 +404,7 @@ namespace HFM.Forms
                 // Act
                 presenter.BrowseForOverviewTransform(dialog);
                 // Assert
-                Assert.AreEqual(path, presenter.Model.WebVisualStylesModel.WebOverview);
+                Assert.AreEqual(path, presenter.Model.WebVisualStylesModel.OverviewXsltPath);
             }
         }
 
@@ -425,7 +425,7 @@ namespace HFM.Forms
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
                     // Assert
-                    Assert.AreEqual(Path.GetFileName(path), presenter.Model.WebVisualStylesModel.WebOverview);
+                    Assert.AreEqual(Path.GetFileName(path), presenter.Model.WebVisualStylesModel.OverviewXsltPath);
                 }
             }
         }

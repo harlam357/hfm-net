@@ -300,16 +300,16 @@ namespace HFM.Forms
         {
             if (Core.Application.IsRunningOnMono)
             {
-                StyleList.Sorted = false;
+                webVisualStylesCssFileListBox.Sorted = false;
             }
-            StyleList.DataSource = _presenter.Model.WebVisualStylesModel.CssFileList;
-            StyleList.DisplayMember = "DisplayMember";
-            StyleList.ValueMember = "ValueMember";
-            StyleList.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.CssFile), false, DataSourceUpdateMode.OnPropertyChanged);
+            webVisualStylesCssFileListBox.DataSource = _presenter.Model.WebVisualStylesModel.CssFileList;
+            webVisualStylesCssFileListBox.DisplayMember = "DisplayMember";
+            webVisualStylesCssFileListBox.ValueMember = "ValueMember";
+            webVisualStylesCssFileListBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.CssFile), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            txtOverview.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.WebOverview), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSummary.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.WebSummary), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtInstance.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.WebSlot), false, DataSourceUpdateMode.OnPropertyChanged);
+            webVisualStylesOverviewTextBox.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.OverviewXsltPath), false, DataSourceUpdateMode.OnPropertyChanged);
+            webVisualStylesSummaryTextBox.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.SummaryXsltPath), false, DataSourceUpdateMode.OnPropertyChanged);
+            webVisualStylesSlotTextBox.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.SlotXsltPath), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -380,7 +380,7 @@ namespace HFM.Forms
         }
 
         // Visual Style Tab
-        private void StyleList_SelectedIndexChanged(object sender, EventArgs e)
+        private void webVisualStylesCssFileListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ShowCssPreview();
         }
@@ -509,7 +509,7 @@ namespace HFM.Forms
             }
         }
 
-        private void btnOverviewBrowse_Click(object sender, EventArgs e)
+        private void webVisualStylesOverviewBrowseXsltButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
@@ -517,7 +517,7 @@ namespace HFM.Forms
             }
         }
 
-        private void btnSummaryBrowse_Click(object sender, EventArgs e)
+        private void webVisualStylesSummaryBrowseXsltButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
@@ -525,7 +525,7 @@ namespace HFM.Forms
             }
         }
 
-        private void btnInstanceBrowse_Click(object sender, EventArgs e)
+        private void webVisualStylesSlotBrowseXsltButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {

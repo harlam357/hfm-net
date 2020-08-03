@@ -32,7 +32,7 @@ namespace HFM.Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreferencesDialog));
             this.pnl1CSSSample = new System.Windows.Forms.Panel();
-            this.StyleList = new System.Windows.Forms.ListBox();
+            this.webVisualStylesCssFileListBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.clientsTab = new System.Windows.Forms.TabPage();
             this.clientsRefreshClientDataGroupBox = new System.Windows.Forms.GroupBox();
@@ -41,7 +41,7 @@ namespace HFM.Forms
             this.lbl2SchedExplain = new System.Windows.Forms.Label();
             this.clientsRetrievalEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.clientsRetrievalIsSerialCheckBox = new System.Windows.Forms.CheckBox();
-            this.ConfigurationGroupBox = new System.Windows.Forms.GroupBox();
+            this.clientsConfigurationGroupBox = new System.Windows.Forms.GroupBox();
             this.clientsDefaultConfigFileEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.clientsBrowseConfigFileButton = new System.Windows.Forms.Button();
             this.clientsDefaultConfigFileTextBox = new HFM.Forms.Controls.DataErrorTextBox();
@@ -121,14 +121,14 @@ namespace HFM.Forms
             this.webGenerationPathLabel = new System.Windows.Forms.Label();
             this.webGenerationEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.webVisualStylesTab = new System.Windows.Forms.TabPage();
-            this.btnInstanceBrowse = new System.Windows.Forms.Button();
-            this.txtInstance = new HFM.Forms.Controls.DataErrorTextBox();
-            this.SlotXsltLabel = new System.Windows.Forms.Label();
-            this.btnSummaryBrowse = new System.Windows.Forms.Button();
-            this.txtSummary = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webVisualStylesSlotBrowseXsltButton = new System.Windows.Forms.Button();
+            this.webVisualStylesSlotTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webVisualStylesSlotLabel = new System.Windows.Forms.Label();
+            this.webVisualStylesSummaryBrowseXsltButton = new System.Windows.Forms.Button();
+            this.webVisualStylesSummaryTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.lblSummary = new System.Windows.Forms.Label();
-            this.btnOverviewBrowse = new System.Windows.Forms.Button();
-            this.txtOverview = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webVisualStylesOverviewBrowseXsltButton = new System.Windows.Forms.Button();
+            this.webVisualStylesOverviewTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.lblOverview = new System.Windows.Forms.Label();
             this.lbl1Preview = new System.Windows.Forms.Label();
             this.lbl1Style = new System.Windows.Forms.Label();
@@ -167,7 +167,7 @@ namespace HFM.Forms
             this.tabControl1.SuspendLayout();
             this.clientsTab.SuspendLayout();
             this.clientsRefreshClientDataGroupBox.SuspendLayout();
-            this.ConfigurationGroupBox.SuspendLayout();
+            this.clientsConfigurationGroupBox.SuspendLayout();
             this.optionsDisplayProductionOptionsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDecimalPlacesUpDown)).BeginInit();
             this.optionsTab.SuspendLayout();
@@ -198,13 +198,13 @@ namespace HFM.Forms
             // 
             // StyleList
             // 
-            this.StyleList.FormattingEnabled = true;
-            this.StyleList.Location = new System.Drawing.Point(6, 27);
-            this.StyleList.Name = "StyleList";
-            this.StyleList.Size = new System.Drawing.Size(120, 134);
-            this.StyleList.Sorted = true;
-            this.StyleList.TabIndex = 2;
-            this.StyleList.SelectedIndexChanged += new System.EventHandler(this.StyleList_SelectedIndexChanged);
+            this.webVisualStylesCssFileListBox.FormattingEnabled = true;
+            this.webVisualStylesCssFileListBox.Location = new System.Drawing.Point(6, 27);
+            this.webVisualStylesCssFileListBox.Name = "webVisualStylesCssFileListBox";
+            this.webVisualStylesCssFileListBox.Size = new System.Drawing.Size(120, 134);
+            this.webVisualStylesCssFileListBox.Sorted = true;
+            this.webVisualStylesCssFileListBox.TabIndex = 2;
+            this.webVisualStylesCssFileListBox.SelectedIndexChanged += new System.EventHandler(this.webVisualStylesCssFileListBox_SelectedIndexChanged);
             // 
             // tabControl1
             // 
@@ -226,7 +226,7 @@ namespace HFM.Forms
             // clientsTab
             // 
             this.clientsTab.Controls.Add(this.clientsRefreshClientDataGroupBox);
-            this.clientsTab.Controls.Add(this.ConfigurationGroupBox);
+            this.clientsTab.Controls.Add(this.clientsConfigurationGroupBox);
             this.clientsTab.Controls.Add(this.optionsDisplayProductionOptionsGroupBox);
             this.clientsTab.Location = new System.Drawing.Point(4, 22);
             this.clientsTab.Name = "clientsTab";
@@ -298,16 +298,16 @@ namespace HFM.Forms
             // 
             // ConfigurationGroupBox
             // 
-            this.ConfigurationGroupBox.Controls.Add(this.clientsDefaultConfigFileEnabledCheckBox);
-            this.ConfigurationGroupBox.Controls.Add(this.clientsBrowseConfigFileButton);
-            this.ConfigurationGroupBox.Controls.Add(this.clientsDefaultConfigFileTextBox);
-            this.ConfigurationGroupBox.Controls.Add(this.clientsAutoSaveConfig);
-            this.ConfigurationGroupBox.Location = new System.Drawing.Point(6, 9);
-            this.ConfigurationGroupBox.Name = "ConfigurationGroupBox";
-            this.ConfigurationGroupBox.Size = new System.Drawing.Size(489, 79);
-            this.ConfigurationGroupBox.TabIndex = 5;
-            this.ConfigurationGroupBox.TabStop = false;
-            this.ConfigurationGroupBox.Text = "Configuration";
+            this.clientsConfigurationGroupBox.Controls.Add(this.clientsDefaultConfigFileEnabledCheckBox);
+            this.clientsConfigurationGroupBox.Controls.Add(this.clientsBrowseConfigFileButton);
+            this.clientsConfigurationGroupBox.Controls.Add(this.clientsDefaultConfigFileTextBox);
+            this.clientsConfigurationGroupBox.Controls.Add(this.clientsAutoSaveConfig);
+            this.clientsConfigurationGroupBox.Location = new System.Drawing.Point(6, 9);
+            this.clientsConfigurationGroupBox.Name = "clientsConfigurationGroupBox";
+            this.clientsConfigurationGroupBox.Size = new System.Drawing.Size(489, 79);
+            this.clientsConfigurationGroupBox.TabIndex = 5;
+            this.clientsConfigurationGroupBox.TabStop = false;
+            this.clientsConfigurationGroupBox.Text = "Configuration";
             // 
             // clientsDefaultConfigFileEnabledCheckBox
             // 
@@ -1232,18 +1232,18 @@ namespace HFM.Forms
             // webVisualStylesTab
             // 
             this.webVisualStylesTab.BackColor = System.Drawing.Color.Transparent;
-            this.webVisualStylesTab.Controls.Add(this.btnInstanceBrowse);
-            this.webVisualStylesTab.Controls.Add(this.txtInstance);
-            this.webVisualStylesTab.Controls.Add(this.SlotXsltLabel);
-            this.webVisualStylesTab.Controls.Add(this.btnSummaryBrowse);
-            this.webVisualStylesTab.Controls.Add(this.txtSummary);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesSlotBrowseXsltButton);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesSlotTextBox);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesSlotLabel);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesSummaryBrowseXsltButton);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesSummaryTextBox);
             this.webVisualStylesTab.Controls.Add(this.lblSummary);
-            this.webVisualStylesTab.Controls.Add(this.btnOverviewBrowse);
-            this.webVisualStylesTab.Controls.Add(this.txtOverview);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesOverviewBrowseXsltButton);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesOverviewTextBox);
             this.webVisualStylesTab.Controls.Add(this.lblOverview);
             this.webVisualStylesTab.Controls.Add(this.pnl1CSSSample);
             this.webVisualStylesTab.Controls.Add(this.lbl1Preview);
-            this.webVisualStylesTab.Controls.Add(this.StyleList);
+            this.webVisualStylesTab.Controls.Add(this.webVisualStylesCssFileListBox);
             this.webVisualStylesTab.Controls.Add(this.lbl1Style);
             this.webVisualStylesTab.Location = new System.Drawing.Point(4, 22);
             this.webVisualStylesTab.Name = "webVisualStylesTab";
@@ -1254,63 +1254,63 @@ namespace HFM.Forms
             // 
             // btnInstanceBrowse
             // 
-            this.btnInstanceBrowse.Location = new System.Drawing.Point(466, 221);
-            this.btnInstanceBrowse.Name = "btnInstanceBrowse";
-            this.btnInstanceBrowse.Size = new System.Drawing.Size(24, 23);
-            this.btnInstanceBrowse.TabIndex = 18;
-            this.btnInstanceBrowse.Text = "...";
-            this.btnInstanceBrowse.UseVisualStyleBackColor = true;
-            this.btnInstanceBrowse.Click += new System.EventHandler(this.btnInstanceBrowse_Click);
+            this.webVisualStylesSlotBrowseXsltButton.Location = new System.Drawing.Point(466, 221);
+            this.webVisualStylesSlotBrowseXsltButton.Name = "webVisualStylesSlotBrowseXsltButton";
+            this.webVisualStylesSlotBrowseXsltButton.Size = new System.Drawing.Size(24, 23);
+            this.webVisualStylesSlotBrowseXsltButton.TabIndex = 18;
+            this.webVisualStylesSlotBrowseXsltButton.Text = "...";
+            this.webVisualStylesSlotBrowseXsltButton.UseVisualStyleBackColor = true;
+            this.webVisualStylesSlotBrowseXsltButton.Click += new System.EventHandler(this.webVisualStylesSlotBrowseXsltButton_Click);
             // 
             // txtInstance
             // 
-            this.txtInstance.BackColor = System.Drawing.SystemColors.Control;
-            this.txtInstance.DoubleBuffered = true;
-            this.txtInstance.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtInstance.ErrorToolTip = this.toolTipPrefs;
-            this.txtInstance.ErrorToolTipDuration = 5000;
-            this.txtInstance.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtInstance.ErrorToolTipText = "";
-            this.txtInstance.Location = new System.Drawing.Point(132, 223);
-            this.txtInstance.Name = "txtInstance";
-            this.txtInstance.ReadOnly = true;
-            this.txtInstance.Size = new System.Drawing.Size(328, 20);
-            this.txtInstance.TabIndex = 17;
+            this.webVisualStylesSlotTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webVisualStylesSlotTextBox.DoubleBuffered = true;
+            this.webVisualStylesSlotTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webVisualStylesSlotTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webVisualStylesSlotTextBox.ErrorToolTipDuration = 5000;
+            this.webVisualStylesSlotTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webVisualStylesSlotTextBox.ErrorToolTipText = "";
+            this.webVisualStylesSlotTextBox.Location = new System.Drawing.Point(132, 223);
+            this.webVisualStylesSlotTextBox.Name = "webVisualStylesSlotTextBox";
+            this.webVisualStylesSlotTextBox.ReadOnly = true;
+            this.webVisualStylesSlotTextBox.Size = new System.Drawing.Size(328, 20);
+            this.webVisualStylesSlotTextBox.TabIndex = 17;
             // 
             // SlotXsltLabel
             // 
-            this.SlotXsltLabel.AutoSize = true;
-            this.SlotXsltLabel.Location = new System.Drawing.Point(68, 226);
-            this.SlotXsltLabel.Name = "SlotXsltLabel";
-            this.SlotXsltLabel.Size = new System.Drawing.Size(55, 13);
-            this.SlotXsltLabel.TabIndex = 16;
-            this.SlotXsltLabel.Text = "Slot XSLT";
-            this.SlotXsltLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.webVisualStylesSlotLabel.AutoSize = true;
+            this.webVisualStylesSlotLabel.Location = new System.Drawing.Point(68, 226);
+            this.webVisualStylesSlotLabel.Name = "webVisualStylesSlotLabel";
+            this.webVisualStylesSlotLabel.Size = new System.Drawing.Size(55, 13);
+            this.webVisualStylesSlotLabel.TabIndex = 16;
+            this.webVisualStylesSlotLabel.Text = "Slot XSLT";
+            this.webVisualStylesSlotLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // btnSummaryBrowse
             // 
-            this.btnSummaryBrowse.Location = new System.Drawing.Point(466, 195);
-            this.btnSummaryBrowse.Name = "btnSummaryBrowse";
-            this.btnSummaryBrowse.Size = new System.Drawing.Size(24, 23);
-            this.btnSummaryBrowse.TabIndex = 12;
-            this.btnSummaryBrowse.Text = "...";
-            this.btnSummaryBrowse.UseVisualStyleBackColor = true;
-            this.btnSummaryBrowse.Click += new System.EventHandler(this.btnSummaryBrowse_Click);
+            this.webVisualStylesSummaryBrowseXsltButton.Location = new System.Drawing.Point(466, 195);
+            this.webVisualStylesSummaryBrowseXsltButton.Name = "webVisualStylesSummaryBrowseXsltButton";
+            this.webVisualStylesSummaryBrowseXsltButton.Size = new System.Drawing.Size(24, 23);
+            this.webVisualStylesSummaryBrowseXsltButton.TabIndex = 12;
+            this.webVisualStylesSummaryBrowseXsltButton.Text = "...";
+            this.webVisualStylesSummaryBrowseXsltButton.UseVisualStyleBackColor = true;
+            this.webVisualStylesSummaryBrowseXsltButton.Click += new System.EventHandler(this.webVisualStylesSummaryBrowseXsltButton_Click);
             // 
             // txtSummary
             // 
-            this.txtSummary.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSummary.DoubleBuffered = true;
-            this.txtSummary.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSummary.ErrorToolTip = this.toolTipPrefs;
-            this.txtSummary.ErrorToolTipDuration = 5000;
-            this.txtSummary.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSummary.ErrorToolTipText = "";
-            this.txtSummary.Location = new System.Drawing.Point(132, 197);
-            this.txtSummary.Name = "txtSummary";
-            this.txtSummary.ReadOnly = true;
-            this.txtSummary.Size = new System.Drawing.Size(328, 20);
-            this.txtSummary.TabIndex = 11;
+            this.webVisualStylesSummaryTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webVisualStylesSummaryTextBox.DoubleBuffered = true;
+            this.webVisualStylesSummaryTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webVisualStylesSummaryTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webVisualStylesSummaryTextBox.ErrorToolTipDuration = 5000;
+            this.webVisualStylesSummaryTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webVisualStylesSummaryTextBox.ErrorToolTipText = "";
+            this.webVisualStylesSummaryTextBox.Location = new System.Drawing.Point(132, 197);
+            this.webVisualStylesSummaryTextBox.Name = "webVisualStylesSummaryTextBox";
+            this.webVisualStylesSummaryTextBox.ReadOnly = true;
+            this.webVisualStylesSummaryTextBox.Size = new System.Drawing.Size(328, 20);
+            this.webVisualStylesSummaryTextBox.TabIndex = 11;
             // 
             // lblSummary
             // 
@@ -1324,28 +1324,28 @@ namespace HFM.Forms
             // 
             // btnOverviewBrowse
             // 
-            this.btnOverviewBrowse.Location = new System.Drawing.Point(466, 169);
-            this.btnOverviewBrowse.Name = "btnOverviewBrowse";
-            this.btnOverviewBrowse.Size = new System.Drawing.Size(24, 23);
-            this.btnOverviewBrowse.TabIndex = 6;
-            this.btnOverviewBrowse.Text = "...";
-            this.btnOverviewBrowse.UseVisualStyleBackColor = true;
-            this.btnOverviewBrowse.Click += new System.EventHandler(this.btnOverviewBrowse_Click);
+            this.webVisualStylesOverviewBrowseXsltButton.Location = new System.Drawing.Point(466, 169);
+            this.webVisualStylesOverviewBrowseXsltButton.Name = "webVisualStylesOverviewBrowseXsltButton";
+            this.webVisualStylesOverviewBrowseXsltButton.Size = new System.Drawing.Size(24, 23);
+            this.webVisualStylesOverviewBrowseXsltButton.TabIndex = 6;
+            this.webVisualStylesOverviewBrowseXsltButton.Text = "...";
+            this.webVisualStylesOverviewBrowseXsltButton.UseVisualStyleBackColor = true;
+            this.webVisualStylesOverviewBrowseXsltButton.Click += new System.EventHandler(this.webVisualStylesOverviewBrowseXsltButton_Click);
             // 
             // txtOverview
             // 
-            this.txtOverview.BackColor = System.Drawing.SystemColors.Control;
-            this.txtOverview.DoubleBuffered = true;
-            this.txtOverview.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtOverview.ErrorToolTip = this.toolTipPrefs;
-            this.txtOverview.ErrorToolTipDuration = 5000;
-            this.txtOverview.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtOverview.ErrorToolTipText = "";
-            this.txtOverview.Location = new System.Drawing.Point(132, 171);
-            this.txtOverview.Name = "txtOverview";
-            this.txtOverview.ReadOnly = true;
-            this.txtOverview.Size = new System.Drawing.Size(328, 20);
-            this.txtOverview.TabIndex = 5;
+            this.webVisualStylesOverviewTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webVisualStylesOverviewTextBox.DoubleBuffered = true;
+            this.webVisualStylesOverviewTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webVisualStylesOverviewTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webVisualStylesOverviewTextBox.ErrorToolTipDuration = 5000;
+            this.webVisualStylesOverviewTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webVisualStylesOverviewTextBox.ErrorToolTipText = "";
+            this.webVisualStylesOverviewTextBox.Location = new System.Drawing.Point(132, 171);
+            this.webVisualStylesOverviewTextBox.Name = "webVisualStylesOverviewTextBox";
+            this.webVisualStylesOverviewTextBox.ReadOnly = true;
+            this.webVisualStylesOverviewTextBox.Size = new System.Drawing.Size(328, 20);
+            this.webVisualStylesOverviewTextBox.TabIndex = 5;
             // 
             // lblOverview
             // 
@@ -1810,8 +1810,8 @@ namespace HFM.Forms
             this.clientsTab.ResumeLayout(false);
             this.clientsRefreshClientDataGroupBox.ResumeLayout(false);
             this.clientsRefreshClientDataGroupBox.PerformLayout();
-            this.ConfigurationGroupBox.ResumeLayout(false);
-            this.ConfigurationGroupBox.PerformLayout();
+            this.clientsConfigurationGroupBox.ResumeLayout(false);
+            this.clientsConfigurationGroupBox.PerformLayout();
             this.optionsDisplayProductionOptionsGroupBox.ResumeLayout(false);
             this.optionsDisplayProductionOptionsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDecimalPlacesUpDown)).EndInit();
@@ -1850,7 +1850,7 @@ namespace HFM.Forms
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Panel pnl1CSSSample;
-        private System.Windows.Forms.ListBox StyleList;
+        private System.Windows.Forms.ListBox webVisualStylesCssFileListBox;
         private System.Windows.Forms.Label lbl1Style;
         private System.Windows.Forms.Label lbl1Preview;
         private System.Windows.Forms.GroupBox webGenerationGroupBox;
@@ -1909,14 +1909,14 @@ namespace HFM.Forms
         private System.Windows.Forms.RadioButton webDeploymentFtpActiveRadioButton;
         private System.Windows.Forms.RadioButton webDeploymentFtpPassiveRadioButton;
         private System.Windows.Forms.Label lblFtpMode;
-        private System.Windows.Forms.Button btnInstanceBrowse;
-        private HFM.Forms.Controls.DataErrorTextBox txtInstance;
-        private System.Windows.Forms.Label SlotXsltLabel;
-        private System.Windows.Forms.Button btnSummaryBrowse;
-        private HFM.Forms.Controls.DataErrorTextBox txtSummary;
+        private System.Windows.Forms.Button webVisualStylesSlotBrowseXsltButton;
+        private HFM.Forms.Controls.DataErrorTextBox webVisualStylesSlotTextBox;
+        private System.Windows.Forms.Label webVisualStylesSlotLabel;
+        private System.Windows.Forms.Button webVisualStylesSummaryBrowseXsltButton;
+        private HFM.Forms.Controls.DataErrorTextBox webVisualStylesSummaryTextBox;
         private System.Windows.Forms.Label lblSummary;
-        private System.Windows.Forms.Button btnOverviewBrowse;
-        private HFM.Forms.Controls.DataErrorTextBox txtOverview;
+        private System.Windows.Forms.Button webVisualStylesOverviewBrowseXsltButton;
+        private HFM.Forms.Controls.DataErrorTextBox webVisualStylesOverviewTextBox;
         private System.Windows.Forms.Label lblOverview;
         private System.Windows.Forms.CheckBox reportingIsSecureCheckBox;
         private HFM.Forms.Controls.DataErrorTextBox reportingPortTextBox;
@@ -1957,7 +1957,7 @@ namespace HFM.Forms
         private System.Windows.Forms.GroupBox optionsMessageLevelGroupBox;
         private System.Windows.Forms.ComboBox optionsMessageLevelComboBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox ConfigurationGroupBox;
+        private System.Windows.Forms.GroupBox clientsConfigurationGroupBox;
         private System.Windows.Forms.CheckBox clientsDefaultConfigFileEnabledCheckBox;
         private System.Windows.Forms.Button clientsBrowseConfigFileButton;
         private Controls.DataErrorTextBox clientsDefaultConfigFileTextBox;

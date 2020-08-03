@@ -26,17 +26,17 @@ namespace HFM.Forms.Models
         {
             ApplicationPath = Preferences.Get<string>(Preference.ApplicationPath);
             CssFile = Preferences.Get<string>(Preference.CssFile);
-            WebOverview = Preferences.Get<string>(Preference.WebOverview);
-            WebSummary = Preferences.Get<string>(Preference.WebSummary);
-            WebSlot = Preferences.Get<string>(Preference.WebSlot);
+            OverviewXsltPath = Preferences.Get<string>(Preference.WebOverview);
+            SummaryXsltPath = Preferences.Get<string>(Preference.WebSummary);
+            SlotXsltPath = Preferences.Get<string>(Preference.WebSlot);
         }
 
         public override void Save()
         {
             Preferences.Set(Preference.CssFile, CssFile);
-            Preferences.Set(Preference.WebOverview, WebOverview);
-            Preferences.Set(Preference.WebSummary, WebSummary);
-            Preferences.Set(Preference.WebSlot, WebSlot);
+            Preferences.Set(Preference.WebOverview, OverviewXsltPath);
+            Preferences.Set(Preference.WebSummary, SummaryXsltPath);
+            Preferences.Set(Preference.WebSlot, SlotXsltPath);
         }
 
         public string this[string columnName]
@@ -71,15 +71,9 @@ namespace HFM.Forms.Models
                 var di = new DirectoryInfo(Path.Combine(ApplicationPath, Application.CssFolderName));
                 if (di.Exists)
                 {
-                    foreach (FileInfo fi in di.GetFiles())
-                    {
-                        if (fi.Extension.Equals(CssExtension))
-                        {
-                            list.Add(new ListItem { DisplayMember = Path.GetFileNameWithoutExtension(fi.Name), ValueMember = fi.Name });
-                        }
-                    }
+                    list.AddRange(di.EnumerateFiles($"*.{CssExtension}")
+                        .Select(fi => new ListItem { DisplayMember = Path.GetFileNameWithoutExtension(fi.Name), ValueMember = fi.Name }));
                 }
-
                 return list.AsReadOnly();
             }
         }
@@ -100,49 +94,49 @@ namespace HFM.Forms.Models
             }
         }
 
-        private string _webOverview;
+        private string _overviewXsltPath;
 
-        public string WebOverview
+        public string OverviewXsltPath
         {
-            get { return _webOverview; }
+            get { return _overviewXsltPath; }
             set
             {
-                if (WebOverview != value)
+                if (OverviewXsltPath != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _webOverview = newValue;
+                    _overviewXsltPath = newValue;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private string _webSummary;
+        private string _summaryXsltPath;
 
-        public string WebSummary
+        public string SummaryXsltPath
         {
-            get { return _webSummary; }
+            get { return _summaryXsltPath; }
             set
             {
-                if (WebSummary != value)
+                if (SummaryXsltPath != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _webSummary = newValue;
+                    _summaryXsltPath = newValue;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private string _webSlot;
+        private string _slotXsltPath;
 
-        public string WebSlot
+        public string SlotXsltPath
         {
-            get { return _webSlot; }
+            get { return _slotXsltPath; }
             set
             {
-                if (WebSlot != value)
+                if (SlotXsltPath != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _webSlot = newValue;
+                    _slotXsltPath = newValue;
                     OnPropertyChanged();
                 }
             }

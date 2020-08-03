@@ -236,31 +236,31 @@ namespace HFM.Forms
 
         public void BrowseForOverviewTransform(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.WebOverview);
+            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.OverviewXsltPath);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, XsltExtension, XsltFilter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.WebVisualStylesModel.WebOverview = GetPathOrFileNameIfInDefaultXsltPath(result);
+                Model.WebVisualStylesModel.OverviewXsltPath = GetPathOrFileNameIfInDefaultXsltPath(result);
             }
         }
 
         public void BrowseForSummaryTransform(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.WebSummary);
+            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.SummaryXsltPath);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, XsltExtension, XsltFilter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.WebVisualStylesModel.WebSummary = GetPathOrFileNameIfInDefaultXsltPath(result);
+                Model.WebVisualStylesModel.SummaryXsltPath = GetPathOrFileNameIfInDefaultXsltPath(result);
             }
         }
 
         public void BrowseForSlotTransform(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.WebSlot);
+            var x = GetInitialDirectoryAndFileNameForTransform(Model.WebVisualStylesModel.SlotXsltPath);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, XsltExtension, XsltFilter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.WebVisualStylesModel.WebSlot = GetPathOrFileNameIfInDefaultXsltPath(result);
+                Model.WebVisualStylesModel.SlotXsltPath = GetPathOrFileNameIfInDefaultXsltPath(result);
             }
         }
 

@@ -189,14 +189,14 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(WebVisualStylesModel.WebOverview):
-                    txtOverview.Text = _presenter.Model.WebVisualStylesModel.WebOverview;
+                case nameof(WebVisualStylesModel.OverviewXsltPath):
+                    webVisualStylesOverviewTextBox.Text = _presenter.Model.WebVisualStylesModel.OverviewXsltPath;
                     break;
-                case nameof(WebVisualStylesModel.WebSummary):
-                    txtSummary.Text = _presenter.Model.WebVisualStylesModel.WebSummary;
+                case nameof(WebVisualStylesModel.SummaryXsltPath):
+                    webVisualStylesSummaryTextBox.Text = _presenter.Model.WebVisualStylesModel.SummaryXsltPath;
                     break;
-                case nameof(WebVisualStylesModel.WebSlot):
-                    txtInstance.Text = _presenter.Model.WebVisualStylesModel.WebSlot;
+                case nameof(WebVisualStylesModel.SlotXsltPath):
+                    webVisualStylesSlotTextBox.Text = _presenter.Model.WebVisualStylesModel.SlotXsltPath;
                     break;
             }
         }
