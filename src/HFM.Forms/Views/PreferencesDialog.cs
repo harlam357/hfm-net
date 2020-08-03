@@ -25,7 +25,7 @@ namespace HFM.Forms
             //WebGeneration = 2,
             WebVisualStyles = 3
             //Reporting = 4,
-            //WebSettings = 5,
+            //WebProxy = 5,
         }
 
         #region Fields
@@ -153,7 +153,7 @@ namespace HFM.Forms
             udLimitSize.DataBindings.Add(ValuePropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLength), false, DataSourceUpdateMode.OnPropertyChanged);
             udLimitSize.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLengthEnabled));
 
-            TestConnectionButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            TestConnectionLinkLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
             BrowseWebFolderButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.BrowseLocalPathEnabled));
             chkWebSiteGenerator.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
         }
@@ -237,7 +237,7 @@ namespace HFM.Forms
             chkEmailSecure.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerSecure));
             chkEmailSecure.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
 
-            btnTestEmail.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            SendTestEmailLinkLabel.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
 
             txtToEmailAddress.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ToAddress));
             txtToEmailAddress.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
@@ -347,7 +347,7 @@ namespace HFM.Forms
                txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
         }
 
-        private void btnTestEmail_Click(object sender, EventArgs e)
+        private void SendTestEmailLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestEmailClicked(SendMailService.Default);
         }
@@ -427,7 +427,7 @@ namespace HFM.Forms
         }
 
         // Button Click Event Handlers
-        private async void TestConnectionButtonClick(object sender, EventArgs e)
+        private async void TestConnectionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Cursor = Cursors.WaitCursor;
             try

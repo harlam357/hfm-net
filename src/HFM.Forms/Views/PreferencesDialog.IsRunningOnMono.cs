@@ -28,7 +28,7 @@ namespace HFM.Forms
                     chkHtml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     chkXml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     chkFAHlog.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    TestConnectionButton.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    TestConnectionLinkLabel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     WebGenTypePanel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     break;
                 case nameof(WebGenerationModel.GenerateIntervalEnabled):
@@ -141,7 +141,7 @@ namespace HFM.Forms
             {
                 case nameof(ReportingModel.ReportingEnabled):
                     chkEmailSecure.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    btnTestEmail.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                    SendTestEmailLinkLabel.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     txtToEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     txtFromEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     txtSmtpServer.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;

@@ -89,6 +89,7 @@ namespace HFM.Forms
             this.chkRunMinimized = new System.Windows.Forms.CheckBox();
             this.WebGenerationTab = new System.Windows.Forms.TabPage();
             this.WebGenerationGroupBox = new System.Windows.Forms.GroupBox();
+            this.TestConnectionLinkLabel = new System.Windows.Forms.LinkLabel();
             this.CopyLabel = new System.Windows.Forms.Label();
             this.WebSitePortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSitePortLabel = new System.Windows.Forms.Label();
@@ -110,7 +111,6 @@ namespace HFM.Forms
             this.chkLimitSize = new System.Windows.Forms.CheckBox();
             this.chkXml = new System.Windows.Forms.CheckBox();
             this.chkHtml = new System.Windows.Forms.CheckBox();
-            this.TestConnectionButton = new System.Windows.Forms.Button();
             this.chkFAHlog = new System.Windows.Forms.CheckBox();
             this.radioFullRefresh = new System.Windows.Forms.RadioButton();
             this.radioSchedule = new System.Windows.Forms.RadioButton();
@@ -135,10 +135,10 @@ namespace HFM.Forms
             this.ReportingTab = new System.Windows.Forms.TabPage();
             this.grpReportSelections = new System.Windows.Forms.GroupBox();
             this.grpEmailSettings = new System.Windows.Forms.GroupBox();
+            this.SendTestEmailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.txtSmtpServerPort = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper3 = new System.Windows.Forms.Label();
             this.chkEmailSecure = new System.Windows.Forms.CheckBox();
-            this.btnTestEmail = new System.Windows.Forms.Button();
             this.txtSmtpPassword = new HFM.Forms.Controls.DataErrorTextBox();
             this.txtSmtpUsername = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper4 = new System.Windows.Forms.Label();
@@ -821,6 +821,7 @@ namespace HFM.Forms
             // 
             // WebGenerationGroupBox
             // 
+            this.WebGenerationGroupBox.Controls.Add(this.TestConnectionLinkLabel);
             this.WebGenerationGroupBox.Controls.Add(this.CopyLabel);
             this.WebGenerationGroupBox.Controls.Add(this.WebSitePortTextBox);
             this.WebGenerationGroupBox.Controls.Add(this.WebSitePortLabel);
@@ -836,7 +837,6 @@ namespace HFM.Forms
             this.WebGenerationGroupBox.Controls.Add(this.chkLimitSize);
             this.WebGenerationGroupBox.Controls.Add(this.chkXml);
             this.WebGenerationGroupBox.Controls.Add(this.chkHtml);
-            this.WebGenerationGroupBox.Controls.Add(this.TestConnectionButton);
             this.WebGenerationGroupBox.Controls.Add(this.chkFAHlog);
             this.WebGenerationGroupBox.Controls.Add(this.radioFullRefresh);
             this.WebGenerationGroupBox.Controls.Add(this.radioSchedule);
@@ -848,10 +848,21 @@ namespace HFM.Forms
             this.WebGenerationGroupBox.Controls.Add(this.chkWebSiteGenerator);
             this.WebGenerationGroupBox.Location = new System.Drawing.Point(6, 6);
             this.WebGenerationGroupBox.Name = "WebGenerationGroupBox";
-            this.WebGenerationGroupBox.Size = new System.Drawing.Size(489, 188);
+            this.WebGenerationGroupBox.Size = new System.Drawing.Size(489, 191);
             this.WebGenerationGroupBox.TabIndex = 0;
             this.WebGenerationGroupBox.TabStop = false;
             this.WebGenerationGroupBox.Text = "Web Generation";
+            // 
+            // TestConnectionLinkLabel
+            // 
+            this.TestConnectionLinkLabel.AutoSize = true;
+            this.TestConnectionLinkLabel.Location = new System.Drawing.Point(395, 20);
+            this.TestConnectionLinkLabel.Name = "TestConnectionLinkLabel";
+            this.TestConnectionLinkLabel.Size = new System.Drawing.Size(85, 13);
+            this.TestConnectionLinkLabel.TabIndex = 25;
+            this.TestConnectionLinkLabel.TabStop = true;
+            this.TestConnectionLinkLabel.Text = "Test Connection";
+            this.TestConnectionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestConnectionLinkLabel_LinkClicked);
             // 
             // CopyLabel
             // 
@@ -1106,17 +1117,6 @@ namespace HFM.Forms
             this.chkHtml.TabIndex = 19;
             this.chkHtml.Text = "HTML";
             this.chkHtml.UseVisualStyleBackColor = true;
-            // 
-            // TestConnectionButton
-            // 
-            this.TestConnectionButton.Enabled = false;
-            this.TestConnectionButton.Location = new System.Drawing.Point(383, 15);
-            this.TestConnectionButton.Name = "TestConnectionButton";
-            this.TestConnectionButton.Size = new System.Drawing.Size(100, 24);
-            this.TestConnectionButton.TabIndex = 5;
-            this.TestConnectionButton.Text = "Test Connection";
-            this.TestConnectionButton.UseVisualStyleBackColor = true;
-            this.TestConnectionButton.Click += new System.EventHandler(this.TestConnectionButtonClick);
             // 
             // chkFAHlog
             // 
@@ -1398,10 +1398,10 @@ namespace HFM.Forms
             // 
             // grpEmailSettings
             // 
+            this.grpEmailSettings.Controls.Add(this.SendTestEmailLinkLabel);
             this.grpEmailSettings.Controls.Add(this.txtSmtpServerPort);
             this.grpEmailSettings.Controls.Add(this.labelWrapper3);
             this.grpEmailSettings.Controls.Add(this.chkEmailSecure);
-            this.grpEmailSettings.Controls.Add(this.btnTestEmail);
             this.grpEmailSettings.Controls.Add(this.txtSmtpPassword);
             this.grpEmailSettings.Controls.Add(this.txtSmtpUsername);
             this.grpEmailSettings.Controls.Add(this.labelWrapper4);
@@ -1419,6 +1419,17 @@ namespace HFM.Forms
             this.grpEmailSettings.TabIndex = 0;
             this.grpEmailSettings.TabStop = false;
             this.grpEmailSettings.Text = "Email Settings";
+            // 
+            // SendTestEmailLinkLabel
+            // 
+            this.SendTestEmailLinkLabel.AutoSize = true;
+            this.SendTestEmailLinkLabel.Location = new System.Drawing.Point(384, 21);
+            this.SendTestEmailLinkLabel.Name = "SendTestEmailLinkLabel";
+            this.SendTestEmailLinkLabel.Size = new System.Drawing.Size(84, 13);
+            this.SendTestEmailLinkLabel.TabIndex = 26;
+            this.SendTestEmailLinkLabel.TabStop = true;
+            this.SendTestEmailLinkLabel.Text = "Send Test Email";
+            this.SendTestEmailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SendTestEmailLinkLabel_LinkClicked);
             // 
             // txtSmtpServerPort
             // 
@@ -1457,17 +1468,6 @@ namespace HFM.Forms
             this.chkEmailSecure.TabIndex = 1;
             this.chkEmailSecure.Text = "Use Secure Connection (SSL)";
             this.chkEmailSecure.UseVisualStyleBackColor = true;
-            // 
-            // btnTestEmail
-            // 
-            this.btnTestEmail.Enabled = false;
-            this.btnTestEmail.Location = new System.Drawing.Point(350, 15);
-            this.btnTestEmail.Name = "btnTestEmail";
-            this.btnTestEmail.Size = new System.Drawing.Size(119, 26);
-            this.btnTestEmail.TabIndex = 14;
-            this.btnTestEmail.Text = "Send Test Email";
-            this.btnTestEmail.UseVisualStyleBackColor = true;
-            this.btnTestEmail.Click += new System.EventHandler(this.btnTestEmail_Click);
             // 
             // txtSmtpPassword
             // 
@@ -1637,7 +1637,7 @@ namespace HFM.Forms
             this.grpWebProxy.Controls.Add(this.lbl3Proxy);
             this.grpWebProxy.Location = new System.Drawing.Point(6, 9);
             this.grpWebProxy.Name = "grpWebProxy";
-            this.grpWebProxy.Size = new System.Drawing.Size(489, 117);
+            this.grpWebProxy.Size = new System.Drawing.Size(489, 121);
             this.grpWebProxy.TabIndex = 2;
             this.grpWebProxy.TabStop = false;
             this.grpWebProxy.Text = "Web Proxy Settings";
@@ -1902,7 +1902,6 @@ namespace HFM.Forms
         private HFM.Forms.Controls.DataErrorTextBox txtSmtpUsername;
         private System.Windows.Forms.Label labelWrapper4;
         private System.Windows.Forms.Label labelWrapper5;
-        private System.Windows.Forms.Button btnTestEmail;
         private System.Windows.Forms.GroupBox grpReportSelections;
         private System.Windows.Forms.TabPage OptionsTab;
         private System.Windows.Forms.GroupBox grpStartup;
@@ -1918,7 +1917,6 @@ namespace HFM.Forms
         private System.Windows.Forms.RadioButton radioActive;
         private System.Windows.Forms.RadioButton radioPassive;
         private System.Windows.Forms.Label lblFtpMode;
-        private System.Windows.Forms.Button TestConnectionButton;
         private System.Windows.Forms.Button btnInstanceBrowse;
         private HFM.Forms.Controls.DataErrorTextBox txtInstance;
         private System.Windows.Forms.Label SlotXsltLabel;
@@ -1988,5 +1986,7 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox ClientRefreshIntervalCheckBox;
         private System.Windows.Forms.CheckBox ClientSynchronousTextBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel TestConnectionLinkLabel;
+        private System.Windows.Forms.LinkLabel SendTestEmailLinkLabel;
     }
 }

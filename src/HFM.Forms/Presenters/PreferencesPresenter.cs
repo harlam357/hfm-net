@@ -72,7 +72,7 @@ namespace HFM.Forms
 
         public void TestEmailClicked(SendMailService sendMailService)
         {
-            if (Model.ReportingModel.HasError)
+            if (!Model.ReportingModel.ValidateAcceptance())
             {
                 MessageBox.ShowError(Dialog, "Please correct error conditions before sending a test email.", Core.Application.NameAndVersion);
             }
