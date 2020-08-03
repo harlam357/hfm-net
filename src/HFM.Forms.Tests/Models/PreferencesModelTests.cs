@@ -16,8 +16,8 @@ namespace HFM.Forms.Models
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             Assert.IsNotNull(model.Preferences);
             Assert.IsNotNull(model.ScheduledTasksModel);
-            Assert.IsNotNull(model.StartupAndExternalModel);
             Assert.IsNotNull(model.OptionsModel);
+            Assert.IsNotNull(model.ClientsModel);
             Assert.IsNotNull(model.ReportingModel);
             Assert.IsNotNull(model.WebSettingsModel);
             Assert.IsNotNull(model.WebVisualStylesModel);
@@ -103,7 +103,7 @@ namespace HFM.Forms.Models
             // Act
             model.Load();
             // Assert
-            Assert.IsTrue(model.StartupAndExternalModel.AutoRun);
+            Assert.IsTrue(model.OptionsModel.AutoRun);
         }
 
         [Test]
@@ -111,11 +111,11 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.StartupAndExternalModel.AutoRun = true;
+            model.OptionsModel.AutoRun = true;
             // Act
             model.Save();
             // Assert
-            Assert.IsTrue(model.StartupAndExternalModel.AutoRunConfiguration.IsEnabled());
+            Assert.IsTrue(model.OptionsModel.AutoRunConfiguration.IsEnabled());
         }
     }
 }

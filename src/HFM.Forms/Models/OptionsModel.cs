@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 
 using HFM.Core.Logging;
-using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -14,38 +13,38 @@ namespace HFM.Forms.Models
     public class OptionsModel : ViewModelBase, IDataErrorInfo
     {
         public IPreferenceSet Preferences { get; }
+        public IAutoRunConfiguration AutoRunConfiguration { get; }
 
-        public OptionsModel(IPreferenceSet preferences)
+        public OptionsModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences;
+            AutoRunConfiguration = autoRunConfiguration;
         }
 
         public override void Load()
         {
-            OfflineLast = Preferences.Get<bool>(Preference.OfflineLast);
-            ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
-            AutoSaveConfig = Preferences.Get<bool>(Preference.AutoSaveConfig);
-            PpdCalculation = Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
-            DecimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
-            CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
-            EtaDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
-            DuplicateProjectCheck = Preferences.Get<bool>(Preference.DuplicateProjectCheck);
-            DefaultConfigFile = Preferences.Get<string>(Preference.DefaultConfigFile);
-            UseDefaultConfigFile = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
+            AutoRun = AutoRunConfiguration.IsEnabled();
+            RunMinimized = Preferences.Get<bool>(Preference.RunMinimized);
+            StartupCheckForUpdate = Preferences.Get<bool>(Preference.StartupCheckForUpdate);
+            LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
+            FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
+            MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
+            FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
         }
 
         public override void Save()
         {
-            Preferences.Set(Preference.OfflineLast, OfflineLast);
-            Preferences.Set(Preference.ColorLogFile, ColorLogFile);
-            Preferences.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-            Preferences.Set(Preference.PPDCalculation, PpdCalculation);
-            Preferences.Set(Preference.DecimalPlaces, DecimalPlaces);
-            Preferences.Set(Preference.BonusCalculation, CalculateBonus);
-            Preferences.Set(Preference.DisplayEtaAsDate, EtaDate);
-            Preferences.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
-            Preferences.Set(Preference.DefaultConfigFile, DefaultConfigFile);
-            Preferences.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
+            Preferences.Set(Preference.RunMinimized, RunMinimized);
+            Preferences.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
+            Preferences.Set(Preference.LogFileViewer, LogFileViewer);
+            Preferences.Set(Preference.FileExplorer, FileExplorer);
+            Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
+            Preferences.Set(Preference.MinimizeTo, FormShowStyle);
+        }
+
+        public void SaveAutoRunConfiguration()
+        {
+            AutoRunConfiguration.SetFilePath(AutoRun ? System.Windows.Forms.Application.ExecutablePath : null);
         }
 
         public string this[string columnName]
@@ -70,123 +69,48 @@ namespace HFM.Forms.Models
             }
         }
 
-        #region Interactive Options
+        #region Startup
 
-        private bool _offlineLast;
+        private bool _autoRun;
 
-        public bool OfflineLast
+        public bool AutoRun
         {
-            get { return _offlineLast; }
+            get => _autoRun;
             set
             {
-                if (OfflineLast != value)
+                if (_autoRun != value)
                 {
-                    _offlineLast = value;
+                    _autoRun = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private bool _colorLogFile;
+        private bool _runMinimized;
 
-        public bool ColorLogFile
+        public bool RunMinimized
         {
-            get { return _colorLogFile; }
+            get { return _runMinimized; }
             set
             {
-                if (ColorLogFile != value)
+                if (RunMinimized != value)
                 {
-                    _colorLogFile = value;
+                    _runMinimized = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private bool _autoSaveConfig;
+        private bool _startupCheckForUpdate;
 
-        public bool AutoSaveConfig
+        public bool StartupCheckForUpdate
         {
-            get { return _autoSaveConfig; }
+            get { return _startupCheckForUpdate; }
             set
             {
-                if (AutoSaveConfig != value)
+                if (StartupCheckForUpdate != value)
                 {
-                    _autoSaveConfig = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private PPDCalculation _ppdCalculation;
-
-        public PPDCalculation PpdCalculation
-        {
-            get { return _ppdCalculation; }
-            set
-            {
-                if (PpdCalculation != value)
-                {
-                    _ppdCalculation = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private int _decimalPlaces;
-
-        public int DecimalPlaces
-        {
-            get { return _decimalPlaces; }
-            set
-            {
-                if (DecimalPlaces != value)
-                {
-                    _decimalPlaces = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private BonusCalculation _calculateBonus;
-
-        public BonusCalculation CalculateBonus
-        {
-            get { return _calculateBonus; }
-            set
-            {
-                if (CalculateBonus != value)
-                {
-                    _calculateBonus = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _etaDate;
-
-        public bool EtaDate
-        {
-            get { return _etaDate; }
-            set
-            {
-                if (EtaDate != value)
-                {
-                    _etaDate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _duplicateProjectCheck;
-
-        public bool DuplicateProjectCheck
-        {
-            get { return _duplicateProjectCheck; }
-            set
-            {
-                if (DuplicateProjectCheck != value)
-                {
-                    _duplicateProjectCheck = value;
+                    _startupCheckForUpdate = value;
                     OnPropertyChanged();
                 }
             }
@@ -194,39 +118,35 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        #region Configuration File
+        #region External Programs
 
-        private string _defaultConfigFile;
+        private string _logFileViewer;
 
-        public string DefaultConfigFile
+        public string LogFileViewer
         {
-            get { return _defaultConfigFile; }
+            get { return _logFileViewer; }
             set
             {
-                if (DefaultConfigFile != value)
+                if (LogFileViewer != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _defaultConfigFile = newValue;
+                    _logFileViewer = newValue;
                     OnPropertyChanged();
-
-                    if (newValue.Length == 0)
-                    {
-                        UseDefaultConfigFile = false;
-                    }
                 }
             }
         }
 
-        private bool _useDefaultConfigFile;
+        private string _fileExplorer;
 
-        public bool UseDefaultConfigFile
+        public string FileExplorer
         {
-            get { return _useDefaultConfigFile; }
+            get { return _fileExplorer; }
             set
             {
-                if (UseDefaultConfigFile != value)
+                if (FileExplorer != value)
                 {
-                    _useDefaultConfigFile = value;
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _fileExplorer = newValue;
                     OnPropertyChanged();
                 }
             }
@@ -234,40 +154,55 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        public static ReadOnlyCollection<ListItem> PpdCalculationList
+        #region Debug Message Level
+
+        private LoggerLevel _messageLevel;
+
+        public LoggerLevel MessageLevel
         {
-            get
+            get { return _messageLevel; }
+            set
             {
-                var list = new List<ListItem>
-                       {
-                          new ListItem
-                          { DisplayMember = "Last Frame", ValueMember = PPDCalculation.LastFrame },
-                          new ListItem
-                          { DisplayMember = "Last Three Frames", ValueMember = PPDCalculation.LastThreeFrames },
-                          new ListItem
-                          { DisplayMember = "All Frames", ValueMember = PPDCalculation.AllFrames },
-                          new ListItem
-                          { DisplayMember = "Effective Rate", ValueMember = PPDCalculation.EffectiveRate }
-                       };
-                return list.AsReadOnly();
+                if (MessageLevel != value)
+                {
+                    _messageLevel = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
-        public static ReadOnlyCollection<ListItem> BonusCalculationList
+        #endregion
+
+        #region Form Docking Style
+
+        private MinimizeToOption _formShowStyle;
+
+        public MinimizeToOption FormShowStyle
         {
-            get
+            get { return _formShowStyle; }
+            set
             {
-                var list = new List<ListItem>
-                       {
-                          new ListItem
-                          { DisplayMember = "Download Time", ValueMember = BonusCalculation.DownloadTime },
-                          new ListItem
-                          { DisplayMember = "Frame Time", ValueMember = BonusCalculation.FrameTime },
-                          new ListItem
-                          { DisplayMember = "None", ValueMember = BonusCalculation.None },
-                       };
-                return list.AsReadOnly();
+                if (FormShowStyle != value)
+                {
+                    _formShowStyle = value;
+                    OnPropertyChanged();
+                }
             }
         }
+
+        #endregion
+
+        public static ReadOnlyCollection<ListItem> DebugList { get; } = new List<ListItem>
+        {
+            new ListItem { DisplayMember = LoggerLevel.Info.ToString(), ValueMember = LoggerLevel.Info },
+            new ListItem { DisplayMember = LoggerLevel.Debug.ToString(), ValueMember = LoggerLevel.Debug }
+        }.AsReadOnly();
+
+        public static ReadOnlyCollection<ListItem> DockingStyleList { get; } = new List<ListItem>
+        {
+            new ListItem { DisplayMember = "System Tray", ValueMember = MinimizeToOption.SystemTray },
+            new ListItem { DisplayMember = "Task Bar", ValueMember = MinimizeToOption.TaskBar },
+            new ListItem { DisplayMember = "Both", ValueMember = MinimizeToOption.Both }
+        }.AsReadOnly();
     }
 }

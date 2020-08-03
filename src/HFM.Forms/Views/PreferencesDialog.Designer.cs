@@ -75,7 +75,7 @@ namespace HFM.Forms
             this.WebSiteTargetPathTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSiteTargetPathLabel = new System.Windows.Forms.Label();
             this.chkWebSiteGenerator = new System.Windows.Forms.CheckBox();
-            this.tabStartup = new System.Windows.Forms.TabPage();
+            this.OptionsTab = new System.Windows.Forms.TabPage();
             this.grpShowStyle = new System.Windows.Forms.GroupBox();
             this.cboShowStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapper2 = new System.Windows.Forms.Label();
@@ -93,7 +93,7 @@ namespace HFM.Forms
             this.chkCheckForUpdate = new System.Windows.Forms.CheckBox();
             this.chkAutoRun = new System.Windows.Forms.CheckBox();
             this.chkRunMinimized = new System.Windows.Forms.CheckBox();
-            this.tabOptions = new System.Windows.Forms.TabPage();
+            this.ClientsTab = new System.Windows.Forms.TabPage();
             this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
             this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
             this.btnBrowseConfigFile = new System.Windows.Forms.Button();
@@ -177,12 +177,12 @@ namespace HFM.Forms
             this.WebGenTypePanel.SuspendLayout();
             this.FtpModePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
-            this.tabStartup.SuspendLayout();
+            this.OptionsTab.SuspendLayout();
             this.grpShowStyle.SuspendLayout();
             this.LoggingGroupBox.SuspendLayout();
             this.ExternalProgramsGroupBox.SuspendLayout();
             this.grpStartup.SuspendLayout();
-            this.tabOptions.SuspendLayout();
+            this.ClientsTab.SuspendLayout();
             this.grpDefaultConfig.SuspendLayout();
             this.grpInteractiveOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
@@ -216,8 +216,8 @@ namespace HFM.Forms
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabSchdTasks);
-            this.tabControl1.Controls.Add(this.tabStartup);
-            this.tabControl1.Controls.Add(this.tabOptions);
+            this.tabControl1.Controls.Add(this.OptionsTab);
+            this.tabControl1.Controls.Add(this.ClientsTab);
             this.tabControl1.Controls.Add(this.tabReporting);
             this.tabControl1.Controls.Add(this.tabWeb);
             this.tabControl1.Controls.Add(this.tabVisStyles);
@@ -737,19 +737,19 @@ namespace HFM.Forms
             this.chkWebSiteGenerator.Text = "Create a Web Site";
             this.chkWebSiteGenerator.UseVisualStyleBackColor = true;
             // 
-            // tabStartup
+            // OptionsTab
             // 
-            this.tabStartup.Controls.Add(this.grpShowStyle);
-            this.tabStartup.Controls.Add(this.LoggingGroupBox);
-            this.tabStartup.Controls.Add(this.ExternalProgramsGroupBox);
-            this.tabStartup.Controls.Add(this.grpStartup);
-            this.tabStartup.Location = new System.Drawing.Point(4, 22);
-            this.tabStartup.Name = "tabStartup";
-            this.tabStartup.Padding = new System.Windows.Forms.Padding(3);
-            this.tabStartup.Size = new System.Drawing.Size(501, 303);
-            this.tabStartup.TabIndex = 6;
-            this.tabStartup.Text = "Startup & External";
-            this.tabStartup.UseVisualStyleBackColor = true;
+            this.OptionsTab.Controls.Add(this.grpShowStyle);
+            this.OptionsTab.Controls.Add(this.LoggingGroupBox);
+            this.OptionsTab.Controls.Add(this.ExternalProgramsGroupBox);
+            this.OptionsTab.Controls.Add(this.grpStartup);
+            this.OptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.OptionsTab.Name = "OptionsTab";
+            this.OptionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.OptionsTab.Size = new System.Drawing.Size(501, 303);
+            this.OptionsTab.TabIndex = 6;
+            this.OptionsTab.Text = "Options";
+            this.OptionsTab.UseVisualStyleBackColor = true;
             // 
             // grpShowStyle
             // 
@@ -932,16 +932,16 @@ namespace HFM.Forms
             this.chkRunMinimized.Text = "Run Minimized";
             this.chkRunMinimized.UseVisualStyleBackColor = true;
             // 
-            // tabOptions
+            // ClientsTab
             // 
-            this.tabOptions.Controls.Add(this.grpDefaultConfig);
-            this.tabOptions.Controls.Add(this.grpInteractiveOptions);
-            this.tabOptions.Location = new System.Drawing.Point(4, 22);
-            this.tabOptions.Name = "tabOptions";
-            this.tabOptions.Size = new System.Drawing.Size(501, 303);
-            this.tabOptions.TabIndex = 4;
-            this.tabOptions.Text = "Options";
-            this.tabOptions.UseVisualStyleBackColor = true;
+            this.ClientsTab.Controls.Add(this.grpDefaultConfig);
+            this.ClientsTab.Controls.Add(this.grpInteractiveOptions);
+            this.ClientsTab.Location = new System.Drawing.Point(4, 22);
+            this.ClientsTab.Name = "ClientsTab";
+            this.ClientsTab.Size = new System.Drawing.Size(501, 303);
+            this.ClientsTab.TabIndex = 4;
+            this.ClientsTab.Text = "Clients";
+            this.ClientsTab.UseVisualStyleBackColor = true;
             // 
             // grpDefaultConfig
             // 
@@ -1880,7 +1880,7 @@ namespace HFM.Forms
             this.FtpModePanel.ResumeLayout(false);
             this.FtpModePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
-            this.tabStartup.ResumeLayout(false);
+            this.OptionsTab.ResumeLayout(false);
             this.grpShowStyle.ResumeLayout(false);
             this.grpShowStyle.PerformLayout();
             this.LoggingGroupBox.ResumeLayout(false);
@@ -1889,7 +1889,7 @@ namespace HFM.Forms
             this.ExternalProgramsGroupBox.PerformLayout();
             this.grpStartup.ResumeLayout(false);
             this.grpStartup.PerformLayout();
-            this.tabOptions.ResumeLayout(false);
+            this.ClientsTab.ResumeLayout(false);
             this.grpDefaultConfig.ResumeLayout(false);
             this.grpDefaultConfig.PerformLayout();
             this.grpInteractiveOptions.ResumeLayout(false);
@@ -1956,7 +1956,7 @@ namespace HFM.Forms
         private System.Windows.Forms.Label lbl3Port;
         private System.Windows.Forms.CheckBox chkUseProxyAuth;
         private System.Windows.Forms.CheckBox chkUseProxy;
-        private System.Windows.Forms.TabPage tabOptions;
+        private System.Windows.Forms.TabPage ClientsTab;
         private System.Windows.Forms.OpenFileDialog openConfigDialog;
         private System.Windows.Forms.GroupBox grpProjectDownload;
         private HFM.Forms.Controls.DataErrorTextBox txtProjectDownloadUrl;
@@ -1981,7 +1981,7 @@ namespace HFM.Forms
         private System.Windows.Forms.Label labelWrapper5;
         private System.Windows.Forms.Button btnTestEmail;
         private System.Windows.Forms.GroupBox grpReportSelections;
-        private System.Windows.Forms.TabPage tabStartup;
+        private System.Windows.Forms.TabPage OptionsTab;
         private System.Windows.Forms.GroupBox grpStartup;
         private System.Windows.Forms.CheckBox chkRunMinimized;
         private System.Windows.Forms.CheckBox chkAutoRun;

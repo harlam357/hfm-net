@@ -68,8 +68,8 @@ namespace HFM.Forms
         private void PreferencesDialogLoad(object sender, EventArgs e)
         {
             LoadScheduledTasksTab();
-            LoadStartupTab();
             LoadOptionsTab();
+            LoadClientsTab();
             LoadReportingTab();
             LoadWebSettingsTab();
             LoadVisualStylesTab();
@@ -86,8 +86,8 @@ namespace HFM.Forms
             tabControl1.SelectTab(0);
 
             _presenter.Model.ScheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
-            _presenter.Model.StartupAndExternalModel.PropertyChanged += StartupAndExternalPropertyChanged;
             _presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
+            _presenter.Model.ClientsModel.PropertyChanged += ClientsPropertyChanged;
             _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
             _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsChanged;
             _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
@@ -168,12 +168,12 @@ namespace HFM.Forms
             chkWebSiteGenerator.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
         }
 
-        private void LoadStartupTab()
+        private void LoadOptionsTab()
         {
             // Startup
             if (!Core.Application.IsRunningOnMono)
             {
-                chkAutoRun.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.AutoRun));
+                chkAutoRun.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoRun));
             }
             else
             {
@@ -181,51 +181,51 @@ namespace HFM.Forms
                 chkAutoRun.Enabled = false;
             }
 
-            chkRunMinimized.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.RunMinimized));
-            chkCheckForUpdate.BindChecked(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.StartupCheckForUpdate));
+            chkRunMinimized.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.RunMinimized));
+            chkCheckForUpdate.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.StartupCheckForUpdate));
 
             // External Programs
-            LogFileViewerTextBox.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.LogFileViewer));
-            FileExplorerTextBox.BindText(_presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.FileExplorer));
+            LogFileViewerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.LogFileViewer));
+            FileExplorerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FileExplorer));
 
             // Debug Message Level
-            cboMessageLevel.DataSource = StartupAndExternalModel.DebugList;
+            cboMessageLevel.DataSource = OptionsModel.DebugList;
             cboMessageLevel.DisplayMember = "DisplayMember";
             cboMessageLevel.ValueMember = "ValueMember";
-            cboMessageLevel.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
+            cboMessageLevel.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // Form Docking Style
-            cboShowStyle.DataSource = StartupAndExternalModel.DockingStyleList;
+            cboShowStyle.DataSource = OptionsModel.DockingStyleList;
             cboShowStyle.DisplayMember = "DisplayMember";
             cboShowStyle.ValueMember = "ValueMember";
-            cboShowStyle.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.StartupAndExternalModel, nameof(StartupAndExternalModel.FormShowStyle), false, DataSourceUpdateMode.OnPropertyChanged);
+            cboShowStyle.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.FormShowStyle), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
-        private void LoadOptionsTab()
+        private void LoadClientsTab()
         {
             // Interactive Options
-            chkOffline.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.OfflineLast));
-            chkColorLog.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.ColorLogFile));
-            chkAutoSave.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoSaveConfig));
-            DuplicateProjectCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.DuplicateProjectCheck));
+            chkOffline.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.OfflineLast));
+            chkColorLog.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
+            chkAutoSave.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
+            DuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
 
-            PpdCalculationComboBox.DataSource = OptionsModel.PpdCalculationList;
+            PpdCalculationComboBox.DataSource = ClientsModel.PpdCalculationList;
             PpdCalculationComboBox.DisplayMember = "DisplayMember";
             PpdCalculationComboBox.ValueMember = "ValueMember";
-            PpdCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.PpdCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
-            BonusCalculationComboBox.DataSource = OptionsModel.BonusCalculationList;
+            PpdCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.PpdCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
+            BonusCalculationComboBox.DataSource = ClientsModel.BonusCalculationList;
             BonusCalculationComboBox.DisplayMember = "DisplayMember";
             BonusCalculationComboBox.ValueMember = "ValueMember";
-            BonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.CalculateBonus), false, DataSourceUpdateMode.OnPropertyChanged);
-            udDecimalPlaces.DataBindings.Add(ValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
-            chkEtaAsDate.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.EtaDate));
+            BonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.CalculateBonus), false, DataSourceUpdateMode.OnPropertyChanged);
+            udDecimalPlaces.DataBindings.Add(ValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
+            chkEtaAsDate.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.EtaDate));
 
             // Configuration File
-            txtDefaultConfigFile.BindEnabled(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
-            btnBrowseConfigFile.BindEnabled(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
-            txtDefaultConfigFile.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.DefaultConfigFile));
+            txtDefaultConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
+            btnBrowseConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
+            txtDefaultConfigFile.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFile));
 
-            chkDefaultConfig.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.UseDefaultConfigFile));
+            chkDefaultConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
         }
 
         private void LoadReportingTab()
@@ -466,13 +466,13 @@ namespace HFM.Forms
             {
                 tabControl1.SelectedTab = tabSchdTasks;
             }
-            else if (_presenter.Model.StartupAndExternalModel.HasError)
-            {
-                tabControl1.SelectedTab = tabStartup;
-            }
             else if (_presenter.Model.OptionsModel.HasError)
             {
-                tabControl1.SelectedTab = tabOptions;
+                tabControl1.SelectedTab = OptionsTab;
+            }
+            else if (_presenter.Model.ClientsModel.HasError)
+            {
+                tabControl1.SelectedTab = ClientsTab;
             }
             else if (_presenter.Model.ReportingModel.HasError)
             {

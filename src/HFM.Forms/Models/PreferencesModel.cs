@@ -13,8 +13,8 @@ namespace HFM.Forms.Models
         {
             Preferences = preferences;
             ScheduledTasksModel = new ScheduledTasksModel(preferences);
-            StartupAndExternalModel = new StartupAndExternalModel(preferences, autoRunConfiguration);
-            OptionsModel = new OptionsModel(preferences);
+            OptionsModel = new OptionsModel(preferences, autoRunConfiguration);
+            ClientsModel = new ClientsModel(preferences);
             ReportingModel = new ReportingModel(preferences);
             WebSettingsModel = new WebSettingsModel(preferences);
             WebVisualStylesModel = new WebVisualStylesModel(preferences);
@@ -22,8 +22,8 @@ namespace HFM.Forms.Models
 
         public IPreferenceSet Preferences { get; }
         public ScheduledTasksModel ScheduledTasksModel { get; set; }
-        public StartupAndExternalModel StartupAndExternalModel { get; set; }
         public OptionsModel OptionsModel { get; set; }
+        public ClientsModel ClientsModel { get; set; }
         public ReportingModel ReportingModel { get; set; }
         public WebSettingsModel WebSettingsModel { get; set; }
         public WebVisualStylesModel WebVisualStylesModel { get; set; }
@@ -40,8 +40,8 @@ namespace HFM.Forms.Models
         private IEnumerable<string> EnumerateErrors()
         {
             yield return ScheduledTasksModel.Error;
-            yield return StartupAndExternalModel.Error;
             yield return OptionsModel.Error;
+            yield return ClientsModel.Error;
             yield return ReportingModel.Error;
             yield return WebSettingsModel.Error;
             yield return WebVisualStylesModel.Error;
@@ -51,8 +51,8 @@ namespace HFM.Forms.Models
         {
             OnPropertyChanged(String.Empty);
             ScheduledTasksModel.ValidateAcceptance();
-            StartupAndExternalModel.ValidateAcceptance();
             OptionsModel.ValidateAcceptance();
+            ClientsModel.ValidateAcceptance();
             ReportingModel.ValidateAcceptance();
             WebSettingsModel.ValidateAcceptance();
             WebVisualStylesModel.ValidateAcceptance();
@@ -62,8 +62,8 @@ namespace HFM.Forms.Models
         public override void Load()
         {
             ScheduledTasksModel.Load();
-            StartupAndExternalModel.Load();
             OptionsModel.Load();
+            ClientsModel.Load();
             ReportingModel.Load();
             WebSettingsModel.Load();
             WebVisualStylesModel.Load();
@@ -72,14 +72,14 @@ namespace HFM.Forms.Models
         public override void Save()
         {
             ScheduledTasksModel.Save();
-            StartupAndExternalModel.Save();
             OptionsModel.Save();
+            ClientsModel.Save();
             ReportingModel.Save();
             WebSettingsModel.Save();
             WebVisualStylesModel.Save();
             
             Preferences.Save();
-            StartupAndExternalModel.SaveAutoRunConfiguration();
+            OptionsModel.SaveAutoRunConfiguration();
         }
     }
 }

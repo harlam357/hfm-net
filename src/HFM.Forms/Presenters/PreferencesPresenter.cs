@@ -172,13 +172,13 @@ namespace HFM.Forms
 
         public void BrowseForConfigurationFileClicked(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileName(Model.OptionsModel.DefaultConfigFile);
+            var x = GetInitialDirectoryAndFileName(Model.ClientsModel.DefaultConfigFile);
             string extension = Core.Client.ClientSettingsFileSerializer.DefaultFileExtension;
             string filter = Core.Client.ClientSettingsFileSerializer.DefaultFileTypeFilter;
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, extension, filter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.OptionsModel.DefaultConfigFile = result;
+                Model.ClientsModel.DefaultConfigFile = result;
             }
         }
 
@@ -187,21 +187,21 @@ namespace HFM.Forms
 
         public void BrowseForLogViewerClicked(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileName(Model.StartupAndExternalModel.LogFileViewer);
+            var x = GetInitialDirectoryAndFileName(Model.OptionsModel.LogFileViewer);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, ExeExtension, ExeFilter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.StartupAndExternalModel.LogFileViewer = result;
+                Model.OptionsModel.LogFileViewer = result;
             }
         }
 
         public void BrowseForFileExplorerClicked(FileDialogPresenter dialog)
         {
-            var x = GetInitialDirectoryAndFileName(Model.StartupAndExternalModel.FileExplorer);
+            var x = GetInitialDirectoryAndFileName(Model.OptionsModel.FileExplorer);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, ExeExtension, ExeFilter);
             if (!String.IsNullOrEmpty(result))
             {
-                Model.StartupAndExternalModel.FileExplorer = result;
+                Model.OptionsModel.FileExplorer = result;
             }
         }
 

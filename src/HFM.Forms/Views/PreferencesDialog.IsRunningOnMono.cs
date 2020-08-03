@@ -70,33 +70,6 @@ namespace HFM.Forms
             }
         }
 
-        private void StartupAndExternalPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (Core.Application.IsRunningOnMono && Enabled)
-            {
-                HandleStartupAndExternalPropertyEnabledForMono(e.PropertyName);
-                HandleStartupAndExternalPropertyChangedForMono(e.PropertyName);
-            }
-        }
-
-        private void HandleStartupAndExternalPropertyEnabledForMono(string propertyName)
-        {
-
-        }
-
-        private void HandleStartupAndExternalPropertyChangedForMono(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case "LogFileViewer":
-                    LogFileViewerTextBox.Text = _presenter.Model.StartupAndExternalModel.LogFileViewer;
-                    break;
-                case "FileExplorer":
-                    FileExplorerTextBox.Text = _presenter.Model.StartupAndExternalModel.FileExplorer;
-                    break;
-            }
-        }
-
         private void OptionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Core.Application.IsRunningOnMono && Enabled)
@@ -108,21 +81,48 @@ namespace HFM.Forms
 
         private void HandleOptionsPropertyEnabledForMono(string propertyName)
         {
-            switch (propertyName)
-            {
-                case "UseDefaultConfigFile":
-                    txtDefaultConfigFile.Enabled = _presenter.Model.OptionsModel.UseDefaultConfigFile;
-                    btnBrowseConfigFile.Enabled = _presenter.Model.OptionsModel.UseDefaultConfigFile;
-                    break;
-            }
+
         }
 
         private void HandleOptionsPropertyChangedForMono(string propertyName)
         {
             switch (propertyName)
             {
+                case "LogFileViewer":
+                    LogFileViewerTextBox.Text = _presenter.Model.OptionsModel.LogFileViewer;
+                    break;
+                case "FileExplorer":
+                    FileExplorerTextBox.Text = _presenter.Model.OptionsModel.FileExplorer;
+                    break;
+            }
+        }
+
+        private void ClientsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Core.Application.IsRunningOnMono && Enabled)
+            {
+                HandleClientsPropertyEnabledForMono(e.PropertyName);
+                HandleClientsPropertyChangedForMono(e.PropertyName);
+            }
+        }
+
+        private void HandleClientsPropertyEnabledForMono(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "UseDefaultConfigFile":
+                    txtDefaultConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
+                    btnBrowseConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
+                    break;
+            }
+        }
+
+        private void HandleClientsPropertyChangedForMono(string propertyName)
+        {
+            switch (propertyName)
+            {
                 case "DefaultConfigFile":
-                    txtDefaultConfigFile.Text = _presenter.Model.OptionsModel.DefaultConfigFile;
+                    txtDefaultConfigFile.Text = _presenter.Model.ClientsModel.DefaultConfigFile;
                     break;
             }
         }

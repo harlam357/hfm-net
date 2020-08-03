@@ -1033,7 +1033,7 @@ namespace HFM.Forms
             _prefs.Set(Preference.BonusCalculation, calculationType);
             _prefs.Save();
 
-            string calculationTypeString = (from item in OptionsModel.BonusCalculationList
+            string calculationTypeString = (from item in ClientsModel.BonusCalculationList
                                             where ((BonusCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
@@ -1055,7 +1055,7 @@ namespace HFM.Forms
             _prefs.Set(Preference.PPDCalculation, calculationType);
             _prefs.Save();
 
-            string calculationTypeString = (from item in OptionsModel.PpdCalculationList
+            string calculationTypeString = (from item in ClientsModel.PpdCalculationList
                                             where ((PPDCalculation)item.ValueMember) == calculationType
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
