@@ -29,6 +29,7 @@ namespace HFM.Forms.Models
             EocUserID = Preferences.Get<int>(Preference.EocUserId);
             FahUserID = Preferences.Get<string>(Preference.StanfordId);
             TeamID = Preferences.Get<int>(Preference.TeamId);
+            ShowXmlStats = Preferences.Get<bool>(Preference.EnableUserStats);
             LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
             FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
             MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
@@ -42,6 +43,7 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.EocUserId, EocUserID);
             Preferences.Set(Preference.StanfordId, FahUserID);
             Preferences.Set(Preference.TeamId, TeamID);
+            Preferences.Set(Preference.EnableUserStats, ShowXmlStats);
             Preferences.Set(Preference.LogFileViewer, LogFileViewer);
             Preferences.Set(Preference.FileExplorer, FileExplorer);
             Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
@@ -202,6 +204,21 @@ namespace HFM.Forms.Models
         private bool ValidateTeamID()
         {
             return TeamID >= 0;
+        }
+
+        private bool _showXmlStats;
+
+        public bool ShowXmlStats
+        {
+            get { return _showXmlStats; }
+            set
+            {
+                if (ShowXmlStats != value)
+                {
+                    _showXmlStats = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         #endregion

@@ -110,9 +110,6 @@ namespace HFM.Forms
 
             chkSynchronous.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncOnLoad));
 
-            // User Stats
-            EocUserStatsCheckBox.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.ShowXmlStats));
-
             // Web Generation
             radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
             lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
@@ -188,6 +185,7 @@ namespace HFM.Forms
             EocUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.EocUserID));
             FahUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FahUserID));
             FahTeamIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.TeamID));
+            EocUserStatsCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.ShowXmlStats));
 
             // External Programs
             LogFileViewerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.LogFileViewer));
@@ -208,10 +206,17 @@ namespace HFM.Forms
 
         private void LoadClientsTab()
         {
+            // Configuration
+            txtDefaultConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
+            btnBrowseConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
+            txtDefaultConfigFile.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFile));
+
+            chkDefaultConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
+            chkAutoSave.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
+
             // Interactive Options
             chkOffline.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.OfflineLast));
             chkColorLog.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
-            chkAutoSave.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
             DuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
 
             PpdCalculationComboBox.DataSource = ClientsModel.PpdCalculationList;
@@ -224,13 +229,6 @@ namespace HFM.Forms
             BonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.CalculateBonus), false, DataSourceUpdateMode.OnPropertyChanged);
             udDecimalPlaces.DataBindings.Add(ValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
             chkEtaAsDate.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.EtaDate));
-
-            // Configuration File
-            txtDefaultConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
-            btnBrowseConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
-            txtDefaultConfigFile.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFile));
-
-            chkDefaultConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
         }
 
         private void LoadReportingTab()

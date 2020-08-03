@@ -28,8 +28,6 @@ namespace HFM.Forms.Models
             SyncOnSchedule = clientRetrievalTask.Enabled;
             SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
 
-            ShowXmlStats = Preferences.Get<bool>(Preference.EnableUserStats);
-
             var webGenerationTask = Preferences.Get<WebGenerationTask>(Preference.WebGenerationTask);
             GenerateWeb = webGenerationTask.Enabled;
             GenerateInterval = webGenerationTask.Interval;
@@ -58,8 +56,6 @@ namespace HFM.Forms.Models
                 ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
             };
             Preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
-
-            Preferences.Set(Preference.EnableUserStats, ShowXmlStats);
 
             var webGenerationTask = new WebGenerationTask
             {
@@ -188,21 +184,6 @@ namespace HFM.Forms.Models
         }
 
         #endregion
-
-        private bool _showXmlStats;
-
-        public bool ShowXmlStats
-        {
-            get { return _showXmlStats; }
-            set
-            {
-                if (ShowXmlStats != value)
-                {
-                    _showXmlStats = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         #region Web Generation
 

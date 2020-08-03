@@ -35,8 +35,6 @@ namespace HFM.Forms
             this.StyleList = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSchdTasks = new System.Windows.Forms.TabPage();
-            this.EocUserStatsGroupBox = new System.Windows.Forms.GroupBox();
-            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.grpUpdateData = new System.Windows.Forms.GroupBox();
             this.txtCollectMinutes = new HFM.Forms.Controls.DataErrorTextBox();
             this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
@@ -104,11 +102,10 @@ namespace HFM.Forms
             this.chkAutoRun = new System.Windows.Forms.CheckBox();
             this.chkRunMinimized = new System.Windows.Forms.CheckBox();
             this.ClientsTab = new System.Windows.Forms.TabPage();
-            this.grpDefaultConfig = new System.Windows.Forms.GroupBox();
+            this.ConfigurationGroupBox = new System.Windows.Forms.GroupBox();
             this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
             this.btnBrowseConfigFile = new System.Windows.Forms.Button();
             this.txtDefaultConfigFile = new HFM.Forms.Controls.DataErrorTextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.grpInteractiveOptions = new System.Windows.Forms.GroupBox();
             this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper6 = new System.Windows.Forms.Label();
@@ -169,9 +166,9 @@ namespace HFM.Forms
             this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabSchdTasks.SuspendLayout();
-            this.EocUserStatsGroupBox.SuspendLayout();
             this.grpUpdateData.SuspendLayout();
             this.WebGenerationGroupBox.SuspendLayout();
             this.WebGenTypePanel.SuspendLayout();
@@ -184,7 +181,7 @@ namespace HFM.Forms
             this.ExternalProgramsGroupBox.SuspendLayout();
             this.grpStartup.SuspendLayout();
             this.ClientsTab.SuspendLayout();
-            this.grpDefaultConfig.SuspendLayout();
+            this.ConfigurationGroupBox.SuspendLayout();
             this.grpInteractiveOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
             this.tabReporting.SuspendLayout();
@@ -233,7 +230,6 @@ namespace HFM.Forms
             // tabSchdTasks
             // 
             this.tabSchdTasks.BackColor = System.Drawing.Color.Transparent;
-            this.tabSchdTasks.Controls.Add(this.EocUserStatsGroupBox);
             this.tabSchdTasks.Controls.Add(this.grpUpdateData);
             this.tabSchdTasks.Controls.Add(this.WebGenerationGroupBox);
             this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
@@ -243,26 +239,6 @@ namespace HFM.Forms
             this.tabSchdTasks.TabIndex = 2;
             this.tabSchdTasks.Text = "Scheduled Tasks";
             this.tabSchdTasks.UseVisualStyleBackColor = true;
-            // 
-            // EocUserStatsGroupBox
-            // 
-            this.EocUserStatsGroupBox.Controls.Add(this.EocUserStatsCheckBox);
-            this.EocUserStatsGroupBox.Location = new System.Drawing.Point(255, 9);
-            this.EocUserStatsGroupBox.Name = "EocUserStatsGroupBox";
-            this.EocUserStatsGroupBox.Size = new System.Drawing.Size(240, 76);
-            this.EocUserStatsGroupBox.TabIndex = 1;
-            this.EocUserStatsGroupBox.TabStop = false;
-            this.EocUserStatsGroupBox.Text = "EOC User Stats";
-            // 
-            // EocUserStatsCheckBox
-            // 
-            this.EocUserStatsCheckBox.AutoSize = true;
-            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(10, 22);
-            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
-            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
-            this.EocUserStatsCheckBox.TabIndex = 13;
-            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
-            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
             // 
             // grpUpdateData
             // 
@@ -754,6 +730,7 @@ namespace HFM.Forms
             // 
             // IdentityGroupBox
             // 
+            this.IdentityGroupBox.Controls.Add(this.EocUserStatsCheckBox);
             this.IdentityGroupBox.Controls.Add(this.EocUserIDLabel);
             this.IdentityGroupBox.Controls.Add(this.FahUserIDLabel);
             this.IdentityGroupBox.Controls.Add(this.TestFahTeamIDLinkLabel);
@@ -878,7 +855,7 @@ namespace HFM.Forms
             // 
             this.grpShowStyle.Controls.Add(this.cboShowStyle);
             this.grpShowStyle.Controls.Add(this.labelWrapper2);
-            this.grpShowStyle.Location = new System.Drawing.Point(254, 234);
+            this.grpShowStyle.Location = new System.Drawing.Point(254, 238);
             this.grpShowStyle.Name = "grpShowStyle";
             this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
             this.grpShowStyle.TabIndex = 7;
@@ -907,7 +884,7 @@ namespace HFM.Forms
             // 
             this.LoggingGroupBox.Controls.Add(this.cboMessageLevel);
             this.LoggingGroupBox.Controls.Add(this.label6);
-            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 234);
+            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 238);
             this.LoggingGroupBox.Name = "LoggingGroupBox";
             this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
             this.LoggingGroupBox.TabIndex = 6;
@@ -1057,7 +1034,7 @@ namespace HFM.Forms
             // 
             // ClientsTab
             // 
-            this.ClientsTab.Controls.Add(this.grpDefaultConfig);
+            this.ClientsTab.Controls.Add(this.ConfigurationGroupBox);
             this.ClientsTab.Controls.Add(this.grpInteractiveOptions);
             this.ClientsTab.Location = new System.Drawing.Point(4, 22);
             this.ClientsTab.Name = "ClientsTab";
@@ -1066,18 +1043,18 @@ namespace HFM.Forms
             this.ClientsTab.Text = "Clients";
             this.ClientsTab.UseVisualStyleBackColor = true;
             // 
-            // grpDefaultConfig
+            // ConfigurationGroupBox
             // 
-            this.grpDefaultConfig.Controls.Add(this.chkDefaultConfig);
-            this.grpDefaultConfig.Controls.Add(this.btnBrowseConfigFile);
-            this.grpDefaultConfig.Controls.Add(this.txtDefaultConfigFile);
-            this.grpDefaultConfig.Controls.Add(this.label1);
-            this.grpDefaultConfig.Location = new System.Drawing.Point(6, 166);
-            this.grpDefaultConfig.Name = "grpDefaultConfig";
-            this.grpDefaultConfig.Size = new System.Drawing.Size(489, 86);
-            this.grpDefaultConfig.TabIndex = 5;
-            this.grpDefaultConfig.TabStop = false;
-            this.grpDefaultConfig.Text = "Configuration File";
+            this.ConfigurationGroupBox.Controls.Add(this.chkDefaultConfig);
+            this.ConfigurationGroupBox.Controls.Add(this.btnBrowseConfigFile);
+            this.ConfigurationGroupBox.Controls.Add(this.txtDefaultConfigFile);
+            this.ConfigurationGroupBox.Controls.Add(this.chkAutoSave);
+            this.ConfigurationGroupBox.Location = new System.Drawing.Point(6, 9);
+            this.ConfigurationGroupBox.Name = "ConfigurationGroupBox";
+            this.ConfigurationGroupBox.Size = new System.Drawing.Size(489, 86);
+            this.ConfigurationGroupBox.TabIndex = 5;
+            this.ConfigurationGroupBox.TabStop = false;
+            this.ConfigurationGroupBox.Text = "Configuration";
             // 
             // chkDefaultConfig
             // 
@@ -1110,20 +1087,11 @@ namespace HFM.Forms
             this.txtDefaultConfigFile.ErrorToolTipDuration = 5000;
             this.txtDefaultConfigFile.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtDefaultConfigFile.ErrorToolTipText = "";
-            this.txtDefaultConfigFile.Location = new System.Drawing.Point(66, 49);
+            this.txtDefaultConfigFile.Location = new System.Drawing.Point(10, 49);
             this.txtDefaultConfigFile.Name = "txtDefaultConfigFile";
             this.txtDefaultConfigFile.ReadOnly = true;
-            this.txtDefaultConfigFile.Size = new System.Drawing.Size(384, 20);
+            this.txtDefaultConfigFile.Size = new System.Drawing.Size(440, 20);
             this.txtDefaultConfigFile.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 52);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Filename:";
             // 
             // grpInteractiveOptions
             // 
@@ -1136,9 +1104,8 @@ namespace HFM.Forms
             this.grpInteractiveOptions.Controls.Add(this.chkOffline);
             this.grpInteractiveOptions.Controls.Add(this.chkColorLog);
             this.grpInteractiveOptions.Controls.Add(this.udDecimalPlaces);
-            this.grpInteractiveOptions.Controls.Add(this.chkAutoSave);
             this.grpInteractiveOptions.Controls.Add(this.labelWrapper1);
-            this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 9);
+            this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 138);
             this.grpInteractiveOptions.Name = "grpInteractiveOptions";
             this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 151);
             this.grpInteractiveOptions.TabIndex = 0;
@@ -1231,11 +1198,11 @@ namespace HFM.Forms
             // chkAutoSave
             // 
             this.chkAutoSave.AutoSize = true;
-            this.chkAutoSave.Location = new System.Drawing.Point(10, 72);
+            this.chkAutoSave.Location = new System.Drawing.Point(150, 22);
             this.chkAutoSave.Name = "chkAutoSave";
-            this.chkAutoSave.Size = new System.Drawing.Size(216, 17);
+            this.chkAutoSave.Size = new System.Drawing.Size(151, 17);
             this.chkAutoSave.TabIndex = 2;
-            this.chkAutoSave.Text = "Auto Save Configuration when Changed";
+            this.chkAutoSave.Text = "Auto Save when Changed";
             this.chkAutoSave.UseVisualStyleBackColor = true;
             // 
             // labelWrapper1
@@ -1847,6 +1814,16 @@ namespace HFM.Forms
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // EocUserStatsCheckBox
+            // 
+            this.EocUserStatsCheckBox.AutoSize = true;
+            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(250, 47);
+            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
+            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.EocUserStatsCheckBox.TabIndex = 14;
+            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
+            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // PreferencesDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1867,8 +1844,6 @@ namespace HFM.Forms
             this.Load += new System.EventHandler(this.PreferencesDialogLoad);
             this.tabControl1.ResumeLayout(false);
             this.tabSchdTasks.ResumeLayout(false);
-            this.EocUserStatsGroupBox.ResumeLayout(false);
-            this.EocUserStatsGroupBox.PerformLayout();
             this.grpUpdateData.ResumeLayout(false);
             this.grpUpdateData.PerformLayout();
             this.WebGenerationGroupBox.ResumeLayout(false);
@@ -1890,8 +1865,8 @@ namespace HFM.Forms
             this.grpStartup.ResumeLayout(false);
             this.grpStartup.PerformLayout();
             this.ClientsTab.ResumeLayout(false);
-            this.grpDefaultConfig.ResumeLayout(false);
-            this.grpDefaultConfig.PerformLayout();
+            this.ConfigurationGroupBox.ResumeLayout(false);
+            this.ConfigurationGroupBox.PerformLayout();
             this.grpInteractiveOptions.ResumeLayout(false);
             this.grpInteractiveOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).EndInit();
@@ -2023,8 +1998,6 @@ namespace HFM.Forms
         private System.Windows.Forms.Label labelWrapper6;
         private System.Windows.Forms.ComboBox BonusCalculationComboBox;
         private System.Windows.Forms.Label CopyLabel;
-        private System.Windows.Forms.GroupBox EocUserStatsGroupBox;
-        private System.Windows.Forms.CheckBox EocUserStatsCheckBox;
         private System.Windows.Forms.Button btnBrowseFileExplorer;
         private System.Windows.Forms.Label label4;
         private Controls.DataErrorTextBox FileExplorerTextBox;
@@ -2034,11 +2007,10 @@ namespace HFM.Forms
         private System.Windows.Forms.GroupBox LoggingGroupBox;
         private System.Windows.Forms.ComboBox cboMessageLevel;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox grpDefaultConfig;
+        private System.Windows.Forms.GroupBox ConfigurationGroupBox;
         private System.Windows.Forms.CheckBox chkDefaultConfig;
         private System.Windows.Forms.Button btnBrowseConfigFile;
         private Controls.DataErrorTextBox txtDefaultConfigFile;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox IdentityGroupBox;
         private System.Windows.Forms.Label EocUserIDLabel;
         private System.Windows.Forms.Label FahUserIDLabel;
@@ -2049,5 +2021,6 @@ namespace HFM.Forms
         private System.Windows.Forms.LinkLabel TestFahUserIDLinkLabel;
         private Controls.DataErrorTextBox FahUserIDTextBox;
         private System.Windows.Forms.LinkLabel TestEocUserIDLinkLabel;
+        private System.Windows.Forms.CheckBox EocUserStatsCheckBox;
     }
 }
