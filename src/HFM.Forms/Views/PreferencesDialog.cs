@@ -72,7 +72,7 @@ namespace HFM.Forms
             LoadWebGenerationTab();
             LoadVisualStylesTab();
             LoadReportingTab();
-            LoadWebSettingsTab();
+            LoadWebProxyTab();
 
             // Cycle through Tabs to create all controls and Bind data
             for (int i = 0; i < tabControl1.TabPages.Count; i++)
@@ -90,7 +90,7 @@ namespace HFM.Forms
             _presenter.Model.WebGenerationModel.PropertyChanged += WebGenerationPropertyChanged;
             _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
             _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
-            _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsPropertyChanged;
+            _presenter.Model.WebProxyModel.PropertyChanged += WebProxyPropertyChanged;
         }
 
         // *** Always add bindings for CheckBox controls that control TextBox.Enabled after binding TextBox.Text ***
@@ -269,31 +269,31 @@ namespace HFM.Forms
             //chkClientHung.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportHung));
         }
 
-        private void LoadWebSettingsTab()
+        private void LoadWebProxyTab()
         {
             // Web Proxy Settings
-            txtProxyServer.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyServer));
-            txtProxyServer.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyServer.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
+            txtProxyServer.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServer));
+            txtProxyServer.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyServer.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
 
-            txtProxyPort.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyPort));
-            txtProxyPort.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPort.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
-
-            // Finally, add the CheckBox.Checked Binding
-            chkUseProxy.BindChecked(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
-            chkUseProxyAuth.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
-
-            txtProxyUser.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyUser));
-            txtProxyUser.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyUser.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyAuthEnabled));
-
-            txtProxyPass.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyPass));
-            txtProxyPass.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPass.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyAuthEnabled));
+            txtProxyPort.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyPort));
+            txtProxyPort.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyPort.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
 
             // Finally, add the CheckBox.Checked Binding
-            chkUseProxyAuth.BindChecked(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxyAuth));
+            chkUseProxy.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
+            chkUseProxyAuth.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
+
+            txtProxyUser.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUser));
+            txtProxyUser.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyUser.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyAuthEnabled));
+
+            txtProxyPass.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyPass));
+            txtProxyPass.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
+            txtProxyPass.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyAuthEnabled));
+
+            // Finally, add the CheckBox.Checked Binding
+            chkUseProxyAuth.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxyAuth));
         }
 
         private void LoadVisualStylesTab()
@@ -473,7 +473,7 @@ namespace HFM.Forms
             {
                 tabControl1.SelectedTab = ReportingTab;
             }
-            else if (_presenter.Model.WebSettingsModel.HasError)
+            else if (_presenter.Model.WebProxyModel.HasError)
             {
                 tabControl1.SelectedTab = ProxyTab;
             }

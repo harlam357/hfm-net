@@ -153,26 +153,26 @@ namespace HFM.Forms
             }
         }
 
-        private void WebSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void WebProxyPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Core.Application.IsRunningOnMono && Enabled)
             {
-                HandleWebSettingsPropertyEnabledForMono(e.PropertyName);
+                HandleWebProxyPropertyEnabledForMono(e.PropertyName);
             }
         }
 
-        private void HandleWebSettingsPropertyEnabledForMono(string propertyName)
+        private void HandleWebProxyPropertyEnabledForMono(string propertyName)
         {
             switch (propertyName)
             {
                 case "UseProxy":
-                    txtProxyServer.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
-                    txtProxyPort.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
-                    chkUseProxyAuth.Enabled = _presenter.Model.WebSettingsModel.UseProxy;
+                    txtProxyServer.Enabled = _presenter.Model.WebProxyModel.UseProxy;
+                    txtProxyPort.Enabled = _presenter.Model.WebProxyModel.UseProxy;
+                    chkUseProxyAuth.Enabled = _presenter.Model.WebProxyModel.UseProxy;
                     break;
                 case "ProxyAuthEnabled":
-                    txtProxyUser.Enabled = _presenter.Model.WebSettingsModel.ProxyAuthEnabled;
-                    txtProxyPass.Enabled = _presenter.Model.WebSettingsModel.ProxyAuthEnabled;
+                    txtProxyUser.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
+                    txtProxyPass.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
                     break;
             }
         }

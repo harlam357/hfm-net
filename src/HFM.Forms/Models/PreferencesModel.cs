@@ -17,7 +17,7 @@ namespace HFM.Forms.Models
             WebGenerationModel = new WebGenerationModel(preferences);
             WebVisualStylesModel = new WebVisualStylesModel(preferences);
             ReportingModel = new ReportingModel(preferences);
-            WebSettingsModel = new WebSettingsModel(preferences);
+            WebProxyModel = new WebProxyModel(preferences);
         }
 
         public IPreferenceSet Preferences { get; }
@@ -26,7 +26,7 @@ namespace HFM.Forms.Models
         public WebGenerationModel WebGenerationModel { get; set; }
         public WebVisualStylesModel WebVisualStylesModel { get; set; }
         public ReportingModel ReportingModel { get; set; }
-        public WebSettingsModel WebSettingsModel { get; set; }
+        public WebProxyModel WebProxyModel { get; set; }
 
         public override string Error
         {
@@ -44,7 +44,7 @@ namespace HFM.Forms.Models
             yield return WebGenerationModel.Error;
             yield return WebVisualStylesModel.Error;
             yield return ReportingModel.Error;
-            yield return WebSettingsModel.Error;
+            yield return WebProxyModel.Error;
         }
 
         public override bool ValidateAcceptance()
@@ -55,7 +55,7 @@ namespace HFM.Forms.Models
             WebGenerationModel.ValidateAcceptance();
             WebVisualStylesModel.ValidateAcceptance();
             ReportingModel.ValidateAcceptance();
-            WebSettingsModel.ValidateAcceptance();
+            WebProxyModel.ValidateAcceptance();
             return !HasError;
         }
 
@@ -66,7 +66,7 @@ namespace HFM.Forms.Models
             WebGenerationModel.Load();
             WebVisualStylesModel.Load();
             ReportingModel.Load();
-            WebSettingsModel.Load();
+            WebProxyModel.Load();
         }
 
         public override void Save()
@@ -76,7 +76,7 @@ namespace HFM.Forms.Models
             WebGenerationModel.Save();
             WebVisualStylesModel.Save();
             ReportingModel.Save();
-            WebSettingsModel.Save();
+            WebProxyModel.Save();
 
             Preferences.Save();
             OptionsModel.SaveAutoRunConfiguration();

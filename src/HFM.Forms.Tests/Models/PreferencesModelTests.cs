@@ -20,7 +20,7 @@ namespace HFM.Forms.Models
             Assert.IsNotNull(model.WebGenerationModel);
             Assert.IsNotNull(model.WebVisualStylesModel);
             Assert.IsNotNull(model.ReportingModel);
-            Assert.IsNotNull(model.WebSettingsModel);
+            Assert.IsNotNull(model.WebProxyModel);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_HasError()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.UseProxy = true;
+            model.WebProxyModel.UseProxy = true;
             Assert.AreNotEqual(String.Empty, model.Error);
             Assert.IsTrue(model.HasError);
         }
@@ -64,7 +64,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_ValidateAcceptance_ReturnsFalseWhenModelHasError()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.UseProxy = true;
+            model.WebProxyModel.UseProxy = true;
             Assert.IsFalse(model.ValidateAcceptance());
         }
 
@@ -78,7 +78,7 @@ namespace HFM.Forms.Models
             // Act
             model.Load();
             // Assert
-            Assert.IsTrue(model.WebSettingsModel.UseProxy);
+            Assert.IsTrue(model.WebProxyModel.UseProxy);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.UseProxy = true;
+            model.WebProxyModel.UseProxy = true;
             // Act
             model.Save();
             // Assert
