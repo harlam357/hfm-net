@@ -13,8 +13,6 @@ namespace HFM.Forms.Models
 {
     public class WebVisualStylesModel : ViewModelBase, IDataErrorInfo
     {
-        private const string CssExtension = ".css";
-
         public IPreferenceSet Preferences { get; }
 
         public WebVisualStylesModel(IPreferenceSet preferences)
@@ -63,6 +61,8 @@ namespace HFM.Forms.Models
 
         private string ApplicationPath { get; set; }
 
+        private const string CssPattern = "*.css";
+
         public ReadOnlyCollection<ListItem> CssFileList
         {
             get
@@ -71,7 +71,7 @@ namespace HFM.Forms.Models
                 var di = new DirectoryInfo(Path.Combine(ApplicationPath, Application.CssFolderName));
                 if (di.Exists)
                 {
-                    list.AddRange(di.EnumerateFiles($"*.{CssExtension}")
+                    list.AddRange(di.EnumerateFiles(CssPattern)
                         .Select(fi => new ListItem { DisplayMember = Path.GetFileNameWithoutExtension(fi.Name), ValueMember = fi.Name }));
                 }
                 return list.AsReadOnly();
