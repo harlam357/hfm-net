@@ -7,7 +7,7 @@ namespace HFM.Forms
 {
     public partial class PreferencesDialog
     {
-        private void ScheduledTasksPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void WebGenerationPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Core.Application.IsRunningOnMono && Enabled)
             {
@@ -21,38 +21,38 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "GenerateWeb":
-                    radioSchedule.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    lbl2MinutesToGen.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    radioFullRefresh.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    WebSiteTargetPathTextBox.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    chkHtml.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    chkXml.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    chkFAHlog.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    TestConnectionButton.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
-                    WebGenTypePanel.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
+                    radioSchedule.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    lbl2MinutesToGen.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    radioFullRefresh.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    WebSiteTargetPathTextBox.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    chkHtml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    chkXml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    chkFAHlog.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    TestConnectionButton.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                    WebGenTypePanel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     break;
                 case "GenerateIntervalEnabled":
-                    txtWebGenMinutes.Enabled = _presenter.Model.ScheduledTasksModel.GenerateIntervalEnabled;
+                    txtWebGenMinutes.Enabled = _presenter.Model.WebGenerationModel.GenerateIntervalEnabled;
                     break;
                 case "FtpModeEnabled":
-                    WebSiteServerTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSiteServerLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSitePortTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSitePortLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSiteUsernameTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSiteUsernameLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSitePasswordTextBox.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    WebSitePasswordLabel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
-                    FtpModePanel.Enabled = _presenter.Model.ScheduledTasksModel.FtpModeEnabled;
+                    WebSiteServerTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSiteServerLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSitePortTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSitePortLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSiteUsernameTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSiteUsernameLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSitePasswordTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    WebSitePasswordLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    FtpModePanel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     break;
                 case "BrowseLocalPathEnabled":
-                    BrowseWebFolderButton.Enabled = _presenter.Model.ScheduledTasksModel.BrowseLocalPathEnabled;
+                    BrowseWebFolderButton.Enabled = _presenter.Model.WebGenerationModel.BrowseLocalPathEnabled;
                     break;
                 case "LimitLogSizeEnabled":
-                    chkLimitSize.Enabled = _presenter.Model.ScheduledTasksModel.LimitLogSizeEnabled;
+                    chkLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeEnabled;
                     break;
                 case "LimitLogSizeLengthEnabled":
-                    udLimitSize.Enabled = _presenter.Model.ScheduledTasksModel.LimitLogSizeLengthEnabled;
+                    udLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeLengthEnabled;
                     break;
             }
         }
@@ -62,7 +62,7 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case "WebRoot":
-                    WebSiteTargetPathTextBox.Text = _presenter.Model.ScheduledTasksModel.WebRoot;
+                    WebSiteTargetPathTextBox.Text = _presenter.Model.WebGenerationModel.WebRoot;
                     break;
             }
         }
@@ -153,7 +153,7 @@ namespace HFM.Forms
             }
         }
 
-        private void WebSettingsChanged(object sender, PropertyChangedEventArgs e)
+        private void WebSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Core.Application.IsRunningOnMono && Enabled)
             {

@@ -15,12 +15,12 @@ namespace HFM.Forms.Models
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             Assert.IsNotNull(model.Preferences);
-            Assert.IsNotNull(model.ScheduledTasksModel);
-            Assert.IsNotNull(model.OptionsModel);
             Assert.IsNotNull(model.ClientsModel);
+            Assert.IsNotNull(model.OptionsModel);
+            Assert.IsNotNull(model.WebGenerationModel);
+            Assert.IsNotNull(model.WebVisualStylesModel);
             Assert.IsNotNull(model.ReportingModel);
             Assert.IsNotNull(model.WebSettingsModel);
-            Assert.IsNotNull(model.WebVisualStylesModel);
         }
 
         [Test]

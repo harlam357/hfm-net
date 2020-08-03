@@ -60,13 +60,13 @@ namespace HFM.Forms
 
         public void BrowseWebFolderClicked(FolderDialogPresenter dialog)
         {
-            if (!String.IsNullOrWhiteSpace(Model.ScheduledTasksModel.WebRoot))
+            if (!String.IsNullOrWhiteSpace(Model.WebGenerationModel.WebRoot))
             {
-                dialog.SelectedPath = Model.ScheduledTasksModel.WebRoot;
+                dialog.SelectedPath = Model.WebGenerationModel.WebRoot;
             }
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Model.ScheduledTasksModel.WebRoot = dialog.SelectedPath;
+                Model.WebGenerationModel.WebRoot = dialog.SelectedPath;
             }
         }
 
@@ -133,14 +133,14 @@ namespace HFM.Forms
         {
             try
             {
-                string path = Model.ScheduledTasksModel.WebRoot;
-                if (Model.ScheduledTasksModel.FtpModeEnabled)
+                string path = Model.WebGenerationModel.WebRoot;
+                if (Model.WebGenerationModel.FtpModeEnabled)
                 {
-                    string host = Model.ScheduledTasksModel.WebGenServer;
-                    int port = Model.ScheduledTasksModel.WebGenPort;
-                    string username = Model.ScheduledTasksModel.WebGenUsername;
-                    string password = Model.ScheduledTasksModel.WebGenPassword;
-                    var ftpMode = Model.ScheduledTasksModel.FtpMode;
+                    string host = Model.WebGenerationModel.WebGenServer;
+                    int port = Model.WebGenerationModel.WebGenPort;
+                    string username = Model.WebGenerationModel.WebGenUsername;
+                    string password = Model.WebGenerationModel.WebGenPassword;
+                    var ftpMode = Model.WebGenerationModel.FtpMode;
 
                     await Task.Run(() => ftpService.CheckConnection(host, port, path, username, password, ftpMode)).ConfigureAwait(false);
                 }

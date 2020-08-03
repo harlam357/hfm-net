@@ -22,7 +22,7 @@ namespace HFM.Forms
         {
             //Clients = 0,
             //Options = 1,
-            //ScheduledTasks = 2,
+            //WebGeneration = 2,
             WebVisualStyles = 3
             //Reporting = 4,
             //WebSettings = 5,
@@ -69,7 +69,7 @@ namespace HFM.Forms
         {
             LoadClientsTab();
             LoadOptionsTab();
-            LoadScheduledTasksTab();
+            LoadWebGenerationTab();
             LoadVisualStylesTab();
             LoadReportingTab();
             LoadWebSettingsTab();
@@ -85,12 +85,12 @@ namespace HFM.Forms
             }
             tabControl1.SelectTab(0);
 
-            _presenter.Model.ScheduledTasksModel.PropertyChanged += ScheduledTasksPropertyChanged;
-            _presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
             _presenter.Model.ClientsModel.PropertyChanged += ClientsPropertyChanged;
-            _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
-            _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsChanged;
+            _presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
+            _presenter.Model.WebGenerationModel.PropertyChanged += WebGenerationPropertyChanged;
             _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
+            _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
+            _presenter.Model.WebSettingsModel.PropertyChanged += WebSettingsPropertyChanged;
         }
 
         // *** Always add bindings for CheckBox controls that control TextBox.Enabled after binding TextBox.Text ***
@@ -101,61 +101,61 @@ namespace HFM.Forms
         private const string SelectedValuePropertyName = "SelectedValue";
         private const string TextPropertyName = "Text";
 
-        private void LoadScheduledTasksTab()
+        private void LoadWebGenerationTab()
         {
             // Web Generation
-            radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
+            radioSchedule.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            lbl2MinutesToGen.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
 
-            txtWebGenMinutes.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateInterval));
-            txtWebGenMinutes.DataBindings.Add(EnabledPropertyName, _presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateIntervalEnabled), false, DataSourceUpdateMode.OnValidation);
+            txtWebGenMinutes.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateInterval));
+            txtWebGenMinutes.DataBindings.Add(EnabledPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateIntervalEnabled), false, DataSourceUpdateMode.OnValidation);
 
-            radioFullRefresh.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenAfterRefresh));
-            radioFullRefresh.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
+            radioFullRefresh.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenAfterRefresh));
+            radioFullRefresh.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
 
-            WebGenTypePanel.DataSource = _presenter.Model.ScheduledTasksModel;
-            WebGenTypePanel.ValueMember = nameof(ScheduledTasksModel.WebGenType);
-            WebGenTypePanel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
+            WebGenTypePanel.DataSource = _presenter.Model.WebGenerationModel;
+            WebGenTypePanel.ValueMember = nameof(WebGenerationModel.WebGenType);
+            WebGenTypePanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
 
-            WebSiteTargetPathTextBox.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebRoot));
-            WebSiteTargetPathTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            WebSiteTargetPathLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
+            WebSiteTargetPathTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebRoot));
+            WebSiteTargetPathTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            WebSiteTargetPathLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
 
-            WebSiteServerTextBox.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenServer));
-            WebSiteServerTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
-            WebSiteServerLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
+            WebSiteServerTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenServer));
+            WebSiteServerTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            WebSiteServerLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSitePortTextBox.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenPort));
-            WebSitePortTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
-            WebSitePortLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
+            WebSitePortTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenPort));
+            WebSitePortTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            WebSitePortLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSiteUsernameTextBox.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenUsername));
-            WebSiteUsernameTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
-            WebSiteUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSiteUsernameLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
+            WebSiteUsernameTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenUsername));
+            WebSiteUsernameTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            WebSiteUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            WebSiteUsernameLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSitePasswordTextBox.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.WebGenPassword));
-            WebSitePasswordTextBox.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
-            WebSitePasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSitePasswordLabel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
+            WebSitePasswordTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenPassword));
+            WebSitePasswordTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            WebSitePasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            WebSitePasswordLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            chkHtml.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.CopyHtml));
-            chkHtml.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            chkXml.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.CopyXml));
-            chkXml.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            chkFAHlog.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.CopyFAHlog));
-            chkFAHlog.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            FtpModePanel.DataSource = _presenter.Model.ScheduledTasksModel;
-            FtpModePanel.ValueMember = nameof(ScheduledTasksModel.FtpMode);
-            FtpModePanel.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.FtpModeEnabled));
-            chkLimitSize.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.LimitLogSize));
-            chkLimitSize.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.LimitLogSizeEnabled));
-            udLimitSize.DataBindings.Add(ValuePropertyName, _presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.LimitLogSizeLength), false, DataSourceUpdateMode.OnPropertyChanged);
-            udLimitSize.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.LimitLogSizeLengthEnabled));
+            chkHtml.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyHtml));
+            chkHtml.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            chkXml.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyXml));
+            chkXml.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            chkFAHlog.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyFAHlog));
+            chkFAHlog.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            FtpModePanel.DataSource = _presenter.Model.WebGenerationModel;
+            FtpModePanel.ValueMember = nameof(WebGenerationModel.FtpMode);
+            FtpModePanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            chkLimitSize.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSize));
+            chkLimitSize.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeEnabled));
+            udLimitSize.DataBindings.Add(ValuePropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLength), false, DataSourceUpdateMode.OnPropertyChanged);
+            udLimitSize.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLengthEnabled));
 
-            TestConnectionButton.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
-            BrowseWebFolderButton.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.BrowseLocalPathEnabled));
-            chkWebSiteGenerator.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
+            TestConnectionButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            BrowseWebFolderButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.BrowseLocalPathEnabled));
+            chkWebSiteGenerator.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
         }
 
         private void LoadOptionsTab()
@@ -468,21 +468,21 @@ namespace HFM.Forms
             {
                 tabControl1.SelectedTab = OptionsTab;
             }
-            else if (_presenter.Model.ScheduledTasksModel.HasError)
+            else if (_presenter.Model.WebGenerationModel.HasError)
             {
-                tabControl1.SelectedTab = tabSchdTasks;
+                tabControl1.SelectedTab = WebGenerationTab;
             }
             else if (_presenter.Model.WebVisualStylesModel.HasError)
             {
-                tabControl1.SelectedTab = tabVisStyles;
+                tabControl1.SelectedTab = WebVisualStylesTab;
             }
             else if (_presenter.Model.ReportingModel.HasError)
             {
-                tabControl1.SelectedTab = tabReporting;
+                tabControl1.SelectedTab = ReportingTab;
             }
             else if (_presenter.Model.WebSettingsModel.HasError)
             {
-                tabControl1.SelectedTab = tabWeb;
+                tabControl1.SelectedTab = ProxyTab;
             }
         }
 

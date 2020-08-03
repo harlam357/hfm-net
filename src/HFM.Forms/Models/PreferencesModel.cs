@@ -12,21 +12,21 @@ namespace HFM.Forms.Models
         public PreferencesModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences;
-            ScheduledTasksModel = new ScheduledTasksModel(preferences);
-            OptionsModel = new OptionsModel(preferences, autoRunConfiguration);
             ClientsModel = new ClientsModel(preferences);
+            OptionsModel = new OptionsModel(preferences, autoRunConfiguration);
+            WebGenerationModel = new WebGenerationModel(preferences);
+            WebVisualStylesModel = new WebVisualStylesModel(preferences);
             ReportingModel = new ReportingModel(preferences);
             WebSettingsModel = new WebSettingsModel(preferences);
-            WebVisualStylesModel = new WebVisualStylesModel(preferences);
         }
 
         public IPreferenceSet Preferences { get; }
-        public ScheduledTasksModel ScheduledTasksModel { get; set; }
-        public OptionsModel OptionsModel { get; set; }
         public ClientsModel ClientsModel { get; set; }
+        public OptionsModel OptionsModel { get; set; }
+        public WebGenerationModel WebGenerationModel { get; set; }
+        public WebVisualStylesModel WebVisualStylesModel { get; set; }
         public ReportingModel ReportingModel { get; set; }
         public WebSettingsModel WebSettingsModel { get; set; }
-        public WebVisualStylesModel WebVisualStylesModel { get; set; }
 
         public override string Error
         {
@@ -39,45 +39,45 @@ namespace HFM.Forms.Models
 
         private IEnumerable<string> EnumerateErrors()
         {
-            yield return ScheduledTasksModel.Error;
-            yield return OptionsModel.Error;
             yield return ClientsModel.Error;
+            yield return OptionsModel.Error;
+            yield return WebGenerationModel.Error;
+            yield return WebVisualStylesModel.Error;
             yield return ReportingModel.Error;
             yield return WebSettingsModel.Error;
-            yield return WebVisualStylesModel.Error;
         }
 
         public override bool ValidateAcceptance()
         {
             OnPropertyChanged(String.Empty);
-            ScheduledTasksModel.ValidateAcceptance();
-            OptionsModel.ValidateAcceptance();
             ClientsModel.ValidateAcceptance();
+            OptionsModel.ValidateAcceptance();
+            WebGenerationModel.ValidateAcceptance();
+            WebVisualStylesModel.ValidateAcceptance();
             ReportingModel.ValidateAcceptance();
             WebSettingsModel.ValidateAcceptance();
-            WebVisualStylesModel.ValidateAcceptance();
             return !HasError;
         }
 
         public override void Load()
         {
-            ScheduledTasksModel.Load();
-            OptionsModel.Load();
             ClientsModel.Load();
+            OptionsModel.Load();
+            WebGenerationModel.Load();
+            WebVisualStylesModel.Load();
             ReportingModel.Load();
             WebSettingsModel.Load();
-            WebVisualStylesModel.Load();
         }
 
         public override void Save()
         {
-            ScheduledTasksModel.Save();
-            OptionsModel.Save();
             ClientsModel.Save();
+            OptionsModel.Save();
+            WebGenerationModel.Save();
+            WebVisualStylesModel.Save();
             ReportingModel.Save();
             WebSettingsModel.Save();
-            WebVisualStylesModel.Save();
-            
+
             Preferences.Save();
             OptionsModel.SaveAutoRunConfiguration();
         }

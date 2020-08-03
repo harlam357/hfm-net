@@ -75,7 +75,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                presenter.Model.ScheduledTasksModel.WebRoot = @"foo\";
+                presenter.Model.WebGenerationModel.WebRoot = @"foo\";
                 var dialog = new MockFolderDialogPresenter(window => default);
                 // Act
                 presenter.BrowseWebFolderClicked(dialog);
@@ -109,7 +109,7 @@ namespace HFM.Forms
                 // Act
                 presenter.BrowseWebFolderClicked(dialog);
                 // Assert
-                Assert.AreEqual(@"foo\", presenter.Model.ScheduledTasksModel.WebRoot);
+                Assert.AreEqual(@"foo\", presenter.Model.WebGenerationModel.WebRoot);
             }
         }
 
@@ -211,8 +211,8 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ScheduledTasksModel.GenerateWeb = true;
-                presenter.Model.ScheduledTasksModel.WebGenType = WebDeploymentType.Ftp;
+                presenter.Model.WebGenerationModel.GenerateWeb = true;
+                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Ftp;
                 // Act & Assert
                 Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
             }
@@ -226,8 +226,8 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ScheduledTasksModel.GenerateWeb = true;
-                presenter.Model.ScheduledTasksModel.WebGenType = WebDeploymentType.Ftp;
+                presenter.Model.WebGenerationModel.GenerateWeb = true;
+                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Ftp;
                 // Act & Assert
                 Assert.ThrowsAsync<WebException>(async () => await presenter.TestWebGenerationConnection(new FtpServiceThrowsOnCheckConnection()));
             }
@@ -241,11 +241,11 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ScheduledTasksModel.GenerateWeb = true;
-                presenter.Model.ScheduledTasksModel.WebGenType = WebDeploymentType.Path;
+                presenter.Model.WebGenerationModel.GenerateWeb = true;
+                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Path;
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.ScheduledTasksModel.WebRoot = artifacts.Path;
+                    presenter.Model.WebGenerationModel.WebRoot = artifacts.Path;
                     // Act & Assert
                     Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }
@@ -260,11 +260,11 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ScheduledTasksModel.GenerateWeb = true;
-                presenter.Model.ScheduledTasksModel.WebGenType = WebDeploymentType.Path;
+                presenter.Model.WebGenerationModel.GenerateWeb = true;
+                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Path;
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.ScheduledTasksModel.WebRoot = Path.Combine(artifacts.Path, "DoesNotExist");
+                    presenter.Model.WebGenerationModel.WebRoot = Path.Combine(artifacts.Path, "DoesNotExist");
                     // Act & Assert
                     Assert.ThrowsAsync<DirectoryNotFoundException>(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }
