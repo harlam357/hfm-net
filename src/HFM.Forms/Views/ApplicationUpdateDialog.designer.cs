@@ -1,7 +1,7 @@
 ﻿
 namespace HFM.Forms
 {
-   partial class UpdateDialog
+   partial class ApplicationUpdateDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -136,7 +136,7 @@ namespace HFM.Forms
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
          this.MaximizeBox = false;
          this.MinimizeBox = false;
-         this.Name = "UpdateDialog";
+         this.Name = "ApplicationUpdateDialog";
          this.ShowIcon = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Application Update";

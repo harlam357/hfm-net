@@ -7,7 +7,7 @@ namespace HFM.Forms
 {
     public interface IUpdateView
     {
-        void AttachPresenter(UpdatePresenter presenter);
+        void AttachPresenter(ApplicationUpdatePresenter presenter);
 
         void SetSelectDownloadLabelTextDefault();
 
@@ -30,10 +30,10 @@ namespace HFM.Forms
         void CloseView();
     }
 
-    public partial class UpdateDialog : Form, IUpdateView
+    public partial class ApplicationUpdateDialog : Form, IUpdateView
     {
         private IWin32Window _owner;
-        private UpdatePresenter _presenter;
+        private ApplicationUpdatePresenter _presenter;
 
         #region Properties
 
@@ -45,7 +45,7 @@ namespace HFM.Forms
 
         #endregion
 
-        public UpdateDialog(ApplicationUpdate update, string applicationName, string applicationVersion)
+        public ApplicationUpdateDialog(ApplicationUpdate update, string applicationName, string applicationVersion)
         {
             InitializeComponent();
 
@@ -91,7 +91,7 @@ namespace HFM.Forms
 
         #region IUpdateView Methods
 
-        public void AttachPresenter(UpdatePresenter presenter)
+        public void AttachPresenter(ApplicationUpdatePresenter presenter)
         {
             _presenter = presenter;
         }

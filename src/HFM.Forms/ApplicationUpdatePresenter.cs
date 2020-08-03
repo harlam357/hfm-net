@@ -10,7 +10,7 @@ using HFM.Core.Net;
 
 namespace HFM.Forms
 {
-    public class UpdatePresenter
+    public class ApplicationUpdatePresenter
     {
         #region Fields
 
@@ -54,17 +54,17 @@ namespace HFM.Forms
 
         #region Constructors
 
-        public UpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData,
+        public ApplicationUpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData,
                                IWebProxy proxy, string applicationName, string applicationVersion)
         {
             _exceptionLogger = exceptionLogger;
             _updateData = updateData;
             _proxy = proxy;
-            _updateView = new UpdateDialog(updateData, applicationName, applicationVersion);
+            _updateView = new ApplicationUpdateDialog(updateData, applicationName, applicationVersion);
             _updateView.AttachPresenter(this);
         }
 
-        public UpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData,
+        public ApplicationUpdatePresenter(Action<Exception> exceptionLogger, ApplicationUpdate updateData,
                                IWebProxy proxy, IUpdateView updateView, WebOperation webOperation)
         {
             _exceptionLogger = exceptionLogger;

@@ -158,7 +158,7 @@ namespace HFM.Forms
                 return;
             }
 
-            var updatePresenter = new UpdatePresenter(ExceptionLogger,
+            var updatePresenter = new ApplicationUpdatePresenter(ExceptionLogger,
                update, _proxy, Application.Name, Application.FullVersion);
             updatePresenter.Show(Owner);
             HandleUpdatePresenterResults(updatePresenter);
@@ -169,7 +169,7 @@ namespace HFM.Forms
             Logger.Error(ex.Message, ex);
         }
 
-        private void HandleUpdatePresenterResults(UpdatePresenter presenter)
+        private void HandleUpdatePresenterResults(ApplicationUpdatePresenter presenter)
         {
             if (presenter.UpdateReady &&
                 presenter.SelectedUpdate.UpdateType == 0 &&
