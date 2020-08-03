@@ -58,15 +58,15 @@ namespace HFM.Forms
             Dialog?.Dispose();
         }
 
-        public void BrowseWebFolderClicked(FolderDialogPresenter dialog)
+        public void WebGenerationBrowsePathClicked(FolderDialogPresenter dialog)
         {
-            if (!String.IsNullOrWhiteSpace(Model.WebGenerationModel.WebRoot))
+            if (!String.IsNullOrWhiteSpace(Model.WebGenerationModel.Path))
             {
-                dialog.SelectedPath = Model.WebGenerationModel.WebRoot;
+                dialog.SelectedPath = Model.WebGenerationModel.Path;
             }
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Model.WebGenerationModel.WebRoot = dialog.SelectedPath;
+                Model.WebGenerationModel.Path = dialog.SelectedPath;
             }
         }
 
@@ -133,13 +133,13 @@ namespace HFM.Forms
         {
             try
             {
-                string path = Model.WebGenerationModel.WebRoot;
+                string path = Model.WebGenerationModel.Path;
                 if (Model.WebGenerationModel.FtpModeEnabled)
                 {
-                    string host = Model.WebGenerationModel.WebGenServer;
-                    int port = Model.WebGenerationModel.WebGenPort;
-                    string username = Model.WebGenerationModel.WebGenUsername;
-                    string password = Model.WebGenerationModel.WebGenPassword;
+                    string host = Model.WebGenerationModel.Server;
+                    int port = Model.WebGenerationModel.Port;
+                    string username = Model.WebGenerationModel.Username;
+                    string password = Model.WebGenerationModel.Password;
                     var ftpMode = Model.WebGenerationModel.FtpMode;
 
                     await Task.Run(() => ftpService.CheckConnection(host, port, path, username, password, ftpMode)).ConfigureAwait(false);

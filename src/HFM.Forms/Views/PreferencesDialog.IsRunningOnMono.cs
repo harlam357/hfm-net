@@ -20,39 +20,39 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(WebGenerationModel.GenerateWeb):
-                    radioSchedule.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    lbl2MinutesToGen.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    radioFullRefresh.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    WebSiteTargetPathTextBox.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    chkHtml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    chkXml.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    chkFAHlog.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    TestConnectionLinkLabel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
-                    WebGenTypePanel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
+                case nameof(WebGenerationModel.Enabled):
+                    webGenerationOnScheduleRadioButton.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationIntervalLabel.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationAfterClientRetrievalRadioButton.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationPathTextBox.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationCopyHtmlCheckBox.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationCopyXmlCheckBox.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationCopyLogCheckBox.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webGenerationTestConnectionLinkLabel.Enabled = _presenter.Model.WebGenerationModel.Enabled;
+                    webDeploymentTypeRadioPanel.Enabled = _presenter.Model.WebGenerationModel.Enabled;
                     break;
-                case nameof(WebGenerationModel.GenerateIntervalEnabled):
-                    txtWebGenMinutes.Enabled = _presenter.Model.WebGenerationModel.GenerateIntervalEnabled;
+                case nameof(WebGenerationModel.IntervalEnabled):
+                    webGenerationIntervalTextBox.Enabled = _presenter.Model.WebGenerationModel.IntervalEnabled;
                     break;
                 case nameof(WebGenerationModel.FtpModeEnabled):
-                    WebSiteServerTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSiteServerLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSitePortTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSitePortLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSiteUsernameTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSiteUsernameLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSitePasswordTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    WebSitePasswordLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
-                    FtpModePanel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationServerTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationServerLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationPortTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationPortLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationUsernameTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationUsernameLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationPasswordTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationPasswordLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
+                    webGenerationFtpModeRadioPanel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     break;
-                case nameof(WebGenerationModel.BrowseLocalPathEnabled):
-                    BrowseWebFolderButton.Enabled = _presenter.Model.WebGenerationModel.BrowseLocalPathEnabled;
+                case nameof(WebGenerationModel.BrowsePathEnabled):
+                    webGenerationBrowsePathButton.Enabled = _presenter.Model.WebGenerationModel.BrowsePathEnabled;
                     break;
                 case nameof(WebGenerationModel.LimitLogSizeEnabled):
-                    chkLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeEnabled;
+                    webGenerationLimitLogSizeCheckBox.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeEnabled;
                     break;
                 case nameof(WebGenerationModel.LimitLogSizeLengthEnabled):
-                    udLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeLengthEnabled;
+                    webGenerationLimitLogSizeLengthUpDown.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeLengthEnabled;
                     break;
             }
         }
@@ -61,8 +61,8 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(WebGenerationModel.WebRoot):
-                    WebSiteTargetPathTextBox.Text = _presenter.Model.WebGenerationModel.WebRoot;
+                case nameof(WebGenerationModel.Path):
+                    webGenerationPathTextBox.Text = _presenter.Model.WebGenerationModel.Path;
                     break;
             }
         }

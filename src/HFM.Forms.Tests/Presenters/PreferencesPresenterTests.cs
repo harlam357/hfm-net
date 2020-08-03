@@ -70,36 +70,36 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseWebFolderClicked_SetsFolderDialogSelectedPathWhenModelPathIsSet()
+        public void PreferencesPresenter_WebGenerationBrowsePathClicked_SetsFolderDialogSelectedPathWhenModelPathIsSet()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                presenter.Model.WebGenerationModel.WebRoot = @"foo\";
+                presenter.Model.WebGenerationModel.Path = @"foo\";
                 var dialog = new MockFolderDialogPresenter(window => default);
                 // Act
-                presenter.BrowseWebFolderClicked(dialog);
+                presenter.WebGenerationBrowsePathClicked(dialog);
                 // Assert
                 Assert.AreEqual(@"foo\", dialog.SelectedPath);
             }
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseWebFolderClicked_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
+        public void PreferencesPresenter_WebGenerationBrowsePathClicked_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFolderDialogPresenter(window => default);
                 // Act
-                presenter.BrowseWebFolderClicked(dialog);
+                presenter.WebGenerationBrowsePathClicked(dialog);
                 // Assert
                 Assert.IsNull(dialog.SelectedPath);
             }
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseWebFolderClicked_SetsModelPathWhenDialogResultIsOK()
+        public void PreferencesPresenter_WebGenerationBrowsePathClicked_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -107,9 +107,9 @@ namespace HFM.Forms
                 var dialog = new MockFolderDialogPresenter(window => DialogResult.OK);
                 dialog.SelectedPath = @"foo\";
                 // Act
-                presenter.BrowseWebFolderClicked(dialog);
+                presenter.WebGenerationBrowsePathClicked(dialog);
                 // Assert
-                Assert.AreEqual(@"foo\", presenter.Model.WebGenerationModel.WebRoot);
+                Assert.AreEqual(@"foo\", presenter.Model.WebGenerationModel.Path);
             }
         }
 
@@ -211,8 +211,8 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.WebGenerationModel.GenerateWeb = true;
-                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Ftp;
+                presenter.Model.WebGenerationModel.Enabled = true;
+                presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Ftp;
                 // Act & Assert
                 Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
             }
@@ -226,8 +226,8 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.WebGenerationModel.GenerateWeb = true;
-                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Ftp;
+                presenter.Model.WebGenerationModel.Enabled = true;
+                presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Ftp;
                 // Act & Assert
                 Assert.ThrowsAsync<WebException>(async () => await presenter.TestWebGenerationConnection(new FtpServiceThrowsOnCheckConnection()));
             }
@@ -241,11 +241,11 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.WebGenerationModel.GenerateWeb = true;
-                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Path;
+                presenter.Model.WebGenerationModel.Enabled = true;
+                presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Path;
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.WebGenerationModel.WebRoot = artifacts.Path;
+                    presenter.Model.WebGenerationModel.Path = artifacts.Path;
                     // Act & Assert
                     Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }
@@ -260,11 +260,11 @@ namespace HFM.Forms
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.WebGenerationModel.GenerateWeb = true;
-                presenter.Model.WebGenerationModel.WebGenType = WebDeploymentType.Path;
+                presenter.Model.WebGenerationModel.Enabled = true;
+                presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Path;
                 using (var artifacts = new ArtifactFolder())
                 {
-                    presenter.Model.WebGenerationModel.WebRoot = Path.Combine(artifacts.Path, "DoesNotExist");
+                    presenter.Model.WebGenerationModel.Path = Path.Combine(artifacts.Path, "DoesNotExist");
                     // Act & Assert
                     Assert.ThrowsAsync<DirectoryNotFoundException>(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }

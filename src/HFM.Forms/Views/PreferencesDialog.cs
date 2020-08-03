@@ -104,58 +104,58 @@ namespace HFM.Forms
         private void LoadWebGenerationTab()
         {
             // Web Generation
-            radioSchedule.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            lbl2MinutesToGen.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            webGenerationOnScheduleRadioButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationIntervalLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
 
-            txtWebGenMinutes.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateInterval));
-            txtWebGenMinutes.DataBindings.Add(EnabledPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateIntervalEnabled), false, DataSourceUpdateMode.OnValidation);
+            webGenerationIntervalTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Interval));
+            webGenerationIntervalTextBox.DataBindings.Add(EnabledPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.IntervalEnabled), false, DataSourceUpdateMode.OnValidation);
 
-            radioFullRefresh.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenAfterRefresh));
-            radioFullRefresh.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            webGenerationAfterClientRetrievalRadioButton.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.AfterClientRetrieval));
+            webGenerationAfterClientRetrievalRadioButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
 
-            WebGenTypePanel.DataSource = _presenter.Model.WebGenerationModel;
-            WebGenTypePanel.ValueMember = nameof(WebGenerationModel.WebGenType);
-            WebGenTypePanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            webDeploymentTypeRadioPanel.DataSource = _presenter.Model.WebGenerationModel;
+            webDeploymentTypeRadioPanel.ValueMember = nameof(WebGenerationModel.WebDeploymentType);
+            webDeploymentTypeRadioPanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
 
-            WebSiteTargetPathTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebRoot));
-            WebSiteTargetPathTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            WebSiteTargetPathLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            webGenerationPathTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Path));
+            webGenerationPathTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationPathLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
 
-            WebSiteServerTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenServer));
-            WebSiteServerTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
-            WebSiteServerLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationServerTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Server));
+            webGenerationServerTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationServerLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSitePortTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenPort));
-            WebSitePortTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
-            WebSitePortLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationPortTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Port));
+            webGenerationPortTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationPortLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSiteUsernameTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenUsername));
-            WebSiteUsernameTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
-            WebSiteUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSiteUsernameLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationUsernameTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Username));
+            webGenerationUsernameTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webGenerationUsernameLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            WebSitePasswordTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.WebGenPassword));
-            WebSitePasswordTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
-            WebSitePasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
-            WebSitePasswordLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationPasswordTextBox.BindText(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Password));
+            webGenerationPasswordTextBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationPasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webGenerationPasswordLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
 
-            chkHtml.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyHtml));
-            chkHtml.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            chkXml.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyXml));
-            chkXml.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            chkFAHlog.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyFAHlog));
-            chkFAHlog.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            FtpModePanel.DataSource = _presenter.Model.WebGenerationModel;
-            FtpModePanel.ValueMember = nameof(WebGenerationModel.FtpMode);
-            FtpModePanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
-            chkLimitSize.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSize));
-            chkLimitSize.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeEnabled));
-            udLimitSize.DataBindings.Add(ValuePropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLength), false, DataSourceUpdateMode.OnPropertyChanged);
-            udLimitSize.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLengthEnabled));
+            webGenerationCopyHtmlCheckBox.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyHtml));
+            webGenerationCopyHtmlCheckBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationCopyXmlCheckBox.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyXml));
+            webGenerationCopyXmlCheckBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationCopyLogCheckBox.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.CopyLog));
+            webGenerationCopyLogCheckBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationFtpModeRadioPanel.DataSource = _presenter.Model.WebGenerationModel;
+            webGenerationFtpModeRadioPanel.ValueMember = nameof(WebGenerationModel.FtpMode);
+            webGenerationFtpModeRadioPanel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.FtpModeEnabled));
+            webGenerationLimitLogSizeCheckBox.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSize));
+            webGenerationLimitLogSizeCheckBox.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeEnabled));
+            webGenerationLimitLogSizeLengthUpDown.DataBindings.Add(ValuePropertyName, _presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLength), false, DataSourceUpdateMode.OnPropertyChanged);
+            webGenerationLimitLogSizeLengthUpDown.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.LimitLogSizeLengthEnabled));
 
-            TestConnectionLinkLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
-            BrowseWebFolderButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.BrowseLocalPathEnabled));
-            chkWebSiteGenerator.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.GenerateWeb));
+            webGenerationTestConnectionLinkLabel.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
+            webGenerationBrowsePathButton.BindEnabled(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.BrowsePathEnabled));
+            webGenerationEnabledCheckBox.BindChecked(_presenter.Model.WebGenerationModel, nameof(WebGenerationModel.Enabled));
         }
 
         private void LoadOptionsTab()
@@ -325,11 +325,11 @@ namespace HFM.Forms
         #endregion
 
         // Scheduled Tasks Tab
-        private void BrowseWebFolderButton_Click(object sender, EventArgs e)
+        private void webGenerationBrowsePathButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFolderDialogPresenter.BrowseFolder())
             {
-                _presenter.BrowseWebFolderClicked(dialog);
+                _presenter.WebGenerationBrowsePathClicked(dialog);
             }
         }
 
@@ -463,11 +463,11 @@ namespace HFM.Forms
             }
             else if (_presenter.Model.WebGenerationModel.HasError)
             {
-                tabControl1.SelectedTab = WebGenerationTab;
+                tabControl1.SelectedTab = webGenerationTab;
             }
             else if (_presenter.Model.WebVisualStylesModel.HasError)
             {
-                tabControl1.SelectedTab = WebVisualStylesTab;
+                tabControl1.SelectedTab = webVisualStylesTab;
             }
             else if (_presenter.Model.ReportingModel.HasError)
             {

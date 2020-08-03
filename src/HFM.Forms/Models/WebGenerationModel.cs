@@ -24,19 +24,19 @@ namespace HFM.Forms.Models
         public override void Load()
         {
             var webGenerationTask = Preferences.Get<WebGenerationTask>(Preference.WebGenerationTask);
-            GenerateWeb = webGenerationTask.Enabled;
-            GenerateInterval = webGenerationTask.Interval;
-            WebGenAfterRefresh = webGenerationTask.AfterClientRetrieval;
+            Enabled = webGenerationTask.Enabled;
+            Interval = webGenerationTask.Interval;
+            AfterClientRetrieval = webGenerationTask.AfterClientRetrieval;
 
-            WebGenType = Preferences.Get<WebDeploymentType>(Preference.WebDeploymentType);
-            WebRoot = Preferences.Get<string>(Preference.WebDeploymentRoot);
-            WebGenServer = Preferences.Get<string>(Preference.WebGenServer);
-            WebGenPort = Preferences.Get<int>(Preference.WebGenPort);
-            WebGenUsername = Preferences.Get<string>(Preference.WebGenUsername);
-            WebGenPassword = Preferences.Get<string>(Preference.WebGenPassword);
+            WebDeploymentType = Preferences.Get<WebDeploymentType>(Preference.WebDeploymentType);
+            Path = Preferences.Get<string>(Preference.WebDeploymentRoot);
+            Server = Preferences.Get<string>(Preference.WebGenServer);
+            Port = Preferences.Get<int>(Preference.WebGenPort);
+            Username = Preferences.Get<string>(Preference.WebGenUsername);
+            Password = Preferences.Get<string>(Preference.WebGenPassword);
             CopyHtml = Preferences.Get<bool>(Preference.WebGenCopyHtml);
             CopyXml = Preferences.Get<bool>(Preference.WebGenCopyXml);
-            CopyFAHlog = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
+            CopyLog = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
             FtpMode = Preferences.Get<FtpMode>(Preference.WebGenFtpMode);
             LimitLogSize = Preferences.Get<bool>(Preference.WebGenLimitLogSize);
             LimitLogSizeLength = Preferences.Get<int>(Preference.WebGenLimitLogSizeLength);
@@ -46,28 +46,28 @@ namespace HFM.Forms.Models
         {
             var webGenerationTask = new WebGenerationTask
             {
-                Enabled = GenerateWeb,
-                Interval = GenerateInterval,
-                AfterClientRetrieval = WebGenAfterRefresh
+                Enabled = Enabled,
+                Interval = Interval,
+                AfterClientRetrieval = AfterClientRetrieval
             };
             Preferences.Set(Preference.WebGenerationTask, webGenerationTask);
 
-            Preferences.Set(Preference.WebDeploymentType, WebGenType);
-            if (WebGenType == WebDeploymentType.Ftp)
+            Preferences.Set(Preference.WebDeploymentType, WebDeploymentType);
+            if (WebDeploymentType == WebDeploymentType.Ftp)
             {
-                Preferences.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddUnixTrailingSlash(WebRoot));
+                Preferences.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddUnixTrailingSlash(Path));
             }
             else
             {
-                Preferences.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddTrailingSlash(WebRoot));
+                Preferences.Set(Preference.WebDeploymentRoot, Internal.FileSystemPath.AddTrailingSlash(Path));
             }
-            Preferences.Set(Preference.WebGenServer, WebGenServer);
-            Preferences.Set(Preference.WebGenPort, WebGenPort);
-            Preferences.Set(Preference.WebGenUsername, WebGenUsername);
-            Preferences.Set(Preference.WebGenPassword, WebGenPassword);
+            Preferences.Set(Preference.WebGenServer, Server);
+            Preferences.Set(Preference.WebGenPort, Port);
+            Preferences.Set(Preference.WebGenUsername, Username);
+            Preferences.Set(Preference.WebGenPassword, Password);
             Preferences.Set(Preference.WebGenCopyHtml, CopyHtml);
             Preferences.Set(Preference.WebGenCopyXml, CopyXml);
-            Preferences.Set(Preference.WebGenCopyFAHlog, CopyFAHlog);
+            Preferences.Set(Preference.WebGenCopyFAHlog, CopyLog);
             Preferences.Set(Preference.WebGenFtpMode, FtpMode);
             Preferences.Set(Preference.WebGenLimitLogSize, LimitLogSize);
             Preferences.Set(Preference.WebGenLimitLogSizeLength, LimitLogSizeLength);
@@ -79,16 +79,16 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(GenerateInterval):
-                        return ValidateGenerateInterval() ? null : GenerateIntervalError;
-                    case nameof(WebRoot):
-                        return ValidateWebRoot() ? null : WebRootError;
-                    case nameof(WebGenServer):
-                        return ValidateWebGenServer() ? null : WebGenServerError;
-                    case nameof(WebGenPort):
-                        return ValidateWebGenPort() ? null : WebGenPortError;
-                    case nameof(WebGenUsername):
-                    case nameof(WebGenPassword):
+                    case nameof(Interval):
+                        return ValidateInterval() ? null : IntervalError;
+                    case nameof(Path):
+                        return ValidatePath() ? null : PathError;
+                    case nameof(Server):
+                        return ValidateServer() ? null : ServerError;
+                    case nameof(Port):
+                        return ValidatePort() ? null : PortError;
+                    case nameof(Username):
+                    case nameof(Password):
                         return ValidateCredentials() ? null : CredentialsError;
                     default:
                         return null;
@@ -102,11 +102,11 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(GenerateInterval),
-                    nameof(WebRoot),
-                    nameof(WebGenServer),
-                    nameof(WebGenPort),
-                    nameof(WebGenUsername)
+                    nameof(Interval),
+                    nameof(Path),
+                    nameof(Server),
+                    nameof(Port),
+                    nameof(Username)
                 };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
@@ -115,188 +115,188 @@ namespace HFM.Forms.Models
 
         #region Web Generation
 
-        private WebDeploymentType _webGenType;
+        private WebDeploymentType _webDeploymentType;
 
-        public WebDeploymentType WebGenType
+        public WebDeploymentType WebDeploymentType
         {
-            get { return _webGenType; }
+            get { return _webDeploymentType; }
             set
             {
-                if (WebGenType != value)
+                if (WebDeploymentType != value)
                 {
-                    _webGenType = value;
+                    _webDeploymentType = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(FtpModeEnabled));
-                    OnPropertyChanged(nameof(BrowseLocalPathEnabled));
+                    OnPropertyChanged(nameof(BrowsePathEnabled));
                     OnPropertyChanged(nameof(LimitLogSizeEnabled));
                     OnPropertyChanged(nameof(LimitLogSizeLengthEnabled));
                 }
             }
         }
 
-        private int _generateInterval;
+        private int _interval;
 
-        public int GenerateInterval
+        public int Interval
         {
-            get { return _generateInterval; }
+            get { return _interval; }
             set
             {
-                if (GenerateInterval != value)
+                if (Interval != value)
                 {
-                    _generateInterval = value;
+                    _interval = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private static string GenerateIntervalError { get; } = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
+        private static string IntervalError { get; } = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
 
-        public bool GenerateIntervalEnabled
+        public bool IntervalEnabled
         {
-            get { return GenerateWeb && WebGenAfterRefresh == false; }
+            get { return Enabled && AfterClientRetrieval == false; }
         }
 
-        public bool ValidateGenerateInterval()
+        public bool ValidateInterval()
         {
-            return !GenerateIntervalEnabled || ClientScheduledTasks.ValidateInterval(GenerateInterval);
+            return !IntervalEnabled || ClientScheduledTasks.ValidateInterval(Interval);
         }
 
-        private bool _webGenAfterRefresh;
+        private bool _afterClientRetrieval;
 
-        public bool WebGenAfterRefresh
+        public bool AfterClientRetrieval
         {
-            get { return _webGenAfterRefresh; }
+            get { return _afterClientRetrieval; }
             set
             {
-                if (WebGenAfterRefresh != value)
+                if (AfterClientRetrieval != value)
                 {
-                    _webGenAfterRefresh = value;
+                    _afterClientRetrieval = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(GenerateIntervalEnabled));
+                    OnPropertyChanged(nameof(IntervalEnabled));
                 }
             }
         }
 
-        private string _webRoot;
+        private string _path;
 
-        public string WebRoot
+        public string Path
         {
-            get { return _webRoot; }
+            get { return _path; }
             set
             {
-                if (WebRoot != value)
+                if (Path != value)
                 {
-                    _webRoot = value == null ? String.Empty : Internal.FileSystemPath.AddTrailingSlash(value.Trim());
+                    _path = value == null ? String.Empty : Internal.FileSystemPath.AddTrailingSlash(value.Trim());
                     OnPropertyChanged();
                 }
             }
         }
 
-        private const string WebRootError = "Web Generation target path must be a valid local path, network (UNC) path,\r\nor Un" +
+        private const string PathError = "Web Generation target path must be a valid local path, network (UNC) path,\r\nor Un" +
                                             "ix style path when the upload type is FTP server.";
 
-        public bool ValidateWebRoot()
+        public bool ValidatePath()
         {
-            if (GenerateWeb == false) return true;
+            if (Enabled == false) return true;
 
-            switch (WebGenType)
+            switch (WebDeploymentType)
             {
                 case WebDeploymentType.Path:
-                    if (WebRoot.Length < 2)
+                    if (Path.Length < 2)
                     {
                         return false;
                     }
-                    return FileSystemPath.Validate(WebRoot);
+                    return FileSystemPath.Validate(Path);
                 case WebDeploymentType.Ftp:
-                    return FileSystemPath.ValidateUnix(WebRoot);
+                    return FileSystemPath.ValidateUnix(Path);
                 default:
                     return false;
             }
         }
 
-        private string _webGenServer;
+        private string _server;
 
-        public string WebGenServer
+        public string Server
         {
-            get { return _webGenServer; }
+            get { return _server; }
             set
             {
-                if (WebGenServer != value)
+                if (Server != value)
                 {
-                    _webGenServer = value == null ? String.Empty : value.Trim();
+                    _server = value == null ? String.Empty : value.Trim();
                     OnPropertyChanged();
                 }
             }
         }
 
-        private const string WebGenServerError = "FTP server must be a valid host name or IP address.";
+        private const string ServerError = "FTP server must be a valid host name or IP address.";
 
-        private bool ValidateWebGenServer()
+        private bool ValidateServer()
         {
-            switch (WebGenType)
+            switch (WebDeploymentType)
             {
                 case WebDeploymentType.Ftp:
-                    return HostName.Validate(WebGenServer);
+                    return HostName.Validate(Server);
                 default:
                     return true;
             }
         }
 
-        private int _webGenPort;
+        private int _port;
 
-        public int WebGenPort
+        public int Port
         {
-            get { return _webGenPort; }
+            get { return _port; }
             set
             {
-                if (WebGenPort != value)
+                if (Port != value)
                 {
-                    _webGenPort = value;
+                    _port = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private static string WebGenPortError { get; } = $"Must be greater than zero and less than {UInt16.MaxValue}";
+        private static string PortError { get; } = $"Must be greater than zero and less than {UInt16.MaxValue}";
 
-        private bool ValidateWebGenPort()
+        private bool ValidatePort()
         {
-            switch (WebGenType)
+            switch (WebDeploymentType)
             {
                 case WebDeploymentType.Ftp:
-                    return TcpPort.Validate(WebGenPort);
+                    return TcpPort.Validate(Port);
                 default:
                     return true;
             }
         }
 
-        private string _webGenUsername;
+        private string _username;
 
-        public string WebGenUsername
+        public string Username
         {
-            get { return _webGenUsername; }
+            get { return _username; }
             set
             {
-                if (WebGenUsername != value)
+                if (Username != value)
                 {
-                    _webGenUsername = value == null ? String.Empty : value.Trim();
-                    OnPropertyChanged(nameof(WebGenPassword));
+                    _username = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged(nameof(Password));
                     OnPropertyChanged();
                 }
             }
         }
 
-        private string _webGenPassword;
+        private string _password;
 
-        public string WebGenPassword
+        public string Password
         {
-            get { return _webGenPassword; }
+            get { return _password; }
             set
             {
-                if (WebGenPassword != value)
+                if (Password != value)
                 {
-                    _webGenPassword = value == null ? String.Empty : value.Trim();
-                    OnPropertyChanged(nameof(WebGenUsername));
+                    _password = value == null ? String.Empty : value.Trim();
+                    OnPropertyChanged(nameof(Username));
                     OnPropertyChanged();
                 }
             }
@@ -306,7 +306,7 @@ namespace HFM.Forms.Models
 
         private bool ValidateCredentials()
         {
-            switch (WebGenType)
+            switch (WebDeploymentType)
             {
                 case WebDeploymentType.Ftp:
                     return ValidateFtpCredentials();
@@ -317,7 +317,7 @@ namespace HFM.Forms.Models
 
         private bool ValidateFtpCredentials()
         {
-            var result = NetworkCredentialFactory.ValidateRequired(WebGenUsername, WebGenPassword, out var message);
+            var result = NetworkCredentialFactory.ValidateRequired(Username, Password, out var message);
             CredentialsError = result ? String.Empty : message;
             return result;
         }
@@ -361,17 +361,17 @@ namespace HFM.Forms.Models
         }
 
         // ReSharper disable InconsistentNaming
-        private bool _copyFAHlog;
+        private bool _copyLog;
 
-        public bool CopyFAHlog
+        public bool CopyLog
         // ReSharper restore InconsistentNaming
         {
-            get { return _copyFAHlog; }
+            get { return _copyLog; }
             set
             {
-                if (CopyFAHlog != value)
+                if (CopyLog != value)
                 {
-                    _copyFAHlog = value;
+                    _copyLog = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(LimitLogSizeEnabled));
                     OnPropertyChanged(nameof(LimitLogSizeLengthEnabled));
@@ -396,12 +396,12 @@ namespace HFM.Forms.Models
 
         public bool FtpModeEnabled
         {
-            get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp; }
+            get { return Enabled && WebDeploymentType == WebDeploymentType.Ftp; }
         }
 
-        public bool BrowseLocalPathEnabled
+        public bool BrowsePathEnabled
         {
-            get { return GenerateWeb && WebGenType == WebDeploymentType.Path; }
+            get { return Enabled && WebDeploymentType == WebDeploymentType.Path; }
         }
 
         private bool _limitLogSize;
@@ -423,7 +423,7 @@ namespace HFM.Forms.Models
 
         public bool LimitLogSizeEnabled
         {
-            get { return GenerateWeb && WebGenType == WebDeploymentType.Ftp && CopyFAHlog; }
+            get { return Enabled && WebDeploymentType == WebDeploymentType.Ftp && CopyLog; }
         }
 
         private int _limitLogSizeLength;
@@ -446,20 +446,20 @@ namespace HFM.Forms.Models
             get { return LimitLogSizeEnabled && LimitLogSize; }
         }
 
-        private bool _generateWeb;
+        private bool _enabled;
 
-        public bool GenerateWeb
+        public bool Enabled
         {
-            get { return _generateWeb; }
+            get { return _enabled; }
             set
             {
-                if (GenerateWeb != value)
+                if (Enabled != value)
                 {
-                    _generateWeb = value;
+                    _enabled = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(GenerateIntervalEnabled));
+                    OnPropertyChanged(nameof(IntervalEnabled));
                     OnPropertyChanged(nameof(FtpModeEnabled));
-                    OnPropertyChanged(nameof(BrowseLocalPathEnabled));
+                    OnPropertyChanged(nameof(BrowsePathEnabled));
                     OnPropertyChanged(nameof(LimitLogSizeEnabled));
                     OnPropertyChanged(nameof(LimitLogSizeLengthEnabled));
                 }
