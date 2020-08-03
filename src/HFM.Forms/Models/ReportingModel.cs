@@ -20,28 +20,28 @@ namespace HFM.Forms.Models
 
         public override void Load()
         {
-            ServerSecure = Preferences.Get<bool>(Preference.EmailReportingServerSecure);
+            IsSecure = Preferences.Get<bool>(Preference.EmailReportingServerSecure);
             ToAddress = Preferences.Get<string>(Preference.EmailReportingToAddress);
             FromAddress = Preferences.Get<string>(Preference.EmailReportingFromAddress);
-            ServerAddress = Preferences.Get<string>(Preference.EmailReportingServerAddress);
-            ServerPort = Preferences.Get<int>(Preference.EmailReportingServerPort);
-            ServerUsername = Preferences.Get<string>(Preference.EmailReportingServerUsername);
-            ServerPassword = Preferences.Get<string>(Preference.EmailReportingServerPassword);
-            ReportingEnabled = Preferences.Get<bool>(Preference.EmailReportingEnabled);
+            Server = Preferences.Get<string>(Preference.EmailReportingServerAddress);
+            Port = Preferences.Get<int>(Preference.EmailReportingServerPort);
+            Username = Preferences.Get<string>(Preference.EmailReportingServerUsername);
+            Password = Preferences.Get<string>(Preference.EmailReportingServerPassword);
+            Enabled = Preferences.Get<bool>(Preference.EmailReportingEnabled);
             //ReportEuePause = Preferences.Get<bool>(Preference.ReportEuePause);
             //ReportHung = Preferences.Get<bool>(Preference.ReportHung);
         }
 
         public override void Save()
         {
-            Preferences.Set(Preference.EmailReportingServerSecure, ServerSecure);
+            Preferences.Set(Preference.EmailReportingServerSecure, IsSecure);
             Preferences.Set(Preference.EmailReportingToAddress, ToAddress);
             Preferences.Set(Preference.EmailReportingFromAddress, FromAddress);
-            Preferences.Set(Preference.EmailReportingServerAddress, ServerAddress);
-            Preferences.Set(Preference.EmailReportingServerPort, ServerPort);
-            Preferences.Set(Preference.EmailReportingServerUsername, ServerUsername);
-            Preferences.Set(Preference.EmailReportingServerPassword, ServerPassword);
-            Preferences.Set(Preference.EmailReportingEnabled, ReportingEnabled);
+            Preferences.Set(Preference.EmailReportingServerAddress, Server);
+            Preferences.Set(Preference.EmailReportingServerPort, Port);
+            Preferences.Set(Preference.EmailReportingServerUsername, Username);
+            Preferences.Set(Preference.EmailReportingServerPassword, Password);
+            Preferences.Set(Preference.EmailReportingEnabled, Enabled);
             //Preferences.Set(Preference.ReportEuePause, ReportEuePause);
             //Preferences.Set(Preference.ReportHung, ReportHung);
         }
@@ -56,12 +56,12 @@ namespace HFM.Forms.Models
                         return ValidateToAddress() ? null : ToAddressError;
                     case nameof(FromAddress):
                         return ValidateFromAddress() ? null : FromAddressError;
-                    case nameof(ServerAddress):
-                    case nameof(ServerPort):
-                        return ValidateServerAddressPort() ? null : ServerAddressPortError;
-                    case nameof(ServerUsername):
-                    case nameof(ServerPassword):
-                        return ValidateServerUsernamePassword() ? null : ServerUsernamePasswordError;
+                    case nameof(Server):
+                    case nameof(Port):
+                        return ValidateServerPort() ? null : ServerPortError;
+                    case nameof(Username):
+                    case nameof(Password):
+                        return ValidateCredentials() ? null : CredentialsError;
                     default:
                         return null;
                 }
@@ -76,8 +76,8 @@ namespace HFM.Forms.Models
                 {
                     nameof(ToAddress),
                     nameof(FromAddress),
-                    nameof(ServerAddress),
-                    nameof(ServerUsername)
+                    nameof(Server),
+                    nameof(Username)
                 };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
@@ -86,16 +86,16 @@ namespace HFM.Forms.Models
 
         #region Email Settings
 
-        private bool _serverSecure;
+        private bool _isSecure;
 
-        public bool ServerSecure
+        public bool IsSecure
         {
-            get { return _serverSecure; }
+            get { return _isSecure; }
             set
             {
-                if (ServerSecure != value)
+                if (IsSecure != value)
                 {
-                    _serverSecure = value;
+                    _isSecure = value;
                     OnPropertyChanged();
                 }
             }
@@ -121,7 +121,7 @@ namespace HFM.Forms.Models
 
         public bool ValidateToAddress()
         {
-            if (ReportingEnabled == false) return true;
+            if (Enabled == false) return true;
             if (String.IsNullOrEmpty(ToAddress)) return false;
 
             return SendMailService.ValidateEmail(ToAddress);
@@ -147,111 +147,111 @@ namespace HFM.Forms.Models
 
         public bool ValidateFromAddress()
         {
-            if (ReportingEnabled == false) return true;
+            if (Enabled == false) return true;
             if (String.IsNullOrEmpty(FromAddress)) return false;
 
             return SendMailService.ValidateEmail(FromAddress);
         }
 
-        private string _serverAddress;
+        private string _server;
 
-        public string ServerAddress
+        public string Server
         {
-            get { return _serverAddress; }
+            get { return _server; }
             set
             {
-                if (ServerAddress != value)
+                if (Server != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _serverAddress = newValue;
-                    OnPropertyChanged(nameof(ServerPort));
+                    _server = newValue;
+                    OnPropertyChanged(nameof(Port));
                     OnPropertyChanged();
                 }
             }
         }
 
-        private int _serverPort;
+        private int _port;
 
-        public int ServerPort
+        public int Port
         {
-            get { return _serverPort; }
+            get { return _port; }
             set
             {
-                if (ServerPort != value)
+                if (Port != value)
                 {
-                    _serverPort = value;
-                    OnPropertyChanged(nameof(ServerAddress));
+                    _port = value;
+                    OnPropertyChanged(nameof(Server));
                     OnPropertyChanged();
                 }
             }
         }
 
-        public string ServerAddressPortError { get; private set; }
+        public string ServerPortError { get; private set; }
 
-        private bool ValidateServerAddressPort()
+        private bool ValidateServerPort()
         {
-            if (ReportingEnabled == false) return true;
+            if (Enabled == false) return true;
 
-            var result = HostName.ValidateNameAndPort(ServerAddress, ServerPort, out var message);
-            ServerAddressPortError = result ? String.Empty : message;
+            var result = HostName.ValidateNameAndPort(Server, Port, out var message);
+            ServerPortError = result ? String.Empty : message;
             return result;
         }
 
-        private string _serverUsername;
+        private string _username;
 
-        public string ServerUsername
+        public string Username
         {
-            get { return _serverUsername; }
+            get { return _username; }
             set
             {
-                if (ServerUsername != value)
+                if (Username != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _serverUsername = newValue;
-                    OnPropertyChanged(nameof(ServerPassword));
+                    _username = newValue;
+                    OnPropertyChanged(nameof(Password));
                     OnPropertyChanged();
                 }
             }
         }
 
-        private string _serverPassword;
+        private string _password;
 
-        public string ServerPassword
+        public string Password
         {
-            get { return _serverPassword; }
+            get { return _password; }
             set
             {
-                if (ServerPassword != value)
+                if (Password != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _serverPassword = newValue;
-                    OnPropertyChanged(nameof(ServerUsername));
+                    _password = newValue;
+                    OnPropertyChanged(nameof(Username));
                     OnPropertyChanged();
                 }
             }
         }
 
-        public string ServerUsernamePasswordError { get; private set; }
+        public string CredentialsError { get; private set; }
 
-        private bool ValidateServerUsernamePassword()
+        private bool ValidateCredentials()
         {
-            if (ReportingEnabled == false) return true;
+            if (Enabled == false) return true;
 
-            var result = NetworkCredentialFactory.ValidateOrEmpty(ServerUsername, ServerPassword, out var message);
-            ServerUsernamePasswordError = result ? String.Empty : message;
+            var result = NetworkCredentialFactory.ValidateOrEmpty(Username, Password, out var message);
+            CredentialsError = result ? String.Empty : message;
             return result;
         }
 
-        private bool _reportingEnabled;
+        private bool _enabled;
 
-        public bool ReportingEnabled
+        public bool Enabled
         {
-            get { return _reportingEnabled; }
+            get { return _enabled; }
             set
             {
-                if (ReportingEnabled != value)
+                if (Enabled != value)
                 {
-                    _reportingEnabled = value;
+                    _enabled = value;
                     OnPropertyChanged();
                 }
             }

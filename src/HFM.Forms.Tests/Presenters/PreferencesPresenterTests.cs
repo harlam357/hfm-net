@@ -70,7 +70,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_WebGenerationBrowsePathClicked_SetsFolderDialogSelectedPathWhenModelPathIsSet()
+        public void PreferencesPresenter_BrowseForWebGenerationPath_SetsFolderDialogSelectedPathWhenModelPathIsSet()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -78,28 +78,28 @@ namespace HFM.Forms
                 presenter.Model.WebGenerationModel.Path = @"foo\";
                 var dialog = new MockFolderDialogPresenter(window => default);
                 // Act
-                presenter.WebGenerationBrowsePathClicked(dialog);
+                presenter.BrowseForWebGenerationPath(dialog);
                 // Assert
                 Assert.AreEqual(@"foo\", dialog.SelectedPath);
             }
         }
 
         [Test]
-        public void PreferencesPresenter_WebGenerationBrowsePathClicked_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
+        public void PreferencesPresenter_BrowseForWebGenerationPath_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFolderDialogPresenter(window => default);
                 // Act
-                presenter.WebGenerationBrowsePathClicked(dialog);
+                presenter.BrowseForWebGenerationPath(dialog);
                 // Assert
                 Assert.IsNull(dialog.SelectedPath);
             }
         }
 
         [Test]
-        public void PreferencesPresenter_WebGenerationBrowsePathClicked_SetsModelPathWhenDialogResultIsOK()
+        public void PreferencesPresenter_BrowseForWebGenerationPath_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -107,23 +107,23 @@ namespace HFM.Forms
                 var dialog = new MockFolderDialogPresenter(window => DialogResult.OK);
                 dialog.SelectedPath = @"foo\";
                 // Act
-                presenter.WebGenerationBrowsePathClicked(dialog);
+                presenter.BrowseForWebGenerationPath(dialog);
                 // Assert
                 Assert.AreEqual(@"foo\", presenter.Model.WebGenerationModel.Path);
             }
         }
 
         [Test]
-        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenModelHasError()
+        public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenModelHasError()
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ReportingModel.ReportingEnabled = true;
+                presenter.Model.ReportingModel.Enabled = true;
                 // Act
-                presenter.TestEmailClicked(NullSendMailService.Instance);
+                presenter.TestReportingEmail(NullSendMailService.Instance);
                 // Assert
                 Assert.AreEqual(1, messageBox.Invocations.Count);
                 Assert.AreEqual(nameof(MessageBoxPresenter.ShowError), messageBox.Invocations.First().Name);
@@ -131,20 +131,20 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenTestEmailSucceeds()
+        public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenTestEmailSucceeds()
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ReportingModel.ReportingEnabled = true;
+                presenter.Model.ReportingModel.Enabled = true;
                 presenter.Model.ReportingModel.FromAddress = "me@home.com";
                 presenter.Model.ReportingModel.ToAddress = "you@yourhouse.com";
-                presenter.Model.ReportingModel.ServerAddress = "foo";
-                presenter.Model.ReportingModel.ServerPort = 25;
+                presenter.Model.ReportingModel.Server = "foo";
+                presenter.Model.ReportingModel.Port = 25;
                 // Act
-                presenter.TestEmailClicked(NullSendMailService.Instance);
+                presenter.TestReportingEmail(NullSendMailService.Instance);
                 // Assert
                 Assert.AreEqual(1, messageBox.Invocations.Count);
                 Assert.AreEqual(nameof(MessageBoxPresenter.ShowInformation), messageBox.Invocations.First().Name);
@@ -152,20 +152,20 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_TestEmailClicked_ShowsMessageBoxWhenTestEmailFails()
+        public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenTestEmailFails()
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
-                presenter.Model.ReportingModel.ReportingEnabled = true;
+                presenter.Model.ReportingModel.Enabled = true;
                 presenter.Model.ReportingModel.FromAddress = "me@home.com";
                 presenter.Model.ReportingModel.ToAddress = "you@yourhouse.com";
-                presenter.Model.ReportingModel.ServerAddress = "foo";
-                presenter.Model.ReportingModel.ServerPort = 25;
+                presenter.Model.ReportingModel.Server = "foo";
+                presenter.Model.ReportingModel.Port = 25;
                 // Act
-                presenter.TestEmailClicked(new SendMailServiceThrows());
+                presenter.TestReportingEmail(new SendMailServiceThrows());
                 // Assert
                 Assert.AreEqual(1, messageBox.Invocations.Count);
                 Assert.AreEqual(nameof(MessageBoxPresenter.ShowError), messageBox.Invocations.First().Name);
@@ -173,7 +173,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_TestExtremeOverclockingUserClicked_StartsLocalProcess()
+        public void PreferencesPresenter_TestExtremeOverclockingUser_StartsLocalProcess()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             using (var presenter = new MockDialogPreferencesPresenter(model))
@@ -181,7 +181,7 @@ namespace HFM.Forms
                 model.OptionsModel.EocUserID = 12345;
                 // Act
                 var localProcess = new MockLocalProcessService();
-                presenter.TestExtremeOverclockingUserClicked(localProcess);
+                presenter.TestExtremeOverclockingUser(localProcess);
                 // Assert
                 Assert.AreEqual(1, localProcess.Invocations.Count);
                 Assert.IsTrue(localProcess.Invocations.First().FileName.EndsWith("12345"));
@@ -189,14 +189,14 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_TestExtremeOverclockingUserClicked_ShowsMessageBoxWhenLocalProcessFailsToStart()
+        public void PreferencesPresenter_TestExtremeOverclockingUser_ShowsMessageBoxWhenLocalProcessFailsToStart()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
                 // Act
-                presenter.TestExtremeOverclockingUserClicked(new LocalProcessServiceThrows());
+                presenter.TestExtremeOverclockingUser(new LocalProcessServiceThrows());
                 // Assert
                 Assert.AreEqual(1, messageBox.Invocations.Count);
                 Assert.AreEqual(nameof(MessageBoxPresenter.ShowError), messageBox.Invocations.First().Name);
@@ -272,7 +272,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseForConfigurationFileClicked_SetsFolderDialogInitialDirectoryAndFileNameWhenModelPathIsFileAndExists()
+        public void PreferencesPresenter_BrowseForConfigurationFile_SetsFolderDialogInitialDirectoryAndFileNameWhenModelPathIsFileAndExists()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -284,7 +284,7 @@ namespace HFM.Forms
                     presenter.Model.ClientsModel.DefaultConfigFile = path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
-                    presenter.BrowseForConfigurationFileClicked(dialog);
+                    presenter.BrowseForConfigurationFile(dialog);
                     // Assert
                     Assert.AreEqual(Path.GetDirectoryName(path), dialog.InitialDirectory);
                     Assert.AreEqual(Path.GetFileName(path), dialog.FileName);
@@ -293,7 +293,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseForConfigurationFileClicked_SetsFolderDialogInitialDirectoryWhenModelPathIsDirectoryAndExists()
+        public void PreferencesPresenter_BrowseForConfigurationFile_SetsFolderDialogInitialDirectoryWhenModelPathIsDirectoryAndExists()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -303,7 +303,7 @@ namespace HFM.Forms
                     presenter.Model.ClientsModel.DefaultConfigFile = artifacts.Path;
                     var dialog = new MockFileDialogPresenter(window => default);
                     // Act
-                    presenter.BrowseForConfigurationFileClicked(dialog);
+                    presenter.BrowseForConfigurationFile(dialog);
                     // Assert
                     Assert.AreEqual(artifacts.Path, dialog.InitialDirectory);
                     Assert.AreEqual(null, dialog.FileName);
@@ -312,7 +312,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void PreferencesPresenter_BrowseForConfigurationFileClicked_SetsModelPathWhenDialogResultIsOK()
+        public void PreferencesPresenter_BrowseForConfigurationFile_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
@@ -321,7 +321,7 @@ namespace HFM.Forms
                 string path = @"C:\foo\bar.hfmx";
                 dialog.FileName = path;
                 // Act
-                presenter.BrowseForConfigurationFileClicked(dialog);
+                presenter.BrowseForConfigurationFile(dialog);
                 // Assert
                 Assert.AreEqual(path, presenter.Model.ClientsModel.DefaultConfigFile);
             }

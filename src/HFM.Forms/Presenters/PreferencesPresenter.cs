@@ -58,7 +58,7 @@ namespace HFM.Forms
             Dialog?.Dispose();
         }
 
-        public void WebGenerationBrowsePathClicked(FolderDialogPresenter dialog)
+        public void BrowseForWebGenerationPath(FolderDialogPresenter dialog)
         {
             if (!String.IsNullOrWhiteSpace(Model.WebGenerationModel.Path))
             {
@@ -70,7 +70,7 @@ namespace HFM.Forms
             }
         }
 
-        public void TestEmailClicked(SendMailService sendMailService)
+        public void TestReportingEmail(SendMailService sendMailService)
         {
             if (!Model.ReportingModel.ValidateAcceptance())
             {
@@ -82,7 +82,7 @@ namespace HFM.Forms
                 {
                     var m = Model.ReportingModel;
                     sendMailService.SendEmail(m.FromAddress, m.ToAddress, "HFM.NET - Test Email",
-                        "HFM.NET - Test Email", m.ServerAddress, m.ServerPort, m.ServerUsername, m.ServerPassword, m.ServerSecure);
+                        "HFM.NET - Test Email", m.Server, m.Port, m.Username, m.Password, m.IsSecure);
                     MessageBox.ShowInformation(Dialog, "Test email sent successfully.", Core.Application.NameAndVersion);
                 }
                 catch (Exception ex)
@@ -94,21 +94,21 @@ namespace HFM.Forms
             }
         }
 
-        public void TestExtremeOverclockingUserClicked(LocalProcessService localProcess)
+        public void TestExtremeOverclockingUser(LocalProcessService localProcess)
         {
             string url = String.Concat(EocStatsService.UserBaseUrl, Model.OptionsModel.EocUserID);
             string caption = "EOC User Stats page";
             TestUrl(localProcess, url, caption);
         }
 
-        public void TestFoldingAtHomeUserClicked(LocalProcessService localProcess)
+        public void TestFoldingAtHomeUser(LocalProcessService localProcess)
         {
             string url = String.Concat(FahUrl.UserBaseUrl, Model.OptionsModel.FahUserID);
             string caption = "FAH User Stats page";
             TestUrl(localProcess, url, caption);
         }
 
-        public void TestExtremeOverclockingTeamClicked(LocalProcessService localProcess)
+        public void TestExtremeOverclockingTeam(LocalProcessService localProcess)
         {
             string url = String.Concat(EocStatsService.TeamBaseUrl, Model.OptionsModel.TeamID);
             string caption = "EOC Team Stats page";
@@ -170,7 +170,7 @@ namespace HFM.Forms
             MessageBox.ShowError(Dialog, text, Core.Application.NameAndVersion);
         }
 
-        public void BrowseForConfigurationFileClicked(FileDialogPresenter dialog)
+        public void BrowseForConfigurationFile(FileDialogPresenter dialog)
         {
             var x = GetInitialDirectoryAndFileName(Model.ClientsModel.DefaultConfigFile);
             string extension = Core.Client.ClientSettingsFileSerializer.DefaultFileExtension;
@@ -185,7 +185,7 @@ namespace HFM.Forms
         private const string ExeExtension = "exe";
         private const string ExeFilter = "Program Files|*.exe";
 
-        public void BrowseForLogViewerClicked(FileDialogPresenter dialog)
+        public void BrowseForLogViewer(FileDialogPresenter dialog)
         {
             var x = GetInitialDirectoryAndFileName(Model.OptionsModel.LogFileViewer);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, ExeExtension, ExeFilter);
@@ -195,7 +195,7 @@ namespace HFM.Forms
             }
         }
 
-        public void BrowseForFileExplorerClicked(FileDialogPresenter dialog)
+        public void BrowseForFileExplorer(FileDialogPresenter dialog)
         {
             var x = GetInitialDirectoryAndFileName(Model.OptionsModel.FileExplorer);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, ExeExtension, ExeFilter);

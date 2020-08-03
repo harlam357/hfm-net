@@ -133,23 +133,23 @@ namespace HFM.Forms
             this.lbl1Preview = new System.Windows.Forms.Label();
             this.lbl1Style = new System.Windows.Forms.Label();
             this.ReportingTab = new System.Windows.Forms.TabPage();
-            this.grpReportSelections = new System.Windows.Forms.GroupBox();
+            this.reportingSelectionsGroupBox = new System.Windows.Forms.GroupBox();
             this.grpEmailSettings = new System.Windows.Forms.GroupBox();
-            this.SendTestEmailLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.txtSmtpServerPort = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingSendTestEmailLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.reportingPortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper3 = new System.Windows.Forms.Label();
-            this.chkEmailSecure = new System.Windows.Forms.CheckBox();
-            this.txtSmtpPassword = new HFM.Forms.Controls.DataErrorTextBox();
-            this.txtSmtpUsername = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingIsSecureCheckBox = new System.Windows.Forms.CheckBox();
+            this.reportingPasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingUsernameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper4 = new System.Windows.Forms.Label();
             this.labelWrapper5 = new System.Windows.Forms.Label();
             this.lblFromEmailAddress = new System.Windows.Forms.Label();
-            this.txtFromEmailAddress = new HFM.Forms.Controls.DataErrorTextBox();
-            this.chkEnableEmail = new System.Windows.Forms.CheckBox();
+            this.reportingFromAddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.lblSmtpServer = new System.Windows.Forms.Label();
             this.lblToAddress = new System.Windows.Forms.Label();
-            this.txtSmtpServer = new HFM.Forms.Controls.DataErrorTextBox();
-            this.txtToEmailAddress = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingServerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.reportingToAddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.ProxyTab = new System.Windows.Forms.TabPage();
             this.grpWebProxy = new System.Windows.Forms.GroupBox();
             this.chkUseProxy = new System.Windows.Forms.CheckBox();
@@ -862,7 +862,7 @@ namespace HFM.Forms
             this.webGenerationTestConnectionLinkLabel.TabIndex = 25;
             this.webGenerationTestConnectionLinkLabel.TabStop = true;
             this.webGenerationTestConnectionLinkLabel.Text = "Test Connection";
-            this.webGenerationTestConnectionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestConnectionLinkLabel_LinkClicked);
+            this.webGenerationTestConnectionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.webGenerationTestConnectionLinkLabel_LinkClicked);
             // 
             // CopyLabel
             // 
@@ -1376,7 +1376,7 @@ namespace HFM.Forms
             // 
             // ReportingTab
             // 
-            this.ReportingTab.Controls.Add(this.grpReportSelections);
+            this.ReportingTab.Controls.Add(this.reportingSelectionsGroupBox);
             this.ReportingTab.Controls.Add(this.grpEmailSettings);
             this.ReportingTab.Location = new System.Drawing.Point(4, 22);
             this.ReportingTab.Name = "ReportingTab";
@@ -1387,32 +1387,32 @@ namespace HFM.Forms
             // 
             // grpReportSelections
             // 
-            this.grpReportSelections.Enabled = false;
-            this.grpReportSelections.Location = new System.Drawing.Point(6, 179);
-            this.grpReportSelections.Name = "grpReportSelections";
-            this.grpReportSelections.Size = new System.Drawing.Size(489, 114);
-            this.grpReportSelections.TabIndex = 1;
-            this.grpReportSelections.TabStop = false;
-            this.grpReportSelections.Text = "Report Selections";
-            this.grpReportSelections.EnabledChanged += new System.EventHandler(this.grpReportSelections_EnabledChanged);
+            this.reportingSelectionsGroupBox.Enabled = false;
+            this.reportingSelectionsGroupBox.Location = new System.Drawing.Point(6, 179);
+            this.reportingSelectionsGroupBox.Name = "reportingSelectionsGroupBox";
+            this.reportingSelectionsGroupBox.Size = new System.Drawing.Size(489, 114);
+            this.reportingSelectionsGroupBox.TabIndex = 1;
+            this.reportingSelectionsGroupBox.TabStop = false;
+            this.reportingSelectionsGroupBox.Text = "Report Selections";
+            this.reportingSelectionsGroupBox.EnabledChanged += new System.EventHandler(this.grpReportSelections_EnabledChanged);
             // 
             // grpEmailSettings
             // 
-            this.grpEmailSettings.Controls.Add(this.SendTestEmailLinkLabel);
-            this.grpEmailSettings.Controls.Add(this.txtSmtpServerPort);
+            this.grpEmailSettings.Controls.Add(this.reportingSendTestEmailLinkLabel);
+            this.grpEmailSettings.Controls.Add(this.reportingPortTextBox);
             this.grpEmailSettings.Controls.Add(this.labelWrapper3);
-            this.grpEmailSettings.Controls.Add(this.chkEmailSecure);
-            this.grpEmailSettings.Controls.Add(this.txtSmtpPassword);
-            this.grpEmailSettings.Controls.Add(this.txtSmtpUsername);
+            this.grpEmailSettings.Controls.Add(this.reportingIsSecureCheckBox);
+            this.grpEmailSettings.Controls.Add(this.reportingPasswordTextBox);
+            this.grpEmailSettings.Controls.Add(this.reportingUsernameTextBox);
             this.grpEmailSettings.Controls.Add(this.labelWrapper4);
             this.grpEmailSettings.Controls.Add(this.labelWrapper5);
             this.grpEmailSettings.Controls.Add(this.lblFromEmailAddress);
-            this.grpEmailSettings.Controls.Add(this.txtFromEmailAddress);
-            this.grpEmailSettings.Controls.Add(this.chkEnableEmail);
+            this.grpEmailSettings.Controls.Add(this.reportingFromAddressTextBox);
+            this.grpEmailSettings.Controls.Add(this.reportingEnabledCheckBox);
             this.grpEmailSettings.Controls.Add(this.lblSmtpServer);
             this.grpEmailSettings.Controls.Add(this.lblToAddress);
-            this.grpEmailSettings.Controls.Add(this.txtSmtpServer);
-            this.grpEmailSettings.Controls.Add(this.txtToEmailAddress);
+            this.grpEmailSettings.Controls.Add(this.reportingServerTextBox);
+            this.grpEmailSettings.Controls.Add(this.reportingToAddressTextBox);
             this.grpEmailSettings.Location = new System.Drawing.Point(6, 9);
             this.grpEmailSettings.Name = "grpEmailSettings";
             this.grpEmailSettings.Size = new System.Drawing.Size(489, 164);
@@ -1422,32 +1422,32 @@ namespace HFM.Forms
             // 
             // SendTestEmailLinkLabel
             // 
-            this.SendTestEmailLinkLabel.AutoSize = true;
-            this.SendTestEmailLinkLabel.Location = new System.Drawing.Point(384, 21);
-            this.SendTestEmailLinkLabel.Name = "SendTestEmailLinkLabel";
-            this.SendTestEmailLinkLabel.Size = new System.Drawing.Size(84, 13);
-            this.SendTestEmailLinkLabel.TabIndex = 26;
-            this.SendTestEmailLinkLabel.TabStop = true;
-            this.SendTestEmailLinkLabel.Text = "Send Test Email";
-            this.SendTestEmailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SendTestEmailLinkLabel_LinkClicked);
+            this.reportingSendTestEmailLinkLabel.AutoSize = true;
+            this.reportingSendTestEmailLinkLabel.Location = new System.Drawing.Point(384, 21);
+            this.reportingSendTestEmailLinkLabel.Name = "reportingSendTestEmailLinkLabel";
+            this.reportingSendTestEmailLinkLabel.Size = new System.Drawing.Size(84, 13);
+            this.reportingSendTestEmailLinkLabel.TabIndex = 26;
+            this.reportingSendTestEmailLinkLabel.TabStop = true;
+            this.reportingSendTestEmailLinkLabel.Text = "Send Test Email";
+            this.reportingSendTestEmailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.reportingSendTestEmailLinkLabel_LinkClicked);
             // 
             // txtSmtpServerPort
             // 
-            this.txtSmtpServerPort.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSmtpServerPort.DoubleBuffered = true;
-            this.txtSmtpServerPort.Enabled = false;
-            this.txtSmtpServerPort.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpServerPort.ErrorToolTip = this.toolTipPrefs;
-            this.txtSmtpServerPort.ErrorToolTipDuration = 5000;
-            this.txtSmtpServerPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSmtpServerPort.ErrorToolTipText = "";
-            this.txtSmtpServerPort.Location = new System.Drawing.Point(415, 103);
-            this.txtSmtpServerPort.MaxLength = 200;
-            this.txtSmtpServerPort.Name = "txtSmtpServerPort";
-            this.txtSmtpServerPort.ReadOnly = true;
-            this.txtSmtpServerPort.Size = new System.Drawing.Size(54, 20);
-            this.txtSmtpServerPort.TabIndex = 9;
-            this.txtSmtpServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
+            this.reportingPortTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingPortTextBox.DoubleBuffered = true;
+            this.reportingPortTextBox.Enabled = false;
+            this.reportingPortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingPortTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingPortTextBox.ErrorToolTipDuration = 5000;
+            this.reportingPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingPortTextBox.ErrorToolTipText = "";
+            this.reportingPortTextBox.Location = new System.Drawing.Point(415, 103);
+            this.reportingPortTextBox.MaxLength = 200;
+            this.reportingPortTextBox.Name = "reportingPortTextBox";
+            this.reportingPortTextBox.ReadOnly = true;
+            this.reportingPortTextBox.Size = new System.Drawing.Size(54, 20);
+            this.reportingPortTextBox.TabIndex = 9;
+            this.reportingPortTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // labelWrapper3
             // 
@@ -1460,49 +1460,49 @@ namespace HFM.Forms
             // 
             // chkEmailSecure
             // 
-            this.chkEmailSecure.AutoSize = true;
-            this.chkEmailSecure.Enabled = false;
-            this.chkEmailSecure.Location = new System.Drawing.Point(152, 20);
-            this.chkEmailSecure.Name = "chkEmailSecure";
-            this.chkEmailSecure.Size = new System.Drawing.Size(168, 17);
-            this.chkEmailSecure.TabIndex = 1;
-            this.chkEmailSecure.Text = "Use Secure Connection (SSL)";
-            this.chkEmailSecure.UseVisualStyleBackColor = true;
+            this.reportingIsSecureCheckBox.AutoSize = true;
+            this.reportingIsSecureCheckBox.Enabled = false;
+            this.reportingIsSecureCheckBox.Location = new System.Drawing.Point(152, 20);
+            this.reportingIsSecureCheckBox.Name = "reportingIsSecureCheckBox";
+            this.reportingIsSecureCheckBox.Size = new System.Drawing.Size(168, 17);
+            this.reportingIsSecureCheckBox.TabIndex = 1;
+            this.reportingIsSecureCheckBox.Text = "Use Secure Connection (SSL)";
+            this.reportingIsSecureCheckBox.UseVisualStyleBackColor = true;
             // 
             // txtSmtpPassword
             // 
-            this.txtSmtpPassword.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSmtpPassword.DoubleBuffered = true;
-            this.txtSmtpPassword.Enabled = false;
-            this.txtSmtpPassword.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpPassword.ErrorToolTip = this.toolTipPrefs;
-            this.txtSmtpPassword.ErrorToolTipDuration = 5000;
-            this.txtSmtpPassword.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSmtpPassword.ErrorToolTipText = "";
-            this.txtSmtpPassword.Location = new System.Drawing.Point(314, 129);
-            this.txtSmtpPassword.MaxLength = 100;
-            this.txtSmtpPassword.Name = "txtSmtpPassword";
-            this.txtSmtpPassword.ReadOnly = true;
-            this.txtSmtpPassword.Size = new System.Drawing.Size(155, 20);
-            this.txtSmtpPassword.TabIndex = 13;
-            this.txtSmtpPassword.UseSystemPasswordChar = true;
+            this.reportingPasswordTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingPasswordTextBox.DoubleBuffered = true;
+            this.reportingPasswordTextBox.Enabled = false;
+            this.reportingPasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingPasswordTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingPasswordTextBox.ErrorToolTipDuration = 5000;
+            this.reportingPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingPasswordTextBox.ErrorToolTipText = "";
+            this.reportingPasswordTextBox.Location = new System.Drawing.Point(314, 129);
+            this.reportingPasswordTextBox.MaxLength = 100;
+            this.reportingPasswordTextBox.Name = "reportingPasswordTextBox";
+            this.reportingPasswordTextBox.ReadOnly = true;
+            this.reportingPasswordTextBox.Size = new System.Drawing.Size(155, 20);
+            this.reportingPasswordTextBox.TabIndex = 13;
+            this.reportingPasswordTextBox.UseSystemPasswordChar = true;
             // 
             // txtSmtpUsername
             // 
-            this.txtSmtpUsername.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSmtpUsername.DoubleBuffered = true;
-            this.txtSmtpUsername.Enabled = false;
-            this.txtSmtpUsername.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpUsername.ErrorToolTip = this.toolTipPrefs;
-            this.txtSmtpUsername.ErrorToolTipDuration = 5000;
-            this.txtSmtpUsername.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSmtpUsername.ErrorToolTipText = "";
-            this.txtSmtpUsername.Location = new System.Drawing.Point(92, 129);
-            this.txtSmtpUsername.MaxLength = 100;
-            this.txtSmtpUsername.Name = "txtSmtpUsername";
-            this.txtSmtpUsername.ReadOnly = true;
-            this.txtSmtpUsername.Size = new System.Drawing.Size(155, 20);
-            this.txtSmtpUsername.TabIndex = 11;
+            this.reportingUsernameTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingUsernameTextBox.DoubleBuffered = true;
+            this.reportingUsernameTextBox.Enabled = false;
+            this.reportingUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingUsernameTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingUsernameTextBox.ErrorToolTipDuration = 5000;
+            this.reportingUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingUsernameTextBox.ErrorToolTipText = "";
+            this.reportingUsernameTextBox.Location = new System.Drawing.Point(92, 129);
+            this.reportingUsernameTextBox.MaxLength = 100;
+            this.reportingUsernameTextBox.Name = "reportingUsernameTextBox";
+            this.reportingUsernameTextBox.ReadOnly = true;
+            this.reportingUsernameTextBox.Size = new System.Drawing.Size(155, 20);
+            this.reportingUsernameTextBox.TabIndex = 11;
             // 
             // labelWrapper4
             // 
@@ -1533,31 +1533,31 @@ namespace HFM.Forms
             // 
             // txtFromEmailAddress
             // 
-            this.txtFromEmailAddress.BackColor = System.Drawing.SystemColors.Control;
-            this.txtFromEmailAddress.DoubleBuffered = true;
-            this.txtFromEmailAddress.Enabled = false;
-            this.txtFromEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtFromEmailAddress.ErrorToolTip = this.toolTipPrefs;
-            this.txtFromEmailAddress.ErrorToolTipDuration = 5000;
-            this.txtFromEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtFromEmailAddress.ErrorToolTipText = "";
-            this.txtFromEmailAddress.Location = new System.Drawing.Point(92, 77);
-            this.txtFromEmailAddress.MaxLength = 200;
-            this.txtFromEmailAddress.Name = "txtFromEmailAddress";
-            this.txtFromEmailAddress.ReadOnly = true;
-            this.txtFromEmailAddress.Size = new System.Drawing.Size(377, 20);
-            this.txtFromEmailAddress.TabIndex = 5;
-            this.txtFromEmailAddress.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
+            this.reportingFromAddressTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingFromAddressTextBox.DoubleBuffered = true;
+            this.reportingFromAddressTextBox.Enabled = false;
+            this.reportingFromAddressTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingFromAddressTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingFromAddressTextBox.ErrorToolTipDuration = 5000;
+            this.reportingFromAddressTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingFromAddressTextBox.ErrorToolTipText = "";
+            this.reportingFromAddressTextBox.Location = new System.Drawing.Point(92, 77);
+            this.reportingFromAddressTextBox.MaxLength = 200;
+            this.reportingFromAddressTextBox.Name = "reportingFromAddressTextBox";
+            this.reportingFromAddressTextBox.ReadOnly = true;
+            this.reportingFromAddressTextBox.Size = new System.Drawing.Size(377, 20);
+            this.reportingFromAddressTextBox.TabIndex = 5;
+            this.reportingFromAddressTextBox.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
             // 
             // chkEnableEmail
             // 
-            this.chkEnableEmail.AutoSize = true;
-            this.chkEnableEmail.Location = new System.Drawing.Point(10, 20);
-            this.chkEnableEmail.Name = "chkEnableEmail";
-            this.chkEnableEmail.Size = new System.Drawing.Size(136, 17);
-            this.chkEnableEmail.TabIndex = 0;
-            this.chkEnableEmail.Text = "Enable Email Reporting";
-            this.chkEnableEmail.UseVisualStyleBackColor = true;
+            this.reportingEnabledCheckBox.AutoSize = true;
+            this.reportingEnabledCheckBox.Location = new System.Drawing.Point(10, 20);
+            this.reportingEnabledCheckBox.Name = "reportingEnabledCheckBox";
+            this.reportingEnabledCheckBox.Size = new System.Drawing.Size(136, 17);
+            this.reportingEnabledCheckBox.TabIndex = 0;
+            this.reportingEnabledCheckBox.Text = "Enable Email Reporting";
+            this.reportingEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
             // lblSmtpServer
             // 
@@ -1579,37 +1579,37 @@ namespace HFM.Forms
             // 
             // txtSmtpServer
             // 
-            this.txtSmtpServer.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSmtpServer.DoubleBuffered = true;
-            this.txtSmtpServer.Enabled = false;
-            this.txtSmtpServer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtSmtpServer.ErrorToolTip = this.toolTipPrefs;
-            this.txtSmtpServer.ErrorToolTipDuration = 5000;
-            this.txtSmtpServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtSmtpServer.ErrorToolTipText = "";
-            this.txtSmtpServer.Location = new System.Drawing.Point(92, 103);
-            this.txtSmtpServer.MaxLength = 200;
-            this.txtSmtpServer.Name = "txtSmtpServer";
-            this.txtSmtpServer.ReadOnly = true;
-            this.txtSmtpServer.Size = new System.Drawing.Size(282, 20);
-            this.txtSmtpServer.TabIndex = 7;
+            this.reportingServerTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingServerTextBox.DoubleBuffered = true;
+            this.reportingServerTextBox.Enabled = false;
+            this.reportingServerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingServerTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingServerTextBox.ErrorToolTipDuration = 5000;
+            this.reportingServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingServerTextBox.ErrorToolTipText = "";
+            this.reportingServerTextBox.Location = new System.Drawing.Point(92, 103);
+            this.reportingServerTextBox.MaxLength = 200;
+            this.reportingServerTextBox.Name = "reportingServerTextBox";
+            this.reportingServerTextBox.ReadOnly = true;
+            this.reportingServerTextBox.Size = new System.Drawing.Size(282, 20);
+            this.reportingServerTextBox.TabIndex = 7;
             // 
             // txtToEmailAddress
             // 
-            this.txtToEmailAddress.BackColor = System.Drawing.SystemColors.Control;
-            this.txtToEmailAddress.DoubleBuffered = true;
-            this.txtToEmailAddress.Enabled = false;
-            this.txtToEmailAddress.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtToEmailAddress.ErrorToolTip = this.toolTipPrefs;
-            this.txtToEmailAddress.ErrorToolTipDuration = 5000;
-            this.txtToEmailAddress.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtToEmailAddress.ErrorToolTipText = "";
-            this.txtToEmailAddress.Location = new System.Drawing.Point(92, 51);
-            this.txtToEmailAddress.MaxLength = 200;
-            this.txtToEmailAddress.Name = "txtToEmailAddress";
-            this.txtToEmailAddress.ReadOnly = true;
-            this.txtToEmailAddress.Size = new System.Drawing.Size(377, 20);
-            this.txtToEmailAddress.TabIndex = 3;
+            this.reportingToAddressTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.reportingToAddressTextBox.DoubleBuffered = true;
+            this.reportingToAddressTextBox.Enabled = false;
+            this.reportingToAddressTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.reportingToAddressTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.reportingToAddressTextBox.ErrorToolTipDuration = 5000;
+            this.reportingToAddressTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.reportingToAddressTextBox.ErrorToolTipText = "";
+            this.reportingToAddressTextBox.Location = new System.Drawing.Point(92, 51);
+            this.reportingToAddressTextBox.MaxLength = 200;
+            this.reportingToAddressTextBox.Name = "reportingToAddressTextBox";
+            this.reportingToAddressTextBox.ReadOnly = true;
+            this.reportingToAddressTextBox.Size = new System.Drawing.Size(377, 20);
+            this.reportingToAddressTextBox.TabIndex = 3;
             // 
             // ProxyTab
             // 
@@ -1893,16 +1893,16 @@ namespace HFM.Forms
         private System.Windows.Forms.GroupBox grpEmailSettings;
         private System.Windows.Forms.Label lblSmtpServer;
         private System.Windows.Forms.Label lblToAddress;
-        private HFM.Forms.Controls.DataErrorTextBox txtSmtpServer;
-        private HFM.Forms.Controls.DataErrorTextBox txtToEmailAddress;
-        private System.Windows.Forms.CheckBox chkEnableEmail;
+        private HFM.Forms.Controls.DataErrorTextBox reportingServerTextBox;
+        private HFM.Forms.Controls.DataErrorTextBox reportingToAddressTextBox;
+        private System.Windows.Forms.CheckBox reportingEnabledCheckBox;
         private System.Windows.Forms.Label lblFromEmailAddress;
-        private HFM.Forms.Controls.DataErrorTextBox txtFromEmailAddress;
-        private HFM.Forms.Controls.DataErrorTextBox txtSmtpPassword;
-        private HFM.Forms.Controls.DataErrorTextBox txtSmtpUsername;
+        private HFM.Forms.Controls.DataErrorTextBox reportingFromAddressTextBox;
+        private HFM.Forms.Controls.DataErrorTextBox reportingPasswordTextBox;
+        private HFM.Forms.Controls.DataErrorTextBox reportingUsernameTextBox;
         private System.Windows.Forms.Label labelWrapper4;
         private System.Windows.Forms.Label labelWrapper5;
-        private System.Windows.Forms.GroupBox grpReportSelections;
+        private System.Windows.Forms.GroupBox reportingSelectionsGroupBox;
         private System.Windows.Forms.TabPage optionsTab;
         private System.Windows.Forms.GroupBox optionsStartupGroupBox;
         private System.Windows.Forms.CheckBox optionsRunMinimizedCheckBox;
@@ -1926,8 +1926,8 @@ namespace HFM.Forms
         private System.Windows.Forms.Button btnOverviewBrowse;
         private HFM.Forms.Controls.DataErrorTextBox txtOverview;
         private System.Windows.Forms.Label lblOverview;
-        private System.Windows.Forms.CheckBox chkEmailSecure;
-        private HFM.Forms.Controls.DataErrorTextBox txtSmtpServerPort;
+        private System.Windows.Forms.CheckBox reportingIsSecureCheckBox;
+        private HFM.Forms.Controls.DataErrorTextBox reportingPortTextBox;
         private System.Windows.Forms.Label labelWrapper3;
         private System.Windows.Forms.CheckBox optionsStartupCheckForUpdateCheckBox;
         private System.Windows.Forms.GroupBox ExternalProgramsGroupBox;
@@ -1987,6 +1987,6 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox clientsRetrievalIsSerialCheckBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel webGenerationTestConnectionLinkLabel;
-        private System.Windows.Forms.LinkLabel SendTestEmailLinkLabel;
+        private System.Windows.Forms.LinkLabel reportingSendTestEmailLinkLabel;
     }
 }

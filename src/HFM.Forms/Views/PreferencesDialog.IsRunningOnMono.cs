@@ -139,16 +139,16 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(ReportingModel.ReportingEnabled):
-                    chkEmailSecure.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    SendTestEmailLinkLabel.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtToEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtFromEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtSmtpServer.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtSmtpServerPort.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtSmtpUsername.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    txtSmtpPassword.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
-                    grpReportSelections.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
+                case nameof(ReportingModel.Enabled):
+                    reportingIsSecureCheckBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingSendTestEmailLinkLabel.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingToAddressTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingFromAddressTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingServerTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingPortTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingUsernameTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingPasswordTextBox.Enabled = _presenter.Model.ReportingModel.Enabled;
+                    reportingSelectionsGroupBox.Enabled = _presenter.Model.ReportingModel.Enabled;
                     break;
             }
         }

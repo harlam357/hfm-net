@@ -234,37 +234,37 @@ namespace HFM.Forms
         private void LoadReportingTab()
         {
             // Email Settings
-            chkEmailSecure.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerSecure));
-            chkEmailSecure.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingIsSecureCheckBox.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.IsSecure));
+            reportingIsSecureCheckBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            SendTestEmailLinkLabel.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingSendTestEmailLinkLabel.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtToEmailAddress.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ToAddress));
-            txtToEmailAddress.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingToAddressTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ToAddress));
+            reportingToAddressTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtFromEmailAddress.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.FromAddress));
-            txtFromEmailAddress.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingFromAddressTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.FromAddress));
+            reportingFromAddressTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtSmtpServer.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerAddress));
-            txtSmtpServer.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerAddressPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpServer.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingServerTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.Server));
+            reportingServerTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            reportingServerTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtSmtpServerPort.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerPort));
-            txtSmtpServerPort.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerAddressPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpServerPort.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingPortTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.Port));
+            reportingPortTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            reportingPortTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtSmtpUsername.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerUsername));
-            txtSmtpUsername.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerUsernamePasswordError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpUsername.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingUsernameTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.Username));
+            reportingUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            reportingUsernameTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            txtSmtpPassword.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.ServerPassword));
-            txtSmtpPassword.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.ServerUsernamePasswordError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtSmtpPassword.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingPasswordTextBox.BindText(_presenter.Model.ReportingModel, nameof(ReportingModel.Password));
+            reportingPasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.ReportingModel, nameof(ReportingModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            reportingPasswordTextBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
-            chkEnableEmail.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingEnabledCheckBox.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
 
             // Report Selections
-            grpReportSelections.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportingEnabled));
+            reportingSelectionsGroupBox.BindEnabled(_presenter.Model.ReportingModel, nameof(ReportingModel.Enabled));
             //chkClientEuePause.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportEuePause));
             //chkClientHung.BindChecked(_presenter.Model.ReportingModel, nameof(ReportingModel.ReportHung));
         }
@@ -329,7 +329,7 @@ namespace HFM.Forms
         {
             using (var dialog = DefaultFolderDialogPresenter.BrowseFolder())
             {
-                _presenter.WebGenerationBrowsePathClicked(dialog);
+                _presenter.BrowseForWebGenerationPath(dialog);
             }
         }
 
@@ -344,21 +344,21 @@ namespace HFM.Forms
 
             toolTipPrefs.RemoveAll();
             toolTipPrefs.Show(String.Format("Depending on your SMTP server, this 'From Address' field may or may not be of consequence.{0}If you are required to enter credentials to send Email through the SMTP server, the server will{0}likely use the Email Address tied to those credentials as the sender or 'From Address'.{0}Regardless of this limitation, a valid Email Address must still be specified here.", Environment.NewLine),
-               txtFromEmailAddress.Parent, txtFromEmailAddress.Location.X + 5, txtFromEmailAddress.Location.Y - 55, 10000);
+               reportingFromAddressTextBox.Parent, reportingFromAddressTextBox.Location.X + 5, reportingFromAddressTextBox.Location.Y - 55, 10000);
         }
 
-        private void SendTestEmailLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void reportingSendTestEmailLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _presenter.TestEmailClicked(SendMailService.Default);
+            _presenter.TestReportingEmail(SendMailService.Default);
         }
 
         private void grpReportSelections_EnabledChanged(object sender, EventArgs e)
         {
-            foreach (Control ctrl in grpReportSelections.Controls)
+            foreach (Control ctrl in reportingSelectionsGroupBox.Controls)
             {
                 if (ctrl is CheckBox)
                 {
-                    ctrl.Enabled = grpReportSelections.Enabled;
+                    ctrl.Enabled = reportingSelectionsGroupBox.Enabled;
                 }
             }
         }
@@ -366,17 +366,17 @@ namespace HFM.Forms
         // Identity
         private void TestEocUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _presenter.TestExtremeOverclockingUserClicked(LocalProcessService.Default);
+            _presenter.TestExtremeOverclockingUser(LocalProcessService.Default);
         }
 
         private void TestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _presenter.TestFoldingAtHomeUserClicked(LocalProcessService.Default);
+            _presenter.TestFoldingAtHomeUser(LocalProcessService.Default);
         }
 
         private void TestFahTeamIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _presenter.TestExtremeOverclockingTeamClicked(LocalProcessService.Default);
+            _presenter.TestExtremeOverclockingTeam(LocalProcessService.Default);
         }
 
         // Visual Style Tab
@@ -427,7 +427,7 @@ namespace HFM.Forms
         }
 
         // Button Click Event Handlers
-        private async void TestConnectionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void webGenerationTestConnectionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Cursor = Cursors.WaitCursor;
             try
@@ -489,7 +489,7 @@ namespace HFM.Forms
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.BrowseForConfigurationFileClicked(dialog);
+                _presenter.BrowseForConfigurationFile(dialog);
             }
         }
 
@@ -497,7 +497,7 @@ namespace HFM.Forms
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.BrowseForLogViewerClicked(dialog);
+                _presenter.BrowseForLogViewer(dialog);
             }
         }
 
@@ -505,7 +505,7 @@ namespace HFM.Forms
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.BrowseForFileExplorerClicked(dialog);
+                _presenter.BrowseForFileExplorer(dialog);
             }
         }
 
