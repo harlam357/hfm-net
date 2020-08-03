@@ -445,7 +445,7 @@ namespace HFM.Forms
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             SetSelectedTabWithError();
             _presenter.OKClicked();
@@ -479,13 +479,13 @@ namespace HFM.Forms
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
 
         }
 
         // Folder Browsing
-        private void btnBrowseConfigFile_Click(object sender, EventArgs e)
+        private void clientsBrowseConfigFileButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
@@ -493,15 +493,15 @@ namespace HFM.Forms
             }
         }
 
-        private void btnBrowseLogViewer_Click(object sender, EventArgs e)
+        private void optionsBrowseLogFileViewerButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {
-                _presenter.BrowseForLogViewer(dialog);
+                _presenter.BrowseForLogFileViewer(dialog);
             }
         }
 
-        private void btnBrowseFileExplorer_Click(object sender, EventArgs e)
+        private void optionsBrowseFileExplorerButton_Click(object sender, EventArgs e)
         {
             using (var dialog = DefaultFileDialogPresenter.OpenFile())
             {

@@ -185,7 +185,7 @@ namespace HFM.Forms
         private const string ExeExtension = "exe";
         private const string ExeFilter = "Program Files|*.exe";
 
-        public void BrowseForLogViewer(FileDialogPresenter dialog)
+        public void BrowseForLogFileViewer(FileDialogPresenter dialog)
         {
             var x = GetInitialDirectoryAndFileName(Model.OptionsModel.LogFileViewer);
             string result = ShowFileDialog(dialog, x.InitialDirectory, x.FileName, ExeExtension, ExeFilter);

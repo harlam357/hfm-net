@@ -35,7 +35,7 @@ namespace HFM.Forms
             this.StyleList = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.clientsTab = new System.Windows.Forms.TabPage();
-            this.RefreshClientDataGroupBox = new System.Windows.Forms.GroupBox();
+            this.clientsRefreshClientDataGroupBox = new System.Windows.Forms.GroupBox();
             this.clientsRetrievalIntervalTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
             this.lbl2SchedExplain = new System.Windows.Forms.Label();
@@ -61,26 +61,26 @@ namespace HFM.Forms
             this.optionsTab = new System.Windows.Forms.TabPage();
             this.optionsIdentityGroupBox = new System.Windows.Forms.GroupBox();
             this.optionsEocUserStatsEnabledCheckBox = new System.Windows.Forms.CheckBox();
-            this.EocUserIDLabel = new System.Windows.Forms.Label();
-            this.FahUserIDLabel = new System.Windows.Forms.Label();
+            this.optionsEocUserIDLabel = new System.Windows.Forms.Label();
+            this.optionsFahUserIDLabel = new System.Windows.Forms.Label();
             this.optionsTestFahTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.optionsEocUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.optionsFahTeamIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
-            this.FahTeamIDLabel = new System.Windows.Forms.Label();
+            this.optionsFahTeamIDLabel = new System.Windows.Forms.Label();
             this.optionsTestFahUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.optionsFahUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.optionsTestEocUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.grpShowStyle = new System.Windows.Forms.GroupBox();
+            this.optionsMinimizeToOptionGroupBox = new System.Windows.Forms.GroupBox();
             this.optionsMinimizeToOptionComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper2 = new System.Windows.Forms.Label();
             this.optionsMessageLevelGroupBox = new System.Windows.Forms.GroupBox();
             this.optionsMessageLevelComboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.ExternalProgramsGroupBox = new System.Windows.Forms.GroupBox();
-            this.btnBrowseFileExplorer = new System.Windows.Forms.Button();
+            this.optionsExternalProgramsGroupBox = new System.Windows.Forms.GroupBox();
+            this.optionsBrowseFileExplorerButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.optionsFileExplorerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
-            this.btnBrowseLogViewer = new System.Windows.Forms.Button();
+            this.optionsBrowseLogFileViewerButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.optionsLogFileViewerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.optionsStartupGroupBox = new System.Windows.Forms.GroupBox();
@@ -134,7 +134,7 @@ namespace HFM.Forms
             this.lbl1Style = new System.Windows.Forms.Label();
             this.reportingTab = new System.Windows.Forms.TabPage();
             this.reportingSelectionsGroupBox = new System.Windows.Forms.GroupBox();
-            this.grpEmailSettings = new System.Windows.Forms.GroupBox();
+            this.reportingSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.reportingSendTestEmailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.reportingPortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.labelWrapper3 = new System.Windows.Forms.Label();
@@ -151,7 +151,7 @@ namespace HFM.Forms
             this.reportingServerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.reportingToAddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.webProxyTab = new System.Windows.Forms.TabPage();
-            this.grpWebProxy = new System.Windows.Forms.GroupBox();
+            this.webProxyGroupBox = new System.Windows.Forms.GroupBox();
             this.webProxyEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.webProxyCredentialsEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.webProxyPasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
@@ -162,19 +162,19 @@ namespace HFM.Forms
             this.lbl3ProxyUser = new System.Windows.Forms.Label();
             this.lbl3Port = new System.Windows.Forms.Label();
             this.lbl3Proxy = new System.Windows.Forms.Label();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.okButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.clientsTab.SuspendLayout();
-            this.RefreshClientDataGroupBox.SuspendLayout();
+            this.clientsRefreshClientDataGroupBox.SuspendLayout();
             this.ConfigurationGroupBox.SuspendLayout();
             this.optionsDisplayProductionOptionsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDecimalPlacesUpDown)).BeginInit();
             this.optionsTab.SuspendLayout();
             this.optionsIdentityGroupBox.SuspendLayout();
-            this.grpShowStyle.SuspendLayout();
+            this.optionsMinimizeToOptionGroupBox.SuspendLayout();
             this.optionsMessageLevelGroupBox.SuspendLayout();
-            this.ExternalProgramsGroupBox.SuspendLayout();
+            this.optionsExternalProgramsGroupBox.SuspendLayout();
             this.optionsStartupGroupBox.SuspendLayout();
             this.webGenerationTab.SuspendLayout();
             this.webGenerationGroupBox.SuspendLayout();
@@ -183,9 +183,9 @@ namespace HFM.Forms
             ((System.ComponentModel.ISupportInitialize)(this.webGenerationLimitLogSizeLengthUpDown)).BeginInit();
             this.webVisualStylesTab.SuspendLayout();
             this.reportingTab.SuspendLayout();
-            this.grpEmailSettings.SuspendLayout();
+            this.reportingSettingsGroupBox.SuspendLayout();
             this.webProxyTab.SuspendLayout();
-            this.grpWebProxy.SuspendLayout();
+            this.webProxyGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnl1CSSSample
@@ -225,7 +225,7 @@ namespace HFM.Forms
             // 
             // clientsTab
             // 
-            this.clientsTab.Controls.Add(this.RefreshClientDataGroupBox);
+            this.clientsTab.Controls.Add(this.clientsRefreshClientDataGroupBox);
             this.clientsTab.Controls.Add(this.ConfigurationGroupBox);
             this.clientsTab.Controls.Add(this.optionsDisplayProductionOptionsGroupBox);
             this.clientsTab.Location = new System.Drawing.Point(4, 22);
@@ -237,16 +237,16 @@ namespace HFM.Forms
             // 
             // RefreshClientDataGroupBox
             // 
-            this.RefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalIntervalTextBox);
-            this.RefreshClientDataGroupBox.Controls.Add(this.lbl2SchedExplain);
-            this.RefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalEnabledCheckBox);
-            this.RefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalIsSerialCheckBox);
-            this.RefreshClientDataGroupBox.Location = new System.Drawing.Point(6, 94);
-            this.RefreshClientDataGroupBox.Name = "RefreshClientDataGroupBox";
-            this.RefreshClientDataGroupBox.Size = new System.Drawing.Size(489, 54);
-            this.RefreshClientDataGroupBox.TabIndex = 6;
-            this.RefreshClientDataGroupBox.TabStop = false;
-            this.RefreshClientDataGroupBox.Text = "Refresh Client Data";
+            this.clientsRefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalIntervalTextBox);
+            this.clientsRefreshClientDataGroupBox.Controls.Add(this.lbl2SchedExplain);
+            this.clientsRefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalEnabledCheckBox);
+            this.clientsRefreshClientDataGroupBox.Controls.Add(this.clientsRetrievalIsSerialCheckBox);
+            this.clientsRefreshClientDataGroupBox.Location = new System.Drawing.Point(6, 94);
+            this.clientsRefreshClientDataGroupBox.Name = "clientsRefreshClientDataGroupBox";
+            this.clientsRefreshClientDataGroupBox.Size = new System.Drawing.Size(489, 54);
+            this.clientsRefreshClientDataGroupBox.TabIndex = 6;
+            this.clientsRefreshClientDataGroupBox.TabStop = false;
+            this.clientsRefreshClientDataGroupBox.Text = "Refresh Client Data";
             // 
             // clientsRetrievalIntervalTextBox
             // 
@@ -328,7 +328,7 @@ namespace HFM.Forms
             this.clientsBrowseConfigFileButton.TabIndex = 3;
             this.clientsBrowseConfigFileButton.Text = "...";
             this.clientsBrowseConfigFileButton.UseVisualStyleBackColor = true;
-            this.clientsBrowseConfigFileButton.Click += new System.EventHandler(this.btnBrowseConfigFile_Click);
+            this.clientsBrowseConfigFileButton.Click += new System.EventHandler(this.clientsBrowseConfigFileButton_Click);
             // 
             // clientsDefaultConfigFileTextBox
             // 
@@ -480,9 +480,9 @@ namespace HFM.Forms
             // optionsTab
             // 
             this.optionsTab.Controls.Add(this.optionsIdentityGroupBox);
-            this.optionsTab.Controls.Add(this.grpShowStyle);
+            this.optionsTab.Controls.Add(this.optionsMinimizeToOptionGroupBox);
             this.optionsTab.Controls.Add(this.optionsMessageLevelGroupBox);
-            this.optionsTab.Controls.Add(this.ExternalProgramsGroupBox);
+            this.optionsTab.Controls.Add(this.optionsExternalProgramsGroupBox);
             this.optionsTab.Controls.Add(this.optionsStartupGroupBox);
             this.optionsTab.Location = new System.Drawing.Point(4, 22);
             this.optionsTab.Name = "optionsTab";
@@ -495,12 +495,12 @@ namespace HFM.Forms
             // IdentityGroupBox
             // 
             this.optionsIdentityGroupBox.Controls.Add(this.optionsEocUserStatsEnabledCheckBox);
-            this.optionsIdentityGroupBox.Controls.Add(this.EocUserIDLabel);
-            this.optionsIdentityGroupBox.Controls.Add(this.FahUserIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsEocUserIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsFahUserIDLabel);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsTestFahTeamIDLinkLabel);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsEocUserIDTextBox);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsFahTeamIDTextBox);
-            this.optionsIdentityGroupBox.Controls.Add(this.FahTeamIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsFahTeamIDLabel);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsTestFahUserIDLinkLabel);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsFahUserIDTextBox);
             this.optionsIdentityGroupBox.Controls.Add(this.optionsTestEocUserIDLinkLabel);
@@ -523,21 +523,21 @@ namespace HFM.Forms
             // 
             // EocUserIDLabel
             // 
-            this.EocUserIDLabel.AutoSize = true;
-            this.EocUserIDLabel.Location = new System.Drawing.Point(247, 22);
-            this.EocUserIDLabel.Name = "EocUserIDLabel";
-            this.EocUserIDLabel.Size = new System.Drawing.Size(68, 13);
-            this.EocUserIDLabel.TabIndex = 0;
-            this.EocUserIDLabel.Text = "EOC User ID";
+            this.optionsEocUserIDLabel.AutoSize = true;
+            this.optionsEocUserIDLabel.Location = new System.Drawing.Point(247, 22);
+            this.optionsEocUserIDLabel.Name = "optionsEocUserIDLabel";
+            this.optionsEocUserIDLabel.Size = new System.Drawing.Size(68, 13);
+            this.optionsEocUserIDLabel.TabIndex = 0;
+            this.optionsEocUserIDLabel.Text = "EOC User ID";
             // 
             // FahUserIDLabel
             // 
-            this.FahUserIDLabel.AutoSize = true;
-            this.FahUserIDLabel.Location = new System.Drawing.Point(12, 22);
-            this.FahUserIDLabel.Name = "FahUserIDLabel";
-            this.FahUserIDLabel.Size = new System.Drawing.Size(67, 13);
-            this.FahUserIDLabel.TabIndex = 1;
-            this.FahUserIDLabel.Text = "FAH User ID";
+            this.optionsFahUserIDLabel.AutoSize = true;
+            this.optionsFahUserIDLabel.Location = new System.Drawing.Point(12, 22);
+            this.optionsFahUserIDLabel.Name = "optionsFahUserIDLabel";
+            this.optionsFahUserIDLabel.Size = new System.Drawing.Size(67, 13);
+            this.optionsFahUserIDLabel.TabIndex = 1;
+            this.optionsFahUserIDLabel.Text = "FAH User ID";
             // 
             // TestFahTeamIDLinkLabel
             // 
@@ -582,12 +582,12 @@ namespace HFM.Forms
             // 
             // FahTeamIDLabel
             // 
-            this.FahTeamIDLabel.AutoSize = true;
-            this.FahTeamIDLabel.Location = new System.Drawing.Point(7, 48);
-            this.FahTeamIDLabel.Name = "FahTeamIDLabel";
-            this.FahTeamIDLabel.Size = new System.Drawing.Size(72, 13);
-            this.FahTeamIDLabel.TabIndex = 2;
-            this.FahTeamIDLabel.Text = "FAH Team ID";
+            this.optionsFahTeamIDLabel.AutoSize = true;
+            this.optionsFahTeamIDLabel.Location = new System.Drawing.Point(7, 48);
+            this.optionsFahTeamIDLabel.Name = "optionsFahTeamIDLabel";
+            this.optionsFahTeamIDLabel.Size = new System.Drawing.Size(72, 13);
+            this.optionsFahTeamIDLabel.TabIndex = 2;
+            this.optionsFahTeamIDLabel.Text = "FAH Team ID";
             // 
             // TestFahUserIDLinkLabel
             // 
@@ -627,14 +627,14 @@ namespace HFM.Forms
             // 
             // grpShowStyle
             // 
-            this.grpShowStyle.Controls.Add(this.optionsMinimizeToOptionComboBox);
-            this.grpShowStyle.Controls.Add(this.labelWrapper2);
-            this.grpShowStyle.Location = new System.Drawing.Point(254, 238);
-            this.grpShowStyle.Name = "grpShowStyle";
-            this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
-            this.grpShowStyle.TabIndex = 7;
-            this.grpShowStyle.TabStop = false;
-            this.grpShowStyle.Text = "Docking Style";
+            this.optionsMinimizeToOptionGroupBox.Controls.Add(this.optionsMinimizeToOptionComboBox);
+            this.optionsMinimizeToOptionGroupBox.Controls.Add(this.labelWrapper2);
+            this.optionsMinimizeToOptionGroupBox.Location = new System.Drawing.Point(254, 238);
+            this.optionsMinimizeToOptionGroupBox.Name = "optionsMinimizeToOptionGroupBox";
+            this.optionsMinimizeToOptionGroupBox.Size = new System.Drawing.Size(241, 54);
+            this.optionsMinimizeToOptionGroupBox.TabIndex = 7;
+            this.optionsMinimizeToOptionGroupBox.TabStop = false;
+            this.optionsMinimizeToOptionGroupBox.Text = "Docking Style";
             // 
             // optionsMinimizeToOptionComboBox
             // 
@@ -685,28 +685,28 @@ namespace HFM.Forms
             // 
             // ExternalProgramsGroupBox
             // 
-            this.ExternalProgramsGroupBox.Controls.Add(this.btnBrowseFileExplorer);
-            this.ExternalProgramsGroupBox.Controls.Add(this.label4);
-            this.ExternalProgramsGroupBox.Controls.Add(this.optionsFileExplorerTextBox);
-            this.ExternalProgramsGroupBox.Controls.Add(this.btnBrowseLogViewer);
-            this.ExternalProgramsGroupBox.Controls.Add(this.label3);
-            this.ExternalProgramsGroupBox.Controls.Add(this.optionsLogFileViewerTextBox);
-            this.ExternalProgramsGroupBox.Location = new System.Drawing.Point(6, 148);
-            this.ExternalProgramsGroupBox.Name = "ExternalProgramsGroupBox";
-            this.ExternalProgramsGroupBox.Size = new System.Drawing.Size(489, 84);
-            this.ExternalProgramsGroupBox.TabIndex = 5;
-            this.ExternalProgramsGroupBox.TabStop = false;
-            this.ExternalProgramsGroupBox.Text = "External Programs";
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.optionsBrowseFileExplorerButton);
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.label4);
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.optionsFileExplorerTextBox);
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.optionsBrowseLogFileViewerButton);
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.label3);
+            this.optionsExternalProgramsGroupBox.Controls.Add(this.optionsLogFileViewerTextBox);
+            this.optionsExternalProgramsGroupBox.Location = new System.Drawing.Point(6, 148);
+            this.optionsExternalProgramsGroupBox.Name = "optionsExternalProgramsGroupBox";
+            this.optionsExternalProgramsGroupBox.Size = new System.Drawing.Size(489, 84);
+            this.optionsExternalProgramsGroupBox.TabIndex = 5;
+            this.optionsExternalProgramsGroupBox.TabStop = false;
+            this.optionsExternalProgramsGroupBox.Text = "External Programs";
             // 
             // btnBrowseFileExplorer
             // 
-            this.btnBrowseFileExplorer.Location = new System.Drawing.Point(456, 49);
-            this.btnBrowseFileExplorer.Name = "btnBrowseFileExplorer";
-            this.btnBrowseFileExplorer.Size = new System.Drawing.Size(24, 23);
-            this.btnBrowseFileExplorer.TabIndex = 5;
-            this.btnBrowseFileExplorer.Text = "...";
-            this.btnBrowseFileExplorer.UseVisualStyleBackColor = true;
-            this.btnBrowseFileExplorer.Click += new System.EventHandler(this.btnBrowseFileExplorer_Click);
+            this.optionsBrowseFileExplorerButton.Location = new System.Drawing.Point(456, 49);
+            this.optionsBrowseFileExplorerButton.Name = "optionsBrowseFileExplorerButton";
+            this.optionsBrowseFileExplorerButton.Size = new System.Drawing.Size(24, 23);
+            this.optionsBrowseFileExplorerButton.TabIndex = 5;
+            this.optionsBrowseFileExplorerButton.Text = "...";
+            this.optionsBrowseFileExplorerButton.UseVisualStyleBackColor = true;
+            this.optionsBrowseFileExplorerButton.Click += new System.EventHandler(this.optionsBrowseFileExplorerButton_Click);
             // 
             // label4
             // 
@@ -733,13 +733,13 @@ namespace HFM.Forms
             // 
             // btnBrowseLogViewer
             // 
-            this.btnBrowseLogViewer.Location = new System.Drawing.Point(456, 19);
-            this.btnBrowseLogViewer.Name = "btnBrowseLogViewer";
-            this.btnBrowseLogViewer.Size = new System.Drawing.Size(24, 23);
-            this.btnBrowseLogViewer.TabIndex = 2;
-            this.btnBrowseLogViewer.Text = "...";
-            this.btnBrowseLogViewer.UseVisualStyleBackColor = true;
-            this.btnBrowseLogViewer.Click += new System.EventHandler(this.btnBrowseLogViewer_Click);
+            this.optionsBrowseLogFileViewerButton.Location = new System.Drawing.Point(456, 19);
+            this.optionsBrowseLogFileViewerButton.Name = "optionsBrowseLogFileViewerButton";
+            this.optionsBrowseLogFileViewerButton.Size = new System.Drawing.Size(24, 23);
+            this.optionsBrowseLogFileViewerButton.TabIndex = 2;
+            this.optionsBrowseLogFileViewerButton.Text = "...";
+            this.optionsBrowseLogFileViewerButton.UseVisualStyleBackColor = true;
+            this.optionsBrowseLogFileViewerButton.Click += new System.EventHandler(this.optionsBrowseLogFileViewerButton_Click);
             // 
             // label3
             // 
@@ -1376,7 +1376,7 @@ namespace HFM.Forms
             // ReportingTab
             // 
             this.reportingTab.Controls.Add(this.reportingSelectionsGroupBox);
-            this.reportingTab.Controls.Add(this.grpEmailSettings);
+            this.reportingTab.Controls.Add(this.reportingSettingsGroupBox);
             this.reportingTab.Location = new System.Drawing.Point(4, 22);
             this.reportingTab.Name = "reportingTab";
             this.reportingTab.Size = new System.Drawing.Size(501, 303);
@@ -1397,27 +1397,27 @@ namespace HFM.Forms
             // 
             // grpEmailSettings
             // 
-            this.grpEmailSettings.Controls.Add(this.reportingSendTestEmailLinkLabel);
-            this.grpEmailSettings.Controls.Add(this.reportingPortTextBox);
-            this.grpEmailSettings.Controls.Add(this.labelWrapper3);
-            this.grpEmailSettings.Controls.Add(this.reportingIsSecureCheckBox);
-            this.grpEmailSettings.Controls.Add(this.reportingPasswordTextBox);
-            this.grpEmailSettings.Controls.Add(this.reportingUsernameTextBox);
-            this.grpEmailSettings.Controls.Add(this.labelWrapper4);
-            this.grpEmailSettings.Controls.Add(this.labelWrapper5);
-            this.grpEmailSettings.Controls.Add(this.lblFromEmailAddress);
-            this.grpEmailSettings.Controls.Add(this.reportingFromAddressTextBox);
-            this.grpEmailSettings.Controls.Add(this.reportingEnabledCheckBox);
-            this.grpEmailSettings.Controls.Add(this.lblSmtpServer);
-            this.grpEmailSettings.Controls.Add(this.lblToAddress);
-            this.grpEmailSettings.Controls.Add(this.reportingServerTextBox);
-            this.grpEmailSettings.Controls.Add(this.reportingToAddressTextBox);
-            this.grpEmailSettings.Location = new System.Drawing.Point(6, 9);
-            this.grpEmailSettings.Name = "grpEmailSettings";
-            this.grpEmailSettings.Size = new System.Drawing.Size(489, 164);
-            this.grpEmailSettings.TabIndex = 0;
-            this.grpEmailSettings.TabStop = false;
-            this.grpEmailSettings.Text = "Email Settings";
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingSendTestEmailLinkLabel);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingPortTextBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.labelWrapper3);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingIsSecureCheckBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingPasswordTextBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingUsernameTextBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.labelWrapper4);
+            this.reportingSettingsGroupBox.Controls.Add(this.labelWrapper5);
+            this.reportingSettingsGroupBox.Controls.Add(this.lblFromEmailAddress);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingFromAddressTextBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingEnabledCheckBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.lblSmtpServer);
+            this.reportingSettingsGroupBox.Controls.Add(this.lblToAddress);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingServerTextBox);
+            this.reportingSettingsGroupBox.Controls.Add(this.reportingToAddressTextBox);
+            this.reportingSettingsGroupBox.Location = new System.Drawing.Point(6, 9);
+            this.reportingSettingsGroupBox.Name = "reportingSettingsGroupBox";
+            this.reportingSettingsGroupBox.Size = new System.Drawing.Size(489, 164);
+            this.reportingSettingsGroupBox.TabIndex = 0;
+            this.reportingSettingsGroupBox.TabStop = false;
+            this.reportingSettingsGroupBox.Text = "Email Settings";
             // 
             // reportingSendTestEmailLinkLabel
             // 
@@ -1613,7 +1613,7 @@ namespace HFM.Forms
             // ProxyTab
             // 
             this.webProxyTab.BackColor = System.Drawing.Color.Transparent;
-            this.webProxyTab.Controls.Add(this.grpWebProxy);
+            this.webProxyTab.Controls.Add(this.webProxyGroupBox);
             this.webProxyTab.Location = new System.Drawing.Point(4, 22);
             this.webProxyTab.Name = "webProxyTab";
             this.webProxyTab.Padding = new System.Windows.Forms.Padding(3);
@@ -1624,22 +1624,22 @@ namespace HFM.Forms
             // 
             // grpWebProxy
             // 
-            this.grpWebProxy.Controls.Add(this.webProxyEnabledCheckBox);
-            this.grpWebProxy.Controls.Add(this.webProxyCredentialsEnabledCheckBox);
-            this.grpWebProxy.Controls.Add(this.webProxyPasswordTextBox);
-            this.grpWebProxy.Controls.Add(this.webProxyUsernameTextBox);
-            this.grpWebProxy.Controls.Add(this.webProxyPortTextBox);
-            this.grpWebProxy.Controls.Add(this.lbl3ProxyPass);
-            this.grpWebProxy.Controls.Add(this.webProxyServerTextBox);
-            this.grpWebProxy.Controls.Add(this.lbl3ProxyUser);
-            this.grpWebProxy.Controls.Add(this.lbl3Port);
-            this.grpWebProxy.Controls.Add(this.lbl3Proxy);
-            this.grpWebProxy.Location = new System.Drawing.Point(6, 9);
-            this.grpWebProxy.Name = "grpWebProxy";
-            this.grpWebProxy.Size = new System.Drawing.Size(489, 121);
-            this.grpWebProxy.TabIndex = 2;
-            this.grpWebProxy.TabStop = false;
-            this.grpWebProxy.Text = "Web Proxy Settings";
+            this.webProxyGroupBox.Controls.Add(this.webProxyEnabledCheckBox);
+            this.webProxyGroupBox.Controls.Add(this.webProxyCredentialsEnabledCheckBox);
+            this.webProxyGroupBox.Controls.Add(this.webProxyPasswordTextBox);
+            this.webProxyGroupBox.Controls.Add(this.webProxyUsernameTextBox);
+            this.webProxyGroupBox.Controls.Add(this.webProxyPortTextBox);
+            this.webProxyGroupBox.Controls.Add(this.lbl3ProxyPass);
+            this.webProxyGroupBox.Controls.Add(this.webProxyServerTextBox);
+            this.webProxyGroupBox.Controls.Add(this.lbl3ProxyUser);
+            this.webProxyGroupBox.Controls.Add(this.lbl3Port);
+            this.webProxyGroupBox.Controls.Add(this.lbl3Proxy);
+            this.webProxyGroupBox.Location = new System.Drawing.Point(6, 9);
+            this.webProxyGroupBox.Name = "webProxyGroupBox";
+            this.webProxyGroupBox.Size = new System.Drawing.Size(489, 121);
+            this.webProxyGroupBox.TabIndex = 2;
+            this.webProxyGroupBox.TabStop = false;
+            this.webProxyGroupBox.Text = "Web Proxy Settings";
             // 
             // chkUseProxy
             // 
@@ -1767,26 +1767,26 @@ namespace HFM.Forms
             // 
             // btnOK
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(366, 352);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 3;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.Location = new System.Drawing.Point(366, 352);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(75, 23);
+            this.okButton.TabIndex = 3;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(447, 352);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 4;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(447, 352);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 4;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // PreferencesDialog
             // 
@@ -1794,8 +1794,8 @@ namespace HFM.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(532, 388);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.okButton);
+            this.Controls.Add(this.cancelButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1808,8 +1808,8 @@ namespace HFM.Forms
             this.Load += new System.EventHandler(this.PreferencesDialogLoad);
             this.tabControl1.ResumeLayout(false);
             this.clientsTab.ResumeLayout(false);
-            this.RefreshClientDataGroupBox.ResumeLayout(false);
-            this.RefreshClientDataGroupBox.PerformLayout();
+            this.clientsRefreshClientDataGroupBox.ResumeLayout(false);
+            this.clientsRefreshClientDataGroupBox.PerformLayout();
             this.ConfigurationGroupBox.ResumeLayout(false);
             this.ConfigurationGroupBox.PerformLayout();
             this.optionsDisplayProductionOptionsGroupBox.ResumeLayout(false);
@@ -1818,12 +1818,12 @@ namespace HFM.Forms
             this.optionsTab.ResumeLayout(false);
             this.optionsIdentityGroupBox.ResumeLayout(false);
             this.optionsIdentityGroupBox.PerformLayout();
-            this.grpShowStyle.ResumeLayout(false);
-            this.grpShowStyle.PerformLayout();
+            this.optionsMinimizeToOptionGroupBox.ResumeLayout(false);
+            this.optionsMinimizeToOptionGroupBox.PerformLayout();
             this.optionsMessageLevelGroupBox.ResumeLayout(false);
             this.optionsMessageLevelGroupBox.PerformLayout();
-            this.ExternalProgramsGroupBox.ResumeLayout(false);
-            this.ExternalProgramsGroupBox.PerformLayout();
+            this.optionsExternalProgramsGroupBox.ResumeLayout(false);
+            this.optionsExternalProgramsGroupBox.PerformLayout();
             this.optionsStartupGroupBox.ResumeLayout(false);
             this.optionsStartupGroupBox.PerformLayout();
             this.webGenerationTab.ResumeLayout(false);
@@ -1837,18 +1837,18 @@ namespace HFM.Forms
             this.webVisualStylesTab.ResumeLayout(false);
             this.webVisualStylesTab.PerformLayout();
             this.reportingTab.ResumeLayout(false);
-            this.grpEmailSettings.ResumeLayout(false);
-            this.grpEmailSettings.PerformLayout();
+            this.reportingSettingsGroupBox.ResumeLayout(false);
+            this.reportingSettingsGroupBox.PerformLayout();
             this.webProxyTab.ResumeLayout(false);
-            this.grpWebProxy.ResumeLayout(false);
-            this.grpWebProxy.PerformLayout();
+            this.webProxyGroupBox.ResumeLayout(false);
+            this.webProxyGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Panel pnl1CSSSample;
         private System.Windows.Forms.ListBox StyleList;
         private System.Windows.Forms.Label lbl1Style;
@@ -1864,7 +1864,7 @@ namespace HFM.Forms
         private HFM.Forms.Controls.DataErrorTextBox webGenerationIntervalTextBox;
         private System.Windows.Forms.CheckBox webGenerationEnabledCheckBox;
         private HFM.Forms.Controls.DataErrorTextBox webGenerationPathTextBox;
-        private System.Windows.Forms.GroupBox grpWebProxy;
+        private System.Windows.Forms.GroupBox webProxyGroupBox;
         private HFM.Forms.Controls.DataErrorTextBox webProxyServerTextBox;
         private System.Windows.Forms.Label lbl3Proxy;
         private HFM.Forms.Controls.DataErrorTextBox webProxyPasswordTextBox;
@@ -1882,7 +1882,7 @@ namespace HFM.Forms
         private System.Windows.Forms.Label labelWrapper1;
         private System.Windows.Forms.NumericUpDown clientsDecimalPlacesUpDown;
         private System.Windows.Forms.TabPage reportingTab;
-        private System.Windows.Forms.GroupBox grpEmailSettings;
+        private System.Windows.Forms.GroupBox reportingSettingsGroupBox;
         private System.Windows.Forms.Label lblSmtpServer;
         private System.Windows.Forms.Label lblToAddress;
         private HFM.Forms.Controls.DataErrorTextBox reportingServerTextBox;
@@ -1922,8 +1922,8 @@ namespace HFM.Forms
         private HFM.Forms.Controls.DataErrorTextBox reportingPortTextBox;
         private System.Windows.Forms.Label labelWrapper3;
         private System.Windows.Forms.CheckBox optionsStartupCheckForUpdateCheckBox;
-        private System.Windows.Forms.GroupBox ExternalProgramsGroupBox;
-        private System.Windows.Forms.Button btnBrowseLogViewer;
+        private System.Windows.Forms.GroupBox optionsExternalProgramsGroupBox;
+        private System.Windows.Forms.Button optionsBrowseLogFileViewerButton;
         private System.Windows.Forms.Label label3;
         private HFM.Forms.Controls.DataErrorTextBox optionsLogFileViewerTextBox;
         private System.Windows.Forms.CheckBox webGenerationCopyHtmlCheckBox;
@@ -1948,10 +1948,10 @@ namespace HFM.Forms
         private System.Windows.Forms.Label labelWrapper6;
         private System.Windows.Forms.ComboBox clientsBonusCalculationComboBox;
         private System.Windows.Forms.Label webGenerationCopyLabel;
-        private System.Windows.Forms.Button btnBrowseFileExplorer;
+        private System.Windows.Forms.Button optionsBrowseFileExplorerButton;
         private System.Windows.Forms.Label label4;
         private Controls.DataErrorTextBox optionsFileExplorerTextBox;
-        private System.Windows.Forms.GroupBox grpShowStyle;
+        private System.Windows.Forms.GroupBox optionsMinimizeToOptionGroupBox;
         private System.Windows.Forms.ComboBox optionsMinimizeToOptionComboBox;
         private System.Windows.Forms.Label labelWrapper2;
         private System.Windows.Forms.GroupBox optionsMessageLevelGroupBox;
@@ -1962,17 +1962,17 @@ namespace HFM.Forms
         private System.Windows.Forms.Button clientsBrowseConfigFileButton;
         private Controls.DataErrorTextBox clientsDefaultConfigFileTextBox;
         private System.Windows.Forms.GroupBox optionsIdentityGroupBox;
-        private System.Windows.Forms.Label EocUserIDLabel;
-        private System.Windows.Forms.Label FahUserIDLabel;
+        private System.Windows.Forms.Label optionsEocUserIDLabel;
+        private System.Windows.Forms.Label optionsFahUserIDLabel;
         private System.Windows.Forms.LinkLabel optionsTestFahTeamIDLinkLabel;
         private Controls.DataErrorTextBox optionsEocUserIDTextBox;
         private Controls.DataErrorTextBox optionsFahTeamIDTextBox;
-        private System.Windows.Forms.Label FahTeamIDLabel;
+        private System.Windows.Forms.Label optionsFahTeamIDLabel;
         private System.Windows.Forms.LinkLabel optionsTestFahUserIDLinkLabel;
         private Controls.DataErrorTextBox optionsFahUserIDTextBox;
         private System.Windows.Forms.LinkLabel optionsTestEocUserIDLinkLabel;
         private System.Windows.Forms.CheckBox optionsEocUserStatsEnabledCheckBox;
-        private System.Windows.Forms.GroupBox RefreshClientDataGroupBox;
+        private System.Windows.Forms.GroupBox clientsRefreshClientDataGroupBox;
         private Controls.DataErrorTextBox clientsRetrievalIntervalTextBox;
         private System.Windows.Forms.Label lbl2SchedExplain;
         private System.Windows.Forms.CheckBox clientsRetrievalEnabledCheckBox;
