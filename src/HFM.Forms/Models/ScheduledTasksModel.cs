@@ -23,11 +23,6 @@ namespace HFM.Forms.Models
 
         public override void Load()
         {
-            var clientRetrievalTask = Preferences.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-            SyncTimeMinutes = clientRetrievalTask.Interval;
-            SyncOnSchedule = clientRetrievalTask.Enabled;
-            SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
-
             var webGenerationTask = Preferences.Get<WebGenerationTask>(Preference.WebGenerationTask);
             GenerateWeb = webGenerationTask.Enabled;
             GenerateInterval = webGenerationTask.Interval;
@@ -49,14 +44,6 @@ namespace HFM.Forms.Models
 
         public override void Save()
         {
-            var clientRetrievalTask = new ClientRetrievalTask
-            {
-                Enabled = SyncOnSchedule,
-                Interval = SyncTimeMinutes,
-                ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
-            };
-            Preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
-
             var webGenerationTask = new WebGenerationTask
             {
                 Enabled = GenerateWeb,
@@ -92,8 +79,6 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(SyncTimeMinutes):
-                        return ValidateSyncTimeMinutes() ? null : SyncTimeMinutesError;
                     case nameof(GenerateInterval):
                         return ValidateGenerateInterval() ? null : GenerateIntervalError;
                     case nameof(WebRoot):
@@ -117,7 +102,6 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(SyncTimeMinutes),
                     nameof(GenerateInterval),
                     nameof(WebRoot),
                     nameof(WebGenServer),
@@ -128,62 +112,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        #region Refresh Data
-
-        private int _syncTimeMinutes;
-
-        public int SyncTimeMinutes
-        {
-            get { return _syncTimeMinutes; }
-            set
-            {
-                if (SyncTimeMinutes != value)
-                {
-                    _syncTimeMinutes = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private static string SyncTimeMinutesError { get; } = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
-
-        private bool ValidateSyncTimeMinutes()
-        {
-            return !SyncOnSchedule || ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
-        }
-
-        private bool _syncOnSchedule;
-
-        public bool SyncOnSchedule
-        {
-            get { return _syncOnSchedule; }
-            set
-            {
-                if (SyncOnSchedule != value)
-                {
-                    _syncOnSchedule = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _syncLoad;
-
-        public bool SyncOnLoad
-        {
-            get { return _syncLoad; }
-            set
-            {
-                if (SyncOnLoad != value)
-                {
-                    _syncLoad = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        #endregion
 
         #region Web Generation
 

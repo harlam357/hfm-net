@@ -20,9 +20,6 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "SyncOnSchedule":
-                    txtCollectMinutes.Enabled = _presenter.Model.ScheduledTasksModel.SyncOnSchedule;
-                    break;
                 case "GenerateWeb":
                     radioSchedule.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
                     lbl2MinutesToGen.Enabled = _presenter.Model.ScheduledTasksModel.GenerateWeb;
@@ -113,6 +110,9 @@ namespace HFM.Forms
                 case "UseDefaultConfigFile":
                     txtDefaultConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
                     btnBrowseConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
+                    break;
+                case "SyncOnSchedule":
+                    ClientRefreshIntervalTextBox.Enabled = _presenter.Model.ClientsModel.SyncOnSchedule;
                     break;
             }
         }

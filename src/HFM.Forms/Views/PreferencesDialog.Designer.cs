@@ -35,15 +35,10 @@ namespace HFM.Forms
             this.StyleList = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSchdTasks = new System.Windows.Forms.TabPage();
-            this.grpUpdateData = new System.Windows.Forms.GroupBox();
-            this.txtCollectMinutes = new HFM.Forms.Controls.DataErrorTextBox();
-            this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
-            this.lbl2SchedExplain = new System.Windows.Forms.Label();
-            this.chkScheduled = new System.Windows.Forms.CheckBox();
-            this.chkSynchronous = new System.Windows.Forms.CheckBox();
             this.WebGenerationGroupBox = new System.Windows.Forms.GroupBox();
             this.CopyLabel = new System.Windows.Forms.Label();
             this.WebSitePortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.toolTipPrefs = new System.Windows.Forms.ToolTip(this.components);
             this.WebSitePortLabel = new System.Windows.Forms.Label();
             this.WebSitePasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.WebSiteUsernameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
@@ -75,6 +70,7 @@ namespace HFM.Forms
             this.chkWebSiteGenerator = new System.Windows.Forms.CheckBox();
             this.OptionsTab = new System.Windows.Forms.TabPage();
             this.IdentityGroupBox = new System.Windows.Forms.GroupBox();
+            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.EocUserIDLabel = new System.Windows.Forms.Label();
             this.FahUserIDLabel = new System.Windows.Forms.Label();
             this.TestFahTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -102,11 +98,18 @@ namespace HFM.Forms
             this.chkAutoRun = new System.Windows.Forms.CheckBox();
             this.chkRunMinimized = new System.Windows.Forms.CheckBox();
             this.ClientsTab = new System.Windows.Forms.TabPage();
+            this.RefreshClientDataGroupBox = new System.Windows.Forms.GroupBox();
+            this.ClientRefreshIntervalTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.lbl2SchedExplain = new System.Windows.Forms.Label();
+            this.ClientRefreshIntervalCheckBox = new System.Windows.Forms.CheckBox();
+            this.ClientSynchronousTextBox = new System.Windows.Forms.CheckBox();
             this.ConfigurationGroupBox = new System.Windows.Forms.GroupBox();
             this.chkDefaultConfig = new System.Windows.Forms.CheckBox();
             this.btnBrowseConfigFile = new System.Windows.Forms.Button();
             this.txtDefaultConfigFile = new HFM.Forms.Controls.DataErrorTextBox();
+            this.chkAutoSave = new System.Windows.Forms.CheckBox();
             this.grpInteractiveOptions = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.BonusCalculationComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper6 = new System.Windows.Forms.Label();
             this.DuplicateProjectCheckBox = new System.Windows.Forms.CheckBox();
@@ -116,7 +119,6 @@ namespace HFM.Forms
             this.chkOffline = new System.Windows.Forms.CheckBox();
             this.chkColorLog = new System.Windows.Forms.CheckBox();
             this.udDecimalPlaces = new System.Windows.Forms.NumericUpDown();
-            this.chkAutoSave = new System.Windows.Forms.CheckBox();
             this.labelWrapper1 = new System.Windows.Forms.Label();
             this.tabReporting = new System.Windows.Forms.TabPage();
             this.grpReportSelections = new System.Windows.Forms.GroupBox();
@@ -166,10 +168,8 @@ namespace HFM.Forms
             this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.EocUserStatsCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabSchdTasks.SuspendLayout();
-            this.grpUpdateData.SuspendLayout();
             this.WebGenerationGroupBox.SuspendLayout();
             this.WebGenTypePanel.SuspendLayout();
             this.FtpModePanel.SuspendLayout();
@@ -181,6 +181,7 @@ namespace HFM.Forms
             this.ExternalProgramsGroupBox.SuspendLayout();
             this.grpStartup.SuspendLayout();
             this.ClientsTab.SuspendLayout();
+            this.RefreshClientDataGroupBox.SuspendLayout();
             this.ConfigurationGroupBox.SuspendLayout();
             this.grpInteractiveOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udDecimalPlaces)).BeginInit();
@@ -230,7 +231,6 @@ namespace HFM.Forms
             // tabSchdTasks
             // 
             this.tabSchdTasks.BackColor = System.Drawing.Color.Transparent;
-            this.tabSchdTasks.Controls.Add(this.grpUpdateData);
             this.tabSchdTasks.Controls.Add(this.WebGenerationGroupBox);
             this.tabSchdTasks.Location = new System.Drawing.Point(4, 22);
             this.tabSchdTasks.Name = "tabSchdTasks";
@@ -239,68 +239,6 @@ namespace HFM.Forms
             this.tabSchdTasks.TabIndex = 2;
             this.tabSchdTasks.Text = "Scheduled Tasks";
             this.tabSchdTasks.UseVisualStyleBackColor = true;
-            // 
-            // grpUpdateData
-            // 
-            this.grpUpdateData.Controls.Add(this.txtCollectMinutes);
-            this.grpUpdateData.Controls.Add(this.lbl2SchedExplain);
-            this.grpUpdateData.Controls.Add(this.chkScheduled);
-            this.grpUpdateData.Controls.Add(this.chkSynchronous);
-            this.grpUpdateData.Location = new System.Drawing.Point(6, 9);
-            this.grpUpdateData.Name = "grpUpdateData";
-            this.grpUpdateData.Size = new System.Drawing.Size(240, 76);
-            this.grpUpdateData.TabIndex = 0;
-            this.grpUpdateData.TabStop = false;
-            this.grpUpdateData.Text = "Refresh Client Data";
-            // 
-            // txtCollectMinutes
-            // 
-            this.txtCollectMinutes.BackColor = System.Drawing.SystemColors.Control;
-            this.txtCollectMinutes.DoubleBuffered = true;
-            this.txtCollectMinutes.Enabled = false;
-            this.txtCollectMinutes.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtCollectMinutes.ErrorToolTip = this.toolTipPrefs;
-            this.txtCollectMinutes.ErrorToolTipDuration = 5000;
-            this.txtCollectMinutes.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtCollectMinutes.ErrorToolTipText = "";
-            this.txtCollectMinutes.Location = new System.Drawing.Point(61, 20);
-            this.txtCollectMinutes.MaxLength = 3;
-            this.txtCollectMinutes.Name = "txtCollectMinutes";
-            this.txtCollectMinutes.ReadOnly = true;
-            this.txtCollectMinutes.Size = new System.Drawing.Size(39, 20);
-            this.txtCollectMinutes.TabIndex = 4;
-            this.txtCollectMinutes.Text = "15";
-            this.txtCollectMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCollectMinutes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
-            // 
-            // lbl2SchedExplain
-            // 
-            this.lbl2SchedExplain.AutoSize = true;
-            this.lbl2SchedExplain.Location = new System.Drawing.Point(103, 24);
-            this.lbl2SchedExplain.Name = "lbl2SchedExplain";
-            this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
-            this.lbl2SchedExplain.TabIndex = 5;
-            this.lbl2SchedExplain.Text = "Minutes";
-            // 
-            // chkScheduled
-            // 
-            this.chkScheduled.AutoSize = true;
-            this.chkScheduled.Location = new System.Drawing.Point(10, 22);
-            this.chkScheduled.Name = "chkScheduled";
-            this.chkScheduled.Size = new System.Drawing.Size(53, 17);
-            this.chkScheduled.TabIndex = 3;
-            this.chkScheduled.Text = "Every";
-            this.chkScheduled.UseVisualStyleBackColor = true;
-            // 
-            // chkSynchronous
-            // 
-            this.chkSynchronous.AutoSize = true;
-            this.chkSynchronous.Location = new System.Drawing.Point(10, 46);
-            this.chkSynchronous.Name = "chkSynchronous";
-            this.chkSynchronous.Size = new System.Drawing.Size(176, 17);
-            this.chkSynchronous.TabIndex = 0;
-            this.chkSynchronous.Text = "In Series (synchronous retrieval)";
-            this.chkSynchronous.UseVisualStyleBackColor = true;
             // 
             // WebGenerationGroupBox
             // 
@@ -329,7 +267,7 @@ namespace HFM.Forms
             this.WebGenerationGroupBox.Controls.Add(this.WebSiteTargetPathTextBox);
             this.WebGenerationGroupBox.Controls.Add(this.WebSiteTargetPathLabel);
             this.WebGenerationGroupBox.Controls.Add(this.chkWebSiteGenerator);
-            this.WebGenerationGroupBox.Location = new System.Drawing.Point(6, 91);
+            this.WebGenerationGroupBox.Location = new System.Drawing.Point(6, 6);
             this.WebGenerationGroupBox.Name = "WebGenerationGroupBox";
             this.WebGenerationGroupBox.Size = new System.Drawing.Size(489, 188);
             this.WebGenerationGroupBox.TabIndex = 0;
@@ -747,6 +685,16 @@ namespace HFM.Forms
             this.IdentityGroupBox.TabStop = false;
             this.IdentityGroupBox.Text = "Identity";
             // 
+            // EocUserStatsCheckBox
+            // 
+            this.EocUserStatsCheckBox.AutoSize = true;
+            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(250, 47);
+            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
+            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.EocUserStatsCheckBox.TabIndex = 14;
+            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
+            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // EocUserIDLabel
             // 
             this.EocUserIDLabel.AutoSize = true;
@@ -1034,6 +982,7 @@ namespace HFM.Forms
             // 
             // ClientsTab
             // 
+            this.ClientsTab.Controls.Add(this.RefreshClientDataGroupBox);
             this.ClientsTab.Controls.Add(this.ConfigurationGroupBox);
             this.ClientsTab.Controls.Add(this.grpInteractiveOptions);
             this.ClientsTab.Location = new System.Drawing.Point(4, 22);
@@ -1043,6 +992,67 @@ namespace HFM.Forms
             this.ClientsTab.Text = "Clients";
             this.ClientsTab.UseVisualStyleBackColor = true;
             // 
+            // RefreshClientDataGroupBox
+            // 
+            this.RefreshClientDataGroupBox.Controls.Add(this.ClientRefreshIntervalTextBox);
+            this.RefreshClientDataGroupBox.Controls.Add(this.lbl2SchedExplain);
+            this.RefreshClientDataGroupBox.Controls.Add(this.ClientRefreshIntervalCheckBox);
+            this.RefreshClientDataGroupBox.Controls.Add(this.ClientSynchronousTextBox);
+            this.RefreshClientDataGroupBox.Location = new System.Drawing.Point(6, 94);
+            this.RefreshClientDataGroupBox.Name = "RefreshClientDataGroupBox";
+            this.RefreshClientDataGroupBox.Size = new System.Drawing.Size(489, 54);
+            this.RefreshClientDataGroupBox.TabIndex = 6;
+            this.RefreshClientDataGroupBox.TabStop = false;
+            this.RefreshClientDataGroupBox.Text = "Refresh Client Data";
+            // 
+            // txtCollectMinutes
+            // 
+            this.ClientRefreshIntervalTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientRefreshIntervalTextBox.DoubleBuffered = true;
+            this.ClientRefreshIntervalTextBox.Enabled = false;
+            this.ClientRefreshIntervalTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.ClientRefreshIntervalTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.ClientRefreshIntervalTextBox.ErrorToolTipDuration = 5000;
+            this.ClientRefreshIntervalTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.ClientRefreshIntervalTextBox.ErrorToolTipText = "";
+            this.ClientRefreshIntervalTextBox.Location = new System.Drawing.Point(61, 20);
+            this.ClientRefreshIntervalTextBox.MaxLength = 3;
+            this.ClientRefreshIntervalTextBox.Name = "ClientRefreshIntervalTextBox";
+            this.ClientRefreshIntervalTextBox.ReadOnly = true;
+            this.ClientRefreshIntervalTextBox.Size = new System.Drawing.Size(39, 20);
+            this.ClientRefreshIntervalTextBox.TabIndex = 4;
+            this.ClientRefreshIntervalTextBox.Text = "15";
+            this.ClientRefreshIntervalTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lbl2SchedExplain
+            // 
+            this.lbl2SchedExplain.AutoSize = true;
+            this.lbl2SchedExplain.Location = new System.Drawing.Point(103, 24);
+            this.lbl2SchedExplain.Name = "lbl2SchedExplain";
+            this.lbl2SchedExplain.Size = new System.Drawing.Size(44, 13);
+            this.lbl2SchedExplain.TabIndex = 5;
+            this.lbl2SchedExplain.Text = "Minutes";
+            // 
+            // chkScheduled
+            // 
+            this.ClientRefreshIntervalCheckBox.AutoSize = true;
+            this.ClientRefreshIntervalCheckBox.Location = new System.Drawing.Point(10, 22);
+            this.ClientRefreshIntervalCheckBox.Name = "ClientRefreshIntervalCheckBox";
+            this.ClientRefreshIntervalCheckBox.Size = new System.Drawing.Size(53, 17);
+            this.ClientRefreshIntervalCheckBox.TabIndex = 3;
+            this.ClientRefreshIntervalCheckBox.Text = "Every";
+            this.ClientRefreshIntervalCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // chkSynchronous
+            // 
+            this.ClientSynchronousTextBox.AutoSize = true;
+            this.ClientSynchronousTextBox.Location = new System.Drawing.Point(153, 22);
+            this.ClientSynchronousTextBox.Name = "ClientSynchronousTextBox";
+            this.ClientSynchronousTextBox.Size = new System.Drawing.Size(176, 17);
+            this.ClientSynchronousTextBox.TabIndex = 0;
+            this.ClientSynchronousTextBox.Text = "In Series (synchronous retrieval)";
+            this.ClientSynchronousTextBox.UseVisualStyleBackColor = true;
+            // 
             // ConfigurationGroupBox
             // 
             this.ConfigurationGroupBox.Controls.Add(this.chkDefaultConfig);
@@ -1051,7 +1061,7 @@ namespace HFM.Forms
             this.ConfigurationGroupBox.Controls.Add(this.chkAutoSave);
             this.ConfigurationGroupBox.Location = new System.Drawing.Point(6, 9);
             this.ConfigurationGroupBox.Name = "ConfigurationGroupBox";
-            this.ConfigurationGroupBox.Size = new System.Drawing.Size(489, 86);
+            this.ConfigurationGroupBox.Size = new System.Drawing.Size(489, 79);
             this.ConfigurationGroupBox.TabIndex = 5;
             this.ConfigurationGroupBox.TabStop = false;
             this.ConfigurationGroupBox.Text = "Configuration";
@@ -1093,8 +1103,19 @@ namespace HFM.Forms
             this.txtDefaultConfigFile.Size = new System.Drawing.Size(440, 20);
             this.txtDefaultConfigFile.TabIndex = 2;
             // 
+            // chkAutoSave
+            // 
+            this.chkAutoSave.AutoSize = true;
+            this.chkAutoSave.Location = new System.Drawing.Point(153, 22);
+            this.chkAutoSave.Name = "chkAutoSave";
+            this.chkAutoSave.Size = new System.Drawing.Size(151, 17);
+            this.chkAutoSave.TabIndex = 2;
+            this.chkAutoSave.Text = "Auto Save when Changed";
+            this.chkAutoSave.UseVisualStyleBackColor = true;
+            // 
             // grpInteractiveOptions
             // 
+            this.grpInteractiveOptions.Controls.Add(this.label1);
             this.grpInteractiveOptions.Controls.Add(this.BonusCalculationComboBox);
             this.grpInteractiveOptions.Controls.Add(this.labelWrapper6);
             this.grpInteractiveOptions.Controls.Add(this.DuplicateProjectCheckBox);
@@ -1105,12 +1126,21 @@ namespace HFM.Forms
             this.grpInteractiveOptions.Controls.Add(this.chkColorLog);
             this.grpInteractiveOptions.Controls.Add(this.udDecimalPlaces);
             this.grpInteractiveOptions.Controls.Add(this.labelWrapper1);
-            this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 138);
+            this.grpInteractiveOptions.Location = new System.Drawing.Point(6, 154);
             this.grpInteractiveOptions.Name = "grpInteractiveOptions";
-            this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 151);
+            this.grpInteractiveOptions.Size = new System.Drawing.Size(489, 130);
             this.grpInteractiveOptions.TabIndex = 0;
             this.grpInteractiveOptions.TabStop = false;
-            this.grpInteractiveOptions.Text = "Interactive Options";
+            this.grpInteractiveOptions.Text = "Display / Production Options";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(411, 72);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Decimals";
             // 
             // BonusCalculationComboBox
             // 
@@ -1124,16 +1154,16 @@ namespace HFM.Forms
             // labelWrapper6
             // 
             this.labelWrapper6.AutoSize = true;
-            this.labelWrapper6.Location = new System.Drawing.Point(227, 47);
+            this.labelWrapper6.Location = new System.Drawing.Point(232, 47);
             this.labelWrapper6.Name = "labelWrapper6";
-            this.labelWrapper6.Size = new System.Drawing.Size(134, 13);
+            this.labelWrapper6.Size = new System.Drawing.Size(131, 13);
             this.labelWrapper6.TabIndex = 13;
-            this.labelWrapper6.Text = "Calculate Bonus based on:";
+            this.labelWrapper6.Text = "Calculate Credit based on:";
             // 
             // DuplicateProjectCheckBox
             // 
             this.DuplicateProjectCheckBox.AutoSize = true;
-            this.DuplicateProjectCheckBox.Location = new System.Drawing.Point(10, 98);
+            this.DuplicateProjectCheckBox.Location = new System.Drawing.Point(10, 73);
             this.DuplicateProjectCheckBox.Name = "DuplicateProjectCheckBox";
             this.DuplicateProjectCheckBox.Size = new System.Drawing.Size(183, 17);
             this.DuplicateProjectCheckBox.TabIndex = 10;
@@ -1143,7 +1173,7 @@ namespace HFM.Forms
             // chkEtaAsDate
             // 
             this.chkEtaAsDate.AutoSize = true;
-            this.chkEtaAsDate.Location = new System.Drawing.Point(256, 98);
+            this.chkEtaAsDate.Location = new System.Drawing.Point(10, 99);
             this.chkEtaAsDate.Name = "chkEtaAsDate";
             this.chkEtaAsDate.Size = new System.Drawing.Size(202, 17);
             this.chkEtaAsDate.TabIndex = 9;
@@ -1153,7 +1183,7 @@ namespace HFM.Forms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(235, 21);
+            this.label2.Location = new System.Drawing.Point(237, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(126, 13);
             this.label2.TabIndex = 4;
@@ -1181,7 +1211,7 @@ namespace HFM.Forms
             // chkColorLog
             // 
             this.chkColorLog.AutoSize = true;
-            this.chkColorLog.Location = new System.Drawing.Point(10, 46);
+            this.chkColorLog.Location = new System.Drawing.Point(10, 47);
             this.chkColorLog.Name = "chkColorLog";
             this.chkColorLog.Size = new System.Drawing.Size(148, 17);
             this.chkColorLog.TabIndex = 1;
@@ -1195,24 +1225,14 @@ namespace HFM.Forms
             this.udDecimalPlaces.Size = new System.Drawing.Size(39, 20);
             this.udDecimalPlaces.TabIndex = 7;
             // 
-            // chkAutoSave
-            // 
-            this.chkAutoSave.AutoSize = true;
-            this.chkAutoSave.Location = new System.Drawing.Point(150, 22);
-            this.chkAutoSave.Name = "chkAutoSave";
-            this.chkAutoSave.Size = new System.Drawing.Size(151, 17);
-            this.chkAutoSave.TabIndex = 2;
-            this.chkAutoSave.Text = "Auto Save when Changed";
-            this.chkAutoSave.UseVisualStyleBackColor = true;
-            // 
             // labelWrapper1
             // 
             this.labelWrapper1.AutoSize = true;
-            this.labelWrapper1.Location = new System.Drawing.Point(253, 73);
+            this.labelWrapper1.Location = new System.Drawing.Point(297, 72);
             this.labelWrapper1.Name = "labelWrapper1";
-            this.labelWrapper1.Size = new System.Drawing.Size(108, 13);
+            this.labelWrapper1.Size = new System.Drawing.Size(66, 13);
             this.labelWrapper1.TabIndex = 6;
-            this.labelWrapper1.Text = "PPD Decimal Places:";
+            this.labelWrapper1.Text = "Calculate to:";
             // 
             // tabReporting
             // 
@@ -1814,16 +1834,6 @@ namespace HFM.Forms
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // EocUserStatsCheckBox
-            // 
-            this.EocUserStatsCheckBox.AutoSize = true;
-            this.EocUserStatsCheckBox.Location = new System.Drawing.Point(250, 47);
-            this.EocUserStatsCheckBox.Name = "EocUserStatsCheckBox";
-            this.EocUserStatsCheckBox.Size = new System.Drawing.Size(194, 17);
-            this.EocUserStatsCheckBox.TabIndex = 14;
-            this.EocUserStatsCheckBox.Text = "Retrieve and Show EOC User Stats";
-            this.EocUserStatsCheckBox.UseVisualStyleBackColor = true;
-            // 
             // PreferencesDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1844,8 +1854,6 @@ namespace HFM.Forms
             this.Load += new System.EventHandler(this.PreferencesDialogLoad);
             this.tabControl1.ResumeLayout(false);
             this.tabSchdTasks.ResumeLayout(false);
-            this.grpUpdateData.ResumeLayout(false);
-            this.grpUpdateData.PerformLayout();
             this.WebGenerationGroupBox.ResumeLayout(false);
             this.WebGenerationGroupBox.PerformLayout();
             this.WebGenTypePanel.ResumeLayout(false);
@@ -1865,6 +1873,8 @@ namespace HFM.Forms
             this.grpStartup.ResumeLayout(false);
             this.grpStartup.PerformLayout();
             this.ClientsTab.ResumeLayout(false);
+            this.RefreshClientDataGroupBox.ResumeLayout(false);
+            this.RefreshClientDataGroupBox.PerformLayout();
             this.ConfigurationGroupBox.ResumeLayout(false);
             this.ConfigurationGroupBox.PerformLayout();
             this.grpInteractiveOptions.ResumeLayout(false);
@@ -1885,9 +1895,6 @@ namespace HFM.Forms
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox grpUpdateData;
-        private System.Windows.Forms.Label lbl2SchedExplain;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Panel pnl1CSSSample;
@@ -1902,9 +1909,6 @@ namespace HFM.Forms
         private System.Windows.Forms.TabPage tabWeb;
         private System.Windows.Forms.TabPage tabVisStyles;
         private System.Windows.Forms.TabPage tabSchdTasks;
-        private HFM.Forms.Controls.DataErrorTextBox txtCollectMinutes;
-        private System.Windows.Forms.CheckBox chkScheduled;
-        private System.Windows.Forms.CheckBox chkSynchronous;
         private HFM.Forms.Controls.DataErrorTextBox txtWebGenMinutes;
         private System.Windows.Forms.CheckBox chkWebSiteGenerator;
         private HFM.Forms.Controls.DataErrorTextBox WebSiteTargetPathTextBox;
@@ -2022,5 +2026,11 @@ namespace HFM.Forms
         private Controls.DataErrorTextBox FahUserIDTextBox;
         private System.Windows.Forms.LinkLabel TestEocUserIDLinkLabel;
         private System.Windows.Forms.CheckBox EocUserStatsCheckBox;
+        private System.Windows.Forms.GroupBox RefreshClientDataGroupBox;
+        private Controls.DataErrorTextBox ClientRefreshIntervalTextBox;
+        private System.Windows.Forms.Label lbl2SchedExplain;
+        private System.Windows.Forms.CheckBox ClientRefreshIntervalCheckBox;
+        private System.Windows.Forms.CheckBox ClientSynchronousTextBox;
+        private System.Windows.Forms.Label label1;
     }
 }

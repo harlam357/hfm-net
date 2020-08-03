@@ -103,13 +103,6 @@ namespace HFM.Forms
 
         private void LoadScheduledTasksTab()
         {
-            // Refresh Data
-            txtCollectMinutes.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncOnSchedule));
-            txtCollectMinutes.BindText(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncTimeMinutes));
-            chkScheduled.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncOnSchedule));
-
-            chkSynchronous.BindChecked(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.SyncOnLoad));
-
             // Web Generation
             radioSchedule.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
             lbl2MinutesToGen.BindEnabled(_presenter.Model.ScheduledTasksModel, nameof(ScheduledTasksModel.GenerateWeb));
@@ -214,7 +207,14 @@ namespace HFM.Forms
             chkDefaultConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
             chkAutoSave.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
 
-            // Interactive Options
+            // Refresh Client Data
+            ClientRefreshIntervalTextBox.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnSchedule));
+            ClientRefreshIntervalTextBox.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncTimeMinutes));
+            ClientRefreshIntervalCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnSchedule));
+
+            ClientSynchronousTextBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnLoad));
+
+            // Display / Production Options
             chkOffline.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.OfflineLast));
             chkColorLog.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
             DuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
